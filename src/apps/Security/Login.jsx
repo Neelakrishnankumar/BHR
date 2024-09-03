@@ -1,11 +1,11 @@
 import React, { useState,useEffect }  from 'react';
-import {Select, Avatar,Stack, Grid,Paper, FormLabel, TextField, Button, Autocomplete,Box,Link,IconButton,FormControl,InputLabel,OutlinedInput,InputAdornment,FormHelperText,FormGroup,MenuItem } from '@mui/material'
+import {Select, Avatar,Stack, Grid,Paper, FormLabel, TextField, Button, Autocomplete,Box,Link,IconButton,FormControl,InputLabel,OutlinedInput,InputAdornment,FormHelperText,FormGroup,MenuItem, Typography } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon  from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from "react-router-dom";
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import Tabss from '../../ui-components/tabs';
-import LgemsLogo from '../../assets/img/LgemsLogo.png'
+//import LgemsLogo from '../../assets/img/LgemsLogo.png'
 import '../../index.css';
 import { useFormik } from "formik";
 import basicSchema from "./validation";
@@ -17,7 +17,7 @@ import store from '../../index';
 import { toast } from "react-hot-toast";
 import {  useParams } from "react-router-dom";
 import { Field, Form, Formik,ErrorMessage} from 'formik';
-import  background from '../../assets/img/background.jpg'
+import  background from '../../assets/img/background7.jpg'
 import { LoadingButton } from '@mui/lab';
 
 
@@ -213,10 +213,21 @@ const Login=()=>{
         
     }}
     >
-      
-    <Avatar variant='rounded' src={LgemsLogo} sx={{width:'227px',height:'100px'}}></Avatar>
+      <Typography variant='h2' color='white' sx={{width:'140px',height:'100px'}}>HR</Typography>
+       {/* <Avatar
+          variant="rounded"
+         // sx={{ width: "100px" }}
+          onClick={() => {
+            navigate("./Chart");
+          }}
+        >
+        
+        </Avatar>  */}
+     {/* <Avatar variant='rounded' src={LgemsLogo} sx={{width:'227px',height:'100px'}}></Avatar> */}
         </Stack>
-      
+       
+       
+
 
         <Stack
          sx={{
