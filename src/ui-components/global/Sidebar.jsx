@@ -1250,7 +1250,7 @@ const Sidebars = () => {
                     navigate("./Chart");
                   }}
                 ></Avatar> */}
-      <Typography variant='h2' width='20px'>HR</Typography>
+      <Typography variant='h2'>HR</Typography>
                 
 
 
