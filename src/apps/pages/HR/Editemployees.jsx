@@ -433,7 +433,7 @@ const Editemployee = () => {
     }
     if (event.target.value == "7") {
       dispatch(
-        fetchExplorelitview("TR146", "itemcustody", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR212", "itemcustody", `EmployeeID=${recID}`, "")
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -741,7 +741,7 @@ if (show == "6") {
             
           </Typography> */}
           <Typography>
-          {show == "2" ? "List of Functions" : show == "6" ? "List of Attachments" : show == "7" ? "ItemCustody" : "List of Designation"}
+          {show == "2" ? "List of Functions" : show == "6" ? "List of Attachments" : show == "7" ? "Item Custody" : "List of Designation"}
 
         </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
@@ -1186,7 +1186,7 @@ const Fndeployment = async (values, resetForm,del) => {
 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
 {show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Attachments</Typography>):false}
-{show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >ItemCustody</Typography>):false}
+{show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false}
 
         </Breadcrumbs>
         </Box>
@@ -1218,7 +1218,7 @@ const Fndeployment = async (values, resetForm,del) => {
                   <MenuItem value={3}>Managers</MenuItem>
                   <MenuItem value={4}>Deployment</MenuItem>
                    <MenuItem value={6}>List of Attachments</MenuItem>
-                   <MenuItem value={7}>ItemCustody</MenuItem>
+                   <MenuItem value={7}>Item Custody</MenuItem>
 
                 </Select>
               </FormControl>
