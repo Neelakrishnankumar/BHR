@@ -17,7 +17,7 @@ import store from '../../index';
 import { toast } from "react-hot-toast";
 import {  useParams } from "react-router-dom";
 import { Field, Form, Formik,ErrorMessage} from 'formik';
-import  background from '../../assets/img/background7.jpg'
+import  background from '../../assets/img/bexlogo.jpg'
 import { LoadingButton } from '@mui/lab';
 
 
@@ -202,18 +202,22 @@ const Login=()=>{
     <Stack  
        
         sx={{
-        width: {sm:'100%',md:'100%',lg:'100%'},
+        width: {sm:'80%',md:'80%',lg:'80%'},
         alignContent:'center',
-        justifyContent:'center',
+        justifyContent:'flexend',
         alignItems:'center',
-        backgroundImage: `url(${background})`,
-        backgroundSize:'cover',
+        backgroundImage: `url(${background})`, 
+        backgroundRepeat: 'no-repeat',  
+        backgroundPosition: 'center',
+        backgroundSize: '50%', 
         padding:1,
-        borderRadius:'5px'
+        borderRadius:'5px',
+        height: '350px',
+        flexDirection: 'column-reverse' 
         
     }}
     >
-      <Typography variant='h2' color='white' sx={{width:'140px',height:'100px'}}>HR</Typography>
+      <Typography variant='h6' sx={{  marginBottom:2,marginRight:2}}>HR Management </Typography>
        {/* <Avatar
           variant="rounded"
          // sx={{ width: "100px" }}
