@@ -1250,10 +1250,8 @@ const Sidebars = () => {
                     navigate("./Chart");
                   }}
                 ></Avatar> */}
-      <Typography variant='h2'>HR</Typography>
+                <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography>
                 
-
-
                 <IconButton
                   onClick={
                     broken ? () => toggleSidebar() : () => collapseSidebar()
