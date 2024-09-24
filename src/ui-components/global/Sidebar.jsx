@@ -690,12 +690,12 @@ const child = {
     //   ],
     // },
     {
-      name: "HR",
+      name: "Setup",
       id: 4,
       MenuID: "HR600",
-      Tooltipname: "Human Resource",
+      Tooltipname: "Setup",
       icon: (
-        <Tooltip title="Human Resource">
+        <Tooltip title="Setup">
           <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
         </Tooltip>
       ),
@@ -789,6 +789,74 @@ const child = {
       ],
     },
     {
+      name: "Attendance",
+      id: 10,
+      MenuID: "EM900",
+      Tooltipname: "Attendance",
+      icon: (
+        <Tooltip title="Attendance">
+          <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+
+
+
+        {
+          name: "Check In",
+          id: 45,
+          url: "./TR123/Check In",
+          icon: (
+            <Tooltip title="Check In">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR123",
+        },
+        {
+          name: "Check Out",
+          id: 46,
+          url: "./TR124/Check Out",
+          icon: (
+            <Tooltip title="Check Out">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR124",
+        },
+        {
+          name: "Attendance Registry",
+          id: 46,
+          url: "./TR124/Attendance Registry",
+          icon: (
+            <Tooltip title="Attendance Registry">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR124",
+        },
+        
+      ],
+    },
+    {
       name: "Payroll",
       id: 10,
       MenuID: "EM900",
@@ -833,23 +901,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR026",
         },
-        // {
-        //   name: "Employee Allowance",
-        //   // id: 45,
-        //   url: "./TR152/Employee Allowance",
-        //   icon: (
-        //     <Tooltip title="Employee Allowance">
-        //       <Diversity3Icon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR026",
-        // },
+      
         {
           name: "Satuary Component",
           id: 59,
@@ -867,41 +919,6 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR026",
         },
-        {
-          name: "Check In",
-          id: 45,
-          url: "./TR123/Check In",
-          icon: (
-            <Tooltip title="Check In">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR123",
-        },
-        {
-          name: "Check Out",
-          id: 46,
-          url: "./TR124/Check Out",
-          icon: (
-            <Tooltip title="Check Out">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR124",
-        },
-        
       ],
     },
     // {
@@ -1302,7 +1319,7 @@ const Sidebars = () => {
               </ListItemButton>
             </Tooltip>
 
-            <Tooltip title="Logout">
+            {/* <Tooltip title="Logout">
               <ListItemButton
                 onClick={() => {
                   navigate("/Apps/changepassword");
@@ -1311,7 +1328,7 @@ const Sidebars = () => {
 
                 {!collapsed && <ListItemText primary="Change Password" />}
               </ListItemButton>
-            </Tooltip>
+            </Tooltip> */}
             <Divider sx={{ mt: 1 }} variant="middle" />
             <Grid mt={1} p={1} container direction={"column"} spacing={2}>
               <Grid item>

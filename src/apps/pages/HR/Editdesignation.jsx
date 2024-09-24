@@ -142,7 +142,7 @@ const Editdesignation = () => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logou")}>
+            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
               <LogoutOutlinedIcon />
             </IconButton>
           </Tooltip>
