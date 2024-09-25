@@ -106,6 +106,8 @@ import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParame
  import EditSalaryComponent from "./pages/Empolyee/EditSalaryComponent";
  import EditSatuaryComponent from "./pages/Empolyee/EditSatuaryComponent";
  import EditemployeePayroll from "./pages/Empolyee/EditemployeePayroll";
+import LeaveType from "./pages/HR/Editleavetype";
+
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -146,6 +148,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditCategories/:id/:Mode"
                     element={<Editproductcategory />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/Editleavetype/:id/:Mode"
+                    element={<LeaveType />}
                   />
                    <Route
                     path="/:accessID/:screenName/EditJobwork Category/:id/:Mode"

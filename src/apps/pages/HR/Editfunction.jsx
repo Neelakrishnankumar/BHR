@@ -88,6 +88,7 @@ const Editfunction = () => {
     code: data.Code,
     name: data.Description,
     sortorder: data.SortOrder,
+   categories: data.Categories,
     disable: data.Disable === "Y" ? true : false,
   };
 
@@ -101,6 +102,7 @@ const Editfunction = () => {
       RecordID: recID,
       Code: values.code,
       Description: values.name,
+      Categories: values.categories,
       SortOrder: values.sortorder,
       Disable: isCheck,
       Finyear,
@@ -448,6 +450,27 @@ const Editfunction = () => {
                       helperText={touched.name && errors.name}
                       autoFocus
                     />
+
+<FormControl
+                      focused
+                      variant="filled"
+                      sx={{ gridColumn: "span 2" }}
+                    >
+                      <InputLabel id="status">Categories</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-filled-label"
+                        id="categories"
+                        name="categories"
+                        value={values.categories}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="TS">Technology Stack</MenuItem>
+                        <MenuItem value="BV">Buisness Vertical</MenuItem>
+                       
+
+                      </Select>
+                    </FormControl>
 
                     <TextField
                       name="sortorder"
