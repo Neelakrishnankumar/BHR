@@ -717,6 +717,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
         },
+       
         {
           name: "Designation",
           id: 44,
@@ -785,6 +786,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
+        },
+        {
+          name: "LeaveType",
+          id: 43,
+          url: "./TR121/LeaveType",
+          icon: (
+            <Tooltip title="LeaveType">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR121",
         },
       ],
     },
