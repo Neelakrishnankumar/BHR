@@ -106,7 +106,7 @@ import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParame
  import EditSalaryComponent from "./pages/Empolyee/EditSalaryComponent";
  import EditSatuaryComponent from "./pages/Empolyee/EditSatuaryComponent";
  import EditemployeePayroll from "./pages/Empolyee/EditemployeePayroll";
-import LeaveType from "./pages/HR/Editleavetype";
+ import LeaveType from "./pages/HR/Editleavetype";
 
 
 function App() {
