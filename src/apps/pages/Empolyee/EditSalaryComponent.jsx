@@ -96,7 +96,7 @@ const EditSalaryComponent = () => {
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(
-        `/Apps/Secondarylistview/TR205/SalaryComponent/${params.row.RecordID}`
+        `/Apps/TR205/Salary Component`
       );
     } else {
       toast.error(response.payload.Msg);

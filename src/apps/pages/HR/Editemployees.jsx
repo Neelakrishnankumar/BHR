@@ -644,7 +644,11 @@ if (show == "6") {
     VISIBLE_FIELDS = ["SLNO", "ProcessCode", "Comments", "action"];
 } else if (show == "2") {
     VISIBLE_FIELDS = ["SLNO", "FunctionCode", "FunctionName", "action"];
-} else {
+
+} else if (show == "7") {
+    VISIBLE_FIELDS = ["SLNO", "ItemNumber", "ItemName", "action"];
+} 
+else {
     VISIBLE_FIELDS = ["SLNO", "DesignationCode", "DesignationName", "action"];
 }
 
@@ -919,12 +923,12 @@ if (show == "6") {
         // console.log("save" + JSON.stringify(saveData));
     
         const response = await dispatch(
-          explorePostData({ accessID: "TR146", action, idata })
+          explorePostData({ accessID: "TR212", action, idata })
         );
         if (response.payload.Status == "Y") {
           setLoading(false);
           dispatch(
-            fetchExplorelitview("TR146", "ItemCustody", `EmployeeID=${recID}`, "")
+            fetchExplorelitview("TR212", "ItemCustody", `EmployeeID=${recID}`, "")
           );
     
           toast.success(response.payload.Msg);

@@ -92,7 +92,7 @@ import {
       const response = await dispatch(postData({ accessID, action, idata }));
       if (response.payload.Status == "Y") {
         toast.success(response.payload.Msg);
-        navigate(`/Apps/Secondarylistview/TR207/SatuaryComponent/${params.row.RecordID}`);
+        navigate(`/Apps/TR207/Satuary Component`);
       } else {
         toast.error(response.payload.Msg);
       }
