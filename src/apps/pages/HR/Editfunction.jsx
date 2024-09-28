@@ -466,7 +466,7 @@ const Editfunction = () => {
                         onChange={handleChange}
                       >
                         <MenuItem value="TS">Technology Stack</MenuItem>
-                        <MenuItem value="BV">Buisness Vertical</MenuItem>
+                        <MenuItem value="BV">Business Vertical</MenuItem>
                        
 
                       </Select>
