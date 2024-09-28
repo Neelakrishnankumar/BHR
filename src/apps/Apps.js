@@ -128,7 +128,7 @@ function App() {
                     path="/:accessID/:screenName/EditSalary Component/:id/:Mode"
                     element={<EditSalaryComponent/>}
                   />
-                                   <Route
+                  <Route
                     path="/:accessID/:screenName/EditSatuary Component/:id/:Mode"
                     element={<EditSatuaryComponent />}
                   />
