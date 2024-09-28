@@ -788,11 +788,11 @@ const child = {
           UGA_ACCESSIDS: "TR027",
         },
         {
-          name: "LeaveType",
-          id: 43,
-          url: "./TR121/LeaveType",
+          name: "Leave Type",
+          id: 80,
+          url: "./TR213/Leave Type",
           icon: (
-            <Tooltip title="LeaveType">
+            <Tooltip title="Leave Type">
               <Diversity3Icon color="info" />
             </Tooltip>
           ),
@@ -803,6 +803,41 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
+        },
+        {
+          name: "Salary Component",
+          id: 57,
+          url: "./TR205/Salary Component",
+          icon: (
+            <Tooltip title="Salary Component">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR026",
+        },
+      
+        {
+          name: "Satuary Component",
+          id: 59,
+          url: "./TR207/Satuary Component",
+          icon: (
+            <Tooltip title="Satuary Component">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR026",
         },
       ],
     },
@@ -902,41 +937,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
-        {
-          name: "Salary Component",
-          id: 57,
-          url: "./TR205/Salary Component",
-          icon: (
-            <Tooltip title="Salary Component">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR026",
-        },
-      
-        {
-          name: "Satuary Component",
-          id: 59,
-          url: "./TR207/Satuary Component",
-          icon: (
-            <Tooltip title="Satuary Component">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR026",
-        },
+     
       ],
     },
     // {

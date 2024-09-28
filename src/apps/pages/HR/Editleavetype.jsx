@@ -86,13 +86,20 @@ import {
   
     const InitialValue = {
       code: data.Code,
-      name: data.Description,
+      name: data.Name,
+      leavetypecategories: data.LeaveTypeCategories,
       sortorder: data.SortOrder,
       disable: data.Disable === "Y" ? true : false,
     };
   
-    const Fnsave = async (values) => {
-      let action = mode === "A" ? "insert" : "update";
+    const Fnsave = async (values,del) => {
+      // let action = mode === "A" ? "insert" : "update";
+      let action =
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+        ? "harddelete"
+        : "update";
       var isCheck = "N";
       if (values.disable == true) {
         isCheck = "Y";
@@ -100,17 +107,18 @@ import {
       const idata = {
         RecordID: recID,
         Code: values.code,
-        Description: values.name,
+        Name: values.name,
+        LeaveTypeCategories: values.leavetypecategories,
         SortOrder: values.sortorder,
         Disable: isCheck,
-        Finyear,
-        CompanyID,
+        // Finyear,
+        // CompanyID,
       };
   
       const response = await dispatch(postData({ accessID, action, idata }));
       if (response.payload.Status == "Y") {
         toast.success(response.payload.Msg);
-        navigate("/Apps/TR121/Functions");
+        navigate("/Apps/TR213/Leave Type");
       } else {
         toast.error(response.payload.Msg);
       }
@@ -300,7 +308,7 @@ import {
             navigate("/");
           }
           if (props === "Close") {
-            navigate("/Apps/TR121/Functions");
+            navigate("/Apps/TR213/LeaveType");
           }
         } else {
           return;
@@ -335,7 +343,7 @@ import {
                     setScreen(0);
                   }}
                 >
-                  LeaveType
+                  Leave Type
                 </Typography>
                 {show == "1" ? (
                   <Typography
@@ -353,7 +361,7 @@ import {
           </Box>
   
           <Box display="flex">
-            {mode !== "A" ? (
+            {/* {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Explore</InputLabel>
                 <Select
@@ -369,7 +377,7 @@ import {
               </FormControl>
             ) : (
               false
-            )}
+            )} */}
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -456,12 +464,12 @@ import {
                       variant="filled"
                       sx={{ gridColumn: "span 2" }}
                     >
-                      <InputLabel id="status">Leave Categories</InputLabel>
+                      <InputLabel id="status">Categories</InputLabel>
                       <Select
                         labelId="demo-simple-select-filled-label"
-                        id="Catergory"
-                        name="Catrgory"
-                        value={values.Catergories}
+                        id="leavetypecategories"
+                        name="leavetypecategories"
+                        value={values.leavetypecategories}
                         onBlur={handleBlur}
                         onChange={handleChange}
                       >
@@ -531,12 +539,30 @@ import {
                       >
                         Save
                       </Button>
+                    )}   {YearFlag == "true" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Fnsave(values,  "harddelete");
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Delete
+                      </Button>
                     )}
                     <Button
-                      color="error"
+                      color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate("/Apps/TR121/Functions");
+                        navigate("/Apps/TR213/LeaveType");
                       }}
                     >
                       Cancel
