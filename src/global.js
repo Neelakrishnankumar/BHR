@@ -121,8 +121,8 @@ const initialState = {
     PurchaseorderratingUrl:'https://lgems.beyondexs.com/api/ParametergetController.php',
     CustomerPriceorderQtyUrl:'https://lgems.beyondexs.com/api/InternalorderController.php',
     employeeattendanceUrl:"https://lgems.beyondexs.com/api/getempattendancehistory.php",
-    attendanceUrl:"https://lgems.beyondexs.com/api/getempattendance.php"
-
+    attendanceUrl:"https://lgems.beyondexs.com/api/getempattendance.php",
+    LeaveTypeurl: "https://beyondexs.com/Trinity/api/APIController.php"
   };
 
 export const getUrlSlice = createSlice({

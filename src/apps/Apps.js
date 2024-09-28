@@ -150,7 +150,7 @@ function App() {
                     element={<Editproductcategory />}
                   />
                   <Route
-                    path="/:accessID/:screenName/Editleavetype/:id/:Mode"
+                    path="/:accessID/:screenName/EditLeave Type/:id/:Mode"
                     element={<LeaveType />}
                   />
                    <Route
