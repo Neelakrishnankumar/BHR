@@ -115,6 +115,8 @@ const EditemployeePayroll = () => {
    console.log("🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:", DataExplore)
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openADPopup, setOpenADPopup] = useState(false);
+  const [openLETPopup, setOpenLETPopup] = useState(false);
+
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
   const empAttendanceData = useSelector((state) => state.formApi.empAttendanceData);
@@ -190,6 +192,10 @@ const EditemployeePayroll = () => {
     if (type == "AD") {
       setOpenADPopup(true);
     }
+
+    if (type == "LT") {
+      setOpenLETPopup(true);
+    }
     
   }
 
@@ -204,7 +210,11 @@ const EditemployeePayroll = () => {
     adDesc: "",
     adCategory: "",
   });
- 
+  const [selectLETLookupData, setselectLETLookupData] = React.useState({
+    letlookupRecordid: "",
+    letlookupCode: "",
+    letlookupDesc: "",
+  });
   
   // ***************  EMPLOYEE-FUNCTION LOOKUP  *************** //
 
@@ -236,6 +246,14 @@ const EditemployeePayroll = () => {
          
         });
         setOpenADPopup(false);
+    };
+    if (type == "Leave Type") {
+      setselectLETLookupData({
+        letlookupCode: childdata.Code,
+        letlookupRecordid: childdata.RecordID,
+        letlookupDesc: childdata.Name,
+      });
+      setOpenLETPopup(false);
     };
 
     
@@ -777,6 +795,12 @@ const EditemployeePayroll = () => {
         adCategory:'',
        
       });
+      setselectLETLookupData({
+        letlookupCode: "",
+        letlookupRecordid: "",
+        letlookupDesc: "",
+      });
+
      setLeaveData({
       recordID:"",
       fromDate: "",
@@ -803,6 +827,12 @@ const EditemployeePayroll = () => {
         type:rowData.Type
       
       })
+      setselectLETLookupData({
+        letlookupCode: rowData.LeaveTypeCode,
+        letlookupRecordid: rowData.LeaveTypeID,
+        letlookupDesc: rowData.LeaveTypeName
+      });
+
       setAllDecData({
         recordID:rowData.RecordID,
         value: rowData.value,
@@ -850,7 +880,9 @@ funMode === "A" && !del
               LeaveCategory:values.LeaveCategory,
               EmployeeID: recID,
               SortOrder: "1",
-              Disable: "N"
+              Disable: "N",
+              LeaveTypeID:selectLETLookupData.letlookupRecordid,
+
             }
             const response = await dispatch(
               explorePostData({ accessID: "TR208", action, idata })
@@ -2411,11 +2443,56 @@ const AttInitialvalues={
                         
                       /> */}
                       <FormControl
+                    sx={{
+                      gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <TextField
+                      id="outlined-basic"
+                      label="LeaveType"
+                      variant="filled"
+                      value={selectLETLookupData.letlookupRecordid}
+                      focused
+                      sx={{ display: "none" }}
+                    />
+                    <TextField
+                      id="outlined-basic"
+                      label="Leave Type"
+                      variant="filled"
+                      value={selectLETLookupData.letlookupCode}
+                      focused
+                      required
+                      DESIGN
+                      inputProps={{ tabIndex: "-1" }}
+                    />
+                    {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
+                    {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
+                    {/* </Button> */}
+                    <IconButton
+                      sx={{ height: 40, width: 40 }}
+                      onClick={() => handleShow("LT")}
+                    >
+                      <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+                    </IconButton>
+                    <TextField
+                      id="outlined-basic"
+                      label=""
+                      variant="filled"
+                      value={selectLETLookupData.letlookupDesc}
+                      fullWidth
+                      focused
+                      inputProps={{ tabIndex: "-1" }}
+                    />
+                  </FormControl>
+                      <FormControl
                     focused
                     variant="filled"
                     sx={{ gridColumn: "span 2" }}
                   >
-                    <InputLabel variant="filled" id="LeaveCategory">{<span>Leave Category <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
+                    <InputLabel variant="filled" id="LeaveCategory">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       fullWidth
@@ -2472,7 +2549,7 @@ const AttInitialvalues={
                     variant="filled"
                     sx={{ gridColumn: "span 2" }}
                   >
-                    <InputLabel id="Type">Type</InputLabel>
+                    <InputLabel id="Type">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="Type"
@@ -2547,6 +2624,19 @@ const AttInitialvalues={
                     >
                       Cancel
                     </Button>
+                    <Popup
+                    title="Leave Type"
+                    openPopup={openLETPopup}
+                    setOpenPopup={setOpenLETPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2092"
+                      screenName="Leave Type"
+                      childToParent={childToParent}
+                       //filterName={"parentID"}
+                       //filterValue={""}
+                    />
+                  </Popup>
                   </Box>
                  
                 </form>
