@@ -937,6 +937,24 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
+        {
+          name: "Run Payroll",
+          id: 46,
+          url: "./TR217/Run Payroll/Editrunpayroll",
+          icon: (
+            <Tooltip title="Run Payroll">
+                <PeopleAltIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
+     
      
       ],
     },

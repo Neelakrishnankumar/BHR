@@ -106,6 +106,7 @@ import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParame
  import EditSalaryComponent from "./pages/Empolyee/EditSalaryComponent";
  import EditSatuaryComponent from "./pages/Empolyee/EditSatuaryComponent";
  import EditemployeePayroll from "./pages/Empolyee/EditemployeePayroll";
+ import Editrunpayroll from "./pages/Empolyee/Editrunpayroll";
  import LeaveType from "./pages/HR/Editleavetype";
 
 
@@ -124,7 +125,9 @@ function App() {
 
                 <Routes>
                 <Route path="/:accessID/:screenName/EditEmployeePayroll/:id/:Mode" element={ <EditemployeePayroll/>}/>
-                <Route
+                <Route path="/:accessID/:screenName/Editrunpayroll" element={ <Editrunpayroll/>}/>
+               
+               <Route
                     path="/:accessID/:screenName/EditSalary Component/:id/:Mode"
                     element={<EditSalaryComponent/>}
                   />

@@ -367,6 +367,16 @@ const EditemployeePayroll = () => {
       });
     }
 
+    if (event.target.value == "5") {
+      dispatch(fetchExplorelitview("TR216", "OT", `parentID=${recID}`, ""));
+      dispatch(fetchApidata(accessID, "get", recID));
+      // selectCellRowData({
+      //   rowData: {},
+      //   mode: "A",
+      //   field: "",
+      // });
+    }
+
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
     }
@@ -416,9 +426,9 @@ const EditemployeePayroll = () => {
  if (show == "2") {
     VISIBLE_FIELDS = ["SLNO","LeaveCategory","FromDate","ToDate","Type","action"];
   }else if(show == "1") {
-    VISIBLE_FIELDS = ["SLNO","Category","Type","value","EffectiveValue","action"];
+    VISIBLE_FIELDS = ["SLNO","Allowances","Type","value","EffectiveValue","action"];
   }else {
-    VISIBLE_FIELDS = ["SLNO","Category","Type","value","EffectiveValue","action"];
+    VISIBLE_FIELDS = ["SLNO","Deductions","Type","value","EffectiveValue","action"];
   }
 
    
@@ -468,6 +478,7 @@ const EditemployeePayroll = () => {
       </GridToolbarContainer>
     );
   }
+  
   function empAttendanceTool() {
     return (
       <GridToolbarContainer
