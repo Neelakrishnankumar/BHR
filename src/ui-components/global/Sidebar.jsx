@@ -1377,6 +1377,15 @@ const Sidebars = () => {
                   label="Calculation"
                 />
               </Grid>
+              <Grid item>
+                <Chip
+                  color="primary"
+                  size="medium"
+                  variant="outlined"
+                  sx={{ width: "100%", background: "#DFDDDD" }}
+                  label="Read Only"
+                />
+              </Grid>
             </Grid>
           </Box>
         </Menu>

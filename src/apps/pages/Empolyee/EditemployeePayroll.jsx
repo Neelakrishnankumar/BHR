@@ -374,10 +374,19 @@ const EditemployeePayroll = () => {
         dispatch(fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""));
         selectCellRowData({ rowData: {}, mode: "A", field: "" });  
           }
-        
+      if (event.target.value == "6") {
+        dispatch(fetchExplorelitview("TR216", "EmployeeOT", `${recID} AND Category='D'`, ""));
+        dispatch(fetchApidata(accessID, "get", recID));
+        selectCellRowData({
+          rowData: {},
+          mode: "A",
+          field: "",
+        });
+      }
     
 
   };
+   
 
   /******************Employee values assign a state variale******************** */
   const selectcelldata = (data, bMode, field) => {
@@ -1132,6 +1141,7 @@ const AttInitialvalues={
 {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Allowances</Typography>):false}
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deductions</Typography>):false}
                 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Leave</Typography>):false}
+                {show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >OT</Typography>):false}
                 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Attendance</Typography>):false}
                 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Payroll Attendance</Typography>):false}
                
@@ -1163,6 +1173,7 @@ const AttInitialvalues={
                   <MenuItem value={1}>Allowances</MenuItem>
                   <MenuItem value={5}>Deductions</MenuItem>
                   <MenuItem value={2}>Leave</MenuItem>
+                  <MenuItem value={6}>OT</MenuItem>
                   <MenuItem value={3}>Attendance</MenuItem>
                   <MenuItem value={4}>Payroll Attendance</MenuItem>
                 </Select>
@@ -2647,6 +2658,186 @@ const AttInitialvalues={
           false
         )}
         
+        {show == "6" ? (
+          <Box m="10px">
+            <Formik
+              initialValues={AllDedInitialValues}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  AllDedFNsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <TextField
+                      name="Date"
+                      type="date"
+                      id="Date"
+                      label=" Date"
+                      inputFormat="YYYY-MM-DD"
+                      variant="filled"
+                      focused
+                      value={values.ToDate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      required
+                     
+                      sx={{ gridColumn: "span 2" }}
+                    />
+
+                    <TextField
+                      name="hours"
+                      type="number"
+                      id="hours"
+                      label="No. of Hours"
+                      variant="filled"
+                      focused
+                      value={values.hours}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      sx={{ background: "#fff6c3" }} 
+                      onWheel={(e) => e.target.blur()} 
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" }, 
+                          min: 0, 
+                          max: 24, 
+                        },
+                      }}
+                    />
+
+  
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Comments"
+                        value={values.Comm}
+                        id="Comm"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Comm"
+                        error={!!touched.Comm && !!errors.Comm}
+                        helperText={touched.Comm && errors.Comm}
+                        sx={{ gridColumn: "span 2" }}
+                        focused
+                        
+                      />
+                    <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Status"
+                        value={values.status}
+                        id="status"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="status"
+                        error={!!touched.status && !!errors.status}
+                        helperText={touched.status && errors.status}
+                        sx={{ gridColumn: "span 2" }}
+                        focused
+
+                      />
+                    
+                  
+                    </FormControl>
+                  </Box>
+                  <Box display="flex" justifyContent="end" mt="30px" gap={2}>
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? ( */}
+                    <Button
+                      color="error"
+                      variant="contained"
+                    onClick={() => {
+                      Swal.fire({
+                        title: `Do you want Delete?`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm" ,
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          AllDedFNsave(values,resetForm,"harddelete");
+                          
+                        } else {
+                          return;
+                        }
+                      }); }}
+                    >
+                      Delete
+                    </Button>
+                    {/* ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    
+                  </Box>
+                 
+                </form>
+              )}
+            </Formik>
+          </Box>
+        ) : (
+          false
+        )}
         {show == "3" ? (
           <Box m="10px">
             <Formik
