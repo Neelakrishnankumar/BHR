@@ -287,7 +287,7 @@ export const fetchExplorelitview =
     // const navigate = useNavigate();  
     var url = store.getState().globalurl.listViewurl; 
 
-    if (filter != "" && AccessID !== "TR212" && AccessID !== "TR210" && AccessID !== "TR146" && AccessID !== "TR208" && AccessID !== "TR019" && AccessID !== "TR017"&& AccessID !== "TR088" && AccessID !== "TR016"&& AccessID !== "TR125" && AccessID !== "TR126"&& AccessID !== "TR130"&& AccessID !== "TR131"&& AccessID !=="TR139") {
+    if (filter != "" && AccessID !== "TR212" && AccessID !== "TR210" && AccessID !== "TR216" && AccessID !== "TR146" && AccessID !== "TR208" && AccessID !== "TR019" && AccessID !== "TR017"&& AccessID !== "TR088" && AccessID !== "TR016"&& AccessID !== "TR125" && AccessID !== "TR126"&& AccessID !== "TR130"&& AccessID !== "TR131"&& AccessID !=="TR139") {
       filter = "parentID=" + filter;
 
     }

@@ -375,13 +375,13 @@ const EditemployeePayroll = () => {
         selectCellRowData({ rowData: {}, mode: "A", field: "" });  
           }
       if (event.target.value == "6") {
-        dispatch(fetchExplorelitview("TR216", "EmployeeOT", `${recID} AND Category='D'`, ""));
+        dispatch(fetchExplorelitview("TR216", "OT",`parentID=${recID}`, ""));
         dispatch(fetchApidata(accessID, "get", recID));
-        selectCellRowData({
-          rowData: {},
-          mode: "A",
-          field: "",
-        });
+        // selectCellRowData({
+        //   rowData: {},
+        //   mode: "A",
+        //   field: "",
+        // });
       }
     
 
@@ -456,7 +456,7 @@ const EditemployeePayroll = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>{(show == "2" ? "List of Leave" : (show == "1" ? "List of Allowance" :"List of Deductions"))}</Typography>
+          <Typography>{(show == "2" ? "List of Leave" :show == "6" ? "List of OT" : (show == "1" ? "List of Allowance" :"List of Deductions"))}</Typography>
           
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -2657,8 +2657,284 @@ const AttInitialvalues={
         ) : (
           false
         )}
-        
+
         {show == "6" ? (
+          <Box m="10px">
+            <Formik
+              initialValues={leaveInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  leaveFNsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        label="Code"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        label="Description"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                    <Stack
+                      sx={{
+                        gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <img
+                        src={userimg}
+                        style={{ width: "200px", height: "150px" }}
+                      />
+                    </Stack>
+                    <Box sx={{ gridColumn: "span 2" }}>
+                    <Box
+                      height="350px"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          // border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          // borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          // borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          // borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        // checkboxSelection
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" ,gap: "30px"}}
+                  >
+                   <TextField
+                      name="Date"
+                      type="date"
+                      id="Date"
+                      label=" Date"
+                      inputFormat="YYYY-MM-DD"
+                      variant="filled"
+                      focused
+                      value={values.Date}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      required
+                     
+                      sx={{ gridColumn: "span 2" }}
+                    />
+
+                    <TextField
+                      name="hours"
+                      type="number"
+                      id="hours"
+                      label="No. of Hours"
+                      variant="filled"
+                      focused
+                      value={values.hours}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      sx={{ background: "#fff6c3" }} 
+                      onWheel={(e) => e.target.blur()} 
+                      required
+                      sx={{ gridColumn: "span 2" }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" }, 
+                          min: 0, 
+                          max: 24, 
+                        },
+                      }}
+                    />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Comments"
+                        value={values.Comm}
+                        id="comments"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="comments"
+                        error={!!touched.comments && !!errors.comments}
+                        helperText={touched.comments && errors.comments}
+                        sx={{ gridColumn: "span 2" }}
+                        focused
+                        
+                      />
+                    <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Status"
+                        value={values.status}
+                        id="status"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="status"
+                        error={!!touched.status && !!errors.status}
+                        helperText={touched.status && errors.status}
+                        sx={{ gridColumn: "span 2" }}
+                        focused
+
+                      />  
+                  </FormControl>
+                    </FormControl>
+                  </Box>
+                  <Box display="flex" justifyContent="end" mt="2px" gap={2}>
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                   
+                    <Button
+                      color="error"
+                      variant="contained"
+                    onClick={() => {
+                      Swal.fire({
+                        title: `Do you want Delete?`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm" ,
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          leaveFNsave(values,resetForm,"harddelete");
+                          
+                        } else {
+                          return;
+                        }
+                      }); }}
+                    >
+                      Delete
+                    </Button>
+                   
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    
+                  </Box>
+                 
+                </form>
+              )}
+            </Formik>
+          </Box>
+        ) : (
+          false
+        )}
+        
+        {/* {show == "6" ? (
           <Box m="10px">
             <Formik
               initialValues={AllDedInitialValues}
@@ -2725,6 +3001,7 @@ const AttInitialvalues={
                       onChange={handleChange}
                       sx={{ background: "#fff6c3" }} 
                       onWheel={(e) => e.target.blur()} 
+                      required
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" }, 
@@ -2741,12 +3018,12 @@ const AttInitialvalues={
                         type="text"
                         label="Comments"
                         value={values.Comm}
-                        id="Comm"
+                        id="comments"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
+                        name="comments"
+                        error={!!touched.comments && !!errors.comments}
+                        helperText={touched.comments && errors.comments}
                         sx={{ gridColumn: "span 2" }}
                         focused
                         
@@ -2772,7 +3049,7 @@ const AttInitialvalues={
                     </FormControl>
                   </Box>
                   <Box display="flex" justifyContent="end" mt="30px" gap={2}>
-                    {/* {YearFlag == "true" ? ( */}
+                 
                     <LoadingButton
                       color="secondary"
                       variant="contained"
@@ -2781,16 +3058,7 @@ const AttInitialvalues={
                     >
                       Save
                     </LoadingButton>
-                    {/* ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" ? ( */}
+                    
                     <Button
                       color="error"
                       variant="contained"
@@ -2813,11 +3081,7 @@ const AttInitialvalues={
                     >
                       Delete
                     </Button>
-                    {/* ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )} */}
+                    
                     <Button
                       type="reset"
                       color="warning"
@@ -2837,7 +3101,7 @@ const AttInitialvalues={
           </Box>
         ) : (
           false
-        )}
+        )} */}
         {show == "3" ? (
           <Box m="10px">
             <Formik
