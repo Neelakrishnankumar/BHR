@@ -77,9 +77,18 @@ import {
       disable: data.Disable === "Y" ? true : false,
     };
   
-    const Fnsave = async (values) => {
-      let action = mode === "A" ? "insert" : "update";
-
+    const Fnsave = async (values,del) => {
+      // let action = mode === "A" ? "insert" : "update";
+      let action =
+    mode === "A" && !del
+      ? "insert"
+      : mode === "E" && del
+      ? "harddelete"
+      : "update";
+    var isCheck = "N";
+    if (values.disable == true) {
+      isCheck = "Y";
+    }
   
       const idata = {
         RecordID: recID,
@@ -246,9 +255,27 @@ import {
                       >
                         Save
                       </Button>
+                    )} {YearFlag == "true" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Fnsave(values,  "harddelete");
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Delete
+                      </Button>
                     )}
                     <Button
-                      color="error"
+                      color="warning"
                       variant="contained"
                       onClick={() => {
                         navigate("/Apps/TR207/Satuary Component");
