@@ -449,7 +449,7 @@ const Editcheckin = () => {
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2" ,background: "#fff6c3"}}
                   />
 
                   <FormControl
@@ -484,7 +484,7 @@ const Editcheckin = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
                   />
                   <TextField
                     name="comment"

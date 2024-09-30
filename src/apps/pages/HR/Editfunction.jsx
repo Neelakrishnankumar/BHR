@@ -440,6 +440,8 @@ const Editfunction = () => {
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
+                      sx={{ background: "#ffffff" }}
+
                       autoFocus
                     />
                     <TextField
@@ -454,13 +456,15 @@ const Editfunction = () => {
                       onChange={handleChange}
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
+                      sx={{ background: "#ffffff" }}
+
                       autoFocus
                     />
 
     <FormControl
                       focused
                       variant="filled"
-                      sx={{ gridColumn: "span 2" }}
+                      sx={{ gridColumn: "span 2", background: "#ffffff"  }}
                     >
                       <InputLabel id="status">Categories</InputLabel>
                       <Select
@@ -476,6 +480,7 @@ const Editfunction = () => {
                        
 
                       </Select>
+                      
                     </FormControl>
 
                     <TextField
@@ -608,6 +613,7 @@ const Editfunction = () => {
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 4",
+                      
                     },
                   }}
                 >
@@ -626,9 +632,12 @@ const Editfunction = () => {
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2" ,background: "#fff6c3" 
+                  }}
                     // error={!!touched.code && !!errors.code}
                     // helperText={touched.code && errors.code}
+                    
+                    
 
                     autoFocus
                   />
@@ -639,7 +648,8 @@ const Editfunction = () => {
                     label="Name"
                     variant="filled"
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2" , background: "#ffffff" 
+                  }}
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}

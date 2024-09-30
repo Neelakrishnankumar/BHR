@@ -258,7 +258,7 @@ const EditSalaryComponent = () => {
                       onChange={handleChange}
                       error={!!touched.sortOrder && !!errors.sortOrder}
                       helperText={touched.sortOrder && errors.sortOrder}
-                      sx={{ gridColumn: "span 2" }}
+                      sx={{ gridColumn: "span 2" ,background: "#fff6c3"}}
                     />
                   <FormControl>
                       <Box>

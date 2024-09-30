@@ -1805,7 +1805,8 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="Phone No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",   background: "#fff6c3"
+                      }}
                        
                       />
                        <TextField
@@ -1835,7 +1836,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="Aadhar Card No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",background: "#fff6c3"}}
                       />
                      <TextField
                         fullWidth
@@ -1850,7 +1851,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="PF No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",background: "#fff6c3"}}
                       />
                      <TextField
                         fullWidth
@@ -1865,7 +1866,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="ESI No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",background: "#fff6c3"}}
                       />
                      <TextField
                         fullWidth
@@ -3068,6 +3069,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
+                        background: "#fff6c3"
                       }}
                     >
                       <TextField
@@ -3091,6 +3093,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
+                        background: "#fff6c3"
                       }}
                     >
                       <TextField
@@ -3815,6 +3818,7 @@ const Fndeployment = async (values, resetForm,del) => {
                                 helperText={touched.ItemNumber && errors.ItemNumber}
                                 sx={{
                                   gridColumn: "span 2",
+                                  
                                 }}
                                 focused
                                 onWheel={(e) => e.target.blur()} 
