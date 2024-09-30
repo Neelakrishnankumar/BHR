@@ -322,17 +322,23 @@ const Editemployee = () => {
     }
   };
   // **********Save Function*****************
-  const fnSave = async (values) => {
-    setLoading(true);
-    setIni(false);
-    if (values.Code == "") {
-      toast.error("Please Enter Code");
-      return;
-    }
-    if (values.Name == "") {
-      toast.error("Please Enter Description");
-      return;
-    }
+  const fnSave = async (values,del) => {
+  //   setLoading(true);
+  //   setIni(false);
+  //   if (values.Code == "") {
+  //     toast.error("Please Enter Code");
+  //     return;
+  //   }
+  //   if (values.Name == "") {
+  //     toast.error("Please Enter Description");
+  //     return;
+  //   }
+  let action =
+  mode === "A" && !del
+    ? "insert"
+    : mode === "E" && del
+    ? "harddelete"
+    : "update";
     var isCheck = "N";
     if (values.checkbox == true) {
       isCheck = "Y";
@@ -1618,7 +1624,25 @@ const Fndeployment = async (values, resetForm,del) => {
                         Save
                       </Button>
                     )}
-
+                     {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values,  "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
+                    </Button>
+                  )}
                     <Button
                       color="warning"
                       variant="contained"
@@ -1781,7 +1805,8 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="Phone No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",   background: "#fff6c3"
+                      }}
                        
                       />
                        <TextField
@@ -1811,7 +1836,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="Aadhar Card No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",background: "#fff6c3"}}
                       />
                      <TextField
                         fullWidth
@@ -1826,7 +1851,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="PF No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",background: "#fff6c3"}}
                       />
                      <TextField
                         fullWidth
@@ -1841,7 +1866,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="ESI No"
                         focused
                         onWheel={(e) => e.target.blur()} 
-                        sx={{gridColumn:"span 2"}}
+                        sx={{gridColumn:"span 2",background: "#fff6c3"}}
                       />
                      <TextField
                         fullWidth
@@ -1893,6 +1918,25 @@ const Fndeployment = async (values, resetForm,del) => {
                         Save
                       </Button>
                     )}
+                     {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values,  "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
+                    </Button>
+                  )}
                     {/* {YearFlag == "true" ? (
                       <Button
                         onClick={() => mgrFunctionFn(values, resetForm, true)}
@@ -3025,6 +3069,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
+                        background: "#fff6c3"
                       }}
                     >
                       <TextField
@@ -3048,6 +3093,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
+                        background: "#fff6c3"
                       }}
                     >
                       <TextField
@@ -3223,6 +3269,25 @@ const Fndeployment = async (values, resetForm,del) => {
                         Save
                       </Button>
                     )}
+                     {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values,  "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
+                    </Button>
+                  )}
                     {/* {YearFlag == "true" ? (
                       <Button
                         onClick={() => mgrFunctionFn(values, resetForm, true)}
@@ -3753,6 +3818,7 @@ const Fndeployment = async (values, resetForm,del) => {
                                 helperText={touched.ItemNumber && errors.ItemNumber}
                                 sx={{
                                   gridColumn: "span 2",
+                                  
                                 }}
                                 focused
                                 onWheel={(e) => e.target.blur()} 

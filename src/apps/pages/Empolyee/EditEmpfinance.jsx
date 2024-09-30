@@ -338,6 +338,8 @@ const EditEmpfinance = () => {
                       inputFormat="YYYY-MM-DD"
                       error={!!touched.date && !!errors.date}
                       helperText={touched.date && errors.date}
+                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+
                       autoFocus
                     />
                     <TextField
@@ -416,6 +418,7 @@ const EditEmpfinance = () => {
                       onChange={handleChange}
                       error={!!touched.amount && !!errors.amount}
                       helperText={touched.amount && errors.amount}
+                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                       autoFocus
                     />
                     <TextField

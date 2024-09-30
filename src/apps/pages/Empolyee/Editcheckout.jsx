@@ -77,9 +77,18 @@ const Editcheckout = () => {
     checkouttime: data.CheckOutTime,
   };
 
-  const Fnsave = async (values) => {
-    let action = mode === "A" ? "insert" : "update";
-
+  const Fnsave = async (values,del) => {
+    // let action = mode === "A" ? "insert" : "update";
+    let action =
+    mode === "A" && !del
+      ? "insert"
+      : mode === "E" && del
+      ? "harddelete"
+      : "update";
+    var isCheck = "N";
+    if (values.disable == true) {
+      isCheck = "Y";
+    }
     const idata = {
       RecordID: recID,
       CheckOutType: values.checkouttype,
@@ -410,7 +419,7 @@ const Editcheckout = () => {
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
                   />
                   <FormControl
                     focused
@@ -443,7 +452,7 @@ const Editcheckout = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
                     variant="filled"
                   />
                   <TextField
@@ -479,9 +488,27 @@ const Editcheckout = () => {
                     >
                       Save
                     </Button>
+                  )}  {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Fnsave(values,  "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
+                    </Button>
                   )}
                   <Button
-                    color="error"
+                    color="warning"
                     variant="contained"
                     onClick={() => {
                       navigate("/Apps/TR124/Check Out");

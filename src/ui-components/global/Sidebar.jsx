@@ -1372,7 +1372,7 @@ const Sidebars = () => {
                 <Chip
                   color="primary"
                   variant="outlined"
-                  sx={{ width: "100%", background: "#DFDDDD" }}
+                  sx={{ width: "100%", background: "#ffffff" }}
                   size="medium"
                   label="Text"
                 />
@@ -1393,6 +1393,15 @@ const Sidebars = () => {
                   variant="outlined"
                   sx={{ width: "100%", background: "#F0CDB5" }}
                   label="Calculation"
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  color="primary"
+                  size="medium"
+                  variant="outlined"
+                  sx={{ width: "100%", background: "#DFDDDD" }}
+                  label="Read Only"
                 />
               </Grid>
             </Grid>
