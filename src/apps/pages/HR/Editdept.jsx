@@ -99,21 +99,31 @@ const Editdept = () => {
     checkbox: Data.Disable === "Y" ? true : false,
   };
   // **********Save Function*****************
-  const fnSave = async (values) => {
-    setLoading(true);
-    setIni(false);
-    if (values.Code == "") {
-      toast.error("Please Enter Code");
-      return;
-    }
-    if (values.Name == "") {
-      toast.error("Please Enter Description");
-      return;
-    }
+  const fnSave = async (values,del) => {
+    // setLoading(true);
+    // setIni(false);
+    // if (values.Code == "") {
+    //   toast.error("Please Enter Code");
+    //   return;
+    // }
+    // if (values.Name == "") {
+    //   toast.error("Please Enter Description");
+    //   return;
+    // }
+    let action =
+    mode === "A" && !del
+      ? "insert"
+      : mode === "E" && del
+      ? "harddelete"
+      : "update";
     var isCheck = "N";
-    if (values.checkbox == true) {
+    if (values.disable == true) {
       isCheck = "Y";
     }
+    // var isCheck = "N";
+    // if (values.checkbox == true) {
+    //   isCheck = "Y";
+    // }
     console.log(values);
 
     var idata = {
@@ -135,7 +145,7 @@ const Editdept = () => {
     // }
 
     // const data = await dispatch(postApidata(accessID, type, idata));
-    let action = mode === "A" ? "insert" : "update";
+    // let action = mode === "A" ? "insert" : "update";
     const data = await dispatch(postData({ accessID, action, idata }));
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
@@ -373,6 +383,24 @@ const Editdept = () => {
                       disabled={true}
                     >
                       Save
+                    </Button>
+                  )} {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values,  "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
                     </Button>
                   )}
                   {/* <Button

@@ -419,7 +419,7 @@ const Editcheckout = () => {
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
                   />
                   <FormControl
                     focused
@@ -452,7 +452,7 @@ const Editcheckout = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
                     variant="filled"
                   />
                   <TextField

@@ -351,7 +351,7 @@ const EditDailytask = () => {
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     autoFocus
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",background: "#fff6c3"  }}
                   />
                   <Box
                     sx={{
