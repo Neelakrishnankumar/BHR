@@ -204,8 +204,13 @@ const EditSalaryComponent = () => {
                     value={values.description}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    sx={{ gridColumn: "span 2" }}
-                  />
+                    sx={{ 
+                      gridColumn: "span 2", 
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      }
+                    }}                  />
 
                   <FormControl
                     focused

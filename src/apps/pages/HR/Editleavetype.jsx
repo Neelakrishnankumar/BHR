@@ -440,6 +440,13 @@ import {
                         onChange={handleChange}
                         error={!!touched.code && !!errors.code}
                         helperText={touched.code && errors.code}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         autoFocus
                       />
                    
@@ -456,6 +463,13 @@ import {
                         onChange={handleChange}
                         error={!!touched.name && !!errors.name}
                         helperText={touched.name && errors.name}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         autoFocus
                       />
 
