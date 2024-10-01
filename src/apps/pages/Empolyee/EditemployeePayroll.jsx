@@ -788,7 +788,13 @@ const EditemployeePayroll = () => {
     value: "",
     sortOrder: "",
   })
-
+const [otdata,setOtdata]= useState({
+        RecordID: "",
+        OtDate: "",
+        NumberOfHours: "",
+        Status: "",
+        Comments: ""
+})
   const selectCellRowData = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
@@ -825,6 +831,13 @@ const EditemployeePayroll = () => {
       toDate: "",
       leaveCategory: "",
       type:""
+     });
+     setOtdata({
+      RecordID: "",
+        OtDate: "",
+        NumberOfHours: "",
+        Status: "",
+        Comments: ""
      })
     } else {
       if (field == "action") {
@@ -845,6 +858,14 @@ const EditemployeePayroll = () => {
         type:rowData.Type
       
       })
+      setOtdata({
+        RecordID: rowData.RecordID,
+          OtDate: rowData.OtDate,
+          NumberOfHours: rowData.NumberOfHours,
+          Status: rowData.Status,
+          Comments: rowData.Comments
+       })
+
       setselectLETLookupData({
         letlookupCode: rowData.LeaveTypeCode,
         letlookupRecordid: rowData.LeaveTypeID,
@@ -927,10 +948,10 @@ funMode === "A" && !del
 const otInitialValue={
   code: Data.Code,
   description: Data.Name,
-  // Data.OtDate ,
-  // NumberOfHours:,
-  // Status: ,
-  // Comments:
+  OtDate: otdata.OtDate ,
+  NumberOfHours:otdata.NumberOfHours,
+  comments:otdata.Comments,
+  Status:otdata.Status
   }
   
   const otFNsave= async(values,resetForm,del)=>{
@@ -942,15 +963,21 @@ const otInitialValue={
               ? "harddelete"
               : "update";
               const idata={
-                RecordID:leaveData.recordID,
-                Type:values.Type,
-                FromDate:values.FromDate,
-                ToDate:values.ToDate,
-                LeaveCategory:values.LeaveCategory,
-                EmployeeID: recID,
-                SortOrder: "1",
-                Disable: "N",
-                LeaveTypeID:selectLETLookupData.letlookupRecordid,
+                //RecordID:leaveData.recordID,
+                RecordID: otdata.RecordID,
+                OtDate: values.OtDate,
+                NumberOfHours: values.NumberOfHours,
+                Status: values.Status,
+                Comments: values.comments,
+                EmployeeID: recID
+                // Type:values.Type,
+                // FromDate:values.FromDate,
+                // ToDate:values.ToDate,
+                // LeaveCategory:values.LeaveCategory,
+                // EmployeeID: recID,
+                // SortOrder: "1",
+                // Disable: "N",
+                // LeaveTypeID:selectLETLookupData.letlookupRecordid,
   
               }
               const response = await dispatch(
@@ -2883,13 +2910,13 @@ const AttInitialvalues={
                     />
 
                     <TextField
-                      name="hours"
+                      name="NumberOfHours"
                       type="number"
-                      id="hours"
+                      id="NumberOfHours"
                       label="No. of Hours"
                       variant="filled"
                       focused
-                      value={values.hours}
+                      value={values.NumberOfHours}
                       onBlur={handleBlur}
                       onChange={handleChange}
                     
@@ -2909,7 +2936,7 @@ const AttInitialvalues={
                         variant="filled"
                         type="text"
                         label="Comments"
-                        value={values.Comm}
+                        value={values.Comments}
                         id="comments"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -2925,13 +2952,13 @@ const AttInitialvalues={
                         variant="filled"
                         type="text"
                         label="Status"
-                        value={values.status}
-                        id="status"
+                        value={values.Status}
+                        id="Status"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        name="status"
-                        error={!!touched.status && !!errors.status}
-                        helperText={touched.status && errors.status}
+                        name="Status"
+                        error={!!touched.Status && !!errors.Status}
+                        helperText={touched.Status && errors.Status}
                         sx={{ gridColumn: "span 2" }}
                         focused
 
