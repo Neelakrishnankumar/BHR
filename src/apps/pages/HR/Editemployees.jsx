@@ -1350,8 +1350,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         name="Code"
                         // error={!!touched.Code && !!errors.Code}
                         // helperText={touched.Code && errors.Code}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         required
                         autoFocus
                         inputProps={{ maxLength: 8 }}
@@ -1369,8 +1374,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         name="Name"
                         // error={!!touched.Name && !!errors.Name}
                         // helperText={touched.Name && errors.Name}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -1386,6 +1396,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         name="Password"
                         // error={!!touched.Password && !!errors.Password}
                         // helperText={touched.Password && errors.Password}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                       />
                       <TextField
@@ -1400,6 +1417,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         name="Job"
                         error={!!touched.Job && !!errors.Job}
                         helperText={touched.Job && errors.Job}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         inputProps={{ maxLength: 90 }}
                       />
@@ -1540,8 +1564,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         name="Comm"
                         error={!!touched.Comm && !!errors.Comm}
                         helperText={touched.Comm && errors.Comm}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                         rows={2}
@@ -1753,6 +1782,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Code"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         // inputProps={{ readOnly: true }}
                       />
@@ -1767,6 +1803,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Name"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         // inputProps={{ readOnly: true }}
                       />
@@ -1821,8 +1864,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         onChange={handleChange}
                         label="Email Id"
                         focused
-                        sx={{gridColumn:"span 2"}}
-                      />
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                      />
                      <TextField
                         fullWidth
                         variant="filled"
@@ -1880,8 +1928,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         onChange={handleChange}
                         label="Permanent Address"
                         focused
-                        sx={{gridColumn:"span 2"}}
-                      />
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                      />
                      <TextField
                         fullWidth
                         variant="filled"
@@ -1894,8 +1947,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         onChange={handleChange}
                         label="Local Address"
                         focused
-                        sx={{gridColumn:"span 2"}}
-                      />
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                      />
                    </Box>
                   
                  
@@ -2019,8 +2077,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         label="Code"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
 
                         //  error={!!touched.Desc && !!errors.Desc}
                         //  helperText={touched.Desc && errors.Desc}
@@ -2038,8 +2101,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         name="Name"
                         error={!!touched.Name && !!errors.Name}
                         helperText={touched.Name && errors.Name}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -2209,8 +2277,12 @@ const Fndeployment = async (values, resetForm,del) => {
                                 onChange={handleChange}
                                 error={!!touched.Comments && !!errors.Comments}
                                 helperText={touched.Comments && errors.Comments}
-                                sx={{
-                                  gridColumn: "span 2",
+                                sx={{ 
+                                  gridColumn: "span 2", 
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  }
                                 }}
                                 focused
                                 multiline
@@ -2394,7 +2466,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         id="description"
                         name="description"
                         value={values.description}
-                        label="Description"
+                        label="Name"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -2858,7 +2930,14 @@ const Fndeployment = async (values, resetForm,del) => {
                         value={values.code}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Model"
+                        label="Code"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         // inputProps={{ readOnly: true }}
                       />
@@ -2872,7 +2951,14 @@ const Fndeployment = async (values, resetForm,del) => {
                         value={values.description}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Description"
+                        label="Name"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         // inputProps={{ readOnly: true }}
                       />
@@ -3510,6 +3596,13 @@ const Fndeployment = async (values, resetForm,del) => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Description"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         inputProps={{ tabIndex: "-1" }}
                       />
@@ -3718,7 +3811,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         id="description"
                         name="description"
                         value={values.description}
-                        label="Description"
+                        label="Name"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -3810,15 +3903,18 @@ const Fndeployment = async (values, resetForm,del) => {
                                 value={values.ItemNumber}
                                 id="ItemNumber"
                                 name="ItemNumber"
-                                label="item No"
+                                label="Item No"
                                 required
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 error={!!touched.ItemNumber && !!errors.ItemNumber}
                                 helperText={touched.ItemNumber && errors.ItemNumber}
-                                sx={{
-                                  gridColumn: "span 2",
-                                  
+                                sx={{ 
+                                  gridColumn: "span 2", 
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  }
                                 }}
                                 focused
                                 onWheel={(e) => e.target.blur()} 
@@ -3838,8 +3934,12 @@ const Fndeployment = async (values, resetForm,del) => {
                                 onChange={handleChange}
                                 error={!!touched.ItemName && !!errors.ItemName}
                                 helperText={touched.ItemName && errors.ItemName}
-                                sx={{
-                                  gridColumn: "span 2",
+                                sx={{ 
+                                  gridColumn: "span 2", 
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  }
                                 }}
                                 focused
                                 multiline
@@ -3859,8 +3959,12 @@ const Fndeployment = async (values, resetForm,del) => {
                                 onChange={handleChange}
                                 error={!!touched.AssestID && !!errors.AssestID}
                                 helperText={touched.AssestID && errors.AssestID}
-                                sx={{
-                                  gridColumn: "span 2",
+                                sx={{ 
+                                  gridColumn: "span 2", 
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  }
                                 }}
                                 focused
                                 multiline
@@ -3880,8 +3984,12 @@ const Fndeployment = async (values, resetForm,del) => {
                                 onChange={handleChange}
                                 error={!!touched.ItemValue && !!errors.ItemValue}
                                 helperText={touched.ItemValue && errors.ItemValue}
-                                sx={{
-                                  gridColumn: "span 2",
+                                sx={{ 
+                                  gridColumn: "span 2", 
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  }
                                 }}
                                 focused
                                 multiline
@@ -3901,8 +4009,12 @@ const Fndeployment = async (values, resetForm,del) => {
                                 onChange={handleChange}
                                 error={!!touched.PurchaseReference && !!errors.PurchaseReference}
                                 helperText={touched.PurchaseReference && errors.PurchaseReference}
-                                sx={{
-                                  gridColumn: "span 2",
+                                sx={{ 
+                                  gridColumn: "span 2", 
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  }
                                 }}
                                 focused
                                 multiline

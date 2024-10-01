@@ -201,8 +201,13 @@ import {
                       onChange={handleChange}
                       error={!!touched.description && !!errors.description}
                       helperText={touched.description && errors.description}
-                      sx={{ gridColumn: "span 2" }}
-                    />
+                      sx={{ 
+                        gridColumn: "span 2", 
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        }
+                      }}                    />
   
                   
             

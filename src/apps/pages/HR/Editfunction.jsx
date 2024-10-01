@@ -440,8 +440,13 @@ const Editfunction = () => {
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{ background: "#ffffff" }}
-
+                      sx={{ 
+                        gridColumn: "span 2", 
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       autoFocus
                     />
                     <TextField
@@ -456,8 +461,13 @@ const Editfunction = () => {
                       onChange={handleChange}
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
-                      sx={{ background: "#ffffff" }}
-
+                      sx={{ 
+                        gridColumn: "span 2", 
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       autoFocus
                     />
 
@@ -632,8 +642,13 @@ const Editfunction = () => {
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    sx={{ gridColumn: "span 2" ,background: "#fff6c3" 
-                  }}
+                    sx={{ 
+                      gridColumn: "span 2", 
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      }
+                    }}
                     // error={!!touched.code && !!errors.code}
                     // helperText={touched.code && errors.code}
                     
@@ -647,9 +662,15 @@ const Editfunction = () => {
                     id="name"
                     label="Name"
                     variant="filled"
+                    color="primary"
                     focused
-                    sx={{ gridColumn: "span 2" , background: "#ffffff" 
-                  }}
+                    sx={{ 
+                      gridColumn: "span 2", 
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      }
+                    }}
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}

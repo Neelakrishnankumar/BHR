@@ -1384,8 +1384,13 @@ const AttInitialvalues={
                         name="Code"
                         // error={!!touched.Code && !!errors.Code}
                         // helperText={touched.Code && errors.Code}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         required
                         autoFocus
                         inputProps={{ maxLength: 8 }}
@@ -1403,8 +1408,13 @@ const AttInitialvalues={
                         name="Name"
                         // error={!!touched.Name && !!errors.Name}
                         // helperText={touched.Name && errors.Name}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -1420,6 +1430,13 @@ const AttInitialvalues={
                         name="Password"
                         // error={!!touched.Password && !!errors.Password}
                         // helperText={touched.Password && errors.Password}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                       />
                       <TextField
@@ -1434,6 +1451,13 @@ const AttInitialvalues={
                         name="Job"
                         error={!!touched.Job && !!errors.Job}
                         helperText={touched.Job && errors.Job}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         inputProps={{ maxLength: 90 }}
                       />
@@ -1574,8 +1598,13 @@ const AttInitialvalues={
                         name="Comm"
                         error={!!touched.Comm && !!errors.Comm}
                         helperText={touched.Comm && errors.Comm}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                         rows={2}
@@ -1779,7 +1808,7 @@ const AttInitialvalues={
                         id="description"
                         name="description"
                         value={values.description}
-                        label="Description"
+                        label="Name"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -1934,6 +1963,13 @@ const AttInitialvalues={
                         name="value"
                         value={values.value}
                         label="Value"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -2264,6 +2300,13 @@ const AttInitialvalues={
                         name="value"
                         value={values.value}
                         label="Value"
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}

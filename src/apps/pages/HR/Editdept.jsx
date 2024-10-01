@@ -268,6 +268,13 @@ const Editdept = () => {
                       required
                       focused
                       autoFocus
+                      sx={{ 
+                        gridColumn: "span 2", 
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       inputProps={{ maxLength: 8 }}
                       onInvalid={(e) => {
                         e.target.setCustomValidity("Please Fill The Code");
@@ -281,7 +288,7 @@ const Editdept = () => {
                       fullWidth
                       variant="filled"
                       type="text"
-                      label="Description"
+                      label="Name"
                       value={values.Name}
                       id="Name"
                       onBlur={handleBlur}
@@ -289,8 +296,14 @@ const Editdept = () => {
                       name="Name"
                       error={!!touched.Name && !!errors.Name}
                       helperText={touched.Name && errors.Name}
-                      sx={{ gridColumn: "span 2" }}
                       focused
+                      sx={{ 
+                        gridColumn: "span 2", 
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       required
                       inputProps={{ maxLength: 90 }}
                       multiline
@@ -315,8 +328,13 @@ const Editdept = () => {
                       name="Loc"
                       error={!!touched.Loc && !!errors.Loc}
                       helperText={touched.Loc && errors.Loc}
-                      sx={{ gridColumn: "span 2" }}
-                      focused
+                      sx={{ 
+                        gridColumn: "span 2", 
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        }
+                      }}                      focused
                       inputProps={{ maxLength: 90 }}
                     />
                     <TextField
