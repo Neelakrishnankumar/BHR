@@ -921,8 +921,59 @@ funMode === "A" && !del
             }
 }
 
+/*OT SAVE FUNCTION*/
+//-------------------------------------LEAVE SAVE FUNCTION---------------------------------------------//
 
-
+const otInitialValue={
+  code: Data.Code,
+  description: Data.Name,
+  // Data.OtDate ,
+  // NumberOfHours:,
+  // Status: ,
+  // Comments:
+  }
+  
+  const otFNsave= async(values,resetForm,del)=>{
+  setLoading(true);
+  let action=
+  funMode === "A" && !del
+              ? "insert"
+              : funMode === "E" && del
+              ? "harddelete"
+              : "update";
+              const idata={
+                RecordID:leaveData.recordID,
+                Type:values.Type,
+                FromDate:values.FromDate,
+                ToDate:values.ToDate,
+                LeaveCategory:values.LeaveCategory,
+                EmployeeID: recID,
+                SortOrder: "1",
+                Disable: "N",
+                LeaveTypeID:selectLETLookupData.letlookupRecordid,
+  
+              }
+              const response = await dispatch(
+                explorePostData({ accessID: "TR216", action, idata })
+              );
+              if (response.payload.Status == "Y") {
+                setLoading(false);
+                dispatch(
+                  fetchExplorelitview("TR216", "OT", `parentID=${recID}`, "")
+                );
+          
+                toast.success(response.payload.Msg);
+          
+                selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                resetForm();
+              } else {
+                setLoading(false);
+                toast.error(response.payload.Msg);
+              }
+  }
+  
+  
+  
 
  // **********Save Function*****************
  const AllDedInitialValues={
@@ -2670,11 +2721,11 @@ const AttInitialvalues={
         {show == "6" ? (
           <Box m="10px">
             <Formik
-              initialValues={leaveInitialValue}
+              initialValues={otInitialValue}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
-                  leaveFNsave(values, resetForm, false);
+                  otFNsave(values, resetForm, false);
                 }, 100);
               }}
             >
@@ -2816,14 +2867,14 @@ const AttInitialvalues={
                     sx={{ gridColumn: "span 2" ,gap: "30px"}}
                   >
                    <TextField
-                      name="Date"
+                      name="OtDate"
                       type="date"
-                      id="Date"
+                      id="OtDate"
                       label=" Date"
                       inputFormat="YYYY-MM-DD"
                       variant="filled"
                       focused
-                      value={values.ToDate}
+                      value={values.OtDate}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
