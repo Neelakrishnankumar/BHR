@@ -370,11 +370,11 @@ const EditemployeePayroll = () => {
     if (event.target.value == "6") {
       dispatch(fetchExplorelitview("TR216", "OT", `parentID=${recID}`, ""));
       dispatch(fetchApidata(accessID, "get", recID));
-      // selectCellRowData({
-      //   rowData: {},
-      //   mode: "A",
-      //   field: "",
-      // });
+      selectCellRowData({
+        rowData: {},
+        mode: "A",
+        field: "",
+      });
     }
 
     if (event.target.value == "0") {
@@ -860,7 +860,7 @@ const [otdata,setOtdata]= useState({
       })
       setOtdata({
         RecordID: rowData.RecordID,
-          OtDate: rowData.OtDate,
+          OtDate: rowData.Date,
           NumberOfHours: rowData.NumberOfHours,
           Status: rowData.Status,
           Comments: rowData.Comments
@@ -948,7 +948,7 @@ funMode === "A" && !del
 const otInitialValue={
   code: Data.Code,
   description: Data.Name,
-  OtDate: otdata.Date ,
+  Date: otdata.OtDate ,
   NumberOfHours:otdata.NumberOfHours,
   comments:otdata.Comments,
   Status:otdata.Status
@@ -1133,6 +1133,7 @@ const PAttInitialvalues={
     const data = {
   Month:values.month.toString(),
   Year:values.year,
+  
     }
  
 
@@ -1151,6 +1152,8 @@ const AttInitialvalues={
     const data = {
   Month:values.month.toString(),
   Year:values.year,
+  EmployeeID: recID
+
     }
  
 
@@ -2937,14 +2940,14 @@ const AttInitialvalues={
                     sx={{ gridColumn: "span 2" ,gap: "30px"}}
                   >
                    <TextField
-                      name="OtDate"
+                      name="Date"
                       type="date"
-                      id="OtDate"
+                      id="Date"
                       label=" Date"
                       inputFormat="YYYY-MM-DD"
                       variant="filled"
                       focused
-                      value={values.OtDate}
+                      value={values.Date}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
@@ -2979,7 +2982,7 @@ const AttInitialvalues={
                         variant="filled"
                         type="text"
                         label="Comments"
-                        value={values.Comments}
+                        value={values.comments}
                         id="comments"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -3043,7 +3046,7 @@ const AttInitialvalues={
                         confirmButtonText: "Confirm" ,
                       }).then((result) => {
                         if (result.isConfirmed) {
-                          leaveFNsave(values,resetForm,"harddelete");
+                          otFNsave(values,resetForm,"harddelete");
                           
                         } else {
                           return;
