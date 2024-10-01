@@ -367,6 +367,16 @@ const EditemployeePayroll = () => {
       });
     }
 
+    if (event.target.value == "6") {
+      dispatch(fetchExplorelitview("TR216", "OT", `parentID=${recID}`, ""));
+      dispatch(fetchApidata(accessID, "get", recID));
+      // selectCellRowData({
+      //   rowData: {},
+      //   mode: "A",
+      //   field: "",
+      // });
+    }
+
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
     }
@@ -374,19 +384,10 @@ const EditemployeePayroll = () => {
         dispatch(fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""));
         selectCellRowData({ rowData: {}, mode: "A", field: "" });  
           }
-      if (event.target.value == "6") {
-        dispatch(fetchExplorelitview("TR216", "EmployeeOT", `${recID} AND Category='D'`, ""));
-        dispatch(fetchApidata(accessID, "get", recID));
-        selectCellRowData({
-          rowData: {},
-          mode: "A",
-          field: "",
-        });
-      }
+        
     
 
   };
-   
 
   /******************Employee values assign a state variale******************** */
   const selectcelldata = (data, bMode, field) => {
@@ -425,9 +426,13 @@ const EditemployeePayroll = () => {
  if (show == "2") {
     VISIBLE_FIELDS = ["SLNO","LeaveCategory","FromDate","ToDate","Type","action"];
   }else if(show == "1") {
-    VISIBLE_FIELDS = ["SLNO","Category","Type","value","EffectiveValue","action"];
-  }else {
-    VISIBLE_FIELDS = ["SLNO","Category","Type","value","EffectiveValue","action"];
+    VISIBLE_FIELDS = ["SLNO","Allowances","Type","value","EffectiveValue","action"];
+  }else if(show == "6") {
+    VISIBLE_FIELDS = ["SLNO","Date","NumberOfHours","action"];
+  }
+  
+  else {
+    VISIBLE_FIELDS = ["SLNO","Deductions","Type","value","EffectiveValue","action"];
   }
 
    
@@ -456,10 +461,13 @@ const EditemployeePayroll = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>{(show == "2" ? "List of Leave" : (show == "1" ? "List of Allowance" :"List of Deductions"))}</Typography>
-          
+        
+          <Typography>{(show == "2" ? "List of Leave" :show == "6" ? "List of OT" : (show == "1" ? "List of Allowance" :"List of Deductions"))}</Typography>
+
+
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -477,6 +485,7 @@ const EditemployeePayroll = () => {
       </GridToolbarContainer>
     );
   }
+  
   function empAttendanceTool() {
     return (
       <GridToolbarContainer
@@ -912,8 +921,59 @@ funMode === "A" && !del
             }
 }
 
+/*OT SAVE FUNCTION*/
+//-------------------------------------LEAVE SAVE FUNCTION---------------------------------------------//
 
-
+const otInitialValue={
+  code: Data.Code,
+  description: Data.Name,
+  // Data.OtDate ,
+  // NumberOfHours:,
+  // Status: ,
+  // Comments:
+  }
+  
+  const otFNsave= async(values,resetForm,del)=>{
+  setLoading(true);
+  let action=
+  funMode === "A" && !del
+              ? "insert"
+              : funMode === "E" && del
+              ? "harddelete"
+              : "update";
+              const idata={
+                RecordID:leaveData.recordID,
+                Type:values.Type,
+                FromDate:values.FromDate,
+                ToDate:values.ToDate,
+                LeaveCategory:values.LeaveCategory,
+                EmployeeID: recID,
+                SortOrder: "1",
+                Disable: "N",
+                LeaveTypeID:selectLETLookupData.letlookupRecordid,
+  
+              }
+              const response = await dispatch(
+                explorePostData({ accessID: "TR216", action, idata })
+              );
+              if (response.payload.Status == "Y") {
+                setLoading(false);
+                dispatch(
+                  fetchExplorelitview("TR216", "OT", `parentID=${recID}`, "")
+                );
+          
+                toast.success(response.payload.Msg);
+          
+                selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                resetForm();
+              } else {
+                setLoading(false);
+                toast.error(response.payload.Msg);
+              }
+  }
+  
+  
+  
 
  // **********Save Function*****************
  const AllDedInitialValues={
@@ -1141,7 +1201,6 @@ const AttInitialvalues={
 {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Allowances</Typography>):false}
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deductions</Typography>):false}
                 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Leave</Typography>):false}
-                {show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >OT</Typography>):false}
                 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Attendance</Typography>):false}
                 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Payroll Attendance</Typography>):false}
                
@@ -1176,7 +1235,9 @@ const AttInitialvalues={
                   <MenuItem value={6}>OT</MenuItem>
                   <MenuItem value={3}>Attendance</MenuItem>
                   <MenuItem value={4}>Payroll Attendance</MenuItem>
+                
                 </Select>
+
               </FormControl>
             ) : (
               false
@@ -2580,7 +2641,7 @@ const AttInitialvalues={
                       onChange={handleChange}
                       required
                      
-                      sx={{ gridColumn: "span 2" ,background: "#fff6c3" }}
+                      sx={{ gridColumn: "span 2" }}
                     />
                     <TextField
                       name="ToDate"
@@ -2595,7 +2656,7 @@ const AttInitialvalues={
                       onChange={handleChange}
                       required
                      
-                      sx={{ gridColumn: "span 2",background: "#fff6c3"  }}
+                      sx={{ gridColumn: "span 2" }}
                     />
                  
                    <FormControl
@@ -2700,15 +2761,14 @@ const AttInitialvalues={
         ) : (
           false
         )}
-        
         {show == "6" ? (
           <Box m="10px">
             <Formik
-              initialValues={AllDedInitialValues}
+              initialValues={otInitialValue}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
-                  AllDedFNsave(values, resetForm, false);
+                  otFNsave(values, resetForm, false);
                 }, 100);
               }}
             >
@@ -2740,15 +2800,124 @@ const AttInitialvalues={
                     }}
                   >
                     <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
-                    <TextField
-                      name="Date"
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        label="Code"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        label="Description"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                    <Stack
+                      sx={{
+                        gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <img
+                        src={userimg}
+                        style={{ width: "200px", height: "150px" }}
+                      />
+                    </Stack>
+                    <Box sx={{ gridColumn: "span 2" }}>
+                    <Box
+                      height="350px"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          // border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          // borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          // borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          // borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        // checkboxSelection
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" ,gap: "30px"}}
+                  >
+                   <TextField
+                      name="OtDate"
                       type="date"
-                      id="Date"
+                      id="OtDate"
                       label=" Date"
                       inputFormat="YYYY-MM-DD"
                       variant="filled"
                       focused
-                      value={values.ToDate}
+                      value={values.OtDate}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
@@ -2766,8 +2935,10 @@ const AttInitialvalues={
                       value={values.hours}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      sx={{ background: "#fff6c3" }} 
+                    
                       onWheel={(e) => e.target.blur()} 
+                      required
+                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" }, 
@@ -2776,20 +2947,18 @@ const AttInitialvalues={
                         },
                       }}
                     />
-
-  
                       <TextField
                         fullWidth
                         variant="filled"
                         type="text"
                         label="Comments"
                         value={values.Comm}
-                        id="Comm"
+                        id="comments"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
+                        name="comments"
+                        error={!!touched.comments && !!errors.comments}
+                        helperText={touched.comments && errors.comments}
                         sx={{ gridColumn: "span 2" }}
                         focused
                         
@@ -2809,13 +2978,12 @@ const AttInitialvalues={
                         sx={{ gridColumn: "span 2" }}
                         focused
 
-                      />
-                    
-                  
+                      />  
+                  </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="30px" gap={2}>
-                    {/* {YearFlag == "true" ? ( */}
+                  <Box display="flex" justifyContent="end" mt="2px" gap={2}>
+                    {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
                       variant="contained"
@@ -2824,16 +2992,7 @@ const AttInitialvalues={
                     >
                       Save
                     </LoadingButton>
-                    {/* ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" ? ( */}
+                   
                     <Button
                       color="error"
                       variant="contained"
@@ -2847,7 +3006,7 @@ const AttInitialvalues={
                         confirmButtonText: "Confirm" ,
                       }).then((result) => {
                         if (result.isConfirmed) {
-                          AllDedFNsave(values,resetForm,"harddelete");
+                          leaveFNsave(values,resetForm,"harddelete");
                           
                         } else {
                           return;
@@ -2856,11 +3015,7 @@ const AttInitialvalues={
                     >
                       Delete
                     </Button>
-                    {/* ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )} */}
+                   
                     <Button
                       type="reset"
                       color="warning"
@@ -2881,6 +3036,7 @@ const AttInitialvalues={
         ) : (
           false
         )}
+      
         {show == "3" ? (
           <Box m="10px">
             <Formik
@@ -3104,6 +3260,7 @@ const AttInitialvalues={
         ) : (
           false
         )}
+
           {show == "4" ? (
           <Box m="10px">
             <Formik
@@ -3175,7 +3332,7 @@ const AttInitialvalues={
       label="Month"
       value={values.month}
       focused
-      sx={{ gridColumn: "span 2" ,background: "#fff6c3" }}
+      sx={{ gridColumn: "span 2" }}
       onChange={handleChange}
       onBlur={handleBlur}
       select
@@ -3204,7 +3361,7 @@ const AttInitialvalues={
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        sx={{ gridColumn: "span 2",background: "#fff6c3"  }}
+                        sx={{ gridColumn: "span 2" }}
                       />
                        </Box>
                    <Box display="flex" justifyContent="end" mt="20px" gap="20px">
@@ -3287,6 +3444,9 @@ const AttInitialvalues={
         ) : (
           false
         )}
+
+
+        
       </Box>
     </React.Fragment>
   );
