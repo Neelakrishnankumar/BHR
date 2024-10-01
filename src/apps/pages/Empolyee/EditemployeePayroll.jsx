@@ -948,7 +948,7 @@ funMode === "A" && !del
 const otInitialValue={
   code: Data.Code,
   description: Data.Name,
-  OtDate: otdata.OtDate ,
+  OtDate: otdata.Date ,
   NumberOfHours:otdata.NumberOfHours,
   comments:otdata.Comments,
   Status:otdata.Status
@@ -965,7 +965,7 @@ const otInitialValue={
               const idata={
                 //RecordID:leaveData.recordID,
                 RecordID: otdata.RecordID,
-                OtDate: values.OtDate,
+                OtDate: values.Date,
                 NumberOfHours: values.NumberOfHours,
                 Status: values.Status,
                 Comments: values.comments,
