@@ -2986,8 +2986,13 @@ const AttInitialvalues={
                         name="comments"
                         error={!!touched.comments && !!errors.comments}
                         helperText={touched.comments && errors.comments}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
                         
                       />
                     <TextField
@@ -3002,8 +3007,13 @@ const AttInitialvalues={
                         name="Status"
                         error={!!touched.Status && !!errors.Status}
                         helperText={touched.Status && errors.Status}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          }
+                        }}                        focused
 
                       />  
                   </FormControl>
