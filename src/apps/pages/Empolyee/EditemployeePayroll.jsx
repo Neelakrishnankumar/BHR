@@ -37,6 +37,7 @@ import {
   resetTrackingData,
   empAttendance,
   Attendance,
+  AttendanceProcess,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -384,6 +385,8 @@ const EditemployeePayroll = () => {
         dispatch(fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""));
         selectCellRowData({ rowData: {}, mode: "A", field: "" });  
           }
+
+          
         
     
 
@@ -956,8 +959,7 @@ const otInitialValue={
   
   const otFNsave= async(values,resetForm,del)=>{
   setLoading(true);
-  let action=
-  funMode === "A" && !del
+  let action= funMode === "A" && !del
               ? "insert"
               : funMode === "E" && del
               ? "harddelete"
@@ -1139,7 +1141,7 @@ const PAttInitialvalues={
 
     dispatch(empAttendance({data}));
 };
-
+/***********Attendance ************/
 const AttInitialvalues={
   code: Data.Code,
   description: Data.Name,
@@ -1160,7 +1162,38 @@ const AttInitialvalues={
     dispatch(Attendance({data}));
 };
 
+/*Attendance Process Button Sve Functions*/
+// const AttProcessInitialvalues={
+//   code: Data.Code,
+//   description: Data.Name,
+//   Sal: Data.Sal,
+//   month:"",
+//   year:"",
+// }
+  const attendaceProcessFnSave = async (values) => {
+    // toast.success("----response.payload.Msg");
 
+ console.log("month",values.month.toString());
+
+    const data = {
+  Month:values.month.toString(),
+  Year:values.year,
+  EmployeeID: recID
+
+    }
+ 
+    const response =await dispatch(AttendanceProcess({data}));
+    if (response.payload.Status == "Y") {
+     
+      toast.success(response.payload.Msg);
+
+      
+    } else {
+ 
+      toast.error(response.payload.Msg);
+    }
+};
+/*end of the Process button onclick */
   
  const getFileChange = async (event) => {
     
@@ -1391,7 +1424,7 @@ const AttInitialvalues={
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         required
@@ -1415,7 +1448,7 @@ const AttInitialvalues={
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         inputProps={{ maxLength: 90 }}
@@ -1437,7 +1470,7 @@ const AttInitialvalues={
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}
                         focused
@@ -1458,7 +1491,7 @@ const AttInitialvalues={
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}
                         focused
@@ -1605,7 +1638,7 @@ const AttInitialvalues={
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         inputProps={{ maxLength: 90 }}
@@ -1802,6 +1835,12 @@ const AttInitialvalues={
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
 
                       <TextField
@@ -1814,6 +1853,12 @@ const AttInitialvalues={
                         label="Name"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     </FormControl>
                     <Stack
@@ -1945,6 +1990,12 @@ const AttInitialvalues={
                         label="Salary Category"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     <TextField
                         fullWidth
@@ -1956,6 +2007,12 @@ const AttInitialvalues={
                         label="Type"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     
                   <TextField
@@ -1966,13 +2023,19 @@ const AttInitialvalues={
                         name="value"
                         value={values.value}
                         label="Value"
-                        sx={{ 
-                          gridColumn: "span 2", 
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                          }
+                        sx={{ background: "#fff6c3" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
                         }}
+                        // sx={{ 
+                        //   gridColumn: "span 2", 
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        //   }
+                        // }}
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -1988,6 +2051,18 @@ const AttInitialvalues={
                         label="Effective Value"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{ background: "#fff6c3" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        // sx={{
+                        //   backgroundColor: '#ffffff', // Change to your desired background color
+                        //   '& .MuiFilledInput-root': {
+                        //     backgroundColor: '#f5f5f5', // For the filled variant
+                        //   },
+                        // }}
                       />
                        <TextField
                     name="sortorder"
@@ -2139,6 +2214,12 @@ const AttInitialvalues={
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
 
                       <TextField
@@ -2151,6 +2232,12 @@ const AttInitialvalues={
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     </FormControl>
                     <Stack
@@ -2282,6 +2369,12 @@ const AttInitialvalues={
                         label="Salary Category"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     <TextField
                         fullWidth
@@ -2293,6 +2386,12 @@ const AttInitialvalues={
                         label="Type"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     
                   <TextField
@@ -2305,11 +2404,17 @@ const AttInitialvalues={
                         label="Value"
                         sx={{ 
                           gridColumn: "span 2", 
-                          backgroundColor: "#ffffff", // Set the background to white
+                          backgroundColor: "#fff6c3", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#fff6c3", // Ensure the filled variant also has a white background
                           }
                         }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -2325,6 +2430,12 @@ const AttInitialvalues={
                         label="Effective Value"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{ background: "#fff6c3" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
                        <TextField
                     name="sortorder"
@@ -2478,6 +2589,13 @@ const AttInitialvalues={
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
+
                       />
 
                       <TextField
@@ -2490,6 +2608,12 @@ const AttInitialvalues={
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     </FormControl>
                     <Stack
@@ -2635,7 +2759,12 @@ const AttInitialvalues={
                       <FormControl
                     focused
                     variant="filled"
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",
+                      backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: '#f5f5f5 ', // For the filled variant
+                      },
+                     }}
                   >
                     <InputLabel variant="filled" id="LeaveCategory">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
                     <Select
@@ -2651,6 +2780,12 @@ const AttInitialvalues={
                       name="LeaveCategory"
                       required
                       focused
+                      sx={{
+                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                        '& .MuiFilledInput-root': {
+                          backgroundColor: '#f5f5f5 ', // For the filled variant
+                        },
+                      }}
                     >
                       <MenuItem value="FH">First Half</MenuItem>
                       <MenuItem value="SH">Second Half</MenuItem> 
@@ -2670,8 +2805,14 @@ const AttInitialvalues={
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
-                     
-                      sx={{ gridColumn: "span 2" }}
+                      sx={{
+                        gridColumn: "span 2",
+                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                        '& .MuiFilledInput-root': {
+                          backgroundColor: '#f5f5f5 ', // For the filled variant
+                        },
+                      }}
+                      
                     />
                     <TextField
                       name="ToDate"
@@ -2685,14 +2826,26 @@ const AttInitialvalues={
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
-                     
-                      sx={{ gridColumn: "span 2" }}
+                      sx={{
+                        gridColumn: "span 2",
+                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                        '& .MuiFilledInput-root': {
+                          backgroundColor: '#f5f5f5 ', // For the filled variant
+                        },
+                      }}
+                
                     />
                  
                    <FormControl
                     focused
                     variant="filled"
-                    sx={{ gridColumn: "span 2" }}
+                    sx={{ gridColumn: "span 2",
+                      backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: '#f5f5f5 ', // For the filled variant
+                      },
+                     }}
+                    
                   >
                     <InputLabel id="Type">Status</InputLabel>
                     <Select
@@ -2840,6 +2993,12 @@ const AttInitialvalues={
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
 
                       <TextField
@@ -2852,6 +3011,12 @@ const AttInitialvalues={
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
                       />
                     </FormControl>
                     <Stack
@@ -2862,6 +3027,7 @@ const AttInitialvalues={
                         alignItems: "center",
                         position: "relative",
                         right: "0px",
+                        
                       }}
                     >
                       <img
@@ -2952,7 +3118,12 @@ const AttInitialvalues={
                       onChange={handleChange}
                       required
                      
-                      sx={{ gridColumn: "span 2" }}
+                      sx={{ gridColumn: "span 2",
+                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                        '& .MuiFilledInput-root': {
+                          backgroundColor: '#f5f5f5 ', // For the filled variant
+                        },
+                       }}
                     />
 
                     <TextField
@@ -2991,10 +3162,10 @@ const AttInitialvalues={
                         helperText={touched.comments && errors.comments}
                         sx={{ 
                           gridColumn: "span 2", 
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                          }
+                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                      '& .MuiFilledInput-root': {
+                        backgroundColor: '#f5f5f5 ', // For the filled variant
+                      },
                         }}                        focused
                         
                       />
@@ -3012,10 +3183,10 @@ const AttInitialvalues={
                         helperText={touched.Status && errors.Status}
                         sx={{ 
                           gridColumn: "span 2", 
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                          }
+                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#f5f5f5 ', // For the filled variant
+                          },
                         }}                        focused
 
                       />  
@@ -3133,7 +3304,12 @@ const AttInitialvalues={
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",
+                          backgroundColor: '#e0e0e0 ', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0 ', // For the filled variant
+                          },
+                         }}
                       />
                        <TextField
                         fullWidth
@@ -3148,6 +3324,11 @@ const AttInitialvalues={
                         error={!!touched.Sal && !!errors.Sal}
                         helperText={touched.Sal && errors.Sal}
                         sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                         focused
                         onWheel={(e) => e.target.blur()} 
                         onInput={(e) => {
@@ -3166,7 +3347,12 @@ const AttInitialvalues={
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",
+                          backgroundColor: '#e0e0e0 ', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0 ', // For the filled variant
+                          },
+                         }}
                       />
                       <TextField
       fullWidth
@@ -3177,6 +3363,12 @@ const AttInitialvalues={
       label="Month"
       value={values.month}
       focused
+      sx={{
+        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+        '& .MuiFilledInput-root': {
+          backgroundColor: '#f5f5f5 ', // For the filled variant
+        },
+      }}
       // sx={{ gridColumn: "span 2" }}
       onChange={handleChange}
       onBlur={handleBlur}
@@ -3207,6 +3399,12 @@ const AttInitialvalues={
       focused
       onChange={handleChange}
       onBlur={handleBlur}
+      sx={{
+        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+        '& .MuiFilledInput-root': {
+          backgroundColor: '#f5f5f5 ', // For the filled variant
+        },
+      }}
       // sx={{ gridColumn: "span 2" }}
     />
   </Box>
@@ -3214,7 +3412,9 @@ const AttInitialvalues={
               <Button type="submit" variant="contained" color="secondary">
                 APPLY
               </Button>
-              <Button type="reset" variant="contained" color="primary">
+              <Button 
+                onClick={() => attendaceProcessFnSave(values)}
+              type="reset" variant="contained" color="primary">
                 PROCESS
               </Button>
               <Button type="reset" variant="contained" color="error">
@@ -3260,7 +3460,7 @@ const AttInitialvalues={
                           rows={AttendanceData}
                           columns={AttColumn}
                           disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
+                          getRowId={(row) => row.SLNO}
                           pageSize={pageSize}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
@@ -3348,7 +3548,13 @@ const AttInitialvalues={
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        // sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",
+                          backgroundColor: '#e0e0e0 ', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0 ', // For the filled variant
+                          },
+                         }}
                       />
 
                       <TextField
@@ -3361,7 +3567,13 @@ const AttInitialvalues={
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        // sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",
+                          backgroundColor: '#e0e0e0 ', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0 ', // For the filled variant
+                          },
+                         }}
                       />
                      <TextField
       fullWidth
@@ -3372,7 +3584,13 @@ const AttInitialvalues={
       label="Month"
       value={values.month}
       focused
-      sx={{ gridColumn: "span 2" }}
+      // sx={{ gridColumn: "span 2" }}
+      sx={{ gridColumn: "span 2",
+        backgroundColor: '#f5f5f5 ', // Change to your desired background color
+        '& .MuiFilledInput-root': {
+          backgroundColor: '#f5f5f5 ', // For the filled variant
+        },
+       }}
       onChange={handleChange}
       onBlur={handleBlur}
       select
@@ -3401,7 +3619,13 @@ const AttInitialvalues={
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        sx={{ gridColumn: "span 2" }}
+                        // sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",
+                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#f5f5f5 ', // For the filled variant
+                          },
+                         }}
                       />
                        </Box>
                    <Box display="flex" justifyContent="end" mt="20px" gap="20px">

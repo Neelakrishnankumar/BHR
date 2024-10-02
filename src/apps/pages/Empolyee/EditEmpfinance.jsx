@@ -338,7 +338,7 @@ const EditEmpfinance = () => {
                       inputFormat="YYYY-MM-DD"
                       error={!!touched.date && !!errors.date}
                       helperText={touched.date && errors.date}
-                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
 
                       autoFocus
                     />
