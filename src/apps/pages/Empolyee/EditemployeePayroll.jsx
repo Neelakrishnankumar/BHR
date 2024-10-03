@@ -942,8 +942,8 @@ funMode === "A" && !del
             }
 }
 
-/*OT SAVE FUNCTION*/
-//-------------------------------------LEAVE SAVE FUNCTION---------------------------------------------//
+/*-------------------------------------LOT SAVE FUNCTION---------------------------------------------*/
+
 
 const otInitialValue={
   code: Data.Code,
@@ -1800,6 +1800,7 @@ const AttInitialvalues={
                         name="code"
                         value={values.code}
                         label="Code"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -1812,6 +1813,7 @@ const AttInitialvalues={
                         name="description"
                         value={values.description}
                         label="Name"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -1922,6 +1924,7 @@ const AttInitialvalues={
                           value={ADLookupData.adDesc}
                           focused
                           required
+                          background="f5f5f5"
                           fullWidth
                           inputProps={{ tabIndex: "-1" }}
                         />
@@ -2135,6 +2138,7 @@ const AttInitialvalues={
                         type="text"
                         id="code"
                         name="code"
+                        background="#e0e0e0"
                         value={values.code}
                         label="Code"
                         focused
@@ -2149,6 +2153,7 @@ const AttInitialvalues={
                         name="description"
                         value={values.description}
                         label="Description"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -2258,6 +2263,7 @@ const AttInitialvalues={
                           variant="filled"
                           value={ADLookupData.adDesc}
                           focused
+                          background="f5f5f5"
                           required
                           fullWidth
                           inputProps={{ tabIndex: "-1" }}
@@ -2476,6 +2482,7 @@ const AttInitialvalues={
                         name="code"
                         value={values.code}
                         label="Code"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -2488,6 +2495,7 @@ const AttInitialvalues={
                         name="description"
                         value={values.description}
                         label="Description"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -2607,6 +2615,7 @@ const AttInitialvalues={
                       id="outlined-basic"
                       label="Leave Type"
                       variant="filled"
+                      background="f5f5f5"
                       value={selectLETLookupData.letlookupCode}
                       focused
                       required
@@ -2641,6 +2650,7 @@ const AttInitialvalues={
                     <Select
                       labelId="demo-simple-select-filled-label"
                       fullWidth
+                      background="f5f5f5"
                       variant="filled"
                       type="text"
                       // label="LeaveCategory"
@@ -2699,6 +2709,7 @@ const AttInitialvalues={
                       labelId="demo-simple-select-filled-label"
                       id="Type"
                       name="Type"
+                      background="f5f5f5"
                       value={values.Type}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -2838,6 +2849,7 @@ const AttInitialvalues={
                         name="code"
                         value={values.code}
                         label="Code"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -2850,6 +2862,7 @@ const AttInitialvalues={
                         name="description"
                         value={values.description}
                         label="Description"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                       />
@@ -2991,14 +3004,14 @@ const AttInitialvalues={
                         helperText={touched.comments && errors.comments}
                         sx={{ 
                           gridColumn: "span 2", 
-                          backgroundColor: "#ffffff", // Set the background to white
+                          backgroundColor: "#f5f5f5", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         
                       />
-                    <TextField
+                    {/* <TextField
                         fullWidth
                         variant="filled"
                         type="text"
@@ -3016,9 +3029,39 @@ const AttInitialvalues={
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                           }
-                        }}                        focused
+                        }}                       
 
-                      />  
+                      />   */}
+                      <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="Status">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="Status"
+                      name="Status"
+                      value={values.Status}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.Status && !!errors.Status}
+                        helperText={touched.Status && errors.Status}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#f5f5f5",
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", 
+                          }
+                        }}     
+                    >
+                      <MenuItem value="A">Time and a Half</MenuItem>
+                      <MenuItem value="R">Double Time</MenuItem> 
+                      <MenuItem value="D">Flexible Scheduling</MenuItem>
+                      <MenuItem value="S">Shift Swaps</MenuItem>
+                    
+                    </Select>
+                  </FormControl>  
                   </FormControl>
                     </FormControl>
                   </Box>
@@ -3130,7 +3173,8 @@ const AttInitialvalues={
                         id="code"
                         name="code"
                         value={values.code}
-                        label="Code"
+                        label= "Code"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
                         sx={{ gridColumn: "span 2" }}
@@ -3164,52 +3208,53 @@ const AttInitialvalues={
                         name="description"
                         value={values.description}
                         label="Description"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2"}}
                       />
                       <TextField
-      fullWidth
-      variant="filled"
-      type="month"
-      id="month"
-      name="month"
-      label="Month"
-      value={values.month}
-      focused
-      // sx={{ gridColumn: "span 2" }}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      select
-    >
-       <MenuItem value={"1"}>1</MenuItem>
-      <MenuItem value={"2"}>2</MenuItem>
-      <MenuItem value={"3"}>3</MenuItem>
-      <MenuItem value={"4"}>4</MenuItem>
-      <MenuItem value={"5"}>5</MenuItem>
-      <MenuItem value={"6"}>6</MenuItem>
-      <MenuItem value={"7"}>7</MenuItem>
-      <MenuItem value={"8"}>8</MenuItem>
-      <MenuItem value={"9"}>9</MenuItem>
-      <MenuItem value={"10"}>10</MenuItem>
-      <MenuItem value={"11"}>11</MenuItem>
-      <MenuItem value={"12"}>12</MenuItem>
-      </TextField>
-    <TextField
-      fullWidth
-      variant="filled"
-      type="number"
-      id="year"
-      name="year"
-      label="Year"
-      value={values.year}
-      inputProps={{ min: "1900", max: "2100", step: "1" }}
-      focused
-      onChange={handleChange}
-      onBlur={handleBlur}
-      // sx={{ gridColumn: "span 2" }}
-    />
-  </Box>
+          fullWidth
+          variant="filled"
+          type="month"
+          id="month"
+          name="month"
+          label="Month"
+          value={values.month}
+          focused
+          // sx={{ gridColumn: "span 2" }}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          select
+        >
+          <MenuItem value={"1"}>1</MenuItem>
+          <MenuItem value={"2"}>2</MenuItem>
+          <MenuItem value={"3"}>3</MenuItem>
+          <MenuItem value={"4"}>4</MenuItem>
+          <MenuItem value={"5"}>5</MenuItem>
+          <MenuItem value={"6"}>6</MenuItem>
+          <MenuItem value={"7"}>7</MenuItem>
+          <MenuItem value={"8"}>8</MenuItem>
+          <MenuItem value={"9"}>9</MenuItem>
+          <MenuItem value={"10"}>10</MenuItem>
+          <MenuItem value={"11"}>11</MenuItem>
+          <MenuItem value={"12"}>12</MenuItem>
+          </TextField>
+        <TextField
+          fullWidth
+          variant="filled"
+          type="number"
+          id="year"
+          name="year"
+          label="Year"
+          value={values.year}
+          inputProps={{ min: "1900", max: "2100", step: "1" }}
+          focused
+          onChange={handleChange}
+          onBlur={handleBlur}
+          // sx={{ gridColumn: "span 2" }}
+        />
+      </Box>
                    <Box display="flex" justifyContent="end" mt="20px" gap="20px">
               <Button type="submit" variant="contained" color="secondary">
                 APPLY
@@ -3346,9 +3391,10 @@ const AttInitialvalues={
                         name="code"
                         value={values.code}
                         label="Code"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",background: "#e0e0e0" }}
                       />
 
                       <TextField
@@ -3359,9 +3405,10 @@ const AttInitialvalues={
                         name="description"
                         value={values.description}
                         label="Description"
+                        background="#e0e0e0"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ gridColumn: "span 2" }}
+                        sx={{ gridColumn: "span 2",background: "#e0e0e0" }}
                       />
                      <TextField
       fullWidth
