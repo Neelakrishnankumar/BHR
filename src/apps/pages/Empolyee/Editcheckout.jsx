@@ -419,7 +419,7 @@ const Editcheckout = () => {
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
+                    sx={{ gridColumn: "span 2",background: "#f5f5f5" }}
                   />
                   <FormControl
                     focused
@@ -452,7 +452,7 @@ const Editcheckout = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2",background: "#fff6c3" }}
+                    sx={{ gridColumn: "span 2",background: "#f5f5f5" }}
                     variant="filled"
                   />
                   <TextField
@@ -469,9 +469,9 @@ const Editcheckout = () => {
                     helperText={touched.comment && errors.comment}
                     sx={{ 
                       gridColumn: "span 2", 
-                      backgroundColor: "#ffffff", // Set the background to white
+                      backgroundColor: "#f5f5f5", // Set the background to white
                       "& .MuiFilledInput-root": {
-                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
                     }}                  />
                 </Box>
