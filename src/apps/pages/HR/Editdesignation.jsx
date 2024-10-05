@@ -208,7 +208,7 @@ const Editdesignation = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         }
                       }}
                       autoFocus
@@ -229,7 +229,7 @@ const Editdesignation = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         }
                       }}
                       autoFocus

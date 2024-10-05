@@ -1372,7 +1372,8 @@ const Sidebars = () => {
                 <Chip
                   color="primary"
                   variant="outlined"
-                  sx={{ width: "100%", background: "#ffffff" }}
+                  // sx={{ width: "100%", background: "#ffffff" }}
+                  sx={{ width: "100%", background: "#f5f5f5 " }}
                   size="medium"
                   label="Text"
                 />
