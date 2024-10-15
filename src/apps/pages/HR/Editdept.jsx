@@ -272,7 +272,7 @@ const Editdept = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         }
                       }}
                       inputProps={{ maxLength: 8 }}
@@ -301,7 +301,7 @@ const Editdept = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         }
                       }}
                       required
@@ -332,7 +332,7 @@ const Editdept = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         }
                       }}                      focused
                       inputProps={{ maxLength: 90 }}

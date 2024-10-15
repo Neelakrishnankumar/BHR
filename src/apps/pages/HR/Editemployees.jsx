@@ -323,18 +323,10 @@ const Editemployee = () => {
   };
   // **********Save Function*****************
   const fnSave = async (values,del) => {
-  //   setLoading(true);
-  //   setIni(false);
-  //   if (values.Code == "") {
-  //     toast.error("Please Enter Code");
-  //     return;
-  //   }
-  //   if (values.Name == "") {
-  //     toast.error("Please Enter Description");
-  //     return;
-  //   }
-  let action =
-  mode === "A" && !del
+    setLoading(true);
+
+    
+  let action = mode === "A" && !del
     ? "insert"
     : mode === "E" && del
     ? "harddelete"
@@ -363,21 +355,24 @@ const Editemployee = () => {
       GateRecID: 0,
       WeekOff:0
     };
-    var type = "";
+ 
 
-    if (mode == "A") {
-      type = "insert";
-    } else {
-      type = "update";
-    }
 
-    const data = await dispatch(postApidatawol(accessID, type, saveData));
+    const data = await dispatch(postData({ accessID, action, idata:saveData}));
+    // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       setLoading(false);
-      navigate(
-        `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
-      );
+      if(del){
+        navigate(
+          `/Apps/TR027/Employees`
+        );
+      }else{
+        navigate(
+          `/Apps/TR027/Employees/EditEmployees/${data.payload.Recid}/E`
+        );
+      }
+
     } else {
       toast.error(data.payload.Msg);
       setLoading(false);
@@ -1259,8 +1254,8 @@ const Fndeployment = async (values, resetForm,del) => {
               enableReinitialize={true}
               validationSchema={basicSchema}
             >
-              {({ values, errors, touched, handleBlur, handleChange }) => (
-                <form>
+              {({ values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
+                <form onSubmit={handleSubmit}>
                   <Box
                     display="grid"
                     gap="30px"
@@ -1354,7 +1349,7 @@ const Fndeployment = async (values, resetForm,del) => {
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         required
@@ -1378,7 +1373,7 @@ const Fndeployment = async (values, resetForm,del) => {
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         inputProps={{ maxLength: 90 }}
@@ -1400,7 +1395,7 @@ const Fndeployment = async (values, resetForm,del) => {
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}
                         focused
@@ -1421,7 +1416,7 @@ const Fndeployment = async (values, resetForm,del) => {
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}
                         focused
@@ -1568,7 +1563,7 @@ const Fndeployment = async (values, resetForm,del) => {
                           gridColumn: "span 2", 
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                           }
                         }}                        focused
                         inputProps={{ maxLength: 90 }}
@@ -1639,7 +1634,7 @@ const Fndeployment = async (values, resetForm,del) => {
                         type="submit"
                         loading={loading}
                         onClick={() => {
-                          fnSave(values);
+                          fnSave(values,false);
                         }}
                       >
                         Save
@@ -1658,8 +1653,21 @@ const Fndeployment = async (values, resetForm,del) => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        fnSave(values,  "harddelete");
-                      }}
+                        Swal.fire({
+                          title: `Do you want Delete?`,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm" ,
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            fnSave(values,true);
+                            
+                          } else {
+                            return;
+                          }
+                        }); }}
                     >
                       Delete
                     </Button>
@@ -1668,6 +1676,9 @@ const Fndeployment = async (values, resetForm,del) => {
                       color="error"
                       variant="contained"
                       disabled={true}
+                      //  color="error"
+                      
+
                     >
                       Delete
                     </Button>
@@ -2028,13 +2039,13 @@ const Fndeployment = async (values, resetForm,del) => {
         {show == "1" ? (
           <Box m="20px" sx={{ m: 2 }}>
             <Formik
-              // onSubmit={handleFormSubmit}
+              
               initialValues={initialValues}
               enableReinitialize={ini}
               validationSchema={basicSchema}
             >
-              {({ values, errors, touched, handleBlur, handleChange }) => (
-                <form>
+              {({ values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
+                <form >
                   <Box
                     display="grid"
                     gap="30px"

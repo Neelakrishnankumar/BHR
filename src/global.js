@@ -122,6 +122,7 @@ const initialState = {
     CustomerPriceorderQtyUrl:'https://lgems.beyondexs.com/api/InternalorderController.php',
     employeeattendanceUrl:"https://lgems.beyondexs.com/api/getempattendancehistory.php",
     attendanceUrl:"https://lgems.beyondexs.com/api/getempattendance.php",
+    attendanceprocessUrl:"https://lgems.beyondexs.com/api/EmpAttendanceHistoryController.php",
     LeaveTypeurl: "https://beyondexs.com/Trinity/api/APIController.php"
   };
 

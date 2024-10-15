@@ -444,7 +444,7 @@ const Editfunction = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
                       }}
                       autoFocus
@@ -465,7 +465,7 @@ const Editfunction = () => {
                         gridColumn: "span 2", 
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
                       }}
                       autoFocus
@@ -475,6 +475,7 @@ const Editfunction = () => {
                       focused
                       variant="filled"
                       sx={{ gridColumn: "span 2", background: "#ffffff"  }}
+                      // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                     >
                       <InputLabel id="status">Categories</InputLabel>
                       <Select
