@@ -450,6 +450,7 @@ const Editcheckin = () => {
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     sx={{ gridColumn: "span 2" ,background: "#f5f5f5"}}
+                    // sx={{ gridColumn: "span 2" ,background: "#f5f5f5"}}
                   />
 
                   <FormControl
@@ -500,7 +501,7 @@ const Editcheckin = () => {
                     helperText={touched.comment && errors.comment}
                     sx={{ 
                       gridColumn: "span 2", 
-                      backgroundColor: "#ffffff", // Set the background to white
+                      backgroundColor: "#f5f5f5", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
