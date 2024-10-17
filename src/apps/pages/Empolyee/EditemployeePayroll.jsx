@@ -544,7 +544,7 @@ const EditemployeePayroll = () => {
       
     },
     {
-      field: "EmployeeName",
+      field: "Name",
       headerName: "Name",
       width:150,
     },
@@ -554,187 +554,193 @@ const EditemployeePayroll = () => {
     //   flex: 1,
     // },
     {
-      field: "Day1Status",
+      field: "Day1",
       headerName: "1",
       flex: 1,
     },
     {
-      field: "Day2Status",
+      field: "Day2",
       headerName: "2",
       flex: 1,
     },
     {
-      field: "Day3Status",
+      field: "Day3",
       headerName: "3",
       flex: 1,
     },
     {
-      field: "Day4Status",
+      field: "Day4",
       headerName: "4",
       flex: 1,
     },
     {
-      field: "Day5Status",
+      field: "Day5",
       headerName: "5",
       flex: 1,
     },
     {
-      field: "Day6Status",
+      field: "Day6",
       headerName: "6",
       flex: 1,
     },
     {
-      field: "Day7Status",
+      field: "Day7",
       headerName: "7",
       flex: 1,
     },
     {
-      field: "Day8Status",
+      field: "Day8",
       headerName: "8",
       flex: 1,
     },
     {
-      field: "Day9Status",
+      field: "Day9",
       headerName: "9",
       flex: 1,
     },
     {
-      field: "Day10Status",
+      field: "Day10",
       headerName: "10",
       flex: 1,
     },
     {
-      field: "Day11Status",
+      field: "Day11",
       headerName: "11",
       flex: 1,
     },
     {
-      field: "Day12Status",
+      field: "Day12",
       headerName: "12",
       flex: 1,
     },
     {
-      field: "Day13Status",
+      field: "Day13",
       headerName: "13",
       flex: 1,
     },
     {
-      field: "Day14Status",
+      field: "Day14",
       headerName: "14",
       flex: 1,
     },
     {
-      field: "Day15Status",
+      field: "Day15",
       headerName: "15",
       flex: 1,
     },
 
     {
-      field: "Day16Status",
+      field: "Day16",
       headerName: "16",
       flex: 1,
     },
     {
-      field: "Day17Status",
+      field: "Day17",
       headerName: "17",
       flex: 1,
     },{
-      field: "Day18Status",
+      field: "Day18",
       headerName: "18",
       flex: 1,
     },
     {
-      field: "Day19Status",
+      field: "Day19",
       headerName: "19",
       flex: 1,
     },
     {
-      field: "Day20Status",
+      field: "Day20",
       headerName: "20",
       flex: 1,
     },
    
     {
-      field: "Day21Status",
+      field: "Day21",
       headerName: "21",
       flex: 1,
     },
 
     {
-      field: "Day22Status",
+      field: "Day22",
       headerName: "22",
       flex: 1,
     },
 
     {
-      field: "Day23Status",
+      field: "Day23",
       headerName: "23",
       flex: 1,
     },
 
     {
-      field: "Day24Status",
+      field: "Day24",
       headerName: "24",
       flex: 1,
     },
 
     {
-      field: "Day25Status",
+      field: "Day25",
       headerName: "25",
       flex: 1,
     },
 
     {
-      field: "Day26Status",
+      field: "Day26",
       headerName: "26",
       flex: 1,
     },
 
     {
-      field: "Day27Status",
+      field: "Day27",
       headerName: "27",
       flex: 1,
     },
     {
-      field: "Day28Status",
+      field: "Day28",
       headerName: "28",
       flex: 1,
     },
 
     {
-      field: "Day29Status",
+      field: "Day29",
       headerName: "29",
       flex: 1,
     },
 
     {
-      field: "Day30Status",
+      field: "Day30",
       headerName: "30",
       flex: 1,
     },
 
     {
-      field: "Day31Status",
+      field: "Day31",
       headerName: "31",
       flex: 1,
     },
 
     {
-      field: "TotalPresent",
+      field: "Present",
       headerName: "Present",
      
     },
-    {
-      field: "TotalAbsent",
-      headerName: "Absent",
+    // {
+    //   field: "Absent",
+    //   headerName: "Absent",
     
-    }, {
-      field: "TotalLeave",
+    // },
+     {
+      field: "Leave",
       headerName: "Leave",
      
     },
     {
-      field: "TotalOT",
+      field: "Weekoff",
+      headerName: "weekoff",
+     
+    },
+    {
+      field: "Total",
       headerName: "Total",
       
     },
@@ -1135,6 +1141,7 @@ const PAttInitialvalues={
     const data = {
   Month:values.month.toString(),
   Year:values.year,
+  EmployeeID: recID
   
     }
  
@@ -3678,7 +3685,7 @@ const AttInitialvalues={
                   rows={empAttendanceData}
                   columns={column}
                   disableSelectionOnClick
-                  getRowId={(row) => row.RecordID}
+                  getRowId={(row) => row.SLNO}
                   pageSize={pageSize}
                   onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                   rowsPerPageOptions={[5, 10, 20]}

@@ -28,6 +28,7 @@ import { useHref, Link } from "react-router-dom";
 // import avatar from "../../assets/img/avatar.jpg";
 import { tokens } from "../../Theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
@@ -923,7 +924,7 @@ const child = {
         {
           name: "Employees",
           id: 46,
-          url: "./TR027/EmployeePayroll",
+          url: "./TR027/Employee Payroll",
           icon: (
             <Tooltip title="Employees">
                 <PeopleAltIcon color="info" />
@@ -1306,12 +1307,19 @@ const Sidebars = () => {
                 ></Avatar> */}
                 <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography>
                 
-                <IconButton
+                {/* <IconButton
                   onClick={
                     broken ? () => toggleSidebar() : () => collapseSidebar()
                   }
                 >
                   <CloseOutlinedIcon />
+                </IconButton> */}
+                  <IconButton
+                  onClick={
+                    broken ? () => toggleSidebar() : () => collapseSidebar()
+                  }
+                >
+                  <ArrowBackIcon/>
                 </IconButton>
               </Box>
             )}
