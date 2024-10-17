@@ -141,6 +141,7 @@ import {
                 id="outlined-basic"
                 label="Company"
                 variant="filled"
+                background="#f5f5f5"
                 focused
                 required
                 fullWidth
@@ -158,6 +159,7 @@ import {
               id="department"
               name="department"
               label="Department"
+              background="#e0e0e0"
               focused
               inputProps={{ readOnly: true }}
             />
@@ -168,6 +170,7 @@ import {
               id="type"
               name="payroll"
               label="Payroll"
+              background="#e0e0e0"
               focused
               inputProps={{ readOnly: true }}
             />
