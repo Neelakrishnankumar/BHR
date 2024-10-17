@@ -128,6 +128,12 @@ const initialState = {
     attendanceprocessUrl:"https://lgems.beyondexs.com/api/EmpAttendanceHistoryController.php",
     LeaveTypeurl: "https://beyondexs.com/Trinity/api/APIController.php",
 
+   
+   
+   
+   
+   
+   
     listViewurl: 'http://cafemgr.benmoredata.com/api/wslistview_mysql.php',
     apiUrl :'http://cafemgr.benmoredata.com/api/APIController.php',
   };
