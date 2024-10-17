@@ -63,12 +63,12 @@ const initialState = {
   //   CustomerPriceorderQtyUrl:'http://bgems.benmoredata.com/api/InternalorderController.php',
  
   
-    listViewurl :'https://lgems.beyondexs.com/api/wslistview_mysql.php',
+    // listViewurl :'https://lgems.beyondexs.com/api/wslistview_mysql.php',
     loginUrl:'https://lgems.beyondexs.com/api/LController.php',
     authUrl:'https://lgems.beyondexs.com/api/auth.php',
     comboUrl:'https://lgems.beyondexs.com/api/APIController.php',
-    apiUrl :'https://lgems.beyondexs.com/api/APIController.php',
-    imgUploadUrl:'https://lgems.beyondexs.com/imgup.php',
+   // apiUrl :'https://lgems.beyondexs.com/api/APIController.php',
+   imgUploadUrl:'https://lgems.beyondexs.com/imgup.php',
     imageUrl:'https://lgems.beyondexs.com/uploads/images/',
     imageNameUpdateUrl:'https://lgems.beyondexs.com/api/CMController.php',
     attachmentUrl:'https://lgems.beyondexs.com/uploads/attachments/',
@@ -120,10 +120,16 @@ const initialState = {
     PurchaseOrderParameterUrl:'https://lgems.beyondexs.com/api/APIController.php',
     PurchaseorderratingUrl:'https://lgems.beyondexs.com/api/ParametergetController.php',
     CustomerPriceorderQtyUrl:'https://lgems.beyondexs.com/api/InternalorderController.php',
+
     employeeattendanceUrl:"https://lgems.beyondexs.com/api/getempattendancehistory.php",
+    
+    payrollattendanceUrl: "https://lgems.beyondexs.com/api/PayrollAttendanceController.php",
     attendanceUrl:"https://lgems.beyondexs.com/api/getempattendance.php",
     attendanceprocessUrl:"https://lgems.beyondexs.com/api/EmpAttendanceHistoryController.php",
-    LeaveTypeurl: "https://beyondexs.com/Trinity/api/APIController.php"
+    LeaveTypeurl: "https://beyondexs.com/Trinity/api/APIController.php",
+
+    listViewurl: 'http://cafemgr.benmoredata.com/api/wslistview_mysql.php',
+    apiUrl :'http://cafemgr.benmoredata.com/api/APIController.php',
   };
 
 export const getUrlSlice = createSlice({

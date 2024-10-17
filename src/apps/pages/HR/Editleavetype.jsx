@@ -88,7 +88,7 @@ import {
       code: data.Code,
       name: data.Name,
       leavetypecategories: data.LeaveTypeCategories,
-      sortorder: data.SortOrder,
+      sortorder: data.Sortorder,
       disable: data.Disable === "Y" ? true : false,
     };
   
@@ -109,7 +109,7 @@ import {
         Code: values.code,
         Name: values.name,
         LeaveTypeCategories: values.leavetypecategories,
-        SortOrder: values.sortorder,
+        Sortorder: values.sortorder,
         Disable: isCheck,
         // Finyear,
         // CompanyID,
