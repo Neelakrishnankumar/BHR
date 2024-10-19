@@ -72,8 +72,11 @@ const EditSalaryComponent = () => {
 
   const InitialValue = {
     description: data.Name,
-    type: data.Type,
-    category: data.Category == "Allowance" ? "A" : "D",
+    type: data.Type == "Percentage of basic salary"? "FS" :
+          data.Type == "Fixed"? "FX" :
+          data.Type == "policy"? "PC" : "",
+    category: data.Category == "Allowance" ? "A" :
+              data.Category == "Deduction" ? "D": "",
     sortOrder: data.Sortorder,     
     disable: data.Disable === "Y" ? true : false,
   };
