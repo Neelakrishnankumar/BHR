@@ -118,56 +118,60 @@ const Login = () => {
       setLoading(false);
       return;
     }
-    //  const data = await dispatch(fetchApidata(values.username,values.password,values.company,values.year));
-    const idata = {
-      username: values.username,
-      password: values.password,
-      yearrecordid: values.year,
-      companyrecordid: values.company,
-    };
-    const data = await dispatch(authentication({ idata }));
-    console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
-
-    if (data.payload.status == 200) {
-      var loginrecordID = data.payload.Data.Recordid;
-      var company = data.payload.Data.Company;
-      var year = data.payload.Data.Year;
-      var YearFlag = data.payload.Data.YearFlag;
-      var CompanyRecordid = data.payload.Data.CompanyRecordid;
-      var stockflag = data.payload.Data.Process;
-      var Cifbysea = data.payload.Data.Cifbysea;
-      var Cifbyair = data.payload.Data.Cifbyair;
-      var Fob = data.payload.Data.Fob;
-      var Overhead = data.payload.Data.Overhead;
-      var YearRecorid = data.payload.Data.YearRecorid;
-      var Groupaccess = data.payload.Data.Groupaccess;
-      var UserName = data.payload.Data.Name;
-      var labourCharge = data.payload.Data.Labourcharges;
-
-      var Modules = data.payload.Data.Modules;
-
+     const data = await dispatch(fetchApidata(values.username,values.password,values.company,values.year));
+    // const idata = {
+    //   username: values.username,
+    //   password: values.password,
+    //   yearrecordid: values.year,
+    //   companyrecordid: values.company,
+    // };
+    // const data = await dispatch(authentication({ idata }));
+    // console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
+    var loginrecordID = data.payload.apiResponse.Recordid
+    //  var UserName = data.payload.apiResponse.Name
+    
       sessionStorage.setItem("loginRecid", loginrecordID);
-      sessionStorage.setItem("UserName", UserName);
-      sessionStorage.setItem("labourCharge", labourCharge);
-      sessionStorage.setItem("company", company);
-      sessionStorage.setItem("year", year);
-      sessionStorage.setItem("YearFlag", YearFlag);
-      sessionStorage.setItem("compID", CompanyRecordid);
-      sessionStorage.setItem("stockflag", stockflag);
-      sessionStorage.setItem("currentPage", 0);
-      sessionStorage.setItem("secondaryCurrentPage", 0);
-      sessionStorage.setItem("Cifbysea", Cifbysea);
-      sessionStorage.setItem("Cifbyair", Cifbyair);
-      sessionStorage.setItem("Fob", Fob);
-      sessionStorage.setItem("Overhead", Overhead);
-      sessionStorage.setItem("YearRecorid", YearRecorid);
-      sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess));
-      sessionStorage.setItem("Modules", JSON.stringify(Modules));
-      navigate("/Apps/Chart");
-    } else {
-      setLoading(false);
-      toast.error(data.payload.message);
-    }
+      
+      if(data.payload.Status=="Y")
+      {  
+       var company = data.payload.apiResponse.Company
+       var year = data.payload.apiResponse.Year
+       var YearFlag = data.payload.apiResponse.YearFlag
+       var CompanyRecordid = data.payload.apiResponse.CompanyRecordid
+       var stockflag= data.payload.apiResponse.Process
+       var Cifbysea=data.payload.apiResponse.Cifbysea
+       var Cifbyair=data.payload.apiResponse.Cifbyair
+       var Fob=data.payload.apiResponse.Fob
+       var Overhead=data.payload.apiResponse.Overhead
+       var YearRecorid=data.payload.apiResponse.YearRecorid
+       var Groupaccess=data.payload.apiResponse.Groupaccess
+       var UserName=data.payload.apiResponse.Name
+      
+       console.log("🚀 ~ file: Login.jsx:144 ~ Login ~ Groupaccess:", Groupaccess)
+       console.log("🚀 ~ file: Login.jsx:144 ~ Login ~ UserName:", UserName)
+       var Modules=data.payload.apiResponse.Modules
+ 
+       sessionStorage.setItem("UserName",UserName);
+       sessionStorage.setItem("company", company);
+       sessionStorage.setItem("year", year);
+       sessionStorage.setItem("YearFlag", YearFlag);
+       sessionStorage.setItem("compID", CompanyRecordid);
+       sessionStorage.setItem("stockflag", stockflag);
+       sessionStorage.setItem("currentPage", 0);
+       sessionStorage.setItem("secondaryCurrentPage", 0);
+       sessionStorage.setItem("Cifbysea",Cifbysea)
+       sessionStorage.setItem("Cifbyair",Cifbyair)
+       sessionStorage.setItem("Fob",Fob)
+       sessionStorage.setItem("Overhead",Overhead)
+       sessionStorage.setItem("YearRecorid",YearRecorid)
+       sessionStorage.setItem("Groupaccess",JSON.stringify(Groupaccess))
+       sessionStorage.setItem("Modules",JSON.stringify(Modules))
+       navigate("/Apps/Chart");
+      }
+      else {
+       setLoading(false);
+       toast.error("Invalid Credentials");
+     }
   };
   return (
     <div className="wrapper">
