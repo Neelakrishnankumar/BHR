@@ -226,9 +226,9 @@ const EditSalaryComponent = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                     >
-                      <MenuItem value="BS">PERCENTAGE OF BASIC SALARY</MenuItem>
-                      <MenuItem value="FA">FIXED AMOUNT</MenuItem>
-                      <MenuItem value="P">POLICY</MenuItem>
+                      <MenuItem value="FS">PERCENTAGE OF BASIC SALARY</MenuItem>
+                      <MenuItem value="FX">FIXED AMOUNT</MenuItem>
+                      <MenuItem value="PC">POLICY</MenuItem>
                     </Select>
                   </FormControl>
 
