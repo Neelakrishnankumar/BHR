@@ -227,7 +227,7 @@ const EditSalaryComponent = () => {
                       onChange={handleChange}
                     >
                       <MenuItem value="BS">PERCENTAGE OF BASIC SALARY</MenuItem>
-                      <MenuItem value="Fixed">FIXED AMOUNT</MenuItem>
+                      <MenuItem value="FA">FIXED AMOUNT</MenuItem>
                       <MenuItem value="P">POLICY</MenuItem>
                     </Select>
                   </FormControl>
