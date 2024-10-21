@@ -165,6 +165,7 @@ const EditDailyHourstask = () => {
     status: data.Status,
     comment: data.Comments,
     sortOrder: data.SortOrder,
+    EmpDate: data.EmpDate,
     disable: data.Disable === "Y" ? false: true,
   };
 
@@ -189,6 +190,7 @@ const EditDailyHourstask = () => {
       FunctionsID: functionLookup.funRecordID,
       ProjectID: projectLookup.proRecordID,
       parentID: params.filtertype,
+      EmpDate: values.EmpDate,
       Finyear,
       CompanyID,
     };
