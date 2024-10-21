@@ -2796,7 +2796,7 @@ const AttInitialvalues={
                     >
                       <MenuItem value="FH">First Half</MenuItem>
                       <MenuItem value="SH">Second Half</MenuItem> 
-                      <MenuItem value="N">None</MenuItem>
+                      <MenuItem value="N">Full Day</MenuItem>
                     
                     </Select>
                   </FormControl> 
