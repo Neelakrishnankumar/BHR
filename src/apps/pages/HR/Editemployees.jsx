@@ -990,6 +990,7 @@ const deploymentInitialValue = {
   description: Data.Name,
   checkin: deploymentData.CheckInTime,
   checkout: deploymentData.CheckOutTime,
+ 
   monday: deploymentData.Monday === "Y" ? true : false,
   tuesday: deploymentData.Tuesday === "Y" ? true : false,
   wednesday: deploymentData.Wednesday === "Y" ? true : false,
@@ -997,6 +998,7 @@ const deploymentInitialValue = {
   friday: deploymentData.Friday === "Y" ? true : false,
   saturday: deploymentData.Saturday === "Y" ? true : false,
   sunday: deploymentData.Sunday === "Y" ? true : false,
+ 
   imageurl: Data.ImageName
     ? store.getState().globalurl.imageUrl + Data.ImageName
     : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
