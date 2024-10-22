@@ -789,8 +789,8 @@ const EditemployeePayroll = () => {
     recordID:"",
     fromDate: "",
     toDate: "",
-    leaveCategory: "",
-    type:""
+    LeavePart: "",
+    Status: ""
   })
   const [allDecData, setAllDecData ] = useState({
     recordID:"",
@@ -838,8 +838,8 @@ const [otdata,setOtdata]= useState({
       recordID:"",
       fromDate: "",
       toDate: "",
-      leaveCategory: "",
-      type:""
+      LeavePart: "",
+      Status: ""
      });
      setOtdata({
       RecordID: "",
@@ -863,8 +863,8 @@ const [otdata,setOtdata]= useState({
         recordID:rowData.RecordID,
         fromDate: rowData.FromDate,
         toDate: rowData.ToDate,
-        leaveCategory: rowData.LeaveCategory,
-        type:rowData.Type
+        LeavePart: rowData.LeavePart,
+        Status:rowData.Status
       
       })
       setOtdata({
@@ -904,7 +904,13 @@ description: Data.Name,
 Type:leaveData.type,
 FromDate: leaveData.fromDate,
 ToDate: leaveData.toDate,
-LeaveCategory: leaveData.leaveCategory,
+// LeaveCategory: leaveData.leaveCategory,
+LeavePart: leaveData.LeavePart === "First half" ? "FH":
+           leaveData.LeavePart === "Second Half" ? "SH":
+           leaveData.LeavePart === "Full Day" ? "N": "",
+Status:leaveData.Status === "Applied" ? "AL" :
+      leaveData.Status === "Rejected" ? "RJ" :
+      leaveData.Status === "Approved" ? "AP" : "",
 SortOrder: "1",
 Disable: "N",
 imageurl: Data.ImageName
@@ -922,11 +928,13 @@ funMode === "A" && !del
             : "update";
             const idata={
               RecordID:leaveData.recordID,
-              Type:values.Type,
+              // Type:values.Type,
               FromDate:values.FromDate,
               ToDate:values.ToDate,
-              LeaveCategory:values.LeaveCategory,
+              // LeaveCategory:values.LeaveCategory,
+              LeavePart:values.LeavePart,
               EmployeeID: recID,
+              Status:values.Status,
               SortOrder: "1",
               Disable: "N",
               LeaveTypeID:selectLETLookupData.letlookupRecordid,
@@ -2773,18 +2781,18 @@ const AttInitialvalues={
                       },
                      }}
                   >
-                    <InputLabel variant="filled" id="LeaveCategory">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
+                    <InputLabel variant="filled" id="LeavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       fullWidth
                       variant="filled"
                       type="text"
                       // label="LeaveCategory"
-                      value={values.LeaveCategory}
-                      id="LeaveCategory"
+                      value={values.LeavePart}
+                      id="LeavePart"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="LeaveCategory"
+                      name="LeavePart"
                       required
                       focused
                       sx={{
@@ -2796,7 +2804,7 @@ const AttInitialvalues={
                     >
                       <MenuItem value="FH">First Half</MenuItem>
                       <MenuItem value="SH">Second Half</MenuItem> 
-                      <MenuItem value="N">None</MenuItem>
+                      <MenuItem value="N">Full Day</MenuItem>
                     
                     </Select>
                   </FormControl> 
@@ -2854,19 +2862,19 @@ const AttInitialvalues={
                      }}
                     
                   >
-                    <InputLabel id="Type">Status</InputLabel>
+                    <InputLabel id="Status">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
-                      id="Type"
-                      name="Type"
-                      value={values.Type}
+                      id="Status"
+                      name="Status"
+                      value={values.Status}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
                     >
-                      <MenuItem value="A">Applied</MenuItem>
-                      <MenuItem value="R">Rejected</MenuItem> 
-                      <MenuItem value="D">Approved</MenuItem>
+                      <MenuItem value="AL">Applied</MenuItem>
+                      <MenuItem value="RJ">Rejected</MenuItem> 
+                      <MenuItem value="AP">Approved</MenuItem>
                     
                     </Select>
                   </FormControl> 
