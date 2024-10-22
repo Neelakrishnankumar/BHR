@@ -801,6 +801,8 @@ const [otdata,setOtdata]= useState({
         RecordID: "",
         OtDate: "",
         NumberOfHours: "",
+        OtType: "",
+        PaymentMethod: "",
         Status: "",
         Comments: ""
 })
@@ -845,6 +847,8 @@ const [otdata,setOtdata]= useState({
       RecordID: "",
         OtDate: "",
         NumberOfHours: "",
+        OtType: "",
+        PaymentMethod: "",
         Status: "",
         Comments: ""
      })
@@ -871,6 +875,8 @@ const [otdata,setOtdata]= useState({
         RecordID: rowData.RecordID,
           OtDate: rowData.Date,
           NumberOfHours: rowData.NumberOfHours,
+          OtType: rowData.OtType,
+          PaymentMethod: rowData.PaymentMethod,
           Status: rowData.Status,
           Comments: rowData.Comments
        })
@@ -901,7 +907,7 @@ const [otdata,setOtdata]= useState({
 const leaveInitialValue={
 code: Data.Code,
 description: Data.Name,
-Type:leaveData.type,
+status:leaveData.Status,
 FromDate: leaveData.fromDate,
 ToDate: leaveData.toDate,
 LeaveCategory: leaveData.leaveCategory,
@@ -922,7 +928,7 @@ funMode === "A" && !del
             : "update";
             const idata={
               RecordID:leaveData.recordID,
-              Type:values.Type,
+              Status:values.status,
               FromDate:values.FromDate,
               ToDate:values.ToDate,
               LeaveCategory:values.LeaveCategory,
@@ -960,7 +966,9 @@ const otInitialValue={
   Date: otdata.OtDate ,
   NumberOfHours:otdata.NumberOfHours,
   comments:otdata.Comments,
-  Status:otdata.Status
+  paymentmethods:otdata.PaymentMethod,
+  OtType:otdata.OtType,
+  Status:otdata.Status,
   }
   
   const otFNsave= async(values,resetForm,del)=>{
@@ -975,9 +983,12 @@ const otInitialValue={
                 RecordID: otdata.RecordID,
                 OtDate: values.Date,
                 NumberOfHours: values.NumberOfHours,
+                PaymentMethod:values.paymentmethods,
+                OtType:values.OtType,
                 Status: values.Status,
                 Comments: values.comments,
-                EmployeeID: recID
+                EmployeeID: recID,
+
                 // Type:values.Type,
                 // FromDate:values.FromDate,
                 // ToDate:values.ToDate,
@@ -2854,19 +2865,19 @@ const AttInitialvalues={
                      }}
                     
                   >
-                    <InputLabel id="Type">Status</InputLabel>
+                    <InputLabel id="status">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
-                      id="Type"
-                      name="Type"
-                      value={values.Type}
+                      id="status"
+                      name="status"
+                      value={values.status}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
                     >
-                      <MenuItem value="A">Applied</MenuItem>
-                      <MenuItem value="R">Rejected</MenuItem> 
-                      <MenuItem value="D">Approved</MenuItem>
+                      <MenuItem value="AL">Applied</MenuItem>
+                      <MenuItem value="RJ">Rejected</MenuItem> 
+                      <MenuItem value="AP">Approved</MenuItem>
                     
                     </Select>
                   </FormControl> 
@@ -3044,7 +3055,7 @@ const AttInitialvalues={
                     </Stack>
                     <Box sx={{ gridColumn: "span 2" }}>
                     <Box
-                      height="350px"
+                      height="460px"
                       sx={{
                         "& .MuiDataGrid-root": {
                           // border: "none",
@@ -3176,34 +3187,100 @@ const AttInitialvalues={
                         }}                        focused
                         
                       />
-                    <TextField
-                        fullWidth
-                        variant="filled"
-                        type="text"
-                        label="Status"
-                        value={values.Status}
-                        id="Status"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Status"
-                        error={!!touched.Status && !!errors.Status}
+
+<FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="paymentmethods">Payment Methods</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="paymentmethods"
+                      name="paymentmethods"
+                      value={values.paymentmethods}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.paymentmethods && !!errors.paymentmethods}
+                        helperText={touched.paymentmethods && errors.paymentmethods}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="AS">Assitis</MenuItem>
+                      <MenuItem value="TH">Time and a Half</MenuItem> 
+                      <MenuItem value="DT">Double Time</MenuItem>
+                      <MenuItem value="CS">Compensate</MenuItem>
+                    
+                    </Select>
+                    
+                  </FormControl>
+ <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="OtType">OT Type</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="OtType"
+                      name="OtType"
+                      value={values.OtType}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.OtType && !!errors.OtType}
+                        helperText={touched.OtType && errors.OtType}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="FS">Flexible Scheduling</MenuItem>
+                      <MenuItem value="SS">Shift Swaps</MenuItem> 
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                   
+                   <InputLabel id="Status">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="Status"
+                      name="Status"
+                      value={values.Status}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.Status && !!errors.Status}
                         helperText={touched.Status && errors.Status}
                         sx={{ 
                           gridColumn: "span 2", 
-                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#f5f5f5 ', // For the filled variant
-                          },
-                        }}                        
-                        
-                        
-                        focused
-
-                      />  
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="AL">Applied</MenuItem>
+                      <MenuItem value="AP">Approved</MenuItem> 
+                      
+                    
+                    </Select>
+                  </FormControl>
                   </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="2px" gap={2}>
+                  <Box display="flex" justifyContent="end" mt="20px" gap={2}>
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
