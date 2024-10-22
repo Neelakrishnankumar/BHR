@@ -789,8 +789,8 @@ const EditemployeePayroll = () => {
     recordID:"",
     fromDate: "",
     toDate: "",
-    leavepart: "",
-    status: ""
+    LeavePart: "",
+    Status: ""
   })
   const [allDecData, setAllDecData ] = useState({
     recordID:"",
@@ -838,8 +838,8 @@ const [otdata,setOtdata]= useState({
       recordID:"",
       fromDate: "",
       toDate: "",
-      leavepart: "",
-      status: ""
+      LeavePart: "",
+      Status: ""
      });
      setOtdata({
       RecordID: "",
@@ -863,8 +863,8 @@ const [otdata,setOtdata]= useState({
         recordID:rowData.RecordID,
         fromDate: rowData.FromDate,
         toDate: rowData.ToDate,
-        leavepart: rowData.LeavePart,
-        status:rowData.Status
+        LeavePart: rowData.LeavePart,
+        Status:rowData.Status
       
       })
       setOtdata({
@@ -905,12 +905,12 @@ Type:leaveData.type,
 FromDate: leaveData.fromDate,
 ToDate: leaveData.toDate,
 // LeaveCategory: leaveData.leaveCategory,
-LeavePart: leaveData.leavepart === "First Half" ? "FH":
-           leaveData.leavepart === "Second Half" ? "SH":
-           leaveData.leavepart === "Full Day" ? "N": "",
-Status:leaveData.status === "Applied" ? "AL" :
-      leaveData.status === "Rejected" ? "RJ" :
-      leaveData.status === "Approved" ? "AP" : "",
+LeavePart: leaveData.LeavePart === "First half" ? "FH":
+           leaveData.LeavePart === "Second Half" ? "SH":
+           leaveData.LeavePart === "Full Day" ? "N": "",
+Status:leaveData.Status === "Applied" ? "AL" :
+      leaveData.Status === "Rejected" ? "RJ" :
+      leaveData.Status === "Approved" ? "AP" : "",
 SortOrder: "1",
 Disable: "N",
 imageurl: Data.ImageName
@@ -932,9 +932,9 @@ funMode === "A" && !del
               FromDate:values.FromDate,
               ToDate:values.ToDate,
               // LeaveCategory:values.LeaveCategory,
-              LeavePart:values.leavePart,
+              LeavePart:values.LeavePart,
               EmployeeID: recID,
-              Status:values.status,
+              Status:values.Status,
               SortOrder: "1",
               Disable: "N",
               LeaveTypeID:selectLETLookupData.letlookupRecordid,
@@ -2781,7 +2781,7 @@ const AttInitialvalues={
                       },
                      }}
                   >
-                    <InputLabel variant="filled" id="leavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
+                    <InputLabel variant="filled" id="LeavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       fullWidth
@@ -2789,10 +2789,10 @@ const AttInitialvalues={
                       type="text"
                       // label="LeaveCategory"
                       value={values.LeavePart}
-                      id="leavePart"
+                      id="LeavePart"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="leavePart"
+                      name="LeavePart"
                       required
                       focused
                       sx={{
@@ -2862,11 +2862,11 @@ const AttInitialvalues={
                      }}
                     
                   >
-                    <InputLabel id="status">Status</InputLabel>
+                    <InputLabel id="Status">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
-                      id="status"
-                      name="status"
+                      id="Status"
+                      name="Status"
                       value={values.Status}
                       onBlur={handleBlur}
                       onChange={handleChange}
