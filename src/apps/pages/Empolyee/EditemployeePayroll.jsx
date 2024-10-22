@@ -431,7 +431,7 @@ const EditemployeePayroll = () => {
   }else if(show == "1") {
     VISIBLE_FIELDS = ["SLNO","Allowances","Type","value","EffectiveValue","action"];
   }else if(show == "6") {
-    VISIBLE_FIELDS = ["SLNO","Date","NumberOfHours","action"];
+    VISIBLE_FIELDS = ["SLNO","OtDate","NumberOfHours","Status","action"];
   }
   
   else {
@@ -789,8 +789,8 @@ const EditemployeePayroll = () => {
     recordID:"",
     fromDate: "",
     toDate: "",
-    leaveCategory: "",
-    type:""
+    LeavePart: "",
+    Status: ""
   })
   const [allDecData, setAllDecData ] = useState({
     recordID:"",
@@ -840,8 +840,8 @@ const [otdata,setOtdata]= useState({
       recordID:"",
       fromDate: "",
       toDate: "",
-      leaveCategory: "",
-      type:""
+      LeavePart: "",
+      Status: ""
      });
      setOtdata({
       RecordID: "",
@@ -867,13 +867,13 @@ const [otdata,setOtdata]= useState({
         recordID:rowData.RecordID,
         fromDate: rowData.FromDate,
         toDate: rowData.ToDate,
-        leaveCategory: rowData.LeaveCategory,
-        type:rowData.Type
+        LeavePart: rowData.LeavePart,
+        Status:rowData.Status
       
       })
       setOtdata({
         RecordID: rowData.RecordID,
-          OtDate: rowData.Date,
+          OtDate: rowData.OtDate,
           NumberOfHours: rowData.NumberOfHours,
           OtType: rowData.OtType,
           PaymentMethod: rowData.PaymentMethod,
@@ -910,7 +910,13 @@ description: Data.Name,
 status:leaveData.Status,
 FromDate: leaveData.fromDate,
 ToDate: leaveData.toDate,
-LeaveCategory: leaveData.leaveCategory,
+// LeaveCategory: leaveData.leaveCategory,
+LeavePart: leaveData.LeavePart === "First half" ? "FH":
+           leaveData.LeavePart === "Second Half" ? "SH":
+           leaveData.LeavePart === "Full Day" ? "N": "",
+Status:leaveData.Status === "Applied" ? "AL" :
+      leaveData.Status === "Rejected" ? "RJ" :
+      leaveData.Status === "Approved" ? "AP" : "",
 SortOrder: "1",
 Disable: "N",
 imageurl: Data.ImageName
@@ -928,11 +934,13 @@ funMode === "A" && !del
             : "update";
             const idata={
               RecordID:leaveData.recordID,
-              Status:values.status,
+              // Type:values.Type,
               FromDate:values.FromDate,
               ToDate:values.ToDate,
-              LeaveCategory:values.LeaveCategory,
+              // LeaveCategory:values.LeaveCategory,
+              LeavePart:values.LeavePart,
               EmployeeID: recID,
+              Status:values.Status,
               SortOrder: "1",
               Disable: "N",
               LeaveTypeID:selectLETLookupData.letlookupRecordid,
@@ -966,9 +974,14 @@ const otInitialValue={
   Date: otdata.OtDate ,
   NumberOfHours:otdata.NumberOfHours,
   comments:otdata.Comments,
-  paymentmethods:otdata.PaymentMethod,
-  OtType:otdata.OtType,
-  Status:otdata.Status,
+  paymentmethods: otdata.PaymentMethod === "Assitis" ? "AS":
+                  otdata.PaymentMethod === "Time and a Half" ? "TH":
+                  otdata.PaymentMethod === "Double Time" ? "DT":
+                  otdata.PaymentMethod === "Compensate" ? "CS": "", 
+  OtType: otdata.OtType === "Flexible Scheduling" ? "FS":
+          otdata.OtType === "Shift Swaps" ? "SS": "",
+  Status: otdata.Status === "Applied" ? "AL" :
+          otdata.Status === "Approved" ? "AP" : "",
   }
   
   const otFNsave= async(values,resetForm,del)=>{
@@ -2784,18 +2797,18 @@ const AttInitialvalues={
                       },
                      }}
                   >
-                    <InputLabel variant="filled" id="LeaveCategory">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
+                    <InputLabel variant="filled" id="LeavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       fullWidth
                       variant="filled"
                       type="text"
                       // label="LeaveCategory"
-                      value={values.LeaveCategory}
-                      id="LeaveCategory"
+                      value={values.LeavePart}
+                      id="LeavePart"
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="LeaveCategory"
+                      name="LeavePart"
                       required
                       focused
                       sx={{
@@ -2865,12 +2878,12 @@ const AttInitialvalues={
                      }}
                     
                   >
-                    <InputLabel id="status">Status</InputLabel>
+                    <InputLabel id="Type">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
-                      id="status"
-                      name="status"
-                      value={values.status}
+                      id="Type"
+                      name="Type"
+                      value={values.Type}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
@@ -3136,12 +3149,7 @@ const AttInitialvalues={
                       onChange={handleChange}
                       required
                      
-                      sx={{ gridColumn: "span 2",
-                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#f5f5f5 ', // For the filled variant
-                        },
-                       }}
+                      sx={{ gridColumn: "span 2" }}
                     />
 
                     <TextField
@@ -3273,7 +3281,7 @@ const AttInitialvalues={
                     >
                       <MenuItem value="AL">Applied</MenuItem>
                       <MenuItem value="AP">Approved</MenuItem> 
-                      
+                      <MenuItem value="RJ">Rejected</MenuItem>
                     
                     </Select>
                   </FormControl>
