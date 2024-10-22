@@ -934,7 +934,7 @@ funMode === "A" && !del
               // LeaveCategory:values.LeaveCategory,
               LeavePart:values.leavePart,
               EmployeeID: recID,
-              Status:values.status,
+              Status:values.Status,
               SortOrder: "1",
               Disable: "N",
               LeaveTypeID:selectLETLookupData.letlookupRecordid,
@@ -2865,8 +2865,8 @@ const AttInitialvalues={
                     <InputLabel id="status">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
-                      id="status"
-                      name="status"
+                      id="Status"
+                      name="Status"
                       value={values.Status}
                       onBlur={handleBlur}
                       onChange={handleChange}
