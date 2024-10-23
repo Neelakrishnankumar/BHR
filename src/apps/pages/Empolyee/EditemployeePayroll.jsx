@@ -907,16 +907,16 @@ const [otdata,setOtdata]= useState({
 const leaveInitialValue={
 code: Data.Code,
 description: Data.Name,
-status:leaveData.Status,
+// status:leaveData.Status,
 FromDate: leaveData.fromDate,
 ToDate: leaveData.toDate,
 // LeaveCategory: leaveData.leaveCategory,
 LeavePart: leaveData.LeavePart === "First half" ? "FH":
            leaveData.LeavePart === "Second Half" ? "SH":
            leaveData.LeavePart === "Full Day" ? "N": "",
-Status:leaveData.Status === "Applied" ? "AL" :
-      leaveData.Status === "Rejected" ? "RJ" :
-      leaveData.Status === "Approved" ? "AP" : "",
+           Status: leaveData.Status == "Applied" ? "AL" :
+           leaveData.Status == "Rejected" ? "RJ" :
+           leaveData.Status == "Approved" ? "AP" : "",
 SortOrder: "1",
 Disable: "N",
 imageurl: Data.ImageName
@@ -981,7 +981,8 @@ const otInitialValue={
   OtType: otdata.OtType === "Flexible Scheduling" ? "FS":
           otdata.OtType === "Shift Swaps" ? "SS": "",
   Status: otdata.Status === "Applied" ? "AL" :
-          otdata.Status === "Approved" ? "AP" : "",
+          otdata.Status === "Approved" ? "AP" :
+          otdata.Status === "Rejected" ? "RJ" : "",
   }
   
   const otFNsave= async(values,resetForm,del)=>{
@@ -2878,12 +2879,12 @@ const AttInitialvalues={
                      }}
                     
                   >
-                    <InputLabel id="Type">Status</InputLabel>
+                    <InputLabel id="Status">Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
-                      id="Type"
-                      name="Type"
-                      value={values.Type}
+                      id="Status"
+                      name="Status"
+                      value={values.Status}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       required
