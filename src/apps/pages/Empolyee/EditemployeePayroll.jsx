@@ -431,7 +431,7 @@ const EditemployeePayroll = () => {
   }else if(show == "1") {
     VISIBLE_FIELDS = ["SLNO","Allowances","Type","value","EffectiveValue","action"];
   }else if(show == "6") {
-    VISIBLE_FIELDS = ["SLNO","Date","NumberOfHours","action"];
+    VISIBLE_FIELDS = ["SLNO","OtDate","NumberOfHours","Status","action"];
   }
   
   else {
@@ -801,6 +801,8 @@ const [otdata,setOtdata]= useState({
         RecordID: "",
         OtDate: "",
         NumberOfHours: "",
+        OtType: "",
+        PaymentMethod: "",
         Status: "",
         Comments: ""
 })
@@ -845,6 +847,8 @@ const [otdata,setOtdata]= useState({
       RecordID: "",
         OtDate: "",
         NumberOfHours: "",
+        OtType: "",
+        PaymentMethod: "",
         Status: "",
         Comments: ""
      })
@@ -869,8 +873,10 @@ const [otdata,setOtdata]= useState({
       })
       setOtdata({
         RecordID: rowData.RecordID,
-          OtDate: rowData.Date,
+          OtDate: rowData.OtDate,
           NumberOfHours: rowData.NumberOfHours,
+          OtType: rowData.OtType,
+          PaymentMethod: rowData.PaymentMethod,
           Status: rowData.Status,
           Comments: rowData.Comments
        })
@@ -901,16 +907,16 @@ const [otdata,setOtdata]= useState({
 const leaveInitialValue={
 code: Data.Code,
 description: Data.Name,
-Type:leaveData.type,
+// status:leaveData.Status,
 FromDate: leaveData.fromDate,
 ToDate: leaveData.toDate,
 // LeaveCategory: leaveData.leaveCategory,
 LeavePart: leaveData.LeavePart === "First half" ? "FH":
            leaveData.LeavePart === "Second Half" ? "SH":
            leaveData.LeavePart === "Full Day" ? "N": "",
-Status:leaveData.Status === "Applied" ? "AL" :
-      leaveData.Status === "Rejected" ? "RJ" :
-      leaveData.Status === "Approved" ? "AP" : "",
+           Status: leaveData.Status == "Applied" ? "AL" :
+           leaveData.Status == "Rejected" ? "RJ" :
+           leaveData.Status == "Approved" ? "AP" : "",
 SortOrder: "1",
 Disable: "N",
 imageurl: Data.ImageName
@@ -968,7 +974,15 @@ const otInitialValue={
   Date: otdata.OtDate ,
   NumberOfHours:otdata.NumberOfHours,
   comments:otdata.Comments,
-  Status:otdata.Status
+  paymentmethods: otdata.PaymentMethod === "Assitis" ? "AS":
+                  otdata.PaymentMethod === "Time and a Half" ? "TH":
+                  otdata.PaymentMethod === "Double Time" ? "DT":
+                  otdata.PaymentMethod === "Compensate" ? "CS": "", 
+  OtType: otdata.OtType === "Flexible Scheduling" ? "FS":
+          otdata.OtType === "Shift Swaps" ? "SS": "",
+  Status: otdata.Status === "Applied" ? "AL" :
+          otdata.Status === "Approved" ? "AP" :
+          otdata.Status === "Rejected" ? "RJ" : "",
   }
   
   const otFNsave= async(values,resetForm,del)=>{
@@ -983,9 +997,12 @@ const otInitialValue={
                 RecordID: otdata.RecordID,
                 OtDate: values.Date,
                 NumberOfHours: values.NumberOfHours,
+                PaymentMethod:values.paymentmethods,
+                OtType:values.OtType,
                 Status: values.Status,
                 Comments: values.comments,
-                EmployeeID: recID
+                EmployeeID: recID,
+
                 // Type:values.Type,
                 // FromDate:values.FromDate,
                 // ToDate:values.ToDate,
@@ -3052,7 +3069,7 @@ const AttInitialvalues={
                     </Stack>
                     <Box sx={{ gridColumn: "span 2" }}>
                     <Box
-                      height="350px"
+                      height="460px"
                       sx={{
                         "& .MuiDataGrid-root": {
                           // border: "none",
@@ -3133,12 +3150,7 @@ const AttInitialvalues={
                       onChange={handleChange}
                       required
                      
-                      sx={{ gridColumn: "span 2",
-                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#f5f5f5 ', // For the filled variant
-                        },
-                       }}
+                      sx={{ gridColumn: "span 2" }}
                     />
 
                     <TextField
@@ -3184,34 +3196,100 @@ const AttInitialvalues={
                         }}                        focused
                         
                       />
-                    <TextField
-                        fullWidth
-                        variant="filled"
-                        type="text"
-                        label="Status"
-                        value={values.Status}
-                        id="Status"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Status"
-                        error={!!touched.Status && !!errors.Status}
+
+<FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="paymentmethods">Payment Methods</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="paymentmethods"
+                      name="paymentmethods"
+                      value={values.paymentmethods}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.paymentmethods && !!errors.paymentmethods}
+                        helperText={touched.paymentmethods && errors.paymentmethods}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="AS">Assitis</MenuItem>
+                      <MenuItem value="TH">Time and a Half</MenuItem> 
+                      <MenuItem value="DT">Double Time</MenuItem>
+                      <MenuItem value="CS">Compensate</MenuItem>
+                    
+                    </Select>
+                    
+                  </FormControl>
+ <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="OtType">OT Type</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="OtType"
+                      name="OtType"
+                      value={values.OtType}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.OtType && !!errors.OtType}
+                        helperText={touched.OtType && errors.OtType}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="FS">Flexible Scheduling</MenuItem>
+                      <MenuItem value="SS">Shift Swaps</MenuItem> 
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                   
+                   <InputLabel id="Status">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="Status"
+                      name="Status"
+                      value={values.Status}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.Status && !!errors.Status}
                         helperText={touched.Status && errors.Status}
                         sx={{ 
                           gridColumn: "span 2", 
-                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#f5f5f5 ', // For the filled variant
-                          },
-                        }}                        
-                        
-                        
-                        focused
-
-                      />  
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="AL">Applied</MenuItem>
+                      <MenuItem value="AP">Approved</MenuItem> 
+                      <MenuItem value="RJ">Rejected</MenuItem>
+                    
+                    </Select>
+                  </FormControl>
                   </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="2px" gap={2}>
+                  <Box display="flex" justifyContent="end" mt="20px" gap={2}>
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
