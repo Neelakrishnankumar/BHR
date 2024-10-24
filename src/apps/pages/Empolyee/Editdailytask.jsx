@@ -305,7 +305,7 @@ const EditDailytask = () => {
                     },
                   }}
                 >
-                  <TextField
+                  {/* <TextField
                     name="code"
                     type="text"
                     id="code"
@@ -320,39 +320,8 @@ const EditDailytask = () => {
                     helperText={touched.code && errors.code}
                     autoFocus
                     sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    name="description"
-                    type="text"
-                    id="description"
-                    label="Description"
-                    variant="filled"
-                    focused
-                    value={values.description}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.description && !!errors.description}
-                    helperText={touched.description && errors.description}
-                    autoFocus
-                    sx={{ gridColumn: "span 2" }}
-                  />
-
-                  <TextField
-                    name="date"
-                    type="date"
-                    id="date"
-                    label="Date"
-                    inputFormat="YYYY-MM-DD"
-                    variant="filled"
-                    focused
-                    value={values.date}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.date && !!errors.date}
-                    helperText={touched.date && errors.date}
-                    autoFocus
-                    sx={{ gridColumn: "span 2",background: "#fff6c3"  }}
-                  />
+                  /> */}
+                 
                   <Box
                     sx={{
                       display: "flex",
@@ -419,6 +388,40 @@ const EditDailytask = () => {
                       focused
                     />
                   </Box>
+
+                  <TextField
+                    name="description"
+                    type="text"
+                    id="description"
+                    label="Description"
+                    variant="filled"
+                    focused
+                    value={values.description}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.description && !!errors.description}
+                    helperText={touched.description && errors.description}
+                    autoFocus
+                    sx={{ gridColumn: "span 2" }}
+                  />
+
+                  <TextField
+                    name="date"
+                    type="date"
+                    id="date"
+                    label="Date"
+                    inputFormat="YYYY-MM-DD"
+                    variant="filled"
+                    focused
+                    value={values.date}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.date && !!errors.date}
+                    helperText={touched.date && errors.date}
+                    autoFocus
+                    sx={{ gridColumn: "span 2",background: "#fff6c3"  }}
+                  />
+
                   <FormControl
                     focused
                     variant="filled"

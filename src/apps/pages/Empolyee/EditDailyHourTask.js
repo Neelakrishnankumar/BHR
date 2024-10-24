@@ -324,7 +324,7 @@ const EditDailyHourstask = () => {
                   }}
                 >
                   
-                    <TextField
+                    {/* <TextField
                       name="code"
                       type="text"
                       id="code"
@@ -354,31 +354,8 @@ const EditDailyHourstask = () => {
                       error={!!touched.description && !!errors.description}
                       helperText={touched.description && errors.description}
                       sx={{gridColumn: "span 2"}}
-                    />
-                    <TextField
-                      name="fromtime"
-                      type="time"
-                      id="fromtime"
-                      label="From"
-                      inputFormat="HH:mm:aa"
-                      value={values.fromtime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      sx={{gridColumn: "span 2"}}
-                    />
-                    <TextField
-                      name="totime"
-                      type="time"
-                      id="totime"
-                      label="To"
-                      inputFormat="HH:mm:aa"
-                      value={values.totime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      sx={{gridColumn: "span 2"}}
-                    />
+                    /> */}
+                  
 
                     {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["TimePicker"]}>
@@ -482,6 +459,31 @@ const EditDailyHourstask = () => {
                         focused
                       />
                     </Box>
+                    <TextField
+                      name="fromtime"
+                      type="time"
+                      id="fromtime"
+                      label="From"
+                      inputFormat="HH:mm:aa"
+                      value={values.fromtime}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      sx={{gridColumn: "span 2"}}
+                    />
+                    <TextField
+                      name="totime"
+                      type="time"
+                      id="totime"
+                      label="To"
+                      inputFormat="HH:mm:aa"
+                      value={values.totime}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      sx={{gridColumn: "span 2"}}
+                    />
+
                     <FormControl
                       focused
                       variant="filled"
