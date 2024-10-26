@@ -427,7 +427,7 @@ const EditemployeePayroll = () => {
 
   let VISIBLE_FIELDS;
  if (show == "2") {
-    VISIBLE_FIELDS = ["SLNO","LeaveCategory","FromDate","ToDate","Type","action"];
+    VISIBLE_FIELDS = ["SLNO","LeaveTypeName","LeavePart","FromDate","ToDate","Status","action"];
   }else if(show == "1") {
     VISIBLE_FIELDS = ["SLNO","Allowances","Type","value","EffectiveValue","action"];
   }else if(show == "6") {
