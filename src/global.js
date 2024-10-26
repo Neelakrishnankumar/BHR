@@ -189,9 +189,9 @@ const initialState = {
 
     employeeattendanceUrl:"http://cafemgr.benmoredata.com/api/getempattendancehistory.php",
     
-    payrollattendanceUrl: "http://lgems.beyondexs.com/api/PayrollAttendanceController.php",
-    attendanceUrl:"http://lgems.beyondexs.com/api/getempattendance.php",
-    attendanceprocessUrl:"http://lgems.beyondexs.com/api/EmpAttendanceHistoryController.php",
+    payrollattendanceUrl: "http://cafemgr.benmoredata.com/api/PayrollAttendanceController.php",
+    attendanceUrl:"http://cafemgr.benmoredata.com/api/getempattendance.php",
+    attendanceprocessUrl:"http://cafemgr.benmoredata.com/api/EmpAttendanceHistoryController.php",
     LeaveTypeurl: "http://beyondexs.com/Trinity/api/APIController.php",
 
    
