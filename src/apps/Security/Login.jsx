@@ -142,6 +142,7 @@ const Login = () => {
        var Cifbysea=data.payload.apiResponse.Cifbysea
        var Cifbyair=data.payload.apiResponse.Cifbyair
        var Fob=data.payload.apiResponse.Fob
+      //  var EmpId=data.payload.apiResponse.EmpId
        var Overhead=data.payload.apiResponse.Overhead
        var YearRecorid=data.payload.apiResponse.YearRecorid
        var Groupaccess=data.payload.apiResponse.Groupaccess
@@ -162,6 +163,7 @@ const Login = () => {
        sessionStorage.setItem("Cifbysea",Cifbysea)
        sessionStorage.setItem("Cifbyair",Cifbyair)
        sessionStorage.setItem("Fob",Fob)
+      //  sessionStorage.setItem("EmpId",EmpId)
        sessionStorage.setItem("Overhead",Overhead)
        sessionStorage.setItem("YearRecorid",YearRecorid)
        sessionStorage.setItem("Groupaccess",JSON.stringify(Groupaccess))

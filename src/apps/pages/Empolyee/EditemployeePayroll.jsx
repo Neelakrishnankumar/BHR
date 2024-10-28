@@ -369,7 +369,7 @@ const EditemployeePayroll = () => {
     }
 
     if (event.target.value == "6") {
-      dispatch(fetchExplorelitview("TR216", "OT", `parentID=${recID}`, ""));
+      dispatch(fetchExplorelitview("TR216", "OT", `EmployeeID=${recID}`, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -1019,7 +1019,7 @@ const otInitialValue={
               if (response.payload.Status == "Y") {
                 setLoading(false);
                 dispatch(
-                  fetchExplorelitview("TR216", "OT", `parentID=${recID}`, "")
+                  fetchExplorelitview("TR216", "OT", `EmployeeID=${recID}`, "")
                 );
           
                 toast.success(response.payload.Msg);
