@@ -1296,6 +1296,7 @@ const AttInitialvalues={
 {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Allowances</Typography>):false}
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deductions</Typography>):false}
                 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Leave</Typography>):false}
+                {/* {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Salary Advance</Typography>):false} */}
                 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Attendance</Typography>):false}
                 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Payroll Attendance</Typography>):false}
                
@@ -1328,6 +1329,7 @@ const AttInitialvalues={
                   <MenuItem value={5}>Deductions</MenuItem>
                   <MenuItem value={2}>Leave</MenuItem>
                   <MenuItem value={6}>OT</MenuItem>
+                  <MenuItem value={7}>Salary Advance</MenuItem>
                   <MenuItem value={3}>Attendance</MenuItem>
                   <MenuItem value={4}>Payroll Attendance</MenuItem>
                 
@@ -3343,7 +3345,441 @@ const AttInitialvalues={
         ) : (
           false
         )}
-      
+        {show == "7" ? (
+          <Box m="10px">
+            <Formik
+              initialValues={salAdinitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  salAdFNsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        label="Code"
+                        focused
+                        inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        label="Description"
+                        focused
+                        inputProps={{ readOnly: true }}
+                        sx={{
+                          backgroundColor: '#e0e0e0', // Change to your desired background color
+                          '& .MuiFilledInput-root': {
+                            backgroundColor: '#e0e0e0', // For the filled variant
+                          },
+                        }}
+                      />
+                    </FormControl>
+                    <Stack
+                      sx={{
+                        gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                        
+                      }}
+                    >
+                      <img
+                        src={userimg}
+                        style={{ width: "200px", height: "150px" }}
+                      />
+                    </Stack>
+                    <Box sx={{ gridColumn: "span 2" }}>
+                    <Box
+                      height="460px"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          // border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          // borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          // borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          // borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        // checkboxSelection
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" ,gap: "30px"}}
+                  >
+                   <TextField
+                      name="date"
+                      type="date"
+                      id="date"
+                      label="Date"
+                      variant="filled"
+                      focused
+                      value={values.date}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      inputFormat="YYYY-MM-DD"
+                      error={!!touched.date && !!errors.date}
+                      helperText={touched.date && errors.date}
+                      autoFocus
+                    />
+
+                    <TextField
+                      name="referenceifany"
+                      type="text"
+                      id="referenceifany"
+                      label="Reference If Any"
+                      variant="filled"
+                      focused
+                      value={values.referenceifany}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={
+                        !!touched.referenceifany && !!errors.referenceifany
+                      }
+                      helperText={
+                        touched.referenceifany && errors.referenceifany
+                      }
+                      autoFocus
+                    />
+                    <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                      <FormControl
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          id="outlined-basic"
+                          label="ID"
+                          variant="filled"
+                          value={selectOHLookupData.OHRecordID}
+                          focused
+                          sx={{ display: "none" }}
+                        />
+                        <TextField
+                          id="outlined-basic"
+                          label="Purpose"
+                          variant="filled"
+                          value={selectOHLookupData.OHlookupCode}
+                          focused
+                          // required
+                          inputProps={{ tabIndex: "-1" }}
+                        />
+                        <IconButton
+                          sx={{ height: 40, width: 40 }}
+                          onClick={() => handleShow("OH")}
+                        >
+                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+                        </IconButton>
+                        {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
+
+                        <TextField
+                          id="outlined-basic"
+                          label=""
+                          variant="filled"
+                          value={selectOHLookupData.OHlookupDesc}
+                          fullWidth
+                          inputProps={{ tabIndex: "-1" }}
+                          focused
+                        />
+                      </FormControl>
+                    </FormControl>
+                    <TextField
+                      name="amount"
+                      type="text"
+                      id="amount"
+                      label="Amount"
+                      variant="filled"
+                      focused
+                      value={values.amount}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.amount && !!errors.amount}
+                      helperText={touched.amount && errors.amount}
+                      autoFocus
+                    />
+                    <TextField
+                      name="comments"
+                      type="text"
+                      id="comments"
+                      label="comments"
+                      variant="filled"
+                      focused
+                      value={values.comments}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.comments && !!errors.comments}
+                      helperText={touched.comments && errors.comments}
+                      autoFocus
+                    />
+
+                    {/* <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="paymentmethods">Payment Methods</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="paymentmethods"
+                      name="paymentmethods"
+                      value={values.paymentmethods}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.paymentmethods && !!errors.paymentmethods}
+                        helperText={touched.paymentmethods && errors.paymentmethods}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="AS">Assitis</MenuItem>
+                      <MenuItem value="TH">Time and a Half</MenuItem> 
+                      <MenuItem value="DT">Double Time</MenuItem>
+                      <MenuItem value="CS">Compensate</MenuItem>
+                    
+                    </Select>
+                    
+                  </FormControl>
+ <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="OtType">OT Type</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="OtType"
+                      name="OtType"
+                      value={values.OtType}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.OtType && !!errors.OtType}
+                        helperText={touched.OtType && errors.OtType}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="FS">Flexible Scheduling</MenuItem>
+                      <MenuItem value="SS">Shift Swaps</MenuItem> 
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2" }}
+                  >
+                   
+                   <InputLabel id="Status">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="Status"
+                      name="Status"
+                      value={values.Status}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                       error={!!touched.Status && !!errors.Status}
+                        helperText={touched.Status && errors.Status}
+                        sx={{ 
+                          gridColumn: "span 2", 
+                          backgroundColor: "#ffffff", 
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          }
+                        }}     
+                    >
+                      <MenuItem value="AL">Applied</MenuItem>
+                      <MenuItem value="AP">Approved</MenuItem> 
+                      <MenuItem value="RJ">Rejected</MenuItem>
+                    
+                    </Select>
+                  </FormControl> */}
+                  </FormControl>
+                    </FormControl>
+                  </Box>
+                  
+                  <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                  <IconButton
+                    size="large"
+                    color="warning"
+                    aria-label="upload picture"
+                    component="label"
+                  >
+                    <input
+                      hidden
+                      accept="all/*"
+                      type="file"
+                      onChange={getFileChange}
+                    />
+                    <PictureAsPdfOutlinedIcon />
+                  </IconButton>
+                  <Button
+                    variant="contained"
+                    component={"a"}
+                    onClick={() => {
+                      data.Attachment || ImageName
+                        ? window.open(
+                            ImageName
+                              ? store.getState().globalurl.attachmentUrl +
+                                  ImageName
+                              : store.getState().globalurl.attachmentUrl +
+                                  data.Attachment,
+                            "_blank"
+                          )
+                        : toast.error("Please Upload File");
+                    }}
+                  >
+                    View
+                  </Button>
+                  <LoadingButton
+                    loading={loading}
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                  >
+                    SAVE
+                  </LoadingButton>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/TR160/Salary Advance/${parentID}/${filtertype}`
+                      );
+                    }}
+                  >
+                    CANCEL
+                  </Button>
+                </Box>
+                 
+                </form>
+              )}
+            </Formik>
+            <Popup
+            title="Purpose"
+            openPopup={openOHPopup}
+            setOpenPopup={setOpenOHPopup}
+          >
+            <Listviewpopup
+              accessID="2032"
+              screenName="OverHead"
+              childToParent={childToParent}
+              filterName={"FinanceCategoryType"}
+              filterValue={parentID}
+            />
+          </Popup>
+          </Box>
+        ) : (
+          false
+        )}
         {show == "3" ? (
           <Box m="10px">
             <Formik
