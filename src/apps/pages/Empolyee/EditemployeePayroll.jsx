@@ -182,7 +182,7 @@ const EditemployeePayroll = () => {
 
   const [isPopupData, setisPopupdata] = React.useState(false);
   const [opendesignPopup, setOpendesignPopup] = useState(false);
-
+  const [openOHPopup, setOpenOHPopup] = useState(false);
   // ************Lookup Function***************
   function handleShow(type) {
     if (type == "DE") {
@@ -197,7 +197,9 @@ const EditemployeePayroll = () => {
     if (type == "LT") {
       setOpenLETPopup(true);
     }
-    
+    if (type == "OH") {
+      setOpenOHPopup(true);
+    }
   }
 
   const [selectLookupData, setselectLookupData] = React.useState({
@@ -205,6 +207,12 @@ const EditemployeePayroll = () => {
     lookupCode: "",
     lookupDesc: "",
   });
+  const [selectOHLookupData, setselectOHLookupData] = React.useState({
+    OHlookupRecordid: "",
+    OHlookupCode: "",
+    OHlookupDesc: "",
+  });
+  
    const [ADLookupData, setADLookupData] = React.useState({
     adRecordID: "",
     adType: "",
@@ -238,6 +246,15 @@ const EditemployeePayroll = () => {
       });
       setOpenDEPopup(false);
     };
+    if (type == "OverHead") {
+      setisPopupdata(true);
+      setselectOHLookupData({
+        OHlookupRecordid: childdata.RecordID,
+        OHlookupCode: childdata.Code,
+        OHlookupDesc: childdata.Name,
+      });
+      setOpenOHPopup(false);
+    }
       if (type == "Allowance" || type == "Deduction") {
         setADLookupData({
           adType: childdata.Type,
@@ -385,6 +402,10 @@ const EditemployeePayroll = () => {
         dispatch(fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""));
         selectCellRowData({ rowData: {}, mode: "A", field: "" });  
           }
+          if (event.target.value == "7") {
+            dispatch(fetchExplorelitview("TR160", "Salary Advance", `EmployeeID=${recID}`, ""));
+            selectCellRowData({ rowData: {}, mode: "A", field: "" });  
+              }
 
           
         
@@ -433,6 +454,9 @@ const EditemployeePayroll = () => {
   }else if(show == "6") {
     VISIBLE_FIELDS = ["SLNO","OtDate","NumberOfHours","Status","action"];
   }
+  else if(show == "7") {
+    VISIBLE_FIELDS = ["SLNO","SalaryAdvanceDate","OverHeadsCode","OverHeadsName","action"];
+  }
   
   else {
     VISIBLE_FIELDS = ["SLNO","Deductions","Type","value","EffectiveValue","action"];
@@ -465,7 +489,7 @@ const EditemployeePayroll = () => {
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
         
-          <Typography>{(show == "2" ? "List of Leave" :show == "6" ? "List of OT" : (show == "1" ? "List of Allowance" :"List of Deductions"))}</Typography>
+          <Typography>{(show == "2" ? "List of Leave" :show == "6" ? "List of OT" :show == "7" ? "List of SalaryAdvance": (show == "1" ? "List of Allowance" :"List of Deductions"))}</Typography>
 
 
           <Typography variant="h5">{`(${rowCount})`}</Typography>
@@ -806,6 +830,16 @@ const [otdata,setOtdata]= useState({
         Status: "",
         Comments: ""
 })
+const [saladdata,setSaladdata]= useState({
+  RecordID:"",
+  SalaryAdvanceDate:"",
+  ReferranceIfAny:"",
+  OverHeadsID:"",
+  // OverHeadsCode:"",
+  // OverHeadsName: "",
+  Amount:"",
+  Comments:"",
+})
   const selectCellRowData = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
@@ -835,6 +869,11 @@ const [otdata,setOtdata]= useState({
         letlookupRecordid: "",
         letlookupDesc: "",
       });
+      setselectOHLookupData({
+        OHlookupRecordid: "",
+        OHlookupCode: "",
+        OHlookupDesc: "",
+      });
 
      setLeaveData({
       recordID:"",
@@ -851,6 +890,16 @@ const [otdata,setOtdata]= useState({
         PaymentMethod: "",
         Status: "",
         Comments: ""
+     })
+     setSaladdata({
+      RecordID:"",
+      SalaryAdvanceDate:"",
+      ReferranceIfAny:"",
+      OverHeadsID:"",
+      // OverHeadsCode:"",
+      // OverHeadsName: "",
+      Amount:"",
+      Comments:"",
      })
     } else {
       if (field == "action") {
@@ -885,6 +934,21 @@ const [otdata,setOtdata]= useState({
         letlookupCode: rowData.LeaveTypeCode,
         letlookupRecordid: rowData.LeaveTypeID,
         letlookupDesc: rowData.LeaveTypeName
+      });
+      setselectOHLookupData({
+        OHlookupRecordid: rowData.OverHeadsID,
+        OHlookupCode: rowData.OverHeadsCode,
+        OHlookupDesc: rowData.OverHeadsName,
+      });
+      setSaladdata({
+        RecordID:rowData.RecordID,
+        SalaryAdvanceDate:rowData.SalaryAdvanceDate,
+        ReferranceIfAny:rowData.ReferranceIfAny,
+        OverHeadsID:rowData.OverHeadsID,
+        // OverHeadsCode:rowData.OverHeadsCode,
+        // OverHeadsName: rowData.OverHeadsName,
+        Amount:rowData.Amount,
+        Comments:rowData.Comments,
       });
 
       setAllDecData({
@@ -966,7 +1030,7 @@ funMode === "A" && !del
 }
 
 /*OT SAVE FUNCTION*/
-//-------------------------------------LEAVE SAVE FUNCTION---------------------------------------------//
+//-------------------------------------OT SAVE FUNCTION---------------------------------------------//
 
 const otInitialValue={
   code: Data.Code,
@@ -1013,6 +1077,7 @@ const otInitialValue={
                 // LeaveTypeID:selectLETLookupData.letlookupRecordid,
   
               }
+              
               const response = await dispatch(
                 explorePostData({ accessID: "TR216", action, idata })
               );
@@ -1031,7 +1096,76 @@ const otInitialValue={
                 toast.error(response.payload.Msg);
               }
   }
-  
+                                            // Salary Advance
+  const salAdinitialValue = {
+    //RecID: data.RecordID,
+    code: Data.Code,
+    description: Data.Name,
+    OHRecordID: saladdata.OverHeadsID,
+    // OHCode: saladdata.OverHeadsCode,
+    // OHName: saladdata.OverHeadsName,
+    date: saladdata.SalaryAdvanceDate,
+    referenceifany: saladdata.ReferranceIfAny,
+    // purpose: saladdata.OverHeadsID,
+    amount: saladdata.Amount,
+    comments: saladdata.Comments,
+    //approvedby: Data.Approvedby,
+  };
+  const salAdFNsave= async(values,resetForm,del)=>{
+    setLoading(true);
+    let action= funMode === "A" && !del
+                ? "insert"
+                : funMode === "E" && del
+                ? "harddelete"
+                : "update";
+                const idata={
+                  RecordID:saladdata.RecordID,
+                  //RecordID: Data.recID,
+                  SalaryAdvanceDate: values.date,
+                  ReferranceIfAny: values.referenceifany,
+                  OverHeadsID: selectOHLookupData.OHlookupRecordid,
+                  OverHeadsCode: selectOHLookupData.OHlookupCode,
+                  OverHeadsName: selectOHLookupData.OHlookupDesc,
+                  Amount: values.amount,
+                  Comments: values.comments,
+                  EmployeeID: recID,
+                  
+                  // Approvedby:values.approvedby,
+                  //OverheadsRecordID: selectOHLookupData.OHlookupRecordid,
+                  // Attachment: ImageName ? ImageName : data.Attachment,
+                  // FinanceCategoryType: parentID,
+                  // Approvedby: EMPID,
+                  // Finyear,
+                  // CompanyID,
+                  // Type:values.Type,
+                  // FromDate:values.FromDate,
+                  // ToDate:values.ToDate,
+                  // LeaveCategory:values.LeaveCategory,
+                  // EmployeeID: recID,
+                  // SortOrder: "1",
+                  // Disable: "N",
+                  // LeaveTypeID:selectLETLookupData.letlookupRecordid,
+    
+                }
+                
+                const response = await dispatch(
+                  explorePostData({ accessID: "TR160", action, idata })
+                );
+                if (response.payload.Status == "Y") {
+                  setLoading(false);
+                  dispatch(
+                    fetchExplorelitview("TR160", "Salary Advance", `EmployeeID=${recID}`, "")
+                  );
+            
+                  toast.success(response.payload.Msg);
+            
+                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                  resetForm();
+                } else {
+                  setLoading(false);
+                  toast.error(response.payload.Msg);
+                }
+    }
   
   
 
@@ -1328,6 +1462,7 @@ const AttInitialvalues={
                   <MenuItem value={5}>Deductions</MenuItem>
                   <MenuItem value={2}>Leave</MenuItem>
                   <MenuItem value={6}>OT</MenuItem>
+                  <MenuItem value={7}>Salary Advance</MenuItem>
                   <MenuItem value={3}>Attendance</MenuItem>
                   <MenuItem value={4}>Payroll Attendance</MenuItem>
                 
@@ -3343,7 +3478,478 @@ const AttInitialvalues={
         ) : (
           false
         )}
-      
+       {show == "7" ? (
+         <Box m="10px">
+         <Formik
+           initialValues={salAdinitialValue}
+           enableReinitialize={true}
+           onSubmit={(values, { resetForm }) => {
+             setTimeout(() => {
+              salAdFNsave(values, resetForm, false);
+             }, 100);
+           }}
+         >
+           {({
+             errors,
+             touched,
+             handleBlur,
+             handleChange,
+             isSubmitting,
+             values,
+             handleSubmit,
+             resetForm,
+           }) => (
+             <form
+               onSubmit={handleSubmit}
+               onReset={() => {
+                 selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                 resetForm();
+               }}
+             >
+               <Box
+                 display="grid"
+                 gap="30px"
+                 gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                 sx={{
+                   "& > div": {
+                     gridColumn: isNonMobile ? undefined : "span 4",
+                   },
+                 }}
+               >
+                 <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                   <TextField
+                     fullWidth
+                     variant="filled"
+                     type="text"
+                     id="code"
+                     name="code"
+                     value={values.code}
+                     label="Code"
+                     focused
+                     inputProps={{ readOnly: true }}
+                     sx={{
+                       backgroundColor: '#e0e0e0', // Change to your desired background color
+                       '& .MuiFilledInput-root': {
+                         backgroundColor: '#e0e0e0', // For the filled variant
+                       },
+                     }}
+                   />
+
+                   <TextField
+                     fullWidth
+                     variant="filled"
+                     type="text"
+                     id="description"
+                     name="description"
+                     value={values.description}
+                     label="Description"
+                     focused
+                     inputProps={{ readOnly: true }}
+                     sx={{
+                       backgroundColor: '#e0e0e0', // Change to your desired background color
+                       '& .MuiFilledInput-root': {
+                         backgroundColor: '#e0e0e0', // For the filled variant
+                       },
+                     }}
+                   />
+                 </FormControl>
+                 <Stack
+                   sx={{
+                     gridColumn: "span 2",
+                     alignContent: "center",
+                     justifyContent: "center",
+                     alignItems: "center",
+                     position: "relative",
+                     right: "0px",
+                     
+                   }}
+                 >
+                   <img
+                     src={userimg}
+                     style={{ width: "200px", height: "150px" }}
+                   />
+                 </Stack>
+                 <Box sx={{ gridColumn: "span 2" }}>
+                 <Box
+                   height="390px"
+                   sx={{
+                     "& .MuiDataGrid-root": {
+                       // border: "none",
+                     },
+                     "& .MuiDataGrid-cell": {
+                       // borderBottom: "none",
+                     },
+                     "& .name-column--cell": {
+                       color: colors.greenAccent[300],
+                     },
+                     "& .MuiDataGrid-columnHeaders": {
+                       backgroundColor: colors.blueAccent[800],
+                       // borderBottom: "none",
+                     },
+                     "& .MuiDataGrid-virtualScroller": {
+                       backgroundColor: colors.primary[400],
+                     },
+                     "& .MuiDataGrid-footerContainer": {
+                       // borderTop: "none",
+                       backgroundColor: colors.blueAccent[800],
+                     },
+                     "& .MuiCheckbox-root": {
+                       color: `${colors.greenAccent[200]} !important`,
+                     },
+                   }}
+                 >
+                   <DataGrid
+                     // checkboxSelection
+                     rows={explorelistViewData}
+                     columns={columns}
+                     disableSelectionOnClick
+                     getRowId={(row) => row.RecordID}
+                     pageSize={pageSize}
+                     onPageSizeChange={(newPageSize) =>
+                       setPageSize(newPageSize)
+                     }
+                     onCellClick={(params) => {
+                       selectCellRowData({
+                         rowData: params.row,
+                         mode: "E",
+                         field: params.field,
+                       });
+                     }}
+                     rowsPerPageOptions={[5, 10, 20]}
+                     pagination
+                     components={{
+                       Toolbar: LeaveTool,
+                     }}
+                     onStateChange={(stateParams) =>
+                       setRowCount(stateParams.pagination.rowCount)
+                     }
+                     loading={exploreLoading}
+                     componentsProps={{
+                       toolbar: {
+                         showQuickFilter: true,
+                         quickFilterProps: { debounceMs: 500 },
+                       },
+                     }}
+                   />
+                 </Box>
+               </Box>
+                 <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                 <FormControl
+                 focused
+                 variant="filled"
+                 sx={{ gridColumn: "span 2" ,gap: "30px"}}
+               >
+                 <TextField
+                      name="date"
+                      type="date"
+                      id="date"
+                      label="Date"
+                      variant="filled"
+                      focused
+                      value={values.date}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      inputFormat="YYYY-MM-DD"
+                      error={!!touched.date && !!errors.date}
+                      helperText={touched.date && errors.date}
+                      autoFocus
+                    />
+
+<TextField
+                      name="referenceifany"
+                      type="text"
+                      id="referenceifany"
+                      label="Reference If Any"
+                      variant="filled"
+                      focused
+                       value={values.referenceifany}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={
+                        !!touched.referenceifany && !!errors.referenceifany
+                      }
+                      helperText={
+                        touched.referenceifany && errors.referenceifany
+                      }
+                      autoFocus
+                    />
+
+<FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                      <FormControl
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          id="outlined-basic"
+                          label="ID"
+                          variant="filled"
+                           value={selectOHLookupData.OHRecordID}
+                          focused
+                          sx={{ display: "none" }}
+                        />
+                        <TextField
+                          id="outlined-basic"
+                          label="Purpose"
+                          variant="filled"
+                           value={selectOHLookupData.OHlookupCode}
+                          focused
+                          // required
+                          inputProps={{ tabIndex: "-1" }}
+                        />
+                        <IconButton
+                          sx={{ height: 40, width: 40 }}
+                           onClick={() => handleShow("OH")}
+                        >
+                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+                        </IconButton>
+                        {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
+
+                        <TextField
+                          id="outlined-basic"
+                          label=""
+                          variant="filled"
+                           value={selectOHLookupData.OHlookupDesc}
+                          fullWidth
+                          inputProps={{ tabIndex: "-1" }}
+                          focused
+                        />
+                      </FormControl>
+                    </FormControl>
+                    
+                    <TextField
+                      name="amount"
+                      type="text"
+                      id="amount"
+                      label="Amount"
+                      variant="filled"
+                      focused
+                      value={values.amount}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.amount && !!errors.amount}
+                      helperText={touched.amount && errors.amount}
+                      autoFocus
+                    />
+                    <TextField
+                      name="comments"
+                      type="text"
+                      id="comments"
+                      label="comments"
+                      variant="filled"
+                      focused
+                      value={values.comments}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.comments && !!errors.comments}
+                      helperText={touched.comments && errors.comments}
+                      autoFocus
+                    />
+                 {/* <TextField
+                   name="NumberOfHours"
+                   type="number"
+                   id="NumberOfHours"
+                   label="No. of Hours"
+                   variant="filled"
+                   focused
+                   value={values.NumberOfHours}
+                   onBlur={handleBlur}
+                   onChange={handleChange}
+                 
+                   onWheel={(e) => e.target.blur()} 
+                   required
+                   sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                   InputProps={{
+                     inputProps: {
+                       style: { textAlign: "right" }, 
+                       min: 0, 
+                       max: 24, 
+                     },
+                   }}
+                 />
+                   <TextField
+                     fullWidth
+                     variant="filled"
+                     type="text"
+                     label="Comments"
+                     value={values.comments}
+                     id="comments"
+                     onBlur={handleBlur}
+                     onChange={handleChange}
+                     name="comments"
+                     error={!!touched.comments && !!errors.comments}
+                     helperText={touched.comments && errors.comments}
+                     sx={{ 
+                       gridColumn: "span 2", 
+                       backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                   '& .MuiFilledInput-root': {
+                     backgroundColor: '#f5f5f5 ', // For the filled variant
+                   },
+                     }}                        focused
+                     
+                   /> */}
+
+{/* <FormControl
+                 focused
+                 variant="filled"
+                 sx={{ gridColumn: "span 2" }}
+               >
+                 <InputLabel id="paymentmethods">Payment Methods</InputLabel>
+                 <Select
+                   labelId="demo-simple-select-filled-label"
+                   id="paymentmethods"
+                   name="paymentmethods"
+                   value={values.paymentmethods}
+                   onBlur={handleBlur}
+                   onChange={handleChange}
+                    error={!!touched.paymentmethods && !!errors.paymentmethods}
+                     helperText={touched.paymentmethods && errors.paymentmethods}
+                     sx={{ 
+                       gridColumn: "span 2", 
+                       backgroundColor: "#ffffff", 
+                       "& .MuiFilledInput-root": {
+                         backgroundColor: "#ffffff",
+                       }
+                     }}     
+                 >
+                   <MenuItem value="AS">Assitis</MenuItem>
+                   <MenuItem value="TH">Time and a Half</MenuItem> 
+                   <MenuItem value="DT">Double Time</MenuItem>
+                   <MenuItem value="CS">Compensate</MenuItem>
+                 
+                 </Select>
+                 
+               </FormControl> */}
+{/* <FormControl
+                 focused
+                 variant="filled"
+                 sx={{ gridColumn: "span 2" }}
+               >
+                 <InputLabel id="OtType">OT Type</InputLabel>
+                 <Select
+                   labelId="demo-simple-select-filled-label"
+                   id="OtType"
+                   name="OtType"
+                   value={values.OtType}
+                   onBlur={handleBlur}
+                   onChange={handleChange}
+                    error={!!touched.OtType && !!errors.OtType}
+                     helperText={touched.OtType && errors.OtType}
+                     sx={{ 
+                       gridColumn: "span 2", 
+                       backgroundColor: "#ffffff", 
+                       "& .MuiFilledInput-root": {
+                         backgroundColor: "#ffffff",
+                       }
+                     }}     
+                 >
+                   <MenuItem value="FS">Flexible Scheduling</MenuItem>
+                   <MenuItem value="SS">Shift Swaps</MenuItem> 
+                 </Select>
+               </FormControl> */}
+
+               {/* <FormControl
+                 focused
+                 variant="filled"
+                 sx={{ gridColumn: "span 2" }}
+               >
+                
+                <InputLabel id="Status">Status</InputLabel>
+                 <Select
+                   labelId="demo-simple-select-filled-label"
+                   id="Status"
+                   name="Status"
+                   value={values.Status}
+                   onBlur={handleBlur}
+                   onChange={handleChange}
+                    error={!!touched.Status && !!errors.Status}
+                     helperText={touched.Status && errors.Status}
+                     sx={{ 
+                       gridColumn: "span 2", 
+                       backgroundColor: "#ffffff", 
+                       "& .MuiFilledInput-root": {
+                         backgroundColor: "#ffffff",
+                       }
+                     }}     
+                 >
+                   <MenuItem value="AL">Applied</MenuItem>
+                   <MenuItem value="AP">Approved</MenuItem> 
+                   <MenuItem value="RJ">Rejected</MenuItem>
+                 
+                 </Select>
+               </FormControl> */}
+               </FormControl>
+                 </FormControl>
+               </Box>
+               <Box display="flex" justifyContent="end" mt="20px" gap={2}>
+                 {/* {/ {YearFlag == "true" ? ( /} */}
+                 <LoadingButton
+                   color="secondary"
+                   variant="contained"
+                   type="submit"
+                   loading={isLoading}
+                 >
+                   Save
+                 </LoadingButton>
+                
+                 <Button
+                   color="error"
+                   variant="contained"
+                 onClick={() => {
+                   Swal.fire({
+                     title: `Do you want Delete?`,
+                     icon: "warning",
+                     showCancelButton: true,
+                     confirmButtonColor: "#3085d6",
+                     cancelButtonColor: "#d33",
+                     confirmButtonText: "Confirm" ,
+                   }).then((result) => {
+                     if (result.isConfirmed) {
+                      salAdFNsave(values,resetForm,"harddelete");
+                       
+                     } else {
+                       return;
+                     }
+                   }); }}
+                 >
+                   Delete
+                 </Button>
+                
+                 <Button
+                   type="reset"
+                   color="warning"
+                   variant="contained"
+                   onClick={() => {
+                     setScreen(0);
+                   }}
+                 >
+                   Cancel
+                 </Button>
+                 
+               </Box>
+              
+             </form>
+           )}
+         </Formik>
+         <Popup
+            title="Purpose"
+            openPopup={openOHPopup}
+            setOpenPopup={setOpenOHPopup}
+          >
+            <Listviewpopup
+              accessID="2032"
+              screenName="OverHead"
+              childToParent={childToParent}
+              //filterName={"FinanceCategoryType"}
+              //filterValue={parentID}
+            />
+          </Popup>
+       </Box>
+        ) : (
+          false
+        )}
         {show == "3" ? (
           <Box m="10px">
             <Formik
