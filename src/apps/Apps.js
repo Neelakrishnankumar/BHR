@@ -108,6 +108,10 @@ import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParame
  import EditemployeePayroll from "./pages/Empolyee/EditemployeePayroll";
  import Editrunpayroll from "./pages/Empolyee/Editrunpayroll";
  import LeaveType from "./pages/HR/Editleavetype";
+import Holidaylist from "./pages/HR/Editholidaylist";
+
+
+
 
 
 function App() {
@@ -156,6 +160,12 @@ function App() {
                     path="/:accessID/:screenName/EditLeave Type/:id/:Mode"
                     element={<LeaveType />}
                   />
+                  <Route
+                    path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
+                    element={<Holidaylist />}
+                  />
+                  
+                
                    <Route
                     path="/:accessID/:screenName/EditJobwork Category/:id/:Mode"
                     element={<Editjobworkcategory />}
