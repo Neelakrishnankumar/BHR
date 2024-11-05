@@ -77,9 +77,9 @@ import {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const location = useLocation();
     const [pageSize, setPageSize] = React.useState(10);
-    useEffect(() => {
-      dispatch(getFetchData({ accessID, get: "get", recID }));
-    }, [location.key]);
+    // useEffect(() => {
+    //   dispatch(getFetchData({ accessID, get: "get", recID }));
+    // }, [location.key]);
     const colors = tokens(theme.palette.mode);
   
     // *************** INITIALVALUE  *************** //
@@ -394,14 +394,14 @@ import {
           {show == 0 && !getLoading ? (
             <Box m="20px">
               <Formik
-                // initialValues={InitialValue}
-                // onSubmit={(values, setSubmitting) => {
-                //   setTimeout(() => {
-                //     Fnsave(values);
-                //   }, 100);
-                // }}
-                // validationSchema={FunctionSchema}
-                // enableReinitialize={true}
+                initialValues={[]}
+                onSubmit={(values, setSubmitting) => {
+                  // setTimeout(() => {
+                  //   Fnsave(values);
+                  // }, 100);
+                }}
+                validationSchema={FunctionSchema}
+                enableReinitialize={true}
               >
                 {({
                   errors,
@@ -429,17 +429,17 @@ import {
                       >
                         <TextField
                           name="date"
-                          type="text"
+                          type="date"
                           id="date"
                           label="Date"
                           variant="filled"
                           focused
                           required
-                        //   value={values.date}
-                        //   onBlur={handleBlur}
-                        //   onChange={handleChange}
-                        //   error={!!touched.date && !!errors.date}
-                        //   helperText={touched.date && errors.date}
+                          // value={values.date}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.date && !!errors.date}
+                          helperText={touched.date && errors.date}
                           sx={{ 
                             gridColumn: "span 2", 
                             backgroundColor: "#ffffff", // Set the background to white
@@ -458,11 +458,11 @@ import {
                           label="Occasion"
                           variant="filled"
                           focused
-                        //   value={values.occasion}
-                        //   onBlur={handleBlur}
-                        //   onChange={handleChange}
-                        //   error={!!touched.occasion && !!errors.occasion}
-                        //   helperText={touched.occasion && errors.occasion}
+                          // value={values.occasion}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.occasion && !!errors.occasion}
+                          helperText={touched.occasion && errors.occasion}
                           sx={{ 
                             gridColumn: "span 2", 
                             backgroundColor: "#ffffff", // Set the background to white
@@ -479,11 +479,11 @@ import {
                           label="Description"
                           variant="filled"
                           focused
-                        //   value={values.description}
-                        //   onBlur={handleBlur}
-                        //   onChange={handleChange}
-                        //   error={!!touched.description && !!errors.description}
-                        //   helperText={touched.description && errors.description}
+                          // value={values.description}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.description && !!errors.description}
+                          helperText={touched.description && errors.description}
                           sx={{ 
                             gridColumn: "span 2", 
                             backgroundColor: "#ffffff", // Set the background to white
@@ -502,11 +502,11 @@ import {
                           label="Sort Order"
                           variant="filled"
                           focused
-                        //   value={values.sortorder}
-                        //   onBlur={handleBlur}
-                        //   onChange={handleChange}
-                        //   error={!!touched.sortorder && !!errors.sortorder}
-                        //   helperText={touched.sortorder && errors.sortorder}
+                          // value={values.sortorder}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.sortorder && !!errors.sortorder}
+                          helperText={touched.sortorder && errors.sortorder}
                           sx={{ background: "#fff6c3" }}
                           InputProps={{
                             inputProps: {
@@ -525,9 +525,9 @@ import {
                             type="checkbox"
                             name="disable"
                             id="disable"
-                            // onChange={handleChange}
-                            // onBlur={handleBlur}
-                            // as={Checkbox}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
                             label="Disable"
                           />
     
@@ -592,11 +592,11 @@ import {
           {show == "1" ? (
             <Box m="10px">
               <Formik
-                initialValues={EmployeeInitialValue}
+                initialValues={[]}
                 onSubmit={(values, { resetForm }) => {
-                  setTimeout(() => {
-                    FnEmployeesave(values, resetForm, false);
-                  }, 100);
+                  // setTimeout(() => {
+                  //   FnEmployeesave(values, resetForm, false);
+                  // }, 100);
                 }}
                 //  validationSchema={ HsnSchema}
                 enableReinitialize={true}
@@ -614,7 +614,7 @@ import {
                   <form
                     onSubmit={handleSubmit}
                     onReset={() => {
-                      selectCellData({ rowData: {}, mode: "A", field: "" });
+                      // selectCellData({ rowData: {}, mode: "A", field: "" });
                       resetForm();
                     }}
                   >
@@ -640,12 +640,12 @@ import {
                         variant="filled"
                         focused
                         required
-                        value={values.code}
+                        // value={values.code}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         sx={{ gridColumn: "span 2" }}
-                        // error={!!touched.code && !!errors.code}
-                        // helperText={touched.code && errors.code}
+                        error={!!touched.code && !!errors.code}
+                        helperText={touched.code && errors.code}
     
                         autoFocus
                       />
@@ -657,11 +657,11 @@ import {
                         variant="filled"
                         focused
                         sx={{ gridColumn: "span 2" }}
-                        value={values.name}
+                        // value={values.name}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.name && !!errors.name}
-                        // helperText={touched.name && errors.name}
+                        error={!!touched.name && !!errors.name}
+                        helperText={touched.name && errors.name}
     
                         autoFocus
                       />
@@ -699,29 +699,31 @@ import {
                           <DataGrid
                             // checkboxSelection
                             loading={exploreLoading}
-                            rows={explorelistViewData}
-                            columns={columns}
+                            // rows={explorelistViewData}
+                            // columns={columns}
+                            rows={[]}
+                            columns={[]}
                             disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
+                            // getRowId={(row) => row.RecordID}
                             pageSize={pageSize}
                             onPageSizeChange={(newPageSize) =>
                               setPageSize(newPageSize)
                             }
-                            onCellClick={(params) => {
-                              selectCellData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                              });
-                            }}
+                            // onCellClick={(params) => {
+                            //   selectCellData({
+                            //     rowData: params.row,
+                            //     mode: "E",
+                            //     field: params.field,
+                            //   });
+                            // }}
                             rowsPerPageOptions={[5, 10, 20]}
                             pagination
                             components={{
                               Toolbar: Employee,
                             }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
+                            // onStateChange={(stateParams) =>
+                            //   setRowCount(stateParams.pagination.rowCount)
+                            // }
                             componentsProps={{
                               toolbar: {
                                 showQuickFilter: true,
@@ -747,10 +749,10 @@ import {
                             focused
                             required
                             inputProps={{ tabIndex: "-1" }}
-                            value={selectEmployeeLookup.EmployeelookupCode}
+                            // value={selectEmployeeLookup.EmployeelookupCode}
                           />
                           <IconButton
-                            onClick={() => handleShow("EMPLOYEE")}
+                            // onClick={() => handleShow("EMPLOYEE")}
                             sx={{ height: 40, width: 40 }}
                           >
                             <img src="https://img.icons8.com/color/48/null/details-popup.png" />
@@ -761,7 +763,7 @@ import {
                             fullWidth
                             inputProps={{ tabIndex: "-1" }}
                             focused
-                            value={selectEmployeeLookup.EmployeelookupDesc}
+                            // value={selectEmployeeLookup.EmployeelookupDesc}
                           />
                         </Box>
                       </FormControl>
@@ -787,22 +789,22 @@ import {
                       )}
                       {YearFlag == "true" ? (
                         <Button
-                          onClick={() =>{ Swal.fire({
-                            title: `Do you want Delete?`,
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Confirm",
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              FnEmployeesave(values, resetForm, true);
+    //                       onClick={() =>{ Swal.fire({
+    //                         title: `Do you want Delete?`,
+    //                         icon: "warning",
+    //                         showCancelButton: true,
+    //                         confirmButtonColor: "#3085d6",
+    //                         cancelButtonColor: "#d33",
+    //                         confirmButtonText: "Confirm",
+    //                       }).then((result) => {
+    //                         if (result.isConfirmed) {
+    //                           FnEmployeesave(values, resetForm, true);
                               
-                            } else {
-                              return;
-                            }
-                          });
-    }}
+    //                         } else {
+    //                           return;
+    //                         }
+    //                       });
+    // }}
                           color="error"
                           variant="contained"
                         >
@@ -817,14 +819,14 @@ import {
                         type="reset"
                         color="warning"
                         variant="contained"
-                        onClick={() => {
-                          setScreen(0);
-                        }}
+                        // onClick={() => {
+                        //   setScreen(0);
+                        // }}
                       >
                         Cancel
                       </Button>
                     </Box>
-                    <Popup
+                    {/* <Popup
                       title="Employees"
                       openPopup={openEmployeePopup}
                       setOpenPopup={setOpenEmployeePopup}
@@ -834,7 +836,7 @@ import {
                         screenName="Employees"
                         childToParent={childToParent}
                       />
-                    </Popup>
+                    </Popup> */}
                   </form>
                 )}
               </Formik>
