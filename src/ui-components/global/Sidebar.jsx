@@ -806,6 +806,24 @@ const child = {
           UGA_ACCESSIDS: "TR121",
         },
         {
+          name: "Holiday List",
+          id: 92,
+          url: "./TR218/Holiday List",
+          icon: (
+            <Tooltip title="Leave Type">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR121",
+        },
+        
+        {
           name: "Salary Component",
           id: 57,
           url: "./TR205/Salary Component",

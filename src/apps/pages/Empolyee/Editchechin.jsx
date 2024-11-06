@@ -46,6 +46,7 @@ const Editcheckin = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
+  // var parentID = params.filtertype;
   const data = useSelector((state) => state.formApi.Data);
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -107,7 +108,8 @@ const Editcheckin = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR123/Check In");
+      // navigate("/Apps/TR123/Check In");
+      navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
     } else {
       toast.error(response.payload.Msg);
     }
@@ -230,7 +232,8 @@ const Editcheckin = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR123/Check In");
+          navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+          // navigate("/Apps/TR123/Check In");
         }
       } else {
         return;
@@ -561,7 +564,9 @@ const Editcheckin = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR123/Check In");
+                      navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+                     
+                      // navigate("/Apps/Secondarylistview/TR123/Check In/");
                     }}
                   >
                     Cancel

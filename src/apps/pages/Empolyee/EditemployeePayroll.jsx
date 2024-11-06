@@ -794,6 +794,11 @@ const EditemployeePayroll = () => {
     headerName: "Number Of Hours Worked",
     flex: 1,
   },
+  {
+    field: "Status",
+    headerName: "Status",
+    flex: 1,
+  },
 
   ];
 
@@ -1430,6 +1435,7 @@ const AttInitialvalues={
 {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Allowances</Typography>):false}
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deductions</Typography>):false}
                 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Leave</Typography>):false}
+                {/* {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Salary Advance</Typography>):false} */}
                 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Attendance</Typography>):false}
                 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Payroll Attendance</Typography>):false}
                
