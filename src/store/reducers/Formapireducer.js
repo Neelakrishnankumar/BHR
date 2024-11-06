@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import store from "../../index";
 import toast from "react-hot-toast";
+import { Filter } from "@mui/icons-material";
 
 const initialState = {
   Data: {},
@@ -676,7 +677,8 @@ export const getFetchData = createAsyncThunk(
     const data = {
       accessid: accessID,
       action: get,
-      recid: recID,};
+      recid: recID,
+         };
 
     
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))

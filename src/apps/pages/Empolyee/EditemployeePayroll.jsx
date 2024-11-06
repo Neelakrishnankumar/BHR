@@ -794,6 +794,11 @@ const EditemployeePayroll = () => {
     headerName: "Number Of Hours Worked",
     flex: 1,
   },
+  {
+    field: "Status",
+    headerName: "Status",
+    flex: 1,
+  },
 
   ];
 
