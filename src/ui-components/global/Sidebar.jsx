@@ -24,6 +24,15 @@ import {
   Grid,
   Divider,
 } from "@mui/material";
+//import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import FactCheckRoundedIcon from '@mui/icons-material/FactCheckRounded';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import PaymentsIcon from '@mui/icons-material/Payments';
+//import AttributionIcon from '@mui/icons-material/Attribution';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import { useHref, Link } from "react-router-dom";
 // import avatar from "../../assets/img/avatar.jpg";
 import { tokens } from "../../Theme";
@@ -70,6 +79,7 @@ import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantity
 import DescriptionIcon from "@mui/icons-material/Description";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import SquareFootOutlinedIcon from "@mui/icons-material/SquareFootOutlined";
 import StraightenOutlinedIcon from "@mui/icons-material/StraightenOutlined";
 import { ReactComponent as UomIcon } from "../../assets/icon/uom.svg";
@@ -80,7 +90,8 @@ import { ReactComponent as MaterialIcon } from "../../assets/icon/material.svg";
 import { ReactComponent as BatchIcon } from "../../assets/icon/batch.svg";
 import { ReactComponent as ProductIcon } from "../../assets/icon/products.svg";
 import { ReactComponent as SubstanceIcon } from "../../assets/icon/substance.svg";
-import { Details } from "@mui/icons-material";
+import { Accessibility, AttachMoney, Details, Hail } from "@mui/icons-material";
+import PersonIcon from '@mui/icons-material/Person';
 import BatchPredictionIcon from "@mui/icons-material/BatchPrediction";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import FactoryIcon from "@mui/icons-material/Factory";
@@ -697,7 +708,7 @@ const child = {
       Tooltipname: "Setup",
       icon: (
         <Tooltip title="Setup">
-          <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
+          <RecentActorsIcon sx={{ color: "#651fff" }} />
         </Tooltip>
       ),
       children: [
@@ -725,7 +736,7 @@ const child = {
           url: "./TR122/Designation",
           icon: (
             <Tooltip title="Designation">
-              <Diversity3Icon color="info" />
+              <PersonIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -794,7 +805,7 @@ const child = {
           url: "./TR213/Leave Type",
           icon: (
             <Tooltip title="Leave Type">
-              <Diversity3Icon color="info" />
+              <Hail color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -811,7 +822,7 @@ const child = {
           url: "./TR218/Holiday List",
           icon: (
             <Tooltip title="Leave Type">
-              <Diversity3Icon color="info" />
+              <FactCheckRoundedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -829,7 +840,7 @@ const child = {
           url: "./TR205/Salary Component",
           icon: (
             <Tooltip title="Salary Component">
-              <Diversity3Icon color="info" />
+              <AttachMoneyIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -847,7 +858,7 @@ const child = {
           url: "./TR207/Satuary Component",
           icon: (
             <Tooltip title="Satuary Component">
-              <Diversity3Icon color="info" />
+              <AttachMoneyIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -880,7 +891,7 @@ const child = {
           url: "./TR123/Check In",
           icon: (
             <Tooltip title="Check In">
-              <Diversity3Icon color="info" />
+              <ChecklistIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -897,7 +908,7 @@ const child = {
           url: "./TR124/Check Out",
           icon: (
             <Tooltip title="Check Out">
-              <Diversity3Icon color="info" />
+              <ChecklistRtlIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -914,7 +925,7 @@ const child = {
           url: "./TR124/Attendance Registry",
           icon: (
             <Tooltip title="Attendance Registry">
-              <Diversity3Icon color="info" />
+              <LibraryBooksIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -935,7 +946,7 @@ const child = {
       Tooltipname: "Employees",
       icon: (
         <Tooltip title="Employees">
-          <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
+          <PaymentsIcon sx={{ color: "#651fff" }} />
         </Tooltip>
       ),
       children: [
@@ -962,7 +973,7 @@ const child = {
           url: "./TR217/Run Payroll/Editrunpayroll",
           icon: (
             <Tooltip title="Run Payroll">
-                <PeopleAltIcon color="info" />
+                <CreditCardIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
