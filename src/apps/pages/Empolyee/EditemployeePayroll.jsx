@@ -799,11 +799,28 @@ const EditemployeePayroll = () => {
     headerName: "Status",
     flex: 1,
   },
-
+  {
+    field: "Action",
+    headerName: "Action",
+    flex: 1,
+    renderCell: (params) => {
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+           size="small"
+          onClick={handleAction}
+        >
+        Regularization
+        </Button>
+      );
+    },
+  },
   ];
 
-
-
+const handleAction= ()=>{
+  navigate('.TR027/Employee%20Payroll')
+}
   
   const [itemCustodyData, setItemCustodyData ] = useState({
     recordID:"",
@@ -4198,9 +4215,6 @@ const AttInitialvalues={
                         />
                       </Box>
                     </Box>
-                  
-                 
-               
                 </form>
               )}
             </Formik>
