@@ -1354,15 +1354,27 @@ const AttInitialvalues={
     }
  
     const response =await dispatch(AttendanceProcess({data}));
-    if (response.payload.Status == "Y") {
+
+    // Check if the day count is less than 15
+  //   if (values.dayCount < 15) {
+  //     alert("Minimum 15 days needed");
+     
+  //     // return; // Exit the function if the condition is not met
+  // }
+
+  if (response.payload.Status == "Y") {
      
       toast.success(response.payload.Msg);
 
       
-    } else {
+    }
+
+    else {
  
       toast.error(response.payload.Msg);
     }
+    
+    
 };
 /*end of the Process button onclick */
   
@@ -1432,12 +1444,12 @@ const AttInitialvalues={
          <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
         <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{color:'#0000D1'}}/>}>
         <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={()=> {setScreen(0)}}>Employee</Typography>
-{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Allowances</Typography>):false}
-{show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deductions</Typography>):false}
-                {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Leave</Typography>):false}
-                {/* {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Salary Advance</Typography>):false} */}
-                {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Attendance</Typography>):false}
-                {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Payroll Attendance</Typography>):false}
+        {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Allowances</Typography>):false}
+        {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deductions</Typography>):false}
+        {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Leave</Typography>):false}
+        {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Salary Advance</Typography>):false}
+        {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Attendance</Typography>):false}
+        {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Payroll Attendance</Typography>):false}
                
         </Breadcrumbs>
         </Box>

@@ -260,7 +260,7 @@ payrollattendanceUrl: "https://hr.beyondexs.com/api/PayrollAttendanceController.
 attendanceUrl:"https://hr.beyondexs.com/api/getempattendance.php",
 attendanceprocessUrl:"https://hr.beyondexs.com/api/EmpAttendanceHistoryController.php",
 LeaveTypeurl: "http://beyondexs.com/Trinity/api/APIController.php",
-
+// HolidaylistUrl: "https://hr.beyondexs.com/api/APIController.php?",
 
   };
 

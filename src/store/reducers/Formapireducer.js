@@ -697,6 +697,7 @@ export const getFetchData = createAsyncThunk(
   }
 );
 
+
 export const postData = createAsyncThunk(
   "allScreen/post",
   async ({ accessID, action, idata }) => {
