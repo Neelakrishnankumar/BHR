@@ -38,6 +38,13 @@ import {
   import Popup from "../popup";
   import Listviewpopup from "../Lookup";
   // import CryptoJS from "crypto-js";
+  import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
+
+
   const EditEmpCheckin = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
@@ -134,6 +141,13 @@ import {
       gateLookup.gateCode = data.GateCode;
       gateLookup.gateName = data.GateName;
     }
+
+    const [value, setValue] = useState(null);
+
+    // Handle date change
+    const handleChange = (newValue) => {
+      setValue(newValue);
+    };
   
     const [openEMPLOYEEPopup, setOpenEMPLOYEEPopup] = useState(false);
     const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
@@ -285,6 +299,7 @@ import {
                       },
                     }}
                   >
+
                     <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
                       <FormControl
                         sx={{
@@ -328,6 +343,17 @@ import {
   
                         {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
   
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateTimePicker']}>
+        <DateTimePicker
+          label="Basic date time picker"
+          value={value}
+          onChange={handleChange} // Update state on change
+          renderInput={(params) => <TextField {...params} />} // Use TextField for the input
+        />
+      </DemoContainer>
+    </LocalizationProvider>
+                         
                         <TextField
                           id="outlined-basic"
                           label=""

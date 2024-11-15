@@ -9,6 +9,9 @@ import {
   FormControlLabel,
   Tooltip,
   Checkbox,
+  InputLabel,
+  MenuItem,
+  Select,
   LinearProgress,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -32,8 +35,7 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
-// import CryptoJS from "crypto-js";
-const Editproject = () => {
+const Regularization = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
@@ -52,27 +54,33 @@ const Editproject = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
-    code: data.Code,
-    name: data.Name,
-
-    sortorder: data.SortOrder,
-    disable: data.Disable === "Y" ? true : false,
+    employeeid: data.EmployeeID,
+    date: data.RegularizationDate,
+    employeeName: data.EmployeeName,
+    checkindate: data.CheckInDate,
+    checkoutdate: data.CheckOutDate,
+    checkintime: data.CheckInTime,
+    checkouttime: data.CheckoutTime,
+    remarks: data.Remarks,
+    status: data.Status,
   };
 
-  const Fnsave = async (values,del) => {
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+        ? "harddelete"
+        : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -80,19 +88,21 @@ const Editproject = () => {
 
     const idata = {
       RecordID: recID,
-      Code: values.code,
-      Name: values.name,
-
-      SortOrder: values.sortorder,
-      Disable: isCheck,
-      Finyear,
-      CompanyID,
+      EmployeeID: values.employeeid,
+      RegularizationDate: values.date,
+      EmployeeName: values.employeeName,
+      CheckInDate: values.checkindate,
+      CheckOutDate: values.checkoutdate,
+      CheckInTime: values.checkintime,
+      CheckoutTime: values.checkouttime,
+      Remarks: values.remarks,
+      Status: values.status,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR133/Project");
+      navigate("/Apps/TR219/Regularization");
     } else {
       toast.error(response.payload.Msg);
     }
@@ -121,7 +131,7 @@ const Editproject = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR133/Project");
+          navigate("/Apps/TR219/Regularization");
         }
       } else {
         return;
@@ -138,7 +148,7 @@ const Editproject = () => {
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          <Typography variant="h3">Project</Typography>
+          <Typography variant="h3">Regularization</Typography>
         </Box>
         <Box display="flex">
           <Tooltip title="Close">
@@ -186,66 +196,119 @@ const Editproject = () => {
                     },
                   }}
                 >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
+               
                     <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
+                      fullWidth
                       variant="filled"
-                      focused
-                      required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      autoFocus
-                    />
-                    <TextField
-                      name="name"
                       type="text"
-                      id="name"
+                      id="employeeName"
+                      name="employeeName"
+                      value={values.employeeName}
                       label="Description"
-                      variant="filled"
                       focused
-                      value={values.name}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      autoFocus
+                      // inputProps={{ readOnly: true }}
+                      sx={{ gridColumn: "span 2" }}
                     />
 
                     <TextField
-                      name="sortorder"
-                      type="number"
-                      id="sortorder"
-                      label="Sort Order"
+                      name="date"
+                      type="date"
+                      id="date"
+                      label="Date"
                       variant="filled"
                       focused
-                      value={values.sortorder}
+                      inputFormat="YYYY-MM-DD"
+                      value={values.date}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.sortorder && !!errors.sortorder}
-                      helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "#fff6c3" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      onWheel={(e) => e.target.blur()} 
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
+                      error={!!touched.date && !!errors.date}
+                      helperText={touched.date && errors.date}
+                      sx={{ gridColumn: "span 2" }}
                     />
-                    <Box>
+
+                    <TextField
+                      name="checkindate"
+                      type="date"
+                      id="checkindate"
+                      label="Check In Date"
+                      variant="filled"
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      value={values.checkindate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.checkindate && !!errors.checkindate}
+                      helperText={touched.checkindate && errors.checkindate}
+                      sx={{ gridColumn: "span 2" }}
+                    />
+
+                    <TextField
+                      name="checkintime"
+                      type="time"
+                      id="checkintime"
+                      label="Check In Time"
+                      inputFormat="HH:mm:aa"
+                      variant="filled"
+                      value={values.checkintime}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      sx={{ gridColumn: "span 2" }}
+                    />
+
+                    <TextField
+                      name="checkoutdate"
+                      type="date"
+                      id="checkoutdate"
+                      label="Check Out Date"
+                      variant="filled"
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      value={values.checkoutdate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.checkoutdate && !!errors.checkoutdate}
+                      helperText={touched.checkoutdate && errors.checkoutdate}
+                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                    />
+
+                    <TextField
+                      name="checkouttime"
+                      type="time"
+                      id="checkouttime"
+                      label="Check Out Time"
+                      inputFormat="HH:mm:aa"
+                      value={values.checkouttime}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                      variant="filled"
+                    />
+
+                    <FormControl
+                      focused
+                      variant="filled"
+                      sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
+                    >
+                      <InputLabel id="status">Status</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-filled-label"
+                        id="status"
+                        name="status"
+                        value={values.status}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="P">Present</MenuItem>
+                        <MenuItem value="A">Absent</MenuItem>
+                        <MenuItem value="W">WeekOff</MenuItem>
+                        <MenuItem value="I">Irregular</MenuItem>
+                        <MenuItem value="L">Leave</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    {/* <Box>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -258,8 +321,8 @@ const Editproject = () => {
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
-                  </FormControl>
+                    </Box> */}
+                 
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px" gap="20px">
                   {YearFlag == "true" ? (
@@ -279,30 +342,28 @@ const Editproject = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )}{" "}
+                  {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values,  "harddelete");
+                        Fnsave(values, "harddelete");
                       }}
                     >
                       Delete
                     </Button>
-                  ) :  (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      disabled={true}
-                    >
+                  ) : (
+                    <Button color="error" variant="contained" disabled={true}>
                       Delete
                     </Button>
-                  )}
+                  )} */}
                   <Button
-                    color="error"
+                    color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR133/Project");
+                      navigate(
+                        -1);
                     }}
                   >
                     Cancel
@@ -319,4 +380,4 @@ const Editproject = () => {
   );
 };
 
-export default Editproject;
+export default Regularization;

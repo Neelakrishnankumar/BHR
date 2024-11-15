@@ -254,7 +254,7 @@ const EditEmpfinance = () => {
               //   );
               // }}
             >
-              Finance Entry
+              Expense Entry
             </Typography>
             <Typography
               variant="h5"
