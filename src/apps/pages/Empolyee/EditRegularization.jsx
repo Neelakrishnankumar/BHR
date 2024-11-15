@@ -9,6 +9,9 @@ import {
   FormControlLabel,
   Tooltip,
   Checkbox,
+  InputLabel,
+  MenuItem,
+  Select,
   LinearProgress,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -59,11 +62,14 @@ const Regularization = () => {
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
-   
-    employeeid: data.EmployeeId,
-    date: data. RegularizationDate,
-    checkInDateTime: data.CheckInDateTime,
-    checkOutDateTime: data.CheckOutDateTime,
+    employeeid: data.EmployeeID,
+    date: data.RegularizationDate,
+    employeeName: data.EmployeeName,
+    checkindate: data.CheckInDate,
+    checkoutdate: data.CheckOutDate,
+    checkintime: data.CheckInTime,
+    checkouttime: data.CheckoutTime,
+    remarks: data.Remarks,
     status: data.Status,
   };
 
@@ -82,10 +88,14 @@ const Regularization = () => {
 
     const idata = {
       RecordID: recID,
-      Employeeid: values.employeeid,
+      EmployeeID: values.employeeid,
       RegularizationDate: values.date,
-      CheckInDateTime: values.checkInDateTime,
-      CheckOutDateTime: values.checkOutDateTime,
+      EmployeeName: values.employeeName,
+      CheckInDate: values.checkindate,
+      CheckOutDate: values.checkoutdate,
+      CheckInTime: values.checkintime,
+      CheckoutTime: values.checkouttime,
+      Remarks: values.remarks,
       Status: values.status,
     };
 
@@ -186,24 +196,18 @@ const Regularization = () => {
                     },
                   }}
                 >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
+               
                     <TextField
-                      name="EmployeeID"
-                      type="text"
-                      id="EmployeeID"
-                      label="EmployeeID"
+                      fullWidth
                       variant="filled"
+                      type="text"
+                      id="employeeName"
+                      name="employeeName"
+                      value={values.employeeName}
+                      label="Description"
                       focused
-                      required
-                      value={values.employeeid}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.employeeid && !!errors.employeeid}
-                      helperText={touched.employeeid && errors.employeeid}
-                      autoFocus
+                      // inputProps={{ readOnly: true }}
+                      sx={{ gridColumn: "span 2" }}
                     />
 
                     <TextField
@@ -222,36 +226,63 @@ const Regularization = () => {
                       sx={{ gridColumn: "span 2" }}
                     />
 
-              
-
                     <TextField
-                      name="ckeckInDateTime"
-                      type="time"
-                      id="ckeckInDateTime"
-                      label="Check In Time"
-                      inputFormat="HH:mm:aa"
+                      name="checkindate"
+                      type="date"
+                      id="checkindate"
+                      label="Check In Date"
                       variant="filled"
-                      value={values.checkInDateTime}
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      value={values.checkindate}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      focused
-                      inputProps={{ readOnly: true }}
+                      error={!!touched.checkindate && !!errors.checkindate}
+                      helperText={touched.checkindate && errors.checkindate}
                       sx={{ gridColumn: "span 2" }}
                     />
 
-            
                     <TextField
-                      name="ckeckOutDateTime"
+                      name="checkintime"
                       type="time"
-                      id="ckeckOutDateTime"
-                      label="Check Out Time"
+                      id="checkintime"
+                      label="Check In Time"
                       inputFormat="HH:mm:aa"
-                      value={values.checkOutDateTime}
+                      variant="filled"
+                      value={values.checkintime}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       focused
-                      inputProps={{ readOnly: true }}
                       sx={{ gridColumn: "span 2" }}
+                    />
+
+                    <TextField
+                      name="checkoutdate"
+                      type="date"
+                      id="checkoutdate"
+                      label="Check Out Date"
+                      variant="filled"
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      value={values.checkoutdate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.checkoutdate && !!errors.checkoutdate}
+                      helperText={touched.checkoutdate && errors.checkoutdate}
+                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                    />
+
+                    <TextField
+                      name="checkouttime"
+                      type="time"
+                      id="checkouttime"
+                      label="Check Out Time"
+                      inputFormat="HH:mm:aa"
+                      value={values.checkouttime}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
                       variant="filled"
                     />
 
@@ -263,8 +294,8 @@ const Regularization = () => {
                       <InputLabel id="status">Status</InputLabel>
                       <Select
                         labelId="demo-simple-select-filled-label"
-                        id="Status"
-                        name="Status"
+                        id="status"
+                        name="status"
                         value={values.status}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -291,7 +322,7 @@ const Regularization = () => {
 
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box> */}
-                  </FormControl>
+                 
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px" gap="20px">
                   {YearFlag == "true" ? (
@@ -312,7 +343,7 @@ const Regularization = () => {
                       Save
                     </Button>
                   )}{" "}
-                  {YearFlag == "true" ? (
+                  {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -326,12 +357,13 @@ const Regularization = () => {
                     <Button color="error" variant="contained" disabled={true}>
                       Delete
                     </Button>
-                  )}
+                  )} */}
                   <Button
-                    color="error"
+                    color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR219/Regularization");
+                      navigate(
+                        -1);
                     }}
                   >
                     Cancel

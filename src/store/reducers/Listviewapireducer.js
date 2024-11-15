@@ -1740,6 +1740,7 @@ export const fetchListview =
                     AccessID !== "TR136" &&
                     AccessID !== "TR091" &&
                     AccessID !== "TR151" &&
+                    AccessID !== "TR027" &&
                     AccessID !== "TR052" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
@@ -1761,6 +1762,19 @@ export const fetchListview =
                     {AccessID == "TR052" || AccessID == "TR151" ? (
                       <Link
                         to={`./EditDelivery Chalan/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )}
+                     {AccessID == "TR027" ? (
+                      <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E/N`}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">

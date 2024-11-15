@@ -106,6 +106,7 @@ const EditemployeePayroll = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
+  var typepassing = params.Type;
   const Data = useSelector((state) => state.formApi.Data);
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -131,6 +132,7 @@ const EditemployeePayroll = () => {
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   useEffect(() => {
+    
     dispatch(fetchApidata(accessID, "get", recID));
   }, []);
   const [ini, setIni] = useState(true);
@@ -348,16 +350,20 @@ const EditemployeePayroll = () => {
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
-  const [show, setScreen] = React.useState("0");
+
+const [show, setScreen] = React.useState("0");
+
   // material
   const [supprodata, setSupprodata] = useState({
     RecordID: "",
     Comments: "",
-    SortOrder: "",
+    SortOrder: "", 
   });
   const [boMode, setBomode] = useState("A");
 
-  
+
+
+
   
 
 
@@ -809,7 +815,7 @@ const EditemployeePayroll = () => {
           variant="contained"
           color="primary"
            size="small"
-          onClick={handleAction}
+          onClick={() => navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`)}
         >
         Regularization
         </Button>
@@ -818,9 +824,7 @@ const EditemployeePayroll = () => {
   },
   ];
 
-const handleAction= ()=>{
-  navigate('.TR027/Employee%20Payroll')
-}
+
   
   const [itemCustodyData, setItemCustodyData ] = useState({
     recordID:"",

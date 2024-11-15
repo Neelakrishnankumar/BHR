@@ -109,6 +109,7 @@ import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParame
  import Editrunpayroll from "./pages/Empolyee/Editrunpayroll";
  import LeaveType from "./pages/HR/Editleavetype";
 import Holidaylist from "./pages/HR/Editholidaylist";
+import Regularization from "./pages/Empolyee/EditRegularization";
 
 
 
@@ -128,8 +129,9 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-                <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={ <EditemployeePayroll/>}/>
+                <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode/:Type" element={ <EditemployeePayroll/>}/>
                 <Route path="/:accessID/:screenName/Editrunpayroll" element={ <Editrunpayroll/>}/>
+                <Route path="/:accessID/Regularization/:id/" element={ <Regularization/>}/>
                
                <Route
                     path="/:accessID/:screenName/EditSalary Component/:id/:Mode"
@@ -525,6 +527,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck Out/:id/:Mode"
                     element={<EditEmpCheckout/>}
+                  />
+                     <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck In/:id/:Mode"
+                    element={<EditEmpCheckin/>}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLocation/:id/:Mode"
