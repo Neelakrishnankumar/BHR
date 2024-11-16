@@ -799,6 +799,22 @@ const EditemployeePayroll = () => {
     headerName: "Status",
     flex: 1,
   },
+  // {
+  //   field: "Action",
+  //   headerName: "Action",
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return (
+  //       <Button
+  //         variant="contained"
+  //         color="primary"
+  //         // onClick={() => handleAction(params.row)}
+  //       >
+  //       Regularization
+  //       </Button>
+  //     );
+  //   },
+  // },
 
   ];
 
