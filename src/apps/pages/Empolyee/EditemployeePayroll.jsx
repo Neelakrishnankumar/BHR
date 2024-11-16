@@ -130,9 +130,18 @@ const EditemployeePayroll = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+  var typepassing = params.Type;
   useEffect(() => {
+   
+    if (typepassing == "N") {
+      setScreen(0);
+    } else if (typepassing == "M") {
+      
+      setScreen(3);
+    }
+    console.log(typepassing,"--get typepassing");
     dispatch(fetchApidata(accessID, "get", recID));
-  }, []);
+  }, [typepassing]);
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -816,8 +825,24 @@ const EditemployeePayroll = () => {
   //   },
   // },
 
+  {
+    field: "Action",
+    headerName: "Action",
+    flex: 1,
+    renderCell: (params) => {
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+           size="small"
+          onClick={() => navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`)}
+        >
+        Regularization
+        </Button>
+      );
+    },
+  },
   ];
-
 
 
   
