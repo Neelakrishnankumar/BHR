@@ -141,7 +141,7 @@ const EditemployeePayroll = () => {
     }
     console.log(typepassing,"--get typepassing");
     dispatch(fetchApidata(accessID, "get", recID));
-  }, [typepassing]);
+  }, []);
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
