@@ -50,18 +50,7 @@ const Regularization = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
 
-  const [asignReg, setAsignReg] = useState({
-    CheckInDate: "",
-    CheckOutDate: "",
-    EmplyeeCheckInDateTime: "",
-    EmplyeeCheckOutDateTime: "",
-    MonthDate: "",
-    Name: "",
-    NumberOfHoursWorked: "",
-    RecordID: "",
-    SLNO: "",
-    Status: ""
-  });
+  
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
