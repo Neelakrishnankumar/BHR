@@ -23,12 +23,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import {
-  fetchApidata,
-  getFetchData,
-  postApidata,
-  postData,
-} from "../../../store/reducers/Formapireducer";
+import { postData,getFetchData } from "../../../store/reducers/Formapireducer";
 import React, { useState, useEffect, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -55,6 +50,18 @@ const Regularization = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
 
+  const [asignReg, setAsignReg] = useState({
+    CheckInDate: "",
+    CheckOutDate: "",
+    EmplyeeCheckInDateTime: "",
+    EmplyeeCheckOutDateTime: "",
+    MonthDate: "",
+    Name: "",
+    NumberOfHoursWorked: "",
+    RecordID: "",
+    SLNO: "",
+    Status: ""
+  });
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -68,14 +75,14 @@ const Regularization = () => {
     checkindate: data.CheckInDate,
     checkoutdate: data.CheckOutDate,
     checkintime: data.CheckInTime,
-    checkouttime: data.CheckoutTime,
+    checkouttime: data.CheckOutTime,
     remarks: data.Remarks,
     status: data.Status,
     newcheckindate: data.NewCheckInDate,
     newcheckoutdate: data.NewCheckOutDate,
     newcheckintime: data.NewCheckInTime,
     newcheckouttime: data.NewCheckOutTime,
-    regularizationdatetime: data.RegularizationDateTime,
+    newstatus: data.NewStatus,
   };
 
   const Fnsave = async (values, del) => {
@@ -99,14 +106,14 @@ const Regularization = () => {
       CheckInDate: values.checkindate,
       CheckOutDate: values.checkoutdate,
       CheckInTime: values.checkintime,
-      CheckoutTime: values.checkouttime,
+      CheckOutTime: values.checkouttime,
       Remarks: values.remarks,
       Status: values.status,
       NewCheckInDate: values.newcheckindate,
       NewCheckOutDate: values.newcheckoutdate,
       NewCheckInTime: values.newcheckintime,
       NewCheckOutTime: values.newcheckouttime,
-      RegularizationDateTime: values.regularizationdatetime,
+      NewStatus: values.newstatus,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -148,6 +155,8 @@ const Regularization = () => {
       }
     });
   };
+
+  
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
@@ -243,11 +252,11 @@ const Regularization = () => {
                     variant="filled"
                     focused
                     inputFormat="YYYY-MM-DD"
-                    value={values.checkindate}
+                    value={values.newcheckindate}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.checkindate && !!errors.checkindate}
-                    helperText={touched.checkindate && errors.checkindate}
+                    error={!!touched.newcheckindate && !!errors.newcheckindate}
+                    helperText={touched.newcheckindate && errors.newcheckindate}
                     sx={{ gridColumn: "span 2" }}
                   />
 
@@ -258,7 +267,7 @@ const Regularization = () => {
                     label="Check In Time"
                     inputFormat="HH:mm:aa"
                     variant="filled"
-                    value={values.checkintime}
+                    value={values.newcheckintime}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
@@ -273,11 +282,11 @@ const Regularization = () => {
                     variant="filled"
                     focused
                     inputFormat="YYYY-MM-DD"
-                    value={values.checkoutdate}
+                    value={values.newcheckoutdate}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.checkoutdate && !!errors.checkoutdate}
-                    helperText={touched.checkoutdate && errors.checkoutdate}
+                    error={!!touched.newcheckoutdate && !!errors.newcheckoutdate}
+                    helperText={touched.newcheckoutdate && errors.newcheckoutdate}
                     sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
                   />
 
@@ -287,7 +296,7 @@ const Regularization = () => {
                     id="checkouttime"
                     label="Check Out Time"
                     inputFormat="HH:mm:aa"
-                    value={values.checkouttime}
+                    value={values.newcheckouttime}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
@@ -305,7 +314,7 @@ const Regularization = () => {
                       labelId="demo-simple-select-filled-label"
                       id="status"
                       name="status"
-                      value={values.status}
+                      value={values.newstatus}
                       onBlur={handleBlur}
                       onChange={handleChange}
                     >
@@ -370,7 +379,9 @@ const Regularization = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate( `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`);
+                      navigate(
+                        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
+                      );
                     }}
                   >
                     Cancel

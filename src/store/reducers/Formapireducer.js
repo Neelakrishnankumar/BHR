@@ -10,6 +10,7 @@ const initialState = {
   msg: "",
   loading: false,
   getLoading: false,
+  regularizationLoading: false,
   expgetLoading: false,
   error: "",
   Successflag: false,
@@ -679,7 +680,6 @@ export const getFetchData = createAsyncThunk(
       action: get,
       recid: recID,
          };
-
     
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
@@ -696,6 +696,33 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   }
 );
+
+// export const Regularizationdata = createAsyncThunk(
+//   "regularization",
+//   async ({ accessID, get, recID, }) => {
+//     var url = store.getState().globalurl.regularizationUrl;
+//     const data = {
+//       accessid: accessID,
+//       action: get,
+//       recid: recID,
+//          };
+    
+//     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+//     const response = await axios.post(url, data, {
+//       headers: {
+//         Authorization:
+//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//       },
+//     });
+//     console.log(
+//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+//       response
+//     );
+//     return response.data;
+//   }
+// );
+
 
 export const postData = createAsyncThunk(
   "allScreen/post",
@@ -1172,6 +1199,24 @@ export const getApiSlice = createSlice({
         state.Data = {};
        toast.error('Something Went Wrong')
       })
+      // .addCase(Regularizationdata.pending, (state, action) => {
+      //   state.Status = "idle";
+      //   state.regularizationLoading = true;
+      //   state.Data = {};
+      //   state.msg =  "Loading..."
+      // })
+      // .addCase(Regularizationdata.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.regularizationLoading = false;
+      //   state.Data = action.payload.Data ? action.payload.Data : {} ;
+      //   // state.msg =  action.payload.Msg
+      // })
+      // .addCase(Regularizationdata.rejected, (state, action) => {
+      //   state.Status = "Error";
+      //   state.regularizationLoading = false;
+      //   state.Data = {};
+      //  toast.error('Something Went Wrong')
+      // })
       .addCase(postData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
