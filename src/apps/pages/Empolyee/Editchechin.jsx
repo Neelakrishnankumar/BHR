@@ -108,8 +108,8 @@ const Editcheckin = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      // navigate("/Apps/TR123/Check In");
-      navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+      navigate("/Apps/TR123/Check In");
+      // navigate(`/Apps/Secondarylistview/TR123/Check%20In`)
     } else {
       toast.error(response.payload.Msg);
     }

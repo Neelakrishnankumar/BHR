@@ -23,12 +23,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import {
-  fetchApidata,
-  getFetchData,
-  postApidata,
-  postData,
-} from "../../../store/reducers/Formapireducer";
+import { postData,getFetchData } from "../../../store/reducers/Formapireducer";
 import React, { useState, useEffect, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -55,6 +50,7 @@ const Regularization = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
 
+  
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -68,9 +64,14 @@ const Regularization = () => {
     checkindate: data.CheckInDate,
     checkoutdate: data.CheckOutDate,
     checkintime: data.CheckInTime,
-    checkouttime: data.CheckoutTime,
+    checkouttime: data.CheckOutTime,
     remarks: data.Remarks,
     status: data.Status,
+    newcheckindate: data.NewCheckInDate,
+    newcheckoutdate: data.NewCheckOutDate,
+    newcheckintime: data.NewCheckInTime,
+    newcheckouttime: data.NewCheckOutTime,
+    newstatus: data.NewStatus,
   };
 
   const Fnsave = async (values, del) => {
@@ -94,9 +95,14 @@ const Regularization = () => {
       CheckInDate: values.checkindate,
       CheckOutDate: values.checkoutdate,
       CheckInTime: values.checkintime,
-      CheckoutTime: values.checkouttime,
+      CheckOutTime: values.checkouttime,
       Remarks: values.remarks,
       Status: values.status,
+      NewCheckInDate: values.newcheckindate,
+      NewCheckOutDate: values.newcheckoutdate,
+      NewCheckInTime: values.newcheckintime,
+      NewCheckOutTime: values.newcheckouttime,
+      NewStatus: values.newstatus,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -138,6 +144,8 @@ const Regularization = () => {
       }
     });
   };
+
+  
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
@@ -196,119 +204,118 @@ const Regularization = () => {
                     },
                   }}
                 >
-               
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      id="employeeName"
-                      name="employeeName"
-                      value={values.employeeName}
-                      label="Description"
-                      focused
-                      // inputProps={{ readOnly: true }}
-                      sx={{ gridColumn: "span 2" }}
-                    />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    id="employeeName"
+                    name="employeeName"
+                    value={values.employeeName}
+                    label="EmployeeName"
+                    focused
+                    inputProps={{ readOnly: true }}
+                    sx={{ gridColumn: "span 2" }}
+                  />
 
-                    <TextField
-                      name="date"
-                      type="date"
-                      id="date"
-                      label="Date"
-                      variant="filled"
-                      focused
-                      inputFormat="YYYY-MM-DD"
-                      value={values.date}
+                  <TextField
+                    name="date"
+                    type="date"
+                    id="date"
+                    label="Date"
+                    variant="filled"
+                    focused
+                    inputFormat="YYYY-MM-DD"
+                    value={values.date}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.date && !!errors.date}
+                    helperText={touched.date && errors.date}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+
+                  <TextField
+                    name="checkindate"
+                    type="date"
+                    id="checkindate"
+                    label="Check In Date"
+                    variant="filled"
+                    focused
+                    inputFormat="YYYY-MM-DD"
+                    value={values.newcheckindate}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.newcheckindate && !!errors.newcheckindate}
+                    helperText={touched.newcheckindate && errors.newcheckindate}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+
+                  <TextField
+                    name="checkintime"
+                    type="time"
+                    id="checkintime"
+                    label="Check In Time"
+                    inputFormat="HH:mm:aa"
+                    variant="filled"
+                    value={values.newcheckintime}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    focused
+                    sx={{ gridColumn: "span 2" }}
+                  />
+
+                  <TextField
+                    name="checkoutdate"
+                    type="date"
+                    id="checkoutdate"
+                    label="Check Out Date"
+                    variant="filled"
+                    focused
+                    inputFormat="YYYY-MM-DD"
+                    value={values.newcheckoutdate}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.newcheckoutdate && !!errors.newcheckoutdate}
+                    helperText={touched.newcheckoutdate && errors.newcheckoutdate}
+                    sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                  />
+
+                  <TextField
+                    name="checkouttime"
+                    type="time"
+                    id="checkouttime"
+                    label="Check Out Time"
+                    inputFormat="HH:mm:aa"
+                    value={values.newcheckouttime}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    focused
+                    sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                    variant="filled"
+                  />
+
+                  <FormControl
+                    focused
+                    variant="filled"
+                    sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
+                  >
+                    <InputLabel id="status">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="status"
+                      name="status"
+                      value={values.newstatus}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.date && !!errors.date}
-                      helperText={touched.date && errors.date}
-                      sx={{ gridColumn: "span 2" }}
-                    />
-
-                    <TextField
-                      name="checkindate"
-                      type="date"
-                      id="checkindate"
-                      label="Check In Date"
-                      variant="filled"
-                      focused
-                      inputFormat="YYYY-MM-DD"
-                      value={values.checkindate}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.checkindate && !!errors.checkindate}
-                      helperText={touched.checkindate && errors.checkindate}
-                      sx={{ gridColumn: "span 2" }}
-                    />
-
-                    <TextField
-                      name="checkintime"
-                      type="time"
-                      id="checkintime"
-                      label="Check In Time"
-                      inputFormat="HH:mm:aa"
-                      variant="filled"
-                      value={values.checkintime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      sx={{ gridColumn: "span 2" }}
-                    />
-
-                    <TextField
-                      name="checkoutdate"
-                      type="date"
-                      id="checkoutdate"
-                      label="Check Out Date"
-                      variant="filled"
-                      focused
-                      inputFormat="YYYY-MM-DD"
-                      value={values.checkoutdate}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.checkoutdate && !!errors.checkoutdate}
-                      helperText={touched.checkoutdate && errors.checkoutdate}
-                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
-                    />
-
-                    <TextField
-                      name="checkouttime"
-                      type="time"
-                      id="checkouttime"
-                      label="Check Out Time"
-                      inputFormat="HH:mm:aa"
-                      value={values.checkouttime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
-                      variant="filled"
-                    />
-
-                    <FormControl
-                      focused
-                      variant="filled"
-                      sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
                     >
-                      <InputLabel id="status">Status</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="status"
-                        name="status"
-                        value={values.status}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="P">Present</MenuItem>
-                        <MenuItem value="A">Absent</MenuItem>
-                        <MenuItem value="W">WeekOff</MenuItem>
-                        <MenuItem value="I">Irregular</MenuItem>
-                        <MenuItem value="L">Leave</MenuItem>
-                      </Select>
-                    </FormControl>
+                      <MenuItem value="P">Present</MenuItem>
+                      <MenuItem value="A">Absent</MenuItem>
+                      <MenuItem value="W">WeekOff</MenuItem>
+                      <MenuItem value="I">Irregular</MenuItem>
+                      <MenuItem value="L">Leave</MenuItem>
+                    </Select>
+                  </FormControl>
 
-                    {/* <Box>
+                  {/* <Box>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -322,7 +329,6 @@ const Regularization = () => {
 
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box> */}
-                 
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px" gap="20px">
                   {YearFlag == "true" ? (
@@ -363,8 +369,8 @@ const Regularization = () => {
                     variant="contained"
                     onClick={() => {
                       navigate(
-                         `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M` );
-                       
+                        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
+                      );
                     }}
                   >
                     Cancel
