@@ -887,9 +887,9 @@ const EditemployeePayroll = () => {
                 SLNO: params.row.SLNO,
                 Status: params.row.Status
               });
-              console.log(setAsignReg, "--setAsignReg");
-            
-             
+              console.log(asignReg, "--onclick asignReg");
+              console.log(params.row, "-- onclick setAsignReg");
+             console.log(params.row.Name, "--Name");
             }}
           >
             Regularization
@@ -945,7 +945,21 @@ const EditemployeePayroll = () => {
 
       rowData
     );
-
+    
+    // setAsignReg({
+                
+    //   CheckInDate: rowData.CheckInDate,
+    //   CheckOutDate: rowData.CheckOutDate,
+    //   EmplyeeCheckInDateTime: rowData.EmplyeeCheckInDateTime,
+    //   EmplyeeCheckOutDateTime: rowData.EmplyeeCheckOutDateTime,
+    //   MonthDate: rowData.MonthDate,
+    //   Name: rowData.Name,
+    //   NumberOfHoursWorked: rowData.NumberOfHoursWorked,
+    //   RecordID: rowData.RecordID,
+    //   SLNO: rowData.SLNO,
+    //   Status: rowData.Status
+    // });
+    // console.log(asignReg, "-- SelectData asignReg");
     // console.log(AttendanceData[1],"RegularizationRow");
 
     // console.log(AttColumn[2],"RegularizationColumn")
@@ -1004,6 +1018,24 @@ const EditemployeePayroll = () => {
         Amount: "",
         Comments: "",
       });
+      // setAsignReg({
+                
+      //   CheckInDate: "",
+      //   CheckOutDate: "",
+      //   EmplyeeCheckInDateTime: "",
+      //   EmplyeeCheckOutDateTime: "",
+      //   MonthDate: "",
+      //   Name: "",
+      //   NumberOfHoursWorked: "",
+      //   RecordID: "",
+      //   SLNO: "",
+      //   Status: ""
+      // });
+      // // console.log(asignReg, "--selectcell");
+      // // console.log(params.row, "--sselectcell etAsignReg");
+     
+   
+
     } else {
       if (field == "action") {
         setItemCustodyData({
@@ -1063,6 +1095,24 @@ const EditemployeePayroll = () => {
           adDesc: rowData.Name,
           adCategory: rowData.Category,
         });
+
+        // setAsignReg({
+                
+        //   CheckInDate: rowData.CheckInDate,
+        //   CheckOutDate: rowData.CheckOutDate,
+        //   EmplyeeCheckInDateTime: rowData.EmplyeeCheckInDateTime,
+        //   EmplyeeCheckOutDateTime: rowData.EmplyeeCheckOutDateTime,
+        //   MonthDate: rowData.MonthDate,
+        //   Name: rowData.Name,
+        //   NumberOfHoursWorked: rowData.NumberOfHoursWorked,
+        //   RecordID: rowData.RecordID,
+        //   SLNO: rowData.SLNO,
+        //   Status: rowData.Status
+        // });
+        // console.log(asignReg, "--selectcell");
+        // console.log(params.row, "--sselectcell etAsignReg");
+       
+
       }
     }
   };

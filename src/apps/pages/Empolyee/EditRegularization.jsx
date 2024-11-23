@@ -67,7 +67,7 @@ const Regularization = () => {
     checkouttime: data.CheckOutTime,
     remarks: data.Remarks,
     status: data.Status,
-    newcheckindate: data.NewCheckInDate,
+    CheckInDate: data.CheckInDate,
     newcheckoutdate: data.NewCheckOutDate,
     newcheckintime: data.NewCheckInTime,
     newcheckouttime: data.NewCheckOutTime,
@@ -98,7 +98,7 @@ const Regularization = () => {
       CheckOutTime: values.checkouttime,
       Remarks: values.remarks,
       Status: values.status,
-      NewCheckInDate: values.newcheckindate,
+      CheckInDate: values.CheckInDate,
       NewCheckOutDate: values.newcheckoutdate,
       NewCheckInTime: values.newcheckintime,
       NewCheckOutTime: values.newcheckouttime,
@@ -234,18 +234,18 @@ const Regularization = () => {
                   />
 
                   <TextField
-                    name="checkindate"
+                    name="CheckInDate"
                     type="date"
-                    id="checkindate"
+                    id="CheckInDate"
                     label="Check In Date"
                     variant="filled"
                     focused
                     inputFormat="YYYY-MM-DD"
-                    value={values.newcheckindate}
+                    value={values.CheckInDate}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.newcheckindate && !!errors.newcheckindate}
-                    helperText={touched.newcheckindate && errors.newcheckindate}
+                    error={!!touched.CheckInDate && !!errors.CheckInDate}
+                    helperText={touched.CheckInDate && errors.CheckInDate}
                     sx={{ gridColumn: "span 2" }}
                   />
 
