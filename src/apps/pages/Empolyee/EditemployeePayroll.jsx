@@ -38,12 +38,14 @@ import {
   empAttendance,
   Attendance,
   AttendanceProcess,
+  setReg,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
 import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 import basicSchema from "../../Security/validation";
+import regfn from "./EditRegularization"
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Listviewpopup from "../Lookup";
 import Popup from "../popup";
@@ -84,6 +86,29 @@ const EditemployeePayroll = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  
+  const [selectedData, setSelectedData] = useState(null); // State to store selected row data
+
+  const handleButtonClick = (params) => {
+    const rowData = {
+      CheckInDate: params.row.CheckInDate,
+      CheckOutDate: params.row.CheckOutDate,
+      EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
+      EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
+      MonthDate: params.row.MonthDate,
+      Name: params.row.Name,
+      NumberOfHoursWorked: params.row.NumberOfHoursWorked,
+      RecordID: params.row.RecordID,
+      SLNO: params.row.SLNO,
+      Status: params.row.Status
+    };
+    setSelectedData(rowData);  // Store the selected row data (optional, for tracking)
+    console.log("Data to be passed:", rowData);
+
+    // Navigate to another screen, passing the data in state
+    navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`, { state: rowData });
+    // navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
+  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -133,6 +158,7 @@ const EditemployeePayroll = () => {
     Name: "",
     NumberOfHoursWorked: "",
     RecordID: "",
+    EmployeeID: "",
     SLNO: "",
     Status: ""
   });
@@ -871,26 +897,33 @@ const EditemployeePayroll = () => {
             variant="contained"
             color="primary"
             size="small"
-            onClick={() => {
+            onClick={() => handleButtonClick(params)}
+            // onClick={() => 
+              // { 
+              // handleButtonClick
+              // dispatch(setReg({ params}));
+              //dispatch(setReg({ params}));
+              //regfn(params);
                // Navigate to the second screen for regularization
-               navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
+              //  navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
               // Set the selected row data in the state
-              setAsignReg({
-                CheckInDate: params.row.CheckInDate,
-                CheckOutDate: params.row.CheckOutDate,
-                EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
-                EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
-                MonthDate: params.row.MonthDate,
-                Name: params.row.Name,
-                NumberOfHoursWorked: params.row.NumberOfHoursWorked,
-                RecordID: params.row.RecordID,
-                SLNO: params.row.SLNO,
-                Status: params.row.Status
-              });
-              console.log(asignReg, "--onclick asignReg");
-              console.log(params.row, "-- onclick setAsignReg");
-             console.log(params.row.Name, "--Name");
-            }}
+            //   setAsignReg({
+            //     CheckInDate: params.row.CheckInDate,
+            //     CheckOutDate: params.row.CheckOutDate,
+            //     EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
+            //     EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
+            //     MonthDate: params.row.MonthDate,
+            //     Name: params.row.Name,
+            //     NumberOfHoursWorked: params.row.NumberOfHoursWorked,
+            //     RecordID: params.row.RecordID,
+            //     SLNO: params.row.SLNO,
+            //     Status: params.row.Status
+            //   });
+            //   console.log(asignReg, "--onclick asignReg");
+            //   console.log(params.row, "-- onclick setAsignReg");
+            //  console.log(params.row.Name, "--Name");
+            // }}
+              // }
           >
             Regularization
           </Button>

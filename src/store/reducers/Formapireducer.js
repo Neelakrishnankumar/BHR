@@ -3,6 +3,7 @@ import axios from "axios";
 import store from "../../index";
 import toast from "react-hot-toast";
 import { Filter } from "@mui/icons-material";
+import { useState } from "react";
 
 const initialState = {
   Data: {},
@@ -56,6 +57,7 @@ searchLoading:false,
 empAttendanceData:{},
 AttendanceData:{},
 };
+
 
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
@@ -928,6 +930,28 @@ export const proPriceTracking = createAsyncThunk(
 );
 
 
+export const setReg = createAsyncThunk(
+  "Regularization/Price Tracking",
+  async ({params }) => {
+    console.log("Dispatch received idata:", params );
+    // var url = store.getState().globalurl.producttrackingUrl;
+    var data = {
+     ...params 
+    };
+    // setAssignparams(params.rows);
+    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+
+    // const response = await axios.post(url, data, {
+    //   headers: {
+    //     Authorization:
+    //       "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+    //   },
+    // });
+    // console.log("🚀 ~ file: Formapireducer.js:345 ~ reg:", response)
+    // return response.data;
+  }
+);
+
 // export function customerorderanalysis(RecordID,CompanyID,YearID) {
 //   return async (dispatch) => {
 //     function onSuccess(success) {
@@ -1299,6 +1323,20 @@ export const getApiSlice = createSlice({
         state.trackingData = action.payload.Data;
       })
       .addCase(proPriceTracking.rejected, (state, action) => {
+        state.Status = "Error";
+        state.loading = false;
+      })
+      /*Regularization*/
+      .addCase(setReg.pending, (state, action) => {
+        state.Status = "idle";
+        state.loading = true;
+      })
+      .addCase(setReg.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+        state.trackingData = action.payload.Data;
+      })
+      .addCase(setReg.rejected, (state, action) => {
         state.Status = "Error";
         state.loading = false;
       })
