@@ -76,7 +76,17 @@ console.log(passedData, "--passedData");
     MonthDate: passedData.MonthDate,
     EmplyeeCheckInDateTime: passedData.EmplyeeCheckInDateTime,
     EmplyeeCheckOutDateTime: passedData.EmplyeeCheckOutDateTime,
-    Status: passedData.Status,
+    Status: passedData.Status === "Present" 
+            ? "P"
+            : passedData.Status === "Absent"
+            ? "A"
+            : passedData.Status === "WeekOff"
+            ? "W"
+            : passedData.Status === "Irregular"
+            ? "I"
+            : passedData.Status === "Leave"
+            ? "L"
+            : "",
    
     // employeeid: data.EmployeeID,
     // date: data.RegularizationDate,
@@ -285,7 +295,8 @@ console.log(idata, "-idata");
                     type="time"
                     id="EmplyeeCheckInDateTime"
                     label="Check In Time"
-                    inputFormat="HH:mm:aa"
+                      inputFormat="HH:mm"
+                    // inputFormat="HH:mm:aa"
                     variant="filled"
                     value={values.EmplyeeCheckInDateTime}
                     onBlur={handleBlur}
