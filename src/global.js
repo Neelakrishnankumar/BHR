@@ -256,12 +256,11 @@ CustomerPriceorderQtyUrl:'https://hr.beyondexs.com/api/InternalorderController.p
 apiweightageUrl:'https://hr.beyondexs.com/api/HRWeightagesGetContoller.php',
 weightagepostUrl:'https://hr.beyondexs.com/api/HRWeightagesContoller.php',
 employeeattendanceUrl:"https://hr.beyondexs.com/api/getempattendancehistory.php",
-
 payrollattendanceUrl: "https://hr.beyondexs.com/api/PayrollAttendanceController.php",
 attendanceUrl:"https://hr.beyondexs.com/api/getempattendance.php",
 attendanceprocessUrl:"https://hr.beyondexs.com/api/EmpAttendanceHistoryController.php",
 LeaveTypeurl: "http://beyondexs.com/Trinity/api/APIController.php",
-// HolidaylistUrl: "https://hr.beyondexs.com/api/APIController.php?",
+regularizationUrl: "https://hr.beyondexs.com/api/APIController.php?",
 
   };
 

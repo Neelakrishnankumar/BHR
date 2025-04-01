@@ -3,6 +3,7 @@ import axios from "axios";
 import store from "../../index";
 import toast from "react-hot-toast";
 import { Filter } from "@mui/icons-material";
+import { useState } from "react";
 
 const initialState = {
   Data: {},
@@ -10,6 +11,7 @@ const initialState = {
   msg: "",
   loading: false,
   getLoading: false,
+  regularizationLoading: false,
   expgetLoading: false,
   error: "",
   Successflag: false,
@@ -55,6 +57,7 @@ searchLoading:false,
 empAttendanceData:{},
 AttendanceData:{},
 };
+
 
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
@@ -679,7 +682,6 @@ export const getFetchData = createAsyncThunk(
       action: get,
       recid: recID,
          };
-
     
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
@@ -693,6 +695,55 @@ export const getFetchData = createAsyncThunk(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
       response
     );
+    return response.data;
+  }
+);
+
+// export const Regularizationdata = createAsyncThunk(
+//   "regularization",
+//   async ({ accessID, get, recID, }) => {
+//     var url = store.getState().globalurl.regularizationUrl;
+//     const data = {
+//       accessid: accessID,
+//       action: get,
+//       recid: recID,
+//          };
+    
+//     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+//     const response = await axios.post(url, data, {
+//       headers: {
+//         Authorization:
+//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//       },
+//     });
+//     console.log(
+//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+//       response
+//     );
+//     return response.data;
+//   }
+// );
+
+
+export const postData = createAsyncThunk(
+  "allScreen/post",
+  async ({ accessID, action, idata }) => {
+    const url = store.getState().globalurl.apiUrl;
+
+    const data = {
+      accessid: accessID,
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
   }
 );
@@ -750,28 +801,6 @@ export const postWeightage = createAsyncThunk(
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
-);
-
-export const postData = createAsyncThunk(
-  "allScreen/post",
-  async ({ accessID, action, idata }) => {
-    const url = store.getState().globalurl.apiUrl;
-
-    const data = {
-      accessid: accessID,
-      action: action,
-      data: idata,
-    };
-    console.log("get" + JSON.stringify(data));
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
-    return response.data;
   }
 );
 
@@ -956,6 +985,28 @@ export const proPriceTracking = createAsyncThunk(
   }
 );
 
+
+export const setReg = createAsyncThunk(
+  "Regularization/Price Tracking",
+  async ({params }) => {
+    console.log("Dispatch received idata:", params );
+    // var url = store.getState().globalurl.producttrackingUrl;
+    var data = {
+     ...params 
+    };
+    // setAssignparams(params.rows);
+    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+
+    // const response = await axios.post(url, data, {
+    //   headers: {
+    //     Authorization:
+    //       "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+    //   },
+    // });
+    // console.log("🚀 ~ file: Formapireducer.js:345 ~ reg:", response)
+    // return response.data;
+  }
+);
 
 // export function customerorderanalysis(RecordID,CompanyID,YearID) {
 //   return async (dispatch) => {
@@ -1228,6 +1279,24 @@ export const getApiSlice = createSlice({
         state.Data = {};
        toast.error('Something Went Wrong')
       })
+      // .addCase(Regularizationdata.pending, (state, action) => {
+      //   state.Status = "idle";
+      //   state.regularizationLoading = true;
+      //   state.Data = {};
+      //   state.msg =  "Loading..."
+      // })
+      // .addCase(Regularizationdata.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.regularizationLoading = false;
+      //   state.Data = action.payload.Data ? action.payload.Data : {} ;
+      //   // state.msg =  action.payload.Msg
+      // })
+      // .addCase(Regularizationdata.rejected, (state, action) => {
+      //   state.Status = "Error";
+      //   state.regularizationLoading = false;
+      //   state.Data = {};
+      //  toast.error('Something Went Wrong')
+      // })
       .addCase(postData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
@@ -1310,6 +1379,20 @@ export const getApiSlice = createSlice({
         state.trackingData = action.payload.Data;
       })
       .addCase(proPriceTracking.rejected, (state, action) => {
+        state.Status = "Error";
+        state.loading = false;
+      })
+      /*Regularization*/
+      .addCase(setReg.pending, (state, action) => {
+        state.Status = "idle";
+        state.loading = true;
+      })
+      .addCase(setReg.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+        state.trackingData = action.payload.Data;
+      })
+      .addCase(setReg.rejected, (state, action) => {
         state.Status = "Error";
         state.loading = false;
       })

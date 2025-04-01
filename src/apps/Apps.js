@@ -244,7 +244,7 @@ function App() {
                     element={<Editcompany />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditEmployees/:id/:Mode"
+                    path="/:accessID/:screenName/EditEmployees/:id/:Mode/N"
                     element={<Editemployee />}
                   />
                           <Route 
