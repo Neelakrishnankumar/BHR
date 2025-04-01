@@ -110,6 +110,14 @@ import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParame
  import LeaveType from "./pages/HR/Editleavetype";
 import Holidaylist from "./pages/HR/Editholidaylist";
 import Regularization from "./pages/Empolyee/EditRegularization";
+import EditRole from "./pages/HR/Editrole";
+import EditMilestones from "./pages/HR/Editmilestone";
+import Editmajortask from "./pages/HR/Editactivities";
+import Logopage from "../assets/Logopage";
+import Editoperation from "./pages/HR/Editoperationstage";
+import EditActivities from "./pages/HR/Editactivities";
+import Edittask from "./pages/HR/EditTask";
+import EditmileWeightage from "./pages/HR/Editweightage";
 
 
 
@@ -129,7 +137,7 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-                <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode/:Type" element={ <EditemployeePayroll/>}/>
+                <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={ <EditemployeePayroll/>}/>
                 <Route path="/:accessID/:screenName/Editrunpayroll" element={ <Editrunpayroll/>}/>
                 <Route path="/:accessID/Regularization/:id/" element={ <Regularization/>}/>
                
@@ -201,7 +209,8 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:parentID/:parentName/imageupload/:id"
                     element={<Imageupload />}
                   />
-                  <Route path="/Chart" element={<Chartboard />} />
+                  {/* <Route path="/Chart" element={<Chartboard />} /> */}
+                  <Route path="/HR" element={<Logopage />} />
                   <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}
@@ -569,6 +578,47 @@ function App() {
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
                     element={<Editproject />}
                   />
+              
+                <Route
+                   path="/:accessID/:screenName/EditRole/:id/:Mode"
+                    element={<EditRole />}
+                  />
+                  <Route
+                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditMilestones/:id/:Mode"
+                    element={<EditMilestones />}
+                  />
+                  <Route
+                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditStages/:id/:Mode"
+                    element={<Editoperation />}
+                  />
+                  <Route
+                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditActivities/:id/:Mode"
+                    element={<EditActivities />}
+                  />
+                   <Route
+                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTask/:id/:Mode"
+                    element={<Edittask />}
+                  />
+                  <Route
+                   path="/:accessID/:screenName/Editweightage/:Type/:id/:Mode"
+                    element={<EditmileWeightage />}
+                  />
+                   {/* <Route
+                   path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
+                    element={<EditStageweightage />}
+                  />
+                  <Route
+                   path="/:accessID/:screenName/Editactivityweightage/:id/:Mode"
+                    element={<Editactivityweightage />}
+                  />
+                   <Route
+                   path="/:accessID/:screenName/EditTaskweightage/:id/:Mode"
+                    element={<EditTaskweightage />}
+                  />
+                  <Route
+                   path="/:accessID/:screenName/EditTaskDetailweightage/:id/:Mode"
+                    element={<EditTaskDetweightage />}
+                  /> */}
                 </Routes>
               </main>
             </div>

@@ -253,7 +253,8 @@ alterNateMaterial:'https://hr.beyondexs.com/api/AlterMaterialController.php',
 PurchaseOrderParameterUrl:'https://hr.beyondexs.com/api/APIController.php',
 PurchaseorderratingUrl:'https://hr.beyondexs.com/api/ParametergetController.php',
 CustomerPriceorderQtyUrl:'https://hr.beyondexs.com/api/InternalorderController.php',
-
+apiweightageUrl:'https://hr.beyondexs.com/api/HRWeightagesGetContoller.php',
+weightagepostUrl:'https://hr.beyondexs.com/api/HRWeightagesContoller.php',
 employeeattendanceUrl:"https://hr.beyondexs.com/api/getempattendancehistory.php",
 
 payrollattendanceUrl: "https://hr.beyondexs.com/api/PayrollAttendanceController.php",

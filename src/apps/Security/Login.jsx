@@ -90,6 +90,7 @@ const Login = () => {
     password: "",
     company: company,
     year: year,
+    license:""
   };
   const clear = async (values) => {
     setCompanycombo("");
@@ -98,11 +99,11 @@ const Login = () => {
   const fnLogin = async (values) => {
     // setLoading(true);
 
-    if (values.company == "" || values.company == undefined) {
-      toast.error("Please select company");
-      setLoading(false);
-      return;
-    }
+    // if (values.company == "" || values.company == undefined) {
+    //   toast.error("Please select company");
+    //   setLoading(false);
+    //   return;
+    // }
     if (values.username == "") {
       toast.error("UserName should not be empty");
       setLoading(false);
@@ -113,12 +114,14 @@ const Login = () => {
       setLoading(false);
       return;
     }
-    if (values.year == "" || values.year == undefined) {
-      toast.error("Please select year");
+    if (values.license == "" || values.license == undefined) {
+      toast.error("Please give LicenseKey");
       setLoading(false);
       return;
     }
-     const data = await dispatch(fetchApidata(values.username,values.password,values.company,values.year));
+     const data = await dispatch(fetchApidata(values.username,values.password,values.license
+      //values.company,values.year
+    ));
     // const idata = {
     //   username: values.username,
     //   password: values.password,
@@ -137,7 +140,7 @@ const Login = () => {
        var company = data.payload.apiResponse.Company
        var year = data.payload.apiResponse.Year
        var YearFlag = data.payload.apiResponse.YearFlag
-       var CompanyRecordid = data.payload.apiResponse.CompanyRecordid
+       var compID = data.payload.apiResponse.CompanyRecordid
        var stockflag= data.payload.apiResponse.Process
        var Cifbysea=data.payload.apiResponse.Cifbysea
        var Cifbyair=data.payload.apiResponse.Cifbyair
@@ -156,7 +159,7 @@ const Login = () => {
        sessionStorage.setItem("company", company);
        sessionStorage.setItem("year", year);
        sessionStorage.setItem("YearFlag", YearFlag);
-       sessionStorage.setItem("compID", CompanyRecordid);
+       sessionStorage.setItem("compID", compID);
        sessionStorage.setItem("stockflag", stockflag);
        sessionStorage.setItem("currentPage", 0);
        sessionStorage.setItem("secondaryCurrentPage", 0);
@@ -168,11 +171,12 @@ const Login = () => {
        sessionStorage.setItem("YearRecorid",YearRecorid)
        sessionStorage.setItem("Groupaccess",JSON.stringify(Groupaccess))
        sessionStorage.setItem("Modules",JSON.stringify(Modules))
-       navigate("/Apps/Chart");
+       //navigate("/Apps/Chart");
+       navigate("/Apps/HR");  
       }
       else {
        setLoading(false);
-       toast.error("Invalid Credentials");
+       toast.error(data.payload.Msg);
      }
   };
   return (
@@ -258,7 +262,7 @@ const Login = () => {
                     }}
                     spacing={2}
                   >
-                    <FormControl fullWidth>
+                    {/* <FormControl fullWidth>
                       <Field
                         as="select"
                         label="Company"
@@ -277,23 +281,10 @@ const Login = () => {
                           </option>
                         ))}
                       </Field>
-                      {/* <Autocomplete
-        value={valuessss}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        inputValue={values.company}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        id="company"  name="company"
-        options={comboCompany}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField focused {...params} label="Controllable" />}
-      />*/}
-                    </FormControl>
+                     
+                    </FormControl> */}
 
-                    <FormControl>
+                    <FormControl sx={{marginTop:"30px"}}>
                       <TextField
                         margin="normal"
                         focused
@@ -340,7 +331,22 @@ const Login = () => {
                       />
                       {/* {errors.password &&<FormHelperText  sx={{color: "red"}} >{errors.password}</FormHelperText>} */}
                     </FormControl>
-                    <FormControl fullWidth>
+                    <TextField
+                        margin="normal"
+                        focused
+                        label="Subscription Code"
+                        id="license"
+                        value={values.license}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        onSubmit={handleSubmit}
+                        //  placeholder='Enter license'
+                        fullWidth
+                        required
+                        error={!!touched.license && !!errors.license}
+                        helperText={touched.license && errors.license}
+                      />
+                    {/* <FormControl fullWidth>
                       <Field
                         as="select"
                         label="Year"
@@ -358,29 +364,8 @@ const Login = () => {
                         ))}
                       </Field>
                       <ErrorMessage name="year" />
-                      {/* <TextField
-           onBlur={handleBlur} 
-          id="year"
-          name="year"
-          select
-          fullWidth
-          error={!!touched.year && !!errors.year}
-          helperText={touched.year && errors.year}
-          SelectProps={{
-            native: true,
-          }}
-          focused
-          label="Select year"
-          
-          onChange={e=>setYearcombo(e.target.value)}
-        >
-          <option value=''></option>
-          { YearCombo.map((year, index) => (
-                <option value={year.Recordid}>{year.Id}</option>
-              ))
-             }
-        </TextField> */}
-                    </FormControl>
+                      
+                    </FormControl> */}
                     <Stack direction={"row"} justifyContent="end" gap={"10px"}>
                       {/* <Button variant="contained" color={"success"} onClick={() => {fnLogin(values)}}>Ok</Button> */}
                       <LoadingButton

@@ -69,10 +69,10 @@ const Editcheckin = () => {
   };
 
   // *************** INITIALVALUE  *************** //
-
+  const currentDate = new Date().toISOString().split('T')[0];
   const InitialValue = {
     checkintype: data.CheckInType,
-    date: data.CheckInDate,
+    date: mode == "A" ? currentDate : data.HiddenDate,
     comment: data.CheckInComment,
     checkintime: data.CheckInTime,
     disable: data.WorkAtHome === "Y" ? false : true,
@@ -108,8 +108,8 @@ const Editcheckin = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      // navigate("/Apps/TR123/Check In");
-      navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+       navigate("/Apps/TR123/Check In");
+      //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
     } else {
       toast.error(response.payload.Msg);
     }
@@ -232,8 +232,8 @@ const Editcheckin = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-          // navigate("/Apps/TR123/Check In");
+          //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+           navigate("/Apps/TR123/Check In");
         }
       } else {
         return;
@@ -453,7 +453,7 @@ const Editcheckin = () => {
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     sx={{ gridColumn: "span 2" ,background: "#f5f5f5"}}
-                    // sx={{ gridColumn: "span 2" ,background: "#f5f5f5"}}
+                    inputProps={{ max: new Date().toISOString().split("T")[0] }} 
                   />
 
                   <FormControl
@@ -564,8 +564,8 @@ const Editcheckin = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-                     
+                      //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+                      navigate("/Apps/TR123/Check In");
                       // navigate("/Apps/Secondarylistview/TR123/Check In/");
                     }}
                   >

@@ -1,182 +1,166 @@
+import React from "react"; 
 import {
-    TextField,
-    Box,
-    Typography,
-    FormControl,
-    FormLabel,
-    Button,
-    IconButton,
-    FormControlLabel,
-    Tooltip,
-    Checkbox,
-    InputLabel,
-    Select,
-    MenuItem,
-    Stack,
-    useTheme,
-    Breadcrumbs,
-    LinearProgress,
-  } from "@mui/material";
-  import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-  import useMediaQuery from "@mui/material/useMediaQuery";
-  import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-  import ResetTvIcon from "@mui/icons-material/ResetTv";
-  import { Field, Formik } from "formik";
-  import { CheckBox, Description } from "@mui/icons-material";
-  import { useParams, useNavigate, useLocation } from "react-router-dom";
-  import { gradeSchema } from "../../Security/validation";
-  import { useDispatch, useSelector } from "react-redux";
-  import { toast } from "react-hot-toast";
-  import {
-    fetchApidata,
-    getFetchData,
-    postApidata,
-    postData,
-    explorePostData,
-  } from "../../../store/reducers/Formapireducer";
-  import {
-    DataGrid,
-    GridToolbarContainer,
-    GridToolbarColumnsButton,
-    GridToolbarFilterButton,
-    GridToolbarExport,
-    GridToolbarDensitySelector,
-    GridToolbarQuickFilter,
-  } from "@mui/x-data-grid";
-  // import Listviewpopup from "../Lookup";
-  // import Popup from "../popup";
-  import { tokens } from "../../../Theme";
-  import React, { useState, useEffect, useRef } from "react";
-  import { LoadingButton } from "@mui/lab";
-  import Swal from "sweetalert2";
-  import { useProSidebar } from "react-pro-sidebar";
-  import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-  import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
-  import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-  import { FunctionSchema } from "../../Security/validation";
-import { date } from "yup";
-  // import {  HsnSchema } from "../../Security/validation";
-  // import CryptoJS from "crypto-js";
-  const Holidaylist = () => {
-    const isNonMobile = useMediaQuery("(min-width:600px)");
-    const navigate = useNavigate();
-    let params = useParams();
-    const dispatch = useDispatch();
-    const theme = useTheme();
-    var recID = params.id;
-    var mode = params.Mode;
-    var accessID = params.accessID;
-    const data = useSelector((state) => state.formApi.Data);
-    const Status = useSelector((state) => state.formApi.Status);
-    const Msg = useSelector((state) => state.formApi.msg);
-    const isLoading = useSelector((state) => state.formApi.postLoading);
-    const getLoading = useSelector((state) => state.formApi.getLoading);
-    const YearFlag = sessionStorage.getItem("YearFlag");
-    const Year = sessionStorage.getItem("year");
-    const Finyear = sessionStorage.getItem("YearRecorid");
-    const CompanyID = sessionStorage.getItem("compID");
-    const { toggleSidebar, broken, rtl } = useProSidebar();
-    const location = useLocation();
-    const [pageSize, setPageSize] = React.useState(10);
-    useEffect(() => {
+  TextField,
+  Box,
+  Typography,
+  FormControl,
+  FormLabel,
+  Button,
+  IconButton,
+  Tooltip,
+  Checkbox,
+  LinearProgress,
+  useMediaQuery, 
+  useTheme, 
+} from "@mui/material";
+
+import ResetTvIcon from "@mui/icons-material/ResetTv";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { Field, Formik } from "formik";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
+import { postData, getFetchData } from "../../../store/reducers/Formapireducer";
+import { useEffect, useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import Swal from "sweetalert2";
+import { useProSidebar } from "react-pro-sidebar";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { tokens } from "../../../Theme";
+
+const Holidaylist = () => {
+  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const navigate = useNavigate();
+  let params = useParams();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const { toggleSidebar, broken, rtl } = useProSidebar();
+  const location = useLocation();
+
+  const [pageSize, setPageSize] = useState(10);
+  const [loading, setLoading] = useState(false);
+
+  // Redux state
+  const data = useSelector((state) => state.formApi.Data);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const YearFlag = sessionStorage.getItem("YearFlag");
+  const Year = sessionStorage.getItem("year");
+  const Finyear = sessionStorage.getItem("YearRecorid");
+  const CompanyID = sessionStorage.getItem("compID");
+
+  // Page params
+  const recID = params.id;
+  const mode = params.Mode;
+  const accessID = params.accessID;
+
+  useEffect(() => {
+    // Fetch data only when the recID or mode changes
+    if (recID && mode === "E") {
       dispatch(getFetchData({ accessID, get: "get", recID }));
-    }, [location.key]);
-    const colors = tokens(theme.palette.mode);
-  
-    // *************** INITIALVALUE  *************** //
-  
-    const InitialValue = {
-      oscc: data.Occasion,
-      name: data.Description,
-      Date: data.HolidayDate,
-      Sortorder: data.SortOrder,
-      disable: data.Disable === "Y" ? true : false,
+    }
+  }, [location.key, recID, mode]);
+
+  // Ensure data is available before rendering form
+  if (!data && getLoading) {
+    return <LinearProgress />;
+  }
+
+  const InitialValue = {
+    oscc: data?.Occasion || "",
+    name: data?.Description || "",
+    Date: data?.HolidayDate || "",
+    Sortorder: data?.SortOrder || "",
+    disable: data?.Disable === "Y" ? true : false,
+  };
+
+  const Fnsave = async (values, del) => {
+    setLoading(true);
+
+    let action =
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+        ? "harddelete"
+        : "update";
+
+    const isCheck = values.disable ? "Y" : "N";
+
+    const idata = {
+      RecordID: recID,
+      Occasion: values.oscc,
+      Description: values.name,
+      HolidayDate: values.Date,
+      SortOrder: values.Sortorder,
+      Disable: isCheck,
+      Finyear,
+      CompanyID,
     };
-  console.log(data.Occasion, "data.Occasion");
-    const Fnsave = async (values,del) => {
-       let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
-      var isCheck = "N";
-      if (values.disable == true) {
-        isCheck = "Y";
-      }
-      console.log(values,"oscc");
-    
-      const idata = {
-        RecordID: recID,
-        Occasion: values.oscc,
-        Description: values.name,
-        HolidayDate: values.Date, 
-        SortOrder: values.Sortorder,
-        Disable: isCheck,
-        Finyear,
-        CompanyID,
-      };
-  console.log(idata,"idata");
+
+    try {
       const response = await dispatch(postData({ accessID, action, idata }));
-      if (response.payload.Status == "Y") {
+
+      if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
         navigate("/Apps/TR218/Holiday List");
       } else {
         toast.error(response.payload.Msg);
       }
-    };
-  
-    
-      const fnLogOut = (props) => {
-      Swal.fire({
-        title: `Do you want ${props}?`,
-        // text:data.payload.Msg,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: props,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (props === "Logout") {
-            navigate("/");
-          }
-          if (props === "Close") {
-            navigate("/Apps/TR218/Holiday List");
-          }
-        } else {
-          return;
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fnLogOut = (props) => {
+    Swal.fire({
+      title: `Do you want ${props}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
         }
-      });
-    };
-    return (
-        <React.Fragment>
-        {getLoading?<LinearProgress/>:false}
-          <Box display="flex" justifyContent="space-between" p={2}>
-            <Box display="flex" borderRadius="3px" alignItems="center">
-              {broken && !rtl && (
-                <IconButton onClick={() => toggleSidebar()}>
-                  <MenuOutlinedIcon />
-                </IconButton>
-              )}
-              <Typography variant="h3">Holiday List</Typography>
-            </Box>
-    
-            <Box display="flex">
-              <Tooltip title="Close">
-                <IconButton onClick={() => fnLogOut("Close")} color="error">
-                  <ResetTvIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Logout">
-                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                  <LogoutOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Box>
-    
-          {!getLoading ? (
+        if (props === "Close") {
+          navigate("/Apps/TR218/Holiday List");
+        }
+      }
+    });
+  };
+
+  return (
+    <React.Fragment>
+      {getLoading ? <LinearProgress /> : null}
+
+      <Box display="flex" justifyContent="space-between" p={2}>
+        <Box display="flex" borderRadius="3px" alignItems="center">
+          {broken && !rtl && (
+            <IconButton onClick={() => toggleSidebar()}>
+              <MenuOutlinedIcon />
+            </IconButton>
+          )}
+          <Typography variant="h3">Holiday List</Typography>
+        </Box>
+
+        <Box display="flex">
+          <Tooltip title="Close">
+            <IconButton onClick={() => fnLogOut("Close")} color="error">
+              <ResetTvIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Logout">
+            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+              <LogoutOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+
+      {!getLoading ? (
             <Box m="20px">
               <Formik
                 initialValues={InitialValue}
@@ -317,7 +301,7 @@ import { date } from "yup";
                           color="secondary"
                           variant="contained"
                           type="submit"
-                          loading={isLoading}
+                          loading={loading}
                         >
                           Save
                         </LoadingButton>
@@ -369,6 +353,5 @@ import { date } from "yup";
         </React.Fragment>
       );
   };
-  
-  export default Holidaylist;
-  
+
+export default Holidaylist;

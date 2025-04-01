@@ -47,6 +47,7 @@ const EditSalaryComponent = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
+  const CompanyID = sessionStorage.getItem("compID");
   const parentID = params.filtertype;
   const data = useSelector((state) => state.formApi.Data);
   const Status = useSelector((state) => state.formApi.Status);
@@ -101,6 +102,7 @@ const EditSalaryComponent = () => {
       Category: values.category,
       SortOrder: values.sortOrder,
       Disable: values.disable === true ? "Y" : "N",
+      CompanyID
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));

@@ -35,7 +35,7 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
-const Regularization = () => {
+const Regularization = ({ onCancel }) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
@@ -361,10 +361,7 @@ const Regularization = () => {
                   <Button
                     color="warning"
                     variant="contained"
-                    onClick={() => {
-                      navigate(
-                        -1);
-                    }}
+                    onClick={onCancel}
                   >
                     Cancel
                   </Button>

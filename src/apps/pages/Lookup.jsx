@@ -45,7 +45,7 @@ const Listviewpopup = ({childToParent,accessID,screenName,filterName,filterValue
     {
       filter =filterValue;
     }else if (accessID == "2049"){
-     filter= filterName+">"+"'"+filterValue+"'";
+     filter= filterName+"="+"'"+filterValue+"'";
     }
     else if(accessID=="2005")
     {

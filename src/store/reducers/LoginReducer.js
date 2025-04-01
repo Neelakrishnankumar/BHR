@@ -100,7 +100,7 @@ export const {
 
 export default getApiSlice.reducer;
 
-export function fetchApidata(emailID, password, company, year) {
+export function fetchApidata(emailID, password,license, company, year) {
   return async (dispatch) => {
     function onSuccess(success) {
       console.log("2---" + JSON.stringify(success.data));
@@ -124,8 +124,8 @@ export function fetchApidata(emailID, password, company, year) {
         Query: {
           username: emailID,
           password: password,
-          yearrecordid: year,
-          companyrecordid: company,
+          //yearrecordid: year,
+          LicenseKey: license,
         },
       };
       dispatch(pending());

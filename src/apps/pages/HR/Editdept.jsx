@@ -70,8 +70,8 @@ const Editdept = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
-  const Data = useSelector((state) => state.formApi.Data);
-  const Status = useSelector((state) => state.formApi.Status);
+  const Data = useSelector((state) => state.formApi.Data) || {};
+    const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.loading);
   const getLoading = useSelector((state) => state.formApi.getLoading);

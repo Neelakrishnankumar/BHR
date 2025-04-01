@@ -78,7 +78,7 @@ const Editemployee = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  const CompanyID = sessionStorage.getItem("compID");
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -100,7 +100,7 @@ const Editemployee = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
-  const Data = useSelector((state) => state.formApi.Data);
+const Data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -296,6 +296,8 @@ const Editemployee = () => {
       });
       setOpenLOCATIONPopup(false);
     }
+    console.log(locationLookup.locationRecordID, "--find locationLookup.locationRecordID");
+    
     if (type == "Gate") {
       SetGateLookup({
         gateRecordID: childdata.RecordID,
@@ -353,7 +355,8 @@ const Editemployee = () => {
       DesignID: 0,
       LocationRecID: 0,
       GateRecID: 0,
-      WeekOff:0
+      WeekOff:0,
+      CompanyID,
     };
  
 
@@ -520,6 +523,7 @@ const Editemployee = () => {
           PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
+          CompanyID
         };
         type = "insert";
       } else {
@@ -529,6 +533,7 @@ const Editemployee = () => {
           PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
+          CompanyID,
         };
         type = "update";
       }
@@ -869,6 +874,7 @@ else {
       RecordID: funEmpRecID,
       EmployeeID: recID,
       FunctionsID: functionLookup.funRecordID,
+      CompanyID,
     };
   
     const response = await dispatch(
@@ -920,6 +926,7 @@ else {
           PurchaseReference: values.PurchaseReference,
           ItemValue: values.ItemValue,
           Disable: "N",
+          CompanyID
         };
         // console.log("save" + JSON.stringify(saveData));
     
@@ -965,6 +972,7 @@ else {
       RecordID: funMgrRecID,
       EmployeeID: recID,
       DesignationID: designationLookup.desRecordID,
+      CompanyID
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1020,6 +1028,7 @@ const Fndeployment = async (values, resetForm,del) => {
    DesignationID: designLookup.designlookupRecordid,
    LocationID: locationLookup.locationRecordID,
    StoregatemasterID: gateLookup.gateRecordID,
+   CompanyID
    };
  
    const response = await dispatch(
@@ -1069,7 +1078,8 @@ const Fndeployment = async (values, resetForm,del) => {
           Description: values.LoaDescription,
           //  ImageName: ImageName ? ImageName:Data.ImageName,
           Attachment:  ImageName ? ImageName:Data.ImageName,
-           Sortorder:"0"
+           Sortorder:"0",
+           CompanyID
         };
     //     
     console.log("save" + JSON.stringify(idata));
@@ -1715,6 +1725,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2051"
                       screenName="Location"
                       childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   <Popup
@@ -1726,6 +1738,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2050"
                       screenName="Gate"
                       childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -1737,6 +1751,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2047"
                       screenName="Designation"
                       childToParent={childToParent}
+                      // filterName={"CompanyID"}
+                      // filterValue={CompanyID}
                     />
                   </Popup>
                 </form>
@@ -2407,6 +2423,8 @@ const Fndeployment = async (values, resetForm,del) => {
                                 accessID="2001"
                                 screenName="Process"
                                 childToParent={childToParent}
+                                // filterName={"CompanyID"}
+                                // filterValue={CompanyID}
                               />
                             </Popup>
                           </form>
@@ -2642,6 +2660,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2048"
                       screenName="Functions"
                       childToParent={childToParent}
+                      filterName={"CompanyID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                 </form>
@@ -2873,6 +2893,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2048"
                       screenName="Functions"
                       childToParent={childToParent}
+                      filterName={"CompanyID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   <Popup
@@ -2884,8 +2906,10 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2049"
                       screenName="Designations"
                       childToParent={childToParent}
-                      filterName={"ERank"}
-                      filterValue={Data.Rank}
+                      // filterName={"ERank"}
+                      // filterValue={Data.Rank}
+                      // filterName={"CompanyID"}
+                      // filterValue={CompanyID}
                     />
                   </Popup>
               </form>
@@ -3418,6 +3442,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2051"
                       screenName="Location"
                       childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   <Popup
@@ -3428,6 +3454,8 @@ const Fndeployment = async (values, resetForm,del) => {
                     <Listviewpopup
                       accessID="2050"
                       screenName="Gate"
+                      filterName={"parentID"}
+                      filterValue={locationLookup.locationRecordID}
                       childToParent={childToParent}
                     />
                   </Popup>
@@ -3440,6 +3468,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2047"
                       screenName="Designation"
                       childToParent={childToParent}
+                      // filterName={"CompanyID"}
+                      // filterValue={CompanyID}
                     />
                   </Popup>
                   {/* <Popup
@@ -4102,6 +4132,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2048"
                       screenName="Functions"
                       childToParent={childToParent}
+                      filterName={"CompanyID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   <Popup
@@ -4113,8 +4145,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2049"
                       screenName="Designations"
                       childToParent={childToParent}
-                      filterName={"Rank"}
-                      filterValue={Data.Rank}
+                      // filterName={"CompanyID"}
+                      // filterValue={CompanyID}
                     />
                   </Popup>
                 </form>

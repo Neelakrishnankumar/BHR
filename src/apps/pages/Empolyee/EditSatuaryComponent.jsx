@@ -57,7 +57,7 @@ import {
     const Year = sessionStorage.getItem("year");
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const location = useLocation();
-
+    const CompanyID = sessionStorage.getItem("compID");
     useEffect(() => {
       dispatch(getFetchData({ accessID, get: "get", recID }));
     }, [location.key]);
@@ -94,7 +94,8 @@ import {
         RecordID: recID,
         Name: values.description,
         SortOrder: values.sortOrder,
-        Disable: values.disable === true ? "Y" : "N",       
+        Disable: values.disable === true ? "Y" : "N",   
+        CompanyID    
       };
   
   

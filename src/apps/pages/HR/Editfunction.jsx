@@ -65,7 +65,7 @@ const Editfunction = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
-  const data = useSelector((state) => state.formApi.Data);
+  const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -85,13 +85,14 @@ const Editfunction = () => {
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
-    code: data.Code,
+    
     name: data.Description,
     sortorder: data.SortOrder,
     categories: data.Categories,
+    code: data.Code || "",
     disable: data.Disable === "Y" ? true : false,
   }; 
-
+console.log(data.Code,"======");
   const Fnsave = async (values,del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
@@ -245,44 +246,44 @@ const Editfunction = () => {
       </GridToolbarContainer>
     );
   }
-  const EmployeeInitialValue = {
-    code: data.Code,
-    name: data.Description,
-  };
+  // const EmployeeInitialValue = {
+  //   code: data.Code,
+  //   name: data.Description,
+  // };
 
-  const FnEmployeesave = async (values, resetForm, del) => {
+  // const FnEmployeesave = async (values, resetForm, del) => {
    
-    let action =
-      empMode === "A" && !del
-        ? "insert"
-        : empMode === "E" && del
-        ? "harddelete"
-        : "update";
-    const idata = {
-      RecordID: funEmpRecID,
-      EmployeeID: selectEmployeeLookup.EmployeelookupRecordid,
-      FunctionsID: recID,
-      Finyear,
-      CompanyID,
-    };
-    // console.log("save" + JSON.stringify(saveData));
+  //   let action =
+  //     empMode === "A" && !del
+  //       ? "insert"
+  //       : empMode === "E" && del
+  //       ? "harddelete"
+  //       : "update";
+  //   const idata = {
+  //     RecordID: funEmpRecID,
+  //     EmployeeID: selectEmployeeLookup.EmployeelookupRecordid,
+  //     FunctionsID: recID,
+  //     Finyear,
+  //     CompanyID,
+  //   };
+  //   // console.log("save" + JSON.stringify(saveData));
 
-    const response = await dispatch(
-      explorePostData({ accessID: "TR125", action, idata })
-    );
-    if (response.payload.Status == "Y") {
-      dispatch(
-        fetchExplorelitview("TR125", "Employees", `FunctionsID=${recID}`, "")
-      );
+  //   const response = await dispatch(
+  //     explorePostData({ accessID: "TR125", action, idata })
+  //   );
+  //   if (response.payload.Status == "Y") {
+  //     dispatch(
+  //       fetchExplorelitview("TR125", "Employees", `FunctionsID=${recID}`, "")
+  //     );
 
-      toast.success(response.payload.Msg);
+  //     toast.success(response.payload.Msg);
      
-      selectCellData({ rowData: {}, mode: "A", field: "" });
-      resetForm();
-    } else {
-      toast.error(response.payload.Msg);
-    }
-  };
+  //     selectCellData({ rowData: {}, mode: "A", field: "" });
+  //     resetForm();
+  //   } else {
+  //     toast.error(response.payload.Msg);
+  //   }
+  // };
 
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
@@ -345,7 +346,7 @@ const Editfunction = () => {
               >
                 Functions
               </Typography>
-              {show == "1" ? (
+              {/* {show == "1" ? (
                 <Typography
                   variant="h5"
                   color="#0000D1"
@@ -355,13 +356,13 @@ const Editfunction = () => {
                 </Typography>
               ) : (
                 false
-              )}
+              )} */}
             </Breadcrumbs>
           </Box>
         </Box>
 
         <Box display="flex">
-          {mode !== "A" ? (
+          {/* {mode !== "A" ? (
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <InputLabel id="demo-select-small">Explore</InputLabel>
               <Select
@@ -377,7 +378,7 @@ const Editfunction = () => {
             </FormControl>
           ) : (
             false
-          )}
+          )} */}
           <Tooltip title="Close">
             <IconButton onClick={() => fnLogOut("Close")} color="error">
               <ResetTvIcon />
@@ -588,7 +589,9 @@ const Editfunction = () => {
       ) : (
         false
       )}
-      {show == "1" ? (
+
+      
+      {/* {show == "1" ? (
         <Box m="10px">
           <Formik
             initialValues={EmployeeInitialValue}
@@ -597,7 +600,7 @@ const Editfunction = () => {
                 FnEmployeesave(values, resetForm, false);
               }, 100);
             }}
-            //  validationSchema={ HsnSchema}
+        
             enableReinitialize={true}
           >
             {({
@@ -628,10 +631,7 @@ const Editfunction = () => {
                     },
                   }}
                 >
-                  {/* <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  > */}
+                
                   <TextField
                     name="code"
                     type="text"
@@ -650,8 +650,7 @@ const Editfunction = () => {
                         backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                       }
                     }}
-                    // error={!!touched.code && !!errors.code}
-                    // helperText={touched.code && errors.code}
+                
                     
                     
 
@@ -675,12 +674,11 @@ const Editfunction = () => {
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    // error={!!touched.name && !!errors.name}
-                    // helperText={touched.name && errors.name}
+               
 
                     autoFocus
                   />
-                  {/* </FormControl> */}
+          
 
                   <Box sx={{ gridColumn: "span 2" }}>
                     <Box
@@ -856,7 +854,7 @@ const Editfunction = () => {
         </Box>
       ) : (
         false
-      )}
+      )} */}
     </React.Fragment>
   );
 };

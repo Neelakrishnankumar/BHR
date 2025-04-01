@@ -748,23 +748,6 @@ const child = {
           UGA_ACCESSIDS: "TR122",
         },
         {
-          name: "Project",
-          id: 44,
-          url: "./TR133/Project",
-          icon: (
-            <Tooltip title="Project">
-              <SourceOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR133",
-        },
-        {
           name: "Department",
           id: 41,
           url: "./TR026/Department",
@@ -780,6 +763,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR026",
+        },
+        {
+          name: "Role",
+          url: "./TR232/Role",
+          id: 60,
+          icon: (
+            <Tooltip title="Rolesss">
+              <PeopleAltIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR232",
         },
 
         {
@@ -799,6 +799,24 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
+        {
+          name: "Project",
+          id: 44,
+          url: "./TR133/Project",
+          icon: (
+            <Tooltip title="Project">
+              <SourceOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR133",
+        },
+        
         {
           name: "Leave Type",
           id: 80,

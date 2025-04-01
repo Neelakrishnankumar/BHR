@@ -82,12 +82,17 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
       disable: data.WorkAtHome === "Y" ? false : true,
     };
   
-    const Fnsave = async (values) => {
-      let action = mode === "A" ? "insert" : "update";
-      var isCheck = "N";
-      if (values.disable == false) {
-        isCheck = "Y";
-      }
+    const Fnsave = async (values,del) => {
+      let action =
+    mode === "A" && !del
+      ? "insert"
+      : mode === "E" && del
+      ? "harddelete"
+      : "update";
+    var isCheck = "N";
+    if (values.disable == false) {
+      isCheck = "Y";
+    }
   
       const idata = {
         RecordID: recID,
@@ -545,10 +550,31 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
                         color="secondary"
                         variant="contained"
                         disabled={true}
+                        
                       >
                         Save
                       </Button>
                     )}
+                  {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Fnsave(values,  "harddelete");
+                        navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
+                    </Button>
+                  )}
                     <Button
                       color="error"
                       variant="contained"

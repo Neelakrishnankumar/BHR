@@ -697,6 +697,61 @@ export const getFetchData = createAsyncThunk(
   }
 );
 
+export const getFetchWeightage = createAsyncThunk(
+  "allScreen/Header",
+  async ({ Type, HeaderID }) => {
+    const url = store.getState().globalurl.apiweightageUrl;
+    
+    const data = {
+      Type: Type,  // Ensure lowercase if required by API
+      HeaderID: HeaderID,
+    };
+
+    console.log("🚀 Request Data:", JSON.stringify(data));
+
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+        },
+      });
+
+      console.log("🚀 API Response:", response.data);
+      return response.data;
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Ensure proper error handling
+    }
+  }
+);
+
+export const postWeightage = createAsyncThunk(
+  "allScreen/Header",
+  async ({ Type, data }, { rejectWithValue }) => {
+    const url = store.getState().globalurl.weightagepostUrl;
+
+    const payload = { Type, data };
+
+    console.log("🚀 Request Payload:", JSON.stringify(payload));
+
+    try {
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+        },
+      });
+
+      console.log("🚀 API Response:", response.data);
+      return response.data;
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+);
 
 export const postData = createAsyncThunk(
   "allScreen/post",

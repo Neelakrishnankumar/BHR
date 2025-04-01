@@ -58,7 +58,12 @@ const ListviewSecondary = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const params = useParams();
-  console.log("🚀 ~ ListviewSecondary ~ params:", params);
+  var CompId = sessionStorage.getItem("compID");
+
+  const state = location.state || {};
+  console.log("🚀 ~ ListviewSecondary ~ params:", state);
+  
+  
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen
   );
@@ -88,7 +93,7 @@ const ListviewSecondary = () => {
   var Type = params.Type;
   var remarkDec = params.remarkDec;
   const { toggleSidebar, broken, rtl } = useProSidebar();
-
+console.log(params,"ppppppppppppp");
   const rowData = location.state || {};
   var Description = params.Desc;
   var Number = params.Number;
@@ -99,6 +104,8 @@ const ListviewSecondary = () => {
       screenName = "Assorted";
     }
   }
+  console.log(filter, "----filter find");
+  
   if (accessID == "TR011") {
     filter = invoiceFilter;
   } else if (accessID == "TR074") {
@@ -113,7 +120,25 @@ const ListviewSecondary = () => {
     filter = `${parentID}' AND Finyear='${year}' AND RemarkRecordID='${parentRecID}' AND CompID = '${compID}`;
   } else if (accessID == "TR151") {
     filter = "";
-  } else if (accessID == "TR063") {
+  }
+  else if (accessID == "TR233") {
+
+    filter = `CompanyID='${CompId}' AND ProjectID='${parentID}'`;
+    console.log(filter,"--calling TR233");
+}
+else if (accessID == "TR236") {   
+  filter = `CompanyID='${CompId}' AND MilestoneID='${parentID}'`;
+  console.log(filter,"--calling TR236");
+}
+else if (accessID == "TR234") {   
+  filter = `CompanyID='${CompId}' AND OperationStageID='${parentID}'`;
+  console.log(filter,"--calling TR234");
+}
+  else if (accessID == "TR235") {
+    filter = `CompanyID='${CompId}' AND ActivitesID='${parentID}'`;
+    console.log(filter,"--calling TR235");
+  }
+  else if (accessID == "TR063") {
     filter = `Finyear='${year}'`;
   } else if (accessID == "TR004") {
     filter = `parentID='${parentID}' AND STKType='${Number}'AND (Finyear='${year}' OR Finyear IS NULL)`;
@@ -1867,7 +1892,154 @@ const ListviewSecondary = () => {
               {screenName}
             </Typography>
           </Breadcrumbs>
-        ) : accessID == "TR132" ? (
+        ) 
+        : accessID == "TR233" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
+            >
+              Project
+            </Typography>
+
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ): accessID == "TR236" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
+            >
+              Project
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+              }}
+            >
+              Milestones
+            </Typography>
+
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        )
+        : accessID == "TR234" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
+            >
+              Project
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+              }}
+            >
+              Milestones
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+              }}
+            >
+              Stages
+            </Typography>
+
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ): accessID == "TR235" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
+            >
+              Project
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+               
+                navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+              }}
+            >
+              Milestones
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+              }}
+            >
+              Stages
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
+              }}
+            >
+              Activities
+            </Typography>
+
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ): accessID == "TR132" ? (
           <Breadcrumbs
             maxItems={2}
             aria-label="breadcrumb"

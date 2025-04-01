@@ -69,10 +69,10 @@ const Editcheckout = () => {
   };
 
   // *************** INITIALVALUE  *************** //
-
+  const currentDate = new Date().toISOString().split('T')[0];
   const InitialValue = {
     checkouttype: data.CheckOutType,
-    date: data.CheckOutDate,
+    date: data.HiddenDate,
     comment: data.CheckOutComment,
     checkouttime: data.CheckOutTime,
   };
@@ -420,6 +420,7 @@ const Editcheckout = () => {
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     sx={{ gridColumn: "span 2",background: "#f5f5f5" }}
+                    inputProps={{ max: new Date().toISOString().split("T")[0] }} 
                   />
                   <FormControl
                     focused
