@@ -151,7 +151,7 @@ const Edittask = () => {
     
           return {
             RecordID: row.RecordID, 
-            TaskID: "1",
+            TaskID: recID,
             RoleID: row.TaskDetailRoleID,
            // RoleName: row.RoleName,
             Effort:row.TaskDetailEffort,
@@ -189,8 +189,8 @@ const Edittask = () => {
             );
     
             // Fetch updated data based on ManualSalesID
-            dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
-    
+             dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
+            //dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
     
           } else {
             toast.error(response.payload.Msg);
@@ -198,6 +198,7 @@ const Edittask = () => {
         } catch (error) {
           console.error("Error saving rows:", error);
           toast.error("Error occurred during save.");
+
         }
       };
     
@@ -475,8 +476,8 @@ const Edittask = () => {
 
             console.log(recID, "--finding recID");
 
-            dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
-
+             dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
+           // dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
         }
     };
 

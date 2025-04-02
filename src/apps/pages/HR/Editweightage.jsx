@@ -10,8 +10,9 @@ import {
     Tooltip,
     Checkbox,
     LinearProgress,
+    Breadcrumbs,
 } from "@mui/material";
-import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter,GridRowModes } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter, GridRowModes } from "@mui/x-data-grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -19,6 +20,7 @@ import { Field, Formik } from "formik";
 import { CheckBox } from "@mui/icons-material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
@@ -75,8 +77,8 @@ const EditmileWeightage = () => {
     );
     // const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const [rows, setRows] = useState([]);
-    console.log(rows,"rowssssssssssssssssssssssssssssssssss");
-    
+    console.log(rows, "rowssssssssssssssssssssssssssssssssss");
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -92,7 +94,7 @@ const EditmileWeightage = () => {
                     setRows(updatedRows);
                 } else {
                     setRows([]);
-                    toast.error(response?.payload?.Msg);
+                    //toast.error(response?.payload?.Msg);
                 }
             } catch (error) {
                 console.error("Error fetching weightage data:", error);
@@ -130,51 +132,51 @@ const EditmileWeightage = () => {
     };
     const processRowUpdate = async (newRow, oldRow) => {
         const updatedRow = { ...newRow, isNew: false };
-    
-    
-        const newData = rows.map((row) => 
+
+
+        const newData = rows.map((row) =>
             row.RecordID === updatedRow.RecordID ? updatedRow : row
         );
         const totalWeightage = newData.reduce((sum, row) => sum + (parseFloat(row.Weightages) || 0), 0);
-    
-   
+
+
         if (totalWeightage > 100) {
             toast.error("Total weightage cannot exceed 100");
-            return oldRow; 
+            return oldRow;
         }
-    
+
         setRows(newData);
         return updatedRow;
     };
-    
-      
-     
-      
-   
+
+
+
+
+
     const handleSaveButtonClick = async () => {
         try {
-          if (!rows || rows.length === 0) {
-            toast.warn("No data available to save.");
-            return;
-          }
+            if (!rows || rows.length === 0) {
+                toast.warn("No data available to save.");
+                return;
+            }
 
-          const response = await dispatch(postWeightage({Type:type,data:rows}));
-      console.log(response,"checkkkkk")
-          if (response.payload.Status === "Y") {
-            toast.success(response.payload.Msg);
+            const response = await dispatch(postWeightage({ Type: type, data: rows }));
+            console.log(response, "checkkkkk")
+            if (response.payload.Status === "Y") {
+                toast.success(response.payload.Msg);
 
-          } else {
-            toast.error(response.payload?.Msg);
-          }
-        } 
-        catch (error) {
-          console.error("🚀 Error saving data:", error);
-          toast.error("An error occurred while saving.");
+            } else {
+                toast.error(response.payload?.Msg);
+            }
         }
-      };
-    
-      
-      
+        catch (error) {
+            console.error("🚀 Error saving data:", error);
+            toast.error("An error occurred while saving.");
+        }
+    };
+
+
+
 
     const fnLogOut = (props) => {
 
@@ -206,26 +208,154 @@ const EditmileWeightage = () => {
         <React.Fragment>
             {/* {getLoading ? <LinearProgress /> : false} */}
             <Box display="flex" justifyContent="space-between" p={2}>
-           
+
                 <Box display="flex" borderRadius="3px" alignItems="center">
                     {broken && !rtl && (
                         <IconButton onClick={() => toggleSidebar()}>
                             <MenuOutlinedIcon />
                         </IconButton>
                     )}
-                   <Typography variant="h3" mt={2}>
-    {type === "M" 
-        ? "Milestone Weightage" 
-        : type === "OPS" 
-        ? "Stage Weightage" 
-        : type === "ACT" 
-        ? "Activity Weightage" 
-        : type === "TK" 
-        ? "Task Weightage" 
-        : "Weightage"}  
-</Typography>
+                    {/* <Typography variant="h3" mt={2}>
+                        {type === "M"
+                            ? "Milestone Weightage"
+                            : type === "OPS"
+                                ? "Stage Weightage"
+                                : type === "ACT"
+                                    ? "Activity Weightage"
+                                    : type === "TK"
+                                        ? "Task Weightage"
+                                        : "Weightage"}
+                    </Typography> */}
+                    <Box display="flex" borderRadius="3px" alignItems="center">
+  <Breadcrumbs
+    maxItems={2}
+    aria-label="breadcrumb"
+    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+  >
+    {type === "M" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate("/Apps/TR133/Project")}
+      >
+        Project
+      </Typography>
+    )}
+    {type === "M" && (
+      <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+        Milestone Weightage
+      </Typography>
+    )}
 
-
+    {type === "OPS" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate("/Apps/TR133/Project")}
+      >
+        Project
+      </Typography>
+    )}
+     {type === "OPS" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+         onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}})}
+        //onClick={() => navigate("/Apps/Secondarylistview/TR233/Milestones/1")}
+      >
+        Milestone
+      </Typography>
+    )}
+    {type === "OPS" && (
+      <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+        Stage Weightage
+      </Typography>
+    )}
+{type === "ACT" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate("/Apps/TR133/Project")}
+      >
+        Project
+      </Typography>
+    )}
+     {type === "ACT" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}})}
+      >
+        Milestone
+      </Typography>
+    )}
+    {type === "ACT" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}})}
+      >
+        Stages
+      </Typography>
+    )}
+    {type === "ACT" && (
+      <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+        Activity Weightage
+      </Typography>
+    )}
+    {type === "TK" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate("/Apps/TR133/Project")}
+      >
+        Project
+      </Typography>
+    )}
+     {type === "TK" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}})}
+      >
+        Milestone
+      </Typography>
+    )}
+    {type === "TK" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}})}
+      >
+        Stages
+      </Typography>
+    )}
+     {type === "TK" && (
+      <Typography
+        variant="h5"
+        color="#0000D1"
+        sx={{ cursor: "pointer" }}
+        onClick={() => navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}})}
+      >
+        Activity
+      </Typography>
+    )}
+    {type === "TK" && (
+      <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+        Task Weightage
+      </Typography>
+    )}
+  </Breadcrumbs>
+</Box>
                 </Box>
                 <Box display="flex">
                     <Tooltip title="Close">
@@ -241,144 +371,144 @@ const EditmileWeightage = () => {
                 </Box>
             </Box>
 
-  
-                <Box m="20px">
-                    <Formik
-                        initialValues={InitialValue}
 
-                        enableReinitialize={true}
-                    >
-                        {({
-                            errors,
-                            touched,
-                            handleBlur,
-                            handleChange,
-                            isSubmitting,
-                            values,
-                            handleSubmit,
-                        }) => (
-                            <form onSubmit={handleSubmit}>
+            <Box m="20px">
+                <Formik
+                    initialValues={InitialValue}
+
+                    enableReinitialize={true}
+                >
+                    {({
+                        errors,
+                        touched,
+                        handleBlur,
+                        handleChange,
+                        isSubmitting,
+                        values,
+                        handleSubmit,
+                    }) => (
+                        <form onSubmit={handleSubmit}>
+                            <Box
+                                display="grid"
+                                gap="50px"
+                                marginBottom={7}
+                                gridTemplateColumns="repeat(2, 1fr)"
+                                sx={{
+                                    "& > div": {
+                                        gridColumn: isNonMobile ? undefined : "span 4",
+                                    },
+                                }}
+                            >
+
+                                <TextField
+                                    name="code"
+                                    type="text"
+                                    id="code"
+                                    label="Code"
+                                    variant="filled"
+                                    focused
+                                    required
+                                    value={values.code}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.code && !!errors.code}
+                                    helperText={touched.code && errors.code}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                                <TextField
+                                    name="name"
+                                    type="text"
+                                    id="name"
+                                    label="Description"
+                                    variant="filled"
+                                    focused
+                                    value={values.name}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={!!touched.name && !!errors.name}
+                                    helperText={touched.name && errors.name}
+                                    autoFocus
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+
+                            </Box>
+
+
+                            <Box sx={{ width: "100%" }}>
+
                                 <Box
-                                    display="grid"
-                                    gap="50px"
-                                    marginBottom={7}
-                                    gridTemplateColumns="repeat(2, 1fr)"
+                                    m="5px 0 0 0"
+                                    height="60vh"
                                     sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 4",
+                                        "& .MuiDataGrid-root": {
+                                            border: "none",
+                                            width: "100%",
+                                        },
+                                        "& .MuiDataGrid-cell": {
+                                            borderBottom: "none",
+                                        },
+                                        "& .name-column--cell": {
+                                            color: colors.greenAccent[300],
+                                        },
+                                        "& .MuiDataGrid-columnHeaders": {
+                                            backgroundColor: colors.blueAccent[800],
+                                            borderBottom: "none",
+                                        },
+                                        "& .MuiDataGrid-virtualScroller": {
+                                            backgroundColor: colors.primary[400],
+                                        },
+                                        "& .MuiDataGrid-footerContainer": {
+                                            borderTop: "none",
+                                            backgroundColor: colors.blueAccent[800],
+                                        },
+                                        "& .MuiCheckbox-root": {
+                                            color: `${colors.greenAccent[200]} !important`,
                                         },
                                     }}
                                 >
-
-                                    <TextField
-                                        name="code"
-                                        type="text"
-                                        id="code"
-                                        label="Code"
-                                        variant="filled"
-                                        focused
-                                        required
-                                        value={values.code}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.code && !!errors.code}
-                                        helperText={touched.code && errors.code}
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                    <TextField
-                                        name="name"
-                                        type="text"
-                                        id="name"
-                                        label="Description"
-                                        variant="filled"
-                                        focused
-                                        value={values.name}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.name && !!errors.name}
-                                        helperText={touched.name && errors.name}
-                                        autoFocus
-                                        InputProps={{
-                                            readOnly: true,
+                                    <DataGrid
+                                        // loading={exploreLoading}
+                                        rows={rows || []}
+                                        columns={columns}
+                                        disableSelectionOnClick
+                                        getRowId={(row) => row.RecordID}
+                                        pageSize={pageSize}
+                                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                        experimentalFeatures={{ newEditingApi: true }}
+                                        processRowUpdate={processRowUpdate}
+                                        onProcessRowUpdateError={(error) => console.error("Row update error:", error)}
+                                        rowsPerPageOptions={[5, 10, 20]}
+                                        pagination
+                                        onStateChange={(stateParams) => setRowCount(stateParams?.pagination?.rowCount || 0)}
+                                        componentsProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                                quickFilterProps: { debounceMs: 500 },
+                                            },
                                         }}
                                     />
 
                                 </Box>
-
-
-                                <Box sx={{ width: "100%" }}>
-
-                                    <Box
-                                        m="5px 0 0 0"
-                                        height="60vh"
-                                        sx={{
-                                            "& .MuiDataGrid-root": {
-                                                border: "none",
-                                                width: "100%",
-                                            },
-                                            "& .MuiDataGrid-cell": {
-                                                borderBottom: "none",
-                                            },
-                                            "& .name-column--cell": {
-                                                color: colors.greenAccent[300],
-                                            },
-                                            "& .MuiDataGrid-columnHeaders": {
-                                                backgroundColor: colors.blueAccent[800],
-                                                borderBottom: "none",
-                                            },
-                                            "& .MuiDataGrid-virtualScroller": {
-                                                backgroundColor: colors.primary[400],
-                                            },
-                                            "& .MuiDataGrid-footerContainer": {
-                                                borderTop: "none",
-                                                backgroundColor: colors.blueAccent[800],
-                                            },
-                                            "& .MuiCheckbox-root": {
-                                                color: `${colors.greenAccent[200]} !important`,
-                                            },
-                                        }}
+                                <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "20px" }}>
+                                    <Button color="secondary" variant="contained"
+                                        onClick={handleSaveButtonClick}
+                                    //navigate();
                                     >
-                                        <DataGrid
-                                            // loading={exploreLoading}
-                                            rows={rows || []}
-                                            columns={columns}
-                                            disableSelectionOnClick
-                                            getRowId={(row) => row.RecordID}
-                                            pageSize={pageSize}
-                                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                            experimentalFeatures={{ newEditingApi: true }}
-                                            processRowUpdate={processRowUpdate} 
-                                            onProcessRowUpdateError={(error) => console.error("Row update error:", error)}
-                                            rowsPerPageOptions={[5, 10, 20]}
-                                            pagination
-                                            onStateChange={(stateParams) => setRowCount(stateParams?.pagination?.rowCount || 0)}
-                                            componentsProps={{
-                                                toolbar: {
-                                                    showQuickFilter: true,
-                                                    quickFilterProps: { debounceMs: 500 },
-                                                },
-                                            }}
-                                        />
-
-                                    </Box>
-                                    <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "20px" }}>
-                                        <Button color="secondary" variant="contained"
-                                            onClick={handleSaveButtonClick}
-                                            //navigate();
-                                        >
-                                            Save
-                                        </Button>
-                                    </Box>
+                                        Save
+                                    </Button>
                                 </Box>
+                            </Box>
 
 
-                            </form>
-                        )}
-                    </Formik>
-                </Box>
-    
+                        </form>
+                    )}
+                </Formik>
+            </Box>
+
         </React.Fragment>
     );
 };

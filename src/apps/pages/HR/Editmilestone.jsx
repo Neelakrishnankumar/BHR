@@ -99,7 +99,7 @@ const EditMilestones = () =>{
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(`/Apps/Secondarylistview/TR233/Milestones/${projectid}`);
-
+      
     } else {
       toast.error(response.payload.Msg);
     }
