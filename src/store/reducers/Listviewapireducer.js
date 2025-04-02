@@ -1800,7 +1800,7 @@ export const fetchListview =
                     )}
                      {AccessID == "TR027" ? (
                       <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      to={`/Apps/TR027/Employees/EditEmployees/${params.row.RecordID}/E`}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -1958,7 +1958,7 @@ export const fetchListview =
                      {AccessID == "TR236" ? (
                       <Link
                       to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID}}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
                         <Tooltip title="Weightage">
                           <IconButton color="info" size="small">
@@ -1987,7 +1987,7 @@ export const fetchListview =
                     {AccessID == "TR234" ? (
                       <Link
                       to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID}}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
                         <Tooltip title="Weightage">
                           <IconButton color="info" size="small">
@@ -2015,7 +2015,7 @@ export const fetchListview =
                     {AccessID == "TR233" ? (
                       <Link
                         to={`/Apps/TR233/weightage/Editweightage/OPS/${params.row.RecordID}/E`}
-                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID}}
+                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                      >
                         <Tooltip title="Weightage">
                           <IconButton color="info" size="small">
@@ -2045,7 +2045,7 @@ export const fetchListview =
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/TR233/weightage/Editweightage/M/${params.row.RecordID}/E`}
-                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID}}
+                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
                         <Tooltip title="Weightage">
                           <IconButton color="info" size="small">

@@ -115,9 +115,12 @@ export function fetchApidata(emailID, password,license, company, year) {
       return datawait;
     }
     function onError(error) {
-      //dispatch({ type: ERROR_GENERATED, error });
-      return error;
+      const errorMsg = error.response.data.Msg || "Something went wrong!";
+      dispatch(errored(errorMsg)); 
+      toast.error(errorMsg); 
+      return errorMsg;
     }
+    
     try {
       var url = store.getState().globalurl.loginUrl;
       var idata = {
@@ -146,3 +149,4 @@ export function fetchApidata(emailID, password,license, company, year) {
     }
   };
 }
+
