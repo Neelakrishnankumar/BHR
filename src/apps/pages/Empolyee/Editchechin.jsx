@@ -333,7 +333,7 @@ const Editcheckin = () => {
                       ) : (
                         <IconButton
                           sx={{ height: 40, width: 40 }}
-                          //  onClick={() => handleShow("EMPLOYEE")}
+                            onClick={() => handleShow("EMPLOYEE")}
                         >
                           <img src="https://img.icons8.com/color/48/null/details-popup.png" />
                         </IconButton>
