@@ -10,7 +10,9 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
+  Breadcrumbs
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -33,7 +35,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 // import CryptoJS from "crypto-js";
-const EditActivities = () =>{
+const EditActivities = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
@@ -54,15 +56,15 @@ const EditActivities = () =>{
   const location = useLocation();
   var OPRecid = params.filtertype;
 
-//  useEffect(() => {
-//      // Fetch data only when the recID or mode changes
-//      if (recID && mode === "E") {
-//        dispatch(getFetchData({ accessID, get: "get", recID }));
-//      }
-//    }, [location.key, recID, mode]);
+  //  useEffect(() => {
+  //      // Fetch data only when the recID or mode changes
+  //      if (recID && mode === "E") {
+  //        dispatch(getFetchData({ accessID, get: "get", recID }));
+  //      }
+  //    }, [location.key, recID, mode]);
   useEffect(() => {
-     dispatch(getFetchData({ accessID, get: "get", recID }));
-   }, [location.key]);
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, [location.key]);
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
@@ -72,14 +74,14 @@ const EditActivities = () =>{
     disable: data.Disable === "Y" ? true : false,
   };
 
-  const Fnsave = async (values,del) => {
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -99,13 +101,13 @@ const EditActivities = () =>{
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(`/Apps/Secondarylistview/TR234/Activities/${OPRecid}`);
-
+      // navigate(`/Apps/Secondarylistview/TR234/Activities/${OPRecid}`);
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
   };
-  
+
 
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
@@ -151,7 +153,53 @@ const EditActivities = () =>{
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          <Typography variant="h3">Activity</Typography>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Project
+              </Typography>
+
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Milestone
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Stages
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+
+              >
+                Activity
+              </Typography>
+            </Breadcrumbs>
+          </Box>
         </Box>
         <Box display="flex">
           <Tooltip title="Close">
@@ -251,7 +299,7 @@ const EditActivities = () =>{
                           style: { textAlign: "right" },
                         },
                       }}
-                      onWheel={(e) => e.target.blur()} 
+                      onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
                         e.target.value = Math.max(0, parseInt(e.target.value))
                           .toString()
@@ -297,12 +345,12 @@ const EditActivities = () =>{
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values,  "harddelete");
+                        Fnsave(values, "harddelete");
                       }}
                     >
                       Delete
                     </Button>
-                  ) :  (
+                  ) : (
                     <Button
                       color="error"
                       variant="contained"
@@ -315,13 +363,14 @@ const EditActivities = () =>{
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate(`/Apps/Secondarylistview/TR234/Activities/${OPRecid}`);
+                      //navigate(`/Apps/Secondarylistview/TR234/Activities/${OPRecid}`);
+                      navigate(-1);
                     }}
                   >
                     Cancel
                   </Button>
                 </Box>
-                
+
               </form>
             )}
           </Formik>

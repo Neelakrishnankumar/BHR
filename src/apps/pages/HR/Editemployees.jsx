@@ -1030,7 +1030,7 @@ const Fndeployment = async (values, resetForm,del) => {
    StoregatemasterID: gateLookup.gateRecordID,
    CompanyID
    };
- 
+ console.log(locationLookup.locationRecordID,"????????");
    const response = await dispatch(
      postDeployment({ data:idata })
    );
@@ -1714,6 +1714,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2010"
                       screenName="Department"
                       childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   <Popup
@@ -1751,8 +1753,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2047"
                       screenName="Designation"
                       childToParent={childToParent}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                 </form>
@@ -2423,8 +2425,8 @@ const Fndeployment = async (values, resetForm,del) => {
                                 accessID="2001"
                                 screenName="Process"
                                 childToParent={childToParent}
-                                // filterName={"CompanyID"}
-                                // filterValue={CompanyID}
+                                filterName={"parentID"}
+                                filterValue={CompanyID}
                               />
                             </Popup>
                           </form>
@@ -2908,8 +2910,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       childToParent={childToParent}
                       // filterName={"ERank"}
                       // filterValue={Data.Rank}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
               </form>
@@ -3468,8 +3470,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2047"
                       screenName="Designation"
                       childToParent={childToParent}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   {/* <Popup
@@ -4145,8 +4147,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2049"
                       screenName="Designations"
                       childToParent={childToParent}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                 </form>

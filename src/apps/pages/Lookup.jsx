@@ -92,7 +92,7 @@ else
   
 
   React.useEffect(() => {
-    dispatch(fetchLookup(accessID,screenName,filter,'',compID,comUomNum));
+    dispatch(fetchLookup(accessID,screenName,filter,'',comUomNum));
   },[location.key]);
 
   var to

@@ -18,6 +18,8 @@ import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import BalanceIcon from '@mui/icons-material/Balance';
+import EditIcon from "@mui/icons-material/Edit";
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -1904,7 +1906,8 @@ else if (accessID == "TR234") {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate("/Apps/TR133/Project");
+                //navigate("/Apps/TR133/Project");
+                navigate(-1);
               }}
             >
               Project
@@ -1935,7 +1938,8 @@ else if (accessID == "TR234") {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                navigate(-1);
               }}
             >
               Milestones
@@ -1977,7 +1981,8 @@ else if (accessID == "TR234") {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+                //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+                navigate(-1);
               }}
             >
               Stages
@@ -2029,7 +2034,8 @@ else if (accessID == "TR234") {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
+                //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
+                navigate(-1);
               }}
             >
               Activities
@@ -2682,7 +2688,65 @@ else if (accessID == "TR234") {
           false
         ) : accessID == "TR102" ? (
           false
-        ) : (
+        ) 
+        :  accessID == "TR233" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Stage Weightage"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Stages"
+              variant="outlined"
+            />
+          </Box>
+       )
+        :  accessID == "TR236" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Activity Weightage"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Activities"
+              variant="outlined"
+            />
+          </Box>
+       )
+        :  accessID == "TR234" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Task Weightage"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Tasks"
+              variant="outlined"
+            />
+          </Box>
+       )
+       :(
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
