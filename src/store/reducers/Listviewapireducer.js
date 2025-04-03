@@ -549,8 +549,7 @@ export const fetchListview =
         AccessID == "TR105" ||
         AccessID == "TR002" ||
         AccessID == "TR086" ||
-        AccessID == "TR123" || 
-        AccessID == "TR124" ||
+
         AccessID == "TR091" 
       
         
