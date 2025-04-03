@@ -173,6 +173,7 @@ const EditMilestones = () =>{
                           variant="h5"
                           color="#0000D1"
                           sx={{ cursor: "default" }}
+                          onClick={()=>navigate(-1)}
                         >
                           Milestone
                         </Typography>

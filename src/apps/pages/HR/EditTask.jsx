@@ -76,6 +76,7 @@ const Edittask = () => {
     const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const state = location.state || {};
     console.log(OPRecid, '====================================');
      useEffect(() => {
          dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -694,7 +695,7 @@ const Edittask = () => {
                                            color="#0000D1"
                                            sx={{ cursor: "default" }}
                                            onClick={() => {
-                                             navigate(-1);
+                                             navigate("/Apps/TR133/Project");
                                            }}
                                          >
                                            Project
@@ -704,9 +705,7 @@ const Edittask = () => {
                                            variant="h5"
                                            color="#0000D1"
                                            sx={{ cursor: "default" }}
-                                           onClick={() => {
-                                             navigate(-1);
-                                           }}
+                                           onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
                                          >
                                            Milestone
                                          </Typography>
@@ -714,9 +713,7 @@ const Edittask = () => {
                                            variant="h5"
                                            color="#0000D1"
                                            sx={{ cursor: "default" }}
-                                           onClick={() => {
-                                             navigate(-1);
-                                           }}
+                                           onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
                                          >
                                            Stages
                                          </Typography>
@@ -725,7 +722,7 @@ const Edittask = () => {
                                            color="#0000D1"
                                            sx={{ cursor: "default" }}
                                            onClick={() => {
-                                            navigate(-1);
+                                            navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`, { state: { ...state } });
                                           }}
                                          >
                                            Activity
@@ -734,7 +731,8 @@ const Edittask = () => {
                                            variant="h5"
                                            color="#0000D1"
                                            sx={{ cursor: "default" }}
-                                          
+                                          onClick={()=>navigate(-1)}
+                                          //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
                                          >
                                             Task
                                          </Typography>
@@ -1089,9 +1087,12 @@ const Edittask = () => {
                                   pagination
                                 />
                                         </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "20px" }}>
+                                        <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", gap:"10px" ,marginTop: "20px" }}>
                                             <Button color="secondary" variant="contained" onClick={handleSaveButtonClick}>
                                                 Save
+                                            </Button>
+                                            <Button color="warning" variant="contained" onClick={()=>navigate(-1)}>
+                                                Cancel
                                             </Button>
                                         </Box>
                                     </Box>
