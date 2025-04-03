@@ -126,6 +126,7 @@ const EditmileWeightage = () => {
             headerName: "Weightage",
             width: 130,
             editable: "true",
+            align:"right"
         },
     ];
 
@@ -161,7 +162,31 @@ const EditmileWeightage = () => {
         setRows(newData);
         return updatedRow;
     };
-
+    // const processRowUpdate = async (newRow, oldRow) => {
+    //     const updatedRow = { ...newRow, isNew: false };
+    
+    //     const newData = rows.map((row) =>
+    //         row.RecordID === updatedRow.RecordID ? updatedRow : row
+    //     );
+    
+    //     const totalWeightage = newData.reduce(
+    //         (sum, row) => sum + (parseFloat(row.Weightages) || 0),
+    //         0
+    //     );
+    
+    //     const isCheckTotalWeightage = newData.every(
+    //         (value) => value.Weightages !== "" && !isNaN(parseFloat(value.Weightages))
+    //     );
+    
+    //     if (totalWeightage !== 100 && isCheckTotalWeightage) {
+    //         toast.error("Total weightage should be 100");
+    //         return false;
+    //     }
+    
+    //     setRows(newData);
+    //     return updatedRow;
+    // };
+    
     const handleSaveButtonClick = async () => {
         try {
             if (!rows || rows.length === 0) {

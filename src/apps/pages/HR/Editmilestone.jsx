@@ -9,6 +9,7 @@ import {
   FormControlLabel,
   Tooltip,
   Checkbox,
+  Breadcrumbs,
   LinearProgress,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -20,6 +21,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {
   fetchApidata,
   getFetchData,
@@ -98,8 +100,8 @@ const EditMilestones = () =>{
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(`/Apps/Secondarylistview/TR233/Milestones/${projectid}`);
-      
+      //navigate(`/Apps/Secondarylistview/TR233/Milestones/${projectid}`);
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -150,7 +152,32 @@ const EditMilestones = () =>{
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          <Typography variant="h3">Milestone</Typography>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+                      <Breadcrumbs
+                        maxItems={2}
+                        aria-label="breadcrumb"
+                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                      >
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                        >
+                         Project
+                        </Typography>
+          
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                        >
+                          Milestone
+                        </Typography>
+                      </Breadcrumbs>
+                    </Box>
         </Box>
         <Box display="flex">
           <Tooltip title="Close">
@@ -314,7 +341,8 @@ const EditMilestones = () =>{
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate(`/Apps/Secondarylistview/TR233/Milestones/${projectid}`);
+                      // navigate(`/Apps/Secondarylistview/TR233/Milestones/${projectid}`);
+                      navigate(-1);
                     }}
                   >
                     Cancel

@@ -19,6 +19,7 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import BalanceIcon from '@mui/icons-material/Balance';
 import MatxCustomizer from "./Mailpdf";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -567,7 +568,7 @@ const [productFilter,setProductFilter] = useState();
         ) : accessID == "TR009" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
-              icon={<EditIcon color="primary" />}
+              icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
             />
@@ -774,10 +775,30 @@ const [productFilter,setProductFilter] = useState();
               variant="outlined"
             />
           </Box>
-        ) : (
+        ) 
+        : accessID == "TR133" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Milestone Weightage"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Milestone"
+              variant="outlined"
+            />
+          </Box>
+       )
+       : (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
-              icon={<EditIcon color="primary" />}
+              icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
             />

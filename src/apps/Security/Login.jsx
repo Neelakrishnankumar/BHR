@@ -121,6 +121,7 @@ const Login = () => {
     }
      const data = await dispatch(fetchApidata(values.username,values.password,values.license
       //values.company,values.year
+    
     ));
     // const idata = {
     //   username: values.username,
@@ -130,8 +131,8 @@ const Login = () => {
     // };
     // const data = await dispatch(authentication({ idata }));
     // console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
-    var loginrecordID = data.payload.apiResponse.Recordid
-    //  var UserName = data.payload.apiResponse.Name
+    //var loginrecordID = data.payload.Recordid
+     var loginrecordID = data.payload.Recordid
     
       sessionStorage.setItem("loginRecid", loginrecordID);
       
