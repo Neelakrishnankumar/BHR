@@ -54,6 +54,7 @@ const EditActivities = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+  const state = location.state || {};
   var OPRecid = params.filtertype;
 
   //  useEffect(() => {
@@ -163,9 +164,7 @@ const EditActivities = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(-1);
-                }}
+                onClick={() => navigate("/Apps/TR133/Project")}
               >
                 Project
               </Typography>
@@ -174,9 +173,7 @@ const EditActivities = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(-1);
-                }}
+                 onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
               >
                 Milestone
               </Typography>
@@ -184,9 +181,7 @@ const EditActivities = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(-1);
-                }}
+                onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
               >
                 Stages
               </Typography>
@@ -194,6 +189,7 @@ const EditActivities = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
+                onClick={()=>navigate(-1)}
 
               >
                 Activity

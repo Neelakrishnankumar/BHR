@@ -1724,7 +1724,7 @@ export const fetchListview =
               },
             };
           }else if (
-            AccessID == "TR236"
+            AccessID == "TR236" || AccessID == "TR234" || AccessID == "TR235" 
           ) {
             obj = {
               field: "action",
@@ -1778,6 +1778,59 @@ export const fetchListview =
                     ) : (
                       false
                     )}
+                    { AccessID == "TR234" &&<Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        state={{
+                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>}
+                    {AccessID == "TR234" ? (
+                      <Link
+                        to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
+                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      >
+                        <Tooltip title="Task">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false           
+                    )}
+                   
+                    {AccessID == "TR234" ? (
+                      <Link
+                      to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      >
+                        <Tooltip title="Task Weightage">
+                          <IconButton color="info" size="small">
+                            <BalanceIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )}
+                     { AccessID == "TR235" &&<Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        state={{
+                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>}
                   </Box>
                 );
               },

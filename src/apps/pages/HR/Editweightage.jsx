@@ -544,7 +544,7 @@ const EditmileWeightage = () => {
                                         justifyContent: "flex-end",
                                         width: "100%",
                                         marginTop: "20px",
-                                        gap:"5px"
+                                        gap:"10px"
                                     }}
                                 >
                                     <Button
