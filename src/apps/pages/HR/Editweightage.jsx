@@ -71,7 +71,6 @@ const EditmileWeightage = () => {
     const location = useLocation();
 
     const state = location.state || {};
-    console.log(state,"???????????????????");
     const [pageSize, setPageSize] = React.useState(10);
     const [rowCount, setRowCount] = useState(0);
     const colors = tokens(theme.palette.mode);
@@ -124,7 +123,9 @@ const EditmileWeightage = () => {
         {
             field: "Weightages",
             headerName: "Weightage",
+            type:"number",
             width: 130,
+            textAlign:"right",
             editable: "true",
             align:"right"
         },
@@ -144,6 +145,10 @@ const EditmileWeightage = () => {
     const processRowUpdate = async (newRow, oldRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
+        if(updatedRow.Weightages == '0'){
+            toast.error("Please give Weightage greater than 0");
+            return false;
+        }
         const newData = rows.map((row) =>
             row.RecordID === updatedRow.RecordID ? updatedRow : row
         );
@@ -152,7 +157,7 @@ const EditmileWeightage = () => {
             0
         );
         const isCheckTotalWeightage = newData.every((value) =>
-            parseFloat(value.Weightages)
+            parseFloat(value.Weightages)  > 0
         );
         if (totalWeightage != 100 && isCheckTotalWeightage) {
             toast.error("Total weightage should be 100");
@@ -193,6 +198,15 @@ const EditmileWeightage = () => {
                 toast.warn("No data available to save.");
                 return;
             }
+            const totalWeightage = rows.reduce(
+                (sum, row) => sum + (parseFloat(row.Weightages) || 0),
+                0
+            );
+            if (totalWeightage != 100) {
+                toast.error("Total weightage should be 100");
+                return false;
+            }
+    
 
             const response = await dispatch(
                 postWeightage({ Type: type, data: rows })
