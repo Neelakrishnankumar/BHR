@@ -10,7 +10,7 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
-  Breadcrumbs
+  Breadcrumbs,Paper
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,6 +33,7 @@ import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { formGap } from "../../../ui-components/global/utils";
 
 // import CryptoJS from "crypto-js";
 const EditActivities = () => {
@@ -147,7 +148,7 @@ const EditActivities = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
+      {/* <Box display="flex" justifyContent="space-between" p={2}>
         <Box display="flex" borderRadius="3px" alignItems="center">
           {broken && !rtl && (
             <IconButton onClick={() => toggleSidebar()}>
@@ -209,10 +210,74 @@ const EditActivities = () => {
             </IconButton>
           </Tooltip>
         </Box>
-      </Box>
+      </Box> */}
+       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
 
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => navigate("/Apps/TR133/Project")}
+              >
+                Project
+              </Typography>
+
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
+              >
+                Milestone
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
+              >
+                Stages
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => navigate(-1)}
+
+              >
+                Activity
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
       {!getLoading ? (
-        <Box m="20px">
+         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -235,24 +300,23 @@ const EditActivities = () => {
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
+                 
                     <TextField
                       name="code"
                       type="text"
                       id="code"
                       label="Code"
-                      variant="filled"
+                    variant="standard"
                       focused
                       required
                       value={values.code}
@@ -267,7 +331,7 @@ const EditActivities = () => {
                       type="text"
                       id="name"
                       label="Description"
-                      variant="filled"
+                    variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
@@ -282,14 +346,14 @@ const EditActivities = () => {
                       type="number"
                       id="sortorder"
                       label="Sort Order"
-                      variant="filled"
+                    variant="standard"
                       focused
                       value={values.sortorder}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.sortorder && !!errors.sortorder}
                       helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "#fff6c3" }}
+                      sx={{ background: "" }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
@@ -316,9 +380,9 @@ const EditActivities = () => {
 
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box>
-                  </FormControl>
+                  
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -370,7 +434,7 @@ const EditActivities = () => {
               </form>
             )}
           </Formik>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

@@ -16,6 +16,7 @@ import {
   useTheme,
   Breadcrumbs,
   LinearProgress,
+  Paper,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -54,6 +55,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { FunctionSchema } from "../../Security/validation";
+import { formGap } from "../../../ui-components/global/utils";
 // import {  HsnSchema } from "../../Security/validation";
 // import CryptoJS from "crypto-js";
 const Editfunction = () => {
@@ -85,22 +87,22 @@ const Editfunction = () => {
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
-    
+
     name: data.Description,
     sortorder: data.SortOrder,
     categories: data.Categories,
     code: data.Code || "",
     disable: data.Disable === "Y" ? true : false,
-  }; 
-console.log(data.Code,"======");
-  const Fnsave = async (values,del) => {
+  };
+  console.log(data.Code, "======");
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -252,7 +254,7 @@ console.log(data.Code,"======");
   // };
 
   // const FnEmployeesave = async (values, resetForm, del) => {
-   
+
   //   let action =
   //     empMode === "A" && !del
   //       ? "insert"
@@ -277,7 +279,7 @@ console.log(data.Code,"======");
   //     );
 
   //     toast.success(response.payload.Msg);
-     
+
   //     selectCellData({ rowData: {}, mode: "A", field: "" });
   //     resetForm();
   //   } else {
@@ -318,35 +320,36 @@ console.log(data.Code,"======");
   };
   return (
     <React.Fragment>
-    {getLoading?<LinearProgress/>:false}
-      <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Box
-            display={isNonMobile ? "flex" : "none"}
-            borderRadius="3px"
-            alignItems="center"
-          >
-            <Breadcrumbs
-              maxItems={3}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+      {getLoading ? <LinearProgress /> : false}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
             >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  setScreen(0);
-                }}
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
               >
-                Functions
-              </Typography>
-              {/* {show == "1" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    setScreen(0);
+                  }}
+                >
+                  Functions
+                </Typography>
+                {/* {show == "1" ? (
                 <Typography
                   variant="h5"
                   color="#0000D1"
@@ -357,12 +360,12 @@ console.log(data.Code,"======");
               ) : (
                 false
               )} */}
-            </Breadcrumbs>
+              </Breadcrumbs>
+            </Box>
           </Box>
-        </Box>
 
-        <Box display="flex">
-          {/* {mode !== "A" ? (
+          <Box display="flex">
+            {/* {mode !== "A" ? (
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <InputLabel id="demo-select-small">Explore</InputLabel>
               <Select
@@ -379,21 +382,22 @@ console.log(data.Code,"======");
           ) : (
             false
           )} */}
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-      </Box>
-
+      </Paper>
       {show == 0 && !getLoading ? (
-        <Box m="20px">
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          {/* <Box m="20px"> */}
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -416,24 +420,23 @@ console.log(data.Code,"======");
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                 // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
+                
                     <TextField
                       name="code"
                       type="text"
                       id="code"
                       label="Code"
-                      variant="filled"
+                      variant="standard"
                       focused
                       required
                       value={values.code}
@@ -442,7 +445,7 @@ console.log(data.Code,"======");
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{ 
-                        gridColumn: "span 2", 
+                        
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -455,7 +458,7 @@ console.log(data.Code,"======");
                       type="text"
                       id="name"
                       label="Name"
-                      variant="filled"
+                      variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
@@ -463,7 +466,7 @@ console.log(data.Code,"======");
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
                       sx={{ 
-                        gridColumn: "span 2", 
+                       
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -474,8 +477,8 @@ console.log(data.Code,"======");
 
     <FormControl
                       focused
-                      variant="filled"
-                      sx={{ gridColumn: "span 2", background: "#ffffff"  }}
+                      variant="standard"
+                      sx={{  background: "#ffffff"  }}
                       // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                     >
                       <InputLabel id="status">Categories</InputLabel>
@@ -500,14 +503,14 @@ console.log(data.Code,"======");
                       type="number"
                       id="sortorder"
                       label="Sort Order"
-                      variant="filled"
+                      variant="standard"
                       focused
                       value={values.sortorder}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.sortorder && !!errors.sortorder}
                       helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "#fff6c3" }}
+                      sx={{ background: "" }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
@@ -533,9 +536,117 @@ console.log(data.Code,"======");
 
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box>
+                
+                </Box> 
+                {/* {/* <Box
+                  display="grid"
+                  gap={2}
+                  padding={2}
+                  gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <TextField
+                    name="code"
+                    type="text"
+                    id="code"
+                    label="Code"
+                    variant="standard"
+                    required
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.code && !!errors.code}
+                    helperText={touched.code && errors.code}
+                    sx={{
+                      backgroundColor: "#ffffff",
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5",
+                      },
+                    }}
+                  />
+
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Name"
+                    variant="standard"
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+                      backgroundColor: "#ffffff",
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5",
+                      },
+                    }}
+                  />
+
+                  <FormControl
+                    variant="standard"
+                    sx={{ backgroundColor: "#ffffff" }}
+                  >
+                    <InputLabel id="status">Categories</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="categories"
+                      name="categories"
+                      value={values.categories}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="TS">Technology Stack</MenuItem>
+                      <MenuItem value="BV">Business Vertical</MenuItem>
+                    </Select>
                   </FormControl>
-                </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ backgroundColor: "" }}
+                    InputProps={{
+                      inputProps: { style: { textAlign: "right" } },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
+                </Box> */}
+
+
+
+                <Box display="flex" justifyContent="end"padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -558,7 +669,7 @@ console.log(data.Code,"======");
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values,  "harddelete");
+                        Fnsave(values, "harddelete");
                       }}
                     >
                       Delete
@@ -585,12 +696,14 @@ console.log(data.Code,"======");
               </form>
             )}
           </Formik>
-        </Box>
+          {/* </Box> */}
+        </Paper>
+
       ) : (
         false
       )}
 
-      
+
       {/* {show == "1" ? (
         <Box m="10px">
           <Formik
@@ -637,7 +750,7 @@ console.log(data.Code,"======");
                     type="text"
                     id="code"
                     label="Code"
-                    variant="filled"
+                    variant="standard"
                     focused
                     required
                     value={values.code}
@@ -661,7 +774,7 @@ console.log(data.Code,"======");
                     type="text"
                     id="name"
                     label="Name"
-                    variant="filled"
+                    variant="standard"
                     color="primary"
                     focused
                     sx={{ 
@@ -756,7 +869,7 @@ console.log(data.Code,"======");
                       <TextField
                         id="employee"
                         label="Employee"
-                        variant="filled"
+                        variant="standard"
                         focused
                         required
                         inputProps={{ tabIndex: "-1" }}
@@ -770,7 +883,7 @@ console.log(data.Code,"======");
                       </IconButton>
                       <TextField
                         id="employee"
-                        variant="filled"
+                        variant="standard"
                         fullWidth
                         inputProps={{ tabIndex: "-1" }}
                         focused

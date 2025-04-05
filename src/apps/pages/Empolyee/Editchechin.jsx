@@ -12,7 +12,8 @@ import {
   MenuItem,
   InputLabel,
   Select,
-  LinearProgress , 
+  LinearProgress,
+  Paper,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -37,6 +38,8 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 // import {  HsnSchema } from "../../Security/validation";
 import Popup from "../popup";
 import Listviewpopup from "../Lookup";
+import { formGap } from "../../../ui-components/global/utils";
+import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
 // import CryptoJS from "crypto-js";
 const Editcheckin = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -55,7 +58,7 @@ const Editcheckin = () => {
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
-   const Finyear = sessionStorage.getItem("YearRecorid");
+  const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
   useEffect(() => {
@@ -78,14 +81,14 @@ const Editcheckin = () => {
     disable: data.WorkAtHome === "Y" ? false : true,
   };
 
-  const Fnsave = async (values,del) => {
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == false) {
       isCheck = "Y";
@@ -96,10 +99,13 @@ const Editcheckin = () => {
       CheckInType: values.checkintype,
       CheckInDate: values.date,
       CheckInComment: values.comment,
-      EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
+      //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
+      EmployeeID:values.employee.RecordID || 0,
       WorkAtHome: isCheck,
-      LocationRecID: locationLookup.locationRecordID,
-      GateRecID: gateLookup.gateRecordID,
+      // LocationRecID: locationLookup.locationRecordID,
+      // GateRecID: gateLookup.gateRecordID,
+      LocationRecID: values.location.RecordID || 0,
+      GateRecID: values.gate.RecordID || 0,
       CheckInTime: values.checkintime,
       Finyear,
       CompanyID,
@@ -108,7 +114,7 @@ const Editcheckin = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-       navigate("/Apps/TR123/Check In");
+      navigate("/Apps/TR123/Check In");
       //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
     } else {
       toast.error(response.payload.Msg);
@@ -146,7 +152,8 @@ const Editcheckin = () => {
     gateLookup.gateCode = data.GateCode;
     gateLookup.gateName = data.GateName;
   }
-
+  const [locgate, setLocgate] = useState(null);
+  const [empID, setEmpID] = useState(null);
   const [openEMPLOYEEPopup, setOpenEMPLOYEEPopup] = useState(false);
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
@@ -233,7 +240,7 @@ const Editcheckin = () => {
         }
         if (props === "Close") {
           //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-           navigate("/Apps/TR123/Check In");
+          navigate("/Apps/TR123/Check In");
         }
       } else {
         return;
@@ -243,7 +250,7 @@ const Editcheckin = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
+      {/* <Box display="flex" justifyContent="space-between" p={2}>
         <Box display="flex" borderRadius="3px" alignItems="center">
           {broken && !rtl && (
             <IconButton onClick={() => toggleSidebar()}>
@@ -264,10 +271,35 @@ const Editcheckin = () => {
             </IconButton>
           </Tooltip>
         </Box>
-      </Box>
+      </Box> */}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Typography variant="h3">Check In</Typography>
+          </Box>
 
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
       {!getLoading ? (
-        <Box m="20px">
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -286,19 +318,22 @@ const Editcheckin = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                  {/* <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
                     <FormControl
                       sx={{
                         display: "flex",
@@ -309,7 +344,7 @@ const Editcheckin = () => {
                       <TextField
                         id="outlined-basic"
                         label="ID"
-                        variant="filled"
+                        variant="standard"
                         value={selectEMPLOYEELookupData.EMPLOYEERecordID}
                         focused
                         sx={{ display: "none" }}
@@ -317,7 +352,7 @@ const Editcheckin = () => {
                       <TextField
                         id="outlined-basic"
                         label="Employee Id"
-                        variant="filled"
+                        variant="standard"
                         value={selectEMPLOYEELookupData.EMPLOYEElookupCode}
                         focused
                         required
@@ -333,26 +368,70 @@ const Editcheckin = () => {
                       ) : (
                         <IconButton
                           sx={{ height: 40, width: 40 }}
-                            onClick={() => handleShow("EMPLOYEE")}
+                          onClick={() => handleShow("EMPLOYEE")}
                         >
                           <img src="https://img.icons8.com/color/48/null/details-popup.png" />
                         </IconButton>
                       )}
 
-                      {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
-
                       <TextField
                         id="outlined-basic"
                         label=""
-                        variant="filled"
+                        variant="standard"
                         value={selectEMPLOYEELookupData.EMPLOYEElookupDesc}
                         fullWidth
                         inputProps={{ tabIndex: "-1" }}
                         focused
                       />
                     </FormControl>
+                  </FormControl> */}
+                  <FormControl
+                    sx={{
+                     
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Productautocomplete
+                      name="employee"
+                      label="Employee"
+                      id="employee"
+                      value={values.employee}
+                      onChange={(newValue) => {
+                        setFieldValue("employee", newValue);
+                        setEmpID(newValue.RecordID);
+                        console.log(newValue.RecordID, "recid");
+
+                      }}
+                      
+                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                    />
                   </FormControl>
                   <FormControl
+                    sx={{
+                      
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Productautocomplete
+                      name="location"
+                      label="Location"
+                      id="location"
+                      value={values.location}
+                      onChange={(newValue) => {
+                        setFieldValue("location", newValue);
+                        setLocgate(newValue.RecordID);
+                        console.log(newValue.RecordID, "recid");
+
+                      }}
+                      
+                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
+                    />
+                  </FormControl>
+                  {/* <FormControl
                     sx={{
                       gridColumn: "span 2",
                       display: "flex",
@@ -363,7 +442,7 @@ const Editcheckin = () => {
                     <TextField
                       id="outlined-basic"
                       label="ID"
-                      variant="filled"
+                      variant="standard"
                       value={locationLookup.locationRecordID}
                       focused
                       sx={{ display: "none" }}
@@ -371,16 +450,14 @@ const Editcheckin = () => {
                     <TextField
                       id="outlined-basic"
                       label="Location"
-                      variant="filled"
+                      variant="standard"
                       value={locationLookup.locationCode}
                       focused
                       required
                       DESIGN
                       inputProps={{ tabIndex: "-1" }}
                     />
-                    {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                    {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                    {/* </Button> */}
+                  
                     <IconButton
                       sx={{ height: 40, width: 40 }}
                       onClick={() => handleShow("LOCATION")}
@@ -390,14 +467,14 @@ const Editcheckin = () => {
                     <TextField
                       id="outlined-basic"
                       label=""
-                      variant="filled"
+                      variant="standard"
                       value={locationLookup.locationName}
                       fullWidth
                       focused
                       inputProps={{ tabIndex: "-1" }}
                     />
-                  </FormControl>
-                  <FormControl
+                  </FormControl> */}                 
+                  {/* <FormControl
                     sx={{
                       gridColumn: "span 2",
                       display: "flex",
@@ -408,7 +485,7 @@ const Editcheckin = () => {
                     <TextField
                       id="outlined-basic"
                       label="ID"
-                      variant="filled"
+                      variant="standard"
                       value={gateLookup.gateRecordID}
                       focused
                       sx={{ display: "none" }}
@@ -416,7 +493,7 @@ const Editcheckin = () => {
                     <TextField
                       id="outlined-basic"
                       label="Gate"
-                      variant="filled"
+                      variant="standard"
                       value={gateLookup.gateCode}
                       focused
                       required
@@ -432,11 +509,35 @@ const Editcheckin = () => {
                     <TextField
                       id="outlined-basic"
                       label=""
-                      variant="filled"
+                      variant="standard"
                       value={gateLookup.gateName}
                       fullWidth
                       focused
                       inputProps={{ tabIndex: "-1" }}
+                    />
+                  </FormControl> */}
+                   <FormControl
+                    sx={{
+                     
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Productautocomplete
+                      name="gate"
+                      label="Gate"
+                      id="gate"
+                      value={values.gate}
+                      onChange={(newValue) => {
+                        setFieldValue("gate", newValue)
+
+                      }}
+                      //  onChange={handleSelectionFunctionname}
+                      // defaultValue={selectedFunctionName}
+                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
+                      //url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate} AND CompanyID=${CompId}","Any":""}}`}
+
                     />
                   </FormControl>
                   <TextField
@@ -444,7 +545,7 @@ const Editcheckin = () => {
                     type="date"
                     id="date"
                     label="Check In Date"
-                    variant="filled"
+                    variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.date}
@@ -452,14 +553,14 @@ const Editcheckin = () => {
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{ gridColumn: "span 2" ,background: "#f5f5f5"}}
-                    inputProps={{ max: new Date().toISOString().split("T")[0] }} 
+                    sx={{background: "#f5f5f5" }}
+                    inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
 
                   <FormControl
                     focused
-                    variant="filled"
-                    sx={{ gridColumn: "span 2" }}
+                    variant="standard"
+                   
                   >
                     <InputLabel id="status">Type</InputLabel>
                     <Select
@@ -483,32 +584,32 @@ const Editcheckin = () => {
                     id="checkintime"
                     label="Check In Time"
                     inputFormat="HH:mm:aa"
-                    variant="filled"
+                    variant="standard"
                     value={values.checkintime}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2",background: "#f5f5f5" }}
+                    sx={{  background: "#f5f5f5" }}
                   />
                   <TextField
                     name="comment"
                     type="text"
                     id="comment"
                     label="Check In Comment"
-                    variant="filled"
+                    variant="standard"
                     focused
                     value={values.comment}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.comment && !!errors.comment}
                     helperText={touched.comment && errors.comment}
-                    sx={{ 
-                      gridColumn: "span 2", 
+                    sx={{
+                     
                       backgroundColor: "#f5f5f5", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
-                    }}                  />
+                    }} />
                   <Box>
                     <Field
                       //  size="small"
@@ -523,7 +624,7 @@ const Editcheckin = () => {
                     <FormLabel focused={true}>Work From Home</FormLabel>
                   </Box>
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -546,7 +647,7 @@ const Editcheckin = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values,  "harddelete");
+                        Fnsave(values, "harddelete");
                       }}
                     >
                       Delete
@@ -614,7 +715,7 @@ const Editcheckin = () => {
               filterValue={locationLookup.locationRecordID}
             />
           </Popup>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

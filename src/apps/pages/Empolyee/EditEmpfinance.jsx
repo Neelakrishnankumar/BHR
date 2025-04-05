@@ -9,7 +9,10 @@ import {
   IconButton,
   Breadcrumbs,
   LinearProgress,
+  Paper,
+  Tooltip,
 } from "@mui/material";
+import { formGap } from "../../../ui-components/global/utils";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -74,21 +77,21 @@ const EditEmpfinance = () => {
       Comments: values.comments,
       // Approvedby:values.approvedby,
       OverheadsRecordID: selectOHLookupData.OHlookupRecordid,
-      Attachment: ImageName ,
+      Attachment: ImageName,
       FinanceCategoryType: "E",
-      Approvedby:params.RecordID,
+      Approvedby: params.RecordID,
     };
 
-      var type = "";
-      if (mode == "A") {
-        type = "insert";
-      } else {
-        type = "update";
-      }
+    var type = "";
+    if (mode == "A") {
+      type = "insert";
+    } else {
+      type = "update";
+    }
 
     // const data = await dispatch(postApidata(accessID,type,idata))
-    let action ="insert" ;
-    const responce = await dispatch(postData({ accessID:"TR086", action, idata }));
+    let action = "insert";
+    const responce = await dispatch(postData({ accessID: "TR086", action, idata }));
 
     if (responce.payload.Status == "Y") {
       toast.success(responce.payload.Msg);
@@ -225,7 +228,7 @@ const EditEmpfinance = () => {
   return (
     <React.Fragment>
       {/* {getLoading ? <LinearProgress /> : false} */}
-      <Box display="flex" justifyContent="space-between" p={2}>
+      {/* <Box display="flex" justifyContent="space-between" p={2}>
         <Box display="flex" borderRadius="3px" alignItems="center">
           <Breadcrumbs
             maxItems={3}
@@ -242,17 +245,13 @@ const EditEmpfinance = () => {
             >
               Employee
             </Typography>
-           
+
 
             <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
-              // onClick={() => {
-              //   navigate(
-              //     `/Apps/Secondarylistview/TR086/Finance Entry/${parentID}/${filtertype}`
-              //   );
-              // }}
+           
             >
               Expense Entry
             </Typography>
@@ -260,20 +259,11 @@ const EditEmpfinance = () => {
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
-              // onClick={() => {
-              //   navigate(`/Apps/TR027/Employees`);
-              // }}
+            
             >
-             {params.Name}
+              {params.Name}
             </Typography>
-            {/* <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  
-                >
-                  {mode === "A" ? "New"}
-                </Typography> */}
+            
           </Breadcrumbs>
         </Box>
         <Box display="flex">
@@ -287,160 +277,240 @@ const EditEmpfinance = () => {
             />
           </IconButton>
         </Box>
-      </Box>
-
-      {/* {!getLoading ? ( */}
-        <Box m="20px">
-          <Formik
-            initialValues={initialValue}
-            onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                fnSave(values);
-              }, 100);
-            }}
-             validationSchema={ financeentrySchema}
-            enableReinitialize={true}
+      </Box> */}
+ <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+               <Breadcrumbs
+            maxItems={3}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
-                    <TextField
-                      name="date"
-                      type="date"
-                      id="date"
-                      label="Date"
-                      variant="filled"
-                      focused
-                      value={values.date}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      inputFormat="YYYY-MM-DD"
-                      error={!!touched.date && !!errors.date}
-                      helperText={touched.date && errors.date}
-                      sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(`/Apps/TR027/Employees`);
+              }}
+            >
+              Employee
+            </Typography>
 
-                      autoFocus
-                    />
-                    <TextField
-                      name="referenceifany"
-                      type="text"
-                      id="referenceifany"
-                      label="Reference If Any"
-                      variant="filled"
-                      focused
-                      value={values.referenceifany}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={
-                        !!touched.referenceifany && !!errors.referenceifany
-                      }
-                      helperText={
-                        touched.referenceifany && errors.referenceifany
-                      }
-                      autoFocus
-                    />
 
-                    <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
-                      <FormControl
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+           
+            >
+              Expense Entry
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+            
+            >
+              {params.Name}
+            </Typography>
+            
+          </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            {/* {mode !== "A" ? (
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <InputLabel id="demo-select-small">Explore</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={show}
+                label="Explore"
+                onChange={screenChange}
+              >
+                <MenuItem value={0}>Function</MenuItem>
+                <MenuItem value={1}>Employee</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            false
+          )} */}
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
+      {/* {!getLoading ? ( */}
+      <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Formik
+          initialValues={initialValue}
+          onSubmit={(values, { resetForm }) => {
+            setTimeout(() => {
+              fnSave(values);
+            }, 100);
+          }}
+          validationSchema={financeentrySchema}
+          enableReinitialize={true}
+        >
+          {({
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            isSubmitting,
+            values,
+            handleSubmit,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Box
+                display="grid"
+                gap={formGap}
+                padding={1}
+                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                // gap="30p"
+                sx={{
+                  "& > div": {
+                    gridColumn: isNonMobile ? undefined : "span 2",
+                  },
+                }}
+              >
+                
+                  <TextField
+                    name="date"
+                    type="date"
+                    id="date"
+                    label="Date"
+                    variant="standard"
+                    focused
+                    value={values.date}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    inputFormat="YYYY-MM-DD"
+                    error={!!touched.date && !!errors.date}
+                    helperText={touched.date && errors.date}
+                    sx={{  background: "#f5f5f5" }}
+
+                    autoFocus
+                  />
+                  <TextField
+                    name="referenceifany"
+                    type="text"
+                    id="referenceifany"
+                    label="Reference If Any"
+                    variant="standard"
+                    focused
+                    value={values.referenceifany}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={
+                      !!touched.referenceifany && !!errors.referenceifany
+                    }
+                    helperText={
+                      touched.referenceifany && errors.referenceifany
+                    }
+                    autoFocus
+                  />
+
+                  
+                    <FormControl
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TextField
+                        id="outlined-basic"
+                        label="ID"
+                        variant="standard"
+                        value={selectOHLookupData.OHRecordID}
+                        focused
+                        sx={{ display: "none" }}
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Over Head"
+                        variant="standard"
+                        value={selectOHLookupData.OHlookupCode}
+                        focused
+                        // required
+                        inputProps={{ tabIndex: "-1" }}
+                      />
+                      <IconButton
+                        sx={{ height: 40, width: 40 }}
+                        onClick={() => handleShow("OH")}
                       >
-                        <TextField
-                          id="outlined-basic"
-                          label="ID"
-                          variant="filled"
-                          value={selectOHLookupData.OHRecordID}
-                          focused
-                          sx={{ display: "none" }}
-                        />
-                        <TextField
-                          id="outlined-basic"
-                          label="Over Head"
-                          variant="filled"
-                          value={selectOHLookupData.OHlookupCode}
-                          focused
-                          // required
-                          inputProps={{ tabIndex: "-1" }}
-                        />
-                        <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("OH")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                        {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
+                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+                      </IconButton>
+                      {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
 
-                        <TextField
-                          id="outlined-basic"
-                          label=""
-                          variant="filled"
-                          value={selectOHLookupData.OHlookupDesc}
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                          focused
-                        />
-                      </FormControl>
+                      <TextField
+                        id="outlined-basic"
+                        label=""
+                        variant="standard"
+                        value={selectOHLookupData.OHlookupDesc}
+                        fullWidth
+                        inputProps={{ tabIndex: "-1" }}
+                        focused
+                      />
                     </FormControl>
+                 
 
-                    <TextField
-                      name="amount"
-                      type="text"
-                      id="amount"
-                      label="Amount"
-                      variant="filled"
-                      focused
-                      value={values.amount}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.amount && !!errors.amount}
-                      helperText={touched.amount && errors.amount}
-                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
-                      autoFocus
-                    />
-                    <TextField
-                      name="comments"
-                      type="text"
-                      id="comments"
-                      label="comments"
-                      variant="filled"
-                      focused
-                      value={values.comments}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.comments && !!errors.comments}
-                      helperText={touched.comments && errors.comments}
-                      autoFocus
-                    />
-                    {/* <TextField
+                  <TextField
+                    name="amount"
+                    type="text"
+                    id="amount"
+                    label="Amount"
+                    variant="standard"
+                    focused
+                    value={values.amount}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.amount && !!errors.amount}
+                    helperText={touched.amount && errors.amount}
+                    sx={{  background: "" }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="comments"
+                    type="text"
+                    id="comments"
+                    label="comments"
+                    variant="standard"
+                    focused
+                    value={values.comments}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.comments && !!errors.comments}
+                    helperText={touched.comments && errors.comments}
+                    autoFocus
+                  />
+                  {/* <TextField
                     name="approvedby"
                     type="text"
                     id="approvedby"
                     label="Approved By"
-                    variant="filled"
+                    variant="standard"
                     focused
                     value={values.approvedby}
                     onBlur={handleBlur}
@@ -450,118 +520,112 @@ const EditEmpfinance = () => {
                     
                     autoFocus
                     /> */}
-                   
-                   
-                     
-                   
-                   
-                 
-                  </FormControl>
-                </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                  <IconButton
-                    size="large"
-                    color="warning"
-                    aria-label="upload picture"
-                    component="label"
-                  >
-                    <input
-                      hidden
-                      accept="all/*"
-                      type="file"
-                      onChange={getFileChange}
-                    />
-                    <PictureAsPdfOutlinedIcon />
-                  </IconButton>
-                  <Button
-                    variant="contained"
-                    component={"a"}
-                    onClick={() => {
-                      ImageName
-                        ? window.open(
-                       
-                               store.getState().globalurl.attachmentUrl +
-                                  ImageName,
-                             
-                            "_blank"
-                          )
-                        : toast.error("Please Upload File");
-                    }}
-                  >
-                    View
-                  </Button>
-                  <LoadingButton
-                    loading={loading}
-                    variant="contained"
-                    color="secondary"
-                    type="submit"
-                  >
-                    SAVE
-                  </LoadingButton>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                      navigate(
-                        `/Apps/TR027/Employees`
-                      );
-                    }}
-                  >
-                    CANCEL
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-          <Popup
-            title="OverHead"
-            openPopup={openOHPopup}
-            setOpenPopup={setOpenOHPopup}
-          >
-            <Listviewpopup
-              accessID="2032"
-              screenName="OverHead"
-              childToParent={childToParent}
-              filterName={"FinanceCategoryType"}
-              filterValue={parentID}
-            />
-          </Popup>
-          <Popup
-            title={
+
+              </Box>
+              <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                <IconButton
+                  size="small"
+                  color="warning"
+                  aria-label="upload picture"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept="all/*"
+                    type="file"
+                    onChange={getFileChange}
+                  />
+                  <PictureAsPdfOutlinedIcon />
+                </IconButton>
+                <Button
+                  variant="contained"
+                  component={"a"}
+                  onClick={() => {
+                    ImageName
+                      ? window.open(
+
+                        store.getState().globalurl.attachmentUrl +
+                        ImageName,
+
+                        "_blank"
+                      )
+                      : toast.error("Please Upload File");
+                  }}
+                >
+                  View
+                </Button>
+                <LoadingButton
+                  loading={loading}
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                >
+                  SAVE
+                </LoadingButton>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => {
+                    navigate(
+                      `/Apps/TR027/Employees`
+                    );
+                  }}
+                >
+                  CANCEL
+                </Button>
+              </Box>
+            </form>
+          )}
+        </Formik>
+        <Popup
+          title="OverHead"
+          openPopup={openOHPopup}
+          setOpenPopup={setOpenOHPopup}
+        >
+          <Listviewpopup
+            accessID="2032"
+            screenName="OverHead"
+            childToParent={childToParent}
+            filterName={"FinanceCategoryType"}
+            filterValue={parentID}
+          />
+        </Popup>
+        <Popup
+          title={
+            // parentID == "E"
+            "Employee"
+            // : parentID == "P"
+            // ? "Products"
+            // : parentID == "F"
+            // ? "Fixed Assets"
+            // : "Material"
+          }
+          openPopup={openEMPLOYEEPopup}
+          setOpenPopup={setOpenEMPLOYEEPopup}
+        >
+          <Listviewpopup
+            accessID={
               // parentID == "E"
-                 "Employee"
-                // : parentID == "P"
-                // ? "Products"
-                // : parentID == "F"
-                // ? "Fixed Assets"
-                // : "Material"
+              "2024"
+              // : parentID == "P"
+              // ? "2002"
+              // : parentID == "F"
+              // ? "2055"
+              // : "2000"
             }
-            openPopup={openEMPLOYEEPopup}
-            setOpenPopup={setOpenEMPLOYEEPopup}
-          >
-            <Listviewpopup
-              accessID={
-                // parentID == "E"
-                   "2024"
-                  // : parentID == "P"
-                  // ? "2002"
-                  // : parentID == "F"
-                  // ? "2055"
-                  // : "2000"
-              }
-              screenName={
-                // parentID == "E"
-                   "Employee"
-                  // : parentID == "P"
-                  // ? "Products"
-                  // : parentID == "F"
-                  // ? "Fixed Assets"
-                  // : "Material"
-              }
-              childToParent={childToParent}
-            />
-          </Popup>
-        </Box>
+            screenName={
+              // parentID == "E"
+              "Employee"
+              // : parentID == "P"
+              // ? "Products"
+              // : parentID == "F"
+              // ? "Fixed Assets"
+              // : "Material"
+            }
+            childToParent={childToParent}
+          />
+        </Popup>
+      </Paper>
       {/* // ) : (
       //   false
       // )} */}

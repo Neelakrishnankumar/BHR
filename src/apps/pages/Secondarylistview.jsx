@@ -51,6 +51,7 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import axios from "axios";
 import toast from "react-hot-toast";
 import store from "../..";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../ui-components/global/utils";
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -2254,9 +2255,11 @@ else if (accessID == "TR234") {
   return (
     <React.Fragment>
       <Box m="5px">
-        <Box
+      <Box
           m="5px 0 0 0"
-          height="85vh"
+          padding={2}
+          // height="85vh"
+          height={dataGridHeight}
           sx={{
             "& .MuiDataGrid-root": {
               // border: "none",
@@ -2281,18 +2284,30 @@ else if (accessID == "TR234") {
             "& .MuiCheckbox-root": {
               color: `${colors.greenAccent[200]} !important`,
             },
-            "& .gridcolor": {
-              backgroundColor: "#f5cbae",
-              color: "#1a3e72",
+            "& .odd-row": {
+              backgroundColor: "",
+              color: "", // Color for odd rows
+            },
+            "& .even-row": {
+              backgroundColor: "#D3D3D3",
+              color: "", // Color for even rows
             },
           }}
         >
           <DataGrid
+           sx={{
+            "& .MuiDataGrid-footerContainer":{
+              height:dataGridHeaderFooterHeight,
+              minHeight:dataGridHeaderFooterHeight,
+            }
+           }}
             key={accessID}
             rows={listViewData}
             columns={columns}
             page={page}
             disableSelectionOnClick
+            rowHeight={dataGridRowHeight}
+            headerHeight={dataGridHeaderFooterHeight}
             getRowId={(row) => row.RecordID}
             pageSize={pageSize}
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
@@ -2308,12 +2323,17 @@ else if (accessID == "TR234") {
                 quickFilterProps: { debounceMs: 500 },
               },
             }}
+            // getRowClassName={(params) =>
+            //   params.row.Rate > params.row.FixedRate ||
+            //   params.row.RemarkRecordID == "24"||
+            //   params.row.Colourflag == "Y"
+            //     ? "gridcolor"
+            //     : ""
+            // }
             getRowClassName={(params) =>
-              params.row.Rate > params.row.FixedRate ||
-              params.row.RemarkRecordID == "24"||
-              params.row.Colourflag == "Y"
-                ? "gridcolor"
-                : ""
+              params.indexRelativeToCurrentPage % 2 === 0
+                ? 'odd-row'
+                : 'even-row'
             }
           />
         </Box>
