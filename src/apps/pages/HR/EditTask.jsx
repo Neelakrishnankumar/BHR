@@ -76,6 +76,7 @@ const Edittask = () => {
     const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const state = location.state || {};
     console.log(OPRecid, '====================================');
      useEffect(() => {
          dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -151,7 +152,7 @@ const Edittask = () => {
     
           return {
             RecordID: row.RecordID, 
-            TaskID: "1",
+            TaskID: recID,
             RoleID: row.TaskDetailRoleID,
            // RoleName: row.RoleName,
             Effort:row.TaskDetailEffort,
@@ -189,8 +190,8 @@ const Edittask = () => {
             );
     
             // Fetch updated data based on ManualSalesID
-            dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
-    
+             dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
+            //dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
     
           } else {
             toast.error(response.payload.Msg);
@@ -198,6 +199,7 @@ const Edittask = () => {
         } catch (error) {
           console.error("Error saving rows:", error);
           toast.error("Error occurred during save.");
+
         }
       };
     
@@ -319,26 +321,26 @@ const Edittask = () => {
           ...prev,
           [id]: { mode: GridRowModes.Edit },
         }));
-        // setIsDropdownVisible(true); 
+        
       };
 
       const handleDeleteClick = (id) => async () => {
         try {
-          console.log("Deleting record with recID:", recID); // Debugging the value of recID
+          console.log("Deleting record with recID:", recID); 
     
-          // First, remove the row from the state
+          
           setRows((prev) => prev.filter((row) => row.RecordID !== id));
-          // toast.success("Row deleted successfully.");
+        
           const idata = ({
             //RecordID: recID,
             RecordID: id,
           });
-          // Now, dispatch the API call to perform the delete action
+     
           const response = await dispatch(
             postData({
-              accessID: "TR237", // Your access ID
-              action: "harddelete", // Action for deleting the record
-              idata: idata, // Record ID of the deleted row
+              accessID: "TR237", 
+              action: "harddelete", 
+              idata: idata, 
             })
           );
 
@@ -355,53 +357,7 @@ const Edittask = () => {
           toast.error("Error occurred during delete.");
         }
       };
-    // const handleDeleteClick = (id) => async () => {
-    //     try {
-    //       console.log("Deleting record with recID:", recID); // Debugging the value of recID
-    
-    //       // First, remove the row from the state
-    //       setRows((prev) => prev.filter((row) => row.RecordID !== id));
-    //       // toast.success("Row deleted successfully.");
-    //       const idata = ({
-    //         //RecordID: recID,
-    //         RecordID: id,
-    //       });
-    //       // Now, dispatch the API call to perform the delete action
-    //       const response = await dispatch(
-    //         postData({
-    //           accessID: "TR228", // Your access ID
-    //           action: "harddelete", // Action for deleting the record
-    //           idata: idata, // Record ID of the deleted row
-    //         })
-    //       );
-    
-    //       // Check the response status for success
-    //       // if (response.payload.Status === "Y") {
-    //       //   toast.success(response.payload.Msg); // Show success message
-    //       // } else {
-    //       //   toast.error(response.payload.Msg); // Show error message if failed
-    //       // }
-    //       if (Array.isArray(response.payload) && response.payload.length > 0) {
-    //         toast.success(response.payload[0].Msg); // Show only the 'Msg' from the first object
-    //     } else if (response.payload?.Status === "Y") {
-    //         toast.success(response.payload.Msg);
-    //     } else {
-    //         toast.error(response.payload?.Msg || "Operation failed");
-    //     }
-        
-    //       // Optionally fetch updated data or reset any related state
-    //       // dispatch(fetchExplorelitview("TR228", "Manual Sales Details", `${recID}`, ""));
-    
-    //     } catch (error) {
-    //       console.error("Error deleting row:", error);
-    //       toast.error("Error occurred during delete.");
-    //     }
-    //   };
-    
-    // const handleInsertInrow = (id) => {
-    //     const newRow = { id: rows.length + 1, slno: rows.length + 1, Role: "", Effort: 0, Unit: "Days" };
-    //     setRows([...rows, newRow]);
-    // };
+   
     const processRowUpdate = (newRow, oldRow) => {
         console.log("------inside processrowupdate");
         console.log(newRow, "--find newRow");
@@ -475,8 +431,8 @@ const Edittask = () => {
 
             console.log(recID, "--finding recID");
 
-            dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
-
+             dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
+           // dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
         }
     };
 
@@ -603,26 +559,7 @@ const Edittask = () => {
             },
         },
 
-        // {
-        //     field: "actions",
-        //     type: "actions",
-        //     headerName: "Actions",
-        //     width: 200,
-        //     cellClassName: "actions",
-        //     getActions: (params) => {
-        //         const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
-        //         return isInEditMode
-        //             ? [
-        //                 <GridActionsCellItem icon={<SaveIcon />} label="Save" sx={{ color: "#009688" }} onClick={handleSave(params.id)} />,
-        //                 <GridActionsCellItem icon={<CancelIcon />} label="Cancel" onClick={() => setRowModesModel((prev) => ({ ...prev, [params.id]: { mode: GridRowModes.View } }))} color="inherit" />,
-        //             ]
-        //             : [
-        //                 <GridActionsCellItem icon={<AddIcon style={{ color: "#00563B" }} />} label="Add" onClick={() => handleInsertInrow(params.id)} color="inherit" />,
-        //                 <GridActionsCellItem icon={<EditIcon style={{ color: "#3498db" }} />} label="Edit" onClick={handleEditClick(params.id)} color="inherit" />,
-        //                 <GridActionsCellItem icon={<DeleteIcon style={{ color: "#e74c3c" }} />} label="Delete" onClick={handleDeleteClick(params.id)} color="inherit" />,
-        //             ];
-        //     },
-        // },
+       
         {
             field: "actions",
             type: "actions",
@@ -747,9 +684,59 @@ const Edittask = () => {
                             </IconButton>
                         )}
                         <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
-                            <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{ color: '#0000D1' }} />}>
-                                <Typography variant="h4" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}>Task</Typography>
-                                {show == "1" ? (<Typography variant="h4" color="#0000D1" sx={{ cursor: 'default' }}  >Task detail</Typography>) : false}
+                          
+                                       <Breadcrumbs
+                                         maxItems={2}
+                                         aria-label="breadcrumb"
+                                         separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                                       >
+                                         <Typography
+                                           variant="h5"
+                                           color="#0000D1"
+                                           sx={{ cursor: "default" }}
+                                           onClick={() => {
+                                             navigate("/Apps/TR133/Project");
+                                           }}
+                                         >
+                                           Project
+                                         </Typography>
+                           
+                                         <Typography
+                                           variant="h5"
+                                           color="#0000D1"
+                                           sx={{ cursor: "default" }}
+                                           onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
+                                         >
+                                           Milestone
+                                         </Typography>
+                                         <Typography
+                                           variant="h5"
+                                           color="#0000D1"
+                                           sx={{ cursor: "default" }}
+                                           onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
+                                         >
+                                           Stages
+                                         </Typography>
+                                         <Typography
+                                           variant="h5"
+                                           color="#0000D1"
+                                           sx={{ cursor: "default" }}
+                                           onClick={() => {
+                                            navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`, { state: { ...state } });
+                                          }}
+                                         >
+                                           Activity
+                                         </Typography>
+                                         <Typography
+                                           variant="h5"
+                                           color="#0000D1"
+                                           sx={{ cursor: "default" }}
+                                          onClick={()=>navigate(-1)}
+                                          //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
+                                         >
+                                            Task
+                                         </Typography>
+                                {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Task detail</Typography>) : false}
                             </Breadcrumbs>
                         </Box>
                     </Box>
@@ -1100,9 +1087,12 @@ const Edittask = () => {
                                   pagination
                                 />
                                         </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "20px" }}>
+                                        <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", gap:"10px" ,marginTop: "20px" }}>
                                             <Button color="secondary" variant="contained" onClick={handleSaveButtonClick}>
                                                 Save
+                                            </Button>
+                                            <Button color="warning" variant="contained" onClick={()=>navigate(-1)}>
+                                                Cancel
                                             </Button>
                                         </Box>
                                     </Box>

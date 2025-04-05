@@ -410,11 +410,11 @@ console.log(idata, "-idata");
                     color="warning"
                     variant="contained"
                     onClick={onCancel}
-                    onClick={() => {
-                      navigate(
-                        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
-                      );
-                    }}
+                    // onClick={() => {
+                    //   navigate(
+                    //     `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
+                    //   );
+                    // }}
                   >
                     Cancel
                   </Button>

@@ -535,6 +535,8 @@ const Editcheckout = () => {
               accessID="2024"
               screenName="Employee"
               childToParent={childToParent}
+              filterName={"CompanyID"}
+              filterValue={CompanyID}
             />
           </Popup>
           <Popup
@@ -546,6 +548,8 @@ const Editcheckout = () => {
               accessID="2051"
               screenName="Location"
               childToParent={childToParent}
+              filterName={"parentID"}
+              filterValue={CompanyID}
             />
           </Popup>
           <Popup
@@ -557,6 +561,8 @@ const Editcheckout = () => {
               accessID="2050"
               screenName="Gate"
               childToParent={childToParent}
+              filterName={"parentID"}
+              filterValue={locationLookup.locationRecordID}
             />
           </Popup>
         </Box>

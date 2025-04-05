@@ -333,7 +333,7 @@ const Editcheckin = () => {
                       ) : (
                         <IconButton
                           sx={{ height: 40, width: 40 }}
-                          //  onClick={() => handleShow("EMPLOYEE")}
+                            onClick={() => handleShow("EMPLOYEE")}
                         >
                           <img src="https://img.icons8.com/color/48/null/details-popup.png" />
                         </IconButton>
@@ -584,6 +584,8 @@ const Editcheckin = () => {
               accessID="2024"
               screenName="Employee"
               childToParent={childToParent}
+              filterName={"CompanyID"}
+              filterValue={CompanyID}
             />
           </Popup>
           <Popup
@@ -595,6 +597,8 @@ const Editcheckin = () => {
               accessID="2051"
               screenName="Location"
               childToParent={childToParent}
+              filterName={"parentID"}
+              filterValue={CompanyID}
             />
           </Popup>
           <Popup
@@ -606,6 +610,8 @@ const Editcheckin = () => {
               accessID="2050"
               screenName="Gate"
               childToParent={childToParent}
+              filterName={"parentID"}
+              filterValue={locationLookup.locationRecordID}
             />
           </Popup>
         </Box>

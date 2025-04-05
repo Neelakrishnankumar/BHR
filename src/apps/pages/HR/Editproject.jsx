@@ -92,7 +92,8 @@ const Editproject = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR133/Project");
+      //navigate("/Apps/TR133/Project");
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -121,7 +122,8 @@ const Editproject = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR133/Project");
+          // navigate("/Apps/TR133/Project");
+          navigate("/");
         }
       } else {
         return;
@@ -302,7 +304,8 @@ const Editproject = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR133/Project");
+                      // navigate("/Apps/TR133/Project");
+                      navigate(-1);
                     }}
                   >
                     Cancel

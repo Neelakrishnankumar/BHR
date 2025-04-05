@@ -10,7 +10,9 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
+  Breadcrumbs
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -48,12 +50,14 @@ const Editoperation = () =>{
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+ 
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+  const state = location.state || {};
 //  useEffect(() => {
 //      // Fetch data only when the recID or mode changes
 //      if (recID && mode === "E") {
@@ -100,8 +104,8 @@ const Editoperation = () =>{
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
-
+      // navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -152,7 +156,47 @@ const Editoperation = () =>{
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          <Typography variant="h3">Stages</Typography>
+           <Box display="flex" borderRadius="3px" alignItems="center">
+                      <Breadcrumbs
+                        maxItems={2}
+                        aria-label="breadcrumb"
+                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                      >
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                          onClick={() => {
+                            navigate("/Apps/TR133/Project");
+                          }}
+                        >
+                         Project
+                        </Typography>
+          
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                          onClick={() => {
+                            //navigate(-1);
+                            navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                          }}
+                        >
+                          Milestone
+                        </Typography>
+                        <Typography
+                          variant="h5"
+                          color="#0000D1"
+                          sx={{ cursor: "default" }}
+                          onClick={() => {
+                            navigate(-1);
+                            //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                          }}
+                        >
+                          Stages
+                        </Typography>
+                      </Breadcrumbs>
+                    </Box>
         </Box>
         <Box display="flex">
           <Tooltip title="Close">
@@ -316,7 +360,8 @@ const Editoperation = () =>{
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                        navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
+                        // navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
+                        navigate(-1);
                     }}
                   >
                     Cancel

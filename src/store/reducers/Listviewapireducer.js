@@ -532,7 +532,7 @@ export const fetchListview =
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
-         AccessID != "TR022" 
+         AccessID != "TR022"  
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -549,8 +549,7 @@ export const fetchListview =
         AccessID == "TR105" ||
         AccessID == "TR002" ||
         AccessID == "TR086" ||
-        AccessID == "TR123" || 
-        AccessID == "TR124" ||
+
         AccessID == "TR091" 
       
         
@@ -1724,7 +1723,119 @@ export const fetchListview =
                 );
               },
             };
-          } else if (AccessID == "TR080") {
+          }else if (
+            AccessID == "TR236" || AccessID == "TR234" || AccessID == "TR235" 
+          ) {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              filterable: false,
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                    { AccessID == "TR236" &&<Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        state={{
+                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>}
+                      {AccessID == "TR236" ? (
+                      <Link
+                        to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
+                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      >
+                        <Tooltip title="Activities">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )}
+                     {AccessID == "TR236" ? (
+                      <Link
+                      to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      >
+                        <Tooltip title="Activity Weightage">
+                          <IconButton color="info" size="small">
+                            <BalanceIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )}
+                    { AccessID == "TR234" &&<Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        state={{
+                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>}
+                    {AccessID == "TR234" ? (
+                      <Link
+                        to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
+                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      >
+                        <Tooltip title="Task">
+                          <IconButton color="info" size="small">
+                            <ListAltOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false           
+                    )}
+                   
+                    {AccessID == "TR234" ? (
+                      <Link
+                      to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      >
+                        <Tooltip title="Task Weightage">
+                          <IconButton color="info" size="small">
+                            <BalanceIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )}
+                     { AccessID == "TR235" &&<Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        state={{
+                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>}
+                  </Box>
+                );
+              },
+            };
+          }  else if (AccessID == "TR080") {
             listviewData.Data.columns.push(obj);
             dispatch(
               Success({
@@ -1800,7 +1911,7 @@ export const fetchListview =
                     )}
                      {AccessID == "TR027" ? (
                       <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      to={`/Apps/TR027/Employees/EditEmployees/${params.row.RecordID}/E`}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -1941,7 +2052,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {AccessID == "TR236" ? (
+                    {/* {AccessID == "TR236" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
                         state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
@@ -1958,9 +2069,9 @@ export const fetchListview =
                      {AccessID == "TR236" ? (
                       <Link
                       to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name}}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
-                        <Tooltip title="Weightage">
+                        <Tooltip title="Activity Weightage">
                           <IconButton color="info" size="small">
                             <BalanceIcon />
                           </IconButton>
@@ -1968,7 +2079,7 @@ export const fetchListview =
                       </Link>
                     ) : (
                       false
-                    )}
+                    )} */}
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
@@ -1987,9 +2098,9 @@ export const fetchListview =
                     {AccessID == "TR234" ? (
                       <Link
                       to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name}}
+                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
-                        <Tooltip title="Weightage">
+                        <Tooltip title="Task Weightage">
                           <IconButton color="info" size="small">
                             <BalanceIcon />
                           </IconButton>
@@ -2003,7 +2114,7 @@ export const fetchListview =
                         to={`/Apps/Secondarylistview/TR236/Stages/${params.row.RecordID}`}
                         state ={{MilestoneID:params.row.RecordID,projectID:params.row.ProjectID}}
                       >
-                        <Tooltip title="Operation Stages">
+                        <Tooltip title="Stages">
                           <IconButton color="info" size="small">
                             <ListAltOutlinedIcon />
                           </IconButton>
@@ -2015,9 +2126,9 @@ export const fetchListview =
                     {AccessID == "TR233" ? (
                       <Link
                         to={`/Apps/TR233/weightage/Editweightage/OPS/${params.row.RecordID}/E`}
-                        state={{code:params.row.Code,Desc:params.row.Name}}
+                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                      >
-                        <Tooltip title="Weightage">
+                        <Tooltip title="Stage Weightage">
                           <IconButton color="info" size="small">
                             <BalanceIcon />
                           </IconButton>
@@ -2026,7 +2137,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {AccessID == "TR133" ? (
+                    {/* {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
                
@@ -2045,9 +2156,9 @@ export const fetchListview =
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/TR233/weightage/Editweightage/M/${params.row.RecordID}/E`}
-                        state={{code:params.row.Code,Desc:params.row.Name}}
+                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
-                        <Tooltip title="Weightage">
+                        <Tooltip title="Milestone Weightage">
                           <IconButton color="info" size="small">
                             < BalanceIcon />
                           </IconButton>
@@ -2057,7 +2168,7 @@ export const fetchListview =
                       </Link>
                     ) : (
                       false
-                    )}
+                    )} */}
                       {AccessID == "TR136" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}

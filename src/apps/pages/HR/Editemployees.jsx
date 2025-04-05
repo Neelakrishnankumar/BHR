@@ -1030,7 +1030,7 @@ const Fndeployment = async (values, resetForm,del) => {
    StoregatemasterID: gateLookup.gateRecordID,
    CompanyID
    };
- 
+ console.log(locationLookup.locationRecordID,"????????");
    const response = await dispatch(
      postDeployment({ data:idata })
    );
@@ -1198,12 +1198,12 @@ const Fndeployment = async (values, resetForm,del) => {
         <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{color:'#0000D1'}}/>}>
         <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={()=> {setScreen(0)}}>Employee</Typography>
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Contact</Typography>):false}
-{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Employee Process</Typography>):false}
+{/* {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Employee Process</Typography>):false} */}
 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Functions</Typography>):false}
 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
-{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Attachments</Typography>):false}
-{show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false}
+{/* {show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Attachments</Typography>):false} */}
+{/* {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false} */}
 
         </Breadcrumbs>
         </Box>
@@ -1230,12 +1230,12 @@ const Fndeployment = async (values, resetForm,del) => {
                 >
                   <MenuItem value={0}>Employee</MenuItem>
                   <MenuItem value={5}>Contact</MenuItem>
-                  <MenuItem value={1}>Employee Process</MenuItem>
+                  {/* <MenuItem value={1}>Employee Process</MenuItem> */}
                   <MenuItem value={2}>Functions</MenuItem>
                   <MenuItem value={3}>Managers</MenuItem>
                   <MenuItem value={4}>Deployment</MenuItem>
-                   <MenuItem value={6}>List of Attachments</MenuItem>
-                   <MenuItem value={7}>Item Custody</MenuItem>
+                   {/* <MenuItem value={6}>List of Attachments</MenuItem> */}
+                   {/* <MenuItem value={7}>Item Custody</MenuItem> */}
 
                 </Select>
               </FormControl>
@@ -1714,6 +1714,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2010"
                       screenName="Department"
                       childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   <Popup
@@ -1751,8 +1753,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2047"
                       screenName="Designation"
                       childToParent={childToParent}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                 </form>
@@ -2423,8 +2425,8 @@ const Fndeployment = async (values, resetForm,del) => {
                                 accessID="2001"
                                 screenName="Process"
                                 childToParent={childToParent}
-                                // filterName={"CompanyID"}
-                                // filterValue={CompanyID}
+                                filterName={"parentID"}
+                                filterValue={CompanyID}
                               />
                             </Popup>
                           </form>
@@ -2908,8 +2910,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       childToParent={childToParent}
                       // filterName={"ERank"}
                       // filterValue={Data.Rank}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
               </form>
@@ -3468,8 +3470,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2047"
                       screenName="Designation"
                       childToParent={childToParent}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                   {/* <Popup
@@ -4145,8 +4147,8 @@ const Fndeployment = async (values, resetForm,del) => {
                       accessID="2049"
                       screenName="Designations"
                       childToParent={childToParent}
-                      // filterName={"CompanyID"}
-                      // filterValue={CompanyID}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
                     />
                   </Popup>
                 </form>

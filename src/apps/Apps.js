@@ -248,12 +248,12 @@ function App() {
                     element={<Editcompany />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditEmployees/:id/:Mode/N"
+                    path="/:accessID/:screenName/EditEmployees/:id/:Mode"
                     element={<Editemployee />}
                   />
-                          <Route 
-                          path="/:accessID/:screenName/EditEmpfinance entry/E/:RecordID/:Name" 
-                          element={ <EditEmpfinance/>}/>
+                  <Route 
+                  path="/:accessID/:screenName/EditEmpfinance entry/E/:RecordID/:Name" 
+                  element={ <EditEmpfinance/>}/>
                   <Route
                     path="/:accessID/:screenName/EditUOM/:id/:Mode"
                     element={<Edituom />}
