@@ -92,7 +92,27 @@ const EditemployeePayroll = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [selectedData, setSelectedData] = useState(null);
+  const handleButtonClick = (params) => {
+    const rowData = {
+      CheckInDate: params.row.CheckInDate,
+      CheckOutDate: params.row.CheckOutDate,
+      EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
+      EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
+      MonthDate: params.row.MonthDate,
+      Name: params.row.Name,
+      NumberOfHoursWorked: params.row.NumberOfHoursWorked,
+      RecordID: params.row.RecordID,
+      SLNO: params.row.SLNO,
+      Status: params.row.Status
+    };
+    setSelectedData(rowData);  // Store the selected row data (optional, for tracking)
+    console.log("Data to be passed:", rowData);
 
+    // Navigate to another screen, passing the data in state
+    navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`, { state: rowData });
+    // navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
+  };
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
@@ -798,6 +818,49 @@ const EditemployeePayroll = () => {
       field: "Status",
       headerName: "Status",
       flex: 1,
+    },
+    {
+      field: "Action",
+      headerName: "Action",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => handleButtonClick(params)}
+            // onClick={() => 
+              // { 
+              // handleButtonClick
+              // dispatch(setReg({ params}));
+              //dispatch(setReg({ params}));
+              //regfn(params);
+               // Navigate to the second screen for regularization
+              //  navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
+              // Set the selected row data in the state
+            //   setAsignReg({
+            //     CheckInDate: params.row.CheckInDate,
+            //     CheckOutDate: params.row.CheckOutDate,
+            //     EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
+            //     EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
+            //     MonthDate: params.row.MonthDate,
+            //     Name: params.row.Name,
+            //     NumberOfHoursWorked: params.row.NumberOfHoursWorked,
+            //     RecordID: params.row.RecordID,
+            //     SLNO: params.row.SLNO,
+            //     Status: params.row.Status
+            //   });
+            //   console.log(asignReg, "--onclick asignReg");
+            //   console.log(params.row, "-- onclick setAsignReg");
+            //  console.log(params.row.Name, "--Name");
+            // }}
+              // }
+          >
+            Regularization
+          </Button>
+        );
+      },
     },
 
   ];
@@ -4307,7 +4370,7 @@ const EditemployeePayroll = () => {
                         },
                       }}
                     />
-                    {/* <TextField
+                    <TextField
                       fullWidth
                       variant="filled"
                       type="month"
@@ -4340,7 +4403,7 @@ const EditemployeePayroll = () => {
                       <MenuItem value={"10"}>10</MenuItem>
                       <MenuItem value={"11"}>11</MenuItem>
                       <MenuItem value={"12"}>12</MenuItem>
-                    </TextField> */}
+                    </TextField>
                     <TextField
                       fullWidth
                       variant="filled"

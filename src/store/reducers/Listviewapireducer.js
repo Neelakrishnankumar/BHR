@@ -1922,6 +1922,19 @@ export const fetchListview =
                     ) : (
                       false
                     )}
+                    {/* {AccessID == "TR027" ? (
+                      <Link
+                      to={`/Apps/TR027/Employee Payroll/EditEmployee Payroll/${params.row.RecordID}/E`}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )} */}
                     {AccessID == "TR091" ? (
                       <Link
                         to={`./${params.row.FirstLeatherID}/Edit${screenName}/${params.row.RecordID}/E`}

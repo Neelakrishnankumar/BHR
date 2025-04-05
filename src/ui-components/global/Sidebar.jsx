@@ -954,23 +954,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR124",
         },
-        // {
-        //   name: "Attendance Registry",
-        //   id: 457789,
-        //   url: "./TR124/Attendance Registry",
-        //   icon: (
-        //     <Tooltip title="Attendance Registry">
-        //       <LibraryBooksIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR124",
-        // },
+        {
+          name: "Attendance Registry",
+          id: 457789,
+          url: "./TR124/Attendance Registry",
+          icon: (
+            <Tooltip title="Attendance Registry">
+              <LibraryBooksIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR124",
+        },
         
       ],
     },
@@ -1068,6 +1068,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
+        // {
+        //   name: "Regularization",
+        //   id: 487,
+        //   url: "./TR219/Regularization",
+        //   icon: (
+        //     <Tooltip title="Regularization">
+        //         <CreditCardIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR219",
+        // },
      
      
       ],
