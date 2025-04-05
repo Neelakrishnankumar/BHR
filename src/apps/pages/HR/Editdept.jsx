@@ -19,7 +19,10 @@ import {
   FormLabel,
   Tooltip,
   LinearProgress,
+  Paper,
+  Breadcrumbs
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -35,7 +38,7 @@ import {
 } from "../../../store/reducers/Formapireducer";
 import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
-import {deptSchema} from "../../Security/validation";
+import { deptSchema } from "../../Security/validation";
 import wallet from "../../../assets/img/wallet.jpg";
 import Topbar from "../../../ui-components/global/Topbar";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -45,6 +48,7 @@ import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { formGap } from "../../../ui-components/global/utils";
 // ***********************************************
 //  Developer:Gowsalya
 // Purpose:To Create Department
@@ -71,7 +75,7 @@ const Editdept = () => {
   var mode = params.Mode;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
-    const Status = useSelector((state) => state.formApi.Status);
+  const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.loading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -99,7 +103,7 @@ const Editdept = () => {
     checkbox: Data.Disable === "Y" ? true : false,
   };
   // **********Save Function*****************
-  const fnSave = async (values,del) => {
+  const fnSave = async (values, del) => {
     // setLoading(true);
     // setIni(false);
     // if (values.Code == "") {
@@ -111,11 +115,11 @@ const Editdept = () => {
     //   return;
     // }
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -193,34 +197,54 @@ const Editdept = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems={"center"}>
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Typography variant="h3">Department</Typography>
-        </Box>
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
 
-        {/* ICONS */}
+                >
+                  Department
+                </Typography>
 
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton onClick={() => fnLogOut("Logout")} color="error">
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-      </Box>
+      </Paper>
       {!getLoading ? (
-        <Box m="20px">
-      <Formik
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
             initialValues={initialValues}
             enableReinitialize={true}
             onSubmit={(values) => {
@@ -240,157 +264,159 @@ const Editdept = () => {
               handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
-                
+
                 <Box
                   display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  
-                  <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Code"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.Code}
-                      id="Code"
-                      name="Code"
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      required
-                      focused
-                      autoFocus
-                      sx={{ 
-                        gridColumn: "span 2", 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      inputProps={{ maxLength: 8 }}
-                      onInvalid={(e) => {
-                        e.target.setCustomValidity("Please Fill The Code");
-                      }}
-                      onInput={(e) => {
-                        e.target.setCustomValidity("");
-                      }}
-                    />
 
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Name"
-                      value={values.Name}
-                      id="Name"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      name="Name"
-                      error={!!touched.Name && !!errors.Name}
-                      helperText={touched.Name && errors.Name}
-                      focused
-                      sx={{ 
-                        gridColumn: "span 2", 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      required
-                      inputProps={{ maxLength: 90 }}
-                      multiline
-                      onInvalid={(e) => {
-                        e.target.setCustomValidity(
-                          "Please Fill The Description"
-                        );
-                      }}
-                      onInput={(e) => {
-                        e.target.setCustomValidity("");
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Location"
-                      value={values.Loc}
-                      id="Loc"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      name="Loc"
-                      error={!!touched.Loc && !!errors.Loc}
-                      helperText={touched.Loc && errors.Loc}
-                      sx={{ 
-                        gridColumn: "span 2", 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}                      focused
-                      inputProps={{ maxLength: 90 }}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      type="Number"
-                      label="Sort Order "
-                      value={values.SortOrder}
-                      id="SortOrder"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      name="SortOrder"
-                      error={!!touched.SortOrder && !!errors.SortOrder}
-                      helperText={touched.SortOrder && errors.SortOrder}
-                      sx={{ gridColumn: "span 2" }}
-                      focused
-                      onWheel={(e) => e.target.blur()} 
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right", background: "#fff6c3" },
-                        },
-                      }}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
-                    />
-                    <FormControl>
-                      <Box>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Disable"
-                        />
 
-                        <FormLabel focused={false}>Disable</FormLabel>
-                      </Box>
-                    </FormControl>
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    label="Code"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.Code}
+                    id="Code"
+                    name="Code"
+                    error={!!touched.Code && !!errors.Code}
+                    helperText={touched.Code && errors.Code}
+                    required
+                    focused
+                    autoFocus
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    inputProps={{ maxLength: 8 }}
+                    onInvalid={(e) => {
+                      e.target.setCustomValidity("Please Fill The Code");
+                    }}
+                    onInput={(e) => {
+                      e.target.setCustomValidity("");
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                   variant="standard"
+                    type="text"
+                    label="Name"
+                    value={values.Name}
+                    id="Name"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="Name"
+                    error={!!touched.Name && !!errors.Name}
+                    helperText={touched.Name && errors.Name}
+                    focused
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    required
+                    inputProps={{ maxLength: 90 }}
+                    multiline
+                    onInvalid={(e) => {
+                      e.target.setCustomValidity(
+                        "Please Fill The Description"
+                      );
+                    }}
+                    onInput={(e) => {
+                      e.target.setCustomValidity("");
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                   variant="standard"
+                    type="text"
+                    label="Location"
+                    value={values.Loc}
+                    id="Loc"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="Loc"
+                    error={!!touched.Loc && !!errors.Loc}
+                    helperText={touched.Loc && errors.Loc}
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      }
+                    }} focused
+                    inputProps={{ maxLength: 90 }}
+                  />
+                  <TextField
+                    fullWidth
+                   variant="standard"
+                    type="Number"
+                    label="Sort Order"
+                    value={values.SortOrder}
+                    id="SortOrder"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="SortOrder"
+                    error={!!touched.SortOrder && !!errors.SortOrder}
+                    helperText={touched.SortOrder && errors.SortOrder}
+
+                    focused
+                    onWheel={(e) => e.target.blur()}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right", background: "" },
+                      },
+                    }}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <FormControl>
+                    <Box>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="checkbox"
+                        id="checkbox"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Disable"
+                      />
+
+                      <FormLabel focused={false}>Disable</FormLabel>
+                    </Box>
                   </FormControl>
+
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap={2}>
+                <Box display="flex" justifyContent="end" padding={1} gap={2}>
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
                       variant="contained"
                       type="submit"
                       loading={loading}
-                      // onClick={() => {
-                      //   fnSave(values);
-                      // }}
+                    // onClick={() => {
+                    //   fnSave(values);
+                    // }}
                     >
                       Save
                     </LoadingButton>
@@ -407,7 +433,7 @@ const Editdept = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        fnSave(values,  "harddelete");
+                        fnSave(values, "harddelete");
                       }}
                     >
                       Delete
@@ -441,8 +467,8 @@ const Editdept = () => {
               </form>
             )}
           </Formik>
-          
-        </Box>
+
+        </Paper>
       ) : (
         false
       )}

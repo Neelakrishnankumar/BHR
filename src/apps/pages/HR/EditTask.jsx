@@ -14,9 +14,15 @@ import {
     MenuItem,
     Select,
     InputLabel,
-
+    Paper,
 } from "@mui/material";
-
+import {
+    dataGridHeaderFooterHeight,
+    dataGridHeight,
+    dataGridPageSize,
+    dataGridPageSizeOption,
+    dataGridRowHeight,
+} from "../../../ui-components/global/utils";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AddIcon from "@mui/icons-material/Add";
@@ -51,6 +57,7 @@ import { tokens } from "../../../Theme"; // Adjust the path based on your projec
 import { ArrowDropDownIcon } from "@mui/x-date-pickers";
 import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import { formGap } from "../../../ui-components/global/utils";
 
 // import CryptoJS from "crypto-js";
 const Edittask = () => {
@@ -78,24 +85,24 @@ const Edittask = () => {
     const colors = tokens(theme.palette.mode);
     const state = location.state || {};
     console.log(OPRecid, '====================================');
-     useEffect(() => {
-         dispatch(getFetchData({ accessID, get: "get", recID }));
-       }, [location.key]);
-   
+    useEffect(() => {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+    }, [location.key]);
+
     const [show, setScreen] = React.useState("0");
     const [rowModesModel, setRowModesModel] = useState({});
     const explorelistViewData = useSelector(
         (state) => state.exploreApi.explorerowData
-      );
+    );
     const [rows, setRows] = useState([]);
     const [pageSize, setPageSize] = React.useState(10);
-  useEffect(() => {
-    if (explorelistViewData) {
-      setRows(explorelistViewData);
-    } else {
-      setRows([]); // Ensures rows don't break if explorelistViewData is undefined or not an array
-    }
-  }, [explorelistViewData, location.key]);
+    useEffect(() => {
+        if (explorelistViewData) {
+            setRows(explorelistViewData);
+        } else {
+            setRows([]); // Ensures rows don't break if explorelistViewData is undefined or not an array
+        }
+    }, [explorelistViewData, location.key]);
 
     const [selectedCustomerOptions, setSelectedCustomerOptions] = useState(null);
     const [funMode, setFunMode] = useState("edit");
@@ -114,95 +121,95 @@ const Edittask = () => {
         console.log("---handleRowModesModelChange calling");
         setRowModesModel(newRowModesModel);
         setSelectedRoleOptions(null);
-      };
+    };
     // const handleRoleChange = (newValue, id) => {
     //     setRows((prevRows) =>
     //         prevRows.map((row) => (row.id === id ? { ...row, Role: newValue } : row))
     //     );
     // };
-    const handleRoleChange = (newValue,id) => {
+    const handleRoleChange = (newValue, id) => {
 
-        console.log('newvalue product',newValue);
-        
+        console.log('newvalue product', newValue);
+
         if (newValue) {
-          setSelectedRoleOptions(newValue);
-          setRoleid(newValue.RecordID);
-          setRoleName(newValue.Name);
-          setRows(prevRows =>
-            prevRows.map((row) => (row.id === id ? { ...row, Role: newValue } : row))
+            setSelectedRoleOptions(newValue);
+            setRoleid(newValue.RecordID);
+            setRoleName(newValue.Name);
+            setRows(prevRows =>
+                prevRows.map((row) => (row.id === id ? { ...row, Role: newValue } : row))
             )
 
         } else {
-          setSelectedRoleOptions(null);
-        
+            setSelectedRoleOptions(null);
+
         }
-    
-      };
+
+    };
     const handleSaveButtonClick = async (action) => {
 
         console.log("---Saving rows:", rows);
         console.log(funMode, "--finding action");
         ;
-    
-    
-    
-      
+
+
+
+
         const idata = rows.map((row, index) => {
-        
-    
-          return {
-            RecordID: row.RecordID, 
-            TaskID: recID,
-            RoleID: row.TaskDetailRoleID,
-           // RoleName: row.RoleName,
-            Effort:row.TaskDetailEffort,
-            Unit: row.TaskDetailUnit,
-            CompanyID,
-           
-          };
+
+
+            return {
+                RecordID: row.RecordID,
+                TaskID: recID,
+                RoleID: row.TaskDetailRoleID,
+                // RoleName: row.RoleName,
+                Effort: row.TaskDetailEffort,
+                Unit: row.TaskDetailUnit,
+                CompanyID,
+
+            };
         });
-    
-    
-        
+
+
+
         try {
 
-          const response = await dispatch(
-            postData({
-              accessID: "TR237",
-              // action : funMode, 
-              action: funMode === "A" ? "insert" : "update", 
-              idata: idata,
-            })
-          );
-    
-          // Check response status for success
-          if (response.payload.Status === "Y") {
-            toast.success(response.payload.Msg);
-    
-    
-           
-            setRows((prev) =>
-              prev.map((row) => ({
-                ...row,
-                isNew: false,
-                isUpdated: false,
-              }))
+            const response = await dispatch(
+                postData({
+                    accessID: "TR237",
+                    // action : funMode, 
+                    action: funMode === "A" ? "insert" : "update",
+                    idata: idata,
+                })
             );
-    
-            // Fetch updated data based on ManualSalesID
-             dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
-            //dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
-    
-          } else {
-            toast.error(response.payload.Msg);
-          }
+
+            // Check response status for success
+            if (response.payload.Status === "Y") {
+                toast.success(response.payload.Msg);
+
+
+
+                setRows((prev) =>
+                    prev.map((row) => ({
+                        ...row,
+                        isNew: false,
+                        isUpdated: false,
+                    }))
+                );
+
+                // Fetch updated data based on ManualSalesID
+                dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
+                //dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
+
+            } else {
+                toast.error(response.payload.Msg);
+            }
         } catch (error) {
-          console.error("Error saving rows:", error);
-          toast.error("Error occurred during save.");
+            console.error("Error saving rows:", error);
+            toast.error("Error occurred during save.");
 
         }
-      };
-    
+    };
+
     const handleUnitChange = (e, id) => {
         const { value } = e.target;
         setRows((prevRows) =>
@@ -213,183 +220,183 @@ const Edittask = () => {
     };
     const handleInsert = () => {
         setFunMode("A");
-    
+
         console.log("----------Step 1");
         const newId = Math.round(Math.random() * 10000); // Temporary unique ID
         setRows((prevRows) => {
-    
-          const nextSLNO = prevRows.length > 0 ? Math.max(...prevRows.map((row) => row.SLNO || 0)) + 1 : 1; // Determine next SLNO
-    
-          const newRow = {
-            RecordID: newId, // Temporary ID, replaced after backend save
-            SLNO: nextSLNO,
-            TaskID: "",
-            TaskDetailRoleID: "",
-            RoleCode: "",
-            RoleName: "",
-            TaskDetailEffort: 0,
-            TaskDetailUnit: "",
-            isNew: true,
-           
-          };
-    
-          console.log("----step2 setRows initializing Objects");
-          console.log("Inserted row:", newRow); // Log the new row to the console
-    
-          return [...prevRows, newRow]; // Append the new row to the existing rows
+
+            const nextSLNO = prevRows.length > 0 ? Math.max(...prevRows.map((row) => row.SLNO || 0)) + 1 : 1; // Determine next SLNO
+
+            const newRow = {
+                RecordID: newId, // Temporary ID, replaced after backend save
+                SLNO: nextSLNO,
+                TaskID: "",
+                TaskDetailRoleID: "",
+                RoleCode: "",
+                RoleName: "",
+                TaskDetailEffort: 0,
+                TaskDetailUnit: "",
+                isNew: true,
+
+            };
+
+            console.log("----step2 setRows initializing Objects");
+            console.log("Inserted row:", newRow); // Log the new row to the console
+
+            return [...prevRows, newRow]; // Append the new row to the existing rows
         });
-    
+
         console.log("----step3 setRowModesModel initializing Objects");
         setRowModesModel((prev) => ({
-          ...prev,
-          [newId]: { mode: GridRowModes.Edit },
+            ...prev,
+            [newId]: { mode: GridRowModes.Edit },
         }));
-      };
-      const handleInsertInrow = (recordID) => {
+    };
+    const handleInsertInrow = (recordID) => {
         setFunMode("A");
-    
+
         console.log("----------Step 1");
-    
+
         const newId = Math.round(Math.random() * 10000); // Temporary unique ID
-    
+
         setRows((prevRows) => {
-          const index = prevRows.findIndex((row) => row.RecordID === recordID); // ✅ Find the clicked row's index
-    
-          if (index === -1) return prevRows; // If not found, return unchanged rows
-    
-          const nextSLNO =
-            prevRows.length > 0 ? Math.max(...prevRows.map((row) => row.SLNO || 0)) + 1 : 1;
-    
-          const newRow = {
-            RecordID: newId, // Temporary ID, replaced after backend save
-            SLNO: nextSLNO,
-            TaskID: "",
-            TaskDetailRoleID: "",
-            RoleCode: "",
-            RoleName: "",
-            TaskDetailEffort: 0,
-            TaskDetailUnit: "",
-            isNew: true,
-          };
-    
-          console.log("----step2 setRows initializing Objects");
-          console.log("Inserted row:", newRow);
-    
-          const updatedRows = [...prevRows];
-          updatedRows.splice(index + 1, 0, newRow); // ✅ Insert row at the correct position
-    
-          return updatedRows;
+            const index = prevRows.findIndex((row) => row.RecordID === recordID); // ✅ Find the clicked row's index
+
+            if (index === -1) return prevRows; // If not found, return unchanged rows
+
+            const nextSLNO =
+                prevRows.length > 0 ? Math.max(...prevRows.map((row) => row.SLNO || 0)) + 1 : 1;
+
+            const newRow = {
+                RecordID: newId, // Temporary ID, replaced after backend save
+                SLNO: nextSLNO,
+                TaskID: "",
+                TaskDetailRoleID: "",
+                RoleCode: "",
+                RoleName: "",
+                TaskDetailEffort: 0,
+                TaskDetailUnit: "",
+                isNew: true,
+            };
+
+            console.log("----step2 setRows initializing Objects");
+            console.log("Inserted row:", newRow);
+
+            const updatedRows = [...prevRows];
+            updatedRows.splice(index + 1, 0, newRow); // ✅ Insert row at the correct position
+
+            return updatedRows;
         });
-    
+
         console.log("----step3 setRowModesModel initializing Objects");
         setRowModesModel((prev) => ({
-          ...prev,
-          [newId]: { mode: GridRowModes.Edit },
+            ...prev,
+            [newId]: { mode: GridRowModes.Edit },
         }));
-      };
-      const handleSave = (id, params, action) => () => {
+    };
+    const handleSave = (id, params, action) => () => {
         console.log("-----Step1: Local save called");
-    
+
         const rowToSave = params?.row;
         if (!rowToSave) {
-          toast.error("Row not found.");
-          return;
+            toast.error("Row not found.");
+            return;
         }
-        const isNew = rowToSave.isNew; 
+        const isNew = rowToSave.isNew;
         console.log("Row to save:", rowToSave);
         setRows((prev) =>
-          prev.map((row) =>
-            row.RecordID === id
-              ? { ...row, ...rowToSave, isNew: isNew && action !== "delete", isUpdated: !isNew } 
-              : row
-          )
+            prev.map((row) =>
+                row.RecordID === id
+                    ? { ...row, ...rowToSave, isNew: isNew && action !== "delete", isUpdated: !isNew }
+                    : row
+            )
         );
-    
+
         // Update row mode to view
         setRowModesModel((prev) => ({
-          ...prev,
-          [id]: { mode: GridRowModes.View },
+            ...prev,
+            [id]: { mode: GridRowModes.View },
         }));
-    
-      };
 
-      const handleEditClick = (id) => () => {
+    };
+
+    const handleEditClick = (id) => () => {
         setFunMode("E");
         // setEditingRowId(id); 
         console.log("EditMode");
         setRowModesModel((prev) => ({
-          ...prev,
-          [id]: { mode: GridRowModes.Edit },
+            ...prev,
+            [id]: { mode: GridRowModes.Edit },
         }));
-        
-      };
 
-      const handleDeleteClick = (id) => async () => {
+    };
+
+    const handleDeleteClick = (id) => async () => {
         try {
-          console.log("Deleting record with recID:", recID); 
-    
-          
-          setRows((prev) => prev.filter((row) => row.RecordID !== id));
-        
-          const idata = ({
-            //RecordID: recID,
-            RecordID: id,
-          });
-     
-          const response = await dispatch(
-            postData({
-              accessID: "TR237", 
-              action: "harddelete", 
-              idata: idata, 
-            })
-          );
+            console.log("Deleting record with recID:", recID);
 
-          if (Array.isArray(response.payload) && response.payload.length > 0) {
-            toast.success(response.payload[0].Msg);
-        } else if (response.payload?.Status === "Y") {
-            toast.success(response.payload.Msg);
-        } else {
-            toast.error(response.payload?.Msg || "Operation failed");
-        }
-      
+
+            setRows((prev) => prev.filter((row) => row.RecordID !== id));
+
+            const idata = ({
+                //RecordID: recID,
+                RecordID: id,
+            });
+
+            const response = await dispatch(
+                postData({
+                    accessID: "TR237",
+                    action: "harddelete",
+                    idata: idata,
+                })
+            );
+
+            if (Array.isArray(response.payload) && response.payload.length > 0) {
+                toast.success(response.payload[0].Msg);
+            } else if (response.payload?.Status === "Y") {
+                toast.success(response.payload.Msg);
+            } else {
+                toast.error(response.payload?.Msg || "Operation failed");
+            }
+
         } catch (error) {
-          console.error("Error deleting row:", error);
-          toast.error("Error occurred during delete.");
+            console.error("Error deleting row:", error);
+            toast.error("Error occurred during delete.");
         }
-      };
-   
+    };
+
     const processRowUpdate = (newRow, oldRow) => {
         console.log("------inside processrowupdate");
         console.log(newRow, "--find newRow");
-    
-        const isNew = !oldRow?.RecordID; 
-        const updatedRow = { ...newRow, isNew }; 
+
+        const isNew = !oldRow?.RecordID;
+        const updatedRow = { ...newRow, isNew };
         // updatedRow.ManualItem = selectedProductName;
         // updatedRow.ItemRecordID = selectedProductid;
-    
-        updatedRow.TaskDetailRoleID=Roleid;
-        updatedRow.RoleName=RoleName;
+
+        updatedRow.TaskDetailRoleID = Roleid;
+        updatedRow.RoleName = RoleName;
         if (!updatedRow.TaskDetailRoleID || updatedRow.TaskDetailRoleID.trim() === "") {
-          toast.error("Role is required.");
-          return; 
+            toast.error("Role is required.");
+            return;
         }
         console.log(updatedRow, "--find updatedRow before setRows");
-    
+
         setRows((prev) => {
-          const index = prev.findIndex((row) => row.RecordID === updatedRow.RecordID);
-          if (index !== -1) {
-            const newData = [...prev];
-            newData[index] = updatedRow; 
-            return newData;
-          }
-          return [...prev, updatedRow]; 
+            const index = prev.findIndex((row) => row.RecordID === updatedRow.RecordID);
+            if (index !== -1) {
+                const newData = [...prev];
+                newData[index] = updatedRow;
+                return newData;
+            }
+            return [...prev, updatedRow];
         });
-    
-        const params = { row: updatedRow }; 
-        handleSave(updatedRow.RecordID, params, funMode); 
-    
+
+        const params = { row: updatedRow };
+        handleSave(updatedRow.RecordID, params, funMode);
+
         return updatedRow;
-      };
+    };
     const Fnsave = async (values, del) => {
 
         let action =
@@ -431,8 +438,8 @@ const Edittask = () => {
 
             console.log(recID, "--finding recID");
 
-             dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
-           // dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
+            dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
+            // dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
         }
     };
 
@@ -447,8 +454,8 @@ const Edittask = () => {
             align: 'left',
             headerAlign: 'center',
             hide: true
-          },
-          {
+        },
+        {
             headerName: "TaskID",
             field: "TaskID",
             width: "100",
@@ -497,7 +504,7 @@ const Edittask = () => {
             headerAlign: "center",
             hide: true
         },
-       
+
         {
             headerName: (
                 <span>
@@ -520,13 +527,13 @@ const Edittask = () => {
                             label="Role"
                             id="Role"
                             value={selectedRoleOptions}
-              onChange={(newValue) =>handleRoleChange(newValue,params.row.RecordID)}
-              defaultValue={params.row.Role}
+                            onChange={(newValue) => handleRoleChange(newValue, params.row.RecordID)}
+                            defaultValue={params.row.Role}
                             url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2097","ScreenName":"Role","Filter":"","Any":""}}`}
                         />
                     );
                 }
-                return params.value || ""; 
+                return params.value || "";
             },
         },
         { field: "TaskDetailEffort", headerName: "Effort", width: 150, editable: true, type: "number" },
@@ -559,7 +566,7 @@ const Edittask = () => {
             },
         },
 
-       
+
         {
             field: "actions",
             type: "actions",
@@ -567,73 +574,73 @@ const Edittask = () => {
             width: 200,
             cellClassName: "actions",
             getActions: (params) => {
-              const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
-      
-      
-              if (isInEditMode) {
+                const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
+
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label="Save"
+                            sx={{ color: '#009688' }}
+                            onClick={handleSave(params.id, params, funMode)}
+
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label="Cancel"
+                            onClick={() => {
+                                setRowModesModel((prev) => ({ ...prev, [params.id]: { mode: GridRowModes.View } }));
+                                setSelectedRoleOptions(null);
+                            }
+                            }
+                            color="inherit"
+                        />,
+                    ];
+                }
+
                 return [
-                  <GridActionsCellItem
-                    icon={<SaveIcon />}
-                    label="Save"
-                    sx={{ color: '#009688' }}
-                    onClick={handleSave(params.id, params, funMode)}
-      
-                  />,
-                  <GridActionsCellItem
-                    icon={<CancelIcon />}
-                    label="Cancel"
-                    onClick={() => {
-                      setRowModesModel((prev) => ({ ...prev, [params.id]: { mode: GridRowModes.View } }));
-                      setSelectedRoleOptions(null);
-                    }
-                    }
-                    color="inherit"
-                  />,
+                    <GridActionsCellItem
+                        icon={<AddIcon style={{ color: '#00563B' }} />}
+                        label="Add"
+                        onClick={() => handleInsertInrow(params.id)}
+                        color="inherit"
+                    />,
+                    <GridActionsCellItem
+                        icon={<EditIcon style={{ color: '#3498db' }} />}
+                        label="Edit"
+                        onClick={handleEditClick(params.id)}
+                        color="inherit"
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon style={{ color: '#e74c3c' }} />}
+                        label="Delete"
+                        onClick={handleDeleteClick(params.id, params, "harddelete")}
+                        color="inherit"
+                    />,
+
+
                 ];
-              }
-      
-              return [
-                <GridActionsCellItem
-                  icon={<AddIcon style={{ color: '#00563B' }} />}
-                  label="Add"
-                  onClick={() => handleInsertInrow(params.id)}
-                  color="inherit"
-                />,
-                <GridActionsCellItem
-                  icon={<EditIcon style={{ color: '#3498db' }} />}
-                  label="Edit"
-                  onClick={handleEditClick(params.id)}
-                  color="inherit"
-                />,
-                <GridActionsCellItem
-                  icon={<DeleteIcon style={{ color: '#e74c3c' }} />}
-                  label="Delete"
-                  onClick={handleDeleteClick(params.id, params, "harddelete")}
-                  color="inherit"
-                />,
-      
-      
-              ];
             }
-      
-          },
+
+        },
     ];
 
     function EditToolbar() {
         return (
-          <GridToolbarContainer
-            sx={{
-              marginBottom: "10px",
-              display: "flex",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleInsert}>
-              Add Record
-            </Button>
-          </GridToolbarContainer>
+            <GridToolbarContainer
+                sx={{
+                    marginBottom: "10px",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                }}
+            >
+                <Button color="primary" startIcon={<AddIcon />} onClick={handleInsert}>
+                    Add Record
+                </Button>
+            </GridToolbarContainer>
         );
-      }
+    }
 
 
 
@@ -666,12 +673,12 @@ const Edittask = () => {
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
 
-            <Box sx={{ height: "100vh", overflow: "auto" }}>
-                <Box display="flex" justifyContent="space-between" p={2}>
-                    {/* SEARCH BAR */}
+            {/* <Box sx={{ height: "100vh", overflow: "auto" }}> */}
+            {/* <Box display="flex" justifyContent="space-between" p={2}>
+                   
                     <Box
                         display="flex"
-                        // backgroundColor={colors.primary[400]}
+                     
                         borderRadius="3px"
                         alignItems={"center"}
                     >
@@ -684,63 +691,159 @@ const Edittask = () => {
                             </IconButton>
                         )}
                         <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
-                          
-                                       <Breadcrumbs
-                                         maxItems={2}
-                                         aria-label="breadcrumb"
-                                         separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                                       >
-                                         <Typography
-                                           variant="h5"
-                                           color="#0000D1"
-                                           sx={{ cursor: "default" }}
-                                           onClick={() => {
-                                             navigate("/Apps/TR133/Project");
-                                           }}
-                                         >
-                                           Project
-                                         </Typography>
-                           
-                                         <Typography
-                                           variant="h5"
-                                           color="#0000D1"
-                                           sx={{ cursor: "default" }}
-                                           onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
-                                         >
-                                           Milestone
-                                         </Typography>
-                                         <Typography
-                                           variant="h5"
-                                           color="#0000D1"
-                                           sx={{ cursor: "default" }}
-                                           onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
-                                         >
-                                           Stages
-                                         </Typography>
-                                         <Typography
-                                           variant="h5"
-                                           color="#0000D1"
-                                           sx={{ cursor: "default" }}
-                                           onClick={() => {
-                                            navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`, { state: { ...state } });
-                                          }}
-                                         >
-                                           Activity
-                                         </Typography>
-                                         <Typography
-                                           variant="h5"
-                                           color="#0000D1"
-                                           sx={{ cursor: "default" }}
-                                          onClick={()=>navigate(-1)}
-                                          //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
-                                         >
-                                            Task
-                                         </Typography>
+
+                            <Breadcrumbs
+                                maxItems={2}
+                                aria-label="breadcrumb"
+                                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    onClick={() => {
+                                        navigate("/Apps/TR133/Project");
+                                    }}
+                                >
+                                    Project
+                                </Typography>
+
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
+                                >
+                                    Milestone
+                                </Typography>
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
+                                >
+                                    Stages
+                                </Typography>
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    onClick={() => {
+                                        navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`, { state: { ...state } });
+                                    }}
+                                >
+                                    Activity
+                                </Typography>
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    onClick={() => navigate(-1)}
+                                //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
+                                >
+                                    Task
+                                </Typography>
                                 {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Task detail</Typography>) : false}
                             </Breadcrumbs>
                         </Box>
                     </Box>
+                    <Box display="flex">
+                        {mode !== "A" ? (
+                            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                <InputLabel id="demo-select-small">Explore</InputLabel>
+                                <Select
+                                    labelId="demo-select-small"
+                                    id="demo-select-small"
+                                    value={show}
+                                    label="Explore"
+                                    onChange={screenChange}
+                                >
+                                    <MenuItem value={0}>Task</MenuItem>
+                                    <MenuItem value={1}>Task Detail</MenuItem>
 
+                                </Select>
+                            </FormControl>
+                        ) : (
+                            false
+                        )}
+                        <Box display="flex">
+                            <Tooltip title="Close">
+                                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                    <ResetTvIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Logout">
+                                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                    <LogoutOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                    </Box>
+                </Box> */}
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+                <Box display="flex" justifyContent="space-between"
+                p={mode == "A" ? 2 : 1}
+                >
+                    <Box display="flex" borderRadius="3px" alignItems="center">
+                        {broken && !rtl && (
+                            <IconButton onClick={() => toggleSidebar()}>
+                                <MenuOutlinedIcon />
+                            </IconButton>
+                        )}
+                        <Breadcrumbs
+                            maxItems={2}
+                            aria-label="breadcrumb"
+                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                        >
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    navigate("/Apps/TR133/Project");
+                                }}
+                            >
+                                Project
+                            </Typography>
+
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
+                            >
+                                Milestone
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
+                            >
+                                Stages
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`, { state: { ...state } });
+                                }}
+                            >
+                                Activity
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => navigate(-1)}
+                            //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
+                            >
+                                Task
+                            </Typography>
+                            {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Task detail</Typography>) : false}
+                        </Breadcrumbs>
+                    </Box>
 
                     <Box display="flex">
                         {mode !== "A" ? (
@@ -761,349 +864,342 @@ const Edittask = () => {
                         ) : (
                             false
                         )}
-
-
-                        {/* <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          
-        </Box> */}
-                        <Box display="flex">
-                            <Tooltip title="Close">
-                                <IconButton onClick={() => fnLogOut("Close")} color="error">
-                                    <ResetTvIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Logout">
-                                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                                    <LogoutOutlinedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
+                        <Tooltip title="Close">
+                            <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                <ResetTvIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Logout">
+                            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                <LogoutOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
                 </Box>
+            </Paper>
+            {show == "0" ? (
+                <Paper elevation={3} sx={{ margin: "10px" }}>
+                    <Formik
+                        initialValues={InitialValue}
+                        onSubmit={(values, setSubmitting) => {
+                            setTimeout(() => {
+                                Fnsave(values);
+                            }, 100);
+                        }}
+                        //  validationSchema={ DesignationSchema}
+                        enableReinitialize={true}
+                    >
+                        {({
+                            errors,
+                            touched,
+                            handleBlur,
+                            handleChange,
+                            isSubmitting,
+                            values,
+                            handleSubmit,
+                        }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                    // gap="30px"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 2",
+                                        },
+                                    }}
+                                >
 
-                {show == "0" ? (
-                    <Box m="20px">
-                        <Formik
-                            initialValues={InitialValue}
-                            onSubmit={(values, setSubmitting) => {
-                                setTimeout(() => {
-                                    Fnsave(values);
-                                }, 100);
-                            }}
-                            //  validationSchema={ DesignationSchema}
-                            enableReinitialize={true}
-                        >
-                            {({
-                                errors,
-                                touched,
-                                handleBlur,
-                                handleChange,
-                                isSubmitting,
-                                values,
-                                handleSubmit,
-                            }) => (
-                                <form onSubmit={handleSubmit}>
+                                    <TextField
+                                        name="code"
+                                        type="text"
+                                        id="code"
+                                        label="Code"
+                                        variant="standard"
+                                        focused
+                                        required
+                                        value={values.code}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.code && !!errors.code}
+                                        helperText={touched.code && errors.code}
+                                        autoFocus
+                                    />
+                                    <TextField
+                                        name="name"
+                                        type="text"
+                                        id="name"
+                                        label="Description"
+                                        variant="standard"
+                                        focused
+                                        value={values.name}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.name && !!errors.name}
+                                        helperText={touched.name && errors.name}
+                                        autoFocus
+                                    />
+
+                                    <TextField
+                                        name="sortorder"
+                                        type="number"
+                                        id="sortorder"
+                                        label="Sort Order"
+                                        variant="standard"
+                                        focused
+                                        value={values.sortorder}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.sortorder && !!errors.sortorder}
+                                        helperText={touched.sortorder && errors.sortorder}
+                                        sx={{ background: "" }}
+                                        InputProps={{
+                                            inputProps: {
+                                                style: { textAlign: "right" },
+                                            },
+                                        }}
+                                        onWheel={(e) => e.target.blur()}
+                                        onInput={(e) => {
+                                            e.target.value = Math.max(0, parseInt(e.target.value))
+                                                .toString()
+                                                .slice(0, 8);
+                                        }}
+                                    />
+                                    <Box>
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="disable"
+                                            id="disable"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Disable"
+                                        />
+
+                                        <FormLabel focused={false}>Disable</FormLabel>
+                                    </Box>
+
+                                </Box>
+                                <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                                    {YearFlag == "true" ? (
+                                        <LoadingButton
+                                            color="secondary"
+                                            variant="contained"
+                                            type="submit"
+                                            loading={isLoading}
+                                        >
+                                            Save
+                                        </LoadingButton>
+                                    ) : (
+                                        <Button
+                                            color="secondary"
+                                            variant="contained"
+                                            disabled={true}
+                                        >
+                                            Save
+                                        </Button>
+                                    )} {YearFlag == "true" ? (
+                                        <Button
+                                            color="error"
+                                            variant="contained"
+                                            onClick={() => {
+                                                Fnsave(values, "harddelete");
+                                            }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            color="error"
+                                            variant="contained"
+                                            disabled={true}
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
+                                    <Button
+                                        color="warning"
+                                        variant="contained"
+                                        onClick={() => {
+                                            navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Box>
+
+
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : (
+                false
+            )}
+            {show == "1" ? (
+                <Paper elevation={3} sx={{ margin: "10px" }}>
+                    <Formik
+                        initialValues={InitialValue}
+                        onSubmit={(values, setSubmitting) => {
+                            setTimeout(() => {
+                                Fnsave(values);
+                            }, 100);
+                        }}
+                        //  validationSchema={ DesignationSchema}
+                        enableReinitialize={true}
+                    >
+                        {({
+                            errors,
+                            touched,
+                            handleBlur,
+                            handleChange,
+                            isSubmitting,
+                            values,
+                            handleSubmit,
+                        }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap={formGap}
+                                    padding={1}
+                                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                    // gap="30px"
+                                    sx={{
+                                        "& > div": {
+                                            gridColumn: isNonMobile ? undefined : "span 2",
+                                        },
+                                    }}
+                                >
+
+                                    <TextField
+                                        name="code"
+                                        type="text"
+                                        id="code"
+                                        label="Code"
+                                        variant="standard"
+                                        focused
+                                        required
+                                        value={values.code}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.code && !!errors.code}
+                                        helperText={touched.code && errors.code}
+                                        readOnly
+                                    />
+                                    <TextField
+                                        name="name"
+                                        type="text"
+                                        id="name"
+                                        label="Description"
+                                        variant="standard"
+                                        focused
+                                        value={values.name}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.name && !!errors.name}
+                                        helperText={touched.name && errors.name}
+                                        autoFocus
+                                        readOnly
+                                    />
+
+                                </Box>
+
+
+                                <Box m="5px">
+                                    <Typography variant="h4">Role Based Effort</Typography>
                                     <Box
-                                        display="grid"
-                                        gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                                        gap="30px"
+                                        m="5px 0 0 0"
+                                        height={dataGridHeight}
                                         sx={{
-                                            "& > div": {
-                                                gridColumn: isNonMobile ? undefined : "span 4",
+                                            "& .MuiDataGrid-root": {
+                                                border: "none",
+                                            },
+                                            "& .MuiDataGrid-cell": {
+                                                borderBottom: "none",
+                                            },
+                                            "& .name-column--cell": {
+                                                color: colors.greenAccent[300],
+                                            },
+                                            "& .MuiDataGrid-columnHeaders": {
+                                                backgroundColor: colors.blueAccent[800],
+                                                borderBottom: "none",
+                                            },
+                                            "& .MuiDataGrid-virtualScroller": {
+                                                backgroundColor: colors.primary[400],
+                                            },
+                                            "& .MuiDataGrid-footerContainer": {
+                                                borderTop: "none",
+                                                backgroundColor: colors.blueAccent[800],
+                                            },
+                                            "& .MuiCheckbox-root": {
+                                                color: `${colors.greenAccent[200]} !important`,
+                                            },
+                                            "& .odd-row": {
+                                                backgroundColor: "",
+                                                color: "", // Color for odd rows
+                                            },
+                                            "& .even-row": {
+                                                backgroundColor: "#D3D3D3",
+                                                color: "", // Color for even rows
                                             },
                                         }}
                                     >
-                                        <FormControl
-                                            fullWidth
-                                            sx={{ gridColumn: "span 2", gap: "40px" }}
-                                        >
-                                            <TextField
-                                                name="code"
-                                                type="text"
-                                                id="code"
-                                                label="Code"
-                                                variant="filled"
-                                                focused
-                                                required
-                                                value={values.code}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                error={!!touched.code && !!errors.code}
-                                                helperText={touched.code && errors.code}
-                                                autoFocus
-                                            />
-                                            <TextField
-                                                name="name"
-                                                type="text"
-                                                id="name"
-                                                label="Description"
-                                                variant="filled"
-                                                focused
-                                                value={values.name}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                error={!!touched.name && !!errors.name}
-                                                helperText={touched.name && errors.name}
-                                                autoFocus
-                                            />
-
-                                            <TextField
-                                                name="sortorder"
-                                                type="number"
-                                                id="sortorder"
-                                                label="Sort Order"
-                                                variant="filled"
-                                                focused
-                                                value={values.sortorder}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                error={!!touched.sortorder && !!errors.sortorder}
-                                                helperText={touched.sortorder && errors.sortorder}
-                                                sx={{ background: "#fff6c3" }}
-                                                InputProps={{
-                                                    inputProps: {
-                                                        style: { textAlign: "right" },
-                                                    },
-                                                }}
-                                                onWheel={(e) => e.target.blur()}
-                                                onInput={(e) => {
-                                                    e.target.value = Math.max(0, parseInt(e.target.value))
-                                                        .toString()
-                                                        .slice(0, 8);
-                                                }}
-                                            />
-                                            <Box>
-                                                <Field
-                                                    //  size="small"
-                                                    type="checkbox"
-                                                    name="disable"
-                                                    id="disable"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    as={Checkbox}
-                                                    label="Disable"
-                                                />
-
-                                                <FormLabel focused={false}>Disable</FormLabel>
-                                            </Box>
-                                        </FormControl>
-                                    </Box>
-                                    <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                                        {YearFlag == "true" ? (
-                                            <LoadingButton
-                                                color="secondary"
-                                                variant="contained"
-                                                type="submit"
-                                                loading={isLoading}
-                                            >
-                                                Save
-                                            </LoadingButton>
-                                        ) : (
-                                            <Button
-                                                color="secondary"
-                                                variant="contained"
-                                                disabled={true}
-                                            >
-                                                Save
-                                            </Button>
-                                        )} {YearFlag == "true" ? (
-                                            <Button
-                                                color="error"
-                                                variant="contained"
-                                                onClick={() => {
-                                                    Fnsave(values, "harddelete");
-                                                }}
-                                            >
-                                                Delete
-                                            </Button>
-                                        ) : (
-                                            <Button
-                                                color="error"
-                                                variant="contained"
-                                                disabled={true}
-                                            >
-                                                Delete
-                                            </Button>
-                                        )}
-                                        <Button
-                                            color="warning"
-                                            variant="contained"
-                                            onClick={() => {
-                                                navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+                                        <DataGrid
+                                            sx={{
+                                                "& .MuiDataGrid-footerContainer": {
+                                                    height: dataGridHeaderFooterHeight,
+                                                    minHeight: dataGridHeaderFooterHeight,
+                                                },
                                             }}
-                                        >
+                                            rows={rows}
+                                            columns={columns}
+                                            loading={exploreLoading}
+                                            rowModesModel={rowModesModel}
+                                            getRowId={(row) => row.RecordID}
+                                            editMode="row"
+                                            disableRowSelectionOnClick
+                                            rowHeight={dataGridRowHeight}
+                                            headerHeight={dataGridHeaderFooterHeight}
+                                            experimentalFeatures={{ newEditingApi: true }}
+                                            onRowModesModelChange={handleRowModesModelChange}
+                                            processRowUpdate={processRowUpdate}
+                                            // onProcessRowUpdateError={handleProcessRowUpdateError}
+                                            components={{
+                                                Toolbar: EditToolbar,
+                                            }}
+                                            componentsProps={{
+                                                toolbar: { setRows, setRowModesModel },
+                                            }}
+                                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                            rowsPerPageOptions={[5, 10, 20]}
+                                            getRowClassName={(params) =>
+                                                params.indexRelativeToCurrentPage % 2 === 0
+                                                    ? "odd-row"
+                                                    : "even-row"
+                                            }
+                                            pagination
+                                        />
+                                    </Box>
+                                    <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                                        <Button color="secondary" variant="contained" onClick={handleSaveButtonClick}>
+                                            Save
+                                        </Button>
+                                        <Button color="warning" variant="contained" onClick={() => navigate(-1)}>
                                             Cancel
                                         </Button>
                                     </Box>
-
-
-                                </form>
-                            )}
-                        </Formik>
-                    </Box>
-                ) : (
-                    false
-                )}
-                {show == "1" ? (
-                    <Box m="20px">
-                        <Formik
-                            initialValues={InitialValue}
-                            onSubmit={(values, setSubmitting) => {
-                                setTimeout(() => {
-                                    Fnsave(values);
-                                }, 100);
-                            }}
-                            //  validationSchema={ DesignationSchema}
-                            enableReinitialize={true}
-                        >
-                            {({
-                                errors,
-                                touched,
-                                handleBlur,
-                                handleChange,
-                                isSubmitting,
-                                values,
-                                handleSubmit,
-                            }) => (
-                                <form onSubmit={handleSubmit}>
-                                    <Box
-                                        display="grid"
-                                        gap="10px"
-                                        marginBottom={7}
-                                        gridTemplateColumns="repeat(2, 1fr)"
-                                        sx={{
-                                            "& > div": {
-                                                gridColumn: isNonMobile ? undefined : "span 4",
-                                            },
-                                        }}
-                                    >
-
-                                        <TextField
-                                            name="code"
-                                            type="text"
-                                            id="code"
-                                            label="Code"
-                                            variant="filled"
-                                            focused
-                                            required
-                                            value={values.code}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            error={!!touched.code && !!errors.code}
-                                            helperText={touched.code && errors.code}
-                                            readOnly
-                                        />
-                                        <TextField
-                                            name="name"
-                                            type="text"
-                                            id="name"
-                                            label="Description"
-                                            variant="filled"
-                                            focused
-                                            value={values.name}
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            error={!!touched.name && !!errors.name}
-                                            helperText={touched.name && errors.name}
-                                            autoFocus
-                                            readOnly
-                                        />
-
-                                    </Box>
-
-
-                                    <Box sx={{ width: "100%" }}>
-                                        <Typography variant="h4">Role Based Effort</Typography>
-                                        <Box
-                                            m="5px 0 0 0"
-                                            height="60vh"
-                                            sx={{
-                                                "& .MuiDataGrid-root": {
-                                                    border: "none",
-                                                    width: "100%",
-                                                },
-                                                "& .MuiDataGrid-cell": {
-                                                    borderBottom: "none",
-                                                },
-                                                "& .name-column--cell": {
-                                                    color: colors.greenAccent[300],
-                                                },
-                                                "& .MuiDataGrid-columnHeaders": {
-                                                    backgroundColor: colors.blueAccent[800],
-                                                    borderBottom: "none",
-                                                },
-                                                "& .MuiDataGrid-virtualScroller": {
-                                                    backgroundColor: colors.primary[400],
-                                                },
-                                                "& .MuiDataGrid-footerContainer": {
-                                                    borderTop: "none",
-                                                    backgroundColor: colors.blueAccent[800],
-                                                },
-                                                "& .MuiCheckbox-root": {
-                                                    color: `${colors.greenAccent[200]} !important`,
-                                                },
-                                            }}
-                                        >
-                                            {/* <DataGrid
-                                                rows={rows}
-                                                columns={columns}
-                                                getRowId={(row) => row.RecordID}
-                                                editMode="row"
-                                                disableRowSelectionOnClick
-                                                pagination
-                                                pageSizeOptions={[5, 10, 20]}
-                                                rowModesModel={rowModesModel}
-                                                onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
-                                                processRowUpdate={(newRow, oldRow) => {
-                                                    setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
-                                                    return newRow;
-                                                }}
-                                            /> */}
-                                <DataGrid
-                                  rows={rows}
-                                  columns={columns}
-                                  loading={exploreLoading}
-                                  rowModesModel={rowModesModel}
-                                  getRowId={(row) => row.RecordID}
-                                  editMode="row"
-                                  disableRowSelectionOnClick
-                                  experimentalFeatures={{ newEditingApi: true }}
-                                  onRowModesModelChange={handleRowModesModelChange}
-                                  processRowUpdate={processRowUpdate}
-                                  // onProcessRowUpdateError={handleProcessRowUpdateError}
-                                  components={{
-                                    Toolbar: EditToolbar,
-                                  }}
-                                  componentsProps={{
-                                    toolbar: { setRows, setRowModesModel },
-                                  }}
-                                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                  rowsPerPageOptions={[5, 10, 20]}
-                                  pagination
-                                />
-                                        </Box>
-                                        <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", gap:"10px" ,marginTop: "20px" }}>
-                                            <Button color="secondary" variant="contained" onClick={handleSaveButtonClick}>
-                                                Save
-                                            </Button>
-                                            <Button color="warning" variant="contained" onClick={()=>navigate(-1)}>
-                                                Cancel
-                                            </Button>
-                                        </Box>
-                                    </Box>
-                                </form>
-                            )}
-                        </Formik>
-                    </Box>
-                ) : (
-                    false
-                )}
-            </Box>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : (
+                false
+            )}
+            {/* </Box> */}
         </React.Fragment>
     );
 };

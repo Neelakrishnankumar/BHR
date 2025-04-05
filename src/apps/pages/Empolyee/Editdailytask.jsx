@@ -14,8 +14,10 @@ import {
   MenuItem,
   Breadcrumbs,
   LinearProgress,
+  Paper
 } from "@mui/material";
 import Listviewpopup from "../Lookup";
+import { formGap } from "../../../ui-components/global/utils";
 import Popup from "../popup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -40,6 +42,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { HsnSchema } from "../../Security/validation";
 import { DailytaskSchema } from "../../Security/validation";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
 
 const EditDailytask = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -58,7 +61,7 @@ const EditDailytask = () => {
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const YearFlag = sessionStorage.getItem("YearFlag");
-    const Finyear = sessionStorage.getItem("YearRecorid");
+  const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -86,7 +89,7 @@ const EditDailytask = () => {
     proCode: "",
     proName: "",
   });
-
+  const [empID, setEmpID] = useState(null);
   const [openPopup, setIsOpenPopup] = useState(false);
   const [openEMPPopup, setOpenEMPPopup] = useState(false);
   const [openFUNPopup, setOpenFUNPopup] = useState(false);
@@ -162,14 +165,14 @@ const EditDailytask = () => {
     disable: data.Disable === "Y" ? false : true,
   };
 
-  const DTSaveFn = async (values,del) => {
+  const DTSaveFn = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -185,9 +188,13 @@ const EditDailytask = () => {
       Comments: values.Comment,
       SortOrder: values.sortOrder,
       Disable: isCheck,
+      //EmployeeID: values.employee.RecordID || 0,
+     
+      FunctionsID: values.FunName.RecordID || 0,
+      ProjectID: values.ProName.RecordID || 0,
       EmployeesID: employeeLookup.empRecordID,
-      FunctionsID: functionLookup.funRecordID,
-      ProjectID: projectLookup.proRecordID,
+      //FunctionsID: functionLookup.funRecordID,
+      //ProjectID: projectLookup.proRecordID,
       Finyear,
       CompanyID,
     };
@@ -224,7 +231,7 @@ const EditDailytask = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
+      {/* <Box display="flex" justifyContent="space-between" p={2}>
         <Box display="flex" borderRadius="3px" alignItems="center">
           {broken && !rtl && (
             <IconButton onClick={() => toggleSidebar()}>
@@ -271,10 +278,59 @@ const EditDailytask = () => {
             </IconButton>
           </Tooltip>
         </Box>
-      </Box>
+      </Box> */}
+<Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+           <Breadcrumbs
+            maxItems={3}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR123/Check%20In");
+              }}
+            >
+              Check In
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/Secondarylistview/TR132/DailyTask/30");
+              }}
+            >
+              DailyTask
+            </Typography>
+          </Breadcrumbs>
+          </Box>
 
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
       {!getLoading ? (
-        <Box m="20px">
+       <Paper elevation={3} sx={{ margin: "10px"}}>
           <Formik
             initialValues={dailyTaskInitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -292,16 +348,18 @@ const EditDailytask = () => {
               handleChange,
               isSubmitting,
               values,
-              handleSubmit,
+              handleSubmit, setFieldValue
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
@@ -310,7 +368,7 @@ const EditDailytask = () => {
                     type="text"
                     id="code"
                     label="Code"
-                    variant="filled"
+                    variant="standard"
                     focused
                     required
                     value={values.code}
@@ -319,10 +377,10 @@ const EditDailytask = () => {
                     error={!!touched.code && !!errors.code}
                     helperText={touched.code && errors.code}
                     autoFocus
-                    sx={{ gridColumn: "span 2" }}
+                    //sx={{ gridColumn: "span 2" }}
                   /> */}
-                 
-                  <Box
+
+                  {/* <Box
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -333,7 +391,7 @@ const EditDailytask = () => {
                     <TextField
                       id="funCode"
                       label="Function"
-                      variant="filled"
+                      variant="standard"
                       value={functionLookup.funCode}
                       focused
                       required
@@ -348,61 +406,84 @@ const EditDailytask = () => {
 
                     <TextField
                       id="funDesc"
-                      variant="filled"
+                      variant="standard"
                       value={functionLookup.funName}
                       fullWidth
                       inputProps={{ tabIndex: "-1" }}
                       focused
                     />
-                  </Box>
+                  </Box> */}
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
-                      gridColumn: "span 2",
+                     
                     }}
                   >
-                    <TextField
-                      id="prjCode"
-                      label="Project"
-                      variant="filled"
-                      value={projectLookup.proCode}
-                      focused
-                      required
-                      inputProps={{ tabIndex: "-1" }}
-                    />
-                    <IconButton
-                      sx={{ height: 40, width: 40 }}
-                      onClick={() => handleOpen("PRO")}
-                    >
-                      <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                    </IconButton>
 
-                    <TextField
-                      id="prjDesc"
-                      variant="filled"
-                      value={projectLookup.proName}
-                      fullWidth
-                      inputProps={{ tabIndex: "-1" }}
-                      focused
+
+                    <Productautocomplete
+                      name="FunName"
+                      label="Function"
+                      id="FunName"
+                      value={values.FunName}
+                      onChange={(newValue) => {
+                        setFieldValue("FunName", newValue)
+                        console.log(newValue);
+                      }}
+                      //  onChange={handleSelectionFunctionname}
+                      // defaultValue={selectedFunctionName}
+                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+
                     />
+
                   </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    
+
+                    }}
+                  >
+
+                    <Productautocomplete
+                      name="ProName"
+                      label="Project"
+                      id="ProName"
+                      value={values.ProName}
+                      onChange={(newValue) => {
+                        setFieldValue("ProName", newValue)
+                        console.log(newValue);
+                      }}
+                      //value={selectedProjectOptions}
+                      //onChange={handleSelectionProjectname}
+                      // defaultValue={selectedProjectName}
+                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+
+                    />
+
+                  </Box>
+
 
                   <TextField
                     name="description"
                     type="text"
                     id="description"
                     label="Description"
-                    variant="filled"
+                    variant="standard"
                     focused
+                    //sx={{ gridColumn: "span 2" }}
                     value={values.description}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.description && !!errors.description}
                     helperText={touched.description && errors.description}
                     autoFocus
-                    sx={{ gridColumn: "span 2" }}
+
                   />
 
                   <TextField
@@ -411,21 +492,22 @@ const EditDailytask = () => {
                     id="date"
                     label="Date"
                     inputFormat="YYYY-MM-DD"
-                    variant="filled"
+                    variant="standard"
                     focused
+
                     value={values.date}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     autoFocus
-                    sx={{ gridColumn: "span 2",background: "#fff6c3"  }}
+                    //sx={{ gridColumn: "span 2" }}
                   />
 
                   <FormControl
                     focused
-                    variant="filled"
-                    sx={{ gridColumn: "span 2" }}
+                    variant="standard"
+                    //sx={{ gridColumn: "span 2" }}
                   >
                     <InputLabel id="status">Status</InputLabel>
                     <Select
@@ -446,35 +528,25 @@ const EditDailytask = () => {
                   {values.status == "T" ? (
                     <Box
                       sx={{
+
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        gridColumn: "span 2",
                       }}
                     >
-                      <TextField
-                        id="empCode"
+                      <Productautocomplete
+                        name="employee"
                         label="Employee"
-                        variant="filled"
-                        value={employeeLookup.empCode}
-                        focused
-                        required
-                        inputProps={{ tabIndex: "-1" }}
-                      />
-                      <IconButton
-                        sx={{ height: 40, width: 40 }}
-                        onClick={() => handleOpen("EMP")}
-                      >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
+                        id="employee"
+                        value={values.employee}
+                        onChange={(newValue) => {
+                          setFieldValue("employee", newValue);
+                          setEmpID(newValue.RecordID);
+                          console.log(newValue.RecordID, "recid");
 
-                      <TextField
-                        id="empDesc"
-                        variant="filled"
-                        value={employeeLookup.empName}
-                        fullWidth
-                        inputProps={{ tabIndex: "-1" }}
-                        focused
+                        }}
+
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                       />
                     </Box>
                   ) : (
@@ -485,7 +557,7 @@ const EditDailytask = () => {
                     type="text"
                     id="Comment"
                     label="Comment"
-                    variant="filled"
+                    variant="standard"
                     focused
                     value={values.Comment}
                     onBlur={handleBlur}
@@ -493,14 +565,15 @@ const EditDailytask = () => {
                     error={!!touched.Comment && !!errors.Comment}
                     helperText={touched.Comment && errors.Comment}
                     autoFocus
-                    sx={{ gridColumn: "span 2" }}
+                    //sx={{ gridColumn: "span 2" }}
+
                   />
                   <TextField
                     name="sortOrder"
                     type="number"
                     id="sortOrder"
                     label="Sort Order"
-                    variant="filled"
+                    variant="standard"
                     focused
                     value={values.sortOrder}
                     onBlur={handleBlur}
@@ -508,13 +581,13 @@ const EditDailytask = () => {
                     error={!!touched.sortOrder && !!errors.sortOrder}
                     helperText={touched.sortOrder && errors.sortOrder}
                     autoFocus
-                    sx={{ background: "#fff6c3", gridColumn: "span 2" }}
+                    //sx={{ gridColumn: "span 2" }}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
                       },
                     }}
-                    onWheel={(e) => e.target.blur()} 
+                    onWheel={(e) => e.target.blur()}
                     onInput={(e) => {
                       e.target.value = Math.max(0, parseInt(e.target.value))
                         .toString()
@@ -536,7 +609,7 @@ const EditDailytask = () => {
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -559,7 +632,7 @@ const EditDailytask = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        DTSaveFn(values,  "harddelete");
+                        DTSaveFn(values, "harddelete");
                       }}
                     >
                       Delete
@@ -621,7 +694,7 @@ const EditDailytask = () => {
               childToParent={childToParent}
             />
           </Popup>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

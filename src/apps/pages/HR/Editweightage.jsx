@@ -12,6 +12,7 @@ import {
     Checkbox,
     LinearProgress,
     Breadcrumbs,
+    Paper,
 } from "@mui/material";
 import {
     DataGrid,
@@ -45,6 +46,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { tokens } from "../../../Theme";
 import { useTheme } from "@emotion/react";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 
 // import CryptoJS from "crypto-js";
 const EditmileWeightage = () => {
@@ -123,11 +125,11 @@ const EditmileWeightage = () => {
         {
             field: "Weightages",
             headerName: "Weightage",
-            type:"number",
+            type: "number",
             width: 130,
-            textAlign:"right",
+            textAlign: "right",
             editable: "true",
-            align:"right"
+            align: "right"
         },
     ];
 
@@ -145,7 +147,7 @@ const EditmileWeightage = () => {
     const processRowUpdate = async (newRow, oldRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
-        if(updatedRow.Weightages == '0'){
+        if (updatedRow.Weightages == '0') {
             toast.error("Please give Weightage greater than 0");
             return false;
         }
@@ -157,7 +159,7 @@ const EditmileWeightage = () => {
             0
         );
         const isCheckTotalWeightage = newData.every((value) =>
-            parseFloat(value.Weightages)  > 0
+            parseFloat(value.Weightages) > 0
         );
         if (totalWeightage != 100 && isCheckTotalWeightage) {
             toast.error("Total weightage should be 100");
@@ -169,29 +171,29 @@ const EditmileWeightage = () => {
     };
     // const processRowUpdate = async (newRow, oldRow) => {
     //     const updatedRow = { ...newRow, isNew: false };
-    
+
     //     const newData = rows.map((row) =>
     //         row.RecordID === updatedRow.RecordID ? updatedRow : row
     //     );
-    
+
     //     const totalWeightage = newData.reduce(
     //         (sum, row) => sum + (parseFloat(row.Weightages) || 0),
     //         0
     //     );
-    
+
     //     const isCheckTotalWeightage = newData.every(
     //         (value) => value.Weightages !== "" && !isNaN(parseFloat(value.Weightages))
     //     );
-    
+
     //     if (totalWeightage !== 100 && isCheckTotalWeightage) {
     //         toast.error("Total weightage should be 100");
     //         return false;
     //     }
-    
+
     //     setRows(newData);
     //     return updatedRow;
     // };
-    
+
     const handleSaveButtonClick = async () => {
         try {
             if (!rows || rows.length === 0) {
@@ -206,7 +208,7 @@ const EditmileWeightage = () => {
                 toast.error("Total weightage should be 100");
                 return false;
             }
-    
+
 
             const response = await dispatch(
                 postWeightage({ Type: type, data: rows })
@@ -248,24 +250,14 @@ const EditmileWeightage = () => {
     return (
         <React.Fragment>
             {/* {getLoading ? <LinearProgress /> : false} */}
-            <Box display="flex" justifyContent="space-between" p={2}>
+            {/* <Box display="flex" justifyContent="space-between" p={2}>
                 <Box display="flex" borderRadius="3px" alignItems="center">
                     {broken && !rtl && (
                         <IconButton onClick={() => toggleSidebar()}>
                             <MenuOutlinedIcon />
                         </IconButton>
                     )}
-                    {/* <Typography variant="h3" mt={2}>
-            {type === "M"
-              ? "Milestone Weightage"
-              : type === "OPS"
-              ? "Stage Weightage"
-              : type === "ACT"
-              ? "Activity Weightage"
-              : type === "TK"
-              ? "Task Weightage"
-              : "Weightage"}
-          </Typography> */}
+                 
 
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         <Breadcrumbs
@@ -412,9 +404,161 @@ const EditmileWeightage = () => {
                         </IconButton>
                     </Tooltip>
                 </Box>
-            </Box>
+            </Box> */}
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
 
-            <Box m="20px">
+                <Box display="flex" justifyContent="space-between" p={2}>
+                    <Box display="flex" borderRadius="3px" alignItems="center">
+                        {broken && !rtl && (
+                            <IconButton onClick={() => toggleSidebar()}>
+                                <MenuOutlinedIcon />
+                            </IconButton>
+                        )}
+                        <Breadcrumbs
+                            maxItems={2}
+                            aria-label="breadcrumb"
+                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                        >
+                            {type === "M" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate("/Apps/TR133/Project")}
+                                >
+                                    Project
+                                </Typography>
+                            )}
+                            {type === "M" && (
+                                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                                    Milestone Weightage
+                                </Typography>
+                            )}
+
+                            {type === "OPS" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate("/Apps/TR133/Project")}
+                                >
+                                    Project
+                                </Typography>
+                            )}
+                            {type === "OPS" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate(-1)}
+                                >
+                                    Milestone
+                                </Typography>
+                            )}
+                            {type === "OPS" && (
+                                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                                    Stage Weightage
+                                </Typography>
+                            )}
+                            {type === "ACT" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate("/Apps/TR133/Project")}
+                                >
+                                    Project
+                                </Typography>
+                            )}
+                            {type === "ACT" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                >
+                                    Milestone
+                                </Typography>
+                            )}
+                            {type === "ACT" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate(-1)
+                                    }
+
+                                >
+                                    Stages
+                                </Typography>
+                            )}
+                            {type === "ACT" && (
+                                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                                    Activity Weightage
+                                </Typography>
+                            )}
+                            {type === "TK" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate("/Apps/TR133/Project")}
+                                >
+                                    Project
+                                </Typography>
+                            )}
+                            {type === "TK" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                // onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
+                                >
+                                    Milestone
+                                </Typography>
+                            )}
+                            {type === "TK" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                // onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
+                                >
+                                    Stages
+                                </Typography>
+                            )}
+                            {type === "TK" && (
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => navigate(-1)}
+                                >
+                                    Activity
+                                </Typography>
+                            )}
+                            {type === "TK" && (
+                                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                                    Task Weightage
+                                </Typography>
+                            )}
+                        </Breadcrumbs>
+                    </Box>
+
+                    <Box display="flex">
+                        <Tooltip title="Close">
+                            <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                <ResetTvIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Logout">
+                            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                <LogoutOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
+            </Paper>
+            <Paper elevation={3} sx={{ margin: "10px" }}>
                 <Formik initialValues={InitialValue} enableReinitialize={true}>
                     {({
                         errors,
@@ -428,12 +572,13 @@ const EditmileWeightage = () => {
                         <form onSubmit={handleSubmit}>
                             <Box
                                 display="grid"
-                                gap="50px"
-                                marginBottom={7}
-                                gridTemplateColumns="repeat(2, 1fr)"
+                                gap={formGap}
+                                padding={1}
+                                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                                // gap="30px"
                                 sx={{
                                     "& > div": {
-                                        gridColumn: isNonMobile ? undefined : "span 4",
+                                        gridColumn: isNonMobile ? undefined : "span 2",
                                     },
                                 }}
                             >
@@ -442,7 +587,7 @@ const EditmileWeightage = () => {
                                     type="text"
                                     id="code"
                                     label="Code"
-                                    variant="filled"
+                                    variant="standard"
                                     focused
                                     required
                                     value={values.code}
@@ -459,7 +604,7 @@ const EditmileWeightage = () => {
                                     type="text"
                                     id="name"
                                     label="Description"
-                                    variant="filled"
+                                    variant="standard"
                                     focused
                                     value={values.name}
                                     onBlur={handleBlur}
@@ -476,11 +621,10 @@ const EditmileWeightage = () => {
                             <Box sx={{ width: "100%" }}>
                                 <Box
                                     m="5px 0 0 0"
-                                    height="60vh"
+                                    height={dataGridHeight}
                                     sx={{
                                         "& .MuiDataGrid-root": {
                                             border: "none",
-                                            width: "100%",
                                         },
                                         "& .MuiDataGrid-cell": {
                                             borderBottom: "none",
@@ -502,17 +646,29 @@ const EditmileWeightage = () => {
                                         "& .MuiCheckbox-root": {
                                             color: `${colors.greenAccent[200]} !important`,
                                         },
-                                        "& .MuiDataGrid-cell--editable": {
-                                            border: "1px solid black"
+                                        "& .odd-row": {
+                                            backgroundColor: "",
+                                            color: "", // Color for odd rows
+                                        },
+                                        "& .even-row": {
+                                            backgroundColor: "#D3D3D3",
+                                            color: "", // Color for even rows
                                         },
                                     }}
                                 >
                                     <DataGrid
-                                        // loading={exploreLoading}
+                                        sx={{
+                                            "& .MuiDataGrid-footerContainer": {
+                                                height: dataGridHeaderFooterHeight,
+                                                minHeight: dataGridHeaderFooterHeight,
+                                            },
+                                        }}
                                         rows={rows || []}
                                         columns={columns}
                                         disableSelectionOnClick
                                         getRowId={(row) => row.RecordID}
+                                        rowHeight={dataGridRowHeight}
+                                        headerHeight={dataGridHeaderFooterHeight}
                                         pageSize={pageSize}
                                         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                                         experimentalFeatures={{ newEditingApi: true }}
@@ -524,6 +680,11 @@ const EditmileWeightage = () => {
                                         pagination
                                         onStateChange={(stateParams) =>
                                             setRowCount(stateParams?.pagination?.rowCount || 0)
+                                        }
+                                        getRowClassName={(params) =>
+                                            params.indexRelativeToCurrentPage % 2 === 0
+                                                ? "odd-row"
+                                                : "even-row"
                                         }
                                         componentsProps={{
                                             cell: (params) => ({
@@ -538,15 +699,7 @@ const EditmileWeightage = () => {
                                         }}
                                     />
                                 </Box>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "flex-end",
-                                        width: "100%",
-                                        marginTop: "20px",
-                                        gap:"10px"
-                                    }}
-                                >
+                                  <Box display="flex" justifyContent="end" padding={1} gap="20px">
                                     <Button
                                         color="secondary"
                                         variant="contained"
@@ -558,7 +711,7 @@ const EditmileWeightage = () => {
                                     <Button
                                         color="warning"
                                         variant="contained"
-                                        onClick={()=> navigate(-1)}
+                                        onClick={() => navigate(-1)}
                                     //navigate();
                                     >
                                         Cancel
@@ -568,7 +721,7 @@ const EditmileWeightage = () => {
                         </form>
                     )}
                 </Formik>
-            </Box>
+            </Paper>
         </React.Fragment>
     );
 };

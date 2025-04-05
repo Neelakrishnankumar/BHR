@@ -1,4 +1,4 @@
-import React from "react"; 
+import React from "react";
 import {
   TextField,
   Box,
@@ -10,10 +10,11 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
-  useMediaQuery, 
-  useTheme, 
+  useMediaQuery,
+  useTheme,
+  Paper, Breadcrumbs
 } from "@mui/material";
-
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Field, Formik } from "formik";
@@ -27,6 +28,7 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { tokens } from "../../../Theme";
+import { formGap } from "../../../ui-components/global/utils";
 
 const Holidaylist = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -80,8 +82,8 @@ const Holidaylist = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const isCheck = values.disable ? "Y" : "N";
 
@@ -136,222 +138,244 @@ const Holidaylist = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : null}
 
-      <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Typography variant="h3">Holiday List</Typography>
-        </Box>
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
 
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+                >
+                   Holiday List
+                </Typography>
+
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-      </Box>
+      </Paper>
 
       {!getLoading ? (
-            <Box m="20px">
-              <Formik
-                initialValues={InitialValue}
-                onSubmit={(values, setSubmitting) => {
-                  setTimeout(() => {
-                    Fnsave(values);
-                  }, 100);
-                }}
-                //validationSchema={FunctionSchema}
-                enableReinitialize={true}
-              >
-                {({
-                  errors,
-                  touched,
-                  handleBlur,
-                  handleChange,
-                  isSubmitting,
-                  values,
-                  handleSubmit,
-                }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Box
-                      display="grid"
-                      gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                      gap="30px"
-                      sx={{
-                        "& > div": {
-                          gridColumn: isNonMobile ? undefined : "span 4",
-                        },
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={InitialValue}
+            onSubmit={(values, setSubmitting) => {
+              setTimeout(() => {
+                Fnsave(values);
+              }, 100);
+            }}
+            //validationSchema={FunctionSchema}
+            enableReinitialize={true}
+          >
+            {({
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              isSubmitting,
+              values,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+
+
+                  <TextField
+                    name="Date"
+                    type="date"
+                    id="Date"
+                    label="Holiday Date"
+                  variant="standard"
+                    focused
+                    required
+                    value={values.Date}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="oscc"
+                    type="text"
+                    id="oscc"
+                    label="Occasion"
+                  variant="standard"
+                    focused
+                    value={values.oscc}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Description"
+                  variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="Sortorder"
+                    type="number"
+                    id="Sortorder"
+                    label="Sort Order"
+                  variant="standard"
+                    focused
+                    value={values.Sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+
+                    sx={{ background: "" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
+                </Box>
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                  {YearFlag == "true" ? (
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={loading}
+                    >
+                      Save
+                    </LoadingButton>
+                  ) : (
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Save
+                    </Button>
+                  )}   {YearFlag == "true" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Fnsave(values, "harddelete");
                       }}
                     >
-                      <FormControl
-                        fullWidth
-                        sx={{ gridColumn: "span 2", gap: "40px" }}
-                      >
-                        <TextField
-                          name="Date"
-                          type="date"
-                          id="Date"
-                          label="Holiday Date"
-                          variant="filled"
-                          focused
-                          required
-                          value={values.Date}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          
-                          sx={{ 
-                            gridColumn: "span 2", 
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            }
-                          }}
-                          autoFocus
-                        />
-                        <TextField
-                          name="oscc"
-                          type="text"
-                          id="oscc"
-                          label="Occasion"
-                          variant="filled"
-                          focused
-                          value={values.oscc}
-                          onBlur={handleBlur}
-                          onChange={handleChange}                                                                            
-                          
-                          sx={{ 
-                            gridColumn: "span 2", 
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            }
-                          }}
-                          autoFocus
-                        />
-                        <TextField
-                          name="name"
-                          type="text"
-                          id="name"
-                          label="Description"
-                          variant="filled"
-                          focused
-                          value={values.name}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          
-                          sx={{ 
-                            gridColumn: "span 2", 
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                            }
-                          }}
-                          autoFocus
-                        />                
-                        <TextField
-                          name="Sortorder"
-                          type="number"
-                          id="Sortorder"
-                          label="Sort Order"
-                          variant="filled"
-                          focused
-                          value={values.Sortorder}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                         
-                          sx={{ background: "#fff6c3" }}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                          onWheel={(e) => e.target.blur()} 
-                          onInput={(e) => {
-                            e.target.value = Math.max(0, parseInt(e.target.value))
-                              .toString()
-                              .slice(0, 8);
-                          }}
-                        />
-                        <Box>
-                          <Field
-                            type="checkbox"
-                            name="disable"
-                            id="disable"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            as={Checkbox}
-                            label="Disable"
-                          />
-                          <FormLabel focused={false}>Disable</FormLabel>
-                        </Box>
-                      </FormControl>
-                    </Box>
-                    <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                      {YearFlag == "true" ? (
-                        <LoadingButton
-                          color="secondary"
-                          variant="contained"
-                          type="submit"
-                          loading={loading}
-                        >
-                          Save
-                        </LoadingButton>
-                      ) : (
-                        <Button
-                          color="secondary"
-                          variant="contained"
-                          disabled={true}
-                        >
-                          Save
-                        </Button>
-                      )}   {YearFlag == "true" ? (
-                        <Button
-                          color="error"
-                          variant="contained"
-                          onClick={() => {
-                            Fnsave(values,  "harddelete");
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      ) : (
-                        <Button
-                          color="error"
-                          variant="contained"
-                          disabled={true}
-                        >
-                          Delete
-                        </Button>
-                      )}
-                      <Button
-                        color="warning"
-                        variant="contained"
-                        onClick={() => {
-                          navigate("/Apps/TR218/Holiday List");
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
-                  </form>
-                )}
-              </Formik>
-            </Box>
-          ) : (
-            false
-          )}
-          
-        </React.Fragment>
-      );
-  };
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      disabled={true}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                  <Button
+                    color="warning"
+                    variant="contained"
+                    onClick={() => {
+                      navigate("/Apps/TR218/Holiday List");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+    </React.Fragment>
+  );
+};
 
 export default Holidaylist;

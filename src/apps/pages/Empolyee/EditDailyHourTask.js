@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   Breadcrumbs,
+  Paper,
 } from "@mui/material";
 import dayjs from "dayjs";
 
@@ -45,6 +46,8 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { formGap } from "../../../ui-components/global/utils";
 
 const EditDailyHourstask = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -65,7 +68,7 @@ const EditDailyHourstask = () => {
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
-    const Finyear = sessionStorage.getItem("YearRecorid");
+  const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
 
   useEffect(() => {
@@ -166,7 +169,7 @@ const EditDailyHourstask = () => {
     comment: data.Comments,
     sortOrder: data.SortOrder,
     EmpDate: data.EmpDate,
-    disable: data.Disable === "Y" ? false: true,
+    disable: data.Disable === "Y" ? false : true,
   };
 
   const DHTSaveFn = async (values) => {
@@ -187,8 +190,10 @@ const EditDailyHourstask = () => {
       SortOrder: values.sortOrder,
       Disable: isCheck,
       EmployeesID: employeeLookup.empRecordID,
-      FunctionsID: functionLookup.funRecordID,
-      ProjectID: projectLookup.proRecordID,
+      // FunctionsID: functionLookup.funRecordID,
+      // ProjectID: projectLookup.proRecordID,
+      ProjectID: values.ProName.RecordID || 0,
+      FunctionsID: values.FunName.RecordID || 0,
       parentID: params.filtertype,
       EmpDate: values.EmpDate,
       Finyear,
@@ -231,7 +236,7 @@ const EditDailyHourstask = () => {
 
   return (
     <React.Fragment>
-      <Box display="flex" justifyContent="space-between" p={2}>
+      {/* <Box display="flex" justifyContent="space-between" p={2}>
         <Box display="flex" borderRadius="3px" alignItems="center">
           {broken && !rtl && (
             <IconButton onClick={() => toggleSidebar()}>
@@ -290,9 +295,71 @@ const EditDailyHourstask = () => {
             </IconButton>
           </Tooltip>
         </Box>
-      </Box>
+      </Box> */}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR123/Check%20In");
+                }}
+              >
+                Check In
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(`/Apps/Secondarylistview/TR132/DailyTask/${params.parentID}`);
+                }}
+              >
+                Daily Task
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/TR134/Daily%20Hour%20Task/${params.filtertype}/${params.parentID}`
+                  );
+                }}
+              >
+                Daily Hour Task
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
       {!loading ? (
-        <Box m=" 20px">
+        <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={dailyHourTaskInitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -311,20 +378,22 @@ const EditDailyHourstask = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  
-                    {/* <TextField
+                  {/* <TextField
                       name="code"
                       type="text"
                       id="code"
@@ -355,9 +424,9 @@ const EditDailyHourstask = () => {
                       helperText={touched.description && errors.description}
                       sx={{gridColumn: "span 2"}}
                     /> */}
-                  
 
-                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["TimePicker"]}>
                         <TimePicker
                           name="fromtime"
@@ -393,7 +462,7 @@ const EditDailyHourstask = () => {
                       </DemoContainer>
                     </LocalizationProvider> */}
 
-                    <Box
+                  {/* <Box
                       sx={{
                         display: "flex",
                         flexDirection: "row",
@@ -458,149 +527,203 @@ const EditDailyHourstask = () => {
                         inputProps={{ tabIndex: "-1" }}
                         focused
                       />
-                    </Box>
-                    <TextField
-                      name="fromtime"
-                      type="time"
-                      id="fromtime"
-                      label="From"
-                      inputFormat="HH:mm:aa"
-                      value={values.fromtime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      sx={{gridColumn: "span 2"}}
-                    />
-                    <TextField
-                      name="totime"
-                      type="time"
-                      id="totime"
-                      label="To"
-                      inputFormat="HH:mm:aa"
-                      value={values.totime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      sx={{gridColumn: "span 2"}}
+                    </Box> */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                     
+                    }}
+                  >
+
+
+                    <Productautocomplete
+                      name="FunName"
+                      label="Function"
+                      id="FunName"
+                      value={values.FunName}
+                      onChange={(newValue) => {
+                        setFieldValue("FunName", newValue)
+                      }}
+                      //  onChange={handleSelectionFunctionname}
+                      // defaultValue={selectedFunctionName}
+                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+
                     />
 
-                    <FormControl
-                      focused
-                      variant="filled"
-                      sx={{ gridColumn: "span 2" }}
+                  </Box>
+
+
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                     
+
+                    }}
+                  >
+
+                    <Productautocomplete
+                      name="ProName"
+                      label="Project"
+                      id="ProName"
+                      value={values.ProName}
+                      onChange={(newValue) => {
+                        setFieldValue("ProName", newValue)
+                      }}
+                      //value={selectedProjectOptions}
+                      //onChange={handleSelectionProjectname}
+                      // defaultValue={selectedProjectName}
+                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+
+                    />
+
+                  </Box>
+                  <TextField
+                    name="fromtime"
+                    type="time"
+                    id="fromtime"
+                    label="From"
+                    inputFormat="HH:mm:aa"
+                    value={values.fromtime}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    focused
+                   
+                  />
+                  <TextField
+                    name="totime"
+                    type="time"
+                    id="totime"
+                    label="To"
+                    inputFormat="HH:mm:aa"
+                    value={values.totime}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    focused
+                    //sx={{ gridColumn: "span 2" }}
+                  />
+
+                  <FormControl
+                    focused
+                    variant="filled"
+                    
+                  >
+                    <InputLabel id="status">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="status"
+                      name="status"
+                      value={values.status}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
                     >
-                      <InputLabel id="status">Status</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="status"
-                        name="status"
-                        value={values.status}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="N">Not yet started</MenuItem>
-                        <MenuItem value="I">Inprogress</MenuItem>
-                        <MenuItem value="C">Completed</MenuItem>
-                        <MenuItem value="T">Transfer to</MenuItem>
-                      </Select>
-                    </FormControl>
+                      <MenuItem value="N">Not yet started</MenuItem>
+                      <MenuItem value="I">Inprogress</MenuItem>
+                      <MenuItem value="C">Completed</MenuItem>
+                      <MenuItem value="T">Transfer to</MenuItem>
+                    </Select>
+                  </FormControl>
 
-                    {values.status == "T" ? (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gridColumn: "span 2"
-                        }}
-                      >
-                        <TextField
-                          id="empCode"
-                          label="Employee"
-                          variant="filled"
-                          value={employeeLookup.empCode}
-                          focused
-                          required
-                          inputProps={{ tabIndex: "-1" }}
-                        />
-                        <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleOpen("EMP")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-
-                        <TextField
-                          id="empDesc"
-                          variant="filled"
-                          value={employeeLookup.empName}
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                          focused
-                        />
-                      </Box>
-                    ) : (
-                      false
-                    )}
-                    <TextField
-                      name="comment"
-                      type="text"
-                      id="comment"
-                      label="comment"
-                      variant="filled"
-                      focused
-                      required
-                      value={values.comment}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.comment && !!errors.comment}
-                      helperText={touched.comment && errors.comment}
-                      sx={{gridColumn: "span 2"}}
-
-                    />
-                    <TextField
-                      name="sortOrder"
-                      type="number"
-                      id="sortOrder"
-                      label="Sort Order"
-                      variant="filled"
-                      focused
-                      value={values.sortOrder}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.sortOrder && !!errors.sortOrder}
-                      helperText={touched.sortOrder && errors.sortOrder}
-                      sx={{ background: "#fff6c3" ,gridColumn: "span 2"}}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-
+                  {values.status == "T" ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        
                       }}
-                      onWheel={(e) => e.target.blur()} 
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
-                    />
-                    <Box>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="disable"
-                        id="disable"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
+                    >
+                      <TextField
+                        id="empCode"
+                        label="Employee"
+                        variant="filled"
+                        value={employeeLookup.empCode}
+                        focused
+                        required
+                        inputProps={{ tabIndex: "-1" }}
                       />
+                      <IconButton
+                        sx={{ height: 40, width: 40 }}
+                        onClick={() => handleOpen("EMP")}
+                      >
+                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+                      </IconButton>
 
-                      <FormLabel focused={false}>Disable</FormLabel>
+                      <TextField
+                        id="empDesc"
+                        variant="filled"
+                        value={employeeLookup.empName}
+                        fullWidth
+                        inputProps={{ tabIndex: "-1" }}
+                        focused
+                      />
                     </Box>
-                  
+                  ) : (
+                    false
+                  )}
+                  <TextField
+                    name="comment"
+                    type="text"
+                    id="comment"
+                    label="comment"
+                    variant="filled"
+                    focused
+                    required
+                    value={values.comment}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.comment && !!errors.comment}
+                    helperText={touched.comment && errors.comment}
+                   
+
+                  />
+                  <TextField
+                    name="sortOrder"
+                    type="number"
+                    id="sortOrder"
+                    label="Sort Order"
+                    variant="filled"
+                    focused
+                    value={values.sortOrder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortOrder && !!errors.sortOrder}
+                    helperText={touched.sortOrder && errors.sortOrder}
+                    sx={{ background: ""}}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -667,7 +790,7 @@ const EditDailyHourstask = () => {
               childToParent={childToParent}
             />
           </Popup>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

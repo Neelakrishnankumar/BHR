@@ -10,7 +10,7 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
-  Breadcrumbs
+  Breadcrumbs,Paper
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,24 +33,25 @@ import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { formGap } from "../../../ui-components/global/utils";
 
 // import CryptoJS from "crypto-js";
-const Editoperation = () =>{
+const Editoperation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
-  var MTRecid =params.filtertype;
-  console.log(MTRecid,'====================================');
+  var MTRecid = params.filtertype;
+  console.log(MTRecid, '====================================');
   var accessID = params.accessID;
   const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
- 
+
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
@@ -58,15 +59,15 @@ const Editoperation = () =>{
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const state = location.state || {};
-//  useEffect(() => {
-//      // Fetch data only when the recID or mode changes
-//      if (recID && mode === "E") {
-//        dispatch(getFetchData({ accessID, get: "get", recID }));
-//      }
-//    }, [location.key, recID, mode]);
+  //  useEffect(() => {
+  //      // Fetch data only when the recID or mode changes
+  //      if (recID && mode === "E") {
+  //        dispatch(getFetchData({ accessID, get: "get", recID }));
+  //      }
+  //    }, [location.key, recID, mode]);
   useEffect(() => {
-     dispatch(getFetchData({ accessID, get: "get", recID }));
-   }, [location.key]);
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, [location.key]);
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
@@ -76,14 +77,14 @@ const Editoperation = () =>{
     disable: data.Disable === "Y" ? true : false,
   };
 
-  const Fnsave = async (values,del) => {
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -95,8 +96,8 @@ const Editoperation = () =>{
       Name: values.name,
       SortOrder: values.sortorder,
       Disable: isCheck,
-      MilestoneID:MTRecid,
-    //   Finyear,
+      MilestoneID: MTRecid,
+      //   Finyear,
       CompanyID,
     };
 
@@ -110,7 +111,7 @@ const Editoperation = () =>{
       toast.error(response.payload.Msg);
     }
   };
-  
+
 
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
@@ -136,7 +137,7 @@ const Editoperation = () =>{
           navigate("/");
         }
         if (props === "Close") {
-            navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
+          navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
         }
       } else {
         return;
@@ -149,71 +150,74 @@ const Editoperation = () =>{
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-           <Box display="flex" borderRadius="3px" alignItems="center">
-                      <Breadcrumbs
-                        maxItems={2}
-                        aria-label="breadcrumb"
-                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                      >
-                        <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
-                          onClick={() => {
-                            navigate("/Apps/TR133/Project");
-                          }}
-                        >
-                         Project
-                        </Typography>
-          
-                        <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
-                          onClick={() => {
-                            //navigate(-1);
-                            navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-                          }}
-                        >
-                          Milestone
-                        </Typography>
-                        <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
-                          onClick={() => {
-                            navigate(-1);
-                            //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-                          }}
-                        >
-                          Stages
-                        </Typography>
-                      </Breadcrumbs>
-                    </Box>
+     
+ <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+       
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+             <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+          <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR133/Project");
+                }}
+              >
+                Project
+              </Typography>
+
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  //navigate(-1);
+                  navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } });
+                }}
+              >
+                Milestone
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                  //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                }}
+              >
+                Stages
+              </Typography>
+              </Breadcrumbs>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
+      </Paper>
 
       {!getLoading ? (
-        <Box m="20px">
+        <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -236,24 +240,24 @@ const Editoperation = () =>{
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
+
+                 
                     <TextField
                       name="code"
                       type="text"
                       id="code"
                       label="Code"
-                      variant="filled"
+                    variant="standard"
                       focused
                       required
                       value={values.code}
@@ -268,7 +272,7 @@ const Editoperation = () =>{
                       type="text"
                       id="name"
                       label="Description"
-                      variant="filled"
+                    variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
@@ -283,20 +287,20 @@ const Editoperation = () =>{
                       type="number"
                       id="sortorder"
                       label="Sort Order"
-                      variant="filled"
+                    variant="standard"
                       focused
                       value={values.sortorder}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.sortorder && !!errors.sortorder}
                       helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "#fff6c3" }}
+                      sx={{ background: "" }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
                         },
                       }}
-                      onWheel={(e) => e.target.blur()} 
+                      onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
                         e.target.value = Math.max(0, parseInt(e.target.value))
                           .toString()
@@ -317,9 +321,9 @@ const Editoperation = () =>{
 
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box>
-                  </FormControl>
+               
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -342,12 +346,12 @@ const Editoperation = () =>{
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values,  "harddelete");
+                        Fnsave(values, "harddelete");
                       }}
                     >
                       Delete
                     </Button>
-                  ) :  (
+                  ) : (
                     <Button
                       color="error"
                       variant="contained"
@@ -360,19 +364,19 @@ const Editoperation = () =>{
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                        // navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
-                        navigate(-1);
+                      // navigate(`/Apps/Secondarylistview/TR236/Stages/${MTRecid}`);
+                      navigate(-1);
                     }}
                   >
                     Cancel
                   </Button>
                 </Box>
-                
+
 
               </form>
             )}
           </Formik>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

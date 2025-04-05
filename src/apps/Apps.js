@@ -119,6 +119,7 @@ import EditActivities from "./pages/HR/Editactivities";
 import Edittask from "./pages/HR/EditTask";
 import EditmileWeightage from "./pages/HR/Editweightage";
 import Settings from "./Security/Settings";
+import Editvendor from "./pages/HR/Editvendor";
 
 
 
@@ -606,6 +607,10 @@ function App() {
                   <Route
                    path="/:accessID/:screenName/Editweightage/:Type/:id/:Mode"
                     element={<EditmileWeightage />}
+                  />
+                  <Route
+                   path="/:accessID/:screenName/EditVendor/:id/:Mode"
+                    element={<Editvendor />}
                   />
                    {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
