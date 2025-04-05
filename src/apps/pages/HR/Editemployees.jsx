@@ -361,6 +361,9 @@ const Editemployee = () => {
       GateRecID: 0,
       WeekOff: 0,
       CompanyID,
+      EmpType:"",
+      DateOfConfirmation:"",
+      SubscriptionCode:""
     };
 
 
