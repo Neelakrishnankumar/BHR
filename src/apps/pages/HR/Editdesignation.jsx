@@ -10,7 +10,9 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
+  Paper,Breadcrumbs
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -33,6 +35,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { HsnSchema } from "../../Security/validation";
 import { DesignationSchema } from "../../Security/validation";
+import { formGap } from "../../../ui-components/global/utils";
 // import CryptoJS from "crypto-js";
 const Editdesignation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -66,14 +69,14 @@ const Editdesignation = () => {
     disable: data.Disable === "Y" ? true : false,
   };
 
-  const Fnsave = async (values,del ) => {
+  const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
-    mode === "A" && !del
-      ? "insert"
-      : mode === "E" && del
-      ? "harddelete"
-      : "update";
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -132,31 +135,54 @@ const Editdesignation = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
       <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Typography variant="h3">Designation</Typography>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                
+                >
+                  Designation
+                </Typography>
+             
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
+      </Paper>
 
       {!getLoading ? (
-        <Box m="20px">
+        <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -179,124 +205,123 @@ const Editdesignation = () => {
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
-                      variant="filled"
-                      focused
-                      required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{ 
-                        gridColumn: "span 2", 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      autoFocus
-                    />
-                    <TextField
-                      name="name"
-                      type="text"
-                      id="name"
-                      label="Name"
-                      variant="filled"
-                      focused
-                      value={values.name}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      sx={{ 
-                        gridColumn: "span 2", 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      autoFocus
-                    />
-                    <TextField
-                      name="rank"
-                      type="number"
-                      id="rank"
-                      label="Rank"
-                      variant="filled"
-                      focused
-                      value={values.rank}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      sx={{ background: "#fff6c3" }}
-                      onWheel={(e) => e.target.blur()} 
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      error={!!touched.rank && !!errors.rank}
-                      helperText={touched.rank && errors.rank}
-                      autoFocus
-                    />
-                    <TextField
-                      name="sortorder"
-                      type="number"
-                      id="sortorder"
-                      label="Sort Order"
-                      variant="filled"
-                      focused
-                      value={values.sortorder}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.sortorder && !!errors.sortorder}
-                      helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "#fff6c3" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      onWheel={(e) => e.target.blur()} 
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
-                    />
-                    <Box>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="disable"
-                        id="disable"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
-                      />
 
-                      <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
-                  </FormControl>
+                  <TextField
+                    name="code"
+                    type="text"
+                    id="code"
+                    label="Code"
+                    variant="standard"
+                    focused
+                    required
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.code && !!errors.code}
+                    helperText={touched.code && errors.code}
+                    sx={{
+                     
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Name"
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+                     
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="rank"
+                    type="number"
+                    id="rank"
+                    label="Rank"
+                    variant="standard"
+                    focused
+                    value={values.rank}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    sx={{ background: "" }}
+                    onWheel={(e) => e.target.blur()}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    error={!!touched.rank && !!errors.rank}
+                    helperText={touched.rank && errors.rank}
+                    autoFocus
+                  />
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    focused
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ background: "" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -319,7 +344,7 @@ const Editdesignation = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values,  "harddelete");
+                        Fnsave(values, "harddelete");
                       }}
                     >
                       Delete
@@ -346,7 +371,7 @@ const Editdesignation = () => {
               </form>
             )}
           </Formik>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

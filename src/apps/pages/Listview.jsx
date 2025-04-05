@@ -20,6 +20,7 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import BalanceIcon from '@mui/icons-material/Balance';
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../ui-components/global/utils";
 import MatxCustomizer from "./Mailpdf";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -463,9 +464,11 @@ const [productFilter,setProductFilter] = useState();
             {searchLoading?<CircularProgress size={20} /> : <SearchIcon onClick={searchProduct} />}
             </IconButton>
           </Paper>:false}
+          <Box m="5px">
         <Box
           m="5px 0 0 0"
-          height="85vh"
+          padding={2}
+          height={dataGridHeight}
           sx={{
             "& .MuiDataGrid-root": {
               border: "none",
@@ -490,26 +493,47 @@ const [productFilter,setProductFilter] = useState();
             "& .MuiCheckbox-root": {
               color: `${colors.greenAccent[200]} !important`,
             },
+            "& .odd-row": {
+              backgroundColor: "",
+              color: "", // Color for odd rows
+            },
+            "& .even-row": {
+              backgroundColor: "#D3D3D3",
+              color: "", // Color for even rows
+            },
           }}
         >
           <DataGrid
+            sx={{
+              "& .MuiDataGrid-footerContainer":{
+                height:dataGridHeaderFooterHeight,
+                minHeight:dataGridHeaderFooterHeight,
+              }
+             }}
             key={accessID}
             rows={rows}
             // columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
             columns={columns}
             loading={loading}
             disableSelectionOnClick
+            rowHeight={dataGridRowHeight}
+            headerHeight={dataGridHeaderFooterHeight}
             getRowId={(row) => row.RecordID}
             pageSize={pageSize}
             page={page}
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 15, 20]}
             onPageChange={(pageno) => handlePagechange(pageno)}
+            getRowClassName={(params) =>
+              params.indexRelativeToCurrentPage % 2 === 0
+                ? 'odd-row'
+                : 'even-row'
+            }
             components={{
               Toolbar: CustomToolbar,
             }}
           />
-        </Box>
+        </Box> </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip

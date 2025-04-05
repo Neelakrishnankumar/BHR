@@ -769,7 +769,7 @@ const child = {
           url: "./TR232/Role",
           id: 34578,
           icon: (
-            <Tooltip title="Rolesss">
+            <Tooltip title="Roles">
               <PeopleAltIcon color="info" />
             </Tooltip>
           ),
@@ -815,6 +815,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR133",
+        },
+        {
+          name: "Vendor",
+          id: 4346895,
+          url: "./TR243/Vendor",
+          icon: (
+            <Tooltip title="Vendor">
+              <SourceOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR243",
         },
         
         {
@@ -905,7 +922,7 @@ const child = {
 
         {
           name: "Check In",
-          id: 58486,
+          id: 5486,
           url: "./TR123/Check In",
           icon: (
             <Tooltip title="Check In">
@@ -1006,6 +1023,55 @@ const child = {
      
     //   ],
     // },
+    {
+      name: "Payroll",
+      id: 10,
+      MenuID: "EM900",
+      Tooltipname: "Employees",
+      icon: (
+        <Tooltip title="Employees">
+          <PaymentsIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+        {
+          name: "Employees",
+          id: 46,
+          url: "./TR027/Employee Payroll",
+          icon: (
+            <Tooltip title="Employees">
+                <PeopleAltIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
+        {
+          name: "Run Payroll",
+          id: 46,
+          url: "./TR217/Run Payroll/Editrunpayroll",
+          icon: (
+            <Tooltip title="Run Payroll">
+                <CreditCardIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
+     
+     
+      ],
+    },
     // {
     //   name: "FM",
     //   id: 5,

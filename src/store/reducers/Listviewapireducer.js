@@ -2112,7 +2112,7 @@ export const fetchListview =
                     {AccessID == "TR233" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR236/Stages/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.RecordID,projectID:params.row.ProjectID}}
+                        state ={{MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,MilestoneName:params.row.MilestoneName}}
                       >
                         <Tooltip title="Stages">
                           <IconButton color="info" size="small">
@@ -2137,7 +2137,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {/* {AccessID == "TR133" ? (
+                    {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
                
@@ -2168,7 +2168,7 @@ export const fetchListview =
                       </Link>
                     ) : (
                       false
-                    )} */}
+                    )}
                       {AccessID == "TR136" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}
