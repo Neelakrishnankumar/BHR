@@ -18,6 +18,7 @@ import {
   FormControlLabel,
   Select,
   Tooltip,
+  Paper
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
@@ -71,6 +72,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { imageUpload } from "../../../store/reducers/Imguploadreducer";
 import { Code } from "@mui/icons-material";
 import { type } from "@testing-library/user-event/dist/type";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 // ***********************************************
 //  Developer:Gowsalya
 // Purpose:To Create Employee
@@ -1489,8 +1491,8 @@ const EditemployeePayroll = () => {
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          {/* SEARCH BAR */}
+        {/* <Box display="flex" justifyContent="space-between" p={2}>
+         
           <Box
             display="flex"
             // backgroundColor={colors.primary[400]}
@@ -1517,15 +1519,10 @@ const EditemployeePayroll = () => {
 
               </Breadcrumbs>
             </Box>
-            {/* <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton> */}
-
-            {/* {show=="2" ? <Typography variant="h3">Supplier Notification</Typography>:false} */}
+          
           </Box>
 
-          {/* ICONS */}
+          
 
           <Box display="flex">
             {mode !== "A" ? (
@@ -1566,10 +1563,80 @@ const EditemployeePayroll = () => {
               </IconButton>
             </Tooltip>
           </Box>
-        </Box>
+        </Box> */}
+ <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+          <Box display="flex" justifyContent="space-between" p={mode == "A" ? 2 : 1}>
+          <Box
+            display="flex"
+            // backgroundColor={colors.primary[400]}
+            borderRadius="3px"
+            alignItems={"center"}
+          >
+            {broken && !rtl && (
+              <IconButton
 
+                onClick={() => toggleSidebar()}
+              >
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
+              <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{ color: '#0000D1' }} />}>
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}>Employee</Typography>
+                {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Allowances</Typography>) : false}
+                {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Deductions</Typography>) : false}
+                {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Leave</Typography>) : false}
+                {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Salary Advance</Typography>) : false}
+                {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Attendance</Typography>) : false}
+                {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Payroll Attendance</Typography>) : false}
+
+              </Breadcrumbs>
+            </Box>
+          
+          </Box>
+          <Box display="flex">
+            {mode !== "A" ? (
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Explore</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  value={show}
+                  label="Explore"
+                  onChange={screenChange}
+                >
+                  <MenuItem value={0}>Employee</MenuItem>
+
+                  <MenuItem value={1}>Allowances</MenuItem>
+                  <MenuItem value={5}>Deductions</MenuItem>
+                  <MenuItem value={2}>Leave</MenuItem>
+                  <MenuItem value={6}>OT</MenuItem>
+                  <MenuItem value={7}>Salary Advance</MenuItem>
+                  <MenuItem value={3}>Attendance</MenuItem>
+                  <MenuItem value={4}>Payroll Attendance</MenuItem>
+
+                </Select>
+
+              </FormControl>
+            ) : (
+              false
+            )}
+
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box> 
+        </Paper>
         {show == "0" ? (
-          <Box m="20px">
+           <Paper elevation={3} sx={{ margin: "10px" }}>
             {/* { <Header title="Products" subtitle="" /> } */}
 
             <Formik
@@ -1582,11 +1649,13 @@ const EditemployeePayroll = () => {
                 <form>
                   <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
                       "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 4",
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
@@ -1594,7 +1663,7 @@ const EditemployeePayroll = () => {
                       <Stack
                         sx={{
                           //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           alignContent: "center",
                           justifyContent: "center",
                           alignItems: "center",
@@ -1605,23 +1674,23 @@ const EditemployeePayroll = () => {
                         <Avatar
                           variant="rounded"
                           src={userimg}
-                          sx={{ width: "200px", height: "150px" }}
+                          sx={{ width: "200px", height: "120px" }}
                         />
                       </Stack>
                     )}
 
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         id="outlined-basic"
                         label="ID"
-                        variant="filled"
+                        variant="standard"
                         value={selectLookupData.lookupRecordid}
                         focused
                         sx={{ display: "none" }}
                       />
                       <FormControl
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
@@ -1630,7 +1699,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label="Department"
-                          variant="filled"
+                          variant="standard"
                           value={selectLookupData.lookupCode}
                           focused
                           required
@@ -1649,7 +1718,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label=""
-                          variant="filled"
+                          variant="standard"
                           value={selectLookupData.lookupDesc}
                           fullWidth
                           focused
@@ -1659,7 +1728,7 @@ const EditemployeePayroll = () => {
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="Code"
                         value={values.Code}
@@ -1670,7 +1739,7 @@ const EditemployeePayroll = () => {
                         // error={!!touched.Code && !!errors.Code}
                         // helperText={touched.Code && errors.Code}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -1683,7 +1752,7 @@ const EditemployeePayroll = () => {
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="Name"
                         value={values.Name}
@@ -1694,7 +1763,7 @@ const EditemployeePayroll = () => {
                         // error={!!touched.Name && !!errors.Name}
                         // helperText={touched.Name && errors.Name}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -1705,7 +1774,7 @@ const EditemployeePayroll = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="Password"
                         label="Password"
                         value={values.Password}
@@ -1716,7 +1785,7 @@ const EditemployeePayroll = () => {
                         // error={!!touched.Password && !!errors.Password}
                         // helperText={touched.Password && errors.Password}
                         sx={{
-                          gridColumn: "span 2",
+                         // gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -1726,7 +1795,7 @@ const EditemployeePayroll = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="Job"
                         value={values.Job}
@@ -1737,7 +1806,7 @@ const EditemployeePayroll = () => {
                         error={!!touched.Job && !!errors.Job}
                         helperText={touched.Job && errors.Job}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -1748,7 +1817,7 @@ const EditemployeePayroll = () => {
                       />
                       {/* <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="Comments"
                         value={values.Comm}
@@ -1783,12 +1852,12 @@ const EditemployeePayroll = () => {
                       </FormControl>
                     </FormControl>
 
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{ gap: formGap }}>
                       {isNonMobile && (
                         <Stack
                           sx={{
                             //    width: {sm:'100%',md:'100%',lg:'100%'},
-                            gridColumn: "span 2",
+                            //gridColumn: "span 2",
                             alignContent: "center",
                             justifyContent: "center",
                             alignItems: "center",
@@ -1799,14 +1868,14 @@ const EditemployeePayroll = () => {
                           <Avatar
                             variant="rounded"
                             src={userimg}
-                            sx={{ width: "200px", height: "150px" }}
+                            sx={{ width: "200px", height: "120px" }}
                           />
                         </Stack>
                       )}
 
                       {/* <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="Manager"
                         value={values.Mgr}
@@ -1836,7 +1905,7 @@ const EditemployeePayroll = () => {
                        <TextField
                         id="outlined-basic"
                         label="ID"
-                        variant="filled"
+                        variant="standard"
                         value={designLookup.designlookupRecordid}
                         focused
                         sx={{ display: "none" }}
@@ -1845,7 +1914,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label="Designation"
-                          variant="filled"
+                          variant="standard"
                           value={designLookup.designlookupCode}
                           focused
                           required
@@ -1864,7 +1933,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label=""
-                          variant="filled"
+                          variant="standard"
                           value={designLookup.designlookupDesc}
                           fullWidth
                           focused
@@ -1873,7 +1942,7 @@ const EditemployeePayroll = () => {
                       </FormControl> */}
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="Comments"
                         value={values.Comm}
@@ -1884,7 +1953,7 @@ const EditemployeePayroll = () => {
                         error={!!touched.Comm && !!errors.Comm}
                         helperText={touched.Comm && errors.Comm}
                         sx={{
-                          gridColumn: "span 2",
+                         // gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -1896,7 +1965,7 @@ const EditemployeePayroll = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="number"
                         label="Salary"
                         value={values.Sal}
@@ -1906,7 +1975,7 @@ const EditemployeePayroll = () => {
                         name="Sal"
                         error={!!touched.Sal && !!errors.Sal}
                         helperText={touched.Sal && errors.Sal}
-                        sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                        //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                         focused
                         onWheel={(e) => e.target.blur()}
                         onInput={(e) => {
@@ -1923,7 +1992,7 @@ const EditemployeePayroll = () => {
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="number"
                         label="Sort Order"
                         value={values.SortOrder}
@@ -1933,7 +2002,7 @@ const EditemployeePayroll = () => {
                         name="SortOrder"
                         error={!!touched.SortOrder && !!errors.SortOrder}
                         helperText={touched.SortOrder && errors.SortOrder}
-                        sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                        ///sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                         focused
                         onWheel={(e) => e.target.blur()}
                         onInput={(e) => {
@@ -1949,7 +2018,7 @@ const EditemployeePayroll = () => {
                       />
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="20px" gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
                     {YearFlag == "true" ? (
                       <LoadingButton
                         color="secondary"
@@ -2029,14 +2098,14 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
 
 
         {show == "1" ? (
-          <Box m="10px">
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={AllDedInitialValues}
               enableReinitialize={true}
@@ -2065,36 +2134,39 @@ const EditemployeePayroll = () => {
                 >
                   <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
                       "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 4",
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{  gap:formGap}}>
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="code"
                         name="code"
                         value={values.code}
                         label="Code"
                         focused
-                        inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
-                      />
-
+                        //inputProps={{ readOnly: true }}
+                         sx={{ 
+                        
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}
+                      /> 
+                     
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="description"
                         name="description"
@@ -2102,17 +2174,18 @@ const EditemployeePayroll = () => {
                         label="Name"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                         sx={{ 
+                        
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       />
                     </FormControl>
-                    <Stack
+                    {/* <Stack
                       sx={{
-                        gridColumn: "span 2",
+                        //gridColumn: "span 2",
                         alignContent: "center",
                         justifyContent: "center",
                         alignItems: "center",
@@ -2122,40 +2195,71 @@ const EditemployeePayroll = () => {
                     >
                       <img
                         src={values.imageurl}
-                        style={{ width: "200px", height: "150px" }}
+                        style={{ width: "200px", height: "120px" }}
                       />
-                    </Stack>
-                    <Box sx={{ gridColumn: "span 2" }}>
-                      <Box
-                        height="350px"
+                    </Stack> */}
+                    <Stack
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+                    <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
                         sx={{
                           "& .MuiDataGrid-root": {
-                            // border: "none",
+                            border: "none",
                           },
                           "& .MuiDataGrid-cell": {
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .name-column--cell": {
                             color: colors.greenAccent[300],
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                           },
                           "& .MuiDataGrid-footerContainer": {
-                            // borderTop: "none",
+                            borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
                         }}
                       >
                         <DataGrid
-                          // checkboxSelection
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                           rows={explorelistViewData}
                           columns={columns}
                           // rows={[]}
@@ -2163,6 +2267,8 @@ const EditemployeePayroll = () => {
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
                           pageSize={pageSize}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
                           }
@@ -2173,6 +2279,11 @@ const EditemployeePayroll = () => {
                               field: params.field,
                             });
                           }}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                        }
                           rowsPerPageOptions={[5, 10, 20]}
                           pagination
                           components={{
@@ -2190,20 +2301,20 @@ const EditemployeePayroll = () => {
                           }}
                         />
                       </Box>
-                    </Box>
+                    
 
-                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         id="outlined-basic"
                         label="ID"
-                        variant="filled"
+                        variant="standard"
                         value={ADLookupData.adRecordID}
                         focused
                         sx={{ display: "none" }}
                       />
                       <FormControl
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
@@ -2212,7 +2323,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label="Allowances"
-                          variant="filled"
+                          variant="standard"
                           value={ADLookupData.adDesc}
                           focused
                           required
@@ -2231,7 +2342,7 @@ const EditemployeePayroll = () => {
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="salaryCategory"
                         name="salaryCategory"
@@ -2239,16 +2350,17 @@ const EditemployeePayroll = () => {
                         label="Salary Category"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                         sx={{ 
+                        
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="type"
                         name="type"
@@ -2256,23 +2368,24 @@ const EditemployeePayroll = () => {
                         label="Type"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                         sx={{ 
+                        
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}
                       />
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="value"
                         name="value"
                         value={values.value}
                         label="Value"
-                        sx={{ background: "#fff6c3" }}
+                        //sx={{ background: "#fff6c3" }}
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
@@ -2292,7 +2405,7 @@ const EditemployeePayroll = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="effectivevalue"
                         name="effectivevalue"
@@ -2300,7 +2413,7 @@ const EditemployeePayroll = () => {
                         label="Effective Value"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ background: "#fff6c3" }}
+                        //sx={{ background: "#fff6c3" }}
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
@@ -2318,12 +2431,12 @@ const EditemployeePayroll = () => {
                         type="number"
                         id="sortorder"
                         label="Sort Order"
-                        variant="filled"
+                        variant="standard"
                         focused
                         value={values.sortorder}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        sx={{ background: "#fff6c3" }}
+                        //sx={{ background: "#fff6c3" }}
                         onWheel={(e) => e.target.blur()}
                         InputProps={{
                           inputProps: {
@@ -2335,7 +2448,7 @@ const EditemployeePayroll = () => {
 
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="30px" gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1}style={{ marginTop: "-45px" }} gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -2411,12 +2524,12 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
         {show == "5" ? (
-          <Box m="10px">
+           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={AllDedInitialValues}
               enableReinitialize={true}
@@ -2445,18 +2558,20 @@ const EditemployeePayroll = () => {
                 >
                   <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
                       "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 4",
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{gap: formGap }}>
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="code"
                         name="code"
@@ -2464,17 +2579,12 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                       
                       />
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="description"
                         name="description"
@@ -2482,66 +2592,80 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                        
                       />
                     </FormControl>
                     <Stack
-                      sx={{
-                        gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <img
-                        src={values.imageurl}
-                        style={{ width: "200px", height: "150px" }}
-                      />
-                    </Stack>
-                    <Box sx={{ gridColumn: "span 2" }}>
-                      <Box
-                        height="350px"
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+                  
+                    <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
                         sx={{
                           "& .MuiDataGrid-root": {
-                            // border: "none",
+                            border: "none",
                           },
                           "& .MuiDataGrid-cell": {
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .name-column--cell": {
                             color: colors.greenAccent[300],
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                           },
                           "& .MuiDataGrid-footerContainer": {
-                            // borderTop: "none",
+                            borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
                         }}
                       >
                         <DataGrid
-                          // checkboxSelection
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                           rows={explorelistViewData}
                           columns={columns}
                           // rows={[]}
                           // columns={[]}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                           pageSize={pageSize}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
@@ -2562,6 +2686,11 @@ const EditemployeePayroll = () => {
                             setRowCount(stateParams.pagination.rowCount)
                           }
                           loading={exploreLoading}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                        }
                           componentsProps={{
                             toolbar: {
                               showQuickFilter: true,
@@ -2570,20 +2699,20 @@ const EditemployeePayroll = () => {
                           }}
                         />
                       </Box>
-                    </Box>
+                    
 
-                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    <FormControl sx={{gap:formGap }}>
                       <TextField
                         id="outlined-basic"
                         label="ID"
-                        variant="filled"
+                        variant="standard"
                         value={ADLookupData.adRecordID}
                         focused
                         sx={{ display: "none" }}
                       />
                       <FormControl
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
@@ -2592,7 +2721,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label="Deductions"
-                          variant="filled"
+                          variant="standard"
                           value={ADLookupData.adDesc}
                           focused
                           required
@@ -2611,7 +2740,7 @@ const EditemployeePayroll = () => {
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="salaryCategory"
                         name="salaryCategory"
@@ -2619,16 +2748,11 @@ const EditemployeePayroll = () => {
                         label="Salary Category"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                       
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="type"
                         name="type"
@@ -2636,29 +2760,19 @@ const EditemployeePayroll = () => {
                         label="Type"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                        
+                       
                       />
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="value"
                         name="value"
                         value={values.value}
                         label="Value"
-                        sx={{
-                          gridColumn: "span 2",
-                          backgroundColor: "#fff6c3", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#fff6c3", // Ensure the filled variant also has a white background
-                          }
-                        }}
+                      
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
@@ -2672,7 +2786,7 @@ const EditemployeePayroll = () => {
                       />
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="effectivevalue"
                         name="effectivevalue"
@@ -2680,7 +2794,7 @@ const EditemployeePayroll = () => {
                         label="Effective Value"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ background: "#fff6c3" }}
+                        //sx={{ background: "#fff6c3" }}
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
@@ -2692,12 +2806,12 @@ const EditemployeePayroll = () => {
                         type="number"
                         id="sortorder"
                         label="Sort Order"
-                        variant="filled"
+                        variant="standard"
                         focused
                         value={values.sortorder}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        sx={{ background: "#fff6c3" }}
+                        //sx={{ background: "#fff6c3" }}
                         onWheel={(e) => e.target.blur()}
                         InputProps={{
                           inputProps: {
@@ -2709,7 +2823,7 @@ const EditemployeePayroll = () => {
 
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="30px" gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2} style={{ marginTop: "-45px" }}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -2785,14 +2899,14 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
 
 
         {show == "2" ? (
-          <Box m="10px">
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={leaveInitialValue}
               enableReinitialize={true}
@@ -2819,20 +2933,22 @@ const EditemployeePayroll = () => {
                     resetForm();
                   }}
                 >
-                  <Box
+                 <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
                       "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 4",
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{ gap:formGap }}>
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="code"
                         name="code"
@@ -2840,18 +2956,19 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
+                        sx={{ 
+                        
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                          }
                         }}
 
                       />
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="description"
                         name="description"
@@ -2859,64 +2976,84 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
+                        sx={{ 
+                        
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                          }
                         }}
                       />
                     </FormControl>
                     <Stack
-                      sx={{
-                        gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <img
-                        src={userimg}
-                        style={{ width: "200px", height: "150px" }}
-                      />
-                    </Stack>
-                    <Box sx={{ gridColumn: "span 2" }}>
-                      <Box
-                        height="350px"
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+                    
+                    <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
                         sx={{
                           "& .MuiDataGrid-root": {
-                            // border: "none",
+                            border: "none",
                           },
                           "& .MuiDataGrid-cell": {
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .name-column--cell": {
                             color: colors.greenAccent[300],
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                           },
                           "& .MuiDataGrid-footerContainer": {
-                            // borderTop: "none",
+                            borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
                         }}
                       >
                         <DataGrid
-                          // checkboxSelection
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                           rows={explorelistViewData}
                           columns={columns}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                           pageSize={pageSize}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
@@ -2936,6 +3073,11 @@ const EditemployeePayroll = () => {
                           onStateChange={(stateParams) =>
                             setRowCount(stateParams.pagination.rowCount)
                           }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                        }
                           loading={exploreLoading}
                           componentsProps={{
                             toolbar: {
@@ -2945,12 +3087,12 @@ const EditemployeePayroll = () => {
                           }}
                         />
                       </Box>
-                    </Box>
-                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    
+                    <FormControl sx={{  gap:formGap }}>
 
                       {/* <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         label="LeaveCategory"
                         value={values.LeaveCategory}
@@ -2964,7 +3106,7 @@ const EditemployeePayroll = () => {
                       /> */}
                       <FormControl
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           display: "flex",
                           flexDirection: "row",
                           alignItems: "center",
@@ -2973,7 +3115,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label="LeaveType"
-                          variant="filled"
+                          variant="standard"
                           value={selectLETLookupData.letlookupRecordid}
                           focused
                           sx={{ display: "none" }}
@@ -2981,7 +3123,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label="Leave Type"
-                          variant="filled"
+                          variant="standard"
                           value={selectLETLookupData.letlookupCode}
                           focused
                           required
@@ -3000,7 +3142,7 @@ const EditemployeePayroll = () => {
                         <TextField
                           id="outlined-basic"
                           label=""
-                          variant="filled"
+                          variant="standard"
                           value={selectLETLookupData.letlookupDesc}
                           fullWidth
                           focused
@@ -3009,20 +3151,14 @@ const EditemployeePayroll = () => {
                       </FormControl>
                       <FormControl
                         focused
-                        variant="filled"
-                        sx={{
-                          gridColumn: "span 2",
-                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#f5f5f5 ', // For the filled variant
-                          },
-                        }}
+                        variant="standard"
+                        
                       >
-                        <InputLabel variant="filled" id="LeavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
+                        <InputLabel variant="standard" id="LeavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
                         <Select
                           labelId="demo-simple-select-filled-label"
                           fullWidth
-                          variant="filled"
+                          variant="standard"
                           type="text"
                           // label="LeaveCategory"
                           value={values.LeavePart}
@@ -3032,12 +3168,7 @@ const EditemployeePayroll = () => {
                           name="LeavePart"
                           required
                           focused
-                          sx={{
-                            backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                            '& .MuiFilledInput-root': {
-                              backgroundColor: '#f5f5f5 ', // For the filled variant
-                            },
-                          }}
+                         
                         >
                           <MenuItem value="FH">First Half</MenuItem>
                           <MenuItem value="SH">Second Half</MenuItem>
@@ -3051,20 +3182,13 @@ const EditemployeePayroll = () => {
                         id="FromDate"
                         label="From Date"
                         inputFormat="YYYY-MM-DD"
-                        variant="filled"
+                        variant="standard"
                         focused
                         value={values.FromDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         required
-                        sx={{
-                          gridColumn: "span 2",
-                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#f5f5f5 ', // For the filled variant
-                          },
-                        }}
-
+                       
                       />
                       <TextField
                         name="ToDate"
@@ -3072,32 +3196,20 @@ const EditemployeePayroll = () => {
                         id="ToDate"
                         label="To Date"
                         inputFormat="YYYY-MM-DD"
-                        variant="filled"
+                        variant="standard"
                         focused
                         value={values.ToDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         required
-                        sx={{
-                          gridColumn: "span 2",
-                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#f5f5f5 ', // For the filled variant
-                          },
-                        }}
+                       
 
                       />
 
                       <FormControl
                         focused
-                        variant="filled"
-                        sx={{
-                          gridColumn: "span 2",
-                          backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#f5f5f5 ', // For the filled variant
-                          },
-                        }}
+                        variant="standard"
+                       
 
                       >
                         <InputLabel id="Status">Status</InputLabel>
@@ -3118,7 +3230,7 @@ const EditemployeePayroll = () => {
                       </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="30px" gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1}style={{ marginTop: "-45px" }} gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -3194,12 +3306,12 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
         {show == "6" ? (
-          <Box m="10px">
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={otInitialValue}
               enableReinitialize={true}
@@ -3226,20 +3338,22 @@ const EditemployeePayroll = () => {
                     resetForm();
                   }}
                 >
-                  <Box
+                 <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
                       "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 4",
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="code"
                         name="code"
@@ -3247,17 +3361,12 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                       
                       />
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="description"
                         name="description"
@@ -3265,65 +3374,78 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                       
                       />
                     </FormControl>
                     <Stack
-                      sx={{
-                        gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-
-                      }}
-                    >
-                      <img
-                        src={userimg}
-                        style={{ width: "200px", height: "150px" }}
-                      />
-                    </Stack>
-                    <Box sx={{ gridColumn: "span 2" }}>
-                      <Box
-                        height="460px"
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+                    
+                    <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
                         sx={{
                           "& .MuiDataGrid-root": {
-                            // border: "none",
+                            border: "none",
                           },
                           "& .MuiDataGrid-cell": {
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .name-column--cell": {
                             color: colors.greenAccent[300],
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                           },
                           "& .MuiDataGrid-footerContainer": {
-                            // borderTop: "none",
+                            borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
                         }}
                       >
                         <DataGrid
-                          // checkboxSelection
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                           rows={explorelistViewData}
                           columns={columns}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                           pageSize={pageSize}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
@@ -3350,14 +3472,19 @@ const EditemployeePayroll = () => {
                               quickFilterProps: { debounceMs: 500 },
                             },
                           }}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                        }
                         />
                       </Box>
-                    </Box>
-                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                   
+                    <FormControl sx={{gap: formGap }}>
                       <FormControl
                         focused
-                        variant="filled"
-                        sx={{ gridColumn: "span 2", gap: "30px" }}
+                        variant="standard"
+                        sx={{ gap: formGap }}
                       >
                         <TextField
                           name="Date"
@@ -3365,14 +3492,14 @@ const EditemployeePayroll = () => {
                           id="Date"
                           label=" Date"
                           inputFormat="YYYY-MM-DD"
-                          variant="filled"
+                          variant="standard"
                           focused
                           value={values.Date}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           required
 
-                          sx={{ gridColumn: "span 2" }}
+                          //sx={{ gridColumn: "span 2" }}
                         />
 
                         <TextField
@@ -3380,7 +3507,7 @@ const EditemployeePayroll = () => {
                           type="number"
                           id="NumberOfHours"
                           label="No. of Hours"
-                          variant="filled"
+                          variant="standard"
                           focused
                           value={values.NumberOfHours}
                           onBlur={handleBlur}
@@ -3388,7 +3515,7 @@ const EditemployeePayroll = () => {
 
                           onWheel={(e) => e.target.blur()}
                           required
-                          sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                          //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
@@ -3399,7 +3526,7 @@ const EditemployeePayroll = () => {
                         />
                         <TextField
                           fullWidth
-                          variant="filled"
+                          variant="standard"
                           type="text"
                           label="Comments"
                           value={values.comments}
@@ -3409,20 +3536,14 @@ const EditemployeePayroll = () => {
                           name="comments"
                           error={!!touched.comments && !!errors.comments}
                           helperText={touched.comments && errors.comments}
-                          sx={{
-                            gridColumn: "span 2",
-                            backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                            '& .MuiFilledInput-root': {
-                              backgroundColor: '#f5f5f5 ', // For the filled variant
-                            },
-                          }} focused
+                           focused
 
                         />
 
                         <FormControl
                           focused
-                          variant="filled"
-                          sx={{ gridColumn: "span 2" }}
+                          variant="standard"
+                          //sx={{ gridColumn: "span 2" }}
                         >
                           <InputLabel id="paymentmethods">Payment Methods</InputLabel>
                           <Select
@@ -3434,13 +3555,7 @@ const EditemployeePayroll = () => {
                             onChange={handleChange}
                             error={!!touched.paymentmethods && !!errors.paymentmethods}
                             helperText={touched.paymentmethods && errors.paymentmethods}
-                            sx={{
-                              gridColumn: "span 2",
-                              backgroundColor: "#ffffff",
-                              "& .MuiFilledInput-root": {
-                                backgroundColor: "#ffffff",
-                              }
-                            }}
+                            
                           >
                             <MenuItem value="AS">Assitis</MenuItem>
                             <MenuItem value="TH">Time and a Half</MenuItem>
@@ -3452,8 +3567,8 @@ const EditemployeePayroll = () => {
                         </FormControl>
                         <FormControl
                           focused
-                          variant="filled"
-                          sx={{ gridColumn: "span 2" }}
+                          variant="standard"
+                          //sx={{ gridColumn: "span 2" }}
                         >
                           <InputLabel id="OtType">OT Type</InputLabel>
                           <Select
@@ -3465,13 +3580,7 @@ const EditemployeePayroll = () => {
                             onChange={handleChange}
                             error={!!touched.OtType && !!errors.OtType}
                             helperText={touched.OtType && errors.OtType}
-                            sx={{
-                              gridColumn: "span 2",
-                              backgroundColor: "#ffffff",
-                              "& .MuiFilledInput-root": {
-                                backgroundColor: "#ffffff",
-                              }
-                            }}
+                            
                           >
                             <MenuItem value="FS">Flexible Scheduling</MenuItem>
                             <MenuItem value="SS">Shift Swaps</MenuItem>
@@ -3480,8 +3589,8 @@ const EditemployeePayroll = () => {
 
                         <FormControl
                           focused
-                          variant="filled"
-                          sx={{ gridColumn: "span 2" }}
+                          variant="standard"
+                          //sx={{ gridColumn: "span 2" }}
                         >
 
                           <InputLabel id="Status">Status</InputLabel>
@@ -3494,13 +3603,13 @@ const EditemployeePayroll = () => {
                             onChange={handleChange}
                             error={!!touched.Status && !!errors.Status}
                             helperText={touched.Status && errors.Status}
-                            sx={{
-                              gridColumn: "span 2",
-                              backgroundColor: "#ffffff",
-                              "& .MuiFilledInput-root": {
-                                backgroundColor: "#ffffff",
-                              }
-                            }}
+                            // sx={{
+                            //   gridColumn: "span 2",
+                            //   backgroundColor: "#ffffff",
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "#ffffff",
+                            //   }
+                            // }}
                           >
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
@@ -3511,7 +3620,7 @@ const EditemployeePayroll = () => {
                       </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="20px" gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2} style={{ marginTop: "-45px" }}>
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -3562,12 +3671,12 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
         {show == "7" ? (
-          <Box m="10px">
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={salAdinitialValue}
               enableReinitialize={true}
@@ -3596,18 +3705,20 @@ const EditemployeePayroll = () => {
                 >
                   <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
                       "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 4",
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="code"
                         name="code"
@@ -3615,17 +3726,12 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                       
                       />
 
                       <TextField
                         fullWidth
-                        variant="filled"
+                        variant="standard"
                         type="text"
                         id="description"
                         name="description"
@@ -3633,65 +3739,78 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: '#e0e0e0', // Change to your desired background color
-                          '& .MuiFilledInput-root': {
-                            backgroundColor: '#e0e0e0', // For the filled variant
-                          },
-                        }}
+                        
                       />
                     </FormControl>
                     <Stack
-                      sx={{
-                        gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-
-                      }}
-                    >
-                      <img
-                        src={userimg}
-                        style={{ width: "200px", height: "150px" }}
-                      />
-                    </Stack>
-                    <Box sx={{ gridColumn: "span 2" }}>
-                      <Box
-                        height="390px"
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+                  
+                    <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
                         sx={{
                           "& .MuiDataGrid-root": {
-                            // border: "none",
+                            border: "none",
                           },
                           "& .MuiDataGrid-cell": {
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .name-column--cell": {
                             color: colors.greenAccent[300],
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                           },
                           "& .MuiDataGrid-footerContainer": {
-                            // borderTop: "none",
+                            borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
                         }}
                       >
                         <DataGrid
-                          // checkboxSelection
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                           rows={explorelistViewData}
                           columns={columns}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                           pageSize={pageSize}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
@@ -3712,6 +3831,11 @@ const EditemployeePayroll = () => {
                             setRowCount(stateParams.pagination.rowCount)
                           }
                           loading={exploreLoading}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                        }
                           componentsProps={{
                             toolbar: {
                               showQuickFilter: true,
@@ -3720,19 +3844,19 @@ const EditemployeePayroll = () => {
                           }}
                         />
                       </Box>
-                    </Box>
-                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                    
+                    <FormControl sx={{gap: formGap }}>
                       <FormControl
                         focused
-                        variant="filled"
-                        sx={{ gridColumn: "span 2", gap: "30px" }}
+                        variant="standard"
+                        sx={{  gap: formGap}}
                       >
                         <TextField
                           name="date"
                           type="date"
                           id="date"
                           label="Date"
-                          variant="filled"
+                          variant="standard"
                           focused
                           value={values.date}
                           onBlur={handleBlur}
@@ -3748,7 +3872,7 @@ const EditemployeePayroll = () => {
                           type="text"
                           id="referenceifany"
                           label="Reference If Any"
-                          variant="filled"
+                          variant="standard"
                           focused
                           value={values.referenceifany}
                           onBlur={handleBlur}
@@ -3762,7 +3886,7 @@ const EditemployeePayroll = () => {
                           autoFocus
                         />
 
-                        <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                        <FormControl sx={{  display: "flex" }}>
                           <FormControl
                             sx={{
                               display: "flex",
@@ -3773,7 +3897,7 @@ const EditemployeePayroll = () => {
                             <TextField
                               id="outlined-basic"
                               label="ID"
-                              variant="filled"
+                              variant="standard"
                               value={selectOHLookupData.OHRecordID}
                               focused
                               sx={{ display: "none" }}
@@ -3781,7 +3905,7 @@ const EditemployeePayroll = () => {
                             <TextField
                               id="outlined-basic"
                               label="Purpose"
-                              variant="filled"
+                              variant="standard"
                               value={selectOHLookupData.OHlookupCode}
                               focused
                               // required
@@ -3798,7 +3922,7 @@ const EditemployeePayroll = () => {
                             <TextField
                               id="outlined-basic"
                               label=""
-                              variant="filled"
+                              variant="standard"
                               value={selectOHLookupData.OHlookupDesc}
                               fullWidth
                               inputProps={{ tabIndex: "-1" }}
@@ -3812,7 +3936,7 @@ const EditemployeePayroll = () => {
                           type="text"
                           id="amount"
                           label="Amount"
-                          variant="filled"
+                          variant="standard"
                           focused
                           value={values.amount}
                           onBlur={handleBlur}
@@ -3826,7 +3950,7 @@ const EditemployeePayroll = () => {
                           type="text"
                           id="comments"
                           label="comments"
-                          variant="filled"
+                          variant="standard"
                           focused
                           value={values.comments}
                           onBlur={handleBlur}
@@ -3840,7 +3964,7 @@ const EditemployeePayroll = () => {
                    type="number"
                    id="NumberOfHours"
                    label="No. of Hours"
-                   variant="filled"
+                   variant="standard"
                    focused
                    value={values.NumberOfHours}
                    onBlur={handleBlur}
@@ -3859,7 +3983,7 @@ const EditemployeePayroll = () => {
                  />
                    <TextField
                      fullWidth
-                     variant="filled"
+                     variant="standard"
                      type="text"
                      label="Comments"
                      value={values.comments}
@@ -3881,7 +4005,7 @@ const EditemployeePayroll = () => {
 
                         {/* <FormControl
                  focused
-                 variant="filled"
+                 variant="standard"
                  sx={{ gridColumn: "span 2" }}
                >
                  <InputLabel id="paymentmethods">Payment Methods</InputLabel>
@@ -3912,7 +4036,7 @@ const EditemployeePayroll = () => {
                </FormControl> */}
                         {/* <FormControl
                  focused
-                 variant="filled"
+                 variant="standard"
                  sx={{ gridColumn: "span 2" }}
                >
                  <InputLabel id="OtType">OT Type</InputLabel>
@@ -3940,7 +4064,7 @@ const EditemployeePayroll = () => {
 
                         {/* <FormControl
                  focused
-                 variant="filled"
+                 variant="standard"
                  sx={{ gridColumn: "span 2" }}
                >
                 
@@ -3971,7 +4095,7 @@ const EditemployeePayroll = () => {
                       </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="20px" gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2} style={{ marginTop: "-45px" }}>
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -4035,12 +4159,12 @@ const EditemployeePayroll = () => {
               //filterValue={parentID}
               />
             </Popup>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
         {show == "3" ? (
-          <Box m="10px">
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={AttInitialvalues}
               enableReinitialize={true}
@@ -4069,25 +4193,21 @@ const EditemployeePayroll = () => {
 
                 >
                   <Box
-                    // display="grid"
-                    // gap="30px"
-                    // gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                    // sx={{
-                    //   "& > div": {
-                    //     gridColumn: isNonMobile ? undefined : "span 4",
-                    //   },
-                    // }}
                     display="grid"
-                    gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                    gap="30px"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
-                      "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
                     }}
                   >
 
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="text"
                       id="code"
                       name="code"
@@ -4095,17 +4215,16 @@ const EditemployeePayroll = () => {
                       label="Code"
                       focused
                       inputProps={{ readOnly: true }}
-                      sx={{
-                        gridColumn: "span 2",
-                        backgroundColor: '#e0e0e0 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#e0e0e0 ', // For the filled variant
-                        },
-                      }}
+                      // sx={{
+                      //   backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                      //   '& .MuiFilledInput-root': {
+                      //     backgroundColor: '#f5f5f5 ', // For the filled variant
+                      //   },
+                      // }}
                     />
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="number"
                       label="Salary"
                       value={values.Sal}
@@ -4115,7 +4234,7 @@ const EditemployeePayroll = () => {
                       name="Sal"
                       error={!!touched.Sal && !!errors.Sal}
                       helperText={touched.Sal && errors.Sal}
-                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
@@ -4131,7 +4250,7 @@ const EditemployeePayroll = () => {
 
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="text"
                       id="description"
                       name="description"
@@ -4139,29 +4258,18 @@ const EditemployeePayroll = () => {
                       label="Description"
                       focused
                       inputProps={{ readOnly: true }}
-                      sx={{
-                        gridColumn: "span 2",
-                        backgroundColor: '#e0e0e0 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#e0e0e0 ', // For the filled variant
-                        },
-                      }}
+                      
                     />
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="month"
                       id="month"
                       name="month"
                       label="Month"
                       value={values.month}
                       focused
-                      sx={{
-                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#f5f5f5 ', // For the filled variant
-                        },
-                      }}
+                      
                       // sx={{ gridColumn: "span 2" }}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -4182,7 +4290,7 @@ const EditemployeePayroll = () => {
                     </TextField>
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="number"
                       id="year"
                       name="year"
@@ -4192,16 +4300,11 @@ const EditemployeePayroll = () => {
                       focused
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      sx={{
-                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#f5f5f5 ', // For the filled variant
-                        },
-                      }}
+                      
                     // sx={{ gridColumn: "span 2" }}
                     />
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                  <Box display="flex" justifyContent="end"padding={1} gap="20px">
                     <Button type="submit" variant="contained" color="secondary">
                       APPLY
                     </Button>
@@ -4217,43 +4320,59 @@ const EditemployeePayroll = () => {
 
 
                   <Box sx={{ gridColumn: "span 4" }}>
-                    <Box
-                      height="350px"
-                      sx={{
-                        "& .MuiDataGrid-root": {
-                          // border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          // borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          // borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          // borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                      }}
-                    >
-
-                      <DataGrid
-                        // checkboxSelection
+                  <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                         // rows={explorelistViewData}
                         // columns={columns}
                         rows={AttendanceData}
                         columns={AttColumn}
                         disableSelectionOnClick
                         getRowId={(row) => row.SLNO}
+                        rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) =>
                           setPageSize(newPageSize)
@@ -4273,6 +4392,11 @@ const EditemployeePayroll = () => {
                         onStateChange={(stateParams) =>
                           setRowCount(stateParams.pagination.rowCount)
                         }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                      }
                         loading={exploreLoading}
                         componentsProps={{
                           toolbar: {
@@ -4289,13 +4413,13 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}
 
         {show == "4" ? (
-          <Box m="10px">
+           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={PAttInitialvalues}
               enableReinitialize={true}
@@ -4322,18 +4446,22 @@ const EditemployeePayroll = () => {
                     dispatch(resetTrackingData());
                   }}
                 >
-                  <Box
+                 <Box
                     display="grid"
-                    gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                    gap="30px"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
-                      "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
                     }}
                   >
 
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="text"
                       id="code"
                       name="code"
@@ -4342,18 +4470,12 @@ const EditemployeePayroll = () => {
                       focused
                       inputProps={{ readOnly: true }}
                       // sx={{ gridColumn: "span 2" }}
-                      sx={{
-                        gridColumn: "span 2",
-                        backgroundColor: '#e0e0e0 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#e0e0e0 ', // For the filled variant
-                        },
-                      }}
+                     
                     />
 
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="text"
                       id="description"
                       name="description"
@@ -4362,31 +4484,18 @@ const EditemployeePayroll = () => {
                       focused
                       inputProps={{ readOnly: true }}
                       // sx={{ gridColumn: "span 2" }}
-                      sx={{
-                        gridColumn: "span 2",
-                        backgroundColor: '#e0e0e0 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#e0e0e0 ', // For the filled variant
-                        },
-                      }}
+                      
                     />
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="month"
                       id="month"
                       name="month"
                       label="Month"
                       value={values.month}
                       focused
-                      // sx={{ gridColumn: "span 2" }}
-                      sx={{
-                        gridColumn: "span 2",
-                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#f5f5f5 ', // For the filled variant
-                        },
-                      }}
+                     
                       onChange={handleChange}
                       onBlur={handleBlur}
                       select
@@ -4406,7 +4515,7 @@ const EditemployeePayroll = () => {
                     </TextField>
                     <TextField
                       fullWidth
-                      variant="filled"
+                      variant="standard"
                       type="text"
                       id="year"
                       name="year"
@@ -4416,16 +4525,10 @@ const EditemployeePayroll = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       // sx={{ gridColumn: "span 2" }}
-                      sx={{
-                        gridColumn: "span 2",
-                        backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                        '& .MuiFilledInput-root': {
-                          backgroundColor: '#f5f5f5 ', // For the filled variant
-                        },
-                      }}
+                     
                     />
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                  <Box display="flex" justifyContent="end" padding={1} gap="20px">
                     <Button type="submit" variant="contained" color="secondary">
                       APPLY
                     </Button>
@@ -4439,42 +4542,59 @@ const EditemployeePayroll = () => {
 
 
                   <Box m="5px">
-                    <Box
-                      m="5px 0 0 0"
-                      height="400px"
-                      sx={{
-                        "& .MuiDataGrid-root": {
-                          border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                      }}
-                    >
-                      <DataGrid
+                  <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                         rows={empAttendanceData}
                         columns={column}
                         disableSelectionOnClick
                         getRowId={(row) => row.SLNO}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
                         // loading={isLoading}
@@ -4488,6 +4608,11 @@ const EditemployeePayroll = () => {
                         components={{
                           Toolbar: empAttendanceTool,
                         }}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                      }
                         componentsProps={{
                           toolbar: {
                             showQuickFilter: true,
@@ -4501,7 +4626,7 @@ const EditemployeePayroll = () => {
                 </form>
               )}
             </Formik>
-          </Box>
+          </Paper>
         ) : (
           false
         )}

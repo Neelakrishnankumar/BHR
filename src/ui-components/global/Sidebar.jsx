@@ -24,6 +24,7 @@ import {
   Grid,
   Divider,
 } from "@mui/material";
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 //import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FactCheckRoundedIcon from '@mui/icons-material/FactCheckRounded';
@@ -103,6 +104,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import { menuHeight } from "./utils";
 const child = {
   data: [
     // {
@@ -822,7 +824,7 @@ const child = {
           url: "./TR243/Vendor",
           icon: (
             <Tooltip title="Vendor">
-              <SourceOutlinedIcon color="info" />
+              <PersonSearchIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -1300,7 +1302,7 @@ const Sidebars = () => {
                   <List component="div" disablePadding key={id}>
                     <ListItem
                       disableGutters
-                      style={{ padding: "0px" }}
+                      style={{ padding: "0px" ,height:menuHeight}}
                       key={id}
                     >
                       <Item
@@ -1325,11 +1327,12 @@ const Sidebars = () => {
                 <ListItem
                   disableGutters
                   key={id}
+                  style={{height:menuHeight}}
                   onClick={() => handleClicks(name)}
                 >
                   {!collapsed && (
                     <Tooltip title={Tooltipname}>
-                      <ListItemButton>
+                      <ListItemButton  style={{height:menuHeight}} >
                         <ListItemIcon>{icon}</ListItemIcon>
                         <ListItemText primary={name} />
 
@@ -1342,7 +1345,7 @@ const Sidebars = () => {
                     </Tooltip>
                   )}
                   {collapsed && (
-                    <ListItemButton>
+                    <ListItemButton style={{height:menuHeight}}>
                       <ListItemIcon>
                         {icon}{" "}
                         {menu[name] ? (
@@ -1379,6 +1382,7 @@ const Sidebars = () => {
         position: "sticky",
         display: "flex",
         height: "100vh",
+       // height: menuHeight,
         top: 0,
         bottom: 0,
         zIndex: 7,
