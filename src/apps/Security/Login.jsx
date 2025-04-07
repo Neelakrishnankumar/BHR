@@ -135,10 +135,10 @@ const Login = () => {
     //  var UserName = data.payload.apiResponse.Name
     
       sessionStorage.setItem("loginRecid", loginrecordID);
-      
       if(data.payload.Status=="Y")
       {  
        var company = data.payload.apiResponse.Company
+       var SubscriptionCode = data.payload.SubscriptionCode
        var year = data.payload.apiResponse.Year
        var YearFlag = data.payload.apiResponse.YearFlag
        var compID = data.payload.apiResponse.CompanyRecordid
@@ -150,6 +150,12 @@ const Login = () => {
        var Overhead=data.payload.apiResponse.Overhead
        var YearRecorid=data.payload.apiResponse.YearRecorid
        var Groupaccess=data.payload.apiResponse.Groupaccess
+       var UserName=data.payload.apiResponse.Name
+      
+       console.log(SubscriptionCode,"SubscriptionCode");
+
+       console.log("🚀 ~ file: Login.jsx:144 ~ Login ~ Groupaccess:", Groupaccess)
+       console.log("🚀 ~ file: Login.jsx:144 ~ Login ~ UserName:", UserName)
        var Modules=data.payload.apiResponse.Modules
 
        var UserName=data.payload.apiResponse.Name
@@ -161,6 +167,7 @@ const Login = () => {
        sessionStorage.setItem("Expiryin",Expiryin);
        sessionStorage.setItem("SubscriptionCode",SubscriptionCode);
        sessionStorage.setItem("UserName",UserName);
+       sessionStorage.setItem("SubscriptionCode",SubscriptionCode);      
        sessionStorage.setItem("company", company);
        sessionStorage.setItem("year", year);
        sessionStorage.setItem("YearFlag", YearFlag);

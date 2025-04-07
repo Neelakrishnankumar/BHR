@@ -25,6 +25,7 @@ import {
   Paper,
   Divider,
 } from "@mui/material";
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 //import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FactCheckRoundedIcon from '@mui/icons-material/FactCheckRounded';
@@ -104,6 +105,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import { menuHeight } from "./utils";
 const child = {
 
   data: [
@@ -824,7 +826,7 @@ const child = {
           url: "./TR243/Vendor",
           icon: (
             <Tooltip title="Vendor">
-              <SourceOutlinedIcon color="info" />
+              <PersonSearchIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -956,23 +958,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR124",
         },
-        // {
-        //   name: "Attendance Registry",
-        //   id: 457789,
-        //   url: "./TR124/Attendance Registry",
-        //   icon: (
-        //     <Tooltip title="Attendance Registry">
-        //       <LibraryBooksIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR124",
-        // },
+        {
+          name: "Attendance Registry",
+          id: 457789,
+          url: "./TR124/Attendance Registry",
+          icon: (
+            <Tooltip title="Attendance Registry">
+              <LibraryBooksIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR124",
+        },
         
       ],
     },
@@ -1070,6 +1072,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
+        // {
+        //   name: "Regularization",
+        //   id: 487,
+        //   url: "./TR219/Regularization",
+        //   icon: (
+        //     <Tooltip title="Regularization">
+        //         <CreditCardIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR219",
+        // },
      
      
       ],
@@ -1285,7 +1304,7 @@ const Sidebars = () => {
                   <List component="div" disablePadding key={id}>
                     <ListItem
                       disableGutters
-                      style={{ padding: "0px" }}
+                      style={{ padding: "0px" ,height:menuHeight}}
                       key={id}
                     >
                       <Item
@@ -1310,11 +1329,12 @@ const Sidebars = () => {
                 <ListItem
                   disableGutters
                   key={id}
+                  style={{height:menuHeight}}
                   onClick={() => handleClicks(name)}
                 >
                   {!collapsed && (
                     <Tooltip title={Tooltipname}>
-                      <ListItemButton>
+                      <ListItemButton  style={{height:menuHeight}} >
                         <ListItemIcon>{icon}</ListItemIcon>
                         <ListItemText primary={name} />
 
@@ -1327,7 +1347,7 @@ const Sidebars = () => {
                     </Tooltip>
                   )}
                   {collapsed && (
-                    <ListItemButton>
+                    <ListItemButton style={{height:menuHeight}}>
                       <ListItemIcon>
                         {icon}{" "}
                         {menu[name] ? (
@@ -1367,6 +1387,7 @@ console.log(Expiryin, "--in a sideBar Expiryin");
         position: "sticky",
         display: "flex",
         height: "100vh",
+       // height: menuHeight,
         top: 0,
         bottom: 0,
         zIndex: 7,
