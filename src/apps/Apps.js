@@ -118,6 +118,7 @@ import Editoperation from "./pages/HR/Editoperationstage";
 import EditActivities from "./pages/HR/Editactivities";
 import Edittask from "./pages/HR/EditTask";
 import EditmileWeightage from "./pages/HR/Editweightage";
+import Settings from "./Security/Settings";
 import Editvendor from "./pages/HR/Editvendor";
 
 
@@ -194,6 +195,9 @@ function App() {
                     element={<Editlocalinvoce />}
                   />
                   <Route path="/changepassword" element={<Changepassword />} />
+                {/* Settings */}
+                <Route path="/settings" element={<Settings />} />
+
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"
                     element={<Imageupload />}

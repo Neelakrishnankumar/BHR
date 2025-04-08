@@ -719,6 +719,33 @@ export const getFetchData = createAsyncThunk(
   }
 );
 
+
+/* settings Get*/
+export const getSettingsData = createAsyncThunk(
+  "Settings/get",
+  async ({ SubscriptionCode }) => {  // Destructure the SubscriptionCode here
+    const url = store.getState().globalurl.settingsgetUrl;
+console.log(url, "--find url");
+
+    const data = {
+      SubscriptionCode: SubscriptionCode,  // Now using SubscriptionCode passed via the thunk
+    };
+    
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 // export const Regularizationdata = createAsyncThunk(
 //   "regularization",
 //   async ({ accessID, get, recID, }) => {
@@ -758,6 +785,31 @@ export const postData = createAsyncThunk(
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+
+
+//Settings Post
+
+export const SettingspostData = createAsyncThunk(
+  "Settings/SubSettings Post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.settingsPostUrl;
+
+    // const data = {
+    //   UserName: UserName,
+    //   OldPassword: OldPassword,
+    //   NewPassword: NewPassword,
+    // };
+    console.log("get" + JSON.stringify(idata));
+    const response = await axios.post(url, idata, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
@@ -1299,6 +1351,28 @@ export const getApiSlice = createSlice({
         state.Data = {};
        toast.error('Something Went Wrong')
       })
+
+
+      
+      .addCase(getSettingsData.pending, (state, action) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.Data = {};
+        state.msg =  "Loading..."
+      })
+      .addCase(getSettingsData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.Data = action.payload.Data ? action.payload.Data : {} ;
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(getSettingsData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.Data = {};
+       toast.error('Something Went Wrong')
+      })
+
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;
@@ -1335,10 +1409,35 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
+ //settingspost
+
+ 
+      .addCase(SettingspostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(SettingspostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(SettingspostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+
+
       .addCase(explorePostData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
       })
+     
+
+
       .addCase(explorePostData.fulfilled, (state, action) => {
         state.Status = "success";
         state.postLoading = false;

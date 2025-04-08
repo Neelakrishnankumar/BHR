@@ -22,8 +22,10 @@ import {
   Chip,
   Stack,
   Grid,
+  Paper,
   Divider,
 } from "@mui/material";
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 //import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FactCheckRoundedIcon from '@mui/icons-material/FactCheckRounded';
@@ -103,7 +105,9 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import { menuHeight } from "./utils";
 const child = {
+
   data: [
     // {
     //   name: "Masters",
@@ -822,7 +826,7 @@ const child = {
           url: "./TR243/Vendor",
           icon: (
             <Tooltip title="Vendor">
-              <SourceOutlinedIcon color="info" />
+              <PersonSearchIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -1300,7 +1304,7 @@ const Sidebars = () => {
                   <List component="div" disablePadding key={id}>
                     <ListItem
                       disableGutters
-                      style={{ padding: "0px" }}
+                      style={{ padding: "0px" ,height:menuHeight}}
                       key={id}
                     >
                       <Item
@@ -1325,11 +1329,12 @@ const Sidebars = () => {
                 <ListItem
                   disableGutters
                   key={id}
+                  style={{height:menuHeight}}
                   onClick={() => handleClicks(name)}
                 >
                   {!collapsed && (
                     <Tooltip title={Tooltipname}>
-                      <ListItemButton>
+                      <ListItemButton  style={{height:menuHeight}} >
                         <ListItemIcon>{icon}</ListItemIcon>
                         <ListItemText primary={name} />
 
@@ -1342,7 +1347,7 @@ const Sidebars = () => {
                     </Tooltip>
                   )}
                   {collapsed && (
-                    <ListItemButton>
+                    <ListItemButton style={{height:menuHeight}}>
                       <ListItemIcon>
                         {icon}{" "}
                         {menu[name] ? (
@@ -1372,6 +1377,9 @@ const Sidebars = () => {
     );
   };
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
+  // const Expiryin = sessionStorage.getItem("Expiryin");
+  const Expiryin = Number(sessionStorage.getItem("Expiryin")) || 0; 
+console.log(Expiryin, "--in a sideBar Expiryin");
 
   return (
     <Box
@@ -1379,6 +1387,7 @@ const Sidebars = () => {
         position: "sticky",
         display: "flex",
         height: "100vh",
+       // height: menuHeight,
         top: 0,
         bottom: 0,
         zIndex: 7,
@@ -1480,6 +1489,16 @@ const Sidebars = () => {
             {handleMenu(child.data, Groupaccess)}
 
          
+          <Tooltip title="Settings">
+              <ListItemButton
+                onClick={() => {
+                  navigate("/Apps/settings");
+                }}
+              >
+
+                {!collapsed && <ListItemText primary="Settings" />}
+              </ListItemButton>
+            </Tooltip>
             <Tooltip title="Logout">
               <ListItemButton
                 onClick={() => {
@@ -1505,45 +1524,67 @@ const Sidebars = () => {
               </ListItemButton>
             </Tooltip> */}
             <Divider sx={{ mt: 1 }} variant="middle" />
+
+     
+
             <Grid mt={1} p={1} container direction={"column"} spacing={2}>
-              <Grid item>
-                <Chip
-                  color="primary"
-                  variant="outlined"
-                  // sx={{ width: "100%", background: "#ffffff" }}
-                  sx={{ width: "100%", background: "#f5f5f5 " }}
-                  size="medium"
-                  label="Text"
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  color="primary"
-                  size="medium"
-                  variant="outlined"
-                  sx={{ width: "100%", background: "#F0E8B8" }}
-                  label="Numeric"
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  color="primary"
-                  size="medium"
-                  variant="outlined"
-                  sx={{ width: "100%", background: "#F0CDB5" }}
-                  label="Calculation"
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  color="primary"
-                  size="medium"
-                  variant="outlined"
-                  sx={{ width: "100%", background: "#DFDDDD" }}
-                  label="Read Only"
-                />
-              </Grid>
-            </Grid>
+            {Expiryin < 10 ? (
+  <Paper elevation={3} sx={{ padding: 2, maxWidth: 400, margin: "auto" }}>
+    <Box
+      sx={{
+        border: "1px solid red",
+        backgroundColor: "#ffebee",
+        padding: 2,
+        textAlign: "center",
+      }}
+    >
+      <Typography variant="body1" color="error" fontWeight="bold">
+        ⚠ Warning: Your subscription will expire in  {Expiryin} days!
+      </Typography>
+    </Box>
+  </Paper>
+) : null}
+
+  <Grid item>
+    <Chip
+      color="primary"
+      variant="outlined"
+      sx={{ width: "100%", background: "#f5f5f5" }}
+      size="medium"
+      label="Text"
+    />
+  </Grid>
+  <Grid item>
+    <Chip
+      color="primary"
+      size="medium"
+      variant="outlined"
+      sx={{ width: "100%", background: "#F0E8B8" }}
+      label="Numeric"
+    />
+  </Grid>
+  <Grid item>
+    <Chip
+      color="primary"
+      size="medium"
+      variant="outlined"
+      sx={{ width: "100%", background: "#F0CDB5" }}
+      label="Calculation"
+    />
+  </Grid>
+  <Grid item>
+    <Chip
+      color="primary"
+      size="medium"
+      variant="outlined"
+      sx={{ width: "100%", background: "#DFDDDD" }}
+      label="Read Only"
+    />
+  </Grid>
+</Grid>
+
+         
+
           </Box>
         </Menu>
       </Sidebar>

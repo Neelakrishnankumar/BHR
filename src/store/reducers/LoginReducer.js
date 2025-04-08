@@ -110,7 +110,8 @@ export function fetchApidata(emailID, password,license, company, year) {
           Status: success.data.Status,
           apiResponse: success.data.Data,
           Msg: success.data.Msg,
-          SubscriptionCode: success.data.SubscriptionCode
+          SubscriptionCode: success.data.SubscriptionCode,
+          Expiryin: success.data.Expiryin,
         })
       );
       return datawait;

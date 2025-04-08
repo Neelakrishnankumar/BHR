@@ -1,42 +1,51 @@
 import {
-    Box,
-    TextField,
-    MenuItem,
-    Typography,
-    Tooltip,
-    IconButton,
-    useTheme,
-    FormControl,
-    Button,
-  } from "@mui/material";
-  import ResetTvIcon from "@mui/icons-material/ResetTv";
-  import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-  import { LoadingButton } from "@mui/lab";
-  import React from "react";
-  import { useProSidebar } from "react-pro-sidebar";
-  import { tokens } from "../../../Theme";
-  import useMediaQuery from "@mui/material/useMediaQuery";
-  import { useSelector } from "react-redux";
-  import {
-    DataGrid,
-    GridToolbarContainer,
-    GridToolbarColumnsButton,
-    GridToolbarFilterButton,
-    GridToolbarExport,
-    GridToolbarDensitySelector,
-    GridToolbarQuickFilter,
-  } from "@mui/x-data-grid";
+  Box,
+  TextField,
+  MenuItem,
+  Typography,
+  Tooltip,
+  IconButton,
+  useTheme,
+  FormControl,
+  Button,
+  Paper,
+  Breadcrumbs,Grid
+} from "@mui/material";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
+
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import ResetTvIcon from "@mui/icons-material/ResetTv";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { LoadingButton } from "@mui/lab";
+import React from "react";
+import { useProSidebar } from "react-pro-sidebar";
+import { tokens } from "../../../Theme";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useSelector } from "react-redux";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 
 
-  export default function EditEnquiryTruck() {
-    const { toggleSidebar, broken, rtl } = useProSidebar();
-    const [pageSize, setPageSize] = React.useState(10);
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const isNonMobile = useMediaQuery("(min-width:600px)");
-    const exploreLoading = useSelector((state) => state.exploreApi.loading);
-    const isLoading = useSelector((state) => state.formApi.loading);
-   const columns = [
+export default function EditEnquiryTruck() {
+  const { toggleSidebar, broken, rtl } = useProSidebar();
+  const [pageSize, setPageSize] = React.useState(10);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+  const navigate = useNavigate();
+  const isLoading = useSelector((state) => state.formApi.loading);
+  const columns = [
     { field: "sNo", headerName: "S.No", width: 80 },
     { field: "empNo", headerName: "Emp No", width: 100 },
     { field: "empCode", headerName: "Emp Code", width: 120 },
@@ -54,7 +63,37 @@ import {
     { field: "netSalary", headerName: "Net Salary", width: 150, type: 'number' },
   ];
 
+  const fnLogOut = (props) => {
+    //   if(Object.keys(ref.current.touched).length === 0){
+    //     if(props === 'Logout'){
+    //       navigate("/")}
+    //       if(props === 'Close'){
+    //         navigate("/Apps/TR022/Bank Master")
+    //       }
 
+    //       return
+    //  }
+    Swal.fire({
+      title: `Do you want ${props}?`,
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
+        }
+        if (props === "Close") {
+          navigate("/Apps/TR121/Functions");
+        }
+      } else {
+        return;
+      }
+    });
+  };
   function PayrollTool() {
     return (
       <GridToolbarContainer
@@ -77,6 +116,7 @@ import {
           <GridToolbarQuickFilter />
         </Box>
       </GridToolbarContainer>
+
     );
   }
   // Define rows
@@ -94,8 +134,9 @@ import {
   ];
 
 
-    return (
-      <React.Fragment>
+  return (
+    <React.Fragment>
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0",gap:"10px" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -103,125 +144,138 @@ import {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3" color="#174c4f">Run Payroll</Typography>
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+
+              <Typography variant="h5" color="#0000D1"
+                sx={{ cursor: "default" }}>Run Payroll</Typography>
+
+
+            </Box>
           </Box>
+
           <Box display="flex">
+
             <Tooltip title="Close">
-              <IconButton color="error">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title="Logout">
-              <IconButton color="error">
-                {/* Logout Icon Here */}
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
           </Box>
         </Box>
-  
-        <Box display="flex" p={2}>
-          {/* Left Side: Text Fields */}
-          <FormControl sx={{ gridColumn: "span 3", gap: "30px" }}>
-            <TextField
-              id="outlined-basic"
-              label="ID"
-              variant="filled"
-              focused
-              sx={{ display: "none" }}
-            />
-            <FormControl
-              sx={{
-                gridColumn: "span 2",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <TextField
-                id="outlined-basic"
-                label="Company"
-                variant="filled"
-                background="#f5f5f5"
-                focused
-                required
-                fullWidth
-                inputProps={{ tabIndex: "-1" }}
-              />
-              <IconButton sx={{ height: 40, width: 40 }}>
-                <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-              </IconButton>
-            </FormControl>
-  
-            <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              id="department"
-              name="department"
-              label="Department"
-              background="#e0e0e0"
-              focused
-              inputProps={{ readOnly: true }}
-            />
-            <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              id="type"
-              name="payroll"
-              label="Payroll"
-              background="#e0e0e0"
-              focused
-              inputProps={{ readOnly: true }}
-            />
-            <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              id="year"
-              name="year"
-              label="Year"
-              focused
-            />
-        <TextField
-  fullWidth
-  variant="filled"
-  id="month"
-  label="Month"
-  focused
-  select
-  // Add value and onChange props to manage selection
->
-  <MenuItem value={"1"}>1</MenuItem>
-  <MenuItem value={"2"}>2</MenuItem>
-  <MenuItem value={"3"}>3</MenuItem>
-  <MenuItem value={"4"}>4</MenuItem>
-  <MenuItem value={"5"}>5</MenuItem>
-  <MenuItem value={"6"}>6</MenuItem>
-  <MenuItem value={"7"}>7</MenuItem>
-  <MenuItem value={"8"}>8</MenuItem>
-  <MenuItem value={"9"}>9</MenuItem>
-  <MenuItem value={"10"}>10</MenuItem>
-  <MenuItem value={"11"}>11</MenuItem>
-  <MenuItem value={"12"}>12</MenuItem>
-</TextField>
+      </Paper>
 
-<Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button   color="secondary"
-                        variant="contained" sx={{ mr: 1 }}>
-              Apply
-            </Button>
-            <Button type="reset" color="warning" variant="contained">
-              Cancel
-            </Button>
-          </Box>
+      <Paper elevation={3} sx={{ margin: "10px" }}>
+        {/* Left Side: Text Fields */}
+        <Grid container spacing={2}>
+  {/* Hidden ID Field */}
+  <Grid item xs={12} sx={{ display: "none" }}>
+    <TextField
+      id="outlined-basic"
+      label="ID"
+      variant="standard"
+      focused
+      fullWidth
+    />
+  </Grid>
 
-            {/* <TextField
+  {/* Company + Icon */}
+  <Grid item xs={6}>
+    <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <TextField
+        id="company"
+        label="Company"
+        variant="standard"
+        focused
+        required
+        fullWidth
+        inputProps={{ tabIndex: "-1" }}
+      />
+      <IconButton sx={{ height: 40, width: 40 }}>
+        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+      </IconButton>
+    </FormControl>
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      fullWidth
+      variant="standard"
+      type="text"
+      id="department"
+      name="department"
+      label="Department"
+      focused
+      inputProps={{ readOnly: true }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      fullWidth
+      variant="standard"
+      type="text"
+      id="type"
+      name="payroll"
+      label="Payroll"
+      focused
+      inputProps={{ readOnly: true }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      fullWidth
+      variant="standard"
+      type="text"
+      id="year"
+      name="year"
+      label="Year"
+      focused
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      fullWidth
+      variant="standard"
+      id="month"
+      label="Month"
+      select
+      focused
+    >
+      {[...Array(12)].map((_, i) => (
+        <MenuItem key={i + 1} value={i + 1}>{i + 1}</MenuItem>
+      ))}
+    </TextField>
+  </Grid>
+
+  {/* Buttons */}
+  <Grid item xs={12}>
+    <Box display="flex" justifyContent="flex-end" paddingTop={1}>
+      <Button color="secondary" variant="contained" sx={{ mr: 1 }}>
+        Apply
+      </Button>
+      <Button type="reset" color="warning" variant="contained">
+        Cancel
+      </Button>
+    </Box>
+  </Grid>
+</Grid>
+          {/* <TextField
               name="sortorder"
               type="number"
               id="sortorder"
               label="Sort Order"
-              variant="filled"
+              variant="standard"
               focused
               sx={{ background: "#fff6c3" }}
               onWheel={(e) => e.target.blur()}
@@ -231,50 +285,73 @@ import {
                 },
               }}
             /> */}
-          </FormControl>
-        
-          {/* Right Side: Data Grid */}
-          <Box sx={{ flex: 2, ml: 2 }}> {/* Increased width of DataGrid */}
-            <Box
-              height="400px"
-              sx={{
-                "& .MuiDataGrid-root": {
-                  // border: "none",
-                },
-                "& .MuiDataGrid-cell": {
-                  // borderBottom: "none",
-                },
-                "& .name-column--cell": {
-                  color: colors.greenAccent[300],
-                },
-                "& .MuiDataGrid-columnHeaders": {
-                  backgroundColor: colors.blueAccent[800],
-                  // borderBottom: "none",
-                },
-                "& .MuiDataGrid-virtualScroller": {
-                  backgroundColor: colors.primary[400],
-                },
-                "& .MuiDataGrid-footerContainer": {
-                  backgroundColor: colors.blueAccent[800],
-                },
-                "& .MuiCheckbox-root": {
-                  color: `${colors.greenAccent[200]} !important`,
-                },
-              }}
-            >
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={pageSize}
-                disableSelectionOnClick
-                components={{
-                    Toolbar: PayrollTool,
-                  }}
-              />
-            </Box>
-          </Box>
+        {/* </FormControl> */}
+
+        {/* Right Side: Data Grid */}
+        {/* Increased width of DataGrid */}
+        <Box
+          m="5px 0 0 0"
+          //height={dataGridHeight}
+          height="50vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+              color: colors.greenAccent[300],
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: colors.blueAccent[800],
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              backgroundColor: colors.primary[400],
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+              backgroundColor: colors.blueAccent[800],
+            },
+            "& .MuiCheckbox-root": {
+              color: `${colors.greenAccent[200]} !important`,
+            },
+            "& .odd-row": {
+              backgroundColor: "",
+              color: "", // Color for odd rows
+            },
+            "& .even-row": {
+              backgroundColor: "#D3D3D3",
+              color: "", // Color for even rows
+            },
+          }}
+        >
+          <DataGrid
+            sx={{
+              "& .MuiDataGrid-footerContainer": {
+                height: dataGridHeaderFooterHeight,
+                minHeight: dataGridHeaderFooterHeight,
+              },
+            }}
+            rows={rows}
+            columns={columns}
+            pageSize={pageSize}
+            rowHeight={dataGridRowHeight}
+            headerHeight={dataGridHeaderFooterHeight}
+            disableSelectionOnClick
+            components={{
+              Toolbar: PayrollTool,
+            }}
+            getRowClassName={(params) =>
+              params.indexRelativeToCurrentPage % 2 === 0
+                  ? "odd-row"
+                  : "even-row"
+          }
+          />
         </Box>
-      </React.Fragment>
-    );
-  }
-  
+
+      </Paper>
+    </React.Fragment>
+  );
+}

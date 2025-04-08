@@ -154,6 +154,9 @@ const Editemployee = () => {
     SortOrder: Data.SortOrder,
     Disable: Data.Disable,
     Password: Data.Password,
+    joindate:Data.joindate,
+    confirmdate:Data.confirmdate,
+    employeetype:Data.employeetype
   };
   //*******Assign Employee values from Database in  Yup initial value******* */
   const initialValues = {
@@ -168,6 +171,9 @@ const Editemployee = () => {
     SortOrder: apiData.SortOrder,
     checkbox: apiData.Disable,
     Password: apiData.Password,
+    joindate:apiData.joindate,
+    confirmdate:apiData.confirmdate,
+    employeetype:apiData.employeetype
   };
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -357,7 +363,10 @@ const Editemployee = () => {
       Disable: values.checkbox === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
-      Sal: values.Sal,
+      Sal: "",
+      EmpType:values.employeetype,
+      DateOfJoin:values.joindate,
+      DateOfConfirmation:values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
       DesignID: 0,
@@ -1304,13 +1313,14 @@ const Editemployee = () => {
                   >
                     <MenuItem value={0}>Employee</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
+                    <MenuItem value={8}>Contractor</MenuItem>
                     <MenuItem value={1}>Employee Process</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
                     <MenuItem value={4}>Deployment</MenuItem>
                     <MenuItem value={6}>List of Attachments</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
-                    <MenuItem value={8}>Contractor</MenuItem>
+                    
 
                   </Select>
                 </FormControl>
@@ -1487,9 +1497,9 @@ const Editemployee = () => {
                           // },
                         }}
                       >
-                        <MenuItem value="FH">Prohibition Period</MenuItem>
-                        <MenuItem value="SH">Permanent</MenuItem>
-                        <MenuItem value="N">Contractor</MenuItem>
+                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PM">Permanent</MenuItem>
+                        <MenuItem value="CT">Contractor</MenuItem>
                       </TextField>
 
                       <TextField
@@ -1756,6 +1766,34 @@ const Editemployee = () => {
                             },
                           }}
                         /> */}
+                          <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={
+                          <span>
+                            Employee Type
+                          </span>
+                        }
+                        value={values.employeetype}
+                        id="employeetype"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="employeetype"
+                        required
+                        focused
+                        sx={{
+                          gridColumn: "span 2",
+                          // backgroundColor: "#ffffff",
+                          // "& .MuiInputBase-root": {
+                          //   backgroundColor: "#f5f5f5",
+                          // },
+                        }}
+                      >
+                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PM">Permanent</MenuItem>
+                        <MenuItem value="CT">Contractor</MenuItem>
+                      </TextField>
                       <TextField
                         name="joindate"
                         type="date"
@@ -1984,7 +2022,7 @@ const Editemployee = () => {
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
                         variant="standard"
@@ -1996,7 +2034,7 @@ const Editemployee = () => {
                         onChange={handleChange}
                         label="Code"
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -2017,7 +2055,7 @@ const Editemployee = () => {
                         onChange={handleChange}
                         label="Name"
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -2028,9 +2066,9 @@ const Editemployee = () => {
                       />
 
                     </FormControl>
-                    <Stack
+                    {/* <Stack
                       sx={{
-                        gridColumn: "span 2",
+                       // gridColumn: "span 2",
                         alignContent: "center",
                         justifyContent: "center",
                         alignItems: "center",
@@ -2042,11 +2080,27 @@ const Editemployee = () => {
 
                       <img
                         src={userimg}
-                        style={{ width: "200px", height: "150px" }}
+                        style={{ width: "200px", height: "120px" }}
                       />
-                    </Stack>
+                    </Stack> */}
 
-
+<Stack
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
 
                     <TextField
                       fullWidth
@@ -2062,7 +2116,7 @@ const Editemployee = () => {
                       focused
                       onWheel={(e) => e.target.blur()}
                       sx={{
-                        gridColumn: "span 2", background: "#fff6c3"
+                        //gridColumn: "span 2", background: "#fff6c3"
                       }}
 
                     />
@@ -2079,7 +2133,7 @@ const Editemployee = () => {
                       label="Email Id"
                       focused
                       sx={{
-                        gridColumn: "span 2",
+                        //gridColumn: "span 2",
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -2098,7 +2152,7 @@ const Editemployee = () => {
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                     // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2113,7 +2167,7 @@ const Editemployee = () => {
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2128,7 +2182,7 @@ const Editemployee = () => {
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2143,7 +2197,7 @@ const Editemployee = () => {
                       label="Permanent Address"
                       focused
                       sx={{
-                        gridColumn: "span 2",
+                       // gridColumn: "span 2",
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -2162,7 +2216,7 @@ const Editemployee = () => {
                       label="Local Address"
                       focused
                       sx={{
-                        gridColumn: "span 2",
+                        //gridColumn: "span 2",
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -2171,7 +2225,7 @@ const Editemployee = () => {
                   </Box>
 
 
-                  <Box display="flex" justifyContent="end" mt="10px" gap={2}>
+                  <Box display="flex" justifyContent="end" mt="10px"padding={1} gap={2}>
                     {YearFlag == "true" ? (
                       <LoadingButton
                         color="secondary"
@@ -2265,7 +2319,7 @@ const Editemployee = () => {
                       <Stack
                         sx={{
                           //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           alignContent: "center",
                           justifyContent: "center",
                           alignItems: "center",
@@ -2468,7 +2522,7 @@ const Editemployee = () => {
                                   <Avatar
                                     variant="rounded"
                                     src={userimg}
-                                    sx={{ width: "200px", height: "150px" }}
+                                    sx={{ width: "200px", height: "120px" }}
                                   />
                                 </Stack>
                               )}
@@ -2479,7 +2533,7 @@ const Editemployee = () => {
                                   display: "flex",
                                   flexDirection: "row",
                                   alignItems: "center",
-                                  marginTop: "50px",
+                                  
                                 }}
                               >
                                 <TextField
@@ -2583,7 +2637,7 @@ const Editemployee = () => {
                               {/* <FormControlLabel  control={ <Field type="checkbox" name="checkbox" id="checkbox"  label="Disable" />} label="Disable" /> */}
                             </FormControl>
 
-                            <Box display="flex" justifyContent="end" padding={1} gap={2} mt={20}>
+                            <Box display="flex" justifyContent="end" padding={1} gap={2} mt={30}>
                               {YearFlag == "true" ? (
                                 <LoadingButton
                                   color="secondary"
@@ -2880,7 +2934,7 @@ const Editemployee = () => {
                       </Box>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" style={{ marginTop: "-32px" }} padding={1} gap={2}>
+                  <Box display="flex" justifyContent="end"style={{ marginTop: "-45px" }}padding={1} gap={2}>
                     {YearFlag == "true" ? (
                       <LoadingButton
                         color="secondary"
@@ -4068,7 +4122,7 @@ const Editemployee = () => {
                               </FormControl>
                              */}
                        
-                        <Box display="flex" justifyContent="end"padding={1} mt={30}gap={2}>
+                        <Box display="flex" justifyContent="end"padding={1} mt={29}gap={2}>
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -4170,7 +4224,7 @@ const Editemployee = () => {
                       },
                     }}
                   >
-                    <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
+                    <FormControl sx={{  gap: formGap }}>
                       <TextField
                         fullWidth
                         variant="standard"
@@ -4196,55 +4250,74 @@ const Editemployee = () => {
                       />
                     </FormControl>
                     <Stack
-                      sx={{
-                        gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <img
-                        src={values.imageurl}
-                        style={{ width: "200px", height: "150px" }}
-                      />
-                    </Stack>
-                    <Box sx={{ gridColumn: "span 2" }}>
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+                   
                       <Box
-                        height="350px"
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
                         sx={{
                           "& .MuiDataGrid-root": {
-                            // border: "none",
+                            border: "none",
                           },
                           "& .MuiDataGrid-cell": {
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .name-column--cell": {
                             color: colors.greenAccent[300],
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // borderBottom: "none",
+                            borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                           },
                           "& .MuiDataGrid-footerContainer": {
-                            // borderTop: "none",
+                            borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
                         }}
                       >
                         <DataGrid
-                          // checkboxSelection
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
                           rows={explorelistViewData}
                           columns={columns}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
                           pageSize={pageSize}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
@@ -4264,6 +4337,11 @@ const Editemployee = () => {
                           onStateChange={(stateParams) =>
                             setRowCount(stateParams.pagination.rowCount)
                           }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                        }
                           loading={exploreLoading}
                           componentsProps={{
                             toolbar: {
@@ -4273,8 +4351,8 @@ const Editemployee = () => {
                           }}
                         />
                       </Box>
-                    </Box>
-                    <FormControl sx={{ gridColumn: "span 2", gap: "30px" }}>
+                  
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
                         variant="standard"
@@ -4289,7 +4367,7 @@ const Editemployee = () => {
                         error={!!touched.ItemNumber && !!errors.ItemNumber}
                         helperText={touched.ItemNumber && errors.ItemNumber}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -4314,7 +4392,7 @@ const Editemployee = () => {
                         error={!!touched.ItemName && !!errors.ItemName}
                         helperText={touched.ItemName && errors.ItemName}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -4339,7 +4417,7 @@ const Editemployee = () => {
                         error={!!touched.AssestID && !!errors.AssestID}
                         helperText={touched.AssestID && errors.AssestID}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -4364,7 +4442,7 @@ const Editemployee = () => {
                         error={!!touched.ItemValue && !!errors.ItemValue}
                         helperText={touched.ItemValue && errors.ItemValue}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -4389,7 +4467,7 @@ const Editemployee = () => {
                         error={!!touched.PurchaseReference && !!errors.PurchaseReference}
                         helperText={touched.PurchaseReference && errors.PurchaseReference}
                         sx={{
-                          gridColumn: "span 2",
+                          //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
@@ -4401,7 +4479,7 @@ const Editemployee = () => {
                       />
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" mt="30px" gap={2}>
+                  <Box display="flex" justifyContent="end"padding={1} style={{ marginTop: "-40px" }} gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -4804,7 +4882,7 @@ const Editemployee = () => {
 
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1}style={{ marginTop: "-45px" }}  gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"

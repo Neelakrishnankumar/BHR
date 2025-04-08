@@ -261,6 +261,8 @@ attendanceUrl:"https://hr.beyondexs.com/api/getempattendance.php",
 attendanceprocessUrl:"https://hr.beyondexs.com/api/EmpAttendanceHistoryController.php",
 LeaveTypeurl: "http://beyondexs.com/Trinity/api/APIController.php",
 regularizationUrl: "https://hr.beyondexs.com/api/APIController.php?",
+settingsgetUrl: "https://hr.beyondexs.com/api/HRSubscriptionCodeGetController.php",
+settingsPostUrl: "https://hr.beyondexs.com/api/HRChangePasswordController.php?",
 
   };
 

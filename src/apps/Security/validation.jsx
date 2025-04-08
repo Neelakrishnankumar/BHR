@@ -44,6 +44,47 @@ export const companySchema = yup.object().shape({
     .matches(/^[A-Za-z\s\.'-]+$/, "Only  Alphabets "),
 });
 
+/***Settings Validation***/
+
+export const Settingsvalidation = yup.object().shape({
+  currentpassword: yup.string().required("Please enter password"),
+
+  newpassword: yup.string()
+  .required('Please Enter your password')
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+    "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+  ),
+  
+    // .string()
+    // .required("Please enter your new password")
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/,
+    //   "Password must contain at least 6 characters, one uppercase letter, one lowercase letter, one number, and one special character."
+    // )
+    // .min(6, "Password must be at least 6 characters"),
+    // .max(5, "Password cannot be more than 5 characters"),  // Stop validation after 5 characters
+  confirmpassword: yup
+    .string()
+    .required("Please confirm your password")
+    .oneOf([yup.ref('newpassword')], "Passwords must match")
+});
+// export const Settingsvalidation = yup.object().shape({
+//   currentpassword: yup.string().required("Please enter password"),
+//   newpassword: yup.string()
+//   .required('Please Enter your password')
+//   .matches(
+//     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/,
+//     "Must Contain 6 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+//   ),
+
+//   confirmpassword: yup
+//   .string()
+//   .required("Please confirm your password")
+//   .oneOf([yup.ref('newpassword')], "Passwords must match"),
+ 
+// });
+
 /********************* BANK MASTER SCREEN*************************/
 export const bankmasterSchema = yup.object().shape({
   // code:yup.string().matches(/^[-_ a-zA-Z0-9]+$/, "Only Numeric and Alphabets ").min(10,"Code must be 10 character"),
