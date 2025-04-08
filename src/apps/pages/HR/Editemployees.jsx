@@ -116,6 +116,7 @@ const Editemployee = () => {
   var mode = params.Mode;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
+
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -154,23 +155,26 @@ const Editemployee = () => {
       userimg = userimg + Data.ImageName;
     }
   }
+  console.log(Data, "--Data");
+  
 
-  var apiData = "";
-  apiData = {
-    Code: Data.Code,
-    Name: Data.Name,
-    Job: Data.Job,
-    Comm: Data.Comm,
-    Mgr: Data.Mgr,
-    Sal: Data.Sal,
-    Fax: Data.Fax,
-    SortOrder: Data.SortOrder,
-    Disable: Data.Disable,
-    Password: Data.Password,
-    joindate: Data.joindate,
-    confirmdate: Data.confirmdate,
-    employeetype: Data.employeetype,
-  };
+  // var apiData = "";
+  // apiData = {
+  //   Code: Data.Code,
+  //   Name: Data.Name,
+  //   Job: Data.Job,
+  //   Department: Data.Department,
+  //   Comm: Data.Comm,
+  //   Mgr: Data.Mgr,
+  //   Sal: Data.Sal,
+  //   Fax: Data.Fax,
+  //   SortOrder: Data.SortOrder,
+  //   Disable: Data.Disable,
+  //   Password: Data.Password,
+  //   joindate: Data.joindate,
+  //   confirmdate: Data.confirmdate,
+  //   employeetype: Data.employeetype,
+  // };
   //*******Assign Employee values from Database in  Yup initial value******* */
   const formatDateForInput = (dateStr) => {
     if (!dateStr) return "";
@@ -181,27 +185,31 @@ const Editemployee = () => {
     return dateStr;
   };
 
+  // console.log(apiData, "--apiData");
+  // console.log(apiData.DeptName, "--apiData.DeptName");
+  
   const initialValues = {
-    Code: apiData.Code,
-    Name: apiData.Name,
-    Job: apiData.Job,
-    // DeptRecordID:apiData.DeptRecordID,
-    Comm: apiData.Comm,
-    Mgr: apiData.Mgr,
-    Sal: apiData.Sal,
-    Fax: apiData.Fax,
-    SortOrder: apiData.SortOrder,
-    checkbox: apiData.Disable,
-    Password: apiData.Password,
-    joindate: apiData.joindate,
-    confirmdate: apiData.confirmdate,
-    employeetype: apiData.employeetype === "Prohibition"
+    Department: Data.DeptRecordID ? {RecordID:Data.DeptRecordID,Code:Data.DeptCode,Name: Data.DeptName} : null,
+    Code: Data.Code,
+    Name: Data.Name,
+    Password: Data.Password,
+    Job: Data.Job,
+    employeetype: Data.EmpType === "Prohibition"
     ? "PP"
-    : apiData.employeetype === "Permanent"
+    : Data.EmpType === "Permanent"
     ? "PM"
-     : apiData.employeetype === "Contractor"
+     : Data.EmpType === "Contractor"
     ? "CT"
     : "",
+    checkbox: Data.Disable,
+    joindate: Data.DateOfJoin,
+    confirmdate: Data.DateOfConfirmation,
+    Comm: Data.Comm,
+    SortOrder: Data.SortOrder,
+
+    Mgr: Data.Mgr,
+    Sal: Data.Sal,
+    Fax: Data.Fax,
   };
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -431,6 +439,8 @@ const Editemployee = () => {
     // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
+      dispatch(fetchApidata(accessID, "get", recID));
+
       setLoading(false);
       if (del) {
         navigate(`/Apps/TR027/Employees`);
@@ -439,6 +449,8 @@ const Editemployee = () => {
       }
     } else {
       toast.error(data.payload.Msg);
+      console.log(data.payload.Msg, "--error");
+      
       setLoading(false);
     }
   };
@@ -474,6 +486,7 @@ const Editemployee = () => {
 
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
+      
     }
     if (event.target.value == "2") {
       dispatch(
@@ -1560,7 +1573,13 @@ const Editemployee = () => {
                   >
                     <MenuItem value={0}>Employee</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
-                    <MenuItem value={8}>Contracts</MenuItem>
+              {
+                initialValues.employeetype === "CT" ? 
+                <MenuItem value={8}>Contracts</MenuItem>
+                : false
+              }      
+
+                    {/* <MenuItem value={8}>Contracts</MenuItem> */}
                     <MenuItem value={1}>Employee Process</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
@@ -1746,6 +1765,7 @@ const Editemployee = () => {
                         value={values.Department}
                         onChange={(newValue) => {
                           setFieldValue("Department", newValue);
+                          console.log(newValue, "--newValue");
                           console.log(newValue.RecordID, "////");
                         }}
                         //  onChange={handleSelectionFunctionname}
