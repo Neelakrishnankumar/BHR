@@ -283,6 +283,7 @@ const Editemployee = () => {
     desRecordID: "",
     desCode: "",
     desName: "",
+    ManagerID: "",
   });
 
   const [locationLookup, SetLocationLookup] = useState({
@@ -385,7 +386,8 @@ const Editemployee = () => {
 
     if (type == "Designations") {
       SetDesignationLookup({
-        desRecordID: childdata.RecordID,
+        desRecordID: childdata.DesignationID,
+        ManagerID: childdata.RecordID,
         desCode: childdata.Code,
         desName: childdata.Name,
       });
@@ -430,8 +432,10 @@ const Editemployee = () => {
       GateRecID: 0,
       WeekOff: 0,
       CompanyID,
-      SubscriptionCode,
+      SubscriptionCode
     };
+
+
 
     const data = await dispatch(
       postData({ accessID, action, idata: saveData })
@@ -495,9 +499,7 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "3") {
-      dispatch(
-        fetchExplorelitview("TR126", "Manager", `EmployeeID=${recID}`, "")
-      );
+      dispatch(fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, ""));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "4") {
@@ -923,6 +925,7 @@ const Editemployee = () => {
         desRecordID: "",
         desCode: "",
         desName: "",
+        ManagerID: "",
       });
       SetEmpLoaData({
         description: "",
@@ -965,8 +968,9 @@ const Editemployee = () => {
         });
         SetDesignationLookup({
           desRecordID: rowData.DesignationID,
-          desCode: rowData.DesignationCode,
-          desName: rowData.DesignationName,
+          desCode: rowData.EmployeeCode,
+          desName: rowData.EmployeeName,
+          ManagerID: rowData.EmployeeID,
         });
         SetEmpLoaData({
           description: rowData.Description,
@@ -1169,7 +1173,8 @@ const Editemployee = () => {
       RecordID: funMgrRecID,
       EmployeeID: recID,
       DesignationID: designationLookup.desRecordID,
-      CompanyID,
+      ManagerID: designationLookup.ManagerID,
+      CompanyID
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1178,7 +1183,7 @@ const Editemployee = () => {
     );
     if (response.payload.Status == "Y") {
       dispatch(
-        fetchExplorelitview("TR126", "Manager", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -3557,7 +3562,7 @@ const Editemployee = () => {
                       // filterName={"ERank"}
                       // filterValue={Data.Rank}
                       filterName={"parentID"}
-                      filterValue={CompanyID}
+                      filterValue={`${CompanyID}' AND EmployeeID='${recID}`}
                     />
                   </Popup>
                 </form>
