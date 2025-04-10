@@ -1976,8 +1976,8 @@ else if (accessID == "TR234") {
                 navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
               }}
             >
-              {/* {`Milestones(${state.MilestoneName})`} */}
-              Milestone
+              {`Milestones(${state.MilestoneName})`}
+              {/* Milestone */}
             </Typography>
             <Typography
               variant="h5"
@@ -2020,8 +2020,8 @@ else if (accessID == "TR234") {
                 navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
               }}
             >
-              {/* {`Milestones(${state.MilestoneName})`} */}
-              Milestone            
+              {`Milestones(${state.MilestoneName})`}
+              {/* Milestone             */}
               </Typography>
             <Typography
               variant="h5"

@@ -56,6 +56,7 @@ const EditActivities = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const state = location.state || {};
+  console.log(state,"Activity screen");
   var OPRecid = params.filtertype;
 
   //  useEffect(() => {
@@ -231,7 +232,7 @@ const EditActivities = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => navigate("/Apps/TR133/Project")}
               >
-                Project
+                {`Project(${state.projectName})`}
               </Typography>
 
               <Typography
@@ -240,7 +241,8 @@ const EditActivities = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
               >
-                Milestone
+                {`Milestone(${state.MilestoneName})`}
+
               </Typography>
               <Typography
                 variant="h5"
@@ -248,7 +250,7 @@ const EditActivities = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
               >
-                Stages
+                {`Stages(${state.stagesName})`}
               </Typography>
               <Typography
                 variant="h5"

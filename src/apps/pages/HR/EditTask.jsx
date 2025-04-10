@@ -1025,7 +1025,8 @@ const Edittask = () => {
                                         color="warning"
                                         variant="contained"
                                         onClick={() => {
-                                            navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+                                            // navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+                                            navigate(-1);
                                         }}
                                     >
                                         Cancel

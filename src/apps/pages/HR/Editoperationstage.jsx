@@ -173,7 +173,7 @@ const Editoperation = () => {
                   navigate("/Apps/TR133/Project");
                 }}
               >
-                Project
+                {`Project(${state.projectName})`}
               </Typography>
 
               <Typography
@@ -185,7 +185,8 @@ const Editoperation = () => {
                   navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } });
                 }}
               >
-                Milestone
+              {`Milestone(${state.MilestoneName})`}
+
               </Typography>
               <Typography
                 variant="h5"
