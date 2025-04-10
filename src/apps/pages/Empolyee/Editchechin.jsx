@@ -14,7 +14,9 @@ import {
   Select,
   LinearProgress,
   Paper,
+  Breadcrumbs
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -61,6 +63,8 @@ const Editcheckin = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
+  const state=location.state || {};
+  console.log(state,"checkin");
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -70,7 +74,7 @@ const Editcheckin = () => {
     borderRadius: "5px",
     backgroundColor: "#EDEDED",
   };
-
+console.log(data.EmployeeName);
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split('T')[0];
   const InitialValue = {
@@ -114,7 +118,7 @@ const Editcheckin = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR123/Check In");
+      navigate(-1);
       //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
     } else {
       toast.error(response.payload.Msg);
@@ -280,7 +284,31 @@ const Editcheckin = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Check In</Typography>
+            <Breadcrumbs
+            maxItems={3}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+             <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              {`Employee(${state.EmpName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+             
+            >
+              Check In
+            </Typography>
+           
+          </Breadcrumbs>
           </Box>
 
           <Box display="flex">
@@ -666,7 +694,7 @@ const Editcheckin = () => {
                     variant="contained"
                     onClick={() => {
                       //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-                      navigate("/Apps/TR123/Check In");
+                      navigate(-1);
                       // navigate("/Apps/Secondarylistview/TR123/Check In/");
                     }}
                   >

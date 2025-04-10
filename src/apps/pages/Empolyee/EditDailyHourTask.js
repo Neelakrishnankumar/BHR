@@ -70,7 +70,8 @@ const EditDailyHourstask = () => {
   const location = useLocation();
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
-
+  const state = location.state || {};
+  console.log(state,"hourtask");
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -314,29 +315,40 @@ const EditDailyHourstask = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR123/Check%20In");
+                  navigate("/Apps/TR027/Employee");
                 }}
               >
-                Check In
+                {`Employee(${state.EmpName})`}
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate(`/Apps/Secondarylistview/TR132/DailyTask/${params.parentID}`);
+                  navigate(`/Apps/Secondarylistview/TR123/Check%20In/${state.EmployeeID}`,{state:{...state}});
                 }}
               >
-                Daily Task
+                {`Check In(${state.Locname})`}
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/TR134/Daily%20Hour%20Task/${params.filtertype}/${params.parentID}`
-                  );
+                  navigate(`/Apps/Secondarylistview/TR132/DailyTask/${state.checkinID}`,{state:{...state}});
+                }}
+              >
+                 {`DailyTask(${state.Date})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  // navigate(
+                  //   `/Apps/Secondarylistview/TR134/Daily%20Hour%20Task/${params.filtertype}/${params.parentID}`
+                  // );
+                  navigate(-1);
                 }}
               >
                 Daily Hour Task
@@ -746,9 +758,10 @@ const EditDailyHourstask = () => {
                     color="error"
                     variant="contained"
                     onClick={() => {
-                      navigate(
-                        `/Apps/Secondarylistview/TR134/Daily%20Hour%20Task/${params.filtertype}/${params.parentID}`
-                      );
+                      // navigate(
+                      //   `/Apps/Secondarylistview/TR134/Daily%20Hour%20Task/${params.filtertype}/${params.parentID}`
+                      // );
+                      navigate(-1);
                     }}
                   >
                     Cancel

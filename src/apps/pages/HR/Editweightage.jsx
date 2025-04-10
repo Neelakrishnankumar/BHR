@@ -73,6 +73,7 @@ const EditmileWeightage = () => {
     const location = useLocation();
 
     const state = location.state || {};
+    console.log(state,"weightage");
     const [pageSize, setPageSize] = React.useState(10);
     const [rowCount, setRowCount] = useState(0);
     const colors = tokens(theme.palette.mode);
@@ -426,7 +427,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate("/Apps/TR133/Project")}
                                 >
-                                    Project
+                                    {`Project(${state.projectName})`}
                                 </Typography>
                             )}
                             {type === "M" && (
@@ -442,7 +443,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate("/Apps/TR133/Project")}
                                 >
-                                    Project
+                                    {`Project(${state.projectName})`}
                                 </Typography>
                             )}
                             {type === "OPS" && (
@@ -452,7 +453,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate(-1)}
                                 >
-                                    Milestone
+                                    {`Milestone(${state.MilestoneName})`}
                                 </Typography>
                             )}
                             {type === "OPS" && (
@@ -467,7 +468,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate("/Apps/TR133/Project")}
                                 >
-                                    Project
+                                    {`Project(${state.projectName})`}
                                 </Typography>
                             )}
                             {type === "ACT" && (
@@ -476,7 +477,8 @@ const EditmileWeightage = () => {
                                     color="#0000D1"
                                     sx={{ cursor: "pointer" }}
                                 >
-                                    Milestone
+                                {/* {`Milestone(${state.MilestoneName})`} */}
+                                Milestone
                                 </Typography>
                             )}
                             {type === "ACT" && (
@@ -488,7 +490,7 @@ const EditmileWeightage = () => {
                                     }
 
                                 >
-                                    Stages
+                                    {`Stages(${state.stagesName})`}
                                 </Typography>
                             )}
                             {type === "ACT" && (
@@ -503,7 +505,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate("/Apps/TR133/Project")}
                                 >
-                                    Project
+                                   {`Project(${state.projectName})`}
                                 </Typography>
                             )}
                             {type === "TK" && (
@@ -513,7 +515,8 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                 // onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
                                 >
-                                    Milestone
+                                    {`Milestone(${state.MilestoneName})`}
+                                    
                                 </Typography>
                             )}
                             {type === "TK" && (
@@ -523,7 +526,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                 // onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
                                 >
-                                    Stages
+                                    {`Stages(${state.stagesName})`}
                                 </Typography>
                             )}
                             {type === "TK" && (
@@ -533,7 +536,7 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate(-1)}
                                 >
-                                    Activity
+                                    {`Activity(${state.Activityname})`}
                                 </Typography>
                             )}
                             {type === "TK" && (

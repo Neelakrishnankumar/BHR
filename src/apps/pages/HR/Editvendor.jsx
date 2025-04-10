@@ -14,7 +14,13 @@ import {
     useTheme,
     Paper, Breadcrumbs
 } from "@mui/material";
+import Resizer from "react-image-file-resizer";
+import store from "../../../index";
+import { fileUpload, fnImageUpload, imageUpload } from "../../../store/reducers/Imguploadreducer";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import * as Yup from 'yup';
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Field, Formik } from "formik";
@@ -38,7 +44,7 @@ const Editvendor = () => {
     const theme = useTheme();
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const location = useLocation();
-
+    const isLoading = useSelector((state) => state.formApi.postLoading);
     const [pageSize, setPageSize] = useState(10);
     const [loading, setLoading] = useState(false);
 
@@ -49,32 +55,135 @@ const Editvendor = () => {
     const Year = sessionStorage.getItem("year");
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
-    const [ImageName, setImgName] = useState({ name: "Choose File" });
+    const [panImage, setPanImage] = useState("");
+    const [panUrl, setPanUrl] = useState(null);
+    const [gstImage, setGstImage] = useState("");  
+    const [gstUrl, setGstUrl] = useState(null);
+    console.log(panImage, "panImage");
+    console.log(panImage.name, "panImage");
+    console.log(gstImage, "gstImage");
+    console.log(gstImage.name, "gstImage");
+    
+    const getFilepanChange = async (e) => {
+        let files = e.target.files;
+        let fileReader = new FileReader();
+
+        fileReader.readAsDataURL(files[0]);
+        fileReader.onload = (event) => {
+            let fileInput = !!event.target.result;
+            if (fileInput) {
+                try {
+                    Resizer.imageFileResizer(
+                        files[0],
+                        150,
+                        150,
+                        "JPEG",
+                        100,
+                        0,
+                        async (uri) => {
+                            const formData = { image: uri, type: "images" };
+                            const fileData = await dispatch(imageUpload({ formData }));
+                            console.log("Uploaded File Response:", fileData);
+
+                            if (fileData?.payload?.Status === "Y") {
+                                toast.success(fileData.payload.Msg); 
+                                setPanImage(fileData.payload.name);
+                            } else {
+                                toast.error("File upload failed."); 
+                            }
+                        },
+                        "base64",
+                        150,
+                        150
+                    );
+                } catch (err) {
+                    console.log(err);
+                    toast.error("An error occurred during file processing.");
+                }
+            }
+        };
+    };
+    console.log(panImage,"does");
+    const getFilegstChange = async (e) => {
+        let files = e.target.files;
+        let fileReader = new FileReader();
+
+        fileReader.readAsDataURL(files[0]);
+        fileReader.onload = (event) => {
+            let fileInput = !!event.target.result;
+            if (fileInput) {
+                try {
+                    Resizer.imageFileResizer(
+                        files[0],
+                        150,
+                        150,
+                        "JPEG",
+                        100,
+                        0,
+                        async (uri) => {
+                            const formData = { image: uri, type: "images" };
+                            const fileData = await dispatch(imageUpload({ formData }));
+                            console.log("Uploaded File Response:", fileData);
+
+                            if (fileData?.payload?.Status === "Y") {
+                                toast.success(fileData.payload.Msg); 
+                                setGstImage(fileData.payload.name);
+                            } else {
+                                toast.error("File upload failed."); 
+                            }
+                        },
+                        "base64",
+                        150,
+                        150
+                    );
+                } catch (err) {
+                    console.log(err);
+                    toast.error("An error occurred during file processing.");
+                }
+            }
+        };
+    };
     // Page params
     const recID = params.id;
     const mode = params.Mode;
     const accessID = params.accessID;
 
     useEffect(() => {
-        // Fetch data only when the recID or mode changes
+       
         if (recID && mode === "E") {
             dispatch(getFetchData({ accessID, get: "get", recID }));
         }
+        else {
+            dispatch(getFetchData({ accessID, get: "", recID }));
+        }
     }, [location.key, recID, mode]);
 
-    // Ensure data is available before rendering form
+    
     if (!data && getLoading) {
         return <LinearProgress />;
     }
 
+    const validationSchema = Yup.object({
+        Pancardnumber: Yup.string()
+            .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Card Number")
+            .required("PAN card number is required"),
+        gstnumber: Yup.string()
+            .matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, "Invalid GST Number")
+            .required("GST number is required"),
+    });
     const InitialValue = {
-        oscc: data?.Occasion || "",
-        name: data?.Description || "",
-        Date: data?.HolidayDate || "",
-        Sortorder: data?.SortOrder || "",
-        disable: data?.Disable === "Y" ? true : false,
+        code: data.Code || "",
+        name: data.Name || "",
+        Pancardnumber: data.PanCardNo || "",
+        PanImg: data.PanImg || "",
+        GstImg: data.gstImage || "",
+        gstnumber: data.GstNo || "",
+        mobilenumber: data.MobileNo || "",
+        date: data.RegistrationDate || "",
+        verifieddate: data.VerifyConfirmDate || "",
+        emailid: data.EmailID || "",
     };
-
+    console.log(data.PanImg, "dooo");
     const Fnsave = async (values, del) => {
         setLoading(true);
 
@@ -89,13 +198,17 @@ const Editvendor = () => {
 
         const idata = {
             RecordID: recID,
-            Occasion: values.oscc,
-            Description: values.name,
-            HolidayDate: values.Date,
-            SortOrder: values.Sortorder,
-            Disable: isCheck,
-            Finyear,
-            CompanyID,
+            Code: values.code,
+            Name: values.name,
+            PanCardNo: values.Pancardnumber,
+            PanImg: panImage,
+            GstNo: values.gstnumber,
+            GstImg: gstImage,
+            MobileNo: values.mobilenumber,
+            RegistrationDate: values.date,
+            VerifyConfirmDate: values.verifieddate,
+            EmailID: values.emailid,
+            CompanyID
         };
 
         try {
@@ -103,7 +216,7 @@ const Editvendor = () => {
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                navigate("/Apps/TR218/Holiday List");
+                navigate("/Apps/TR243/Vendor");
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -128,7 +241,7 @@ const Editvendor = () => {
                     navigate("/");
                 }
                 if (props === "Close") {
-                    navigate("/Apps/TR218/Holiday List");
+                    navigate("/Apps/TR243/Vendor");
                 }
             }
         });
@@ -187,13 +300,13 @@ const Editvendor = () => {
             {!getLoading ? (
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
-                        initialValues={[]}
+                        initialValues={InitialValue}
                         onSubmit={(values, setSubmitting) => {
                             setTimeout(() => {
                                 Fnsave(values);
                             }, 100);
                         }}
-                        //validationSchema={FunctionSchema}
+                        validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
                         {({
@@ -204,6 +317,7 @@ const Editvendor = () => {
                             isSubmitting,
                             values,
                             handleSubmit,
+                            setFieldValue
                         }) => (
                             <form onSubmit={handleSubmit}>
                                 <Box
@@ -226,7 +340,7 @@ const Editvendor = () => {
                                         variant="standard"
                                         focused
                                         required
-                                        ////value={values.code}
+                                        value={values.code}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.code && !!errors.code}
@@ -247,7 +361,7 @@ const Editvendor = () => {
                                         label="Name"
                                         variant="standard"
                                         focused
-                                        ////value={values.name}
+                                        value={values.name}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.name && !!errors.name}
@@ -263,136 +377,85 @@ const Editvendor = () => {
                                     />
                                     <TextField
                                         name="Pancardnumber"
-                                        type="text"
-                                        id="Pancardnumber"
                                         label="Pan Card Number"
                                         variant="standard"
                                         focused
-                                        //value={values.Pancardnumber}
+                                        value={values.Pancardnumber}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
-
-                                        sx={{ background: "" }}
-                                        InputProps={{
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
+                                        onChange={(e) => {
+                                            const input = e.target.value.toUpperCase();
+                                            if (/^[A-Z0-9]*$/.test(input) || input === "") {
+                                                handleChange({
+                                                    target: {
+                                                        name: "Pancardnumber",
+                                                        value: input,
+                                                    },
+                                                });
+                                            }
                                         }}
-                                        onWheel={(e) => e.target.blur()}
-                                        onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value))
-                                                .toString()
-                                                .slice(0, 8);
+                                        error={!!touched.Pancardnumber && !!errors.Pancardnumber}
+                                        helperText={touched.Pancardnumber && errors.Pancardnumber}
+                                        sx={{
+                                            backgroundColor: "#ffffff",
                                         }}
+                                        autoFocus
                                     />
-                                    {/* panimage */}
-                                    <Box display="flex" alignItems="center" gap={2} >
-
-                                        <TextField
-                                            label="PAN Image"
-                                            value={ImageName?.name || ""}
-                                            size="small"
-                                            sx={{ width: "400px", borderRadius: "10px" }}
-                                        />
-
-                                        {/* Hidden File Input */}
-                                        <input
-                                            type="file"
-                                            name="csv"
-                                            id="file-input"
-                                            style={{ display: "none" }}
-                                        //onChange={handleFileChange}
-                                        //disabled={!saveSuccess}
-                                        />
-
-                                        {/* Upload Button triggers file input */}
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                        //disabled={!saveSuccess}
-                                        //onClick={() => document.getElementById("file-input").click()}
-                                        >
-                                            Upload
-                                        </Button>
-                                    </Box>
                                     <TextField
                                         name="gstnumber"
-                                        type="text"
-                                        id="gstnumber"
                                         label="GST Number"
                                         variant="standard"
                                         focused
-                                        //value={values.gstnumber}
+                                        value={values.gstnumber}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
-
-                                        sx={{ background: "" }}
-                                        InputProps={{
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
+                                        onChange={(e) => {
+                                            const input = e.target.value.toUpperCase();
+                                            if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                                                // This updates Formik value correctly
+                                                handleChange({
+                                                    target: {
+                                                        name: "gstnumber",
+                                                        value: input,
+                                                    },
+                                                });
+                                            }
                                         }}
-                                        onWheel={(e) => e.target.blur()}
-                                        onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value))
-                                                .toString()
-                                                .slice(0, 8);
+                                        error={!!touched.gstnumber && !!errors.gstnumber}
+                                        helperText={touched.gstnumber && errors.gstnumber}
+                                        sx={{
+                                            backgroundColor: "#ffffff",
                                         }}
+                                        autoFocus
                                     />
-                                    {/* GSTimage */}
-                                    <Box display="flex" alignItems="center" gap={2}>
-
-                                        <TextField
-                                            label="GST Image"
-                                            value={ImageName?.name || ""}
-                                            size="small"
-                                            sx={{ width: "400px", borderRadius: "10px" }}
-                                        />
-
-                                        {/* Hidden File Input */}
-                                        <input
-                                            type="file"
-                                            name="csv"
-                                            id="file-input"
-                                            style={{ display: "none" }}
-                                        //onChange={handleFileChange}
-                                        //disabled={!saveSuccess}
-                                        />
-
-                                        {/* Upload Button triggers file input */}
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                        //disabled={!saveSuccess}
-                                        //onClick={() => document.getElementById("file-input").click()}
-                                        >
-                                            Upload
-                                        </Button>
-                                    </Box>
                                     <TextField
                                         name="mobilenumber"
-                                        type="number"
+                                        type="tel"
                                         id="mobilenumber"
-                                        label="Contact Mobile number"
+                                        label="Contact Mobile Number"
                                         variant="standard"
                                         focused
-                                        //value={values.mobilenumber}
+                                        value={values.mobilenumber}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            // Only allow numbers and max 10 digits
+                                            if (/^\d{0,10}$/.test(value)) {
+                                                handleChange(e);
+                                            }
+                                        }}
+                                        error={!!touched.mobilenumber && !!errors.mobilenumber}
+                                        helperText={touched.mobilenumber && errors.mobilenumber}
+                                        inputProps={{ maxLength: 10 }}
+                                        sx={{
 
-                                        sx={{ background: "" }}
-                                        InputProps={{
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
+                                            backgroundColor: "#ffffff", // Set the background to white
+                                            "& .MuiFilledInput-root": {
+                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                            }
                                         }}
-                                        onWheel={(e) => e.target.blur()}
-                                        onInput={(e) => {
-                                            e.target.value = Math.max(0, parseInt(e.target.value))
-                                                .toString()
-                                                .slice(0, 8);
-                                        }}
+                                        autoFocus
                                     />
+
+
                                     <TextField
                                         name="emailid"
                                         type="text"
@@ -400,7 +463,7 @@ const Editvendor = () => {
                                         label="Contact Email id"
                                         variant="standard"
                                         focused
-                                        //value={values.emailid}
+                                        value={values.emailid}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
 
@@ -408,7 +471,7 @@ const Editvendor = () => {
 
                                             backgroundColor: "#ffffff", // Set the background to white
                                             "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                             }
                                         }}
                                         autoFocus
@@ -421,12 +484,18 @@ const Editvendor = () => {
                                         variant="standard"
                                         focused
                                         inputFormat="YYYY-MM-DD"
-                                        //value={values.date}
+                                        value={values.date}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.date && !!errors.date}
                                         helperText={touched.date && errors.date}
-                                        sx={{ background: "#f5f5f5" }}
+                                        sx={{
+
+                                            backgroundColor: "#ffffff", // Set the background to white
+                                            "& .MuiFilledInput-root": {
+                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                            }
+                                        }}
                                     //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                                     />
                                     <TextField
@@ -437,26 +506,110 @@ const Editvendor = () => {
                                         variant="standard"
                                         focused
                                         inputFormat="YYYY-MM-DD"
-                                        //value={values.verifieddate}
+                                        value={values.verifieddate}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.date && !!errors.date}
                                         helperText={touched.date && errors.date}
-                                        sx={{ background: "#f5f5f5" }}
-                                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                                        sx={{
+
+                                            backgroundColor: "#ffffff",
+                                            "& .MuiFilledInput-root": {
+                                                backgroundColor: "#f5f5f5 ",
+                                            }
+                                        }}
+
                                     />
 
-                                   
-                                    
 
+                                    {/* panimage */}
+
+
+                                   
                                 </Box>
+
                                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                               
+                                    <Tooltip title="PAN Upload">
+                                        <IconButton
+                                            size="small"
+                                            color="warning"                                           
+                                            aria-label="upload picture"
+                                            component="label"
+                                        >
+                                            <input
+                                                hidden
+                                                accept="all/*"
+                                                type="file"
+                                                onChange={getFilepanChange}
+                                            />
+                                            <PictureAsPdfOutlinedIcon />
+                                        </IconButton>
+                                        </Tooltip>
+                                        <Button
+                                        size="small"
+                                            variant="contained"
+                                            component={"a"}
+                                            onClick={() => {
+                                                data.PanImg || panImage
+                                                    ? window.open(
+                                                        panImage
+                                                            ? store.getState().globalurl.attachmentUrl +
+                                                            panImage
+                                                            : store.getState().globalurl.attachmentUrl +
+                                                            data.PanImg,
+                                                        "_blank"
+                                                    )
+                                                    : toast.error("Please Upload File");
+                                            }}
+                                        >
+                                           PAN Image View
+                                        </Button>                                                                                              
+                                        {/* GSTimage */}
+                                        <Tooltip title="GST Upload">
+                                        <IconButton
+                                            size="small"
+                                            color="warning"
+                                            aria-label="upload picture"
+                                            component="label"
+                                        >
+                                            <input
+                                                hidden
+                                                accept="all/*"
+                                                type="file"
+                                                onChange={getFilegstChange}
+                                            />
+                                            <PictureAsPdfOutlinedIcon />
+                                        </IconButton>
+                                        </Tooltip>
+                                        <Button
+                                        size="small"
+                                            variant="contained"
+                                            component={"a"}
+                                            onClick={() => {
+                                                data.GstImg || gstImage
+                                                    ? window.open(
+                                                        gstImage
+                                                            ? store.getState().globalurl.attachmentUrl +
+                                                            gstImage
+                                                            : store.getState().globalurl.attachmentUrl +
+                                                            data.GstImg,
+                                                        "_blank"
+                                                    )
+                                                    : toast.error("Please Upload File");
+                                            }}
+                                        >
+                                            GST Image View
+                                        </Button>
+
+
+                                    
                                     {YearFlag == "true" ? (
                                         <LoadingButton
                                             color="secondary"
                                             variant="contained"
                                             type="submit"
-                                            loading={loading}
+                                            loading={isLoading}
                                         >
                                             Save
                                         </LoadingButton>
@@ -468,13 +621,13 @@ const Editvendor = () => {
                                         >
                                             Save
                                         </Button>
-                                    )}   {YearFlag == "true" ? (
+                                    )} {YearFlag == "true" ? (
                                         <Button
                                             color="error"
                                             variant="contained"
-                                        // onClick={() => {
-                                        //     Fnsave(values, "harddelete");
-                                        // }}
+                                            onClick={() => {
+                                                Fnsave(values, "harddelete");
+                                            }}
                                         >
                                             Delete
                                         </Button>
@@ -490,9 +643,9 @@ const Editvendor = () => {
                                     <Button
                                         color="warning"
                                         variant="contained"
-                                    // onClick={() => {
-                                    //     navigate("/Apps/TR218/Holiday List");
-                                    // }}
+                                        onClick={() => {
+                                            navigate("/Apps/TR243/Vendor");
+                                        }}
                                     >
                                         Cancel
                                     </Button>
