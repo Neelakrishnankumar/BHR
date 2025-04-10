@@ -23,9 +23,10 @@ import {
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../index";
+
 import {
   explorePostData,
   fetchApidata,
@@ -86,7 +87,9 @@ const EditemployeePayroll = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  const location = useLocation();
+  const state = location.state || {};
+  console.log(state, "emnployee");
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -1582,10 +1585,11 @@ const EditemployeePayroll = () => {
             )}
             <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
               <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{ color: '#0000D1' }} />}>
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}>Employee</Typography>
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}> {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}</Typography>
                 {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Allowances</Typography>) : false}
                 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Deductions</Typography>) : false}
                 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Leave</Typography>) : false}
+                {show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >OT</Typography>) : false}
                 {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Salary Advance</Typography>) : false}
                 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Attendance</Typography>) : false}
                 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Payroll Attendance</Typography>) : false}

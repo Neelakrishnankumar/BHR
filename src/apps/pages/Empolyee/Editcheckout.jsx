@@ -13,7 +13,9 @@ import {
   Select,
   MenuItem,
   LinearProgress,
+  Breadcrumbs,
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -40,24 +42,30 @@ import Listviewpopup from "../Lookup";
 // import CryptoJS from "crypto-js";
 const Editcheckout = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  console.log("hiiiiiiiiiiiiiiii");
   const navigate = useNavigate();
   let params = useParams();
   console.log("🚀 ~ file: Editcheckout.jsx:45 ~ Editcheckout ~ params:", params)
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
+  const location = useLocation();
+  const state = location.state || {};
+  
+  console.log(state,"checkout");
   var accessID = params.accessID;
   const data = useSelector((state) => state.formApi.Data);
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+  
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
    const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
-  const location = useLocation();
+  
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -70,6 +78,7 @@ const Editcheckout = () => {
 
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split('T')[0];
+  console.log("checkout", data.EmployeeName);
   const InitialValue = {
     checkouttype: data.CheckOutType,
     date: data.HiddenDate,
@@ -105,7 +114,7 @@ const Editcheckout = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR124/Check Out");
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -207,7 +216,7 @@ const Editcheckout = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR124/Check Out");
+          navigate(-1);
         }
       } else {
         return;
@@ -224,7 +233,31 @@ const Editcheckout = () => {
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          <Typography variant="h3">Check Out</Typography>
+          <Breadcrumbs
+            maxItems={3}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+             <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employee");
+              }}
+            >
+              {`Employee(${state.EmpName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+             
+            >
+              Check Out
+            </Typography>
+           
+          </Breadcrumbs>
         </Box>
         <Box display="flex">
           <Tooltip title="Close">
@@ -517,7 +550,7 @@ const Editcheckout = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR124/Check Out");
+                      navigate(-1);
                     }}
                   >
                     Cancel

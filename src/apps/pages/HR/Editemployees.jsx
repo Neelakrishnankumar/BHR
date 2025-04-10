@@ -25,7 +25,7 @@ import { subDays, differenceInDays } from "date-fns";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../index";
 import {
@@ -119,6 +119,9 @@ const Editemployee = () => {
 
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
+  const location = useLocation();
+  const state = location.state || {};
+  console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   //  console.log("deploymentData",deploymentData);
@@ -1473,16 +1476,11 @@ const Editemployee = () => {
                   aria-label="breadcrumb"
                   separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                 >
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => {
-                      setScreen(0);
-                    }}
-                  >
-                    Employee
-                  </Typography>
+                   <Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}>
+                    
+                     {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}
+
+                    </Typography>
                   {show == "5" ? (
                     <Typography
                       variant="h5"
@@ -1600,6 +1598,8 @@ const Editemployee = () => {
                     <MenuItem value={4}>Deployment</MenuItem>
                     <MenuItem value={6}>List of Attachments</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
+
+
                   </Select>
                 </FormControl>
               ) : (
@@ -2422,7 +2422,7 @@ const Editemployee = () => {
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2436,7 +2436,7 @@ const Editemployee = () => {
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2451,7 +2451,7 @@ const Editemployee = () => {
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -4230,6 +4230,89 @@ const Editemployee = () => {
                           // inputProps={{ readOnly: true }}
                         />
 
+                        <Box
+                          m="5px 0 0 0"
+                          //height={dataGridHeight}
+                          height="50vh"
+                          sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              backgroundColor: "#D3D3D3",
+                              color: "", // Color for even rows
+                            },
+                          }}
+                        >
+                          <DataGrid
+                            sx={{
+                              "& .MuiDataGrid-footerContainer": {
+                                height: dataGridHeaderFooterHeight,
+                                minHeight: dataGridHeaderFooterHeight,
+                              },
+                            }}
+                            rows={explorelistViewData}
+                            columns={columns}
+                            disableSelectionOnClick
+                            getRowId={(row) => row.RecordID}
+                            rowHeight={dataGridRowHeight}
+                            headerHeight={dataGridHeaderFooterHeight}
+                            pageSize={pageSize}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
+                            onCellClick={(params) => {
+                              selectCellRowData({
+                                rowData: params.row,
+                                mode: "E",
+                                field: params.field,
+                              });
+                            }}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            pagination
+                            components={{
+                              Toolbar: Employee,
+                            }}
+                            onStateChange={(stateParams) =>
+                              setRowCount(stateParams.pagination.rowCount)
+                            }
+                            loading={exploreLoading}
+                            componentsProps={{
+                              toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                              },
+                            }}
+                            getRowClassName={(params) =>
+                              params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"}
+/>
+</Box>
                         <Box
                           m="5px 0 0 0"
                           //height={dataGridHeight}

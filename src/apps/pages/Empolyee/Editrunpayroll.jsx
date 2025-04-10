@@ -175,7 +175,18 @@ export default function EditEnquiryTruck() {
 
       <Paper elevation={3} sx={{ margin: "10px" }}>
         {/* Left Side: Text Fields */}
-        <Grid container spacing={2}>
+       <Box
+                         display="grid"
+                         gap={formGap}
+                         padding={1}
+                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                         // gap="30px"
+                         sx={{
+                           "& > div": {
+                             gridColumn: isNonMobile ? undefined : "span 2",
+                           },
+                         }}
+                       >
   {/* Hidden ID Field */}
   <Grid item xs={12} sx={{ display: "none" }}>
     <TextField
@@ -269,7 +280,7 @@ export default function EditEnquiryTruck() {
       </Button>
     </Box>
   </Grid>
-</Grid>
+</Box>
           {/* <TextField
               name="sortorder"
               type="number"
