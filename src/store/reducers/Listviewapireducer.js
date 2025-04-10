@@ -3509,7 +3509,7 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      <Link
+                      {/* <Link
                         to={`/Apps/TR027/Employees/EditEmpfinance entry/E/${params.row.RecordID}/${params.row.Name}`}
                       >
                         <Tooltip title="Finance Entry">
@@ -3517,7 +3517,7 @@ export const fetchListview =
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
+                      </Link> */}
                       </Box>
                       )  : AccessID == "TR003" ? (
                         <Link
