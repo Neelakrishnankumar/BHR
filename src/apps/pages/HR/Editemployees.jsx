@@ -268,11 +268,12 @@ const Editemployee = () => {
 
   // ***************  EMPLOYEE-FUNCTION LOOKUP  *************** //
 
-  const [vendorlookup, SetVendorlookup] = useState({
-    venRecordID: "",
-    venCode: "",
-    venName: "",
-  });
+  const [vendorlookup, SetVendorlookup] = useState(null);
+  //   {
+  //   venRecordID: "",
+  //   venCode: "",
+  //   venName: "",
+  // });
   const [functionLookup, SetFunctionLookup] = useState({
     funRecordID: "",
     funCode: "",
@@ -376,11 +377,11 @@ const Editemployee = () => {
       setOpenFunPopup(false);
     }
     if (type == "Vendor") {
-      SetVendorlookup({
-        venRecordID: childdata.RecordID,
-        venCode: childdata.Code,
-        venName: childdata.Name,
-      });
+      // SetVendorlookup({
+      //   venRecordID: childdata.RecordID,
+      //   venCode: childdata.Code,
+      //   venName: childdata.Name,
+      // });
       setOpenvenPopup(false);
     }
 
@@ -897,6 +898,7 @@ const Editemployee = () => {
     unitrate: "",
     alertdate: "",
     renewalperiod: "",
+    vendor: "",
   });
 
   const selectCellRowData = ({ rowData, mode, field }) => {
@@ -916,11 +918,12 @@ const Editemployee = () => {
         funCode: "",
         funName: "",
       });
-      SetVendorlookup({
-        venRecordID: "",
-        venCode: "",
-        venName: "",
-      });
+      SetVendorlookup(null);
+      //   {
+      //   venRecordID: "",
+      //   venCode: "",
+      //   venName: "",
+      // });
       SetDesignationLookup({
         desRecordID: "",
         desCode: "",
@@ -951,6 +954,7 @@ const Editemployee = () => {
         unitrate: "",
         alertdate: "",
         renewalperiod: "",
+        vendor: "",
       });
     } else {
       if (field == "action") {
@@ -962,9 +966,12 @@ const Editemployee = () => {
           funName: rowData.FunctionName,
         });
         SetVendorlookup({
-          venRecordID: rowData.Vendor,
-          venCode: rowData.VendorCode,
-          venName: rowData.VendorName,
+          RecordID: rowData.Vendor,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+          // venRecordID: rowData.Vendor,
+          // venCode: rowData.VendorCode,
+          // venName: rowData.VendorName,
         });
         SetDesignationLookup({
           desRecordID: rowData.DesignationID,
@@ -986,7 +993,7 @@ const Editemployee = () => {
           reference: rowData.ItemValue,
         });
 
-        console.log();
+      
         setContractorData({
           recordID: rowData.RecordID,
           fromperiod: rowData.FromPeriod,
@@ -995,6 +1002,7 @@ const Editemployee = () => {
           unitrate: rowData.UnitRate,
           alertdate: rowData.NotificationAlertDate,
           renewalperiod: rowData.RenewableNotification,
+          vendor: rowData.Vendor ? {RecordID:rowData.Vendor,Code: rowData.VendorCode,Name:rowData.VendorName} : null,
         });
       }
     }
@@ -1122,7 +1130,8 @@ const Editemployee = () => {
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
-      Vendor: vendorlookup.venRecordID,
+      // Vendor: values.vendor.RecordID,
+      Vendor: vendorlookup ? vendorlookup.RecordID : 0,
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
       // FromPeriod: funMode === "E" ? formatDateForInput(values.FromPeriod) : values.FromPeriod,
@@ -5081,7 +5090,7 @@ const Editemployee = () => {
                       </Box>
                     </Box>
                     <FormControl sx={{ gap: formGap }}>
-                      <Box
+                      {/* <Box
                         sx={{
                           display: "flex",
                           flexDirection: "row",
@@ -5111,26 +5120,37 @@ const Editemployee = () => {
                           focused
                           value={vendorlookup.venName}
                         />
-                      </Box>
-                      {/* 
+                      </Box> */}
+                      
                     <Productautocomplete
                         name="vendor"
                         label="vendor"
+                          variant="outlined"
                         id="vendor"
-                        value={values.vendor}
+                        value={vendorlookup}
+                        // value={values.vendor}
                         onChange={(newValue) => {
-                          setFieldValue("vendor", newValue)
-                          console.log(newValue.RecordID, "////");
+                          // setFieldValue("vendor", newValue);
+                          console.log(newValue, "--newvalue vendor");
+                          
+                          console.log(newValue.RecordID, "vendor RecordID");
+                       
+                          SetVendorlookup({
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
 
-                      /> */}
+                      />
                       {/* <SingleFormikOptimizedAutocomplete
-                        name="vendor"
+                       
                         label="Vendor"
                         id="vendor"
+                         name="vendor"
                         value={vendorlookup}
                         // value={values.vendor}
                         // onChange={(newValue) => {
