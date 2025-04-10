@@ -300,7 +300,6 @@ console.log(data.EmployeeName);
               {`Employee(${state.EmpName})`}
             </Typography>
             <Typography
-              variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
              
