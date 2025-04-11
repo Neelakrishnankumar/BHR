@@ -478,8 +478,8 @@ const EditmileWeightage = () => {
                                     sx={{ cursor: "pointer" }}
                                     onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
                                 >
-                                {/* {`Milestone(${state.MilestoneName})`} */}
-                                Milestone
+                                {`Milestone(${state.MilestoneName})`}
+                               
                                 </Typography>
                             )}
                             {type === "ACT" && (
@@ -514,7 +514,7 @@ const EditmileWeightage = () => {
                                     variant="h5"
                                     color="#0000D1"
                                     sx={{ cursor: "pointer" }}
-                                    //onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
+                                    onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
                                 >
                                     {`Milestone(${state.MilestoneName})`}
                                     
@@ -525,7 +525,7 @@ const EditmileWeightage = () => {
                                     variant="h5"
                                     color="#0000D1"
                                     sx={{ cursor: "pointer" }}
-                                //onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
+                                onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
                                 >
                                     {`Stages(${state.stagesName})`}
                                 </Typography>

@@ -57,6 +57,7 @@ const EditMilestones = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+  const state =location.state || {};
   //  useEffect(() => {
   //      // Fetch data only when the recID or mode changes
   //      if (recID && mode === "E") {
@@ -203,7 +204,7 @@ const EditMilestones = () => {
                   navigate("/Apps/TR133/Project");
                 }}
               >
-                Project
+               {` Project(${state.projectName})`}
               </Typography>
 
               <Typography
