@@ -840,7 +840,7 @@ const Edittask = () => {
                             //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
                             >
                                 {/* {`Task(${state.TaskName})`} */}
-                                {`Task(${state.TaskName})`}
+                                {mode === "E" ? `Task(${state.TaskName})` : "Task(New)"} 
                             </Typography>
                             {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Task detail</Typography>) : false}
                         </Breadcrumbs>
