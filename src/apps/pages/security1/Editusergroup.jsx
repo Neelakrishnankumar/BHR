@@ -268,7 +268,7 @@ const Editusergroup = () => {
     {
       field: "SM_CAPTION1",
       headerName: "Screen Name",
-      width: 250,
+      width: 200,
     },
     {
       field: "all",

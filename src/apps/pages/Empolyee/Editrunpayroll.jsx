@@ -34,6 +34,7 @@ import {
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
+import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
 
 
 export default function EditEnquiryTruck() {
@@ -201,7 +202,7 @@ export default function EditEnquiryTruck() {
   {/* Company + Icon */}
   <Grid item xs={6}>
     <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-      <TextField
+      {/* <TextField
         id="company"
         label="Company"
         variant="standard"
@@ -212,7 +213,34 @@ export default function EditEnquiryTruck() {
       />
       <IconButton sx={{ height: 40, width: 40 }}>
         <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-      </IconButton>
+      </IconButton> */}
+
+           <Productautocomplete
+                                sx={{ marginTop: "7px" }}
+                                name="company"
+                                // label="company"
+                                label={
+                                  <span>
+                                    Company
+                                    <span
+                                      style={{ color: "red", fontWeight: "bold" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                id="company"
+                                // value={values.company}
+                                onChange={(newValue) => {
+                                  // setFieldValue("company", newValue);
+                                  console.log(newValue, "--newValue");
+                                  console.log(newValue.RecordID, "////");
+                                }}
+                                //  onChange={handleSelectionFunctionname}
+                                // defaultValue={selectedFunctionName}
+                                url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Company","Filter":"","Any":""}}`}
+                              />
     </FormControl>
   </Grid>
 

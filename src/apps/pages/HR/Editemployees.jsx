@@ -111,6 +111,8 @@ const Editemployee = () => {
 
   const navigate = useNavigate();
   let params = useParams();
+
+  
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
@@ -258,16 +260,18 @@ const Editemployee = () => {
     lookupCode: "",
     lookupDesc: "",
   });
-  const [designLookup, setdesignLookup] = React.useState({
-    designlookupRecordid: "",
-    designlookupCode: "",
-    designlookupDesc: "",
-  });
-  const [selectproLookupData, setselectproLookupData] = React.useState({
-    PROlookupRecordid: "",
-    PROlookupCode: "",
-    PROlookupDesc: "",
-  });
+  const [designLookup, setdesignLookup] = React.useState(null);
+  //   {
+  //   designlookupRecordid: "",
+  //   designlookupCode: "",
+  //   designlookupDesc: "",
+  // });
+  const [selectproLookupData, setselectproLookupData] = React.useState(null);
+  //   {
+  //   PROlookupRecordid: "",
+  //   PROlookupCode: "",
+  //   PROlookupDesc: "",
+  // });
 
   // ***************  EMPLOYEE-FUNCTION LOOKUP  *************** //
 
@@ -277,47 +281,54 @@ const Editemployee = () => {
   //   venCode: "",
   //   venName: "",
   // });
-  const [functionLookup, SetFunctionLookup] = useState({
-    funRecordID: "",
-    funCode: "",
-    funName: "",
-  });
+  const [functionLookup, SetFunctionLookup] = useState(null);
+  //   {
+  //   funRecordID: "",
+  //   funCode: "",
+  //   funName: "",
+  // });
 
-  const [designationLookup, SetDesignationLookup] = useState({
-    desRecordID: "",
-    desCode: "",
-    desName: "",
-    ManagerID: "",
-  });
+  const [designationLookup, SetDesignationLookup] = useState(null);
+  //   {
+  //   desRecordID: "",
+  //   desCode: "",
+  //   desName: "",
+  //   ManagerID: "",
+  // });
 
-  const [locationLookup, SetLocationLookup] = useState({
-    locationRecordID: "",
-    locationCode: "",
-    locationName: "",
-  });
-  const [gateLookup, SetGateLookup] = useState({
-    gateRecordID: "",
-    gateCode: "",
-    gateName: "",
-  });
+  const [locationLookup, SetLocationLookup] = useState(null);
+  //   {
+  //   locationRecordID: "",
+  //   locationCode: "",
+  //   locationName: "",
+  // });
+  const [gateLookup, SetGateLookup] = useState(null);
+  //   {
+  //   gateRecordID: "",
+  //   gateCode: "",
+  //   gateName: "",
+  // });
   if (isPopupData == false) {
     selectLookupData.lookupRecordid = Data.DeptRecordID;
     selectLookupData.lookupCode = Data.DeptCode;
     selectLookupData.lookupDesc = Data.DeptName;
 
     //Designation
-    designLookup.designlookupRecordid = deploymentData.DesignationID;
-    designLookup.designlookupCode = deploymentData.DesignationCode;
-    designLookup.designlookupDesc = deploymentData.DesignationName;
+   
+    // designLookup.designlookupRecordid = deploymentData.DesignationID;
+    // designLookup.designlookupCode = deploymentData.DesignationCode;
+    // designLookup.designlookupDesc = deploymentData.DesignationName;
+ 
+ 
     //Location
-    locationLookup.locationRecordID = deploymentData.LocationID;
-    locationLookup.locationCode = deploymentData.LocationCode;
-    locationLookup.locationName = deploymentData.LocationName;
+    // locationLookup.locationRecordID = deploymentData.LocationID;
+    // locationLookup.locationCode = deploymentData.LocationCode;
+    // locationLookup.locationName = deploymentData.LocationName;
 
     //Gate
-    gateLookup.gateRecordID = deploymentData.StoregatemasterID;
-    gateLookup.gateCode = deploymentData.StoregatemasterCode;
-    gateLookup.gateName = deploymentData.StoregatemasterName;
+    // gateLookup.gateRecordID = deploymentData.StoregatemasterID;
+    // gateLookup.gateCode = deploymentData.StoregatemasterCode;
+    // gateLookup.gateName = deploymentData.StoregatemasterName;
   }
 
   //************************** Lookup value assign type based Function *****************/
@@ -334,49 +345,45 @@ const Editemployee = () => {
     }
 
     if (type == "Process") {
-      setselectproLookupData({
-        PROlookupCode: childdata.Code,
-        PROlookupRecordid: childdata.RecordID,
-        PROlookupDesc: childdata.Name,
-      });
+      // setselectproLookupData({
+      //   PROlookupCode: childdata.Code,
+      //   PROlookupRecordid: childdata.RecordID,
+      //   PROlookupDesc: childdata.Name,
+      // });
       setOpenPROPopup(false);
     }
     if (type == "Designation") {
-      setdesignLookup({
-        designlookupRecordid: childdata.RecordID,
-        designlookupCode: childdata.Code,
-        designlookupDesc: childdata.Name,
-      });
+      // setdesignLookup({
+      //   designlookupRecordid: childdata.RecordID,
+      //   designlookupCode: childdata.Code,
+      //   designlookupDesc: childdata.Name,
+      // });
       setOpendesignPopup(false);
     }
     if (type == "Location") {
-      SetLocationLookup({
-        locationRecordID: childdata.RecordID,
-        // locationRecordid: childdata.RecordID,
-        locationCode: childdata.Code,
-        locationName: childdata.Name,
-      });
+      // SetLocationLookup({
+      //   locationRecordID: childdata.RecordID,
+      //   // locationRecordid: childdata.RecordID,
+      //   locationCode: childdata.Code,
+      //   locationName: childdata.Name,
+      // });
       setOpenLOCATIONPopup(false);
     }
-    console.log(
-      locationLookup.locationRecordID,
-      "--find locationLookup.locationRecordID"
-    );
-
+   
     if (type == "Gate") {
-      SetGateLookup({
-        gateRecordID: childdata.RecordID,
-        gateCode: childdata.Code,
-        gateName: childdata.Name,
-      });
+      // SetGateLookup({
+      //   gateRecordID: childdata.RecordID,
+      //   gateCode: childdata.Code,
+      //   gateName: childdata.Name,
+      // });
       setOpenGATEPopup(false);
     }
     if (type == "Functions") {
-      SetFunctionLookup({
-        funRecordID: childdata.RecordID,
-        funCode: childdata.Code,
-        funName: childdata.Name,
-      });
+      // SetFunctionLookup({
+      //   funRecordID: childdata.RecordID,
+      //   funCode: childdata.Code,
+      //   funName: childdata.Name,
+      // });
       setOpenFunPopup(false);
     }
     if (type == "Vendor") {
@@ -389,12 +396,12 @@ const Editemployee = () => {
     }
 
     if (type == "Designations") {
-      SetDesignationLookup({
-        desRecordID: childdata.DesignationID,
-        ManagerID: childdata.RecordID,
-        desCode: childdata.Code,
-        desName: childdata.Name,
-      });
+      // SetDesignationLookup({
+      //   desRecordID: childdata.DesignationID,
+      //   ManagerID: childdata.RecordID,
+      //   desCode: childdata.Code,
+      //   desName: childdata.Name,
+      // });
       setOpenDesPopup(false);
     }
   };
@@ -413,7 +420,6 @@ const Editemployee = () => {
       isCheck = "Y";
     }
 
-    console.log(locationLookup.locationRecordID, gateLookup.gateRecordID);
 
     var saveData = {
       RecordID: recID,
@@ -542,11 +548,12 @@ const Editemployee = () => {
     setIniProcess(true);
     if (bMode == "A") {
       setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-      setselectproLookupData({
-        PROlookupRecordid: "",
-        PROlookupCode: "",
-        PROlookupDesc: "",
-      });
+      setselectproLookupData(null);
+      //   {
+      //   PROlookupRecordid: "",
+      //   PROlookupCode: "",
+      //   PROlookupDesc: "",
+      // });
     } else {
       if (field == "action") {
         console.log("selectdata" + data.Disable);
@@ -557,9 +564,12 @@ const Editemployee = () => {
         });
 
         setselectproLookupData({
-          PROlookupRecordid: data.PsRecordID,
-          PROlookupCode: data.ProcessCode,
-          PROlookupDesc: data.ProcessDescription,
+          RecordID: data.PsRecordID,
+          Code: data.ProcessCode,
+          Name: data.ProcessDescription,
+          // PROlookupRecordid: data.PsRecordID,
+          // PROlookupCode: data.ProcessCode,
+          // PROlookupDesc: data.ProcessDescription,
         });
       }
     }
@@ -599,7 +609,8 @@ const Editemployee = () => {
       saveData = {
         RecordID: supprodata.RecordID,
         EmpRecordID: recID,
-        PsRecordID: selectproLookupData.PROlookupRecordid,
+        PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+        // PsRecordID: selectproLookupData.PROlookupRecordid,
         Comments: values.Comments,
         SortOrder: values.SortOrder,
       };
@@ -609,7 +620,8 @@ const Editemployee = () => {
         saveData = {
           RecordID: "",
           EmpRecordID: recID,
-          PsRecordID: selectproLookupData.PROlookupRecordid,
+          PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+          // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
           CompanyID,
@@ -619,7 +631,8 @@ const Editemployee = () => {
         saveData = {
           RecordID: supprodata.RecordID,
           EmpRecordID: recID,
-          PsRecordID: selectproLookupData.PROlookupRecordid,
+          PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+          // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
           CompanyID,
@@ -706,11 +719,12 @@ const Editemployee = () => {
 
   const clrForm = () => {
     setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-    setselectproLookupData({
-      PROlookupRecordid: "",
-      PROlookupCode: "",
-      PROlookupDesc: "",
-    });
+    setselectproLookupData(null);
+    //   {
+    //   PROlookupRecordid: "",
+    //   PROlookupCode: "",
+    //   PROlookupDesc: "",
+    // });
 
     selectcelldata("", "A", "");
   };
@@ -916,23 +930,28 @@ const Editemployee = () => {
     if (mode == "A") {
       setFunMgrRecID("");
       setFunEmpRecID("");
-      SetFunctionLookup({
-        funRecordID: "",
-        funCode: "",
-        funName: "",
-      });
+      SetFunctionLookup(null);
+      //   {
+      //   funRecordID: "",
+      //   funCode: "",
+      //   funName: "",
+      // });
       SetVendorlookup(null);
       //   {
       //   venRecordID: "",
       //   venCode: "",
       //   venName: "",
       // });
-      SetDesignationLookup({
-        desRecordID: "",
-        desCode: "",
-        desName: "",
-        ManagerID: "",
-      });
+      SetDesignationLookup(null);
+      //   {
+      //   desRecordID: "",
+      //   desCode: "",
+      //   desName: "",
+      //   ManagerID: "",
+      // });
+
+      setdesignLookup(null);
+      SetGateLookup(null);
       SetEmpLoaData({
         description: "",
         recordID: "",
@@ -964,9 +983,13 @@ const Editemployee = () => {
         setFunMgrRecID(rowData.RecordID);
         setFunEmpRecID(rowData.RecordID);
         SetFunctionLookup({
-          funRecordID: rowData.FunctionsID,
-          funCode: rowData.FunctionCode,
-          funName: rowData.FunctionName,
+          RecordID: rowData.FunctionsID,
+          Code: rowData.FunctionCode,
+          Name: rowData.FunctionName,
+
+          // funRecordID: rowData.FunctionsID,
+          // funCode: rowData.FunctionCode,
+          // funName: rowData.FunctionName,
         });
         SetVendorlookup({
           RecordID: rowData.Vendor,
@@ -977,11 +1000,28 @@ const Editemployee = () => {
           // venName: rowData.VendorName,
         });
         SetDesignationLookup({
-          desRecordID: rowData.DesignationID,
-          desCode: rowData.EmployeeCode,
-          desName: rowData.EmployeeName,
+          RecordID: rowData.DesignationID,
           ManagerID: rowData.EmployeeID,
+          Code: rowData.EmployeeCode,
+          Name: rowData.EmployeeName,
+          // desRecordID: rowData.DesignationID,
+          // desCode: rowData.EmployeeCode,
+          // desName: rowData.EmployeeName,
+          // ManagerID: rowData.EmployeeID,
         });
+
+        setdesignLookup({
+          RecordID: rowData.DesignationID,
+          Code: rowData.DesignationCode,
+          Name: rowData.DesignationName,
+        });
+
+        SetGateLookup({
+          RecordID: rowData.StoregatemasterID,
+          Code: rowData.StoregatemasterCode,
+          Name: rowData.StoregatemasterName,
+        });
+
         SetEmpLoaData({
           description: rowData.Description,
           recordID: rowData.RecordID,
@@ -1021,7 +1061,9 @@ const Editemployee = () => {
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
-      FunctionsID: functionLookup.funRecordID,
+      FunctionsID: functionLookup ? functionLookup.RecordID : 0,
+
+      // FunctionsID: functionLookup.funRecordID,
       CompanyID,
     };
 
@@ -1238,12 +1280,12 @@ const Editemployee = () => {
       Friday: values.friday === true ? "Y" : "N",
       Saturday: values.saturday === true ? "Y" : "N",
       Sunday: values.sunday === true ? "Y" : "N",
-      DesignationID: designLookup.designlookupRecordid,
-      LocationID: locationLookup.locationRecordID,
-      StoregatemasterID: gateLookup.gateRecordID,
+      DesignationID: designLookup ? designLookup.RecordID : 0,
+      LocationID: locationLookup ? locationLookup.RecordID : 0,
+      StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
       CompanyID,
     };
-    console.log(locationLookup.locationRecordID, "????????");
+    // console.log(locationLookup.locationRecordID, "????????");
     const response = await dispatch(postDeployment({ data: idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
@@ -1784,7 +1826,7 @@ const Editemployee = () => {
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth
@@ -2231,7 +2273,7 @@ const Editemployee = () => {
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                      filterValue={locationLookup.locationRecordID}
+                      // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -2765,6 +2807,7 @@ const Editemployee = () => {
                       sx={{
                         //mt: "15px",
                         gap: formGap,
+                        marginTop: "20px"
                       }}
                     >
                       <Formik
@@ -2819,7 +2862,30 @@ const Editemployee = () => {
                                   alignItems: "center",
                                 }}
                               >
-                                <TextField
+                                 <Productautocomplete
+                        name="process"
+                        label="process"
+                          variant="outlined"
+                        id="process"
+                        value={selectproLookupData}
+                        // value={values.process}
+                        onChange={(newValue) => {
+                          // setFieldValue("process", newValue);
+                          console.log(newValue, "--newvalue process");
+                          
+                          console.log(newValue.RecordID, "process RecordID");
+                       
+                          setselectproLookupData({
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                      
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2001","ScreenName":"Process","Filter":"parentID=${CompanyID}","Any":""}}`}
+
+                      />
+                                {/* <TextField
                                   id="outlined-basic"
                                   label="ID"
                                   variant="standard"
@@ -2836,24 +2902,24 @@ const Editemployee = () => {
                                   focused
                                   required
                                   inputProps={{ tabIndex: "-1" }}
-                                />
+                                /> */}
                                 {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
                                 {/* <MoreHorizIcon onClick={()=>handleShow('SM')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                                <IconButton
+                                {/* <IconButton
                                   sx={{ height: 40, width: 40 }}
                                   onClick={() => handleShow("PRO")}
                                 >
                                   <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                                </IconButton>
+                                </IconButton> */}
                                 {/* </Button> */}
-                                <TextField
+                                {/* <TextField
                                   id="outlined-basic"
                                   variant="standard"
                                   value={selectproLookupData.PROlookupDesc}
                                   fullWidth
                                   focused
                                   inputProps={{ tabIndex: "-1" }}
-                                />
+                                /> */}
                               </FormControl>
 
                               <TextField
@@ -3188,7 +3254,7 @@ const Editemployee = () => {
                       />
                       {/* </Box> */}
                     </Box>
-                    <FormControl sx={{ gap: formGap }}>
+                    <FormControl sx={{ gap: formGap,marginTop: "30px" }}>
                       <Box
                         sx={{
                           display: "flex",
@@ -3196,7 +3262,31 @@ const Editemployee = () => {
                           alignItems: "center",
                         }}
                       >
-                        <TextField
+                         <Productautocomplete
+                        name="function"
+                        label="function"
+                          variant="outlined"
+                        id="function"
+                        value={functionLookup}
+                        // value={values.function}
+                        onChange={(newValue) => {
+                          // setFieldValue("function", newValue);
+                          console.log(newValue, "--newvalue function");
+                          
+                          console.log(newValue.RecordID, "function RecordID");
+                       
+                          SetFunctionLookup({
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                        //  onChange={handleSelectionFunctionname}
+                        // defaultValue={selectedFunctionName}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+
+                      />
+                        {/* <TextField
                           id="function"
                           label="Function"
                           variant="standard"
@@ -3218,7 +3308,7 @@ const Editemployee = () => {
                           inputProps={{ tabIndex: "-1" }}
                           focused
                           value={functionLookup.funName}
-                        />
+                        /> */}
                       </Box>
                     </FormControl>
                   </Box>
@@ -3470,7 +3560,7 @@ const Editemployee = () => {
                       />
                     </Box>
 
-                    <FormControl sx={{ gap: formGap }}>
+                    <FormControl sx={{ gap: formGap,marginTop: "30px" }}>
                       <Box
                         sx={{
                           display: "flex",
@@ -3478,7 +3568,33 @@ const Editemployee = () => {
                           alignItems: "center",
                         }}
                       >
-                        <TextField
+
+<Productautocomplete
+                        name="manager"
+                        label="manager"
+                          variant="outlined"
+                        id="manager"
+                        value={designationLookup}
+                        // value={values.manager}
+                        onChange={(newValue) => {
+                          // setFieldValue("manager", newValue);
+                          console.log(newValue, "--newvalue manager");
+                          
+                          console.log(newValue.RecordID, "manager RecordID");
+                       
+                          SetDesignationLookup({
+                            RecordID: newValue.DesignationID,
+                            ManagerID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                        //  onChange={handleSelectionFunctionname}
+                        // defaultValue={selectedFunctionName}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
+
+                      />
+                        {/* <TextField
                           id="manager"
                           label="Manager"
                           variant="standard"
@@ -3500,7 +3616,7 @@ const Editemployee = () => {
                           inputProps={{ tabIndex: "-1" }}
                           focused
                           value={designationLookup.desName}
-                        />
+                        /> */}
                       </Box>
                     </FormControl>
                   </Box>
@@ -3724,7 +3840,35 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                      <TextField
+                <Productautocomplete
+                        name="Designation"
+                        label={
+                          <span>
+                            Designation
+                            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                          </span>
+                        }
+                          variant="outlined"
+                        id="Designation"
+                        value={designLookup}
+                        // value={values.Designation}
+                        onChange={(newValue) => {
+                          // setFieldValue("Designation", newValue);
+                          console.log(newValue, "--newvalue Designation");
+                          
+                          console.log(newValue.RecordID, "Designation RecordID");
+                       
+                          setdesignLookup({
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                      
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+
+                      />
+                      {/* <TextField
                         id="outlined-basic"
                         label="ID"
                         variant="standard"
@@ -3741,11 +3885,11 @@ const Editemployee = () => {
                         required
                         DESIGN
                         inputProps={{ tabIndex: "-1" }}
-                      />
+                      /> */}
                       {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
                       {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
                       {/* </Button> */}
-                      <IconButton
+                      {/* <IconButton
                         sx={{ height: 40, width: 40 }}
                         onClick={() => handleShow("DESIGN")}
                       >
@@ -3759,7 +3903,7 @@ const Editemployee = () => {
                         fullWidth
                         focused
                         inputProps={{ tabIndex: "-1" }}
-                      />
+                      /> */}
                     </FormControl>
                     <FormControl
                       sx={{
@@ -3769,7 +3913,7 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                      <TextField
+                      {/* <TextField
                         id="outlined-basic"
                         label="ID"
                         variant="standard"
@@ -3786,11 +3930,11 @@ const Editemployee = () => {
                         required
                         DESIGN
                         inputProps={{ tabIndex: "-1" }}
-                      />
+                      /> */}
                       {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
                       {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
                       {/* </Button> */}
-                      <IconButton
+                      {/* <IconButton
                         sx={{ height: 40, width: 40 }}
                         onClick={() => handleShow("LOCATION")}
                       >
@@ -3804,7 +3948,33 @@ const Editemployee = () => {
                         fullWidth
                         focused
                         inputProps={{ tabIndex: "-1" }}
-                      />
+                      /> */}
+
+
+<Productautocomplete
+  name="location"
+  label={
+    <span>
+      location
+      <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+    </span>
+  }
+  variant="outlined"
+  id="location"
+  value={locationLookup}
+  onChange={(newValue) => {
+    console.log(newValue, "--newvalue location");
+    console.log(newValue.RecordID, "location RecordID");
+
+    SetLocationLookup({
+      RecordID: newValue.RecordID,
+      Code: newValue.Code,
+      Name: newValue.Name,
+    });
+  }}
+  url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+/>
+
                     </FormControl>
                     <FormControl
                       sx={{
@@ -3814,7 +3984,32 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                      <TextField
+
+                      
+<Productautocomplete
+  name="gate"
+  label={
+    <span>
+      Gate
+      <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+    </span>
+  }
+  variant="outlined"
+  id="gate"
+  value={gateLookup}
+  onChange={(newValue) => {
+    console.log(newValue, "--newvalue gate");
+    console.log(newValue.RecordID, "gate RecordID");
+
+    SetGateLookup({
+      RecordID: newValue.RecordID,
+      Code: newValue.Code,
+      Name: newValue.Name,
+    });
+  }}
+  url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${locationLookup ? locationLookup.RecordID : 0}'","Any":""}}`}
+/>
+                      {/* <TextField
                         id="outlined-basic"
                         label="ID"
                         variant="standard"
@@ -3831,11 +4026,13 @@ const Editemployee = () => {
                         required
                         DESIGN
                         inputProps={{ tabIndex: "-1" }}
-                      />
+                      /> */}
+
                       {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
                       {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
                       {/* </Button> */}
-                      <IconButton
+
+                      {/* <IconButton
                         sx={{ height: 40, width: 40 }}
                         onClick={() => handleShow("GATE")}
                       >
@@ -3849,7 +4046,8 @@ const Editemployee = () => {
                         fullWidth
                         focused
                         inputProps={{ tabIndex: "-1" }}
-                      />
+                      /> */}
+
                     </FormControl>
                     <FormControl
                       sx={{
@@ -4125,7 +4323,7 @@ const Editemployee = () => {
                       accessID="2050"
                       screenName="Gate"
                       filterName={"parentID"}
-                      filterValue={locationLookup.locationRecordID}
+                      // filterValue={locationLookup.locationRecordID}
                       childToParent={childToParent}
                     />
                   </Popup>
@@ -4313,90 +4511,7 @@ const Editemployee = () => {
                                 : "even-row"}
 />
 </Box>
-                        <Box
-                          m="5px 0 0 0"
-                          //height={dataGridHeight}
-                          height="50vh"
-                          sx={{
-                            "& .MuiDataGrid-root": {
-                              border: "none",
-                            },
-                            "& .MuiDataGrid-cell": {
-                              borderBottom: "none",
-                            },
-                            "& .name-column--cell": {
-                              color: colors.greenAccent[300],
-                            },
-                            "& .MuiDataGrid-columnHeaders": {
-                              backgroundColor: colors.blueAccent[800],
-                              borderBottom: "none",
-                            },
-                            "& .MuiDataGrid-virtualScroller": {
-                              backgroundColor: colors.primary[400],
-                            },
-                            "& .MuiDataGrid-footerContainer": {
-                              borderTop: "none",
-                              backgroundColor: colors.blueAccent[800],
-                            },
-                            "& .MuiCheckbox-root": {
-                              color: `${colors.greenAccent[200]} !important`,
-                            },
-                            "& .odd-row": {
-                              backgroundColor: "",
-                              color: "", // Color for odd rows
-                            },
-                            "& .even-row": {
-                              backgroundColor: "#D3D3D3",
-                              color: "", // Color for even rows
-                            },
-                          }}
-                        >
-                          <DataGrid
-                            sx={{
-                              "& .MuiDataGrid-footerContainer": {
-                                height: dataGridHeaderFooterHeight,
-                                minHeight: dataGridHeaderFooterHeight,
-                              },
-                            }}
-                            rows={explorelistViewData}
-                            columns={columns}
-                            disableSelectionOnClick
-                            getRowId={(row) => row.RecordID}
-                            rowHeight={dataGridRowHeight}
-                            headerHeight={dataGridHeaderFooterHeight}
-                            pageSize={pageSize}
-                            onPageSizeChange={(newPageSize) =>
-                              setPageSize(newPageSize)
-                            }
-                            onCellClick={(params) => {
-                              selectCellRowData({
-                                rowData: params.row,
-                                mode: "E",
-                                field: params.field,
-                              });
-                            }}
-                            rowsPerPageOptions={[5, 10, 20]}
-                            pagination
-                            components={{
-                              Toolbar: Employee,
-                            }}
-                            onStateChange={(stateParams) =>
-                              setRowCount(stateParams.pagination.rowCount)
-                            }
-                            loading={exploreLoading}
-                            componentsProps={{
-                              toolbar: {
-                                showQuickFilter: true,
-                                quickFilterProps: { debounceMs: 500 },
-                              },
-                            }}
-                            getRowClassName={(params) =>
-                              params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                            }
-                          />
-                        </Box>
+                   
                       </FormControl>
 
                       <FormControl
@@ -5172,7 +5287,7 @@ const Editemployee = () => {
                         />
                       </Box>
                     </Box>
-                    <FormControl sx={{ gap: formGap }}>
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
                       {/* <Box
                         sx={{
                           display: "flex",
@@ -5226,7 +5341,7 @@ const Editemployee = () => {
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
 
                       />
                       {/* <SingleFormikOptimizedAutocomplete
