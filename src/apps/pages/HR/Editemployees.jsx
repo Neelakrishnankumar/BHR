@@ -23,7 +23,7 @@ import {
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate ,useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../index";
 import {
@@ -93,7 +93,7 @@ const Editemployee = () => {
   };
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-
+   const location = useLocation()
   const handleFormSubmit = (values) => {
     console.log(values);
   };
@@ -123,7 +123,7 @@ const Editemployee = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
-  }, []);
+  }, [location.key]);
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
