@@ -18,14 +18,15 @@ import {
   FormControlLabel,
   Select,
   Tooltip,
-  Paper
+  Paper,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../index";
+
 import {
   explorePostData,
   fetchApidata,
@@ -72,7 +73,13 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { imageUpload } from "../../../store/reducers/Imguploadreducer";
 import { Code } from "@mui/icons-material";
 import { type } from "@testing-library/user-event/dist/type";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
+import {
+  dataGridHeaderFooterHeight,
+  dataGridHeight,
+  dataGridRowHeight,
+  formGap,
+} from "../../../ui-components/global/utils";
+import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
 // ***********************************************
 //  Developer:Gowsalya
 // Purpose:To Create Employee
@@ -86,7 +93,9 @@ const EditemployeePayroll = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  const location = useLocation();
+  const state = location.state || {};
+  console.log(state, "emnployee");
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -106,13 +115,15 @@ const EditemployeePayroll = () => {
       NumberOfHoursWorked: params.row.NumberOfHoursWorked,
       RecordID: params.row.RecordID,
       SLNO: params.row.SLNO,
-      Status: params.row.Status
+      Status: params.row.Status,
     };
-    setSelectedData(rowData);  // Store the selected row data (optional, for tracking)
+    setSelectedData(rowData); // Store the selected row data (optional, for tracking)
     console.log("Data to be passed:", rowData);
 
     // Navigate to another screen, passing the data in state
-    navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`, { state: rowData });
+    navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`, {
+      state: rowData,
+    });
     // navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
   };
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -135,14 +146,19 @@ const EditemployeePayroll = () => {
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   //  console.log("deploymentData",deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
-  console.log("🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:", DataExplore)
+  console.log(
+    "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
+    DataExplore
+  );
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openADPopup, setOpenADPopup] = useState(false);
   const [openLETPopup, setOpenLETPopup] = useState(false);
 
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
-  const empAttendanceData = useSelector((state) => state.formApi.empAttendanceData);
+  const empAttendanceData = useSelector(
+    (state) => state.formApi.empAttendanceData
+  );
   console.log("empAttendanceData", empAttendanceData);
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
@@ -159,19 +175,19 @@ const EditemployeePayroll = () => {
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
   var userimg = store.getState().globalurl.imageUrl;
-  if (mode == "A") {
-    userimg = userimg + "Defaultimg.jpg";
-  } else {
-    if (
-      Data.ImageName == undefined ||
-      Data.ImageName == null ||
-      Data.ImageName == ""
-    ) {
-      userimg = userimg + "Defaultimg.jpg";
-    } else {
-      userimg = userimg + Data.ImageName;
-    }
-  }
+  // if (mode == "A") {
+  //   userimg = userimg + "Defaultimg.jpg";
+  // } else {
+  //   if (
+  //     Data.ImageName == undefined ||
+  //     Data.ImageName == null ||
+  //     Data.ImageName == ""
+  //   ) {
+  //     userimg = userimg + "Defaultimg.jpg";
+  //   } else {
+  //     userimg = userimg + Data.ImageName;
+  //   }
+  // }
   const [funMode, setFunMode] = useState("A");
   var apiData = "";
   apiData = {
@@ -185,6 +201,13 @@ const EditemployeePayroll = () => {
     SortOrder: Data.SortOrder,
     Disable: Data.Disable,
     Password: Data.Password,
+    Department: Data.DeptRecordID
+      ? {
+          RecordID: Data.DeptRecordID,
+          Code: Data.DeptCode,
+          Name: Data.DeptName,
+        }
+      : null,
   };
   //*******Assign Employee values from Database in  Yup initial value******* */
   const initialValues = {
@@ -199,8 +222,8 @@ const EditemployeePayroll = () => {
     SortOrder: apiData.SortOrder,
     checkbox: apiData.Disable,
     Password: apiData.Password,
+    Department: apiData.Department,
   };
-
 
   const [isPopupData, setisPopupdata] = React.useState(false);
   const [opendesignPopup, setOpendesignPopup] = useState(false);
@@ -210,7 +233,6 @@ const EditemployeePayroll = () => {
     if (type == "DE") {
       setOpenDEPopup(true);
     }
-
 
     if (type == "AD") {
       setOpenADPopup(true);
@@ -229,26 +251,28 @@ const EditemployeePayroll = () => {
     lookupCode: "",
     lookupDesc: "",
   });
-  const [selectOHLookupData, setselectOHLookupData] = React.useState({
-    OHlookupRecordid: "",
-    OHlookupCode: "",
-    OHlookupDesc: "",
-  });
+  const [selectOHLookupData, setselectOHLookupData] = React.useState(null);
+  //   {
+  //   OHlookupRecordid: "",
+  //   OHlookupCode: "",
+  //   OHlookupDesc: "",
+  // });
 
-  const [ADLookupData, setADLookupData] = React.useState({
-    adRecordID: "",
-    adType: "",
-    adDesc: "",
-    adCategory: "",
-  });
-  const [selectLETLookupData, setselectLETLookupData] = React.useState({
-    letlookupRecordid: "",
-    letlookupCode: "",
-    letlookupDesc: "",
-  });
+  const [ADLookupData, setADLookupData] = React.useState(null);
+  //   {
+  //   adRecordID: "",
+  //   adType: "",
+  //   adDesc: "",
+  //   adCategory: "",
+  // });
+  const [selectLETLookupData, setselectLETLookupData] = React.useState(null);
+  //   {
+  //   letlookupRecordid: "",
+  //   letlookupCode: "",
+  //   letlookupDesc: "",
+  // });
 
   // ***************  EMPLOYEE-FUNCTION LOOKUP  *************** //
-
 
   if (isPopupData == false) {
     selectLookupData.lookupRecordid = Data.DeptRecordID;
@@ -267,42 +291,36 @@ const EditemployeePayroll = () => {
         lookupDesc: childdata.Name,
       });
       setOpenDEPopup(false);
-    };
+    }
     if (type == "OverHead") {
       setisPopupdata(true);
-      setselectOHLookupData({
-        OHlookupRecordid: childdata.RecordID,
-        OHlookupCode: childdata.Code,
-        OHlookupDesc: childdata.Name,
-      });
+      // setselectOHLookupData({
+      //   OHlookupRecordid: childdata.RecordID,
+      //   OHlookupCode: childdata.Code,
+      //   OHlookupDesc: childdata.Name,
+      // });
       setOpenOHPopup(false);
     }
     if (type == "Allowance" || type == "Deduction") {
-      setADLookupData({
-        adType: childdata.Type,
-        adRecordID: childdata.RecordID,
-        adDesc: childdata.Name,
-        adCategory: childdata.SalaryCategory,
+      // setADLookupData({
+      //   adType: childdata.Type,
+      //   adRecordID: childdata.RecordID,
+      //   adDesc: childdata.Name,
+      //   adCategory: childdata.SalaryCategory,
 
-      });
+      // });
       setOpenADPopup(false);
-    };
+    }
     if (type == "Leave Type") {
-      setselectLETLookupData({
-        letlookupCode: childdata.Code,
-        letlookupRecordid: childdata.RecordID,
-        letlookupDesc: childdata.Name,
-      });
+      // setselectLETLookupData({
+      //   letlookupCode: childdata.Code,
+      //   letlookupRecordid: childdata.RecordID,
+      //   letlookupDesc: childdata.Name,
+      // });
       setOpenLETPopup(false);
-    };
-
-
-
-  }
+    }
+  };
   // **********Save Function*****************
-
-
-
 
   const fnSave = async (values) => {
     setLoading(true);
@@ -324,7 +342,8 @@ const EditemployeePayroll = () => {
 
     var saveData = {
       RecordID: recID,
-      DeptRecordID: selectLookupData.lookupRecordid,
+      DeptRecordID: values.Department.RecordID || 0,
+      // DeptRecordID: selectLookupData.lookupRecordid,
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder,
@@ -337,7 +356,7 @@ const EditemployeePayroll = () => {
       DesignID: 0,
       LocationRecID: 0,
       GateRecID: 0,
-      WeekOff: 0
+      WeekOff: 0,
     };
     var type = "";
 
@@ -379,16 +398,19 @@ const EditemployeePayroll = () => {
   });
   const [boMode, setBomode] = useState("A");
 
-
-
-
-
   // **********ScreenChange Function*********
   const screenChange = (event) => {
     setScreen(event.target.value);
 
     if (event.target.value == "1") {
-      dispatch(fetchExplorelitview("TR206", "Employee Allowances", `${recID} AND Category='A'`, ""));
+      dispatch(
+        fetchExplorelitview(
+          "TR206",
+          "Employee Allowances",
+          `${recID} AND Category='A'`,
+          ""
+        )
+      );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -398,7 +420,14 @@ const EditemployeePayroll = () => {
     }
 
     if (event.target.value == "5") {
-      dispatch(fetchExplorelitview("TR206", "Employee Deductions", `${recID} AND Category='D'`, ""));
+      dispatch(
+        fetchExplorelitview(
+          "TR206",
+          "Employee Deductions",
+          `${recID} AND Category='D'`,
+          ""
+        )
+      );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -421,18 +450,22 @@ const EditemployeePayroll = () => {
       dispatch(fetchApidata(accessID, "get", recID));
     }
     if (event.target.value == "2") {
-      dispatch(fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""));
+      dispatch(
+        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
+      );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "7") {
-      dispatch(fetchExplorelitview("TR160", "Salary Advance", `EmployeeID=${recID}`, ""));
+      dispatch(
+        fetchExplorelitview(
+          "TR160",
+          "Salary Advance",
+          `EmployeeID=${recID}`,
+          ""
+        )
+      );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
-
-
-
-
-
   };
 
   /******************Employee values assign a state variale******************** */
@@ -443,7 +476,6 @@ const EditemployeePayroll = () => {
     setIniProcess(true);
     if (bMode == "A") {
       setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-
     } else {
       if (field == "action") {
         console.log("selectdata" + data.Disable);
@@ -452,40 +484,55 @@ const EditemployeePayroll = () => {
           Comments: data.Comments,
           SortOrder: data.SortOrder,
         });
-
-
       }
     }
   };
   //*******Assign Employee values from Grid table in  Yup initial value******* */
 
-
   /******************************save  Function********** */
 
   //*********************Contact******************/
 
-
-
-
-
   let VISIBLE_FIELDS;
   if (show == "2") {
-    VISIBLE_FIELDS = ["SLNO", "LeaveTypeName", "LeavePart", "FromDate", "ToDate", "Status", "action"];
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "LeaveTypeName",
+      "LeavePart",
+      "FromDate",
+      "ToDate",
+      "Status",
+      "action",
+    ];
   } else if (show == "1") {
-    VISIBLE_FIELDS = ["SLNO", "Allowances", "Type", "value", "EffectiveValue", "action"];
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "Allowances",
+      "Type",
+      "value",
+      "EffectiveValue",
+      "action",
+    ];
   } else if (show == "6") {
     VISIBLE_FIELDS = ["SLNO", "OtDate", "NumberOfHours", "Status", "action"];
+  } else if (show == "7") {
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "SalaryAdvanceDate",
+      "OverHeadsCode",
+      "OverHeadsName",
+      "action",
+    ];
+  } else {
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "Deductions",
+      "Type",
+      "value",
+      "EffectiveValue",
+      "action",
+    ];
   }
-  else if (show == "7") {
-    VISIBLE_FIELDS = ["SLNO", "SalaryAdvanceDate", "OverHeadsCode", "OverHeadsName", "action"];
-  }
-
-  else {
-    VISIBLE_FIELDS = ["SLNO", "Deductions", "Type", "value", "EffectiveValue", "action"];
-  }
-
-
-
 
   const columns = React.useMemo(
     () =>
@@ -510,9 +557,17 @@ const EditemployeePayroll = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-
-          <Typography>{(show == "2" ? "List of Leave" : show == "6" ? "List of OT" : show == "7" ? "List of SalaryAdvance" : (show == "1" ? "List of Allowance" : "List of Deductions"))}</Typography>
-
+          <Typography>
+            {show == "2"
+              ? "List of Leave"
+              : show == "6"
+              ? "List of OT"
+              : show == "7"
+              ? "List of SalaryAdvance"
+              : show == "1"
+              ? "List of Allowance"
+              : "List of Deductions"}
+          </Typography>
 
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -587,7 +642,6 @@ const EditemployeePayroll = () => {
     {
       field: "SLNO",
       headerName: "SL.NO",
-
     },
     {
       field: "Name",
@@ -684,7 +738,8 @@ const EditemployeePayroll = () => {
       field: "Day17",
       headerName: "17",
       flex: 1,
-    }, {
+    },
+    {
       field: "Day18",
       headerName: "18",
       flex: 1,
@@ -768,7 +823,6 @@ const EditemployeePayroll = () => {
     {
       field: "Present",
       headerName: "Present",
-
     },
     // {
     //   field: "Absent",
@@ -778,26 +832,20 @@ const EditemployeePayroll = () => {
     {
       field: "Leave",
       headerName: "Leave",
-
     },
     {
       field: "Weekoff",
       headerName: "weekoff",
-
     },
     {
       field: "Total",
       headerName: "Total",
-
     },
-
-
   ];
   const AttColumn = [
     {
       field: "SLNO",
       headerName: "SL.NO",
-
     },
 
     {
@@ -809,7 +857,6 @@ const EditemployeePayroll = () => {
       field: "EmplyeeCheckOutDateTime",
       headerName: "Emplyee CheckOut Date Time",
       flex: 1,
-
     },
     {
       field: "NumberOfHoursWorked",
@@ -832,15 +879,15 @@ const EditemployeePayroll = () => {
             color="primary"
             size="small"
             onClick={() => handleButtonClick(params)}
-            // onClick={() => 
-              // { 
-              // handleButtonClick
-              // dispatch(setReg({ params}));
-              //dispatch(setReg({ params}));
-              //regfn(params);
-               // Navigate to the second screen for regularization
-              //  navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
-              // Set the selected row data in the state
+            // onClick={() =>
+            // {
+            // handleButtonClick
+            // dispatch(setReg({ params}));
+            //dispatch(setReg({ params}));
+            //regfn(params);
+            // Navigate to the second screen for regularization
+            //  navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
+            // Set the selected row data in the state
             //   setAsignReg({
             //     CheckInDate: params.row.CheckInDate,
             //     CheckOutDate: params.row.CheckOutDate,
@@ -857,18 +904,14 @@ const EditemployeePayroll = () => {
             //   console.log(params.row, "-- onclick setAsignReg");
             //  console.log(params.row.Name, "--Name");
             // }}
-              // }
+            // }
           >
             Regularization
           </Button>
         );
       },
     },
-
   ];
-
-
-
 
   const [itemCustodyData, setItemCustodyData] = useState({
     recordID: "",
@@ -877,20 +920,20 @@ const EditemployeePayroll = () => {
     assestID: "",
     itemValue: "",
     reference: "",
-  })
+  });
 
   const [leaveData, setLeaveData] = useState({
     recordID: "",
     fromDate: "",
     toDate: "",
     LeavePart: "",
-    Status: ""
-  })
+    Status: "",
+  });
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
     sortOrder: "",
-  })
+  });
   const [otdata, setOtdata] = useState({
     RecordID: "",
     OtDate: "",
@@ -898,8 +941,8 @@ const EditemployeePayroll = () => {
     OtType: "",
     PaymentMethod: "",
     Status: "",
-    Comments: ""
-  })
+    Comments: "",
+  });
   const [saladdata, setSaladdata] = useState({
     RecordID: "",
     SalaryAdvanceDate: "",
@@ -909,7 +952,7 @@ const EditemployeePayroll = () => {
     // OverHeadsName: "",
     Amount: "",
     Comments: "",
-  })
+  });
   const selectCellRowData = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
@@ -920,37 +963,39 @@ const EditemployeePayroll = () => {
     // setLaoMode(mode);
 
     if (mode == "A") {
-
       setAllDecData({
         recordID: "",
         value: "",
         sortOrder: "",
-      })
+      });
 
-      setADLookupData({
-        adType: '',
-        adRecordID: '',
-        adDesc: '',
-        adCategory: '',
+      setADLookupData(null);
+      //   {
+      //   adType: '',
+      //   adRecordID: '',
+      //   adDesc: '',
+      //   adCategory: '',
 
-      });
-      setselectLETLookupData({
-        letlookupCode: "",
-        letlookupRecordid: "",
-        letlookupDesc: "",
-      });
-      setselectOHLookupData({
-        OHlookupRecordid: "",
-        OHlookupCode: "",
-        OHlookupDesc: "",
-      });
+      // });
+      setselectLETLookupData(null);
+      //   {
+      //   letlookupCode: "",
+      //   letlookupRecordid: "",
+      //   letlookupDesc: "",
+      // });
+      setselectOHLookupData(null);
+      //   {
+      //   OHlookupRecordid: "",
+      //   OHlookupCode: "",
+      //   OHlookupDesc: "",
+      // });
 
       setLeaveData({
         recordID: "",
         fromDate: "",
         toDate: "",
         LeavePart: "",
-        Status: ""
+        Status: "",
       });
       setOtdata({
         RecordID: "",
@@ -959,8 +1004,8 @@ const EditemployeePayroll = () => {
         OtType: "",
         PaymentMethod: "",
         Status: "",
-        Comments: ""
-      })
+        Comments: "",
+      });
       setSaladdata({
         RecordID: "",
         SalaryAdvanceDate: "",
@@ -970,10 +1015,9 @@ const EditemployeePayroll = () => {
         // OverHeadsName: "",
         Amount: "",
         Comments: "",
-      })
+      });
     } else {
       if (field == "action") {
-
         setItemCustodyData({
           recordID: rowData.RecordID,
           itemNO: rowData.ItemNumber,
@@ -981,15 +1025,14 @@ const EditemployeePayroll = () => {
           assestID: rowData.ItemValue,
           itemValue: rowData.ItemValue,
           reference: rowData.ItemValue,
-        })
+        });
         setLeaveData({
           recordID: rowData.RecordID,
           fromDate: rowData.FromDate,
           toDate: rowData.ToDate,
           LeavePart: rowData.LeavePart,
-          Status: rowData.Status
-
-        })
+          Status: rowData.Status,
+        });
         setOtdata({
           RecordID: rowData.RecordID,
           OtDate: rowData.OtDate,
@@ -997,18 +1040,24 @@ const EditemployeePayroll = () => {
           OtType: rowData.OtType,
           PaymentMethod: rowData.PaymentMethod,
           Status: rowData.Status,
-          Comments: rowData.Comments
-        })
+          Comments: rowData.Comments,
+        });
 
         setselectLETLookupData({
-          letlookupCode: rowData.LeaveTypeCode,
-          letlookupRecordid: rowData.LeaveTypeID,
-          letlookupDesc: rowData.LeaveTypeName
+          RecordID: rowData.LeaveTypeID,
+          Code: rowData.LeaveTypeCode,
+          Name: rowData.LeaveTypeName,
+          // letlookupCode: rowData.LeaveTypeCode,
+          // letlookupRecordid: rowData.LeaveTypeID,
+          // letlookupDesc: rowData.LeaveTypeName,
         });
         setselectOHLookupData({
-          OHlookupRecordid: rowData.OverHeadsID,
-          OHlookupCode: rowData.OverHeadsCode,
-          OHlookupDesc: rowData.OverHeadsName,
+           RecordID: rowData.OverHeadsID,
+          Code: rowData.OverHeadsCode,
+          Name: rowData.OverHeadsName,
+          // OHlookupRecordid: rowData.OverHeadsID,
+          // OHlookupCode: rowData.OverHeadsCode,
+          // OHlookupDesc: rowData.OverHeadsName,
         });
         setSaladdata({
           RecordID: rowData.RecordID,
@@ -1025,13 +1074,18 @@ const EditemployeePayroll = () => {
           recordID: rowData.RecordID,
           value: rowData.value,
           sortOrder: rowData.Sortorder,
-        })
-        setADLookupData({
-          adType: rowData.Type,
-          adRecordID: rowData.SalaryComponentID,
-          adDesc: rowData.Name,
-          adCategory: rowData.Category,
+        });
+        console.log(rowData.Sortorder, "--rowData.Sortorder in Allowances");
 
+        setADLookupData({
+          // adType: rowData.Type,
+          // adRecordID: rowData.SalaryComponentID,
+          // adDesc: rowData.Name,
+          // adCategory: rowData.Category,
+          RecordID: rowData.SalaryComponentID,
+          Type: rowData.Type,
+          Name: rowData.Name,
+          SalaryCategory: rowData.Category,
         });
       }
     }
@@ -1045,18 +1099,28 @@ const EditemployeePayroll = () => {
     FromDate: leaveData.fromDate,
     ToDate: leaveData.toDate,
     // LeaveCategory: leaveData.leaveCategory,
-    LeavePart: leaveData.LeavePart === "First half" ? "FH" :
-      leaveData.LeavePart === "Second Half" ? "SH" :
-        leaveData.LeavePart === "Full Day" ? "N" : "",
-    Status: leaveData.Status == "Applied" ? "AL" :
-      leaveData.Status == "Rejected" ? "RJ" :
-        leaveData.Status == "Approved" ? "AP" : "",
+    LeavePart:
+      leaveData.LeavePart === "First half"
+        ? "FH"
+        : leaveData.LeavePart === "Second Half"
+        ? "SH"
+        : leaveData.LeavePart === "Full Day"
+        ? "N"
+        : "",
+    Status:
+      leaveData.Status == "Applied"
+        ? "AL"
+        : leaveData.Status == "Rejected"
+        ? "RJ"
+        : leaveData.Status == "Approved"
+        ? "AP"
+        : "",
     SortOrder: "1",
     Disable: "N",
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-  }
+  };
 
   const leaveFNsave = async (values, resetForm, del) => {
     setLoading(true);
@@ -1064,8 +1128,8 @@ const EditemployeePayroll = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: leaveData.recordID,
       // Type:values.Type,
@@ -1077,9 +1141,10 @@ const EditemployeePayroll = () => {
       Status: values.Status,
       SortOrder: "1",
       Disable: "N",
-      LeaveTypeID: selectLETLookupData.letlookupRecordid,
+      // LeaveTypeID: selectLETLookupData.letlookupRecordid,
+      LeaveTypeID: selectLETLookupData ? selectLETLookupData.RecordID : 0,
 
-    }
+    };
     const response = await dispatch(
       explorePostData({ accessID: "TR208", action, idata })
     );
@@ -1097,7 +1162,7 @@ const EditemployeePayroll = () => {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
-  }
+  };
 
   /*OT SAVE FUNCTION*/
   //-------------------------------------OT SAVE FUNCTION---------------------------------------------//
@@ -1108,22 +1173,38 @@ const EditemployeePayroll = () => {
     Date: otdata.OtDate,
     NumberOfHours: otdata.NumberOfHours,
     comments: otdata.Comments,
-    paymentmethods: otdata.PaymentMethod === "Assitis" ? "AS" :
-      otdata.PaymentMethod === "Time and a Half" ? "TH" :
-        otdata.PaymentMethod === "Double Time" ? "DT" :
-          otdata.PaymentMethod === "Compensate" ? "CS" : "",
-    OtType: otdata.OtType === "Flexible Scheduling" ? "FS" :
-      otdata.OtType === "Shift Swaps" ? "SS" : "",
-    Status: otdata.Status === "Applied" ? "AL" :
-      otdata.Status === "Approved" ? "AP" :
-        otdata.Status === "Rejected" ? "RJ" : "",
-  }
+    paymentmethods:
+      otdata.PaymentMethod === "Assitis"
+        ? "AS"
+        : otdata.PaymentMethod === "Time and a Half"
+        ? "TH"
+        : otdata.PaymentMethod === "Double Time"
+        ? "DT"
+        : otdata.PaymentMethod === "Compensate"
+        ? "CS"
+        : "",
+    OtType:
+      otdata.OtType === "Flexible Scheduling"
+        ? "FS"
+        : otdata.OtType === "Shift Swaps"
+        ? "SS"
+        : "",
+    Status:
+      otdata.Status === "Applied"
+        ? "AL"
+        : otdata.Status === "Approved"
+        ? "AP"
+        : otdata.Status === "Rejected"
+        ? "RJ"
+        : "",
+  };
 
   const otFNsave = async (values, resetForm, del) => {
     setLoading(true);
-    let action = funMode === "A" && !del
-      ? "insert"
-      : funMode === "E" && del
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
         ? "harddelete"
         : "update";
     const idata = {
@@ -1145,17 +1226,14 @@ const EditemployeePayroll = () => {
       // SortOrder: "1",
       // Disable: "N",
       // LeaveTypeID:selectLETLookupData.letlookupRecordid,
-
-    }
+    };
 
     const response = await dispatch(
       explorePostData({ accessID: "TR216", action, idata })
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
-      dispatch(
-        fetchExplorelitview("TR216", "OT", `EmployeeID=${recID}`, "")
-      );
+      dispatch(fetchExplorelitview("TR216", "OT", `EmployeeID=${recID}`, ""));
 
       toast.success(response.payload.Msg);
 
@@ -1165,7 +1243,7 @@ const EditemployeePayroll = () => {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
-  }
+  };
   // Salary Advance
   const salAdinitialValue = {
     //RecID: data.RecordID,
@@ -1183,9 +1261,10 @@ const EditemployeePayroll = () => {
   };
   const salAdFNsave = async (values, resetForm, del) => {
     setLoading(true);
-    let action = funMode === "A" && !del
-      ? "insert"
-      : funMode === "E" && del
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
         ? "harddelete"
         : "update";
     const idata = {
@@ -1193,9 +1272,12 @@ const EditemployeePayroll = () => {
       //RecordID: Data.recID,
       SalaryAdvanceDate: values.date,
       ReferranceIfAny: values.referenceifany,
-      OverHeadsID: selectOHLookupData.OHlookupRecordid,
-      OverHeadsCode: selectOHLookupData.OHlookupCode,
-      OverHeadsName: selectOHLookupData.OHlookupDesc,
+      OverHeadsID: selectOHLookupData ? selectOHLookupData.RecordID : 0,
+      OverHeadsCode: selectOHLookupData ? selectOHLookupData.Code : "",
+      OverHeadsName: selectOHLookupData ? selectOHLookupData.Name : "",
+      // OverHeadsID: selectOHLookupData.OHlookupRecordid,
+      // OverHeadsCode: selectOHLookupData.OHlookupCode,
+      // OverHeadsName: selectOHLookupData.OHlookupDesc,
       Amount: values.amount,
       Comments: values.comments,
       EmployeeID: recID,
@@ -1215,8 +1297,7 @@ const EditemployeePayroll = () => {
       // SortOrder: "1",
       // Disable: "N",
       // LeaveTypeID:selectLETLookupData.letlookupRecordid,
-
-    }
+    };
 
     const response = await dispatch(
       explorePostData({ accessID: "TR160", action, idata })
@@ -1224,7 +1305,12 @@ const EditemployeePayroll = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR160", "Salary Advance", `EmployeeID=${recID}`, "")
+        fetchExplorelitview(
+          "TR160",
+          "Salary Advance",
+          `EmployeeID=${recID}`,
+          ""
+        )
       );
 
       toast.success(response.payload.Msg);
@@ -1235,9 +1321,7 @@ const EditemployeePayroll = () => {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
-  }
-
-
+  };
 
   // **********Save Function*****************
   const AllDedInitialValues = {
@@ -1246,16 +1330,22 @@ const EditemployeePayroll = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-    salaryCategory: (ADLookupData.adCategory === 'A') ? "Allowances" : (ADLookupData.adCategory === 'D') ? "Deductions" : ADLookupData.adCategory,
-    type: ADLookupData.adType,
+
+    salaryCategory: ADLookupData
+      ? ADLookupData.SalaryCategory === "A"
+        ? "Allowances"
+        : ADLookupData.SalaryCategory === "D"
+        ? "Deductions"
+        : "N"
+      : "",
+
+    // salaryCategory: (ADLookupData.adCategory === 'A') ? "Allowances" : (ADLookupData.adCategory === 'D') ? "Deductions" : ADLookupData.adCategory,
+    type: ADLookupData ? ADLookupData.Type : "",
+
+    // type: ADLookupData.adType,
     value: allDecData.value,
-    sortorder: allDecData.sortOrder
-
-
+    sortorder: allDecData.sortOrder,
   };
-
-
-
 
   const AllDedFNsave = async (values, resetForm, del) => {
     setLoading(true);
@@ -1263,36 +1353,38 @@ const EditemployeePayroll = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     var isCheck = "N";
     if (values.checkbox == true) {
       isCheck = "Y";
     }
     const idata = {
-      "RecordID": allDecData.recordID,
-      "SalaryComponentID": ADLookupData.adRecordID,
-      "SCName": ADLookupData.adDesc,
-      "SCType": values.type,
-      "SCCategory": show == '1' ? 'A' : "D",
-      "Value": values.value,
-      "EffectiveValue": show == '1' ? Number(Data.Sal) + Number(values.value) : Number(Data.Sal) - Number(values.value),
-      "SortOrder": 1,
-      "Disable": "N",
+      RecordID: allDecData.recordID,
+      // "SalaryComponentID": ADLookupData.adRecordID,
+      // "SCName": ADLookupData.adDesc,
+      SalaryComponentID: ADLookupData ? ADLookupData.RecordID : 0,
+      SCName: ADLookupData ? ADLookupData.Name : "",
+      SCType: values.type,
+      SCCategory: show == "1" ? "A" : "D",
+      Value: values.value,
+      EffectiveValue:
+        show == "1"
+          ? Number(Data.Sal) + Number(values.value)
+          : Number(Data.Sal) - Number(values.value),
+      SortOrder: values.sortorder,
+      Disable: "N",
 
       parentID: recID,
-
-    }
-
+    };
 
     const response = await dispatch(
       explorePostData({ accessID: "TR206", action, idata })
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
-      const query = show == "1"
-        ? `${recID} AND Category='A'`
-        : `${recID} AND Category='D'`;
+      const query =
+        show == "1" ? `${recID} AND Category='A'` : `${recID} AND Category='D'`;
       dispatch(
         fetchExplorelitview("TR206", "AllowancesAndDeductions", query, "")
       );
@@ -1305,7 +1397,7 @@ const EditemployeePayroll = () => {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
-  }
+  };
   // *************** ITEMCUSTODY SCREEN SAVE FUNCTION *************** //
 
   const itemcustodyInitialValue = {
@@ -1324,8 +1416,8 @@ const EditemployeePayroll = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: itemCustodyData.recordID,
       EmployeeID: recID,
@@ -1357,23 +1449,19 @@ const EditemployeePayroll = () => {
     }
   };
 
-
   // *************** PAYROLL ATTENDANCE *************** //
   const PAttInitialvalues = {
     code: Data.Code,
     description: Data.Name,
     month: "",
     year: "",
-  }
+  };
   const attFnSave = async (values) => {
-
     const data = {
       Month: values.month.toString(),
       Year: values.year,
-      EmployeeID: recID
-
-    }
-
+      EmployeeID: recID,
+    };
 
     dispatch(empAttendance({ data }));
   };
@@ -1384,16 +1472,13 @@ const EditemployeePayroll = () => {
     Sal: Data.Sal,
     month: "",
     year: "",
-  }
+  };
   const attendaceFnSave = async (values) => {
-
     const data = {
       Month: values.month.toString(),
       Year: values.year,
-      EmployeeID: recID
-
-    }
-
+      EmployeeID: recID,
+    };
 
     dispatch(Attendance({ data }));
   };
@@ -1414,9 +1499,8 @@ const EditemployeePayroll = () => {
     const data = {
       Month: values.month.toString(),
       Year: values.year,
-      EmployeeID: recID
-
-    }
+      EmployeeID: recID,
+    };
 
     const response = await dispatch(AttendanceProcess({ data }));
 
@@ -1428,23 +1512,14 @@ const EditemployeePayroll = () => {
     // }
 
     if (response.payload.Status == "Y") {
-
       toast.success(response.payload.Msg);
-
-
-    }
-
-    else {
-
+    } else {
       toast.error(response.payload.Msg);
     }
-
-
   };
   /*end of the Process button onclick */
 
   const getFileChange = async (event) => {
-
     // setImgName(event.target.files[0]);
 
     console.log(event.target.files[0]);
@@ -1453,41 +1528,40 @@ const EditemployeePayroll = () => {
     formData.append("file", event.target.files[0]);
     formData.append("type", "attachments");
 
-    const fileData = await dispatch(
-      imageUpload({ formData })
-    );
+    const fileData = await dispatch(imageUpload({ formData }));
     // setImgName(fileData.payload.name)
-    console.log(">>>", fileData.payload)
-    console.log("🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:", fileData)
+    console.log(">>>", fileData.payload);
+    console.log(
+      "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
+      fileData
+    );
     if (fileData.payload.Status == "Y") {
       // console.log("I am here");
       toast.success(fileData.payload.Msg);
-
     }
-
-  }
+  };
   const fnLogOut = (props) => {
     Swal.fire({
       title: `Do you want ${props}?`,
       // text:data.payload.Msg,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: props
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
     }).then((result) => {
       if (result.isConfirmed) {
-        if (props === 'Logout') {
-          navigate("/")
+        if (props === "Logout") {
+          navigate("/");
         }
-        if (props === 'Close') {
-          navigate("/Apps/TR027/Employees")
+        if (props === "Close") {
+          navigate("/Apps/TR027/Employees");
         }
       } else {
-        return
+        return;
       }
-    })
-  }
+    });
+  };
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
@@ -1564,79 +1638,167 @@ const EditemployeePayroll = () => {
             </Tooltip>
           </Box>
         </Box> */}
- <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-          <Box display="flex" justifyContent="space-between" p={mode == "A" ? 2 : 1}>
+        <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
           <Box
             display="flex"
-            // backgroundColor={colors.primary[400]}
-            borderRadius="3px"
-            alignItems={"center"}
+            justifyContent="space-between"
+            p={mode == "A" ? 2 : 1}
           >
-            {broken && !rtl && (
-              <IconButton
-
-                onClick={() => toggleSidebar()}
+            <Box
+              display="flex"
+              // backgroundColor={colors.primary[400]}
+              borderRadius="3px"
+              alignItems={"center"}
+            >
+              {broken && !rtl && (
+                <IconButton onClick={() => toggleSidebar()}>
+                  <MenuOutlinedIcon />
+                </IconButton>
+              )}
+              <Box
+                display={isNonMobile ? "flex" : "none"}
+                borderRadius="3px"
+                alignItems="center"
               >
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
-              <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{ color: '#0000D1' }} />}>
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}>Employee</Typography>
-                {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Allowances</Typography>) : false}
-                {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Deductions</Typography>) : false}
-                {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Leave</Typography>) : false}
-                {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Salary Advance</Typography>) : false}
-                {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Attendance</Typography>) : false}
-                {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Payroll Attendance</Typography>) : false}
-
-              </Breadcrumbs>
-            </Box>
-          
-          </Box>
-          <Box display="flex">
-            {mode !== "A" ? (
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">Explore</InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  value={show}
-                  label="Explore"
-                  onChange={screenChange}
+                <Breadcrumbs
+                  maxItems={3}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                 >
-                  <MenuItem value={0}>Employee</MenuItem>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      setScreen(0);
+                    }}
+                  >
+                    {" "}
+                    {mode === "E"
+                      ? `Employee(${state.EmpName})`
+                      : "Employee(New)"}
+                  </Typography>
+                  {show == "1" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Allowances
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "5" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Deductions
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "2" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Leave
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "6" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      OT
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "7" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Salary Advance
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "3" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Attendance
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "4" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Payroll Attendance
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                </Breadcrumbs>
+              </Box>
+            </Box>
+            <Box display="flex">
+              {mode !== "A" ? (
+                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                  <InputLabel id="demo-select-small">Explore</InputLabel>
+                  <Select
+                    labelId="demo-select-small"
+                    id="demo-select-small"
+                    value={show}
+                    label="Explore"
+                    onChange={screenChange}
+                  >
+                    <MenuItem value={0}>Employee</MenuItem>
 
-                  <MenuItem value={1}>Allowances</MenuItem>
-                  <MenuItem value={5}>Deductions</MenuItem>
-                  <MenuItem value={2}>Leave</MenuItem>
-                  <MenuItem value={6}>OT</MenuItem>
-                  <MenuItem value={7}>Salary Advance</MenuItem>
-                  <MenuItem value={3}>Attendance</MenuItem>
-                  <MenuItem value={4}>Payroll Attendance</MenuItem>
+                    <MenuItem value={1}>Allowances</MenuItem>
+                    <MenuItem value={5}>Deductions</MenuItem>
+                    <MenuItem value={2}>Leave</MenuItem>
+                    <MenuItem value={6}>OT</MenuItem>
+                    <MenuItem value={7}>Salary Advance</MenuItem>
+                    <MenuItem value={3}>Attendance</MenuItem>
+                    <MenuItem value={4}>Payroll Attendance</MenuItem>
+                  </Select>
+                </FormControl>
+              ) : (
+                false
+              )}
 
-                </Select>
-
-              </FormControl>
-            ) : (
-              false
-            )}
-
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton onClick={() => fnLogOut("Logout")} color="error">
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Close">
+                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                  <ResetTvIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Logout">
+                <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                  <LogoutOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
-        </Box> 
         </Paper>
         {show == "0" ? (
-           <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             {/* { <Header title="Products" subtitle="" /> } */}
 
             <Formik
@@ -1645,7 +1807,14 @@ const EditemployeePayroll = () => {
               enableReinitialize={true}
               validationSchema={basicSchema}
             >
-              {({ values, errors, touched, handleBlur, handleChange }) => (
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                setFieldValue,
+              }) => (
                 <form>
                   <Box
                     display="grid"
@@ -1696,7 +1865,7 @@ const EditemployeePayroll = () => {
                           alignItems: "center",
                         }}
                       >
-                        <TextField
+                        {/* <TextField
                           id="outlined-basic"
                           label="Department"
                           variant="standard"
@@ -1705,11 +1874,11 @@ const EditemployeePayroll = () => {
                           required
                           DE
                           inputProps={{ tabIndex: "-1" }}
-                        />
+                        /> */}
                         {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
                         {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
                         {/* </Button> */}
-                        <IconButton
+                        {/* <IconButton
                           sx={{ height: 40, width: 40 }}
                           onClick={() => handleShow("DE")}
                         >
@@ -1723,6 +1892,33 @@ const EditemployeePayroll = () => {
                           fullWidth
                           focused
                           inputProps={{ tabIndex: "-1" }}
+                        /> */}
+
+                        <Productautocomplete
+                          sx={{ marginTop: "7px" }}
+                          name="Department"
+                          // label="Department"
+                          label={
+                            <span>
+                              Department
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="Department"
+                          value={values.Department}
+                          onChange={(newValue) => {
+                            setFieldValue("Department", newValue);
+                            console.log(newValue, "--newValue");
+                            console.log(newValue.RecordID, "////");
+                          }}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"","Any":""}}`}
                         />
                       </FormControl>
 
@@ -1743,8 +1939,9 @@ const EditemployeePayroll = () => {
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
-                        }} focused
+                          },
+                        }}
+                        focused
                         required
                         autoFocus
                         inputProps={{ maxLength: 8 }}
@@ -1767,8 +1964,9 @@ const EditemployeePayroll = () => {
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
-                        }} focused
+                          },
+                        }}
+                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -1785,11 +1983,11 @@ const EditemployeePayroll = () => {
                         // error={!!touched.Password && !!errors.Password}
                         // helperText={touched.Password && errors.Password}
                         sx={{
-                         // gridColumn: "span 2",
+                          // gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
+                          },
                         }}
                         focused
                       />
@@ -1810,7 +2008,7 @@ const EditemployeePayroll = () => {
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
+                          },
                         }}
                         focused
                         inputProps={{ maxLength: 90 }}
@@ -1891,8 +2089,6 @@ const EditemployeePayroll = () => {
                        
                       /> */}
 
-
-
                       {/* <FormControl
                         sx={{
                           gridColumn: "span 2",
@@ -1953,12 +2149,13 @@ const EditemployeePayroll = () => {
                         error={!!touched.Comm && !!errors.Comm}
                         helperText={touched.Comm && errors.Comm}
                         sx={{
-                         // gridColumn: "span 2",
+                          // gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
-                        }} focused
+                          },
+                        }}
+                        focused
                         inputProps={{ maxLength: 90 }}
                         multiline
                         rows={2}
@@ -2103,7 +2300,6 @@ const EditemployeePayroll = () => {
           false
         )}
 
-
         {show == "1" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -2144,7 +2340,7 @@ const EditemployeePayroll = () => {
                       },
                     }}
                   >
-                    <FormControl sx={{  gap:formGap}}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
                         variant="standard"
@@ -2155,15 +2351,14 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         //inputProps={{ readOnly: true }}
-                         sx={{ 
-                        
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      /> 
-                     
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                      />
+
                       <TextField
                         fullWidth
                         variant="standard"
@@ -2174,13 +2369,12 @@ const EditemployeePayroll = () => {
                         label="Name"
                         focused
                         inputProps={{ readOnly: true }}
-                         sx={{ 
-                        
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                          },
+                        }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -2199,119 +2393,118 @@ const EditemployeePayroll = () => {
                       />
                     </Stack> */}
                     <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
                     <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
                         sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
                           "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          // rows={[]}
-                          // columns={[]}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          pageSize={pageSize}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
+                        rows={explorelistViewData}
+                        columns={columns}
+                        // rows={[]}
+                        // columns={[]}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        pageSize={pageSize}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
                         }
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                        />
-                      </Box>
-                    
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
 
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                      {/* <TextField
                         id="outlined-basic"
                         label="ID"
                         variant="standard"
                         value={ADLookupData.adRecordID}
                         focused
                         sx={{ display: "none" }}
-                      />
+                      /> */}
                       <FormControl
                         sx={{
                           //gridColumn: "span 2",
@@ -2320,7 +2513,44 @@ const EditemployeePayroll = () => {
                           alignItems: "center",
                         }}
                       >
-                        <TextField
+                        <Productautocomplete
+                          name="Allowances"
+                          label={
+                            <span>
+                              Allowances
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="Allowances"
+                          value={ADLookupData}
+                          // value={values.Allowances}
+                          onChange={(newValue) => {
+                            // setFieldValue("Allowances", newValue);
+                            console.log(
+                              ADLookupData,
+                              "--ADLookupData Allowances"
+                            );
+
+                            console.log(
+                              newValue.RecordID,
+                              "Allowances RecordID"
+                            );
+
+                            setADLookupData({
+                              RecordID: newValue.RecordID,
+                              Type: newValue.Type,
+                              Name: newValue.Name,
+                              SalaryCategory: newValue.SalaryCategory,
+                            });
+                          }}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2082","ScreenName":"Allowances","Filter":"SalaryCategory='A'","Any":""}}`}
+                        />
+                        {/* <TextField
                           id="outlined-basic"
                           label="Allowances"
                           variant="standard"
@@ -2336,8 +2566,7 @@ const EditemployeePayroll = () => {
                           onClick={() => handleShow("AD")}
                         >
                           <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-
+                        </IconButton> */}
                       </FormControl>
 
                       <TextField
@@ -2350,13 +2579,12 @@ const EditemployeePayroll = () => {
                         label="Salary Category"
                         focused
                         inputProps={{ readOnly: true }}
-                         sx={{ 
-                        
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                          },
+                        }}
                       />
                       <TextField
                         fullWidth
@@ -2368,13 +2596,12 @@ const EditemployeePayroll = () => {
                         label="Type"
                         focused
                         inputProps={{ readOnly: true }}
-                         sx={{ 
-                        
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                          },
+                        }}
                       />
 
                       <TextField
@@ -2391,8 +2618,8 @@ const EditemployeePayroll = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        // sx={{ 
-                        //   gridColumn: "span 2", 
+                        // sx={{
+                        //   gridColumn: "span 2",
                         //   backgroundColor: "#ffffff", // Set the background to white
                         //   "& .MuiFilledInput-root": {
                         //     backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -2401,7 +2628,7 @@ const EditemployeePayroll = () => {
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
                       <TextField
                         fullWidth
@@ -2419,12 +2646,12 @@ const EditemployeePayroll = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                      // sx={{
-                      //   backgroundColor: '#ffffff', // Change to your desired background color
-                      //   '& .MuiFilledInput-root': {
-                      //     backgroundColor: '#f5f5f5', // For the filled variant
-                      //   },
-                      // }}
+                        // sx={{
+                        //   backgroundColor: '#ffffff', // Change to your desired background color
+                        //   '& .MuiFilledInput-root': {
+                        //     backgroundColor: '#f5f5f5', // For the filled variant
+                        //   },
+                        // }}
                       />
                       <TextField
                         name="sortorder"
@@ -2443,12 +2670,10 @@ const EditemployeePayroll = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-
                       />
-
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1}style={{ marginTop: "-45px" }} gap={2}>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -2482,7 +2707,6 @@ const EditemployeePayroll = () => {
                         }).then((result) => {
                           if (result.isConfirmed) {
                             AllDedFNsave(values, resetForm, "harddelete");
-
                           } else {
                             return;
                           }
@@ -2520,7 +2744,6 @@ const EditemployeePayroll = () => {
                       />
                     </Popup>
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -2529,7 +2752,7 @@ const EditemployeePayroll = () => {
           false
         )}
         {show == "5" ? (
-           <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={AllDedInitialValues}
               enableReinitialize={true}
@@ -2568,7 +2791,7 @@ const EditemployeePayroll = () => {
                       },
                     }}
                   >
-                    <FormControl sx={{gap: formGap }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
                         variant="standard"
@@ -2579,7 +2802,6 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                       
                       />
 
                       <TextField
@@ -2592,124 +2814,122 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        
                       />
                     </FormControl>
                     <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
-                  
-                    <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
-                        sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
-                          "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
-                          },
-                        }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          // rows={[]}
-                          // columns={[]}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                        }
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                        />
-                      </Box>
-                    
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
 
-                    <FormControl sx={{gap:formGap }}>
-                      <TextField
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={explorelistViewData}
+                        columns={columns}
+                        // rows={[]}
+                        // columns={[]}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    <FormControl sx={{ gap: formGap }}>
+                      {/* <TextField
                         id="outlined-basic"
                         label="ID"
                         variant="standard"
                         value={ADLookupData.adRecordID}
                         focused
                         sx={{ display: "none" }}
-                      />
+                      /> */}
                       <FormControl
                         sx={{
                           //gridColumn: "span 2",
@@ -2718,7 +2938,7 @@ const EditemployeePayroll = () => {
                           alignItems: "center",
                         }}
                       >
-                        <TextField
+                        {/* <TextField
                           id="outlined-basic"
                           label="Deductions"
                           variant="standard"
@@ -2734,8 +2954,44 @@ const EditemployeePayroll = () => {
                           onClick={() => handleShow("AD")}
                         >
                           <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
+                        </IconButton> */}
+                        <Productautocomplete
+                          name="Deduction"
+                          label={
+                            <span>
+                              Deductions
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="Deduction"
+                          value={ADLookupData}
+                          // value={values.Deduction}
+                          onChange={(newValue) => {
+                            // setFieldValue("Deduction", newValue);
+                            console.log(
+                              ADLookupData,
+                              "--ADLookupData Deduction"
+                            );
 
+                            console.log(
+                              newValue.RecordID,
+                              "Deduction RecordID"
+                            );
+
+                            setADLookupData({
+                              RecordID: newValue.RecordID,
+                              Type: newValue.Type,
+                              Name: newValue.Name,
+                              SalaryCategory: newValue.SalaryCategory,
+                            });
+                          }}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D'","Any":""}}`}
+                        />
                       </FormControl>
 
                       <TextField
@@ -2748,7 +3004,6 @@ const EditemployeePayroll = () => {
                         label="Salary Category"
                         focused
                         inputProps={{ readOnly: true }}
-                       
                       />
                       <TextField
                         fullWidth
@@ -2760,8 +3015,6 @@ const EditemployeePayroll = () => {
                         label="Type"
                         focused
                         inputProps={{ readOnly: true }}
-                        
-                       
                       />
 
                       <TextField
@@ -2772,17 +3025,15 @@ const EditemployeePayroll = () => {
                         name="value"
                         value={values.value}
                         label="Value"
-                      
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
                           },
                         }}
-
                         focused
                         onChange={handleChange}
                         onBlur={handleBlur}
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
                       <TextField
                         fullWidth
@@ -2818,12 +3069,10 @@ const EditemployeePayroll = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-
                       />
-
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1} gap={2} style={{ marginTop: "-45px" }}>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -2857,7 +3106,6 @@ const EditemployeePayroll = () => {
                         }).then((result) => {
                           if (result.isConfirmed) {
                             AllDedFNsave(values, resetForm, "harddelete");
-
                           } else {
                             return;
                           }
@@ -2895,7 +3143,6 @@ const EditemployeePayroll = () => {
                       />
                     </Popup>
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -2903,7 +3150,6 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
-
 
         {show == "2" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
@@ -2933,7 +3179,7 @@ const EditemployeePayroll = () => {
                     resetForm();
                   }}
                 >
-                 <Box
+                  <Box
                     display="grid"
                     gap={formGap}
                     padding={1}
@@ -2945,7 +3191,7 @@ const EditemployeePayroll = () => {
                       },
                     }}
                   >
-                    <FormControl sx={{ gap:formGap }}>
+                    <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
                         variant="standard"
@@ -2956,14 +3202,12 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ 
-                        
+                        sx={{
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
+                          },
                         }}
-
                       />
 
                       <TextField
@@ -2976,120 +3220,118 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        sx={{ 
-                        
+                        sx={{
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          }
+                          },
                         }}
                       />
                     </FormControl>
                     <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
-                    
-                    <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
-                        sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
-                          "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
-                          },
-                        }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
-                        }
-                          loading={exploreLoading}
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                        />
-                      </Box>
-                    
-                    <FormControl sx={{  gap:formGap }}>
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
 
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    <FormControl sx={{ gap: formGap }}>
                       {/* <TextField
                         fullWidth
                         variant="standard"
@@ -3112,7 +3354,7 @@ const EditemployeePayroll = () => {
                           alignItems: "center",
                         }}
                       >
-                        <TextField
+                        {/* <TextField
                           id="outlined-basic"
                           label="LeaveType"
                           variant="standard"
@@ -3129,11 +3371,11 @@ const EditemployeePayroll = () => {
                           required
                           DESIGN
                           inputProps={{ tabIndex: "-1" }}
-                        />
+                        /> */}
                         {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
                         {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
                         {/* </Button> */}
-                        <IconButton
+                        {/* <IconButton
                           sx={{ height: 40, width: 40 }}
                           onClick={() => handleShow("LT")}
                         >
@@ -3147,14 +3389,56 @@ const EditemployeePayroll = () => {
                           fullWidth
                           focused
                           inputProps={{ tabIndex: "-1" }}
+                        /> */}
+
+
+<Productautocomplete
+                          name="leavetype"
+                          label={
+                            <span>
+                              Leave Type
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="leavetype"
+                          value={selectLETLookupData}
+                          // value={values.leavetype}
+                          onChange={(newValue) => {
+                            // setFieldValue("leavetype", newValue);
+                            console.log(
+                              selectLETLookupData,
+                              "--selectLETLookupData leavetype"
+                            );
+
+                            console.log(
+                              newValue.RecordID,
+                              "leavetype RecordID"
+                            );
+
+                            setselectLETLookupData({
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                             
+                            });
+                          }}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"","Any":""}}`}
                         />
+
                       </FormControl>
-                      <FormControl
-                        focused
-                        variant="standard"
-                        
-                      >
-                        <InputLabel variant="standard" id="LeavePart">{<span>Leave Part <span style={{ color: 'red' }}>*</span></span>}</InputLabel>
+                      <FormControl focused variant="standard">
+                        <InputLabel variant="standard" id="LeavePart">
+                          {
+                            <span>
+                              Leave Part <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                        </InputLabel>
                         <Select
                           labelId="demo-simple-select-filled-label"
                           fullWidth
@@ -3168,12 +3452,10 @@ const EditemployeePayroll = () => {
                           name="LeavePart"
                           required
                           focused
-                         
                         >
                           <MenuItem value="FH">First Half</MenuItem>
                           <MenuItem value="SH">Second Half</MenuItem>
                           <MenuItem value="N">Full Day</MenuItem>
-
                         </Select>
                       </FormControl>
                       <TextField
@@ -3188,7 +3470,6 @@ const EditemployeePayroll = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         required
-                       
                       />
                       <TextField
                         name="ToDate"
@@ -3202,16 +3483,9 @@ const EditemployeePayroll = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         required
-                       
-
                       />
 
-                      <FormControl
-                        focused
-                        variant="standard"
-                       
-
-                      >
+                      <FormControl focused variant="standard">
                         <InputLabel id="Status">Status</InputLabel>
                         <Select
                           labelId="demo-simple-select-filled-label"
@@ -3225,12 +3499,17 @@ const EditemployeePayroll = () => {
                           <MenuItem value="AL">Applied</MenuItem>
                           <MenuItem value="RJ">Rejected</MenuItem>
                           <MenuItem value="AP">Approved</MenuItem>
-
                         </Select>
                       </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1}style={{ marginTop: "-45px" }} gap={2}>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    style={{ marginTop: "-45px" }}
+                    gap={2}
+                  >
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -3264,7 +3543,6 @@ const EditemployeePayroll = () => {
                         }).then((result) => {
                           if (result.isConfirmed) {
                             leaveFNsave(values, resetForm, "harddelete");
-
                           } else {
                             return;
                           }
@@ -3297,12 +3575,11 @@ const EditemployeePayroll = () => {
                         accessID="2092"
                         screenName="Leave Type"
                         childToParent={childToParent}
-                      //filterName={"parentID"}
-                      //filterValue={""}
+                        //filterName={"parentID"}
+                        //filterValue={""}
                       />
                     </Popup>
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -3338,7 +3615,7 @@ const EditemployeePayroll = () => {
                     resetForm();
                   }}
                 >
-                 <Box
+                  <Box
                     display="grid"
                     gap={formGap}
                     padding={1}
@@ -3361,7 +3638,6 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                       
                       />
 
                       <TextField
@@ -3374,113 +3650,112 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                       
                       />
                     </FormControl>
                     <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
-                    
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
                     <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
                         sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
                           "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
                         }
-                        />
-                      </Box>
-                   
-                    <FormControl sx={{gap: formGap }}>
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                      />
+                    </Box>
+
+                    <FormControl sx={{ gap: formGap }}>
                       <FormControl
                         focused
                         variant="standard"
@@ -3512,7 +3787,6 @@ const EditemployeePayroll = () => {
                           value={values.NumberOfHours}
                           onBlur={handleBlur}
                           onChange={handleChange}
-
                           onWheel={(e) => e.target.blur()}
                           required
                           //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
@@ -3536,8 +3810,7 @@ const EditemployeePayroll = () => {
                           name="comments"
                           error={!!touched.comments && !!errors.comments}
                           helperText={touched.comments && errors.comments}
-                           focused
-
+                          focused
                         />
 
                         <FormControl
@@ -3545,7 +3818,9 @@ const EditemployeePayroll = () => {
                           variant="standard"
                           //sx={{ gridColumn: "span 2" }}
                         >
-                          <InputLabel id="paymentmethods">Payment Methods</InputLabel>
+                          <InputLabel id="paymentmethods">
+                            Payment Methods
+                          </InputLabel>
                           <Select
                             labelId="demo-simple-select-filled-label"
                             id="paymentmethods"
@@ -3553,17 +3828,19 @@ const EditemployeePayroll = () => {
                             value={values.paymentmethods}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.paymentmethods && !!errors.paymentmethods}
-                            helperText={touched.paymentmethods && errors.paymentmethods}
-                            
+                            error={
+                              !!touched.paymentmethods &&
+                              !!errors.paymentmethods
+                            }
+                            helperText={
+                              touched.paymentmethods && errors.paymentmethods
+                            }
                           >
                             <MenuItem value="AS">Assitis</MenuItem>
                             <MenuItem value="TH">Time and a Half</MenuItem>
                             <MenuItem value="DT">Double Time</MenuItem>
                             <MenuItem value="CS">Compensate</MenuItem>
-
                           </Select>
-
                         </FormControl>
                         <FormControl
                           focused
@@ -3580,7 +3857,6 @@ const EditemployeePayroll = () => {
                             onChange={handleChange}
                             error={!!touched.OtType && !!errors.OtType}
                             helperText={touched.OtType && errors.OtType}
-                            
                           >
                             <MenuItem value="FS">Flexible Scheduling</MenuItem>
                             <MenuItem value="SS">Shift Swaps</MenuItem>
@@ -3592,7 +3868,6 @@ const EditemployeePayroll = () => {
                           variant="standard"
                           //sx={{ gridColumn: "span 2" }}
                         >
-
                           <InputLabel id="Status">Status</InputLabel>
                           <Select
                             labelId="demo-simple-select-filled-label"
@@ -3614,13 +3889,18 @@ const EditemployeePayroll = () => {
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
                             <MenuItem value="RJ">Rejected</MenuItem>
-
                           </Select>
                         </FormControl>
                       </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1} gap={2} style={{ marginTop: "-45px" }}>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    gap={2}
+                    style={{ marginTop: "-45px" }}
+                  >
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -3645,7 +3925,6 @@ const EditemployeePayroll = () => {
                         }).then((result) => {
                           if (result.isConfirmed) {
                             otFNsave(values, resetForm, "harddelete");
-
                           } else {
                             return;
                           }
@@ -3665,9 +3944,7 @@ const EditemployeePayroll = () => {
                     >
                       Cancel
                     </Button>
-
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -3726,7 +4003,6 @@ const EditemployeePayroll = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
-                       
                       />
 
                       <TextField
@@ -3739,117 +4015,116 @@ const EditemployeePayroll = () => {
                         label="Description"
                         focused
                         inputProps={{ readOnly: true }}
-                        
                       />
                     </FormControl>
                     <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
-                  
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
                     <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
                         sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
                           "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: LeaveTool,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                                ? "odd-row"
-                                : "even-row"
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
                         }
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                        />
-                      </Box>
-                    
-                    <FormControl sx={{gap: formGap }}>
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: LeaveTool,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    <FormControl sx={{ gap: formGap }}>
                       <FormControl
                         focused
                         variant="standard"
-                        sx={{  gap: formGap}}
+                        sx={{ gap: formGap }}
                       >
                         <TextField
                           name="date"
@@ -3886,7 +4161,7 @@ const EditemployeePayroll = () => {
                           autoFocus
                         />
 
-                        <FormControl sx={{  display: "flex" }}>
+                        <FormControl sx={{ display: "flex" }}>
                           <FormControl
                             sx={{
                               display: "flex",
@@ -3894,7 +4169,7 @@ const EditemployeePayroll = () => {
                               alignItems: "center",
                             }}
                           >
-                            <TextField
+                            {/* <TextField
                               id="outlined-basic"
                               label="ID"
                               variant="standard"
@@ -3910,16 +4185,16 @@ const EditemployeePayroll = () => {
                               focused
                               // required
                               inputProps={{ tabIndex: "-1" }}
-                            />
+                            /> 
                             <IconButton
                               sx={{ height: 40, width: 40 }}
                               onClick={() => handleShow("OH")}
                             >
                               <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                            </IconButton>
+                            </IconButton>*/}
                             {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
 
-                            <TextField
+                            {/* <TextField
                               id="outlined-basic"
                               label=""
                               variant="standard"
@@ -3927,7 +4202,44 @@ const EditemployeePayroll = () => {
                               fullWidth
                               inputProps={{ tabIndex: "-1" }}
                               focused
-                            />
+                            /> */}
+                             <Productautocomplete
+                          name="overhead"
+                          label={
+                            <span>
+                              Overhead
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="overhead"
+                          value={selectOHLookupData}
+                          // value={values.overhead}
+                          onChange={(newValue) => {
+                            // setFieldValue("overhead", newValue);
+                            console.log(
+                              selectOHLookupData,
+                              "--selectOHLookupData overhead"
+                            );
+
+                            console.log(
+                              newValue.RecordID,
+                              "overhead RecordID"
+                            );
+
+                            setselectOHLookupData({
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                             
+                            });
+                          }}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                        />
                           </FormControl>
                         </FormControl>
 
@@ -4095,7 +4407,13 @@ const EditemployeePayroll = () => {
                       </FormControl>
                     </FormControl>
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1} gap={2} style={{ marginTop: "-45px" }}>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    gap={2}
+                    style={{ marginTop: "-45px" }}
+                  >
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -4120,7 +4438,6 @@ const EditemployeePayroll = () => {
                         }).then((result) => {
                           if (result.isConfirmed) {
                             salAdFNsave(values, resetForm, "harddelete");
-
                           } else {
                             return;
                           }
@@ -4140,9 +4457,7 @@ const EditemployeePayroll = () => {
                     >
                       Cancel
                     </Button>
-
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -4155,8 +4470,8 @@ const EditemployeePayroll = () => {
                 accessID="2032"
                 screenName="OverHead"
                 childToParent={childToParent}
-              //filterName={"FinanceCategoryType"}
-              //filterValue={parentID}
+                //filterName={"FinanceCategoryType"}
+                //filterValue={parentID}
               />
             </Popup>
           </Paper>
@@ -4190,7 +4505,6 @@ const EditemployeePayroll = () => {
                     resetForm();
                     dispatch(resetTrackingData());
                   }}
-
                 >
                   <Box
                     display="grid"
@@ -4204,7 +4518,6 @@ const EditemployeePayroll = () => {
                       },
                     }}
                   >
-
                     <TextField
                       fullWidth
                       variant="standard"
@@ -4246,7 +4559,8 @@ const EditemployeePayroll = () => {
                         e.target.value = Math.max(0, parseInt(e.target.value))
                           .toString()
                           .slice(0, 8);
-                      }} />
+                      }}
+                    />
 
                     <TextField
                       fullWidth
@@ -4258,7 +4572,6 @@ const EditemployeePayroll = () => {
                       label="Description"
                       focused
                       inputProps={{ readOnly: true }}
-                      
                     />
                     <TextField
                       fullWidth
@@ -4269,7 +4582,6 @@ const EditemployeePayroll = () => {
                       label="Month"
                       value={values.month}
                       focused
-                      
                       // sx={{ gridColumn: "span 2" }}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -4300,17 +4612,25 @@ const EditemployeePayroll = () => {
                       focused
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      
-                    // sx={{ gridColumn: "span 2" }}
+
+                      // sx={{ gridColumn: "span 2" }}
                     />
                   </Box>
-                  <Box display="flex" justifyContent="end"padding={1} gap="20px">
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    gap="20px"
+                  >
                     <Button type="submit" variant="contained" color="secondary">
                       APPLY
                     </Button>
                     <Button
                       onClick={() => attendaceProcessFnSave(values)}
-                      type="reset" variant="contained" color="primary">
+                      type="reset"
+                      variant="contained"
+                      color="primary"
+                    >
                       PROCESS
                     </Button>
                     <Button type="reset" variant="contained" color="error">
@@ -4318,53 +4638,52 @@ const EditemployeePayroll = () => {
                     </Button>
                   </Box>
 
-
                   <Box sx={{ gridColumn: "span 4" }}>
-                  <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
                         sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
                           "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
                         // rows={explorelistViewData}
                         // columns={columns}
                         rows={AttendanceData}
@@ -4372,7 +4691,7 @@ const EditemployeePayroll = () => {
                         disableSelectionOnClick
                         getRowId={(row) => row.SLNO}
                         rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) =>
                           setPageSize(newPageSize)
@@ -4394,9 +4713,9 @@ const EditemployeePayroll = () => {
                         }
                         getRowClassName={(params) =>
                           params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                      }
+                            ? "odd-row"
+                            : "even-row"
+                        }
                         loading={exploreLoading}
                         componentsProps={{
                           toolbar: {
@@ -4407,9 +4726,6 @@ const EditemployeePayroll = () => {
                       />
                     </Box>
                   </Box>
-
-
-
                 </form>
               )}
             </Formik>
@@ -4419,7 +4735,7 @@ const EditemployeePayroll = () => {
         )}
 
         {show == "4" ? (
-           <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={PAttInitialvalues}
               enableReinitialize={true}
@@ -4446,7 +4762,7 @@ const EditemployeePayroll = () => {
                     dispatch(resetTrackingData());
                   }}
                 >
-                 <Box
+                  <Box
                     display="grid"
                     gap={formGap}
                     padding={1}
@@ -4458,7 +4774,6 @@ const EditemployeePayroll = () => {
                       },
                     }}
                   >
-
                     <TextField
                       fullWidth
                       variant="standard"
@@ -4470,7 +4785,6 @@ const EditemployeePayroll = () => {
                       focused
                       inputProps={{ readOnly: true }}
                       // sx={{ gridColumn: "span 2" }}
-                     
                     />
 
                     <TextField
@@ -4484,7 +4798,6 @@ const EditemployeePayroll = () => {
                       focused
                       inputProps={{ readOnly: true }}
                       // sx={{ gridColumn: "span 2" }}
-                      
                     />
                     <TextField
                       fullWidth
@@ -4495,7 +4808,6 @@ const EditemployeePayroll = () => {
                       label="Month"
                       value={values.month}
                       focused
-                     
                       onChange={handleChange}
                       onBlur={handleBlur}
                       select
@@ -4525,10 +4837,14 @@ const EditemployeePayroll = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       // sx={{ gridColumn: "span 2" }}
-                     
                     />
                   </Box>
-                  <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    gap="20px"
+                  >
                     <Button type="submit" variant="contained" color="secondary">
                       APPLY
                     </Button>
@@ -4540,59 +4856,60 @@ const EditemployeePayroll = () => {
                     </Button>
                   </Box>
 
-
                   <Box m="5px">
-                  <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
                         sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
                           "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
                         rows={empAttendanceData}
                         columns={column}
                         disableSelectionOnClick
                         getRowId={(row) => row.SLNO}
                         pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -4610,9 +4927,9 @@ const EditemployeePayroll = () => {
                         }}
                         getRowClassName={(params) =>
                           params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                      }
+                            ? "odd-row"
+                            : "even-row"
+                        }
                         componentsProps={{
                           toolbar: {
                             showQuickFilter: true,
@@ -4622,7 +4939,6 @@ const EditemployeePayroll = () => {
                       />
                     </Box>
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -4630,9 +4946,6 @@ const EditemployeePayroll = () => {
         ) : (
           false
         )}
-
-
-
       </Box>
     </React.Fragment>
   );

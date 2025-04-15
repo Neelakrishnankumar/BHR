@@ -373,6 +373,82 @@ export function MultiFormikOptimizedAutocomplete({
     />
   );
 }
+// export const SingleFormikOptimizedAutocomplete = ({
+//   value = null,
+//   onChange = () => {},
+//   url,
+//   height = 20,
+//   ...props
+// }) => {
+//   const [options, setOptions] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       try {
+//         const response = await axios.get(url, {
+//           headers: {
+//             Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//           },
+//         });
+//         console.log('autocom',response);
+        
+//         const data = response.data.Data.rows || [];
+//         setOptions(data);
+//       } catch (error) {
+//         console.error("Error fetching data:", error);
+//         // setOptions();
+//         setError("Failed to load. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [url]);
+
+//   return (
+//     <Autocomplete
+//       size="small"
+//       limitTags={1}
+//       fullWidth
+//       options={options}
+//       loading={loading}
+//       value={value}
+      
+//       isOptionEqualToValue={(option, value) => option.RecordID === value.RecordID}
+//       onChange={onChange}
+//       getOptionLabel={(option) => `${option.Name}`}
+//       ListboxComponent={ListboxComponent} // Custom listbox component
+//       renderInput={(params) => (
+//         <TextField
+//         variant="filled"
+//         focused
+//           {...params}
+//           label={props.label || "Select Options"}
+//           error={!!error}
+//           helperText={error}
+//           InputProps={{
+//             ...params.InputProps,
+//             endAdornment: (
+//               <>
+//                 {loading ? (
+//                   <CircularProgress color="inherit" size={20} />
+//                 ) : null}
+//                 {params.InputProps.endAdornment}
+//               </>
+//             ),
+//           }}
+//         />
+//       )}
+//       {...props}
+//     />
+//   );
+// };
+ 
+
 export const SingleFormikOptimizedAutocomplete = ({
   value = null,
   onChange = () => {},
@@ -390,17 +466,19 @@ export const SingleFormikOptimizedAutocomplete = ({
       try {
         const response = await axios.get(url, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
-        console.log('autocom',response);
-        
+        console.log("autocom", response);
+
         const data = response.data.Data.rows || [];
+        console.log(data, "--data");
         setOptions(data);
       } catch (error) {
         console.error("Error fetching data:", error);
         // setOptions();
-        setError("Failed to load. Please try again.");
+        // setError("Failed to load. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -411,21 +489,22 @@ export const SingleFormikOptimizedAutocomplete = ({
 
   return (
     <Autocomplete
-      size="small"
+      // size="small"
       limitTags={1}
       fullWidth
       options={options}
       loading={loading}
       value={value}
-      
-      isOptionEqualToValue={(option, value) => option.RecordID === value.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
       onChange={onChange}
-      getOptionLabel={(option) => `${option.Name}`}
+      getOptionLabel={(option) => `${option.Code} || ${option.Name}`}
       ListboxComponent={ListboxComponent} // Custom listbox component
       renderInput={(params) => (
         <TextField
-        variant="filled"
-        focused
+          variant="standard"
+          focused
           {...params}
           label={props.label || "Select Options"}
           error={!!error}
@@ -447,8 +526,6 @@ export const SingleFormikOptimizedAutocomplete = ({
     />
   );
 };
- 
-
 
   export const FormikProductautocomplete = ({
     value = null,

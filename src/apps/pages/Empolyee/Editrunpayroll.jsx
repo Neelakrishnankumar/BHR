@@ -34,6 +34,7 @@ import {
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
+import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
 
 
 export default function EditEnquiryTruck() {
@@ -175,7 +176,18 @@ export default function EditEnquiryTruck() {
 
       <Paper elevation={3} sx={{ margin: "10px" }}>
         {/* Left Side: Text Fields */}
-        <Grid container spacing={2}>
+       <Box
+                         display="grid"
+                         gap={formGap}
+                         padding={1}
+                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                         // gap="30px"
+                         sx={{
+                           "& > div": {
+                             gridColumn: isNonMobile ? undefined : "span 2",
+                           },
+                         }}
+                       >
   {/* Hidden ID Field */}
   <Grid item xs={12} sx={{ display: "none" }}>
     <TextField
@@ -190,7 +202,7 @@ export default function EditEnquiryTruck() {
   {/* Company + Icon */}
   <Grid item xs={6}>
     <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-      <TextField
+      {/* <TextField
         id="company"
         label="Company"
         variant="standard"
@@ -201,7 +213,34 @@ export default function EditEnquiryTruck() {
       />
       <IconButton sx={{ height: 40, width: 40 }}>
         <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-      </IconButton>
+      </IconButton> */}
+
+           <Productautocomplete
+                                sx={{ marginTop: "7px" }}
+                                name="company"
+                                // label="company"
+                                label={
+                                  <span>
+                                    Company
+                                    <span
+                                      style={{ color: "red", fontWeight: "bold" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                id="company"
+                                // value={values.company}
+                                onChange={(newValue) => {
+                                  // setFieldValue("company", newValue);
+                                  console.log(newValue, "--newValue");
+                                  console.log(newValue.RecordID, "////");
+                                }}
+                                //  onChange={handleSelectionFunctionname}
+                                // defaultValue={selectedFunctionName}
+                                url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Company","Filter":"","Any":""}}`}
+                              />
     </FormControl>
   </Grid>
 
@@ -269,7 +308,7 @@ export default function EditEnquiryTruck() {
       </Button>
     </Box>
   </Grid>
-</Grid>
+</Box>
           {/* <TextField
               name="sortorder"
               type="number"

@@ -15,6 +15,7 @@ import {
     LinearProgress,
   } from "@mui/material";
   import useMediaQuery from "@mui/material/useMediaQuery";
+  import NavigateNextIcon from "@mui/icons-material/NavigateNext";
   import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
   import ResetTvIcon from "@mui/icons-material/ResetTv";
   import { Field, Formik } from "formik";

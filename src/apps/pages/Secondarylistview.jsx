@@ -65,7 +65,7 @@ const ListviewSecondary = () => {
 
   const state = location.state || {};
   console.log("🚀 ~ ListviewSecondary ~ params:", state);
-  
+  console.log("🚀 ~ ListviewSecondary ~ params:", params);
   
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen
@@ -96,8 +96,9 @@ const ListviewSecondary = () => {
   var Type = params.Type;
   var remarkDec = params.remarkDec;
   const { toggleSidebar, broken, rtl } = useProSidebar();
-console.log(params,"ppppppppppppp");
-  const rowData = location.state || {};
+  //const rowData = location.state || {};
+  
+  
   var Description = params.Desc;
   var Number = params.Number;
   var filter;
@@ -1911,7 +1912,7 @@ else if (accessID == "TR234") {
                 navigate(-1);
               }}
             >
-              Project
+              {`Project(${state.projectName})`}
             </Typography>
 
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
@@ -1932,7 +1933,7 @@ else if (accessID == "TR234") {
                 navigate("/Apps/TR133/Project");
               }}
             >
-              Project
+              {`Project(${state.projectName})`}
             </Typography>
             <Typography
               variant="h5"
@@ -1943,7 +1944,7 @@ else if (accessID == "TR234") {
                 navigate(-1);
               }}
             >
-              Milestones
+              {`Milestones(${state.MilestoneName})`}
             </Typography>
 
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
@@ -1965,7 +1966,7 @@ else if (accessID == "TR234") {
                 navigate("/Apps/TR133/Project");
               }}
             >
-              Project
+              {`Project(${state.projectName})`}
             </Typography>
             <Typography
               variant="h5"
@@ -1975,7 +1976,8 @@ else if (accessID == "TR234") {
                 navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
               }}
             >
-              Milestones
+              {`Milestones(${state.MilestoneName})`}
+              {/* Milestone */}
             </Typography>
             <Typography
               variant="h5"
@@ -1986,7 +1988,7 @@ else if (accessID == "TR234") {
                 navigate(-1);
               }}
             >
-              Stages
+              {`Stages(${state.stagesName})`}
             </Typography>
 
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
@@ -2007,7 +2009,7 @@ else if (accessID == "TR234") {
                 navigate("/Apps/TR133/Project");
               }}
             >
-              Project
+              {`Project(${state.projectName})`}
             </Typography>
             <Typography
               variant="h5"
@@ -2018,8 +2020,9 @@ else if (accessID == "TR234") {
                 navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
               }}
             >
-              Milestones
-            </Typography>
+              {`Milestones(${state.MilestoneName})`}
+              {/* Milestone             */}
+              </Typography>
             <Typography
               variant="h5"
               color="#0000D1"
@@ -2028,7 +2031,8 @@ else if (accessID == "TR234") {
                 navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
               }}
             >
-              Stages
+              {`stages(${state.stagesName})`}
+
             </Typography>
             <Typography
               variant="h5"
@@ -2039,8 +2043,54 @@ else if (accessID == "TR234") {
                 navigate(-1);
               }}
             >
-              Activities
+              {`Activities(${state.Activityname})`}
             </Typography>
+
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ): accessID == "TR124" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employees",{state:state});
+              }}
+            >
+              {`Employee(${state.EmpName})`}
+            </Typography>
+           
+
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ): accessID == "TR123" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employees",{state:state});
+              }}
+            >
+             {/* Employee */}
+             {`Employee(${state.EmpName})`}
+
+            </Typography>
+           
 
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
               {screenName}
@@ -2052,15 +2102,26 @@ else if (accessID == "TR234") {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
+             <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employees");
+              }}
+            >
+               {`Employee(${state.EmpName})`}
+            </Typography>
             <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate("/Apps/TR123/Check%20In");
+                //navigate("/Apps/TR123/Check%20In");
+                navigate(-1);
               }}
             >
-              Check In
+              {`Check In(${state.Locname})`}
             </Typography>
 
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
@@ -2073,27 +2134,39 @@ else if (accessID == "TR234") {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
-            <Typography
+             <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate("/Apps/TR123/Check%20In");
+                navigate("/Apps/TR027/Employees");
               }}
             >
-              Check In
+               {`Employee(${state.EmpName})`}
             </Typography>
             <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate(
-                  `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
-                );
+                navigate(`/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`,{state:{...state}});
               }}
             >
-              DailyTask
+              {`Check In(${state.Locname})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                // navigate(
+                //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
+                // );
+                navigate(-1);
+              }}
+            >
+              {/* {`DailyTask(${state.proName})`} */}
+              {`DailyTask(${state.Date})`}
             </Typography>
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
               {screenName}
@@ -2187,7 +2260,9 @@ else if (accessID == "TR234") {
                           screenName === "Remarks"
                             ? "Delivery Chalan"
                             : screenName
-                        }/-1/A`
+                        }/-1/A`,  {
+                          state: {...state }
+                        }
                       );
                     }}
                   />
@@ -2204,7 +2279,9 @@ else if (accessID == "TR234") {
                         screenName === "Remarks"
                           ? "Delivery Chalan"
                           : screenName
-                      }/-1/A`
+                      }/-1/A`, {
+                        state: {...state }
+                      }
                     );
                   }}
                 />

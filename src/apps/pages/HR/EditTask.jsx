@@ -803,7 +803,7 @@ const Edittask = () => {
                                     navigate("/Apps/TR133/Project");
                                 }}
                             >
-                                Project
+                                {`Project(${state.projectName})`}
                             </Typography>
 
                             <Typography
@@ -812,7 +812,7 @@ const Edittask = () => {
                                 sx={{ cursor: "default" }}
                                 onClick={() => navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } })}
                             >
-                                Milestone
+                                {`Milestones(${state.MilestoneName})`}
                             </Typography>
                             <Typography
                                 variant="h5"
@@ -820,7 +820,7 @@ const Edittask = () => {
                                 sx={{ cursor: "default" }}
                                 onClick={() => navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } })}
                             >
-                                Stages
+                                {`Stages(${state.stagesName})`}
                             </Typography>
                             <Typography
                                 variant="h5"
@@ -830,7 +830,7 @@ const Edittask = () => {
                                     navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`, { state: { ...state } });
                                 }}
                             >
-                                Activity
+                                 {`Activity(${state.Activityname})`}
                             </Typography>
                             <Typography
                                 variant="h5"
@@ -839,7 +839,8 @@ const Edittask = () => {
                                 onClick={() => navigate(-1)}
                             //onClick={()=>navigate(`Apps/Secondarylistview/TR235/Task/14/EditTask/${OPRecid}/E`)}
                             >
-                                Task
+                                {/* {`Task(${state.TaskName})`} */}
+                                {mode === "E" ? `Task(${state.TaskName})` : "Task(New)"} 
                             </Typography>
                             {show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }}  >Task detail</Typography>) : false}
                         </Breadcrumbs>
@@ -1024,7 +1025,8 @@ const Edittask = () => {
                                         color="warning"
                                         variant="contained"
                                         onClick={() => {
-                                            navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+                                            // navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+                                            navigate(-1);
                                         }}
                                     >
                                         Cancel

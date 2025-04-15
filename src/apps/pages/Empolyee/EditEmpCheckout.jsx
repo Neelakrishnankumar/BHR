@@ -13,7 +13,9 @@ import {
     Select,
     MenuItem,
     LinearProgress,
+    Breadcrumbs
   } from "@mui/material";
+  import NavigateNextIcon from "@mui/icons-material/NavigateNext";
   import useMediaQuery from "@mui/material/useMediaQuery";
   import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
   import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -55,7 +57,10 @@ import {
     const YearFlag = sessionStorage.getItem("YearFlag");
     const Year = sessionStorage.getItem("year");
     const { toggleSidebar, broken, rtl } = useProSidebar();
+  
     const location = useLocation();
+    const state = location.state || {};
+    console.log(state,"empcheckout");
     useEffect(() => {
       dispatch(getFetchData({ accessID, get: "get", recID }));
     }, [location.key]);
@@ -211,7 +216,31 @@ import {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Check Out</Typography>
+            <Breadcrumbs
+            maxItems={3}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+             <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              {`Employee(${state.EmpName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+             
+            >
+              Check Out
+            </Typography>
+           
+          </Breadcrumbs>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -480,7 +509,8 @@ import {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        navigate(`/Apps/Secondarylistview/TR124/Check%20Out/${params.parentID}`);
+                        //navigate(`/Apps/Secondarylistview/TR124/Check%20Out/${params.parentID}`);
+                        navigate(-1);
                       }}
                     >
                       Cancel

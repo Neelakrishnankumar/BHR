@@ -66,7 +66,8 @@ const EditDailytask = () => {
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
-
+  const statenew = location.state || {};
+console.log(statenew,"dailytask");
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -297,20 +298,32 @@ const EditDailytask = () => {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate("/Apps/TR123/Check%20In");
+                navigate("/Apps/TR027/Employee");
               }}
             >
-              Check In
+             {`Employee(${statenew.EmpName})`}
             </Typography>
             <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate("/Apps/Secondarylistview/TR132/DailyTask/30");
+                //navigate("/Apps/TR123/Check%20In");
+                navigate(-1);
               }}
             >
-              DailyTask
+               {`Check In(${statenew.Locname})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              // onClick={() => {
+              //   navigate("/Apps/Secondarylistview/TR132/DailyTask/30");
+              // }}
+            >
+             {/* {`Daily Task(${statenew.proName})`} */}
+             Daily Task
             </Typography>
           </Breadcrumbs>
           </Box>
@@ -649,9 +662,11 @@ const EditDailytask = () => {
                   <Button
                     color="warning"
                     variant="contained"
-                    onClick={() => {
-                      navigate(`/Apps/Secondarylistview/TR132/DailyTask/${params.filtertype}`);
+                     onClick={() => {
+                      //navigate(`/Apps/Secondarylistview/TR132/DailyTask/${params.filtertype}`);
+                      navigate(-1);
                     }}
+                    
                   >
                     Cancel
                   </Button>
