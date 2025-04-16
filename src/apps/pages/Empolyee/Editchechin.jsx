@@ -297,7 +297,7 @@ console.log(data.EmployeeName);
                 navigate(-1);
               }}
             >
-              {`Employee(${state.EmpName})`}
+             {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}
             </Typography>
             <Typography
               color="#0000D1"
