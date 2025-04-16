@@ -30,7 +30,8 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
-const Regularization = ({ onCancel }) => {
+ const Regularization = ({ onCancel }) => {
+  //const Regularization = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
@@ -411,9 +412,10 @@ console.log(idata, "-idata");
                     variant="contained"
                     onClick={onCancel}
                     // onClick={() => {
-                    //   navigate(
-                    //     `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
-                    //   );
+                    //   // navigate(
+                    //   //   `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
+                    //   // );
+                    //   navigate(-1);
                     // }}
                   >
                     Cancel

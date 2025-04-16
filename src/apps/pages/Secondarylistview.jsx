@@ -2366,7 +2366,8 @@ else if (accessID == "TR234") {
               color: "", // Color for odd rows
             },
             "& .even-row": {
-              backgroundColor: "#D3D3D3",
+              //backgroundColor: "#8BD2CE",
+              backgroundColor: "#c4f5f2",
               color: "", // Color for even rows
             },
           }}

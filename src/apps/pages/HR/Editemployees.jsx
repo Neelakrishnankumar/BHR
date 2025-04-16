@@ -459,7 +459,7 @@ const Editemployee = () => {
       if (del) {
         navigate(`/Apps/TR027/Employees`);
       } else {
-        navigate(`/Apps/TR027/Employees/EditEmployees/${data.payload.Recid}/E`);
+        navigate(`/Apps/TR027/Employees/EditEmployees/${data.payload.Recid}/E`,{state:{...state}});
       }
     } else {
       toast.error(data.payload.Msg);
