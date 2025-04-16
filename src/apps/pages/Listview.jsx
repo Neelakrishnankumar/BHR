@@ -465,7 +465,7 @@ const [productFilter,setProductFilter] = useState();
             </IconButton>
           </Paper>:false}
           <Box m="5px">
-        <Box
+          <Box
           m="5px 0 0 0"
           padding={2}
           height={dataGridHeight}
@@ -498,7 +498,7 @@ const [productFilter,setProductFilter] = useState();
               color: "", // Color for odd rows
             },
             "& .even-row": {
-              backgroundColor: "#D3D3D3",
+              backgroundColor: "#d0edec",
               color: "", // Color for even rows
             },
           }}
@@ -533,7 +533,8 @@ const [productFilter,setProductFilter] = useState();
               Toolbar: CustomToolbar,
             }}
           />
-        </Box> </Box>
+        </Box> 
+        </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
