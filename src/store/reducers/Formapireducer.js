@@ -210,6 +210,61 @@ export const materialDcTrckData = createAsyncThunk(
   }
 );
 
+//Employee -- GEO LOCATION get
+export const geolocationData = createAsyncThunk(
+  "Employee/Geo Location",
+  async ({ empID }) => {
+    var url = store.getState().globalurl.geolocationgetUrl;
+    var data = {
+      Query: {
+      empID : empID,
+      }
+    };
+    
+    data=JSON.stringify(data);
+    console.log("get" + data);
+
+    const response = await axios.get(url, {
+      params: {
+        data: data,
+      },
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+   
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//Employee --GEO Location Update
+export const geolocUpdate = createAsyncThunk(
+  "Employee/geollocation update",
+  async (data) => {
+    var url = store.getState().globalurl.geolocationupdateUrl;
+
+    console.log("get" + JSON.stringify(data));
+    // console.log(data.idata, "--idata");
+    
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
 export const searchData = createAsyncThunk(
   "all/search",
   async ({data}) => {
@@ -1580,6 +1635,27 @@ export const getApiSlice = createSlice({
               state.trackingLoading = false;
               state.materialTrackingData = {};
             })
+            //Employee Geo location get
+            .addCase(geolocationData.fulfilled, (state, action) => {
+              state.exploreData = action.payload.Data;
+                })
+         //Employee Geo location Update
+         .addCase(geolocUpdate.pending, (state, action) => {
+          state.Status = "idle";
+          state.loading = true;
+          state.Data = {};
+        })
+        .addCase(geolocUpdate.fulfilled, (state, action) => {
+          state.Status = "success";
+          state.loading = false;
+          state.Data = action.payload.Data;
+        })
+        .addCase(geolocUpdate.rejected, (state, action) => {
+          state.Status = "Error";
+          state.loading = false;
+          state.Data = {};
+        })
+
             .addCase(materialDcTrckData.pending, (state, action) => {
               state.Status = "idle";
               state.trackingLoading = true;

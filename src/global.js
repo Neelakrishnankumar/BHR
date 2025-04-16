@@ -264,6 +264,8 @@ LeaveTypeurl: "http://beyondexs.com/Trinity/api/APIController.php",
 regularizationUrl: "https://hr.beyondexs.com/api/APIController.php?",
 settingsgetUrl: "https://hr.beyondexs.com/api/HRSubscriptionCodeGetController.php",
 settingsPostUrl: "https://hr.beyondexs.com/api/HRChangePasswordController.php?",
+geolocationgetUrl: "https://ess.beyondexs.com/api/EmpGeoLocationGet.php",
+geolocationupdateUrl: "https://ess.beyondexs.com/api/EmpGeoLocationUpdate.php",
 
   };
 

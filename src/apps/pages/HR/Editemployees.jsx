@@ -37,6 +37,8 @@ import {
   postDeployment,
   invoiceExploreGetData,
   postData,
+  geolocationData,
+  geolocUpdate,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -117,7 +119,7 @@ const Editemployee = () => {
   var mode = params.Mode;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
-
+console.log(Data, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
 
@@ -125,12 +127,17 @@ const Editemployee = () => {
   console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
-  //  console.log("deploymentData",deploymentData);
+   console.log("deploymentData",deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
   console.log(
     "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
   );
+
+  
+  const gelocData = useSelector((state) => state.formApi.exploreData);
+
+
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
@@ -502,6 +509,7 @@ const Editemployee = () => {
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
     }
+
     if (event.target.value == "2") {
       dispatch(
         fetchExplorelitview("TR125", "Function", `EmployeeID=${recID}`, "")
@@ -516,6 +524,10 @@ const Editemployee = () => {
     }
     if (event.target.value == "4") {
       dispatch(getDeployment({ HeaderID: recID }));
+      // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+    if (event.target.value == "9") {
+      dispatch(geolocationData({ empID: recID }));
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "5") {
@@ -1219,6 +1231,51 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+
+console.log(gelocData, "--geo");
+
+  //Geolocation 
+  const geolocationinitialvlues = {
+    Code: Data.Code,
+    Name: Data.Name,
+    longitude: gelocData.EMP_LONGITUDE,
+    latitude: gelocData.EMP_LATITUDE,
+    radius: gelocData.EMP_RADIUS,
+  };
+    const geolocSavefn = async (values, resetForm, del) => {
+      setLoading(true);
+      let action =
+        funMode === "A" && !del
+          ? "insert"
+          : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+      const idata = {
+        EmployeeID: recID,
+        Longtitude: values.longitude,
+        Lattitude: values.latitude,
+        radius: values.radius,
+      };
+  console.log(idata, "--idata");
+  
+      const response = await dispatch(
+        geolocUpdate(idata)
+      );
+      if (response.payload.Status == "Y") {
+        setLoading(false);
+  
+        // dispatch(
+        //   fetchExplorelitview("TR244", "Contractor", `EmployeeID='${recID}'`, "")
+        // );
+        toast.success(response.payload.Msg);
+        // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+        resetForm();
+      } else {
+        setLoading(false);
+        toast.error(response.payload.Msg);
+      }
+    };
+
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
 
   const managerInitialValue = {
@@ -1268,9 +1325,6 @@ const Editemployee = () => {
     description: Data.Name,
     checkin: deploymentData.CheckInTime || "",
     checkout: deploymentData.CheckOutTime || "",
-    longitude: deploymentData.Longitude,
-    latitude: deploymentData.Latitude,
-    radius: deploymentData.Radius,
     monday: deploymentData.Monday === "Y" ? true : false,
     tuesday: deploymentData.Tuesday === "Y" ? true : false,
     wednesday: deploymentData.Wednesday === "Y" ? true : false,
@@ -1289,9 +1343,6 @@ const Editemployee = () => {
       HeaderID: recID,
       CheckInTime: values.checkin || "",
       CheckOutTime: values.checkout || "",
-      Longitude: values.longitude,
-      Latitude: values.latitude,
-      Radius: values.radius,
       Monday: values.monday === true ? "Y" : "N",
       Tuesday: values.tuesday === true ? "Y" : "N",
       Wednesday: values.wednesday === true ? "Y" : "N",
@@ -1637,6 +1688,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "9" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Geo Location
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                 </Breadcrumbs>
               </Box>
             </Box>
@@ -1664,6 +1726,7 @@ const Editemployee = () => {
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
                     <MenuItem value={4}>Deployment</MenuItem>
+                    <MenuItem value={9}>Geo Location</MenuItem>
                     <MenuItem value={6}>List of Attachments</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
                   </Select>
@@ -4075,7 +4138,7 @@ const Editemployee = () => {
                         inputProps={{ tabIndex: "-1" }}
                       /> */}
                     </FormControl>
-                    {/* <FormControl
+                    <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -4098,8 +4161,8 @@ const Editemployee = () => {
                         focused
                         // inputProps={{ maxLength:20}}
                       />
-                    </FormControl> */}
-                    {/* <FormControl
+                    </FormControl>
+                    <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -4122,78 +4185,8 @@ const Editemployee = () => {
                         focused
                         // inputProps={{ readOnly: true }}
                       />
-                    </FormControl> */}
-                    <FormControl 
-                     sx={{
-                      //gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      //background: "#fff6c3"
-                    }}
-                    // sx={{ gap: formGap }}
-                    >
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="number"
-                        id="longitude"
-                        label="Longitude"
-                        name="longitude"
-                        focused
-                        value={values.longitude}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        inputProps={{ step: "any", min: -180, max: 180, style:{ textAlign: 'right' } }}
-                      />
-                       </FormControl>
-                        <FormControl 
-                     sx={{
-                      //gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      //background: "#fff6c3"
-                    }}
-                    // sx={{ gap: formGap }}
-                    >
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        id="latitude"
-                        name="latitude"
-                        label="Latitude"
-                        focused
-                        value={values.latitude}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{ step: "any", min: -90, max: 90, style:{ textAlign: 'right' } }}
-                      />
-                       </FormControl>
-                       <FormControl 
-                     sx={{
-                      //gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      //background: "#fff6c3"
-                    }}
-                    // sx={{ gap: formGap }}
-                    >
-                      <TextField
-                      fullWidth
-                      variant="standard"
-                        focused
-                        label="Radius (km)"
-                        name="radius"
-                        value={values.radius}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{ step: "any", min: 0, style:{ textAlign: 'right' } }}
-                      />
                     </FormControl>
+                  
                     {/* <FormControl
                       sx={{
                         gridColumn: "span 2",
@@ -5785,6 +5778,273 @@ const Editemployee = () => {
                       filterValue={CompanyID}
                     />
                   </Popup>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+{show == "9" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+           
+              initialValues={geolocationinitialvlues}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  geolocSavefn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                    {/* <Stack
+                      sx={{
+                       // gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+
+                    >
+
+                      <img
+                        src={userimg}
+                        style={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack> */}
+
+<Stack
+                      sx={{
+                        gap: formGap,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+                    <FormControl 
+                    sx={{ gap: formGap, marginTop: "-20px" }}
+                    >
+
+ {/* <FormControl 
+                     sx={{
+                      //gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      //background: "#fff6c3"
+                    }}
+                    // sx={{ gap: formGap }}
+                    > */}
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="longitude"
+                        label="Longitude"
+                        name="longitude"
+                        focused
+                        value={values.longitude}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        inputProps={{ step: "any", min: -180, max: 180, style:{ textAlign: 'right' } }}
+                      />
+                       {/* </FormControl> */}
+                        {/* <FormControl 
+                     sx={{
+                      //gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      //background: "#fff6c3"
+                    }}
+                    // sx={{ gap: formGap }}
+                    > */}
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        id="latitude"
+                        name="latitude"
+                        label="Latitude"
+                        focused
+                        value={values.latitude}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{ step: "any", min: -90, max: 90, style:{ textAlign: 'right' } }}
+                      />
+                       {/* </FormControl> */}
+                       {/* <FormControl 
+                     sx={{
+                      //gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      //background: "#fff6c3"
+                    }}
+                    // sx={{ gap: formGap }}
+                    > */}
+                      <TextField
+                      fullWidth
+                      variant="standard"
+                        focused
+                        label="Radius (m)"
+                        name="radius"
+                        value={values.radius}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{ step: "any", min: 0, style:{ textAlign: 'right' } }}
+                      />
+                    </FormControl>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    mt="10px"
+                    padding={1}
+                    gap={2}
+                  >
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {/* {YearFlag == "true" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          geolocSavefn(values, "harddelete");
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    {/* {YearFlag == "true" ? (
+                      <Button
+                        onClick={() => mgrFunctionFn(values, resetForm, true)}
+                        color="error"
+                        variant="contained"
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
                 </form>
               )}
             </Formik>
