@@ -1226,7 +1226,7 @@ const Editemployee = () => {
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
-      DesignationID: designationLookup.desRecordID,
+      DesignationID: designationLookup.RecordID,
       ManagerID: designationLookup.ManagerID,
       CompanyID
     };
