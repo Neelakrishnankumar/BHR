@@ -272,12 +272,23 @@ console.log(Data, "geteting Data");
     lookupCode: "",
     lookupDesc: "",
   });
-  const [designLookup, setdesignLookup] = React.useState(null);
-  //   {
-  //   designlookupRecordid: "",
-  //   designlookupCode: "",
-  //   designlookupDesc: "",
-  // });
+  const [designLookup, setdesignLookup] = React.useState({
+    designlookupRecordid: "",
+    designlookupCode: "",
+    designlookupDesc: "",
+  });
+
+  const [locationLookup, SetLocationLookup] = useState({
+    locationRecordID: "",
+    locationCode: "",
+    locationName: "",
+  });
+  const [gateLookup, SetGateLookup] = useState(
+    {
+    gateRecordID: "",
+    gateCode: "",
+    gateName: "",
+  });
   const [selectproLookupData, setselectproLookupData] = React.useState(null);
   //   {
   //   PROlookupRecordid: "",
@@ -301,45 +312,33 @@ console.log(Data, "geteting Data");
   // });
 
   const [designationLookup, SetDesignationLookup] = useState(null);
-  //   {
   //   desRecordID: "",
   //   desCode: "",
   //   desName: "",
   //   ManagerID: "",
   // });
 
-  const [locationLookup, SetLocationLookup] = useState(null);
-  //   {
-  //   locationRecordID: "",
-  //   locationCode: "",
-  //   locationName: "",
-  // });
-  const [gateLookup, SetGateLookup] = useState(null);
-  //   {
-  //   gateRecordID: "",
-  //   gateCode: "",
-  //   gateName: "",
-  // });
+ 
   if (isPopupData == false) {
     selectLookupData.lookupRecordid = Data.DeptRecordID;
     selectLookupData.lookupCode = Data.DeptCode;
     selectLookupData.lookupDesc = Data.DeptName;
-
+   
     //Designation
+    console.log(deploymentData, "ispopupdeployment");
+    designLookup.RecordID = deploymentData.DesignationID;
+    designLookup.Code = deploymentData.DesignationCode;
+    designLookup.Name = deploymentData.DesignationName;
 
-    // designLookup.designlookupRecordid = deploymentData.DesignationID;
-    // designLookup.designlookupCode = deploymentData.DesignationCode;
-    // designLookup.designlookupDesc = deploymentData.DesignationName;
+    // Location
+    locationLookup.RecordID = deploymentData.LocationID;
+    locationLookup.Code = deploymentData.LocationCode;
+    locationLookup.Name = deploymentData.LocationName;
 
-    //Location
-    // locationLookup.locationRecordID = deploymentData.LocationID;
-    // locationLookup.locationCode = deploymentData.LocationCode;
-    // locationLookup.locationName = deploymentData.LocationName;
-
-    //Gate
-    // gateLookup.gateRecordID = deploymentData.StoregatemasterID;
-    // gateLookup.gateCode = deploymentData.StoregatemasterCode;
-    // gateLookup.gateName = deploymentData.StoregatemasterName;
+    // Gate
+    gateLookup.RecordID = deploymentData.StoregatemasterID;
+    gateLookup.Code = deploymentData.StoregatemasterCode;
+    gateLookup.Name = deploymentData.StoregatemasterName;
   }
 
   //************************** Lookup value assign type based Function *****************/
@@ -364,29 +363,29 @@ console.log(Data, "geteting Data");
       setOpenPROPopup(false);
     }
     if (type == "Designation") {
-      // setdesignLookup({
-      //   designlookupRecordid: childdata.RecordID,
-      //   designlookupCode: childdata.Code,
-      //   designlookupDesc: childdata.Name,
-      // });
+      setdesignLookup({
+        designlookupRecordid: childdata.RecordID,
+        designlookupCode: childdata.Code,
+        designlookupDesc: childdata.Name,
+      });
       setOpendesignPopup(false);
     }
     if (type == "Location") {
-      // SetLocationLookup({
-      //   locationRecordID: childdata.RecordID,
-      //   // locationRecordid: childdata.RecordID,
-      //   locationCode: childdata.Code,
-      //   locationName: childdata.Name,
-      // });
+      SetLocationLookup({
+        locationRecordID: childdata.RecordID,
+        // locationRecordid: childdata.RecordID,
+        locationCode: childdata.Code,
+        locationName: childdata.Name,
+      });
       setOpenLOCATIONPopup(false);
     }
 
     if (type == "Gate") {
-      // SetGateLookup({
-      //   gateRecordID: childdata.RecordID,
-      //   gateCode: childdata.Code,
-      //   gateName: childdata.Name,
-      // });
+      SetGateLookup({
+        gateRecordID: childdata.RecordID,
+        gateCode: childdata.Code,
+        gateName: childdata.Name,
+      });
       setOpenGATEPopup(false);
     }
     if (type == "Functions") {
@@ -971,8 +970,8 @@ console.log(Data, "geteting Data");
       //   ManagerID: "",
       // });
 
-      setdesignLookup(null);
-      SetGateLookup(null);
+
+     
       SetEmpLoaData({
         description: "",
         recordID: "",
@@ -1031,17 +1030,9 @@ console.log(Data, "geteting Data");
           // ManagerID: rowData.EmployeeID,
         });
 
-        setdesignLookup({
-          RecordID: rowData.DesignationID,
-          Code: rowData.DesignationCode,
-          Name: rowData.DesignationName,
-        });
+       
 
-        SetGateLookup({
-          RecordID: rowData.StoregatemasterID,
-          Code: rowData.StoregatemasterCode,
-          Name: rowData.StoregatemasterName,
-        });
+   
 
         SetEmpLoaData({
           description: rowData.Description,
@@ -1323,6 +1314,29 @@ console.log(gelocData, "--geo");
   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
+    Designation: deploymentData.DesignationID
+    ? {
+        RecordID: deploymentData.DesignationID,
+        Code: deploymentData.DesignationCode,
+        Name: deploymentData.DesignationName,
+      }
+    : null,
+    location: deploymentData.LocationID
+    ? {
+        RecordID: deploymentData.LocationID,
+        Code: deploymentData.LocationCode,
+        Name: deploymentData.LocationName,
+      }
+    : null,
+    gate: deploymentData.StoregatemasterID
+    ? {
+        RecordID: deploymentData.StoregatemasterID,
+        Code: deploymentData.StoregatemasterCode,
+        Name: deploymentData.StoregatemasterName,
+      }
+    : null,
+
+
     checkin: deploymentData.CheckInTime || "",
     checkout: deploymentData.CheckOutTime || "",
     monday: deploymentData.Monday === "Y" ? true : false,
@@ -1332,12 +1346,11 @@ console.log(gelocData, "--geo");
     friday: deploymentData.Friday === "Y" ? true : false,
     saturday: deploymentData.Saturday === "Y" ? true : false,
     sunday: deploymentData.Sunday === "Y" ? true : false,
-
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
-  // console.log(deploymentInitialValue);
+  console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
     const idata = {
       HeaderID: recID,
@@ -1350,9 +1363,12 @@ console.log(gelocData, "--geo");
       Friday: values.friday === true ? "Y" : "N",
       Saturday: values.saturday === true ? "Y" : "N",
       Sunday: values.sunday === true ? "Y" : "N",
-      DesignationID: designLookup ? designLookup.RecordID : 0,
-      LocationID: locationLookup ? locationLookup.RecordID : 0,
-      StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
+      DesignationID:  values.Designation.RecordID || 0,
+      LocationID: values.location.RecordID || 0,
+      StoregatemasterID: values.gate.RecordID || 0,
+      // DesignationID: designLookup ? designLookup.RecordID : 0,
+      // LocationID: locationLookup ? locationLookup.RecordID : 0,
+      // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
       CompanyID,
     };
     // console.log(locationLookup.locationRecordID, "????????");
@@ -3802,6 +3818,7 @@ console.log(gelocData, "--geo");
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -3937,22 +3954,16 @@ console.log(gelocData, "--geo");
                         }
                         variant="outlined"
                         id="Designation"
-                        value={designLookup}
-                        // value={values.Designation}
+                        // value={designLookup}
+                        value={values.Designation}
                         onChange={(newValue) => {
-                          // setFieldValue("Designation", newValue);
+                          setFieldValue("Designation", newValue);
                           console.log(newValue, "--newvalue Designation");
-
-                          console.log(
-                            newValue.RecordID,
-                            "Designation RecordID"
-                          );
-
-                          setdesignLookup({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
+                          // setdesignLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
                         }}
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
@@ -4050,16 +4061,15 @@ console.log(gelocData, "--geo");
                         }
                         variant="outlined"
                         id="location"
-                        value={locationLookup}
+                        // value={locationLookup}
+                        value={values.location}
                         onChange={(newValue) => {
-                          console.log(newValue, "--newvalue location");
-                          console.log(newValue.RecordID, "location RecordID");
-
-                          SetLocationLookup({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
+                          setFieldValue("location", newValue);
+                          // SetLocationLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
                         }}
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
@@ -4084,19 +4094,21 @@ console.log(gelocData, "--geo");
                         }
                         variant="outlined"
                         id="gate"
-                        value={gateLookup}
+                        // value={gateLookup}
+                        value={values.gate}
                         onChange={(newValue) => {
+                          setFieldValue("gate", newValue);
                           console.log(newValue, "--newvalue gate");
                           console.log(newValue.RecordID, "gate RecordID");
 
-                          SetGateLookup({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
+                          // SetGateLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
                         }}
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
-                          locationLookup ? locationLookup.RecordID : 0
+                          values.location ? values.location.RecordID : 0
                         }'","Any":""}}`}
                       />
                       {/* <TextField
