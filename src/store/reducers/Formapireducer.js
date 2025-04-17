@@ -877,12 +877,13 @@ export const SettingspostData = createAsyncThunk(
 
 export const getFetchWeightage = createAsyncThunk(
   "allScreen/Header",
-  async ({ Type, HeaderID }) => {
+  async ({ Type, HeaderID,CompanyID }) => {
     const url = store.getState().globalurl.apiweightageUrl;
     
     const data = {
       Type: Type,  // Ensure lowercase if required by API
       HeaderID: HeaderID,
+      CompanyID
     };
 
     console.log("🚀 Request Data:", JSON.stringify(data));
