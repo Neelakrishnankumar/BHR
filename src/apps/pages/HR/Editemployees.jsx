@@ -37,6 +37,8 @@ import {
   postDeployment,
   invoiceExploreGetData,
   postData,
+  geolocationData,
+  geolocUpdate,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -112,13 +114,12 @@ const Editemployee = () => {
   const navigate = useNavigate();
   let params = useParams();
 
-  
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
-
+console.log(Data, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
 
@@ -126,12 +127,17 @@ const Editemployee = () => {
   console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
-  //  console.log("deploymentData",deploymentData);
+   console.log("deploymentData",deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
   console.log(
     "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
   );
+
+  
+  const gelocData = useSelector((state) => state.formApi.exploreData);
+
+
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
@@ -161,7 +167,6 @@ const Editemployee = () => {
     }
   }
   console.log(Data, "--Data");
-  
 
   // var apiData = "";
   // apiData = {
@@ -192,20 +197,27 @@ const Editemployee = () => {
 
   // console.log(apiData, "--apiData");
   // console.log(apiData.DeptName, "--apiData.DeptName");
-  
+
   const initialValues = {
-    Department: Data.DeptRecordID ? {RecordID:Data.DeptRecordID,Code:Data.DeptCode,Name: Data.DeptName} : null,
+    Department: Data.DeptRecordID
+      ? {
+          RecordID: Data.DeptRecordID,
+          Code: Data.DeptCode,
+          Name: Data.DeptName,
+        }
+      : null,
     Code: Data.Code,
     Name: Data.Name,
     Password: Data.Password,
     Job: Data.Job,
-    employeetype: Data.EmpType === "Prohibition"
-    ? "PP"
-    : Data.EmpType === "Permanent"
-    ? "PM"
-     : Data.EmpType === "Contractor"
-    ? "CT"
-    : "",
+    employeetype:
+      Data.EmpType === "Prohibition"
+        ? "PP"
+        : Data.EmpType === "Permanent"
+        ? "PM"
+        : Data.EmpType === "Contractor"
+        ? "CT"
+        : "",
     checkbox: Data.Disable,
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
@@ -260,12 +272,23 @@ const Editemployee = () => {
     lookupCode: "",
     lookupDesc: "",
   });
-  const [designLookup, setdesignLookup] = React.useState(null);
-  //   {
-  //   designlookupRecordid: "",
-  //   designlookupCode: "",
-  //   designlookupDesc: "",
-  // });
+  const [designLookup, setdesignLookup] = React.useState({
+    designlookupRecordid: "",
+    designlookupCode: "",
+    designlookupDesc: "",
+  });
+
+  const [locationLookup, SetLocationLookup] = useState({
+    locationRecordID: "",
+    locationCode: "",
+    locationName: "",
+  });
+  const [gateLookup, SetGateLookup] = useState(
+    {
+    gateRecordID: "",
+    gateCode: "",
+    gateName: "",
+  });
   const [selectproLookupData, setselectproLookupData] = React.useState(null);
   //   {
   //   PROlookupRecordid: "",
@@ -289,46 +312,33 @@ const Editemployee = () => {
   // });
 
   const [designationLookup, SetDesignationLookup] = useState(null);
-  //   {
   //   desRecordID: "",
   //   desCode: "",
   //   desName: "",
   //   ManagerID: "",
   // });
 
-  const [locationLookup, SetLocationLookup] = useState(null);
-  //   {
-  //   locationRecordID: "",
-  //   locationCode: "",
-  //   locationName: "",
-  // });
-  const [gateLookup, SetGateLookup] = useState(null);
-  //   {
-  //   gateRecordID: "",
-  //   gateCode: "",
-  //   gateName: "",
-  // });
+ 
   if (isPopupData == false) {
     selectLookupData.lookupRecordid = Data.DeptRecordID;
     selectLookupData.lookupCode = Data.DeptCode;
     selectLookupData.lookupDesc = Data.DeptName;
-
-    //Designation
    
-    // designLookup.designlookupRecordid = deploymentData.DesignationID;
-    // designLookup.designlookupCode = deploymentData.DesignationCode;
-    // designLookup.designlookupDesc = deploymentData.DesignationName;
- 
- 
-    //Location
-    // locationLookup.locationRecordID = deploymentData.LocationID;
-    // locationLookup.locationCode = deploymentData.LocationCode;
-    // locationLookup.locationName = deploymentData.LocationName;
+    //Designation
+    console.log(deploymentData, "ispopupdeployment");
+    designLookup.RecordID = deploymentData.DesignationID;
+    designLookup.Code = deploymentData.DesignationCode;
+    designLookup.Name = deploymentData.DesignationName;
 
-    //Gate
-    // gateLookup.gateRecordID = deploymentData.StoregatemasterID;
-    // gateLookup.gateCode = deploymentData.StoregatemasterCode;
-    // gateLookup.gateName = deploymentData.StoregatemasterName;
+    // Location
+    locationLookup.RecordID = deploymentData.LocationID;
+    locationLookup.Code = deploymentData.LocationCode;
+    locationLookup.Name = deploymentData.LocationName;
+
+    // Gate
+    gateLookup.RecordID = deploymentData.StoregatemasterID;
+    gateLookup.Code = deploymentData.StoregatemasterCode;
+    gateLookup.Name = deploymentData.StoregatemasterName;
   }
 
   //************************** Lookup value assign type based Function *****************/
@@ -353,29 +363,29 @@ const Editemployee = () => {
       setOpenPROPopup(false);
     }
     if (type == "Designation") {
-      // setdesignLookup({
-      //   designlookupRecordid: childdata.RecordID,
-      //   designlookupCode: childdata.Code,
-      //   designlookupDesc: childdata.Name,
-      // });
+      setdesignLookup({
+        designlookupRecordid: childdata.RecordID,
+        designlookupCode: childdata.Code,
+        designlookupDesc: childdata.Name,
+      });
       setOpendesignPopup(false);
     }
     if (type == "Location") {
-      // SetLocationLookup({
-      //   locationRecordID: childdata.RecordID,
-      //   // locationRecordid: childdata.RecordID,
-      //   locationCode: childdata.Code,
-      //   locationName: childdata.Name,
-      // });
+      SetLocationLookup({
+        locationRecordID: childdata.RecordID,
+        // locationRecordid: childdata.RecordID,
+        locationCode: childdata.Code,
+        locationName: childdata.Name,
+      });
       setOpenLOCATIONPopup(false);
     }
-   
+
     if (type == "Gate") {
-      // SetGateLookup({
-      //   gateRecordID: childdata.RecordID,
-      //   gateCode: childdata.Code,
-      //   gateName: childdata.Name,
-      // });
+      SetGateLookup({
+        gateRecordID: childdata.RecordID,
+        gateCode: childdata.Code,
+        gateName: childdata.Name,
+      });
       setOpenGATEPopup(false);
     }
     if (type == "Functions") {
@@ -420,7 +430,6 @@ const Editemployee = () => {
       isCheck = "Y";
     }
 
-
     var saveData = {
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
@@ -442,10 +451,8 @@ const Editemployee = () => {
       GateRecID: 0,
       WeekOff: 0,
       CompanyID,
-      SubscriptionCode
+      SubscriptionCode,
     };
-
-
 
     const data = await dispatch(
       postData({ accessID, action, idata: saveData })
@@ -464,7 +471,7 @@ const Editemployee = () => {
     } else {
       toast.error(data.payload.Msg);
       console.log(data.payload.Msg, "--error");
-      
+
       setLoading(false);
     }
   };
@@ -500,8 +507,8 @@ const Editemployee = () => {
 
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
-      
     }
+
     if (event.target.value == "2") {
       dispatch(
         fetchExplorelitview("TR125", "Function", `EmployeeID=${recID}`, "")
@@ -509,11 +516,17 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "3") {
-      dispatch(fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, ""));
+      dispatch(
+        fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
+      );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "4") {
       dispatch(getDeployment({ HeaderID: recID }));
+      // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+    if (event.target.value == "9") {
+      dispatch(geolocationData({ empID: recID }));
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "5") {
@@ -759,7 +772,14 @@ const Editemployee = () => {
       "action",
     ];
   } else {
-    VISIBLE_FIELDS = ["SLNO", "DesignationCode", "DesignationName", "action"];
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "EmployeeCode",
+      "EmployeeName",
+      "DesignationCode",
+      "DesignationName",
+      "action",
+    ];
   }
 
   const columns = React.useMemo(
@@ -950,8 +970,8 @@ const Editemployee = () => {
       //   ManagerID: "",
       // });
 
-      setdesignLookup(null);
-      SetGateLookup(null);
+
+     
       SetEmpLoaData({
         description: "",
         recordID: "",
@@ -1010,17 +1030,9 @@ const Editemployee = () => {
           // ManagerID: rowData.EmployeeID,
         });
 
-        setdesignLookup({
-          RecordID: rowData.DesignationID,
-          Code: rowData.DesignationCode,
-          Name: rowData.DesignationName,
-        });
+       
 
-        SetGateLookup({
-          RecordID: rowData.StoregatemasterID,
-          Code: rowData.StoregatemasterCode,
-          Name: rowData.StoregatemasterName,
-        });
+   
 
         SetEmpLoaData({
           description: rowData.Description,
@@ -1036,7 +1048,6 @@ const Editemployee = () => {
           reference: rowData.ItemValue,
         });
 
-      
         setContractorData({
           recordID: rowData.RecordID,
           fromperiod: rowData.FromPeriod,
@@ -1045,7 +1056,13 @@ const Editemployee = () => {
           unitrate: rowData.UnitRate,
           alertdate: rowData.NotificationAlertDate,
           renewalperiod: rowData.RenewableNotification,
-          vendor: rowData.Vendor ? {RecordID:rowData.Vendor,Code: rowData.VendorCode,Name:rowData.VendorName} : null,
+          vendor: rowData.Vendor
+            ? {
+                RecordID: rowData.Vendor,
+                Code: rowData.VendorCode,
+                Name: rowData.VendorName,
+              }
+            : null,
         });
       }
     }
@@ -1205,6 +1222,51 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+
+console.log(gelocData, "--geo");
+
+  //Geolocation 
+  const geolocationinitialvlues = {
+    Code: Data.Code,
+    Name: Data.Name,
+    longitude: gelocData.EMP_LONGITUDE,
+    latitude: gelocData.EMP_LATITUDE,
+    radius: gelocData.EMP_RADIUS,
+  };
+    const geolocSavefn = async (values, resetForm, del) => {
+      setLoading(true);
+      let action =
+        funMode === "A" && !del
+          ? "insert"
+          : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+      const idata = {
+        EmployeeID: recID,
+        Longtitude: values.longitude,
+        Lattitude: values.latitude,
+        radius: values.radius,
+      };
+  console.log(idata, "--idata");
+  
+      const response = await dispatch(
+        geolocUpdate(idata)
+      );
+      if (response.payload.Status == "Y") {
+        setLoading(false);
+  
+        // dispatch(
+        //   fetchExplorelitview("TR244", "Contractor", `EmployeeID='${recID}'`, "")
+        // );
+        toast.success(response.payload.Msg);
+        // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+        resetForm();
+      } else {
+        setLoading(false);
+        toast.error(response.payload.Msg);
+      }
+    };
+
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
 
   const managerInitialValue = {
@@ -1228,7 +1290,7 @@ const Editemployee = () => {
       EmployeeID: recID,
       DesignationID: designationLookup.RecordID,
       ManagerID: designationLookup.ManagerID,
-      CompanyID
+      CompanyID,
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1252,9 +1314,31 @@ const Editemployee = () => {
   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
-    checkin: deploymentData.CheckInTime,
-    checkout: deploymentData.CheckOutTime,
+    Designation: deploymentData.DesignationID
+    ? {
+        RecordID: deploymentData.DesignationID,
+        Code: deploymentData.DesignationCode,
+        Name: deploymentData.DesignationName,
+      }
+    : null,
+    location: deploymentData.LocationID
+    ? {
+        RecordID: deploymentData.LocationID,
+        Code: deploymentData.LocationCode,
+        Name: deploymentData.LocationName,
+      }
+    : null,
+    gate: deploymentData.StoregatemasterID
+    ? {
+        RecordID: deploymentData.StoregatemasterID,
+        Code: deploymentData.StoregatemasterCode,
+        Name: deploymentData.StoregatemasterName,
+      }
+    : null,
 
+
+    checkin: deploymentData.CheckInTime || "",
+    checkout: deploymentData.CheckOutTime || "",
     monday: deploymentData.Monday === "Y" ? true : false,
     tuesday: deploymentData.Tuesday === "Y" ? true : false,
     wednesday: deploymentData.Wednesday === "Y" ? true : false,
@@ -1262,17 +1346,16 @@ const Editemployee = () => {
     friday: deploymentData.Friday === "Y" ? true : false,
     saturday: deploymentData.Saturday === "Y" ? true : false,
     sunday: deploymentData.Sunday === "Y" ? true : false,
-
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
-  // console.log(deploymentInitialValue);
+  console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
     const idata = {
       HeaderID: recID,
-      CheckInTime: values.checkin,
-      CheckOutTime: values.checkout,
+      CheckInTime: values.checkin || "",
+      CheckOutTime: values.checkout || "",
       Monday: values.monday === true ? "Y" : "N",
       Tuesday: values.tuesday === true ? "Y" : "N",
       Wednesday: values.wednesday === true ? "Y" : "N",
@@ -1280,9 +1363,12 @@ const Editemployee = () => {
       Friday: values.friday === true ? "Y" : "N",
       Saturday: values.saturday === true ? "Y" : "N",
       Sunday: values.sunday === true ? "Y" : "N",
-      DesignationID: designLookup ? designLookup.RecordID : 0,
-      LocationID: locationLookup ? locationLookup.RecordID : 0,
-      StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
+      DesignationID:  values.Designation.RecordID || 0,
+      LocationID: values.location.RecordID || 0,
+      StoregatemasterID: values.gate.RecordID || 0,
+      // DesignationID: designLookup ? designLookup.RecordID : 0,
+      // LocationID: locationLookup ? locationLookup.RecordID : 0,
+      // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
       CompanyID,
     };
     // console.log(locationLookup.locationRecordID, "????????");
@@ -1518,11 +1604,18 @@ const Editemployee = () => {
                   aria-label="breadcrumb"
                   separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                 >
-                   <Typography variant="h5" color="#0000D1" sx={{ cursor: 'default' }} onClick={() => { setScreen(0) }}>
-                    
-                     {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}
-
-                    </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      setScreen(0);
+                    }}
+                  >
+                    {mode === "E"
+                      ? `Employee(${state.EmpName})`
+                      : "Employee(New)"}
+                  </Typography>
                   {show == "5" ? (
                     <Typography
                       variant="h5"
@@ -1611,6 +1704,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "9" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Geo Location
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                 </Breadcrumbs>
               </Box>
             </Box>
@@ -1627,21 +1731,20 @@ const Editemployee = () => {
                   >
                     <MenuItem value={0}>Employee</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
-              {
-                initialValues.employeetype === "CT" ? 
-                <MenuItem value={8}>Contracts</MenuItem>
-                : false
-              }      
+                    {initialValues.employeetype === "CT" ? (
+                      <MenuItem value={8}>Contracts</MenuItem>
+                    ) : (
+                      false
+                    )}
 
                     {/* <MenuItem value={8}>Contracts</MenuItem> */}
                     <MenuItem value={1}>Employee Process</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
                     <MenuItem value={4}>Deployment</MenuItem>
+                    <MenuItem value={9}>Geo Location</MenuItem>
                     <MenuItem value={6}>List of Attachments</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
-
-
                   </Select>
                 </FormControl>
               ) : (
@@ -2464,7 +2567,7 @@ const Editemployee = () => {
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                    // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2478,7 +2581,7 @@ const Editemployee = () => {
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2493,7 +2596,7 @@ const Editemployee = () => {
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2807,7 +2910,7 @@ const Editemployee = () => {
                       sx={{
                         //mt: "15px",
                         gap: formGap,
-                        marginTop: "20px"
+                        marginTop: "20px",
                       }}
                     >
                       <Formik
@@ -2862,29 +2965,30 @@ const Editemployee = () => {
                                   alignItems: "center",
                                 }}
                               >
-                                 <Productautocomplete
-                        name="process"
-                        label="process"
-                          variant="outlined"
-                        id="process"
-                        value={selectproLookupData}
-                        // value={values.process}
-                        onChange={(newValue) => {
-                          // setFieldValue("process", newValue);
-                          console.log(newValue, "--newvalue process");
-                          
-                          console.log(newValue.RecordID, "process RecordID");
-                       
-                          setselectproLookupData({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                        }}
-                      
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2001","ScreenName":"Process","Filter":"parentID=${CompanyID}","Any":""}}`}
+                                <Productautocomplete
+                                  name="process"
+                                  label="process"
+                                  variant="outlined"
+                                  id="process"
+                                  value={selectproLookupData}
+                                  // value={values.process}
+                                  onChange={(newValue) => {
+                                    // setFieldValue("process", newValue);
+                                    console.log(newValue, "--newvalue process");
 
-                      />
+                                    console.log(
+                                      newValue.RecordID,
+                                      "process RecordID"
+                                    );
+
+                                    setselectproLookupData({
+                                      RecordID: newValue.RecordID,
+                                      Code: newValue.Code,
+                                      Name: newValue.Name,
+                                    });
+                                  }}
+                                  url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2001","ScreenName":"Process","Filter":"parentID=${CompanyID}","Any":""}}`}
+                                />
                                 {/* <TextField
                                   id="outlined-basic"
                                   label="ID"
@@ -3254,7 +3358,7 @@ const Editemployee = () => {
                       />
                       {/* </Box> */}
                     </Box>
-                    <FormControl sx={{ gap: formGap,marginTop: "30px" }}>
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
                       <Box
                         sx={{
                           display: "flex",
@@ -3262,30 +3366,29 @@ const Editemployee = () => {
                           alignItems: "center",
                         }}
                       >
-                         <Productautocomplete
-                        name="function"
-                        label="function"
+                        <Productautocomplete
+                          name="function"
+                          label="function"
                           variant="outlined"
-                        id="function"
-                        value={functionLookup}
-                        // value={values.function}
-                        onChange={(newValue) => {
-                          // setFieldValue("function", newValue);
-                          console.log(newValue, "--newvalue function");
-                          
-                          console.log(newValue.RecordID, "function RecordID");
-                       
-                          SetFunctionLookup({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                        }}
-                        //  onChange={handleSelectionFunctionname}
-                        // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                          id="function"
+                          value={functionLookup}
+                          // value={values.function}
+                          onChange={(newValue) => {
+                            // setFieldValue("function", newValue);
+                            console.log(newValue, "--newvalue function");
 
-                      />
+                            console.log(newValue.RecordID, "function RecordID");
+
+                            SetFunctionLookup({
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
+                          }}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                        />
                         {/* <TextField
                           id="function"
                           label="Function"
@@ -3560,7 +3663,7 @@ const Editemployee = () => {
                       />
                     </Box>
 
-                    <FormControl sx={{ gap: formGap,marginTop: "30px" }}>
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
                       <Box
                         sx={{
                           display: "flex",
@@ -3568,32 +3671,30 @@ const Editemployee = () => {
                           alignItems: "center",
                         }}
                       >
-
-<Productautocomplete
-                        name="manager"
-                        label="manager"
+                        <Productautocomplete
+                          name="manager"
+                          label="manager"
                           variant="outlined"
-                        id="manager"
-                        value={designationLookup}
-                        // value={values.manager}
-                        onChange={(newValue) => {
-                          // setFieldValue("manager", newValue);
-                          console.log(newValue, "--newvalue manager");
-                          
-                          console.log(newValue.RecordID, "manager RecordID");
-                       
-                          SetDesignationLookup({
-                            RecordID: newValue.DesignationID,
-                            ManagerID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
-                        }}
-                        //  onChange={handleSelectionFunctionname}
-                        // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
+                          id="manager"
+                          value={designationLookup}
+                          // value={values.manager}
+                          onChange={(newValue) => {
+                            // setFieldValue("manager", newValue);
+                            console.log(newValue, "--newvalue manager");
 
-                      />
+                            console.log(newValue.RecordID, "manager RecordID");
+
+                            SetDesignationLookup({
+                              RecordID: newValue.DesignationID,
+                              ManagerID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
+                          }}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
+                        />
                         {/* <TextField
                           id="manager"
                           label="Manager"
@@ -3717,6 +3818,7 @@ const Editemployee = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -3840,33 +3942,30 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
-                <Productautocomplete
+                      <Productautocomplete
                         name="Designation"
                         label={
                           <span>
                             Designation
-                            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
                           </span>
                         }
-                          variant="outlined"
+                        variant="outlined"
                         id="Designation"
-                        value={designLookup}
-                        // value={values.Designation}
+                        // value={designLookup}
+                        value={values.Designation}
                         onChange={(newValue) => {
-                          // setFieldValue("Designation", newValue);
+                          setFieldValue("Designation", newValue);
                           console.log(newValue, "--newvalue Designation");
-                          
-                          console.log(newValue.RecordID, "Designation RecordID");
-                       
-                          setdesignLookup({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
-                          });
+                          // setdesignLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
                         }}
-                      
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
-
                       />
                       {/* <TextField
                         id="outlined-basic"
@@ -3950,31 +4049,30 @@ const Editemployee = () => {
                         inputProps={{ tabIndex: "-1" }}
                       /> */}
 
-
-<Productautocomplete
-  name="location"
-  label={
-    <span>
-      location
-      <span style={{ color: "red", fontWeight: "bold" }}>*</span>
-    </span>
-  }
-  variant="outlined"
-  id="location"
-  value={locationLookup}
-  onChange={(newValue) => {
-    console.log(newValue, "--newvalue location");
-    console.log(newValue.RecordID, "location RecordID");
-
-    SetLocationLookup({
-      RecordID: newValue.RecordID,
-      Code: newValue.Code,
-      Name: newValue.Name,
-    });
-  }}
-  url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
-/>
-
+                      <Productautocomplete
+                        name="location"
+                        label={
+                          <span>
+                            location
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        id="location"
+                        // value={locationLookup}
+                        value={values.location}
+                        onChange={(newValue) => {
+                          setFieldValue("location", newValue);
+                          // SetLocationLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
+                        }}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
                     </FormControl>
                     <FormControl
                       sx={{
@@ -3984,31 +4082,35 @@ const Editemployee = () => {
                         alignItems: "center",
                       }}
                     >
+                      <Productautocomplete
+                        name="gate"
+                        label={
+                          <span>
+                            Gate
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        id="gate"
+                        // value={gateLookup}
+                        value={values.gate}
+                        onChange={(newValue) => {
+                          setFieldValue("gate", newValue);
+                          console.log(newValue, "--newvalue gate");
+                          console.log(newValue.RecordID, "gate RecordID");
 
-                      
-<Productautocomplete
-  name="gate"
-  label={
-    <span>
-      Gate
-      <span style={{ color: "red", fontWeight: "bold" }}>*</span>
-    </span>
-  }
-  variant="outlined"
-  id="gate"
-  value={gateLookup}
-  onChange={(newValue) => {
-    console.log(newValue, "--newvalue gate");
-    console.log(newValue.RecordID, "gate RecordID");
-
-    SetGateLookup({
-      RecordID: newValue.RecordID,
-      Code: newValue.Code,
-      Name: newValue.Name,
-    });
-  }}
-  url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${locationLookup ? locationLookup.RecordID : 0}'","Any":""}}`}
-/>
+                          // SetGateLookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
+                        }}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
+                          values.location ? values.location.RecordID : 0
+                        }'","Any":""}}`}
+                      />
                       {/* <TextField
                         id="outlined-basic"
                         label="ID"
@@ -4047,7 +4149,6 @@ const Editemployee = () => {
                         focused
                         inputProps={{ tabIndex: "-1" }}
                       /> */}
-
                     </FormControl>
                     <FormControl
                       sx={{
@@ -4097,7 +4198,7 @@ const Editemployee = () => {
                         // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
-
+                  
                     {/* <FormControl
                       sx={{
                         gridColumn: "span 2",
@@ -4508,10 +4609,10 @@ const Editemployee = () => {
                             getRowClassName={(params) =>
                               params.indexRelativeToCurrentPage % 2 === 0
                                 ? "odd-row"
-                                : "even-row"}
-/>
-</Box>
-                   
+                                : "even-row"
+                            }
+                          />
+                        </Box>
                       </FormControl>
 
                       <FormControl
@@ -5319,20 +5420,20 @@ const Editemployee = () => {
                           value={vendorlookup.venName}
                         />
                       </Box> */}
-                      
-                    <Productautocomplete
+
+                      <Productautocomplete
                         name="vendor"
                         label="vendor"
-                          variant="outlined"
+                        variant="outlined"
                         id="vendor"
                         value={vendorlookup}
                         // value={values.vendor}
                         onChange={(newValue) => {
                           // setFieldValue("vendor", newValue);
                           console.log(newValue, "--newvalue vendor");
-                          
+
                           console.log(newValue.RecordID, "vendor RecordID");
-                       
+
                           SetVendorlookup({
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
@@ -5342,7 +5443,6 @@ const Editemployee = () => {
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
-
                       />
                       {/* <SingleFormikOptimizedAutocomplete
                        
@@ -5690,6 +5790,273 @@ const Editemployee = () => {
                       filterValue={CompanyID}
                     />
                   </Popup>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+{show == "9" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+           
+              initialValues={geolocationinitialvlues}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  geolocSavefn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                    {/* <Stack
+                      sx={{
+                       // gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+
+                    >
+
+                      <img
+                        src={userimg}
+                        style={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack> */}
+
+<Stack
+                      sx={{
+                        gap: formGap,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+                    <FormControl 
+                    sx={{ gap: formGap, marginTop: "-20px" }}
+                    >
+
+ {/* <FormControl 
+                     sx={{
+                      //gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      //background: "#fff6c3"
+                    }}
+                    // sx={{ gap: formGap }}
+                    > */}
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="longitude"
+                        label="Longitude"
+                        name="longitude"
+                        focused
+                        value={values.longitude}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        inputProps={{ step: "any", min: -180, max: 180, style:{ textAlign: 'right' } }}
+                      />
+                       {/* </FormControl> */}
+                        {/* <FormControl 
+                     sx={{
+                      //gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      //background: "#fff6c3"
+                    }}
+                    // sx={{ gap: formGap }}
+                    > */}
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        id="latitude"
+                        name="latitude"
+                        label="Latitude"
+                        focused
+                        value={values.latitude}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{ step: "any", min: -90, max: 90, style:{ textAlign: 'right' } }}
+                      />
+                       {/* </FormControl> */}
+                       {/* <FormControl 
+                     sx={{
+                      //gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      //background: "#fff6c3"
+                    }}
+                    // sx={{ gap: formGap }}
+                    > */}
+                      <TextField
+                      fullWidth
+                      variant="standard"
+                        focused
+                        label="Radius (m)"
+                        name="radius"
+                        value={values.radius}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        type="number"
+                        inputProps={{ step: "any", min: 0, style:{ textAlign: 'right' } }}
+                      />
+                    </FormControl>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    mt="10px"
+                    padding={1}
+                    gap={2}
+                  >
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {/* {YearFlag == "true" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          geolocSavefn(values, "harddelete");
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    {/* {YearFlag == "true" ? (
+                      <Button
+                        onClick={() => mgrFunctionFn(values, resetForm, true)}
+                        color="error"
+                        variant="contained"
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
                 </form>
               )}
             </Formik>

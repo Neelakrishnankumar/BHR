@@ -1152,14 +1152,14 @@ const RegInitialValue = {
         });
         setLeaveData({
           recordID: rowData.RecordID,
-          fromDate: rowData.FromDate,
-          toDate: rowData.ToDate,
+          fromDate: rowData.HiddenFromDate,
+          toDate: rowData.HiddenToDate,
           LeavePart: rowData.LeavePart,
           Status: rowData.Status,
         });
         setOtdata({
           RecordID: rowData.RecordID,
-          OtDate: rowData.OtDate,
+          OtDate: rowData.HiddenOtDate,
           NumberOfHours: rowData.NumberOfHours,
           OtType: rowData.OtType,
           PaymentMethod: rowData.PaymentMethod,
@@ -1195,7 +1195,7 @@ const RegInitialValue = {
         });
         setSaladdata({
           RecordID: rowData.RecordID,
-          SalaryAdvanceDate: rowData.SalaryAdvanceDate,
+          SalaryAdvanceDate: rowData.HiddenSalaryAdvanceDate,
           ReferranceIfAny: rowData.ReferranceIfAny,
           OverHeadsID: rowData.OverHeadsID,
           // OverHeadsCode:rowData.OverHeadsCode,
@@ -1504,7 +1504,7 @@ const RegInitialValue = {
     NumberOfHours: otdata.NumberOfHours,
     comments: otdata.Comments,
     PaymentMethod:
-      otdata.PaymentMethod === "Assitis"
+      otdata.PaymentMethod === "As it is"
         ? "AS"
         : otdata.PaymentMethod === "Time and a Half"
           ? "TH"
@@ -4191,7 +4191,7 @@ const RegInitialValue = {
                               touched.PaymentMethod && errors.PaymentMethod
                             }
                           >
-                            <MenuItem value="AS">Assitis</MenuItem>
+                            <MenuItem value="AS">As it is</MenuItem>
                             <MenuItem value="TH">Time and a Half</MenuItem>
                             <MenuItem value="DT">Double Time</MenuItem>
                             <MenuItem value="CS">Compensate</MenuItem>
@@ -4254,7 +4254,7 @@ const RegInitialValue = {
                     justifyContent="end"
                     padding={1}
                     gap={2}
-                    style={{ marginTop: "-45px" }}
+                    // style={{ marginTop: "-45px" }}
                   >
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
