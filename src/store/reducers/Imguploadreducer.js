@@ -18,6 +18,7 @@ export const imageUpload = createAsyncThunk(
   async ({ formData }) => {
     console.log("🚀 ~ file: Imguploadreducer.js:19 ~ formData:", formData)
     const url = store.getState().globalurl.imgUploadUrl;
+    //const url = store.getState().globalurl.fileUploadUrl;
     const response = await axios.post(url, formData, {
       headers: {
         Authorization:
@@ -43,6 +44,7 @@ export const fileUpload = createAsyncThunk(
     return response.data;
   }
 );
+
 export const getApiSlice = createSlice({
   name: "imageApi",
   initialState,
