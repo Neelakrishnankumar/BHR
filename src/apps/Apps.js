@@ -120,8 +120,10 @@ import Edittask from "./pages/HR/EditTask";
 import EditmileWeightage from "./pages/HR/Editweightage";
 import Settings from "./Security/Settings";
 import Editvendor from "./pages/HR/Editvendor";
-
-
+import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
+import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
+import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
+import EditAttendance from "./pages/Empolyee/EditAttendance";
 
 
 
@@ -612,6 +614,22 @@ function App() {
                    path="/:accessID/:screenName/EditVendor/:id/:Mode"
                     element={<Editvendor />}
                   />
+
+<Route
+                    path="/:accessID/EditAttendance"
+                    element={<EditAttendance />}
+                  />
+                    <Route
+                    path="/:accessID/EditAttendanceHistory"
+                    element={<EditAttendanceHistory />}
+                  />
+                    <Route
+                    path="/:accessID/EditTimeSheet"
+                    element={<EditTimeSheet />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditTimeDailytask/:id"
+                    element={<EditTimeDailytask />} />
                    {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
                     element={<EditStageweightage />}

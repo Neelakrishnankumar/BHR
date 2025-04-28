@@ -56,6 +56,7 @@ purchaseorderratingData:[],
 searchLoading:false,
 empAttendanceData:{},
 AttendanceData:{},
+timeSheetData:{},
 };
 
 export const subScriptionCheck = createAsyncThunk(
@@ -79,28 +80,28 @@ export const subScriptionCheck = createAsyncThunk(
     return response.data;
   }
 );
-export const empAttendance = createAsyncThunk(
-  "employee/Payrollattendance",
-  async ({ data }) => {
+// export const empAttendance = createAsyncThunk(
+//   "employee/Payrollattendance",
+//   async ({ data }) => {
     
-    var url = store.getState().globalurl.payrollattendanceUrl;
-    // var url = store.getState().globalurl.employeeattendanceUrl;
+//     var url = store.getState().globalurl.payrollattendanceUrl;
+//     // var url = store.getState().globalurl.employeeattendanceUrl;
    
-    console.log("get" + JSON.stringify(data));
-    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
-  }
-);
+//     console.log("get" + JSON.stringify(data));
+//     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+//     const response = await axios.post(url, data, {
+//       headers: {
+//         Authorization:
+//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//       },
+//     });
+//     console.log(
+//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+//       response
+//     );
+//     return response.data;
+//   }
+// );
 export const CustomerpriceorderQty= createAsyncThunk(
   "products/Customerprice",
   async ({ data }) => {
@@ -1236,6 +1237,7 @@ export const getApiSlice = createSlice({
      state.purchaseorderratingData=[]
      state.empAttendanceData=[];
      state.AttendanceData=[];
+     state.timeSheetData=[];
      state.costingLeatherCost.leatherOneCost = 0
      state.costingLeatherCost.leatherTwoCost = 0
      state.costingLeatherCost.leatherThreeCost = 0
@@ -1719,6 +1721,11 @@ export const getApiSlice = createSlice({
           .addCase(Attendance.fulfilled, (state, action) => {
     
             state.AttendanceData = action.payload.Data;
+            
+          })
+          .addCase(timeSheet.fulfilled, (state, action) => {
+
+            state.timeSheetData = action.payload.Data;
             
           })
   },
@@ -2723,3 +2730,64 @@ export function stockRequirementFetchapiData(name) {
     }
   };
 }
+export const timeSheetPostData = createAsyncThunk(
+  "timeSheetPostData/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.timesheetdtUrl;
+    const response = await axios.post(url,idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const empAttendance = createAsyncThunk(
+  "employee/Payrollattendance",
+  async ({ data }) => {
+    
+    var url = store.getState().globalurl.payrollattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+   
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const timeSheet = createAsyncThunk(
+  "timeSheet/timeSheetattendance",
+  async ({ data }) => {
+    
+    var url = store.getState().globalurl.timesheetattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+   
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);

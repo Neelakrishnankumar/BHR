@@ -105,6 +105,9 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
+import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import { menuHeight } from "./utils";
 const child = {
 
@@ -911,19 +914,16 @@ const child = {
       ],
     },
     {
-      name: "Attendance",
+      name: "Time Sheet",
       id: 45678,
       MenuID: "EM900",
-      Tooltipname: "Attendance",
+      Tooltipname: "Time Sheet",
       icon: (
-        <Tooltip title="Attendance">
+        <Tooltip title="Time Sheet">
           <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
         </Tooltip>
       ),
       children: [
-
-
-
         {
           name: "Check In",
           id: 5486,
@@ -974,6 +974,57 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR124",
+        },
+        {
+          name: "Attendance",
+          url: "/Apps/TR260/EditAttendance",
+          id: 5590,
+          icon: (
+            <Tooltip title="Attendance">
+              <AppRegistrationOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR260",
+        },
+        {
+          name: "Attendance History",
+          url: "/Apps/TR259/EditAttendanceHistory",
+          id: 5591,
+          icon: (
+            <Tooltip title="Attendance History">
+              <WorkHistoryOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR259",
+        },
+        {
+          name: "Time Sheet",
+          url: "/Apps/TR261/EditTimeSheet",
+          id: 5592,
+          icon: (
+            <Tooltip title="Time Sheet">
+              <PendingActionsOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR261",
         },
         
       ],
