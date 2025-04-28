@@ -1954,7 +1954,13 @@ export const fetchListview =
                                 
                                 EmpName:params.row.Name
                               }
-                            : AccessID === "TR132"
+                            : 
+                            AccessID === "TR257"
+                            ? {
+                                
+                                EmpName:params.row.Name
+                              }
+                              :AccessID === "TR132"
                             ? {
 
                               proName:params.row.ProjectName,Date:params.row.Date,EmpName:params.row.EmployeeName,Locname:params.row.LocationName

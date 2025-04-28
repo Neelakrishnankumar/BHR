@@ -3,7 +3,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import Sidebars from "../ui-components/global/Sidebar";
 import React from "react";
-import Changepassword from "./Security/Changepassword";
+//import Changepassword from "./Security/Changepassword";
 import Listview from "./pages/Listview";
 import { useParams } from "react-router-dom";
 import Productdetail from "./pages/Inventory/Productdetail";
@@ -79,9 +79,7 @@ import Editlocation from "./pages/Masters/Editlocation";
 import Editgate from "./pages/Masters/Editgate";
 import Editbin from "./pages/Masters/Editbin";
 import Editproject from "./pages/HR/Editproject";
-
 import EditDailytask from "./pages/Empolyee/Editdailytask";
-
 import EditDailyHourstask from "./pages/Empolyee/EditDailyHourTask";
 import Editfixedassettype from "./pages/FinanceModule/Editfixedassettype";
 import Editfixedassetcategory from "./pages/FinanceModule/Editfixedassetcategory";
@@ -94,8 +92,6 @@ import EditEmpfinance from "./pages/Empolyee/EditEmpfinance";
 import Editpostshipment from "./pages/Trascation/Editpostshipment";
 import Editjobworkcategory from "./pages/Inventory/Editjobworkcategory";
 import EditJobwork from "./pages/Inventory/EditJobwork";
-
-
 import Editinspection from "./pages/Inventory/Editinspection";
 import Editpurchaseorder from "./pages/FinanceModule/Editpurchaseorder";
  import Editpurchaseorderopen from "./pages/FinanceModule/Editpurchaseorderopen";
@@ -120,6 +116,10 @@ import Edittask from "./pages/HR/EditTask";
 import EditmileWeightage from "./pages/HR/Editweightage";
 import Settings from "./Security/Settings";
 import Editvendor from "./pages/HR/Editvendor";
+import Configuration from "./Security/Configuration";
+import Changepass from "./Security/Changepassword";
+import Editrequests from "./pages/Empolyee/Editrequest";
+import Editapprovals from "./pages/Empolyee/EditApproval";
 
 
 
@@ -140,6 +140,8 @@ function App() {
 
                 <Routes>
                 <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={ <EditemployeePayroll/>}/>
+                <Route path="/:accessID/:screenName/EditEmployee Request/:id/:Mode" element={ <Editrequests/>}/>
+                <Route path="/:accessID/:screenName/EditApproval/:id/:Mode" element={ <Editapprovals/>}/>
                 <Route path="/:accessID/:screenName/Editrunpayroll" element={ <Editrunpayroll/>}/>
                 <Route path="/:accessID/Regularization/:id/" element={ <Regularization/>}/>
                
@@ -194,9 +196,10 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:invoiceType/EditLocal Invoice/:id/:Mode"
                     element={<Editlocalinvoce />}
                   />
-                  <Route path="/changepassword" element={<Changepassword />} />
+                  <Route path="/change Password" element={<Changepass />} />
                 {/* Settings */}
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/configuration" element={<Configuration />} />
 
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"
