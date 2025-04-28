@@ -53,7 +53,8 @@ import StarBorderPurple500OutlinedIcon from "@mui/icons-material/StarBorderPurpl
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-//import LgemsLogo from "../../assets/img/LgemsLogo.png";
+// import LgemsLogo from "../../assets/img/LgemsLogo.png";
+import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -716,23 +717,7 @@ const child = {
         </Tooltip>
       ),
       children: [
-        {
-          name: "Functions",
-          id: 567,
-          url: "./TR121/Functions",
-          icon: (
-            <Tooltip title="Functions">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR121",
-        },
+       
        
         {
           name: "Designation",
@@ -821,11 +806,28 @@ const child = {
           UGA_ACCESSIDS: "TR133",
         },
         {
-          name: "Vendor",
-          id: 4346895,
-          url: "./TR243/Vendor",
+          name: "Functions",
+          id: 567,
+          url: "./TR121/Functions",
           icon: (
-            <Tooltip title="Vendor">
+            <Tooltip title="Functions">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR121",
+        },
+        {
+          name: "Party",
+          id: 4346895,
+          url: "./TR243/Party",
+          icon: (
+            <Tooltip title="Party">
               <PersonSearchIcon color="info" />
             </Tooltip>
           ),
@@ -854,6 +856,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
+        },
+        {
+          name: "Over Head",
+          id: 45687,
+          url: "./TR085/Over Head",
+          icon: (
+            <Tooltip title="Over Head">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR085",
         },
         {
           name: "Holiday List",
@@ -1414,6 +1433,9 @@ console.log(Expiryin, "--in a sideBar Expiryin");
         },
       }}
     >
+
+
+
       <Sidebar breakPoint="md" backgroundColor={colors.primary[400]}>
         <Menu>
           <MenuItem
@@ -1425,7 +1447,8 @@ console.log(Expiryin, "--in a sideBar Expiryin");
               ) : undefined
             }
             style={{
-              margin: "10px 0 3px 0",
+              margin: "40px 0 3px 0",
+              // margin: "10px 0 3px 0",
               color: colors.grey[100],
             }}
           >
@@ -1436,15 +1459,17 @@ console.log(Expiryin, "--in a sideBar Expiryin");
                 alignItems="center"
                 ml="15px"
               >
-                {/* <Avatar
+                <Avatar
                   variant="rounded"
+                  // src={LgemsLogo}
                   src={LgemsLogo}
-                  sx={{ width: "100px" }}
+                  // sx={{ width: "100px" }}
+                  sx={{ height: "110px", width: "140px" }}
                   onClick={() => {
                     navigate("./Chart");
                   }}
-                ></Avatar> */}
-                <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography>
+                ></Avatar>
+                {/* <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography> */}
                 
                 {/* <IconButton
                   onClick={

@@ -609,7 +609,7 @@ function App() {
                     element={<EditmileWeightage />}
                   />
                   <Route
-                   path="/:accessID/:screenName/EditVendor/:id/:Mode"
+                   path="/:accessID/:screenName/EditParty/:id/:Mode"
                     element={<Editvendor />}
                   />
                    {/* <Route
