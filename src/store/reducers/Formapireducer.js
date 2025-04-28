@@ -705,7 +705,47 @@ export const stockGetData = createAsyncThunk(
     return response.data.Data;
   }
 );
+export const requestMail = createAsyncThunk(
+  "email/rquestmail",
+  async (data) => {
+    var url = store.getState().globalurl.requestAcknowledgeUrl;
 
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const leaveAppoval = createAsyncThunk(
+  "leave/approval",
+  async ({data}, thunkAPI) => {
+    try {
+      var url = store.getState().globalurl.leavelApprovalUrl;
+      console.log("get" + JSON.stringify(data));
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+      console.log("🚀 ~ response.data:", response.data)
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
 export const InvoicePostData = createAsyncThunk(
   "PostData/header/details",
   async ({ accessID, action, idata }) => {
@@ -875,7 +915,27 @@ export const SettingspostData = createAsyncThunk(
     return response.data;
   }
 );
+export const CompanydetailpostData = createAsyncThunk(
+  "Company/Sub Post",
+  async ({idata}) => {
+    const url = store.getState().globalurl.compdetailPostUrl;
 
+    // const data = {
+    //   UserName: UserName,
+    //   OldPassword: OldPassword,
+    //   NewPassword: NewPassword,
+    // };
+    console.log("get" + JSON.stringify(idata));
+    const response = await axios.post(url,idata,{
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
 export const getFetchWeightage = createAsyncThunk(
   "allScreen/Header",
   async ({ Type, HeaderID,CompanyID }) => {

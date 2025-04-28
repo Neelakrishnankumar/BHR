@@ -8,6 +8,13 @@ import {
   useProSidebar,
   SubMenu,
 } from "react-pro-sidebar";
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+import SettingsIcon from '@mui/icons-material/Settings';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import {
   Box,
@@ -53,7 +60,8 @@ import StarBorderPurple500OutlinedIcon from "@mui/icons-material/StarBorderPurpl
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-//import LgemsLogo from "../../assets/img/LgemsLogo.png";
+// import LgemsLogo from "../../assets/img/LgemsLogo.png";
+import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -719,23 +727,7 @@ const child = {
         </Tooltip>
       ),
       children: [
-        {
-          name: "Functions",
-          id: 567,
-          url: "./TR121/Functions",
-          icon: (
-            <Tooltip title="Functions">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR121",
-        },
+       
        
         {
           name: "Designation",
@@ -824,11 +816,28 @@ const child = {
           UGA_ACCESSIDS: "TR133",
         },
         {
-          name: "Vendor",
-          id: 4346895,
-          url: "./TR243/Vendor",
+          name: "Functions",
+          id: 567,
+          url: "./TR121/Functions",
           icon: (
-            <Tooltip title="Vendor">
+            <Tooltip title="Functions">
+              <Diversity3Icon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR121",
+        },
+        {
+          name: "Party",
+          id: 4346895,
+          url: "./TR243/Party",
+          icon: (
+            <Tooltip title="Party">
               <PersonSearchIcon color="info" />
             </Tooltip>
           ),
@@ -857,6 +866,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
+        },
+        {
+          name: "Over Head",
+          id: 41,
+          url: "./TR085/Over Head",
+          icon: (
+            <Tooltip title="Over Head">
+              <RequestQuoteOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR085",
         },
         {
           name: "Holiday List",
@@ -1029,6 +1055,56 @@ const child = {
         
       ],
     },
+    {
+      name: "Transaction",
+      id: 97659,
+      MenuID: "ST1600",
+      Tooltipname: "Transaction",
+      icon: (
+        <Tooltip title="Transaction">
+          <AssignmentTurnedInIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+
+        {
+          name: "Employee Request",
+          id: 5846,
+          url: "./TR257/Employee Request",
+          icon: (
+            <Tooltip title="Requests">
+              <PermContactCalendarIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR257",
+        },
+        // {
+        //   name: "Approval",
+        //   id: 5859,
+        //   url: "./TR027/Approval",
+        //   icon: (
+        //     <Tooltip title="Approval">
+        //       <TaskAltIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR258",
+        // },
+        
+        
+      ],
+    },
     // {
     //   name: "Payroll",
     //   id: 34568,
@@ -1123,6 +1199,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
+       
         // {
         //   name: "Regularization",
         //   id: 487,
@@ -1144,6 +1221,59 @@ const child = {
      
       ],
     },
+    {
+      name: "Settings",
+      id: 95689,
+      MenuID: "ST1600",
+      Tooltipname: "Settings",
+      icon: (
+        <Tooltip title="Settings">
+          <SettingsIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+
+
+
+        {
+          name: "Configuration",
+          id: 5846,
+          url: "./configuration",
+          icon: (
+            <Tooltip title="Configuration">
+              <DisplaySettingsIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR252",
+        },
+        {
+          name: "Change Password",
+          id: 5859,
+          url: "./change Password",
+          icon: (
+            <Tooltip title="Change Password">
+              <LockOpenIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR253",
+        },
+        
+        
+      ],
+    },
+    
     // {
     //   name: "FM",
     //   id: 5,
@@ -1465,6 +1595,9 @@ console.log(Expiryin, "--in a sideBar Expiryin");
         },
       }}
     >
+
+
+
       <Sidebar breakPoint="md" backgroundColor={colors.primary[400]}>
         <Menu>
           <MenuItem
@@ -1476,7 +1609,8 @@ console.log(Expiryin, "--in a sideBar Expiryin");
               ) : undefined
             }
             style={{
-              margin: "10px 0 3px 0",
+              margin: "40px 0 3px 0",
+              // margin: "10px 0 3px 0",
               color: colors.grey[100],
             }}
           >
@@ -1487,15 +1621,17 @@ console.log(Expiryin, "--in a sideBar Expiryin");
                 alignItems="center"
                 ml="15px"
               >
-                {/* <Avatar
+                <Avatar
                   variant="rounded"
+                  // src={LgemsLogo}
                   src={LgemsLogo}
-                  sx={{ width: "100px" }}
+                  // sx={{ width: "100px" }}
+                  sx={{ height: "110px", width: "140px" }}
                   onClick={() => {
                     navigate("./Chart");
                   }}
-                ></Avatar> */}
-                <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography>
+                ></Avatar>
+                {/* <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography> */}
                 
                 {/* <IconButton
                   onClick={
@@ -1540,7 +1676,7 @@ console.log(Expiryin, "--in a sideBar Expiryin");
             {handleMenu(child.data, Groupaccess)}
 
          
-          <Tooltip title="Settings">
+          {/* <Tooltip title="Settings">
               <ListItemButton
                 onClick={() => {
                   navigate("/Apps/settings");
@@ -1549,7 +1685,7 @@ console.log(Expiryin, "--in a sideBar Expiryin");
 
                 {!collapsed && <ListItemText primary="Settings" />}
               </ListItemButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="Logout">
               <ListItemButton
                 onClick={() => {

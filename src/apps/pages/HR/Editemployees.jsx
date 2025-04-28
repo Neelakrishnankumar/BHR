@@ -25,7 +25,7 @@ import { subDays, differenceInDays } from "date-fns";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useParams, useNavigate ,useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../index";
 import {
@@ -105,7 +105,7 @@ const Editemployee = () => {
   };
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-   const location = useLocation()
+  const location = useLocation();
   const handleFormSubmit = (values) => {
     console.log(values);
   };
@@ -119,24 +119,22 @@ const Editemployee = () => {
   var mode = params.Mode;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
-console.log(Data, "geteting Data");
+  // console.log(Data, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
 
   const state = location.state || {};
-  console.log(state, "emnployee");
+  // console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
-   console.log("deploymentData",deploymentData);
+  console.log("deploymentData", deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
   console.log(
     "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
   );
 
-  
   const gelocData = useSelector((state) => state.formApi.exploreData);
-
 
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
@@ -166,7 +164,7 @@ console.log(Data, "geteting Data");
       userimg = userimg + Data.ImageName;
     }
   }
-  console.log(Data, "--Data");
+  // console.log(Data, "--Data");
 
   // var apiData = "";
   // apiData = {
@@ -215,8 +213,12 @@ console.log(Data, "geteting Data");
         ? "PP"
         : Data.EmpType === "Permanent"
         ? "PM"
-        : Data.EmpType === "Contractor"
-        ? "CT"
+          : Data.EmpType === "Contracts In"
+        ? "CI"
+          : Data.EmpType === "Contracts Out"
+        ? "CO"
+        // : Data.EmpType === "Contractor"
+        // ? "CT"
         : "",
     checkbox: Data.Disable,
     joindate: Data.DateOfJoin,
@@ -283,13 +285,15 @@ console.log(Data, "geteting Data");
     locationCode: "",
     locationName: "",
   });
-  const [gateLookup, SetGateLookup] = useState(
-    {
+  const [gateLookup, SetGateLookup] = useState({
     gateRecordID: "",
     gateCode: "",
     gateName: "",
   });
   const [selectproLookupData, setselectproLookupData] = React.useState(null);
+
+  const [LeaveconLTData, setselectLeaveconLTData] = React.useState(null);
+
   //   {
   //   PROlookupRecordid: "",
   //   PROlookupCode: "",
@@ -297,6 +301,7 @@ console.log(Data, "geteting Data");
   // });
 
   // ***************  EMPLOYEE-FUNCTION LOOKUP  *************** //
+  const [customerlookup, SetCustomerlookup] = useState(null);
 
   const [vendorlookup, SetVendorlookup] = useState(null);
   //   {
@@ -318,12 +323,11 @@ console.log(Data, "geteting Data");
   //   ManagerID: "",
   // });
 
- 
   if (isPopupData == false) {
     selectLookupData.lookupRecordid = Data.DeptRecordID;
     selectLookupData.lookupCode = Data.DeptCode;
     selectLookupData.lookupDesc = Data.DeptName;
-   
+
     //Designation
     console.log(deploymentData, "ispopupdeployment");
     designLookup.RecordID = deploymentData.DesignationID;
@@ -466,7 +470,10 @@ console.log(Data, "geteting Data");
       if (del) {
         navigate(`/Apps/TR027/Employees`);
       } else {
-        navigate(`/Apps/TR027/Employees/EditEmployees/${data.payload.Recid}/E`,{state:{...state}});
+        navigate(
+          `/Apps/TR027/Employees/EditEmployees/${data.payload.Recid}/E`,
+          { state: { ...state } }
+        );
       }
     } else {
       toast.error(data.payload.Msg);
@@ -493,20 +500,19 @@ console.log(Data, "geteting Data");
     Comments: "",
     SortOrder: "",
   });
+
   const [boMode, setBomode] = useState("A");
 
   // **********ScreenChange Function*********
   const screenChange = (event) => {
     setScreen(event.target.value);
-
+    if (event.target.value == "0") {
+      dispatch(fetchApidata(accessID, "get", recID));
+    }
     if (event.target.value == "1") {
       dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
-    }
-
-    if (event.target.value == "0") {
-      dispatch(fetchApidata(accessID, "get", recID));
     }
 
     if (event.target.value == "2") {
@@ -523,10 +529,6 @@ console.log(Data, "geteting Data");
     }
     if (event.target.value == "4") {
       dispatch(getDeployment({ HeaderID: recID }));
-      // selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    }
-    if (event.target.value == "9") {
-      dispatch(geolocationData({ empID: recID }));
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "5") {
@@ -546,10 +548,31 @@ console.log(Data, "geteting Data");
     }
     //Contractor
     if (event.target.value == "8") {
-      dispatch(
-        fetchExplorelitview("TR244", "Contractor", `EmployeeID='${recID}'`, "")
-      );
+      dispatch(fetchExplorelitview("TR244", "Contracts In", `EmployeeID='${recID}' AND Vendors='Y'`, ""))
+
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+    if (event.target.value == "11") {
+      dispatch(fetchExplorelitview("TR244", "Contracts Out", `EmployeeID='${recID}' AND Customer='Y'`, ""))
+
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+    if (event.target.value == "9") {
+      dispatch(geolocationData({ empID: recID }));
+      // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+
+    if (event.target.value == "10") {
+      dispatch(
+        fetchExplorelitview(
+          "TR249",
+          "Leave Configuration",
+          `EmployeeID='${recID}'`,
+          ""
+        )
+      );
+      // dispatch(fetchApidata(accessID, "get", recID));
+      selectcelldata("", "A", "");
     }
   };
 
@@ -562,6 +585,7 @@ console.log(Data, "geteting Data");
     if (bMode == "A") {
       setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
       setselectproLookupData(null);
+
       //   {
       //   PROlookupRecordid: "",
       //   PROlookupCode: "",
@@ -733,12 +757,13 @@ console.log(Data, "geteting Data");
   const clrForm = () => {
     setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
     setselectproLookupData(null);
+
     //   {
     //   PROlookupRecordid: "",
     //   PROlookupCode: "",
     //   PROlookupDesc: "",
     // });
-
+    setselectLeaveconLTData(null);
     selectcelldata("", "A", "");
   };
 
@@ -769,6 +794,23 @@ console.log(Data, "geteting Data");
       "VendorName",
       "BillingUnits",
       "UnitRate",
+      "action",
+    ];
+  } else if (show == "11") {
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "VendorCode",
+      "VendorName",
+      "BillingUnits",
+      "UnitRate",
+      "action",
+    ];
+  } else if (show == "10") {
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "LeavePart",
+      "AvailDays",
+      "EligibleDays",
       "action",
     ];
   } else {
@@ -880,7 +922,9 @@ console.log(Data, "geteting Data");
               ? "List of Managers"
               : show == "7"
               ? "Item Custody"
-              : show == "8"
+              : show == "10"
+              ? "List of Configurations"
+              : show == "8" || show == "11"
               ? "List of Contracts"
               : "List of Managers"}
           </Typography>
@@ -937,7 +981,14 @@ console.log(Data, "geteting Data");
     renewalperiod: "",
     vendor: "",
   });
-
+  const [LeaveCondata, setLeaveCondata] = useState({
+    recordID: "",
+    LeaveTypeID: "",
+    totaldays: "",
+    availableleave: "",
+    elligibledays: "",
+    Year: "",
+  });
   const selectCellRowData = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
@@ -946,6 +997,7 @@ console.log(Data, "geteting Data");
 
     setFunMode(mode);
     setLaoMode(mode);
+    console.log(mode, "--mode");
 
     if (mode == "A") {
       setFunMgrRecID("");
@@ -957,6 +1009,7 @@ console.log(Data, "geteting Data");
       //   funName: "",
       // });
       SetVendorlookup(null);
+      SetCustomerlookup(null);
       //   {
       //   venRecordID: "",
       //   venCode: "",
@@ -970,8 +1023,6 @@ console.log(Data, "geteting Data");
       //   ManagerID: "",
       // });
 
-
-     
       SetEmpLoaData({
         description: "",
         recordID: "",
@@ -987,7 +1038,7 @@ console.log(Data, "geteting Data");
         itemValue: "",
         reference: "",
       });
-
+      setselectLeaveconLTData(null);
       setContractorData({
         recordID: "",
         fromperiod: "",
@@ -998,8 +1049,20 @@ console.log(Data, "geteting Data");
         renewalperiod: "",
         vendor: "",
       });
+
+      setLeaveCondata({
+        recordID: "",
+        LeaveTypeID: "",
+        totaldays: "",
+        availableleave: "",
+        elligibledays: "",
+        Year: "",
+      });
     } else {
+      console.log(rowData, "--rowData");
       if (field == "action") {
+        console.log(LeaveCondata, "--LeaveCondata");
+
         setFunMgrRecID(rowData.RecordID);
         setFunEmpRecID(rowData.RecordID);
         SetFunctionLookup({
@@ -1019,6 +1082,11 @@ console.log(Data, "geteting Data");
           // venCode: rowData.VendorCode,
           // venName: rowData.VendorName,
         });
+        SetCustomerlookup({
+          RecordID: rowData.Vendor,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+        })
         SetDesignationLookup({
           RecordID: rowData.DesignationID,
           ManagerID: rowData.EmployeeID,
@@ -1029,10 +1097,6 @@ console.log(Data, "geteting Data");
           // desName: rowData.EmployeeName,
           // ManagerID: rowData.EmployeeID,
         });
-
-       
-
-   
 
         SetEmpLoaData({
           description: rowData.Description,
@@ -1063,6 +1127,27 @@ console.log(Data, "geteting Data");
                 Name: rowData.VendorName,
               }
             : null,
+        });
+
+        setselectLeaveconLTData({
+          RecordID: rowData.LeaveTypeID,
+          Code: "",
+          Name: rowData.LeavePart,
+        });
+
+        setLeaveCondata({
+          recordID: rowData.RecordID,
+          totaldays: rowData.TotalDays,
+          availableleave: rowData.AvailDays,
+          elligibledays: rowData.EligibleDays,
+          LeaveTypeID: rowData.LeaveTypeID
+            ? {
+                RecordID: rowData.LeaveTypeID,
+                Code: "",
+                Name: rowData.LeavePart,
+              }
+            : null,
+            Year: rowData.Year,
         });
       }
     }
@@ -1178,10 +1263,12 @@ console.log(Data, "geteting Data");
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
   };
-  console.log(contractorData, "--get a contractorData");
+  // console.log(contractorData, "--get a contractorData");
 
   //Contractor Save Function
   const contractSavefn = async (values, resetForm, del) => {
+    console.log(show, "--find show inside save ");
+    
     setLoading(true);
     let action =
       funMode === "A" && !del
@@ -1189,32 +1276,36 @@ console.log(Data, "geteting Data");
         : funMode === "E" && del
         ? "harddelete"
         : "update";
-    const idata = {
-      RecordID: contractorData.recordID,
-      EmployeeID: recID,
-      // Vendor: values.vendor.RecordID,
-      Vendor: vendorlookup ? vendorlookup.RecordID : 0,
-      FromPeriod: values.FromPeriod,
-      ToPeriod: values.ToPeriod,
-      // FromPeriod: funMode === "E" ? formatDateForInput(values.FromPeriod) : values.FromPeriod,
-      // ToPeriod: funMode === "E" ? formatDateForInput(values.ToPeriod) : values.ToPeriod,
-      BillingUnits: values.BillingUnits,
-      UnitRate: values.UnitRate,
-      NotificationAlertDate: values.NotificationAlertDate,
-      // NotificationAlertDate: funMode === "E" ? formatDateForInput(values.NotificationAlertDate) : values.NotificationAlertDate,
-      RenewableNotification: values.RenewableNotification,
-    };
+        const idata = {
+          RecordID: contractorData.recordID,
+          EmployeeID: recID,
+          Vendor: show == "8" 
+            ? (vendorlookup ? vendorlookup.RecordID : 0) 
+            : show == "11" 
+              ? (customerlookup ? customerlookup.RecordID : 0) 
+              : 0,
+        // Vendors: show == "8" ? "Y" : "N",
+        // Customer: show == "11" ? "Y" : "N",
+          FromPeriod: values.FromPeriod,
+          ToPeriod: values.ToPeriod,
+          BillingUnits: values.BillingUnits,
+          UnitRate: values.UnitRate,
+          NotificationAlertDate: values.NotificationAlertDate,
+          RenewableNotification: values.RenewableNotification,
+        };
+        
 
     const response = await dispatch(
       explorePostData({ accessID: "TR244", action, idata })
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
-
-      dispatch(
-        fetchExplorelitview("TR244", "Contractor", `EmployeeID='${recID}'`, "")
-      );
-      toast.success(response.payload.Msg);
+      show == "8"
+      ? dispatch(fetchExplorelitview("TR244", "Contracts In", `EmployeeID='${recID}' AND Vendors='Y'`, ""))
+      : dispatch(fetchExplorelitview("TR244", "Contracts Out", `EmployeeID='${recID}' AND Customer='Y'`, ""));
+  
+     
+    toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm();
     } else {
@@ -1223,9 +1314,9 @@ console.log(Data, "geteting Data");
     }
   };
 
-console.log(gelocData, "--geo");
+  console.log(gelocData, "--geo");
 
-  //Geolocation 
+  //Geolocation
   const geolocationinitialvlues = {
     Code: Data.Code,
     Name: Data.Name,
@@ -1233,39 +1324,115 @@ console.log(gelocData, "--geo");
     latitude: gelocData.EMP_LATITUDE,
     radius: gelocData.EMP_RADIUS,
   };
-    const geolocSavefn = async (values, resetForm, del) => {
-      setLoading(true);
-      let action =
-        funMode === "A" && !del
-          ? "insert"
-          : funMode === "E" && del
-          ? "harddelete"
-          : "update";
-      const idata = {
-        EmployeeID: recID,
-        Longtitude: values.longitude,
-        Lattitude: values.latitude,
-        radius: values.radius,
-      };
-  console.log(idata, "--idata");
-  
-      const response = await dispatch(
-        geolocUpdate(idata)
-      );
-      if (response.payload.Status == "Y") {
-        setLoading(false);
-  
-        // dispatch(
-        //   fetchExplorelitview("TR244", "Contractor", `EmployeeID='${recID}'`, "")
-        // );
-        toast.success(response.payload.Msg);
-        // selectCellRowData({ rowData: {}, mode: "A", field: "" });
-        resetForm();
-      } else {
-        setLoading(false);
-        toast.error(response.payload.Msg);
-      }
+  const geolocSavefn = async (values, resetForm, del) => {
+    setLoading(true);
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+        ? "harddelete"
+        : "update";
+    const idata = {
+      EmployeeID: recID,
+      Longtitude: values.longitude,
+      Lattitude: values.latitude,
+      radius: values.radius,
     };
+    console.log(idata, "--idata");
+
+    const response = await dispatch(geolocUpdate(idata));
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+
+      // dispatch(
+      //   fetchExplorelitview("TR244", "Contractor", `EmployeeID='${recID}'`, "")
+      // );
+      toast.success(response.payload.Msg);
+      // selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
+
+  //Leave Configuration
+  const LCInitialValue = {
+    Code: Data.Code,
+    Name: Data.Name,
+    LeaveTypeID: LeaveCondata.LeaveTypeID,
+    LeavePart: "N",
+    totaldays: LeaveCondata.totaldays,
+    availableleave: LeaveCondata.availableleave,
+    elligibledays: LeaveCondata.elligibledays,
+    Year: LeaveCondata.Year === "2024" ? "PY" 
+          :LeaveCondata.Year === "2025" ? "CY"
+          :LeaveCondata.Year === "2026" ? "NY" : "" ,
+  };
+  // const [funMgrRecID, setFunMgrRecID] = useState("");
+  const currentYear = new Date().getFullYear();
+
+  console.log(currentYear, "currentYear");
+
+  const LCsaveFn = async (values, resetForm, del) => {
+    console.log("--calling LCsave");
+    setLoading(true);
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+        ? "harddelete"
+        : "update";
+    const idata = {
+      RecordID: LeaveCondata.recordID,
+      CompanyID,
+      // Year: currentYear,
+      Year: values.Year,
+      EmployeeID: recID,
+      LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+      TotalDays: Number(values.totaldays),
+      AvailDays: Number(values.availableleave),
+      EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+      LeavePart: "N",
+    };
+    // console.log("save" + JSON.stringify(LCsaveFn));
+    console.log(idata, "--idat LCsaveFna");
+    // const response = await dispatch(
+    //   explorePostData({ accessID: "TR249", action, idata })
+    // );
+    // if (response.payload.Status == "Y") {
+    //     //  setLoading(false);
+    //   dispatch(fetchExplorelitview("TR249", "Leave Configuration", `EmployeeID='${recID}'`, "")
+    //   );
+
+    //   toast.success(response.payload.Msg);
+
+    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    //   resetForm();
+    // } else {
+    //   toast.error(response.payload.Msg);
+    // }
+    const response = await dispatch(
+      explorePostData({ accessID: "TR249", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      await dispatch(
+        fetchExplorelitview(
+          "TR249",
+          "Leave Configuration",
+          `EmployeeID='${recID}'`,
+          ""
+        )
+      );
+
+      toast.success(response.payload.Msg);
+
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
 
@@ -1315,27 +1482,26 @@ console.log(gelocData, "--geo");
     code: Data.Code,
     description: Data.Name,
     Designation: deploymentData.DesignationID
-    ? {
-        RecordID: deploymentData.DesignationID,
-        Code: deploymentData.DesignationCode,
-        Name: deploymentData.DesignationName,
-      }
-    : null,
+      ? {
+          RecordID: deploymentData.DesignationID,
+          Code: deploymentData.DesignationCode,
+          Name: deploymentData.DesignationName,
+        }
+      : null,
     location: deploymentData.LocationID
-    ? {
-        RecordID: deploymentData.LocationID,
-        Code: deploymentData.LocationCode,
-        Name: deploymentData.LocationName,
-      }
-    : null,
+      ? {
+          RecordID: deploymentData.LocationID,
+          Code: deploymentData.LocationCode,
+          Name: deploymentData.LocationName,
+        }
+      : null,
     gate: deploymentData.StoregatemasterID
-    ? {
-        RecordID: deploymentData.StoregatemasterID,
-        Code: deploymentData.StoregatemasterCode,
-        Name: deploymentData.StoregatemasterName,
-      }
-    : null,
-
+      ? {
+          RecordID: deploymentData.StoregatemasterID,
+          Code: deploymentData.StoregatemasterCode,
+          Name: deploymentData.StoregatemasterName,
+        }
+      : null,
 
     checkin: deploymentData.CheckInTime || "",
     checkout: deploymentData.CheckOutTime || "",
@@ -1363,7 +1529,7 @@ console.log(gelocData, "--geo");
       Friday: values.friday === true ? "Y" : "N",
       Saturday: values.saturday === true ? "Y" : "N",
       Sunday: values.sunday === true ? "Y" : "N",
-      DesignationID:  values.Designation.RecordID || 0,
+      DesignationID: values.Designation.RecordID || 0,
       LocationID: values.location.RecordID || 0,
       StoregatemasterID: values.gate.RecordID || 0,
       // DesignationID: designLookup ? designLookup.RecordID : 0,
@@ -1699,7 +1865,20 @@ console.log(gelocData, "--geo");
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Contracts
+                      Contracts In
+                    </Typography>
+                  ) : (
+                    false
+
+                  )}
+
+{show == "11" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Contracts Out
                     </Typography>
                   ) : (
                     false
@@ -1711,6 +1890,17 @@ console.log(gelocData, "--geo");
                       sx={{ cursor: "default" }}
                     >
                       Geo Location
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "10" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Leave Configuration
                     </Typography>
                   ) : (
                     false
@@ -1731,18 +1921,18 @@ console.log(gelocData, "--geo");
                   >
                     <MenuItem value={0}>Employee</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
-                    {initialValues.employeetype === "CT" ? (
-                      <MenuItem value={8}>Contracts</MenuItem>
-                    ) : (
-                      false
-                    )}
-
-                    {/* <MenuItem value={8}>Contracts</MenuItem> */}
+                    {initialValues.employeetype === "CI" ? (
+                    <MenuItem value={8}>Contracts In</MenuItem>
+                    ) : null}
+                      {initialValues.employeetype === "CO" ? (
+                    <MenuItem value={11}>Contracts Out</MenuItem>
+                    ) : null}
                     <MenuItem value={1}>Employee Process</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
                     <MenuItem value={4}>Deployment</MenuItem>
                     <MenuItem value={9}>Geo Location</MenuItem>
+                    <MenuItem value={10}>Leave Configuration</MenuItem>
                     <MenuItem value={6}>List of Attachments</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
                   </Select>
@@ -2059,7 +2249,9 @@ console.log(gelocData, "--geo");
                       >
                         <MenuItem value="PP">Prohibition Period</MenuItem>
                         <MenuItem value="PM">Permanent</MenuItem>
-                        <MenuItem value="CT">Contractor</MenuItem>
+                        <MenuItem value="CI">Contracts In</MenuItem>
+                        <MenuItem value="CO">Contracts Out</MenuItem>
+                        {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
                       <Box>
                         <Field
@@ -4198,7 +4390,7 @@ console.log(gelocData, "--geo");
                         // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
-                  
+
                     {/* <FormControl
                       sx={{
                         gridColumn: "span 2",
@@ -5200,6 +5392,8 @@ console.log(gelocData, "--geo");
         ) : (
           false
         )}
+        
+{/*Contracts In */}
         {show == "8" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -5798,10 +5992,609 @@ console.log(gelocData, "--geo");
           false
         )}
 
-{show == "9" ? (
+{/*Contracts Out */}
+{show == "11" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
-           
+              initialValues={ContractInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  contractSavefn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+
+                    <Stack
+                      sx={{
+                        gap: formGap,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
+                    <Box>
+                      <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          pageSize={pageSize}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                            });
+                          }}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          components={{
+                            Toolbar: Employee,
+                          }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                          }
+                          loading={exploreLoading}
+                          componentsProps={{
+                            toolbar: {
+                              showQuickFilter: true,
+                              quickFilterProps: { debounceMs: 500 },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                      {/* <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          id="vendor"
+                          label="Vendor"
+                          variant="standard"
+                          focused
+                          required
+                          inputProps={{ tabIndex: "-1" }}
+                          value={vendorlookup.venCode}
+                        />
+                        <IconButton
+                          onClick={() => handleShow("VEN")}
+                          sx={{ height: 40, width: 40 }}
+                        >
+                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
+                        </IconButton>
+                        <TextField
+                          id="dies"
+                          variant="standard"
+                          fullWidth
+                          inputProps={{ tabIndex: "-1" }}
+                          focused
+                          value={vendorlookup.venName}
+                        />
+                      </Box> */}
+
+                      <Productautocomplete
+                        name="customer"
+                        label="Customer"
+                        variant="outlined"
+                        id="customer"
+                        value={customerlookup}
+                        // value={values.customer}
+                        onChange={(newValue) => {
+                          // setFieldValue("customer", newValue);
+                          console.log(newValue, "--newvalue customer");
+
+                          console.log(newValue.RecordID, "customer RecordID");
+
+                          SetCustomerlookup({
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                        //  onChange={handleSelectionFunctionname}
+                        // defaultValue={selectedFunctionName}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      />
+                      {/* <SingleFormikOptimizedAutocomplete
+                       
+                        label="Vendor"
+                        id="vendor"
+                         name="vendor"
+                        value={vendorlookup}
+                        // value={values.vendor}
+                        // onChange={(newValue) => {
+                        //   setFieldValue("vendor", newValue)
+                        //   console.log(newValue.RecordID, "newValue.RecordID");
+                        // }}
+
+                        onChange={(e, newValue) => {
+                        
+                          console.log(newValue, "---2100 newvalues");
+                          console.log(vendorlookup, "---2100 matcatLookup");
+
+                          SetVendorlookup({
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                        }}
+                       
+                      //  onChange={handleSelectionFunctionname}
+                      // defaultValue={selectedFunctionName}
+                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID='${CompanyID}'","Any":""}}`}
+
+                      /> */}
+                      <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={<span>Billing Units</span>}
+                        value={values.BillingUnits}
+                        id="BillingUnits"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="BillingUnits"
+                        required
+                        focused
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
+                      >
+                        <MenuItem value="HS">Hours</MenuItem>
+                        <MenuItem value="DS">Days</MenuItem>
+                        <MenuItem value="WS">Week</MenuItem>
+                        <MenuItem value="MS">Month</MenuItem>
+                      </TextField>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        value={values.UnitRate}
+                        id="UnitRate"
+                        name="UnitRate"
+                        label="Unit Rate"
+                        required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.UnitRate && !!errors.UnitRate}
+                        helperText={touched.UnitRate && errors.UnitRate}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        //   }
+                        // }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: {
+                              textAlign: "right",
+                            },
+                          },
+                        }}
+                        onWheel={(e) => e.target.blur()}
+                        multiline
+                        inputProps={{ maxLength: 90 }}
+                      />
+                      <TextField
+                        name="FromPeriod"
+                        type="date"
+                        id="FromPeriod"
+                        label="From Period"
+                        variant="standard"
+                        focused
+                        // inputFormat="YYYY-MM-DD"
+                        // value={funMode === "E" ? formatDateForInput(values.FromPeriod) : values.FromPeriod}                        // value={values.FromPeriod}
+
+                        value={values.FromPeriod}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                        // helperText={touched.FromPeriod && errors.FromPeriod}
+                        //sx={{ background: "" }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        name="ToPeriod"
+                        type="date"
+                        id="ToPeriod"
+                        label="To Date"
+                        variant="standard"
+                        focused
+                        value={values.ToPeriod}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const { name, value } = e.target;
+                          setFieldValue(name, value);
+
+                          // Case 1: Set NotificationAlertDate to 1 day before ToDate
+                          const toDate = new Date(value);
+                          const alertDate = subDays(toDate, 1);
+                          const formattedAlertDate = alertDate
+                            .toISOString()
+                            .split("T")[0];
+                          console.log(
+                            formattedAlertDate,
+                            "--formattedAlertDate"
+                          );
+
+                          setFieldValue(
+                            "NotificationAlertDate",
+                            formattedAlertDate
+                          );
+
+                          // Case 2: If FromPeriod is selected, calculate difference in days
+                          if (values.FromPeriod) {
+                            const fromDate = new Date(values.FromPeriod);
+                            const diffDays = differenceInDays(toDate, fromDate);
+                            setFieldValue("RenewableNotification", diffDays); // or your target field
+                          }
+                        }}
+                      />
+                      <TextField
+                        name="NotificationAlertDate"
+                        type="date"
+                        id="NotificationAlertDate"
+                        label="Notification Alert Date"
+                        variant="standard"
+                        focused
+                        value={values.NotificationAlertDate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.NotificationAlertDate &&
+                          !!errors.NotificationAlertDate
+                        }
+                        helperText={
+                          touched.NotificationAlertDate &&
+                          errors.NotificationAlertDate
+                        }
+                        inputProps={{ readOnly: true }}
+                      />
+                      <TextField
+                        name="RenewableNotification"
+                        label="Renewal Notification Period"
+                        type="number"
+                        variant="standard"
+                        focused
+                        value={values.RenewableNotification}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.RenewableNotification &&
+                          !!errors.RenewableNotification
+                        }
+                        helperText={
+                          touched.RenewableNotification &&
+                          errors.RenewableNotification
+                        }
+                        inputProps={{ readOnly: true }}
+                      />
+
+                      {/* <TextField
+                        name="ToPeriod"
+                        type="date"
+                        id="ToPeriod"
+                        label="To Date"
+                        variant="standard"
+                        focused
+                        // inputFormat="YYYY-MM-DD"
+                        // value={formatDateForInput(values.ToPeriod)}
+                        // value={funMode === "E" ? formatDateForInput(values.ToPeriod) : values.ToPeriod}                        // value={values.FromPeriod}
+
+                        value={values.ToPeriod}
+                        onBlur={handleBlur}
+                        // onChange={handleChange}
+                        onChange={(e) => {
+                          const { name, value } = e.target;
+                          setFieldValue("ToPeriod", value);
+                          if (values.ToPeriod) {
+                            const toDate = new Date(values.ToPeriod);
+                            const alertDate = subDays(toDate, 1); // 1 day before
+                            const formattedDate = format(alertDate, "yyyy-MM-dd");
+                        
+                            if (values.NotificationAlertDate !== formattedDate) {
+                              setFieldValue("NotificationAlertDate", formattedDate);
+                            }
+                          }
+                    
+                      
+                      />
+                      <TextField
+                        name="NotificationAlertDate"
+                        type="date"
+                        id="NotificationAlertDate"
+                        label="Notification Alert Date"
+                        variant="standard"
+                        focused
+                        // inputFormat="YYYY-MM-DD"
+                        // value={formatDateForInput(values.NotificationAlertDate)}
+                        // value={funMode === "E" ? formatDateForInput(values.NotificationAlertDate) : values.NotificationAlertDate}                        // value={values.FromPeriod}
+
+                        value={values.NotificationAlertDate}
+
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.NotificationAlertDate && !!errors.NotificationAlertDate}
+                        helperText={touched.NotificationAlertDate && errors.NotificationAlertDate}
+                        //sx={{ background: "" }}
+                        inputProps={{ readOnly: true }}
+                        // inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        value={values.RenewableNotification}
+                        id="RenewableNotification"
+                        name="RenewableNotification"
+                        label="Renewal Notification Period"
+                        required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.RenewableNotification && !!errors.RenewableNotification
+                        }
+                        helperText={
+                          touched.RenewableNotification && errors.RenewableNotification
+                        }
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "#ffffff",
+                        //   }
+                        // }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        multiline
+                        inputProps={{ maxLength: 90 }}
+                        InputProps={{
+                          inputProps: {
+                            style: {
+                              textAlign: "right",
+                            },
+                          },
+                        }}
+                      /> */}
+                    </FormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    // style={{ marginTop: "-35px" }}
+                    gap={2}
+                  >
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? ( */}
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: `Do you want Delete?`,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            contractSavefn(values, resetForm, "harddelete");
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                    {/* ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  <Popup
+                    title="vendor"
+                    openPopup={openvenPopup}
+                    setOpenPopup={setOpenvenPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2100"
+                      screenName="Vendor"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+
+        {show == "9" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
               initialValues={geolocationinitialvlues}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
@@ -5900,7 +6693,7 @@ console.log(gelocData, "--geo");
                       />
                     </Stack> */}
 
-<Stack
+                    <Stack
                       sx={{
                         gap: formGap,
                         alignContent: "center",
@@ -5916,11 +6709,8 @@ console.log(gelocData, "--geo");
                         sx={{ width: "200px", height: "120px" }}
                       />
                     </Stack>
-                    <FormControl 
-                    sx={{ gap: formGap, marginTop: "-20px" }}
-                    >
-
- {/* <FormControl 
+                    <FormControl sx={{ gap: formGap, marginTop: "-20px" }}>
+                      {/* <FormControl 
                      sx={{
                       //gridColumn: "span 2",
                       display: "flex",
@@ -5941,10 +6731,15 @@ console.log(gelocData, "--geo");
                         value={values.longitude}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        inputProps={{ step: "any", min: -180, max: 180, style:{ textAlign: 'right' } }}
+                        inputProps={{
+                          step: "any",
+                          min: -180,
+                          max: 180,
+                          style: { textAlign: "right" },
+                        }}
                       />
-                       {/* </FormControl> */}
-                        {/* <FormControl 
+                      {/* </FormControl> */}
+                      {/* <FormControl 
                      sx={{
                       //gridColumn: "span 2",
                       display: "flex",
@@ -5965,10 +6760,15 @@ console.log(gelocData, "--geo");
                         onBlur={handleBlur}
                         onChange={handleChange}
                         type="number"
-                        inputProps={{ step: "any", min: -90, max: 90, style:{ textAlign: 'right' } }}
+                        inputProps={{
+                          step: "any",
+                          min: -90,
+                          max: 90,
+                          style: { textAlign: "right" },
+                        }}
                       />
-                       {/* </FormControl> */}
-                       {/* <FormControl 
+                      {/* </FormControl> */}
+                      {/* <FormControl 
                      sx={{
                       //gridColumn: "span 2",
                       display: "flex",
@@ -5979,8 +6779,8 @@ console.log(gelocData, "--geo");
                     // sx={{ gap: formGap }}
                     > */}
                       <TextField
-                      fullWidth
-                      variant="standard"
+                        fullWidth
+                        variant="standard"
                         focused
                         label="Radius (m)"
                         name="radius"
@@ -5988,7 +6788,11 @@ console.log(gelocData, "--geo");
                         onBlur={handleBlur}
                         onChange={handleChange}
                         type="number"
-                        inputProps={{ step: "any", min: 0, style:{ textAlign: 'right' } }}
+                        inputProps={{
+                          step: "any",
+                          min: 0,
+                          style: { textAlign: "right" },
+                        }}
                       />
                     </FormControl>
                   </Box>
@@ -6056,6 +6860,528 @@ console.log(gelocData, "--geo");
                     >
                       Cancel
                     </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+        {show == "10" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={LCInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  LCsaveFn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                resetForm,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    {!isNonMobile && (
+                      <Stack
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "150px" }}
+                        />
+                      </Stack>
+                    )}
+                    {/* <Stack
+                      sx={{
+                        gap: formGap,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack> */}
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        inputProps={{ maxLength: 8 }}
+                        value={values.Code}
+                        id="Code"
+                        name="Code"
+                        label="Code"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        sx={{
+                          // gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+
+                        //  error={!!touched.Desc && !!errors.Desc}
+                        //  helperText={touched.Desc && errors.Desc}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Name"
+                        value={values.Name}
+                        id="Name"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Name"
+                        error={!!touched.Name && !!errors.Name}
+                        helperText={touched.Name && errors.Name}
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      />
+
+                      <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                            });
+                          }}
+                          components={{
+                            Toolbar: Employee,
+                          }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                          }
+                          componentsProps={{
+                            toolbar: {
+                              showQuickFilter: true,
+                              quickFilterProps: { debounceMs: 500 },
+                            },
+                          }}
+                        />
+                      </Box>
+                    </FormControl>
+                    <FormControl
+                      sx={{
+                        //mt: "15px",
+                        gap: formGap,
+                        marginTop: "20px",
+                      }}
+                    >
+                      <FormControl
+                        sx={{
+                          gap: formGap,
+                        }}
+                        style={{ width: "100%" }}
+                      >
+                        {isNonMobile && (
+                          <Stack
+                            sx={{
+                              //    width: {sm:'100%',md:'100%',lg:'100%'},
+                              //gridColumn: "span 2",
+                              alignContent: "center",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              position: "relative",
+                              right: "0px",
+                            }}
+                          >
+                            <Avatar
+                              variant="rounded"
+                              src={userimg}
+                              sx={{ width: "200px", height: "120px" }}
+                            />
+                          </Stack>
+                        )}
+
+                        <FormControl
+                          focused
+                          variant="filled"
+                          sx={{ gridColumn: "span 2" }}
+                        >
+                          {/* <InputLabel variant="standard" id="LeavePart">
+                                  {
+                                    <span>
+                                      Leave Part{" "}
+                                      <span style={{ color: "red" }}>*</span>
+                                    </span>
+                                  }
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-filled-label"
+                                  fullWidth
+                                  variant="standard"
+                                  type="text"
+                                  // value={values.LeavePart}
+                                  id="LeavePart"
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  name="LeavePart"
+                                  required
+                                  focused
+                                >
+                                  <MenuItem value="FH">First Half</MenuItem>
+                                  <MenuItem value="SH">Second Half</MenuItem>
+                                  <MenuItem value="N">Full Day</MenuItem>
+                                </Select> */}
+                          <Productautocomplete
+                            name="leavetype"
+                            label="Leave Type"
+                            id="leavetype"
+                            // value={values.leavetype}
+                            value={LeaveconLTData}
+                            onChange={(newValue) => {
+                              // setFieldValue("leavetype", newValue);
+                              setselectLeaveconLTData({
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              });
+                              console.log(newValue, "--newValue");
+                            }}
+                            // disabled={mode == "E" && values.Status != "AL"}
+                            //value={selectedProjectOptions}
+                            //onChange={handleSelectionProjectname}
+                            // defaultValue={selectedProjectName}
+                            url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          />
+                        </FormControl>
+
+                        {/* <TextField
+                                fullWidth
+                                variant="standard"
+                                type="text"
+                                value={values.employeename}
+                                id="employeename"
+                                name="employeename"
+                                label="Employee Name"
+                                // required
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.employeename && !!errors.employeename}
+                                helperText={touched.employeename && errors.employeename}
+                                sx={{
+                                  //gridColumn: "span 2",
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  },
+                                }}
+                                focused
+                                multiline
+                                inputProps={{ maxLength: 90 }}
+                              /> */}
+
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          // label="Total Days"
+                            label="Eligible Days"
+                          id="totaldays"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.totaldays}
+                          name="totaldays"
+                          error={!!touched.totaldays && !!errors.totaldays}
+                          helperText={touched.totaldays && errors.totaldays}
+                          // sx={{ gridColumn: "span 2" }}
+                          focused
+                          onWheel={(e) => e.target.blur()}
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                                //background: "#fff6c3",
+                              },
+                            },
+                          }}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(
+                          //     0,
+                          //     parseInt(e.target.value)
+                          //   )
+                          //     .toString()
+                          //     .slice(0, 8);
+                          // }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          label="Availed Days"
+                          id="availableleave"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.availableleave}
+                          name="availableleave"
+                          error={
+                            !!touched.availableleave && !!errors.availableleave
+                          }
+                          helperText={
+                            touched.availableleave && errors.availableleave
+                          }
+                          // sx={{ gridColumn: "span 2" }}
+                          focused
+                          onWheel={(e) => e.target.blur()}
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                textAlign: "right",
+                                //background: "#fff6c3",
+                              },
+                            },
+                          }}
+                          // onInput={(e) => {
+                          //   e.target.value = Math.max(
+                          //     0,
+                          //     parseInt(e.target.value)
+                          //   )
+                          //     .toString()
+                          //     .slice(0, 8);
+                          // }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          label="Balance Days"
+                          id="elligibledays"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          // value={values.elligibledays}
+                          value={
+                            Number(values.totaldays) -
+                            Number(values.availableleave)
+                          }
+                          name="elligibledays"
+                          error={
+                            !!touched.elligibledays && !!errors.elligibledays
+                          }
+                          helperText={
+                            touched.elligibledays && errors.elligibledays
+                          }
+                          focused
+                          onWheel={(e) => e.target.blur()}
+                          InputProps={{
+                            readOnly: true, // ✅ Correct way to make the field read-only
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                        />
+                            <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={<span>Year</span>}
+                        value={values.Year}
+                        id="Year"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Year"
+                        // required
+                        focused
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
+                      >
+                    
+                        <MenuItem value="PY">2024</MenuItem>
+                        <MenuItem value="CY">2025</MenuItem>
+                        <MenuItem value="NY">2026</MenuItem>
+                      </TextField>
+                      </FormControl>
+
+                      <Box
+                        display="flex"
+                        justifyContent="end"
+                        padding={1}
+                        gap={2}
+                        mt={10}
+                      >
+                        {/* {YearFlag == "true" ? ( */}
+                        <LoadingButton
+                          color="secondary"
+                          variant="contained"
+                          type="submit"
+                          loading={isLoading}
+                        >
+                          Save
+                        </LoadingButton>
+                        {/* ) : (
+                                <Button
+                                  color="secondary"
+                                  variant="contained"
+                                  disabled={true}
+                                  
+                                >
+                                  Save
+                                </Button>
+                     )}
+                              {YearFlag == "true" ? (  */}
+                        <Button
+                          color="error"
+                          variant="contained"
+                          onClick={() => {
+                            Swal.fire({
+                              title: `Do you want Delete?`,
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Confirm",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                LCsaveFn(values, resetForm, "harddelete");
+                              } else {
+                                return;
+                              }
+                            });
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        {/* ) : (
+                                <Button
+                                  color="error"
+                                  variant="contained"
+                                  disabled={true}
+                                >
+                                  Delete
+                                </Button>
+                              )}  */}
+                        <Button
+                          type="reset"
+                          color="warning"
+                          variant="contained"
+                          onClick={() => {
+                            setScreen(0);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </FormControl>
                   </Box>
                 </form>
               )}
