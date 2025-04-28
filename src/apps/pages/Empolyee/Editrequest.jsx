@@ -382,7 +382,7 @@ import {
         toast.success(data.payload.Msg);
         setLoading(false);
         navigate(
-          `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
+          `/Apps/TR257/Employee Request/EditEmployee Request/${data.payload.apiResponse}/E`
         );
       } else {
         toast.error(data.payload.Msg);
@@ -995,6 +995,10 @@ import {
       toDate: "",
       LeavePart: "",
       Status: "",
+      // comment:"",
+      // managerComments:"",
+      // approvedby:"",
+      // approvedDate:"",
     });
     const [allDecData, setAllDecData] = useState({
       recordID: "",
@@ -1009,6 +1013,9 @@ import {
       PaymentMethod: "",
       Status: "",
       Comments: "",
+      managerComments:"",
+      approvedby:"",
+      approvedDate:"",
     });
     const [ondutydata, setOndutydata] = useState({
       RecordID: "",
@@ -1018,6 +1025,9 @@ import {
       AppliedDate: "",
       LeavePart: "",
       Comments: "",
+      managerComments:"",
+      approvedby:"",
+      approvedDate:"",
     });
     const [saladdata, setSaladdata] = useState({
       RecordID: "",
@@ -1028,6 +1038,9 @@ import {
       // OverHeadsName: "",
       Amount: "",
       Comments: "",
+      managerComments:"",
+      approvedby:"",
+      approvedDate:"",
     });
     const selectCellRowData = ({ rowData, mode, field }) => {
       console.log(
@@ -1072,6 +1085,10 @@ import {
           toDate: "",
           LeavePart: "",
           Status: "",
+          comment:"",
+          managerComments:"",
+          approvedby:"",
+          approvedDate:"",
         });
         setOtdata({
           RecordID: "",
@@ -1081,6 +1098,9 @@ import {
           PaymentMethod: "",
           Status: "",
           Comments: "",
+          managerComments:"",
+          approvedby:"",
+          approvedDate:"",
         });
         setOndutydata({
           RecordID: "",
@@ -1091,6 +1111,9 @@ import {
           AppliedDate: "",
           //Status: "",
           Comments: "",
+           managerComments:"",
+          approvedby:"",
+          approvedDate:"",
         });
         setSaladdata({
           RecordID: "",
@@ -1101,6 +1124,9 @@ import {
           // OverHeadsName: "",
           Amount: "",
           Comments: "",
+          managerComments:"",
+          approvedby:"",
+          approvedDate:"",
         });
       } else {
         if (field == "action") {
@@ -1118,6 +1144,10 @@ import {
             toDate: rowData.ToDate,
             LeavePart: rowData.LeavePart,
             Status: rowData.Status,
+            // comment:rowData.comment,
+            // managerComments:rowData.managerComments,
+            // approvedby:rowData.approvedby,
+            // approvedDate:rowData.approvedDate,
           });
           setOtdata({
             RecordID: rowData.RecordID,
@@ -1127,6 +1157,9 @@ import {
             PaymentMethod: rowData.PaymentMethod,
             Status: rowData.Status,
             Comments: rowData.Comments,
+            // managerComments:rowData.managerComments,
+            // approvedby:rowData.approvedby,
+            // approvedDate:rowData.approvedDate,
           });
           setOndutydata({
             RecordID: rowData.RecordID,
@@ -1137,6 +1170,9 @@ import {
             //PaymentMethod: rowData.PaymentMethod,
             Status: rowData.Status,
             Comments: rowData.Comments,
+            // managerComments:rowData.managerComments,
+            // approvedby:rowData.approvedby,
+            // approvedDate:rowData.approvedDate,
           });
   
           setselectLETLookupData({
@@ -1160,10 +1196,11 @@ import {
             SalaryAdvanceDate: rowData.SalaryAdvanceDate,
             ReferranceIfAny: rowData.ReferranceIfAny,
             OverHeadsID: rowData.OverHeadsID,
-            // OverHeadsCode:rowData.OverHeadsCode,
-            // OverHeadsName: rowData.OverHeadsName,
             Amount: rowData.Amount,
             Comments: rowData.Comments,
+            // managerComments:rowData.managerComments,
+            // approvedby:rowData.approvedby,
+            // approvedDate:rowData.approvedDate,
           });
   
           setAllDecData({
@@ -1350,10 +1387,12 @@ import {
     const ondutyInitialValue = {
       code: Data.Code,
       description: Data.Name,
-      //RecordID: Data.RecordID,
       FromDate: formatDate(ondutydata.FromDate),
-    ToDate: formatDate(ondutydata.ToDate),
-      //LeavePart: ondutydata.LeavePart,
+      ToDate: formatDate(ondutydata.ToDate),  
+      //approvedby:ondutydata.approvedby,
+      //approvedDate:ondutydata.approvedDate,
+      //managerComments: ondutydata.ManagerComments,
+      comment: ondutydata.Comments,
       LeavePart:
         ondutydata.LeavePart === "First half"
           ? "FH"
@@ -1369,10 +1408,10 @@ import {
             ? "RJ"
             : ondutydata.Status == "Approved"
               ? "AP"
+              : ondutydata.Status == "Reconsider"
+              ? "RC"
               : "",
-      //Status: ondutydata.Status,
-      managerComments: ondutydata.ManagerComments,
-      comment: ondutydata.Comments,
+      //Status: ondutydata.Status,  
       //SortOrder: ondutydata.SortOrder,
       //Disable: ondutydata.Disable,
     };
@@ -1458,11 +1497,12 @@ import {
     const leaveInitialValue = {
       code: Data.Code,
       description: Data.Name,
-      // status:leaveData.Status,
-     
+      //managerComments:leaveData.managerComments,
+      //comment:leaveData.Comment,
+      //approvedby:leaveData.approvedby,
+      //approvedDate:leaveData.approvedDate,
       FromDate:formatDate(leaveData.fromDate),
       ToDate: formatDate(leaveData.toDate),
-      // LeaveCategory: leaveData.leaveCategory,
       LeavePart:
         leaveData.LeavePart === "First half"
           ? "FH"
@@ -1478,6 +1518,8 @@ import {
             ? "RJ"
             : leaveData.Status == "Approved"
               ? "AP"
+               : leaveData.Status == "Reconsider"
+              ? "RC"
               : "",
       SortOrder: "1",
       Disable: "N",
@@ -1496,10 +1538,8 @@ import {
             : "update";
       const idata = {
         RecordID: leaveData.recordID,
-        // Type:values.Type,
         FromDate: values.FromDate,
         ToDate: values.ToDate,
-        // LeaveCategory:values.LeaveCategory,
         LeavePart: values.LeavePart,
         EmployeeID: recID,
         Status: values.Status,
@@ -1507,6 +1547,10 @@ import {
         Disable: "N",
         // LeaveTypeID: selectLETLookupData.letlookupRecordid,
         LeaveTypeID: selectLETLookupData ? selectLETLookupData.RecordID : 0,
+        // comment:values.comment,
+        // managerComments:values.managerComments,
+        // approvedby:values.approvedby,
+        // approvedDate:values.approvedDate,
   
       };
       const response = await dispatch(
@@ -1537,6 +1581,9 @@ import {
       Date:formatDate(otdata.OtDate),
       NumberOfHours: otdata.NumberOfHours,
       comments: otdata.Comments,
+      //managerComments:otdata.managerComments,
+      //approvedby:otdata.approvedby,
+      //approvedDate:otdata.approvedDate,
       PaymentMethod:
         otdata.PaymentMethod === "Assitis"
           ? "AS"
@@ -1560,6 +1607,8 @@ import {
             ? "AP"
             : otdata.Status === "Rejected"
               ? "RJ"
+              : otdata.Status === "Reconsider"
+              ? "RC"
               : "",
     };
   
@@ -1581,15 +1630,11 @@ import {
         Status: values.Status,
         Comments: values.comments,
         EmployeeID: recID,
+        // managerComments: values.managerComments,
+        // approvedby: values.approvedby,
+        // approvedDate: values.approvedDate,
   
-        // Type:values.Type,
-        // FromDate:values.FromDate,
-        // ToDate:values.ToDate,
-        // LeaveCategory:values.LeaveCategory,
-        // EmployeeID: recID,
-        // SortOrder: "1",
-        // Disable: "N",
-        // LeaveTypeID:selectLETLookupData.letlookupRecordid,
+        
       };
   
       const response = await dispatch(
@@ -1622,6 +1667,9 @@ import {
       amount: saladdata.Amount,
       comments: saladdata.Comments,
       //approvedby: Data.Approvedby,
+      //managerComments:leaveData.managerComments,
+      //approvedby:leaveData.approvedby,
+      //approvedDate:leaveData.approvedDate,
     };
     const salAdFNsave = async (values, resetForm, del) => {
       setLoading(true);
@@ -1645,22 +1693,11 @@ import {
         Amount: values.amount,
         Comments: values.comments,
         EmployeeID: recID,
+        // managerComments: values.managerComments,
+        // approvedby: values.approvedby,
+        // approvedDate: values.approvedDate,
   
-        // Approvedby:values.approvedby,
-        //OverheadsRecordID: selectOHLookupData.OHlookupRecordid,
-        // Attachment: ImageName ? ImageName : data.Attachment,
-        // FinanceCategoryType: parentID,
-        // Approvedby: EMPID,
-        // Finyear,
-        // CompanyID,
-        // Type:values.Type,
-        // FromDate:values.FromDate,
-        // ToDate:values.ToDate,
-        // LeaveCategory:values.LeaveCategory,
-        // EmployeeID: recID,
-        // SortOrder: "1",
-        // Disable: "N",
-        // LeaveTypeID:selectLETLookupData.letlookupRecordid,
+        
       };
   
       const response = await dispatch(
@@ -1919,7 +1956,7 @@ import {
             navigate("/");
           }
           if (props === "Close") {
-            navigate("/Apps/TR027/Employees");
+            navigate("/Apps/TR257/Employee Request");
           }
         } else {
           return;
@@ -2642,7 +2679,7 @@ import {
                         color="warning"
                         variant="contained"
                         onClick={() => {
-                          navigate(`/Apps/TR027/Employee Payroll`);
+                          navigate(`/Apps/TR257/Employee Request`);
                         }}
                       >
                         Cancel
@@ -3484,6 +3521,8 @@ import {
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="RJ">Rejected</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
+                            <MenuItem value="RC">Reconsider</MenuItem>
+                            
                           </Select>
                         </FormControl>
                         
@@ -3974,6 +4013,7 @@ import {
                               <MenuItem value="AL">Applied</MenuItem>
                               <MenuItem value="AP">Approved</MenuItem>
                               <MenuItem value="RJ">Rejected</MenuItem>
+                              <MenuItem value="RC">Reconsider</MenuItem>
                             </Select>
                           </FormControl>
                         </FormControl>
@@ -4452,6 +4492,7 @@ import {
                               <MenuItem value="AL">Applied</MenuItem>
                               <MenuItem value="AP">Approved</MenuItem>
                               <MenuItem value="RJ">Rejected</MenuItem>
+                              <MenuItem value="RC">Reconsider</MenuItem>
                             </Select>
                           </FormControl>
                           
@@ -4851,13 +4892,17 @@ import {
                             focused
                             variant="standard"
                           >
-                            {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
+                            <MenuItem value="AL">Applied</MenuItem>
+                            <MenuItem value="RJ">Rejected</MenuItem>
+                            <MenuItem value="AP">Approved</MenuItem>
+                            <MenuItem value="RC">Reconsider</MenuItem>
+                            {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
                             <MenuItem disabled={mode != "M"} value="AP">
                               Approved
                             </MenuItem>
                             <MenuItem disabled={mode != "M"} value="RJ">
                               Rejected
-                            </MenuItem>
+                            </MenuItem> */}
                           </TextField>
                           {/* } */}
   
@@ -5326,13 +5371,17 @@ import {
                             focused
                             variant="standard"
                           >
-                            {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
+                            {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
                             <MenuItem disabled={mode != "M"} value="AP">
                               Approved
                             </MenuItem>
                             <MenuItem disabled={mode != "M"} value="RJ">
                               Rejected
-                            </MenuItem>
+                            </MenuItem> */}
+                            <MenuItem value="AL">Applied</MenuItem>
+                            <MenuItem value="RJ">Rejected</MenuItem>
+                            <MenuItem value="AP">Approved</MenuItem>
+                            <MenuItem value="RC">Reconsider</MenuItem>
                           </TextField>
                         </FormControl>
   
@@ -5392,7 +5441,7 @@ import {
                     }).then((result) => {
                       if (result.isConfirmed) {
                         expensefnSave(values, resetForm, "harddelete");
-                        navigate("/Apps/TR086/Finance%20Entry");
+                        //navigate("/Apps/TR086/Finance%20Entry");
                       } else {
                         return;
                       }

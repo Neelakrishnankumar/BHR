@@ -140,7 +140,7 @@ function App() {
 
                 <Routes>
                 <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={ <EditemployeePayroll/>}/>
-                <Route path="/:accessID/:screenName/EditRequest/:id/:Mode" element={ <Editrequests/>}/>
+                <Route path="/:accessID/:screenName/EditEmployee Request/:id/:Mode" element={ <Editrequests/>}/>
                 <Route path="/:accessID/:screenName/EditApproval/:id/:Mode" element={ <Editapprovals/>}/>
                 <Route path="/:accessID/:screenName/Editrunpayroll" element={ <Editrunpayroll/>}/>
                 <Route path="/:accessID/Regularization/:id/" element={ <Regularization/>}/>
