@@ -1081,6 +1081,7 @@ import {
           value: "",
           sortOrder: "",
         });
+        setCheckdate("")
   
         setADLookupData(null);
         //   {
