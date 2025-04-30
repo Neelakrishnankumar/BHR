@@ -182,6 +182,8 @@ const Editvendor = () => {
         date: data.RegistrationDate || "",
         verifieddate: data.VerifyConfirmDate || "",
         emailid: data.EmailID || "",
+        vendor: data.VendorCheckbox === "Y" ? true : false,
+        customer: data.CustomerCheckbox === "Y" ? true : false,
     };
     console.log(data.PanImg, "dooo");
     const Fnsave = async (values, del) => {
@@ -193,8 +195,12 @@ const Editvendor = () => {
                 : mode === "E" && del
                     ? "harddelete"
                     : "update";
-
-        const isCheck = values.disable ? "Y" : "N";
+                    // var isCheck = "N";
+                    // if (values.disable == true) {
+                    //   isCheck = "Y";
+                    // }
+                
+        // const isCheck = values.disable ? "Y" : "N";
 
         const idata = {
             RecordID: recID,
@@ -208,7 +214,9 @@ const Editvendor = () => {
             RegistrationDate: values.date,
             VerifyConfirmDate: values.verifieddate,
             EmailID: values.emailid,
-            CompanyID
+            CompanyID,
+            VendorCheckbox: values.vendor === true ? "Y" : "N",
+            CustomerCheckbox: values.customer === true ? "Y" : "N",
         };
 
         try {
@@ -216,7 +224,7 @@ const Editvendor = () => {
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                navigate("/Apps/TR243/Vendor");
+                navigate("/Apps/TR243/Party");
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -241,7 +249,7 @@ const Editvendor = () => {
                     navigate("/");
                 }
                 if (props === "Close") {
-                    navigate("/Apps/TR243/Vendor");
+                    navigate("/Apps/TR243/Party");
                 }
             }
         });
@@ -275,7 +283,7 @@ const Editvendor = () => {
                                     sx={{ cursor: "default" }}
 
                                 >
-                                    Vendor
+                                    Party
                                 </Typography>
 
                             </Breadcrumbs>
@@ -524,7 +532,31 @@ const Editvendor = () => {
 
                                     {/* panimage */}
 
+ <Box>
+                    <Field
+                    //    size="small"
+                      type="checkbox"
+                      name="vendor"
+                      id="vendor"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Vendor"
+                    />
+                                        <FormLabel focused={false}>Vendor</FormLabel>
 
+  <Field
+                    //    size="small"
+                      type="checkbox"
+                      name="customer"
+                      id="customer"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Customer"
+                    />
+                    <FormLabel focused={false}>Customer</FormLabel>
+                  </Box>
                                    
                                 </Box>
 
@@ -644,7 +676,7 @@ const Editvendor = () => {
                                         color="warning"
                                         variant="contained"
                                         onClick={() => {
-                                            navigate("/Apps/TR243/Vendor");
+                                            navigate("/Apps/TR243/Party");
                                         }}
                                     >
                                         Cancel

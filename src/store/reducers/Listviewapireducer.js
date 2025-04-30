@@ -11,6 +11,7 @@ import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
 import BalanceIcon from '@mui/icons-material/Balance';
+
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -34,6 +35,15 @@ import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import { StockProcessApi } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from '@mui/icons-material/OpenInBrowserOutlined';
+
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
+import Person2Icon from '@mui/icons-material/Person2';
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import SwipeRightIcon from "@mui/icons-material/SwipeRight";
+import UTurnLeftIcon from "@mui/icons-material/UTurnLeft";
+import UTurnRightIcon from "@mui/icons-material/UTurnRight";
+
 import Swal from "sweetalert2";
 const initialState = {
   rowData: [],
@@ -3499,6 +3509,60 @@ export const fetchListview =
                         </Link>
                       ) : AccessID == "TR027" ? (
                         <Box>
+
+{/* {accessID === "TR245" && params.row.ELeave == "Y" ? (
+          <Tooltip title="Contracts In">
+            <IconButton
+              // color= {params.row.LeaveStatus == "Y" ? "warning" :"info"}
+                color= "info"
+              size="small"
+              onClick={() =>
+                navigate(
+                  `/Apps/Secondarylistview/TR248/leave-approval/${params.row.RecordID}`,
+                  {
+                    state: {
+                      EmpLeaveOTOnduty: params.row.Name
+                    }
+                  }
+                )
+              }
+            >
+           <RedoIcon />
+           
+            </IconButton>
+          </Tooltip>
+          
+        // ) : (
+        //   <div></div>
+        // )}
+      ) : null}
+
+        {accessID === "TR245" && params.row.ELeave == "Y" ? (
+          <Tooltip title="Contracts Out">
+            <IconButton
+              // color= {params.row.LeaveStatus == "Y" ? "warning" :"info"}
+              color= "info"
+              size="small"
+              onClick={() =>
+                navigate(
+                  `/Apps/Secondarylistview/TR248/leave-approval/${params.row.RecordID}`,
+                  {
+                    state: {
+                      EmpLeaveOTOnduty: params.row.Name
+                    }
+                  }
+                )
+              }
+            >
+              <UndoIcon />
+           
+            </IconButton>
+          </Tooltip>
+          
+        // ) : (
+        //   <div></div>
+        // )}
+      ) : null} */}
                         <Link
                           to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
                           state={{EmpName:params.row.Name}}
@@ -3647,6 +3711,49 @@ export const fetchListview =
             listviewData.Data.columns.splice(2, 0, obj);
           }
 
+          if (AccessID == "TR027") {
+            const obj = {
+              field: "Type",
+              headerName: "Type",
+              headerAlign: "center",
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
+              minWidth: 120,
+              maxWidth: 100,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Stack direction="row">
+                      <Link>
+                        <Tooltip title="Contracts In">
+                          <IconButton color="info">
+                            <RedoIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                 
+                      <Link>
+                        <Tooltip title="Contracts Out">
+                          <IconButton color="info">
+                            <UndoIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                      <Link>
+                        <Tooltip title="Employee">
+                          <IconButton color="info">
+                            <Person2Icon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+              
+                  </Stack>
+                );
+              },
+            };
+            listviewData.Data.columns.splice(2, 0, obj);
+          }
           listviewData.Data.columns.push(obj);
 
           dispatch(

@@ -268,7 +268,8 @@ settingsgetUrl: "https://hr.beyondexs.com/api/HRSubscriptionCodeGetController.ph
 settingsPostUrl: "https://hr.beyondexs.com/api/HRChangePasswordController.php?",
 geolocationgetUrl: "https://ess.beyondexs.com/api/EmpGeoLocationGet.php",
 geolocationupdateUrl: "https://ess.beyondexs.com/api/EmpGeoLocationUpdate.php",
-
+getLeaveentryDataUrl:"https://ess.beyondexs.com/api/EmpLeaveConfigurationGetController.php",
+regGetUrl:'https://hr.beyondexs.com/api/RegularizationGetController.php',
   };
 
 export const getUrlSlice = createSlice({
