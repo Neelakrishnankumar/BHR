@@ -1462,7 +1462,7 @@ import {
       description: Data.Name, 
     approvedDate: mode != "A" ? currentDate : regdata.approvedDate,
     approvedby:UserName, 
-    CheckInDate: funMode === "A" ? RegData.CheckInDate :  formatDate(regdata.CheckInDate),
+    CheckInDate: formatDate(regdata.CheckInDate)  ,
     CheckOutDate:funMode === "A" ? RegData.CheckOutDate :  formatDate(regdata.CheckOutDate),
     MonthDate:  funMode === "A" ? currentDate : formatDate(regdata.MonthDate),
     EmplyeeCheckInDateTime:funMode === "A" ? RegData.CheckInTime :  regdata.EmplyeeCheckInDateTime,
@@ -4694,6 +4694,13 @@ import {
                             value={values.amount}
                             onBlur={handleBlur}
                             onChange={handleChange}
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                                min: 0,
+                                max: 24,
+                              },
+                            }}
                             error={!!touched.amount && !!errors.amount}
                             helperText={touched.amount && errors.amount}
                             autoFocus
@@ -5859,7 +5866,7 @@ import {
                             Save
                           </LoadingButton>
                         
-                          {/* <Button
+                          <Button
                             color="error"
                             variant="contained"
                             onClick={() => {
@@ -5881,7 +5888,7 @@ import {
                             }}
                           >
                             Delete
-                          </Button> */}
+                          </Button>
                           <Button
                             type="reset"
                             color="warning"
