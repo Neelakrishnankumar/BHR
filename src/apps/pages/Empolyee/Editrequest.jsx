@@ -95,7 +95,6 @@ import {
   const Editrequests = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const RegData = useSelector((state) => state.formApi.RegGetData);
-    console.log(RegData,"RegData");
     const listViewData = useSelector((state) => state.listviewApi.rowData);
     const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
     const data = useSelector((state) => state.formApi.Data);
@@ -106,12 +105,9 @@ import {
     const compID = sessionStorage.getItem("compID");
     const UserName = sessionStorage.getItem("UserName");
     const UserRecordid = sessionStorage.getItem("loginrecordID");
-    console.log(compID,"COMPANY ID");
-    console.log(UserRecordid,"UserRecordid");
     const location = useLocation();
     const state = location.state || {};
     const Finyear = sessionStorage.getItem("YearRecorid");
-    console.log(state, "emnployee");
     const handleMenu = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -125,12 +121,9 @@ import {
       return `${year}-${month}-${day}`;
     };
     const currentDate = new Date().toISOString().split('T')[0];
-    console.log(formatDate(currentDate),"CURRENT DATE");
     const isNonMobile = useMediaQuery("(min-width:600px)");
   
-    const handleFormSubmit = (values) => {
-      console.log(values);
-    };
+
     const YearFlag = sessionStorage.getItem("YearFlag");
   
     const navigate = useNavigate();
@@ -145,12 +138,8 @@ import {
     const Msg = useSelector((state) => state.formApi.msg);
     const isLoading = useSelector((state) => state.formApi.loading);
     const deploymentData = useSelector((state) => state.formApi.deploymentData);
-    //  console.log("deploymentData",deploymentData);
     const DataExplore = useSelector((state) => state.formApi.inviceEData);
-    console.log(
-      "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
-      DataExplore
-    );
+
     const [openDEPopup, setOpenDEPopup] = useState(false);
     const [openADPopup, setOpenADPopup] = useState(false);
     const [openLETPopup, setOpenLETPopup] = useState(false);
@@ -160,10 +149,8 @@ import {
     const empAttendanceData = useSelector(
       (state) => state.formApi.empAttendanceData
     );
-    console.log("empAttendanceData", empAttendanceData);
   
     const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
-    console.log("AttendanceData", AttendanceData);
   
     const [openPROPopup, setOpenPROPopup] = useState(false);
   
@@ -171,6 +158,8 @@ import {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     useEffect(() => {
       dispatch(fetchApidata(accessID, "get", recID));
+      
+      console.log("🚀 ~ useEffect ~ accessID redenerd ...........:")
     }, []);
     const [ini, setIni] = useState(true);
     const [iniProcess, setIniProcess] = useState(true);
@@ -191,7 +180,6 @@ import {
       };
       setSelectedData(rowData); // Store the selected row data (optional, for tracking)
   
-      console.log("Data to be passed:", params);
       // Navigate to another screen, passing the data in state
       navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`, {
         state: rowData,
@@ -523,25 +511,6 @@ import {
       }
     };
   
-    /******************Employee values assign a state variale******************** */
-    const selectcelldata = (data, bMode, field) => {
-      console.log("selectdata" + JSON.stringify(data));
-  
-      setBomode(bMode);
-      setIniProcess(true);
-      if (bMode == "A") {
-        setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-      } else {
-        if (field == "action") {
-          console.log("selectdata" + data.Disable);
-          setSupprodata({
-            RecordID: data.RecordID,
-            Comments: data.Comments,
-            SortOrder: data.SortOrder,
-          });
-        }
-      }
-    };
     //*******Assign Employee values from Grid table in  Yup initial value******* */
   
     /******************************save  Function********** */
@@ -1339,7 +1308,6 @@ import {
             value: rowData.value,
             sortOrder: rowData.Sortorder,
           });
-          console.log(rowData.Sortorder, "--rowData.Sortorder in Allowances");
   
           setADLookupData({
             // adType: rowData.Type,
@@ -1385,7 +1353,6 @@ import {
     const getExpenseFileChange = async (event) => {
       setImgName(event.target.files[0]);
   
-      console.log(event.target.files[0]);
   
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
@@ -1394,13 +1361,8 @@ import {
       const fileData = await dispatch(fileUpload({formData}));
   
       setImgName(fileData.payload.name);
-      console.log(">>>", fileData.payload);
-      console.log(
-        "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-        fileData
-      );
+
       if (fileData.payload.Status == "Y") {
-        // console.log("I am here");
         toast.success(fileData.payload.Msg);
       }
     };
@@ -1456,29 +1418,19 @@ import {
             }
           };
     // -------------------------------- ON Duty ----------------------------------------------
-    
+    const [checkindate , setCheckdate ] = useState("")
     const RegInitialValue = {
-      code: Data.Code,
-      description: Data.Name, 
+    code: Data.Code,
+    description: Data.Name, 
     approvedDate: mode != "A" ? currentDate : regdata.approvedDate,
     approvedby:UserName, 
-    CheckInDate: formatDate(regdata.CheckInDate)  ,
+    CheckInDate: formatDate(regdata.CheckInDate) || checkindate,
     CheckOutDate:funMode === "A" ? RegData.CheckOutDate :  formatDate(regdata.CheckOutDate),
     MonthDate:  funMode === "A" ? currentDate : formatDate(regdata.MonthDate),
     EmplyeeCheckInDateTime:funMode === "A" ? RegData.CheckInTime :  regdata.EmplyeeCheckInDateTime,
     
     EmplyeeCheckOutDateTime:funMode === "A" ? RegData.CheckOutTime :  regdata.EmplyeeCheckOutDateTime,
-    Status:funMode === "A" ? RegData.Status == "P"
-    ? "Present"
-    : RegData.Status == "A"
-      ? "Absent"
-    : RegData.Status == "W"
-      ? "WeekOff"
-    : RegData.Status == "I"
-      ? "Irregular"
-    : RegData.Status == "L"
-      ? "Leave"
-    : ""
+    Status:funMode === "A" ? RegData.Status
     : regdata.Status == "Present"
       ? "P"
     : regdata.Status == "Absent"
@@ -1490,15 +1442,7 @@ import {
     : regdata.Status == "Leave"
       ? "L"
     : "",
-    appliedStatus:funMode === "A" ? RegData.AppliedStatus == "AL"
-    ? "Applied"
-    : RegData.AppliedStatus == "RJ"
-      ? "Rejected"
-    : RegData.AppliedStatus == "AP"
-      ? "Approved"
-    : RegData.AppliedStatus == "RC"
-      ? "Reconsider"
-    : "" 
+    appliedStatus:funMode === "A" ? RegData.AppliedStatus
     :regdata.appliedStatus == "Applied"
       ? "AL"
     : regdata.appliedStatus == "Rejected"
@@ -1544,7 +1488,6 @@ import {
   //   remarks: regdata.remarks,
   //   managerComments: regdata.managerComments,
     };
-    console.log(RegInitialValue,"kkkk");
   
   
     const RegFNsave = async (values, resetForm, del) => {
@@ -1575,11 +1518,7 @@ import {
         NewCheckInDate : values.CheckInDate,
         NewCheckOutDate: values.CheckOutDate,
         NewCheckInTime:values.EmplyeeCheckInDateTime,
-        // ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
-        // : "",
         NewCheckOutTime:  values.EmplyeeCheckOutDateTime,
-        // ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
-        // : "",
         NewStatus: values.Status,
         Reason:"",
         ApprovedDate:values.approvedDate,
@@ -1588,7 +1527,6 @@ import {
         EmployeeID:recID,
 
       };
-      console.log(idata, "-idata");
       const response = await dispatch(
         explorePostData({ accessID: "TR219", action, idata })
       );
@@ -1641,7 +1579,6 @@ import {
       //Disable: ondutydata.Disable,
     };
   
-    console.log("Data:", Data);
   
   
     const ondutyFNsave = async (values, resetForm, del) => {
@@ -1733,12 +1670,9 @@ import {
           })
         );
   
-        console.log(response, "--find response lookup");
   
         const balancedayvaluefind = response.payload.Data;
-        console.log(balancedayvaluefind, "--balancedayvaluefind");
         setSelectedLeavetypebalance(response.payload.Data.ELC_ELIGIBLEDAYS);
-        console.log(selectedLeavetypebalance, "--selectedLeavetypebalance");
   
         // return balancedayvaluefind; // optional if needed
       } catch (error) {
@@ -2180,7 +2114,6 @@ import {
     const attendaceProcessFnSave = async (values) => {
       // toast.success("----response.payload.Msg");
   
-      console.log("month", values.month.toString());
   
       const data = {
         Month: values.month.toString(),
@@ -2208,19 +2141,13 @@ import {
     const getFileChange = async (event) => {
       // setImgName(event.target.files[0]);
   
-      console.log(event.target.files[0]);
   
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
       formData.append("type", "attachments");
   
       const fileData = await dispatch(imageUpload({ formData }));
-      // setImgName(fileData.payload.name)
-      console.log(">>>", fileData.payload);
-      console.log(
-        "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-        fileData
-      );
+
       if (fileData.payload.Status == "Y") {
         // console.log("I am here");
         toast.success(fileData.payload.Msg);
@@ -2635,8 +2562,6 @@ import {
                             value={values.Department}
                             onChange={(newValue) => {
                               setFieldValue("Department", newValue);
-                              console.log(newValue, "--newValue");
-                              console.log(newValue.RecordID, "////");
                             }}
                             //  onChange={handleSelectionFunctionname}
                             // defaultValue={selectedFunctionName}
@@ -3247,15 +3172,7 @@ import {
                             // value={values.Deduction}
                             onChange={(newValue) => {
                               // setFieldValue("Deduction", newValue);
-                              console.log(
-                                ADLookupData,
-                                "--ADLookupData Deduction"
-                              );
-  
-                              console.log(
-                                newValue.RecordID,
-                                "Deduction RecordID"
-                              );
+                              
   
                               setADLookupData({
                                 RecordID: newValue.RecordID,
@@ -3701,17 +3618,7 @@ import {
                                 value={selectleaveLookupData}
                                 // value={values.leavetype}
                                 onChange={(newValue) => {
-                                  // setFieldValue("leavetype", newValue);
-                                  console.log(
-                                    selectleaveLookupData,
-                                    "--selectleaveLookupData leavetype"
-                                  );
-  
-                                  console.log(
-                                    newValue.RecordID,
-                                    "leave RecordID"
-                                  );
-  
+                                 
                                   setselectleaveLookupData({
                                     RecordID: newValue.RecordID,
                                     Code: newValue.Code,
@@ -4661,16 +4568,7 @@ import {
                                 value={selectOHLookupData}
                                 // value={values.overhead}
                                 onChange={(newValue) => {
-                                  // setFieldValue("overhead", newValue);
-                                  console.log(
-                                    selectOHLookupData,
-                                    "--selectOHLookupData overhead"
-                                  );
-  
-                                  console.log(
-                                    newValue.RecordID,
-                                    "overhead RecordID"
-                                  );
+                          
   
                                   setselectOHLookupData({
                                     RecordID: newValue.RecordID,
@@ -5592,16 +5490,7 @@ import {
                                 value={expenseOHData}
                                 // value={values.overhead}
                                 onChange={(newValue) => {
-                                  // setFieldValue("overhead", newValue);
-                                  console.log(
-                                    expenseOHData,
-                                    "--selectOHLookupData overhead"
-                                  );
-  
-                                  console.log(
-                                    newValue.RecordID,
-                                    "overhead RecordID"
-                                  );
+                               
   
                                   setExpenseOHData({
                                     RecordID: newValue.RecordID,
@@ -6112,10 +6001,13 @@ import {
                       variant="standard"
                       focused
                       inputFormat="YYYY-MM-DD"
+                      // inputFormat="DD-MM-YYYY"
                       value={values.CheckInDate}
                       onBlur={handleBlur}
                       //onChange={handleChange}
                       onChange={(e) => {
+                        setFieldValue("CheckInDate", e.target.value);
+                        setCheckdate(e.target.value);
                         if (e.target.value) {
                           dispatch(
                             RegGetData({
@@ -6126,7 +6018,6 @@ import {
                             })
                           );
                         }
-                        setFieldValue("CheckInDate", e.target.value);
                       }}
                       error={!!touched.CheckInDate && !!errors.CheckInDate}
                       helperText={touched.CheckInDate && errors.CheckInDate}
