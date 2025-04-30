@@ -1477,7 +1477,8 @@ import {
           : leaveData.Status == "Rejected"
             ? "RJ"
             : leaveData.Status == "Approved"
-              ? "AP"
+              ? "AP": leaveData.Status == "Reconsider"
+              ? "RC"
               : "",
       SortOrder: "1",
       Disable: "N",
@@ -3470,7 +3471,7 @@ import {
                           //required
                         />
                         
-                        <FormControl focused variant="standard">
+                        <FormControl focused variant="standard" required>
                           <InputLabel id="Status">Status</InputLabel>
                           <Select
                             labelId="demo-simple-select-filled-label"
@@ -3479,11 +3480,12 @@ import {
                             value={values.Status}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            required
+                            
                           >
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="RJ">Rejected</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
+                            <MenuItem value="RC">Reconsider</MenuItem>
                           </Select>
                         </FormControl>
                         
