@@ -1458,8 +1458,8 @@ import {
     // -------------------------------- ON Duty ----------------------------------------------
     
     const RegInitialValue = {
-      code: Data.Code,
-      description: Data.Name, 
+    code: Data.Code,
+    description: Data.Name, 
     approvedDate: mode != "A" ? currentDate : regdata.approvedDate,
     approvedby:UserName, 
     CheckInDate: formatDate(regdata.CheckInDate)  ,
@@ -3700,12 +3700,16 @@ import {
                                 id="leavetype"
                                 value={selectleaveLookupData}
                                 // value={values.leavetype}
-                                onChange={(newValue) => {
-                                  // setFieldValue("leavetype", newValue);
+                                onChange={async (newValue) => {
+                                  setFieldValue("leavetype", newValue);
+                        if (newValue?.RecordID) {
+                          await Balancedayfind(newValue.RecordID);
+                        }
                                   console.log(
                                     selectleaveLookupData,
                                     "--selectleaveLookupData leavetype"
                                   );
+                                  
   
                                   console.log(
                                     newValue.RecordID,
