@@ -131,7 +131,7 @@ const Login = () => {
     // };
     // const data = await dispatch(authentication({ idata }));
     console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
-    var loginrecordID = data.payload.apiResponse.Recordid
+    
     //  var UserName = data.payload.apiResponse.Name
     
       sessionStorage.setItem("loginRecid", loginrecordID);
@@ -151,6 +151,7 @@ const Login = () => {
        var YearRecorid=data.payload.apiResponse.YearRecorid
        var Groupaccess=data.payload.apiResponse.Groupaccess
        var UserName=data.payload.apiResponse.Name
+       var loginrecordID = data.payload.apiResponse.Recordid
       
        console.log(SubscriptionCode,"SubscriptionCode");
 
@@ -167,6 +168,7 @@ const Login = () => {
        sessionStorage.setItem("Expiryin",Expiryin);
        sessionStorage.setItem("SubscriptionCode",SubscriptionCode);
        sessionStorage.setItem("UserName",UserName);
+       sessionStorage.setItem("loginrecordID",loginrecordID);
        sessionStorage.setItem("SubscriptionCode",SubscriptionCode);      
        sessionStorage.setItem("company", company);
        sessionStorage.setItem("year", year);

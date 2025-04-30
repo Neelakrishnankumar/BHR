@@ -43,6 +43,9 @@ import {
     AttendanceProcess,
     requestMail,
     leaveAppoval,
+    getLeaveentryData,
+    RegGetData,
+    resetregularizedata,
   } from "../../../store/reducers/Formapireducer";
   import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
   import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -91,14 +94,20 @@ import {
   // ***********************************************
   const Editrequests = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-  
+    const RegData = useSelector((state) => state.formApi.RegGetData);
+    console.log(RegData,"RegData");
     const listViewData = useSelector((state) => state.listviewApi.rowData);
     const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
+    const data = useSelector((state) => state.formApi.Data);
     const [pageSize, setPageSize] = React.useState(10);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const EMPID = sessionStorage.getItem("EmpId");
-    const compID = sessionStorage.getItem("companyId");
+    const compID = sessionStorage.getItem("compID");
+    const UserName = sessionStorage.getItem("UserName");
+    const UserRecordid = sessionStorage.getItem("loginrecordID");
+    console.log(compID,"COMPANY ID");
+    console.log(UserRecordid,"UserRecordid");
     const location = useLocation();
     const state = location.state || {};
     const Finyear = sessionStorage.getItem("YearRecorid");
@@ -110,8 +119,13 @@ import {
     const handleClose = () => {
       setAnchorEl(null);
     };
-  
-  
+    const formatDate = (dateStr) => {
+      if (!dateStr) return "";
+      const [day, month, year] = dateStr.split("-");
+      return `${year}-${month}-${day}`;
+    };
+    const currentDate = new Date().toISOString().split('T')[0];
+    console.log(formatDate(currentDate),"CURRENT DATE");
     const isNonMobile = useMediaQuery("(min-width:600px)");
   
     const handleFormSubmit = (values) => {
@@ -263,6 +277,8 @@ import {
       lookupDesc: "",
     });
     const [selectOHLookupData, setselectOHLookupData] = React.useState(null);
+    const [selectleaveLookupData, setselectleaveLookupData] = React.useState(null);
+    const [expenseOHData, setExpenseOHData] = React.useState(null);
     //   {
     //   OHlookupRecordid: "",
     //   OHlookupCode: "",
@@ -481,7 +497,7 @@ import {
       if (event.target.value == "9") {
         
         dispatch(
-          fetchExplorelitview("TR086", "Expense", `EmployeeID=${recID}`, "")
+          fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
         );
         dispatch(fetchApidata(accessID, "get", recID));
         selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -560,17 +576,27 @@ import {
         "ToDate",
         "LeavePart",
         "Status",
-        "AppliedDate",
+        
+        "action",
+      ];
+    } 
+    else if (show == "9") {
+      VISIBLE_FIELDS = [
+        "SLNO",
+        "Date",
+        "Name",
+        "Amount",
+        "Status",     
         "action",
       ];
     } else if (show == "10") {
       VISIBLE_FIELDS = [
         "SLNO",
         "RegularizationDate",
-        "CheckInDate",
-        "CheckOutDate",
-        "CheckInTime",
-        "CheckOutTime",
+        "NewCheckInDate",
+        "NewCheckOutDate",
+        "NewCheckInTime",
+        "NewCheckOutTime",
         "Status",
         "action",
       ];
@@ -995,10 +1021,11 @@ import {
       toDate: "",
       LeavePart: "",
       Status: "",
-      // comment:"",
-      // managerComments:"",
-      // approvedby:"",
-      // approvedDate:"",
+      comment:"",
+      managerComments:"",
+      approvedby:"",
+      approvedDate:"",
+      leavetype:""
     });
     const [allDecData, setAllDecData] = useState({
       recordID: "",
@@ -1012,10 +1039,11 @@ import {
       OtType: "",
       PaymentMethod: "",
       Status: "",
-      Comments: "",
+      comments: "",
       managerComments:"",
       approvedby:"",
       approvedDate:"",
+      ReimbursementOption:""
     });
     const [ondutydata, setOndutydata] = useState({
       RecordID: "",
@@ -1024,7 +1052,7 @@ import {
       Status: "",
       AppliedDate: "",
       LeavePart: "",
-      Comments: "",
+      comment: "",
       managerComments:"",
       approvedby:"",
       approvedDate:"",
@@ -1036,11 +1064,36 @@ import {
       OverHeadsID: "",
       // OverHeadsCode:"",
       // OverHeadsName: "",
+      Status:"",
       Amount: "",
       Comments: "",
       managerComments:"",
       approvedby:"",
       approvedDate:"",
+    });
+     const [expensedata, setExpensedata] = useState({
+      RecordID: "",
+      referenceifany:"",
+      Status:"",
+      amount: "",
+      comments: "",
+      managerComments:"",
+      approvedby:"",
+      approvedDate:"",
+      date:"",
+      OverHeadsID:"",
+    });
+    const [regdata, setRegdata] = useState({
+      RecordID: "",
+      MonthDate:"",
+      CheckInDate:"",
+      EmplyeeCheckInDateTime: "",
+      CheckOutDate: "",
+      managerComments:"",
+      EmplyeeCheckOutDateTime:"",
+      Status:"",
+      remarks:"",
+      appliedStatus:"",
     });
     const selectCellRowData = ({ rowData, mode, field }) => {
       console.log(
@@ -1052,6 +1105,8 @@ import {
       // setLaoMode(mode);
   
       if (mode == "A") {
+        dispatch(resetregularizedata());
+        console.log(mode,"ADDMODE-30/04/2025-Assign empty object");
         setAllDecData({
           recordID: "",
           value: "",
@@ -1073,6 +1128,8 @@ import {
         //   letlookupDesc: "",
         // });
         setselectOHLookupData(null);
+        setselectleaveLookupData(null);
+        setExpenseOHData(null);
         //   {
         //   OHlookupRecordid: "",
         //   OHlookupCode: "",
@@ -1089,6 +1146,7 @@ import {
           managerComments:"",
           approvedby:"",
           approvedDate:"",
+          leavetype:""
         });
         setOtdata({
           RecordID: "",
@@ -1097,10 +1155,11 @@ import {
           OtType: "",
           PaymentMethod: "",
           Status: "",
-          Comments: "",
+          comments: "",
           managerComments:"",
           approvedby:"",
           approvedDate:"",
+          ReimbursementOption:""
         });
         setOndutydata({
           RecordID: "",
@@ -1110,7 +1169,7 @@ import {
           Status: "",
           AppliedDate: "",
           //Status: "",
-          Comments: "",
+          comment: "",
            managerComments:"",
           approvedby:"",
           approvedDate:"",
@@ -1122,11 +1181,38 @@ import {
           OverHeadsID: "",
           // OverHeadsCode:"",
           // OverHeadsName: "",
+          Status:"",
           Amount: "",
           Comments: "",
           managerComments:"",
           approvedby:"",
           approvedDate:"",
+        });
+        setExpensedata({
+        RecordID: "",
+      referenceifany:"",
+      Status:"",
+      amount: "",
+      comments: "",
+      managerComments:"",
+      approvedby:"",
+      approvedDate:"",
+      date:"", 
+      OverHeadsID:""      
+        });
+     setRegdata({
+          RecordID: "",
+          MonthDate:"",
+          CheckInDate:"",
+          EmplyeeCheckInDateTime: "",
+          CheckOutDate: "",
+          managerComments:"",
+          approvedby:"",
+          approvedDate:"",
+          EmplyeeCheckOutDateTime:"",
+          Status:"",
+          remarks:"",
+          appliedStatus:""
         });
       } else {
         if (field == "action") {
@@ -1144,10 +1230,11 @@ import {
             toDate: rowData.ToDate,
             LeavePart: rowData.LeavePart,
             Status: rowData.Status,
-            // comment:rowData.comment,
-            // managerComments:rowData.managerComments,
-            // approvedby:rowData.approvedby,
-            // approvedDate:rowData.approvedDate,
+            comment:rowData.Comments,
+            managerComments:rowData.ManagerComments,
+            approvedby:rowData.ApprovedBy,
+            approvedDate:rowData.ApprovedDate,
+            leavetype:rowData.LeaveTypeID
           });
           setOtdata({
             RecordID: rowData.RecordID,
@@ -1156,10 +1243,11 @@ import {
             OtType: rowData.OtType,
             PaymentMethod: rowData.PaymentMethod,
             Status: rowData.Status,
-            Comments: rowData.Comments,
-            // managerComments:rowData.managerComments,
-            // approvedby:rowData.approvedby,
-            // approvedDate:rowData.approvedDate,
+            comments: rowData.Comments,
+            managerComments:rowData.ManagerComments,
+            approvedby:rowData.ApprovedBy,
+            approvedDate:rowData.ApprovedDate,
+            ReimbursementOption:rowData.ReimbursementOption
           });
           setOndutydata({
             RecordID: rowData.RecordID,
@@ -1167,12 +1255,12 @@ import {
             FromDate: rowData.FromDate,
             ToDate: rowData.ToDate,
             AppliedDate: rowData.AppliedDate,
-            //PaymentMethod: rowData.PaymentMethod,
+           
             Status: rowData.Status,
-            Comments: rowData.Comments,
-            // managerComments:rowData.managerComments,
-            // approvedby:rowData.approvedby,
-            // approvedDate:rowData.approvedDate,
+            comment: rowData.Comments,
+            managerComments:rowData.ManagerComments,
+            approvedby:rowData.ApprovedBy,
+            approvedDate:rowData.ApprovedDate,
           });
   
           setselectLETLookupData({
@@ -1183,6 +1271,14 @@ import {
             // letlookupRecordid: rowData.LeaveTypeID,
             // letlookupDesc: rowData.LeaveTypeName,
           });
+          setselectleaveLookupData ({
+            RecordID: rowData.LeaveTypeID,
+            Code: rowData.LeaveTypeCode,
+            Name: rowData.LeaveTypeName,
+            // OHlookupRecordid: rowData.OverHeadsID,
+            // OHlookupCode: rowData.OverHeadsCode,
+            // OHlookupDesc: rowData.OverHeadsName,
+          });
           setselectOHLookupData({
             RecordID: rowData.OverHeadsID,
             Code: rowData.OverHeadsCode,
@@ -1191,6 +1287,11 @@ import {
             // OHlookupCode: rowData.OverHeadsCode,
             // OHlookupDesc: rowData.OverHeadsName,
           });
+          setExpenseOHData({
+            RecordID: rowData.OverheadRecordID,
+            //Code: rowData.OverHeadsCode,
+            Name: rowData.Name,
+          });
           setSaladdata({
             RecordID: rowData.RecordID,
             SalaryAdvanceDate: rowData.SalaryAdvanceDate,
@@ -1198,11 +1299,41 @@ import {
             OverHeadsID: rowData.OverHeadsID,
             Amount: rowData.Amount,
             Comments: rowData.Comments,
-            // managerComments:rowData.managerComments,
-            // approvedby:rowData.approvedby,
-            // approvedDate:rowData.approvedDate,
+            Status:rowData.Status,
+            managerComments:rowData.ManagerComments,
+            approvedby:rowData.ApprovedBy,
+            approvedDate:rowData.ApprovedDate,
           });
-  
+           setExpensedata({
+            RecordID: rowData.RecordID,
+            referenceifany:rowData.Referenceifany,
+            date:rowData.Date,  
+            amount: rowData.Amount,
+            comments: rowData.Comments,
+            Status:rowData.Status,
+            managerComments:rowData.ManagerComments,
+            approvedby:rowData.ApprovedBy,
+            approvedDate:rowData.ApprovedDate,
+            OverHeadsID: rowData.OverheadRecordID,
+          });
+          setRegdata({
+            RecordID: rowData.RecordID,
+            MonthDate:rowData.RegularizationDate,
+            // CheckInDate:rowData.CheckInDate,
+            // EmplyeeCheckInDateTime: rowData.CheckInTime,
+            // CheckOutDate: rowData.CheckOutDate,
+            CheckInDate:rowData.NewCheckInDate,
+            EmplyeeCheckInDateTime: rowData.NewCheckInTime,
+            CheckOutDate: rowData.NewCheckOutDate,
+            managerComments:rowData.ManagerComments,
+            approvedby:rowData.ApprovedBy,
+            approvedDate:rowData.ApprovedDate,
+            EmplyeeCheckOutDateTime:rowData.NewCheckOutTime,
+            Status:rowData.Status,
+            appliedStatus:rowData.AppliedStatus,
+            remarks:rowData.Remarks
+           
+          });
           setAllDecData({
             recordID: rowData.RecordID,
             value: rowData.value,
@@ -1225,86 +1356,31 @@ import {
     };
   
   
-    const RegInitialValue = {
-      EmployeeID: params.id,
-      // Name: passedData.Name,
-      // CheckInDate: passedData.CheckInDate,
-      // CheckOutDate: passedData.CheckOutDate,
-      // MonthDate:currentDate,
-      
-      // EmplyeeCheckInDateTime: passedData.EmplyeeCheckInDateTime,
-      // EmplyeeCheckOutDateTime: passedData.EmplyeeCheckOutDateTime,
-      // Status: passedData.Status === "Present" 
-      //         ? "P"
-      //         : passedData.Status === "Absent"
-      //         ? "A"
-      //         : passedData.Status === "WeekOff"
-      //         ? "W"
-      //         : passedData.Status === "Irregular"
-      //         ? "I"
-      //         : passedData.Status === "Leave"
-      //         ? "L"
-      //         : "",
-    };
-    console.log(RegInitialValue,"kkkk");
-  
-  
-    const RegFNsave = async (values, del) => {
-      // let action = mode === "A" ? "insert" : "update";
-      // let action =
-      //   mode === "A" && !del
-      //     ? "insert"
-      //     : mode === "E" && del
-      //     ? "harddelete"
-      //     : "update";
-       var isCheck = "N";
-      let action = "insert"; 
-      if (values.disable == true) {
-        isCheck = "Y";
-      }
-  
-      const idata = {
-        RecordID: recID,
-       
-        EmployeeID:params.id,
-        RegularizationDate: values.MonthDate,
-       
-        // CheckInDate:passedData.CheckInDate,
-        // CheckOutDate: passedData.CheckOutDate,  
-        
-        // CheckInTime: passedData.EmplyeeCheckInDateTime?.split(" / ")[1] || "", 
-        // CheckOutTime: passedData.EmplyeeCheckOutDateTime?.split(" / ")[1] || "", 
-        Status: values.Status,
-        Remarks: values.remarks,
-        NewCheckInDate : values.CheckInDate,
-        NewCheckOutDate: values.CheckOutDate,
-        NewCheckInTime:values.EmplyeeCheckInDateTime
-        ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
-        : "",
-        NewCheckOutTime:  values.EmplyeeCheckOutDateTime
-        ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
-        : "",
-        NewStatus: values.Status,
-      };
-      console.log(idata, "-idata");
-      const response = await dispatch(postData({ accessID, action, idata }));
-      if (response.payload.Status == "Y") {
-        toast.success(response.payload.Msg);
-        //navigate("/Apps/TR219/Regularization");
-      } else {
-        toast.error(response.payload.Msg);
-      }
-    };
+    
     const [ImageName, setImgName] = useState("");
     const expenseinitialValue = {
       code: Data.Code,
       description: Data.Name,
-      date: Data.FEDate,
-      referenceifany: Data.Referenceifany,
-      amount: Data.Amount,
-      comments: Data.Comments,
-      approvedby: Data.Approvedby,
-      overhead: Data.OverheadsRecordID ? { RecordID: Data.OverheadsRecordID, Name: Data.Name } : null,
+      date: formatDate(expensedata.date),
+      referenceifany: expensedata.referenceifany,
+      amount: expensedata.amount,
+      comments: expensedata.comments,
+      managerComments: expensedata.managerComments,
+     
+      approvedDate: mode != "A" ? currentDate : expensedata.approvedDate,
+      Eapprovedby:UserName,
+      OHRecordID: expensedata.OverHeadsID,
+      //overhead: expensedata.overhead && mode != "A" ? { RecordID: expensedata.overhead, Name: expensedata.Name } : null,
+      Status:
+      expensedata.Status == "Applied"
+        ? "AL"
+        : expensedata.Status == "Rejected"
+          ? "RJ"
+          : expensedata.Status == "Approved"
+            ? "AP"
+            : expensedata.Status == "Reconsider"
+            ? "RC"
+            : "",
     };
     const getExpenseFileChange = async (event) => {
       setImgName(event.target.files[0]);
@@ -1313,7 +1389,7 @@ import {
   
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
-      formData.append("type", "attachments");
+      formData.append("type", "images");
   
       const fileData = await dispatch(fileUpload({formData}));
   
@@ -1332,67 +1408,216 @@ import {
       setLoading(true);
   
       const idata = {
-        RecordID: recID,
+        RecordID: expensedata.RecordID,
         FEDate: values.date,
         Referenceifany: values.referenceifany,
         Amount: values.amount,
         Comments: values.comments,
-        // Approvedby:values.approvedby,
-        //OverheadsRecordID: selectOHLookupData.OHlookupRecordid,
-        OverheadsRecordID: values.overhead.RecordID || 0,
-        Attachment: ImageName ? ImageName : Data.Attachment,
-  
-        //FinanceCategoryType: parentID,
-        Approvedby: EMPID,
-        Finyear,
-        compID,
+        //OverheadRecordID: values.overhead.RecordID || 0,
+        OverheadsRecordID: expenseOHData ? expenseOHData.RecordID : 0,
+        OverHeadsCode: expenseOHData ? expenseOHData.Code : "",
+        OverHeadsName: expenseOHData ? expenseOHData.Name : "",
+        Attachment: ImageName ? ImageName : Data.Attachment || "",
+        AppliedDate: currentDate,
+        FinanceCategoryType: "E",
+        Approvedby: recID,
+        EApprovedBy:UserRecordid,
+        ManagerComments:values.managerComments,
+        ApprovedDate:values.approvedDate,
+        Status:values.Status,
+        Reason:"",
+      
+        // Finyear,
+        // compID,
       };
-  
-      //   var type = "";
-      //   if (mode == "A") {
-      //     type = "insert";
-      //   } else {
-      //     type = "update";
-      //   }
-  
-      // const data = await dispatch(postApidata(accessID,type,idata))
-      //let action = mode === "A" ? "insert" : "update";
       let action =
-        mode === "A" && !del
+        funMode === "A" && !del
           ? "insert"
-          : mode === "E" && del
+          : funMode === "E" && del
             ? "harddelete"
             : "update";
-      const responce = await dispatch(postData({ accessID, action, idata }));
+            const response = await dispatch(
+              explorePostData({ accessID: "TR086", action, idata })
+            );
+            if (response.payload.Status == "Y") {
+              setLoading(false);
+              dispatch(
+                //fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "",`CompId=${compID}`)
+                fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
+              );
+        
+              toast.success(response.payload.Msg);
+        
+              selectCellRowData({ rowData: {}, mode: "A", field: "" });
+              resetForm();
+            } else {
+              setLoading(false);
+              toast.error(response.payload.Msg);
+            }
+          };
+    // -------------------------------- ON Duty ----------------------------------------------
+    
+    const RegInitialValue = {
+      code: Data.Code,
+      description: Data.Name, 
+    approvedDate: mode != "A" ? currentDate : regdata.approvedDate,
+    approvedby:UserName, 
+    CheckInDate: funMode === "A" ? RegData.CheckInDate :  formatDate(regdata.CheckInDate),
+    CheckOutDate:funMode === "A" ? RegData.CheckOutDate :  formatDate(regdata.CheckOutDate),
+    MonthDate:  funMode === "A" ? currentDate : formatDate(regdata.MonthDate),
+    EmplyeeCheckInDateTime:funMode === "A" ? RegData.CheckInTime :  regdata.EmplyeeCheckInDateTime,
+    
+    EmplyeeCheckOutDateTime:funMode === "A" ? RegData.CheckOutTime :  regdata.EmplyeeCheckOutDateTime,
+    Status:funMode === "A" ? RegData.Status == "P"
+    ? "Present"
+    : RegData.Status == "A"
+      ? "Absent"
+    : RegData.Status == "W"
+      ? "WeekOff"
+    : RegData.Status == "I"
+      ? "Irregular"
+    : RegData.Status == "L"
+      ? "Leave"
+    : ""
+    : regdata.Status == "Present"
+      ? "P"
+    : regdata.Status == "Absent"
+      ? "A"
+    : regdata.Status == "WeekOff"
+      ? "W"
+    : regdata.Status == "Irregular"
+      ? "I"
+    : regdata.Status == "Leave"
+      ? "L"
+    : "",
+    appliedStatus:funMode === "A" ? RegData.AppliedStatus == "AL"
+    ? "Applied"
+    : RegData.AppliedStatus == "RJ"
+      ? "Rejected"
+    : RegData.AppliedStatus == "AP"
+      ? "Approved"
+    : RegData.AppliedStatus == "RC"
+      ? "Reconsider"
+    : "" 
+    :regdata.appliedStatus == "Applied"
+      ? "AL"
+    : regdata.appliedStatus == "Rejected"
+      ? "RJ"
+    : regdata.appliedStatus == "Approved"
+      ? "AP"
+    : regdata.appliedStatus == "Reconsider"
+      ? "RC"
+    : "",
+    remarks:funMode === "A" ? RegData.Remarks : regdata.remarks,
+    managerComments: regdata.managerComments,
+  //  code: Data.Code,
+  //     description: Data.Name,
+  //   approvedDate: mode != "A" ? currentDate : regdata.approvedDate,
+  //   approvedby:UserName, 
+  //   CheckInDate: formatDate(regdata.CheckInDate),
+  //   CheckOutDate:formatDate(regdata.CheckOutDate),
+  //   MonthDate: funMode === "A" ? currentDate :formatDate(regdata.MonthDate),
+  //   EmplyeeCheckInDateTime: regdata.EmplyeeCheckInDateTime,
+    
+  //   EmplyeeCheckOutDateTime:regdata.EmplyeeCheckOutDateTime,
+  //   Status:regdata.Status == "Present"
+  //       ? "P"
+  //       : regdata.Status == "Absent"
+  //         ? "A"
+  //         : regdata.Status == "WeekOff"
+  //           ? "W"
+  //           : regdata.Status == "Irregular"
+  //           ? "I"
+  //           : regdata.Status == "Leave"
+  //           ? "L"
+  //           : "",
+  //   appliedStatus:
+  //     regdata.appliedStatus == "Applied"
+  //       ? "AL"
+  //       : regdata.appliedStatus == "Rejected"
+  //         ? "RJ"
+  //         : regdata.appliedStatus == "Approved"
+  //           ? "AP"
+  //           : regdata.appliedStatus == "Reconsider"
+  //           ? "RC"
+  //           : "",
+  //   remarks: regdata.remarks,
+  //   managerComments: regdata.managerComments,
+    };
+    console.log(RegInitialValue,"kkkk");
   
-      if (responce.payload.Status == "Y") {
-        toast.success(responce.payload.Msg);
-        // setIni(true)
+  
+    const RegFNsave = async (values, resetForm, del) => {
+      setLoading(true);
+      let action =
+        funMode === "A" && !del
+          ? "insert"
+          : funMode === "E" && del
+            ? "harddelete"
+            : "update";
+  
+      const idata = {
+        RecordID: recID,
+        RegularizationDate: values.MonthDate,
+        CheckInDate:funMode === "A" ? RegData.CheckInDate :  formatDate(regdata.CheckInDate),
+        CheckOutDate:funMode === "A" ? RegData.CheckOutDate :  formatDate(regdata.CheckOutDate),  
+        CheckInTime: funMode === "A" ? RegData.CheckInTime :  regdata.EmplyeeCheckInDateTime,
+        CheckOutTime: funMode === "A" ? RegData.CheckOutTime :  regdata.EmplyeeCheckOutDateTime, 
+        Status:funMode === "A" ? RegData.Status : regdata.Status,
+        // CheckInDate:formatDate(regdata.CheckInDate),
+        // CheckOutDate: formatDate(regdata.CheckOutDate),  
+        // CheckInTime: regdata.EmplyeeCheckInDateTime,
+        // CheckOutTime:  regdata.EmplyeeCheckOutDateTime, 
+        // Status: values.Status,
+        AppliedStatus:values.appliedStatus,
+        Remarks: values.remarks,
+        Source:"Web Application",
+        NewCheckInDate : values.CheckInDate,
+        NewCheckOutDate: values.CheckOutDate,
+        NewCheckInTime:values.EmplyeeCheckInDateTime,
+        // ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
+        // : "",
+        NewCheckOutTime:  values.EmplyeeCheckOutDateTime,
+        // ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
+        // : "",
+        NewStatus: values.Status,
+        Reason:"",
+        ApprovedDate:values.approvedDate,
+        ApprovedBy:UserRecordid,
+        ManagerComments:values.managerComments,
+        EmployeeID:recID,
+
+      };
+      console.log(idata, "-idata");
+      const response = await dispatch(
+        explorePostData({ accessID: "TR219", action, idata })
+      );
+      if (response.payload.Status == "Y") {
         setLoading(false);
-        // navigate(
-        //   `/Apps/Secondarylistview/TR086/Finance Entry/${parentID}`
-        // );
+        dispatch(
+          fetchExplorelitview("TR219", "Regularization", `EmployeeID=${recID}`, "",`CompId=${compID}`)
+                 );
+
+        toast.success(response.payload.Msg);
+  
+        selectCellRowData({ rowData: {}, mode: "A", field: "" });
+        resetForm();
       } else {
-        toast.error(responce.payload.Msg);
+        dispatch(resetregularizedata());
         setLoading(false);
+        toast.error(response.payload.Msg);
       }
     };
-    // -------------------------------- ON Duty ----------------------------------------------
-    const formatDate = (dateStr) => {
-      if (!dateStr) return "";
-      const [day, month, year] = dateStr.split("-");
-      return `${year}-${month}-${day}`;
-    };
-    
     const ondutyInitialValue = {
       code: Data.Code,
       description: Data.Name,
       FromDate: formatDate(ondutydata.FromDate),
       ToDate: formatDate(ondutydata.ToDate),  
-      //approvedby:ondutydata.approvedby,
-      //approvedDate:ondutydata.approvedDate,
-      //managerComments: ondutydata.ManagerComments,
-      comment: ondutydata.Comments,
+      approvedby:UserName,
+      approvedDate: mode != "A" ? currentDate : leaveData.approvedDate,
+      
+      managerComments:ondutydata.managerComments,
+      comment: ondutydata.comment,
       LeavePart:
         ondutydata.LeavePart === "First half"
           ? "FH"
@@ -1422,23 +1647,29 @@ import {
     const ondutyFNsave = async (values, resetForm, del) => {
       setLoading(true);
       let action =
-        mode === "A" && !del
-          ? "insert"
-          : mode === "E" && del
-            ? "harddelete"
-            : "update";
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+          ? "harddelete"
+          : "update";
       const idata = {
-        RecordID: recID,
+        RecordID: ondutydata.RecordID,
         EmployeeID: recID,
         //EmployeeID: mode == "M" ? params.parentID : EMPID,
         FromDate: values.FromDate,
         ToDate: values.ToDate,
         LeavePart: values.LeavePart,
         Comments: values.comment,
-        Status: mode == "A" ? "AL" : values.Status,
+        //Status: mode == "A" ? "AL" : values.Status,
+        Status: values.Status,
         ManagerComments: values.managerComments,
-        //SortOrder: "1",
-        //Disable: "N",
+        Reason:"",
+        AppliedDate:currentDate,
+        //BalanceDay: selectedLeavetypebalance || 0,
+        ApprovedBy: UserRecordid,
+        ApprovedDate:values.approvedDate,
+        SortOrder: "1",
+        Disable: "N",
   
   
         //   LeaveTypeID: values.leavetype.RecordID || 0,
@@ -1493,16 +1724,42 @@ import {
     };
   
     //-------------------------------------LEAVE SAVE FUNCTION---------------------------------------------//
+    const Balancedayfind = async (LeaveTypeID) => {
+      try {
+        const response = await dispatch(
+          getLeaveentryData({
+            EmployeeID: recID,
+            LeaveTypeID: LeaveTypeID,
+          })
+        );
   
+        console.log(response, "--find response lookup");
+  
+        const balancedayvaluefind = response.payload.Data;
+        console.log(balancedayvaluefind, "--balancedayvaluefind");
+        setSelectedLeavetypebalance(response.payload.Data.ELC_ELIGIBLEDAYS);
+        console.log(selectedLeavetypebalance, "--selectedLeavetypebalance");
+  
+        // return balancedayvaluefind; // optional if needed
+      } catch (error) {
+        console.error("Error in Balancedayfind:", error);
+      }
+    };
+  
+    const [selectedLeavetypebalance, setSelectedLeavetypebalance] = useState("");
     const leaveInitialValue = {
       code: Data.Code,
       description: Data.Name,
-      //managerComments:leaveData.managerComments,
-      //comment:leaveData.Comment,
-      //approvedby:leaveData.approvedby,
-      //approvedDate:leaveData.approvedDate,
+      managerComments:leaveData.managerComments,
+      comment:leaveData.comment,
+      approvedby:UserName,
+      //approvedDate:mode == "A" ? currentDate : leaveData.approvedDate,
+      approvedDate: mode != "A" ? currentDate : leaveData.approvedDate,
       FromDate:formatDate(leaveData.fromDate),
       ToDate: formatDate(leaveData.toDate),
+      //leavetype:leaveData.leavetype,
+      //leavetype:leaveData.leavetype && mode != "A" ? { RecordID: leaveData.leavetype, Name: leaveData.leavetype } : null,
+      leavetype:leaveData.leavetype,
       LeavePart:
         leaveData.LeavePart === "First half"
           ? "FH"
@@ -1545,13 +1802,18 @@ import {
         Status: values.Status,
         SortOrder: "1",
         Disable: "N",
-        // LeaveTypeID: selectLETLookupData.letlookupRecordid,
-        LeaveTypeID: selectLETLookupData ? selectLETLookupData.RecordID : 0,
-        // comment:values.comment,
-        // managerComments:values.managerComments,
-        // approvedby:values.approvedby,
-        // approvedDate:values.approvedDate,
-  
+        //LeaveTypeID:values.leavetype.RecordID,
+         LeaveTypeID: selectleaveLookupData ? selectleaveLookupData.RecordID : 0,
+        LeaveTypeCode: selectleaveLookupData ? selectleaveLookupData.Code : "",
+        LeaveTypeName: selectleaveLookupData ? selectleaveLookupData.Name : "",
+        //LeaveTypeID: selectLETLookupData ? selectLETLookupData.RecordID : 0,
+        Comments:values.comment,
+        ManagerComments:values.managerComments,
+        ApprovedBy:UserRecordid,
+        ApprovedDate:values.approvedDate,
+        Reason:"",
+        AppliedDate:currentDate,
+        BalanceDay: selectedLeavetypebalance || 0,
       };
       const response = await dispatch(
         explorePostData({ accessID: "TR208", action, idata })
@@ -1580,19 +1842,24 @@ import {
       description: Data.Name,
       Date:formatDate(otdata.OtDate),
       NumberOfHours: otdata.NumberOfHours,
-      comments: otdata.Comments,
-      //managerComments:otdata.managerComments,
-      //approvedby:otdata.approvedby,
+      comments: otdata.comments,
+      managerComments:otdata.managerComments,
+      approvedby:UserName,
+      approvedDate: mode != "A" ? currentDate : otdata.approvedDate,
+      //ReimbursementOption:otdata.ReimbursementOption,
+      ReimbursementOption:otdata.ReimbursementOption === "One Time and Half"
+          ? "OH"
+          : otdata.ReimbursementOption === "One and Half Time"
+            ? "HT"
+            : otdata.ReimbursementOption === "Compensatory Half"
+              ? "CH"
+                : "",
       //approvedDate:otdata.approvedDate,
       PaymentMethod:
-        otdata.PaymentMethod === "Assitis"
-          ? "AS"
-          : otdata.PaymentMethod === "Time and a Half"
-            ? "TH"
-            : otdata.PaymentMethod === "Double Time"
-              ? "DT"
-              : otdata.PaymentMethod === "Compensate"
-                ? "CS"
+        otdata.PaymentMethod === "Cash Reimbursement"
+          ? "CR"
+          : otdata.PaymentMethod === "Compensatory Half"
+            ? "CH"
                 : "",
       OtType:
         otdata.OtType === "Flexible Scheduling"
@@ -1630,9 +1897,14 @@ import {
         Status: values.Status,
         Comments: values.comments,
         EmployeeID: recID,
-        // managerComments: values.managerComments,
-        // approvedby: values.approvedby,
-        // approvedDate: values.approvedDate,
+        ManagerComments:values.managerComments,
+        ApprovedBy:UserRecordid,
+        ApprovedDate:values.approvedDate,
+        Reason:"",
+        AppliedDate:currentDate,
+        //BalanceDay: selectedLeavetypebalance || 0,
+        ReimbursementOption:values.ReimbursementOption,
+        ProjectID:"1"
   
         
       };
@@ -1666,10 +1938,19 @@ import {
       // purpose: saladdata.OverHeadsID,
       amount: saladdata.Amount,
       comments: saladdata.Comments,
-      //approvedby: Data.Approvedby,
-      //managerComments:leaveData.managerComments,
-      //approvedby:leaveData.approvedby,
-      //approvedDate:leaveData.approvedDate,
+      approvedby: UserName,
+      managerComments:leaveData.managerComments,
+      approvedDate: mode != "A" ? currentDate : saladdata.approvedDate,
+      Status:
+      saladdata.Status === "Applied"
+        ? "AL"
+        : saladdata.Status === "Approved"
+          ? "AP"
+          : saladdata.Status === "Rejected"
+            ? "RJ"
+            : saladdata.Status === "Reconsider"
+            ? "RC"
+            : "",
     };
     const salAdFNsave = async (values, resetForm, del) => {
       setLoading(true);
@@ -1690,12 +1971,16 @@ import {
         // OverHeadsID: selectOHLookupData.OHlookupRecordid,
         // OverHeadsCode: selectOHLookupData.OHlookupCode,
         // OverHeadsName: selectOHLookupData.OHlookupDesc,
+        Status:values.Status,
         Amount: values.amount,
         Comments: values.comments,
         EmployeeID: recID,
-        // managerComments: values.managerComments,
-        // approvedby: values.approvedby,
-        // approvedDate: values.approvedDate,
+        ManagerComments:values.managerComments,
+        ApprovedBy:UserRecordid,
+        ApprovedDate:values.approvedDate,
+        Reason:"",
+        AppliedDate:currentDate,
+        
   
         
       };
@@ -3160,6 +3445,7 @@ import {
                   values,
                   handleSubmit,
                   resetForm,
+                  setFieldValue
                 }) => (
                   <form
                     onSubmit={handleSubmit}
@@ -3335,7 +3621,7 @@ import {
                           focused
                           
                         /> */}
-                        <FormControl
+                        {/* <FormControl
                           sx={{
                             //gridColumn: "span 2",
                             display: "flex",
@@ -3383,7 +3669,58 @@ import {
                             url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"","Any":""}}`}
                           />
   
-                        </FormControl>
+                        </FormControl> */}
+                        {/* <Productautocomplete
+                      name="leavetype"
+                      label="Leave Type"
+                      id="leavetype"
+                      value={values.leavetype}
+                      onChange={async (newValue) => {
+                        setFieldValue("leavetype", newValue);
+                        if (newValue?.RecordID) {
+                          await Balancedayfind(newValue.RecordID);
+                        }
+                      }}
+                      //disabled={mode == "E" && values.Status != "AL" && values.Status != "RC"}
+                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
+                    /> */}
+                    <Productautocomplete
+                                name="leavetype"
+                                label={
+                                  <span>
+                                    Leave Type
+                                    <span
+                                      style={{ color: "red", fontWeight: "bold" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                id="leavetype"
+                                value={selectleaveLookupData}
+                                // value={values.leavetype}
+                                onChange={(newValue) => {
+                                  // setFieldValue("leavetype", newValue);
+                                  console.log(
+                                    selectleaveLookupData,
+                                    "--selectleaveLookupData leavetype"
+                                  );
+  
+                                  console.log(
+                                    newValue.RecordID,
+                                    "leave RecordID"
+                                  );
+  
+                                  setselectleaveLookupData({
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+  
+                                  });
+                                }}
+                                url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
+                              />
                         <FormControl focused variant="standard">
                           <InputLabel variant="standard" id="LeavePart">
                             {
@@ -3485,7 +3822,9 @@ import {
                           value={values.approvedby}
                           label="Approved By"
                           focused
-                          inputProps={{ readOnly: true }}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          //inputProps={{ readOnly: true }}
                           sx={{
                             backgroundColor: "#ffffff", 
                             "& .MuiFilledInput-root": {
@@ -3823,29 +4162,13 @@ import {
                             }}
                           />
                           
-                          {/* <TextField
-                            fullWidth
-                            variant="standard"
-                            type="text"
-                            label="Comments"
-                            value={values.comments}
-                            id="comments"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            name="comments"
-                            error={!!touched.comments && !!errors.comments}
-                            helperText={touched.comments && errors.comments}
-                            focused
-                          /> */}
                           
                           <FormControl
                             focused
                             variant="standard"
                           //sx={{ gridColumn: "span 2" }}
                           >
-                            <InputLabel id="PaymentMethod">
-                              Payment Methods
-                            </InputLabel>
+                            <InputLabel id="PaymentMethod">Payment Method</InputLabel>
                             <Select
                               labelId="demo-simple-select-filled-label"
                               id="PaymentMethod"
@@ -3853,18 +4176,11 @@ import {
                               value={values.PaymentMethod}
                               onBlur={handleBlur}
                               onChange={handleChange}
-                              error={
-                                !!touched.PaymentMethod &&
-                                !!errors.PaymentMethod
-                              }
-                              helperText={
-                                touched.PaymentMethod && errors.PaymentMethod
-                              }
+                              error={!!touched.PaymentMethod && !!errors.PaymentMethod}
+                              helperText={touched.PaymentMethod && errors.PaymentMethod}
                             >
-                              <MenuItem value="AS">Assitis</MenuItem>
-                              <MenuItem value="TH">Time and a Half</MenuItem>
-                              <MenuItem value="DT">Double Time</MenuItem>
-                              <MenuItem value="CS">Compensate</MenuItem>
+                               <MenuItem value="CR">Cash Reimbursement</MenuItem>
+                               <MenuItem value="CH">Compensatory Half</MenuItem>
                             </Select>
                           </FormControl>
                           <FormControl
@@ -3921,9 +4237,9 @@ import {
                     <TextField
                             // disabled={mode == "E" && values.Status != "AL"}
   
-                            name="comment"
-                            type="comment"
-                            id="comment"
+                            name="comments"
+                            type="comments"
+                            id="comments"
                             label="Comments"
                             multiline
                             rows={6}
@@ -3931,11 +4247,11 @@ import {
                             fullWidth
                             focused
                             required
-                            value={values.comment}
+                            value={values.comments}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.comment && !!errors.comment}
-                            helperText={touched.comment && errors.comment}
+                            error={!!touched.comments && !!errors.comments}
+                            helperText={touched.comments && errors.comments}
                             sx={{ gridColumn: "span 2" }}
                           />
                           {/* {mode == "M" && ( */}
@@ -5146,8 +5462,8 @@ import {
                               minHeight: dataGridHeaderFooterHeight,
                             },
                           }}
-                          rows={[]}
-                          columns={[]}
+                           rows={explorelistViewData}
+                          columns={columns}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
                           rowHeight={dataGridRowHeight}
@@ -5238,7 +5554,7 @@ import {
                                 alignItems: "center",
                               }}
                             >
-                              <Productautocomplete
+                              {/* <Productautocomplete
                                 variant="outlined"
                                 name="overhead"
                                 label="OverHead"
@@ -5251,6 +5567,43 @@ import {
                                 // defaultValue={selectedFunctionName}
                                 url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
   
+                              /> */}
+                               <Productautocomplete
+                                name="overhead"
+                                label={
+                                  <span>
+                                    Over Head
+                                    <span
+                                      style={{ color: "red", fontWeight: "bold" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
+                                variant="outlined"
+                                id="overhead"
+                                value={expenseOHData}
+                                // value={values.overhead}
+                                onChange={(newValue) => {
+                                  // setFieldValue("overhead", newValue);
+                                  console.log(
+                                    expenseOHData,
+                                    "--selectOHLookupData overhead"
+                                  );
+  
+                                  console.log(
+                                    newValue.RecordID,
+                                    "overhead RecordID"
+                                  );
+  
+                                  setExpenseOHData({
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
+  
+                                  });
+                                }}
+                                url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                               />
                             </FormControl>
                           </FormControl>
@@ -5333,9 +5686,9 @@ import {
                           fullWidth
                           variant="standard"
                           type="text"
-                          id="approvedby"
-                          name="approvedby"
-                          value={values.approvedby}
+                          id="Eapprovedby"
+                          name="Eapprovedby"
+                          value={values.Eapprovedby}
                           label="Approved By"
                           focused
                           inputProps={{ readOnly: true }}
@@ -5385,7 +5738,7 @@ import {
                           </TextField>
                         </FormControl>
   
-                        <Box display="flex" padding={1} justifyContent="end"  gap={formGap}>
+                        {/* <Box display="flex" padding={1} justifyContent="end"  gap={formGap}>
                     <IconButton
                       size="small"
                       color="warning"
@@ -5461,7 +5814,85 @@ import {
                     >
                       CANCEL
                     </Button>
-                  </Box>
+                  </Box> */}
+                   <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
+                          {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
+                          <IconButton
+                      size="small"
+                      color="warning"
+                      aria-label="upload picture"
+                      component="label"
+                    >
+                      <input
+                        hidden
+                        accept="all/*"
+                        type="file"
+                        onChange={getExpenseFileChange}
+                      />
+                      <PictureAsPdfOutlinedIcon />
+                    </IconButton>
+                    <Button
+                      variant="contained"
+                      component={"a"}
+                      onClick={() => {
+                        Data.Attachment || ImageName
+                          ? window.open(
+                              ImageName
+                                ? store.getState().globalurl.attachmentUrl +
+                                    ImageName
+                                : store.getState().globalurl.attachmentUrl +
+                                    Data.Attachment,
+                              "_blank"
+                            )
+                          : toast.error("Please Upload File");
+                      }}
+                    >
+                      View
+                    </Button>
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+  
+                          >
+                            Save
+                          </LoadingButton>
+                        
+                          {/* <Button
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              Swal.fire({
+                                title: `Do you want Delete?`,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  expensefnSave(values, resetForm, "harddelete");
+                                  // navigate(-1);
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button> */}
+                          <Button
+                            type="reset"
+                            color="warning"
+                            variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Box>
                       </FormControl>
                     </Box>
   
@@ -5477,11 +5908,7 @@ import {
               <Formik
                 initialValues={RegInitialValue}
                 enableReinitialize={true}
-                onSubmit={(values, { resetForm }) => {
-                  setTimeout(() => {
-                    RegFNsave(values, resetForm, false);
-                  }, 100);
-                }}
+                onSubmit={(values, { resetForm }) => RegFNsave(values, resetForm, false)}
               >
                 {({
                   errors,
@@ -5492,6 +5919,7 @@ import {
                   values,
                   handleSubmit,
                   resetForm,
+                  setFieldValue
                 }) => (
                   <form
                     onSubmit={handleSubmit}
@@ -5657,7 +6085,7 @@ import {
                       name="MonthDate"
                       type="date"
                       id="MonthDate"
-                      label="Date"
+                      label="Regularization Date"
                       variant="standard"
                       focused
                       inputFormat="YYYY-MM-DD"
@@ -5679,7 +6107,20 @@ import {
                       inputFormat="YYYY-MM-DD"
                       value={values.CheckInDate}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      //onChange={handleChange}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          dispatch(
+                            RegGetData({
+                              data: {
+                                EmployeeID: recID,
+                                CheckInDate: e.target.value,
+                              },
+                            })
+                          );
+                        }
+                        setFieldValue("CheckInDate", e.target.value);
+                      }}
                       error={!!touched.CheckInDate && !!errors.CheckInDate}
                       helperText={touched.CheckInDate && errors.CheckInDate}
                      //sx={{ gridColumn: "span 2" }}
@@ -5693,12 +6134,12 @@ import {
                         inputFormat="HH:mm"
                       // inputFormat="HH:mm:aa"
                       variant="standard"
-                      //value={values.EmplyeeCheckInDateTime}
-                      value={
-                        values.EmplyeeCheckInDateTime
-                          ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
-                          : ""
-                      }
+                      value={values.EmplyeeCheckInDateTime}
+                      // value={
+                      //   values.EmplyeeCheckInDateTime
+                      //     ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
+                      //     : ""
+                      // }
                       onBlur={handleBlur}
                       onChange={handleChange}
                       focused
@@ -5727,12 +6168,12 @@ import {
                       id="EmplyeeCheckOutDateTime"
                       label="Check Out Time"
                       inputFormat="HH:mm:aa"
-                      //value={values.EmplyeeCheckOutDateTime}
-                      value={
-                        values.EmplyeeCheckOutDateTime
-                          ? values.EmplyeeCheckOutDateTime.split(" / ")[1] // gets "09:02"
-                          : ""
-                      }
+                      value={values.EmplyeeCheckOutDateTime}
+                      // value={
+                      //   values.EmplyeeCheckOutDateTime
+                      //     ? values.EmplyeeCheckOutDateTime.split(" / ")[1] // gets "09:02"
+                      //     : ""
+                      // }
                       onBlur={handleBlur}
                       onChange={handleChange}
                       focused
@@ -5810,7 +6251,30 @@ import {
                       </Select>
                     </FormControl>
                     
-                         
+                    <TextField
+                            select
+                            label="Applied Status"
+                            id="appliedStatus"
+                            name="appliedStatus"
+                            value={values.appliedStatus}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            required
+                            focused
+                            variant="standard"
+                          >
+                            {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
+                            <MenuItem disabled={mode != "M"} value="AP">
+                              Approved
+                            </MenuItem>
+                            <MenuItem disabled={mode != "M"} value="RJ">
+                              Rejected
+                            </MenuItem> */}
+                            <MenuItem value="AL">Applied</MenuItem>
+                            <MenuItem value="RJ">Rejected</MenuItem>
+                            <MenuItem value="AP">Approved</MenuItem>
+                            <MenuItem value="RC">Reconsider</MenuItem>
+                          </TextField>    
                     <TextField
                       fullWidth
                      variant="standard"
@@ -5855,7 +6319,7 @@ import {
                         </Button>
                       )}
                       {YearFlag == "true" ? ( */}
-                      <Button
+                      {/* <Button
                         color="error"
                         variant="contained"
                         onClick={() => {
@@ -5876,7 +6340,7 @@ import {
                         }}
                       >
                         Delete
-                      </Button>
+                      </Button> */}
                       {/* ) : (
                         <Button color="error" variant="contained" disabled={true}>
                           Delete
