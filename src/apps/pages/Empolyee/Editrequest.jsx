@@ -1508,6 +1508,7 @@ import {
         CheckInTime: funMode === "A" ? RegData.CheckInTime :  regdata.EmplyeeCheckInDateTime,
         CheckOutTime: funMode === "A" ? RegData.CheckOutTime :  regdata.EmplyeeCheckOutDateTime, 
         Status:funMode === "A" ? RegData.Status : regdata.Status,
+        //Status:values.Status,
         // CheckInDate:formatDate(regdata.CheckInDate),
         // CheckOutDate: formatDate(regdata.CheckOutDate),  
         // CheckInTime: regdata.EmplyeeCheckInDateTime,
