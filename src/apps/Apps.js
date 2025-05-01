@@ -120,9 +120,10 @@ import Configuration from "./Security/Configuration";
 import Changepass from "./Security/Changepassword";
 import Editrequests from "./pages/Empolyee/Editrequest";
 import Editapprovals from "./pages/Empolyee/EditApproval";
-
-
-
+import EditAttendance from "./pages/Empolyee/EditAttendance";
+import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
+import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
+import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
 
 
 function App() {

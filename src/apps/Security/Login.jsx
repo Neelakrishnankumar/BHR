@@ -142,6 +142,7 @@ const Login = () => {
        var year = data.payload.apiResponse.Year
        var YearFlag = data.payload.apiResponse.YearFlag
        var compID = data.payload.apiResponse.CompanyRecordid
+       var empID = data.payload.apiResponse.Recordid
        var stockflag= data.payload.apiResponse.Process
        var Cifbysea=data.payload.apiResponse.Cifbysea
        var Cifbyair=data.payload.apiResponse.Cifbyair
@@ -172,6 +173,7 @@ const Login = () => {
        sessionStorage.setItem("year", year);
        sessionStorage.setItem("YearFlag", YearFlag);
        sessionStorage.setItem("compID", compID);
+       sessionStorage.setItem("empID", empID);
        sessionStorage.setItem("stockflag", stockflag);
        sessionStorage.setItem("currentPage", 0);
        sessionStorage.setItem("secondaryCurrentPage", 0);

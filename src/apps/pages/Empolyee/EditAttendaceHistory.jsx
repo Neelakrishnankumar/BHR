@@ -93,9 +93,9 @@ const EditAttendanceHistory = () => {
   const [pageSize, setPageSize] = useState(10);
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
-  const EMPID = sessionStorage.getItem("EmpId");
-
-  const companyID=sessionStorage.getItem("companyId")
+  const EMPID = sessionStorage.getItem("empID");
+console.log(EMPID,'-------------djkvbwld')
+  const companyID=sessionStorage.getItem("compID")
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
@@ -225,6 +225,7 @@ const EditAttendanceHistory = () => {
       Month: values.month.toString(),
       Year: values.year,
       ManagerID:EMPID,
+       Etype:"H"
     };
 
     dispatch(empAttendance({ data }));
@@ -437,7 +438,7 @@ const EditAttendanceHistory = () => {
                         width:200
                       }}
                     />
-                  <Employeeautocomplete
+                  {/* <Employeeautocomplete
                                          sx={{ width: 400 }}
                                          name="Employee"
                                          label="Employee"
@@ -447,7 +448,7 @@ const EditAttendanceHistory = () => {
                                          // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EmpId}","Any":"","CompId":${companyID}}}`}
                                          url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
                  
-                                      />
+                                      /> */}
                   </Stack>
                   <Stack direction="row" spacing={2} display="flex" padding={1} justifyContent="end">
                       
