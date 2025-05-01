@@ -1732,7 +1732,7 @@ console.log(Expiryin, "--in a sideBar Expiryin");
   </Paper>
 ) : null}
 
-  <Grid item>
+  {/* <Grid item>
     <Chip
       color="primary"
       variant="outlined"
@@ -1767,7 +1767,7 @@ console.log(Expiryin, "--in a sideBar Expiryin");
       sx={{ width: "100%", background: "#DFDDDD" }}
       label="Read Only"
     />
-  </Grid>
+  </Grid> */}
 </Grid>
 
          
