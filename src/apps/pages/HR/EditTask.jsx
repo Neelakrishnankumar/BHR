@@ -150,8 +150,7 @@ const Edittask = () => {
 
     const handleSaveButtonClick = async (action) => {
 
-        console.log("---Saving rows:", rows);
-        console.log(funMode, "--finding action");
+
        
         const idata = rows.map((row, index) => {
             var formatted = null;
@@ -175,11 +174,7 @@ const Edittask = () => {
                 // RoleName: row.RoleName,
                 Effort: row.TaskDetailEffort,
                 Unit: row.TaskDetailUnit,
-                TargetDate: formatted,
-    //              TargetDate: row.TaskDetailTargetDate
-    // ? new Date(row.TaskDetailTargetDate).toISOString().split('T')[0]
-    // : null,
-                // TargetDate:  new Date(row.TaskDetailTargetDate).toISOString().split('T')[0],
+                ProjectPlanedDate: formatted,
                 CompanyID,
 
             };
@@ -549,7 +544,7 @@ const Edittask = () => {
                             value={selectedRoleOptions}
                             onChange={(newValue) => handleRoleChange(newValue, params.row.RecordID)}
                             defaultValue={params.row.Role}
-                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2097","ScreenName":"Role","Filter":"","Any":""}}`}
+                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Role","Filter":"parentID=${CompanyID}","Any":""}}`}
                         />
                     );
                 }

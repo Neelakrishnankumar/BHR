@@ -645,7 +645,7 @@ console.log(selectedScheduledToOptions, "--selectedScheduledToOptions");
     },
     {
       headerName: "Task",
-      field: "Task",
+      field: "Description",
       width: "100",
       align: "left",
       headerAlign: "center",
@@ -778,56 +778,18 @@ console.log(selectedScheduledToOptions, "--selectedScheduledToOptions");
                 handleScheduledToChange(newValue, params.row.RecordID)
               }
               defaultValue={params.row.ScheduledTo}
-              url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Scheduled To","Filter":"ERank='${params.row.Rank}'","Any":""}}`}
+              url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2106","ScreenName":"Scheduled To","Filter":"ERank='${params.row.Rank}'","Any":""}}`}
             />
           );
         }
         return params.value || "";
       },
     },
-
-    // {
-    //   // headerName: (
-    //   //   <span>
-    //   //     Scheduled To <span style={{ color: "red" }}>*</span>
-    //   //   </span>
-    //   // ),
-    //   headerName: "Scheduled To",
-    //   field: "ScheduledTo",
-    //   width: 150,
-    //   headerAlign: "center",
-    //   hide: false,
-    //   editable: false,
-    //   sortable: false,
-    //   //   renderEditCell: (params) => {
-    //   //     const isInEditMode =
-    //   //       rowModesModel[params.id]?.mode === GridRowModes.Edit;
-
-    //   //     if (isInEditMode) {
-    //   //       return (
-    //   //         <Productautocomplete
-    //   //           name="Role"
-    //   //           label="Role"
-    //   //           id="Role"
-    //   //           value={selectedRoleOptions}
-    //   //           onChange={(newValue) =>
-    //   //             handleRoleChange(newValue, params.row.RecordID)
-    //   //           }
-    //   //           defaultValue={params.row.Role}
-    //   //           url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2097","ScreenName":"Role","Filter":"","Any":""}}`}
-    //   //         />
-    //   //       );
-    //   //     }
-    //   //     return params.value || "";
-    //   //   },
-    // },
     {
       headerName: "Completed Date",
       field: "CompletedDate",
       type: "date",
       width: "220",
-      // align: "left",
-      // headerAlign: "center",
       hide: false,
       editable: false,
     },
@@ -874,12 +836,6 @@ console.log(selectedScheduledToOptions, "--selectedScheduledToOptions");
         }
 
         return [
-          // <GridActionsCellItem
-          //   icon={<AddIcon style={{ color: "#00563B" }} />}
-          //   label="Add"
-          //   // onClick={() => handleInsertInrow(params.id)}
-          //   color="inherit"
-          // />,
           <GridActionsCellItem
             icon={<EditIcon style={{ color: "#3498db" }} />}
             label="Edit"
@@ -901,41 +857,6 @@ console.log(selectedScheduledToOptions, "--selectedScheduledToOptions");
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        {/* <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-            >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate("/Apps/TR133/Project");
-                }}
-              >
-                Project
-              </Typography>
-
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => navigate(-1)}
-              >
-                Milestone
-              </Typography>
-            </Breadcrumbs>
-          </Box>
-        </Box> */}
-
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -991,10 +912,8 @@ console.log(selectedScheduledToOptions, "--selectedScheduledToOptions");
           onSubmit={(values, setSubmitting) => {
             setTimeout(() => {
               handleApply(values);
-              // setSubmitting(false);
             }, 100);
           }}
-          //  validationSchema={ DesignationSchema}
           enableReinitialize={true}
         >
           {({
@@ -1215,7 +1134,7 @@ console.log(selectedScheduledToOptions, "--selectedScheduledToOptions");
                       loading={sprintPPgetloading}
                       rowModesModel={rowModesModel}
                       getRowId={(row) => row.RecordID}
-                      editMode="row"
+                      editMode="cell"
                       disableRowSelectionOnClick
                       rowHeight={dataGridRowHeight}
                       headerHeight={dataGridHeaderFooterHeight}
