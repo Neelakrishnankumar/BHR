@@ -131,7 +131,7 @@ const Login = () => {
     // };
     // const data = await dispatch(authentication({ idata }));
     console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
-    var loginrecordID = data.payload.apiResponse.Recordid
+    
     //  var UserName = data.payload.apiResponse.Name
     
       sessionStorage.setItem("loginRecid", loginrecordID);
@@ -142,6 +142,7 @@ const Login = () => {
        var year = data.payload.apiResponse.Year
        var YearFlag = data.payload.apiResponse.YearFlag
        var compID = data.payload.apiResponse.CompanyRecordid
+       var empID = data.payload.apiResponse.Recordid
        var stockflag= data.payload.apiResponse.Process
        var Cifbysea=data.payload.apiResponse.Cifbysea
        var Cifbyair=data.payload.apiResponse.Cifbyair
@@ -151,6 +152,7 @@ const Login = () => {
        var YearRecorid=data.payload.apiResponse.YearRecorid
        var Groupaccess=data.payload.apiResponse.Groupaccess
        var UserName=data.payload.apiResponse.Name
+       var loginrecordID = data.payload.apiResponse.Recordid
       
        console.log(SubscriptionCode,"SubscriptionCode");
 
@@ -167,11 +169,13 @@ const Login = () => {
        sessionStorage.setItem("Expiryin",Expiryin);
        sessionStorage.setItem("SubscriptionCode",SubscriptionCode);
        sessionStorage.setItem("UserName",UserName);
+       sessionStorage.setItem("loginrecordID",loginrecordID);
        sessionStorage.setItem("SubscriptionCode",SubscriptionCode);      
        sessionStorage.setItem("company", company);
        sessionStorage.setItem("year", year);
        sessionStorage.setItem("YearFlag", YearFlag);
        sessionStorage.setItem("compID", compID);
+       sessionStorage.setItem("empID", empID);
        sessionStorage.setItem("stockflag", stockflag);
        sessionStorage.setItem("currentPage", 0);
        sessionStorage.setItem("secondaryCurrentPage", 0);

@@ -121,9 +121,10 @@ import Changepass from "./Security/Changepassword";
 import Editrequests from "./pages/Empolyee/Editrequest";
 import Editapprovals from "./pages/Empolyee/EditApproval";
 import EditSprint from "./pages/HR/EditSprint";
-
-
-
+import EditAttendance from "./pages/Empolyee/EditAttendance";
+import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
+import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
+import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
 
 
 function App() {
@@ -616,6 +617,22 @@ function App() {
                    path="/:accessID/:screenName/EditParty/:id/:Mode"
                     element={<Editvendor />}
                   />
+
+<Route
+                    path="/:accessID/EditAttendance"
+                    element={<EditAttendance />}
+                  />
+                    <Route
+                    path="/:accessID/EditAttendanceHistory"
+                    element={<EditAttendanceHistory />}
+                  />
+                    <Route
+                    path="/:accessID/EditTimeSheet"
+                    element={<EditTimeSheet />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditTimeDailytask/:id"
+                    element={<EditTimeDailytask />} />
 
                   {/* Sprint */}
 

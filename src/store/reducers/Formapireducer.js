@@ -56,10 +56,13 @@ purchaseorderratingData:[],
 searchLoading:false,
 empAttendanceData:{},
 AttendanceData:{},
+RegGetData:{},
+timeSheetData:{},
 sprintget: {},
 sprintPPget: [],
 sprintgetstatus: "",
 sprintloading:false
+
 };
 
 export const subScriptionCheck = createAsyncThunk(
@@ -83,28 +86,28 @@ export const subScriptionCheck = createAsyncThunk(
     return response.data;
   }
 );
-export const empAttendance = createAsyncThunk(
-  "employee/Payrollattendance",
-  async ({ data }) => {
+// export const empAttendance = createAsyncThunk(
+//   "employee/Payrollattendance",
+//   async ({ data }) => {
     
-    var url = store.getState().globalurl.payrollattendanceUrl;
-    // var url = store.getState().globalurl.employeeattendanceUrl;
+//     var url = store.getState().globalurl.payrollattendanceUrl;
+//     // var url = store.getState().globalurl.employeeattendanceUrl;
    
-    console.log("get" + JSON.stringify(data));
-    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
-  }
-);
+//     console.log("get" + JSON.stringify(data));
+//     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+//     const response = await axios.post(url, data, {
+//       headers: {
+//         Authorization:
+//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//       },
+//     });
+//     console.log(
+//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+//       response
+//     );
+//     return response.data;
+//   }
+// );
 export const CustomerpriceorderQty= createAsyncThunk(
   "products/Customerprice",
   async ({ data }) => {
@@ -677,7 +680,51 @@ export const invoiceExploreGetData = createAsyncThunk(
     return response.data;
   }
 );
+export const RegGetData = createAsyncThunk(
+  "RegGetData/getdata",
+  async ({ data }, thunkAPI) => {
+    try {
+      var url = store.getState().globalurl.regGetUrl;
+      console.log("get" + JSON.stringify(data));
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+      console.log("🚀 ~ response.data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const getLeaveentryData = createAsyncThunk(
+  "Leave Entry/get",
+  async ({ EmployeeID, LeaveTypeID }) => {  
+    const url = store.getState().globalurl.getLeaveentryDataUrl;
+console.log(url, "--find url");
 
+    const data = {
+      EmployeeID: EmployeeID,
+      LeaveTypeID: LeaveTypeID,  
+    };
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+        "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const stockGetData = createAsyncThunk(
   "stock/material",
   async ({ accessID,Type , recID ,yearData}) => {
@@ -1351,6 +1398,7 @@ export const getApiSlice = createSlice({
      state.purchaseorderratingData=[]
      state.empAttendanceData=[];
      state.AttendanceData=[];
+     state.timeSheetData=[];
      state.costingLeatherCost.leatherOneCost = 0
      state.costingLeatherCost.leatherTwoCost = 0
      state.costingLeatherCost.leatherThreeCost = 0
@@ -1431,7 +1479,24 @@ export const getApiSlice = createSlice({
     },
     userGroupUpdate(state, action) {
       state.userGroup = action.payload.rowData;
+
     },
+    resetregularizedata(state, action){
+      state.RegGetData = {"RecordID":"",
+        "EmployeeID":"",
+        "EmployeeName":"",
+        "CheckInDate":"",
+        "CheckOutDate":"",
+        "CheckInType":"",
+        "CheckInTime":"",
+        "CheckOutTime":"",
+        "Status":"",
+        "Remarks":"",
+        "Date":"",
+		"Reason":"",
+		"ManagerComments":"",
+		"AppliedStatus":""};
+    }
   },
   extraReducers(builder) {
     builder
@@ -1879,6 +1944,23 @@ export const getApiSlice = createSlice({
             state.AttendanceData = action.payload.Data;
             
           })
+          .addCase(RegGetData.pending, (state, action) => {
+            state.RegGetData = {};
+            state.getLoading = true;
+          })
+          .addCase(RegGetData.fulfilled, (state, action) => {
+            state.RegGetData = action.payload.Data;
+            state.getLoading = false;
+          })
+          .addCase(RegGetData.rejected, (state, action) => {
+            state.RegGetData = {};
+            state.getLoading = false;
+          })
+          .addCase(timeSheet.fulfilled, (state, action) => {
+
+            state.timeSheetData = action.payload.Data;
+            
+          })
   },
 });
 
@@ -1886,6 +1968,7 @@ export const getApiSlice = createSlice({
 export const {
   pending,
   errored,
+  resetregularizedata,
   userGroupUpdate,
   Success,
   stockSuccess,
@@ -2881,3 +2964,64 @@ export function stockRequirementFetchapiData(name) {
     }
   };
 }
+export const timeSheetPostData = createAsyncThunk(
+  "timeSheetPostData/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.timesheetdtUrl;
+    const response = await axios.post(url,idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const empAttendance = createAsyncThunk(
+  "employee/Payrollattendance",
+  async ({ data }) => {
+    
+    var url = store.getState().globalurl.payrollattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+   
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const timeSheet = createAsyncThunk(
+  "timeSheet/timeSheetattendance",
+  async ({ data }) => {
+    
+    var url = store.getState().globalurl.timesheetattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+   
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
