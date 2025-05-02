@@ -120,6 +120,7 @@ import Configuration from "./Security/Configuration";
 import Changepass from "./Security/Changepassword";
 import Editrequests from "./pages/Empolyee/Editrequest";
 import Editapprovals from "./pages/Empolyee/EditApproval";
+import EditSprint from "./pages/HR/EditSprint";
 
 
 
@@ -614,6 +615,13 @@ function App() {
                   <Route
                    path="/:accessID/:screenName/EditParty/:id/:Mode"
                     element={<Editvendor />}
+                  />
+
+                  {/* Sprint */}
+
+                  <Route
+                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditSprint/:id/:Mode"
+                    element={<EditSprint />}
                   />
                    {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"

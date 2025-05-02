@@ -145,28 +145,45 @@ const Edittask = () => {
         }
 
     };
+
+  
+
     const handleSaveButtonClick = async (action) => {
 
         console.log("---Saving rows:", rows);
         console.log(funMode, "--finding action");
-        ;
-
-
-
-
+       
         const idata = rows.map((row, index) => {
+            var formatted = null;
+            if(row.ProjectPlanedDate && !isNaN(new Date(row.ProjectPlanedDate))){
+                //format Date
+                const date = new Date(row.ProjectPlanedDate);
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed
+                const dd = String(date.getDate()).padStart(2, "0");
+              
+               formatted = `${yyyy}-${mm}-${dd}`;
+                console.log(formatted); // Output: 2025-04-30
+            }
 
+       
 
-            return {
+        return {
                 RecordID: row.RecordID,
                 TaskID: recID,
                 RoleID: row.TaskDetailRoleID,
                 // RoleName: row.RoleName,
                 Effort: row.TaskDetailEffort,
                 Unit: row.TaskDetailUnit,
+                TargetDate: formatted,
+    //              TargetDate: row.TaskDetailTargetDate
+    // ? new Date(row.TaskDetailTargetDate).toISOString().split('T')[0]
+    // : null,
+                // TargetDate:  new Date(row.TaskDetailTargetDate).toISOString().split('T')[0],
                 CompanyID,
 
             };
+
         });
 
 
@@ -236,6 +253,7 @@ const Edittask = () => {
                 RoleName: "",
                 TaskDetailEffort: 0,
                 TaskDetailUnit: "",
+                ProjectPlanedDate: "",
                 isNew: true,
 
             };
@@ -276,6 +294,7 @@ const Edittask = () => {
                 RoleName: "",
                 TaskDetailEffort: 0,
                 TaskDetailUnit: "",
+                ProjectPlanedDate: "",
                 isNew: true,
             };
 
@@ -502,7 +521,8 @@ const Edittask = () => {
             width: "100",
             align: "left",
             headerAlign: "center",
-            hide: true
+            hide: true,
+            editable: true,
         },
 
         {
@@ -540,7 +560,7 @@ const Edittask = () => {
         {
             field: "TaskDetailUnit",
             headerName: "Unit",
-            width: 300,
+            width: 200,
             align: "left",
             headerAlign: "center",
             editable: true,
@@ -565,7 +585,14 @@ const Edittask = () => {
                 return params.value || "";
             },
         },
-
+        {
+            // field: 'TaskDetailTargetDate',
+            field: 'ProjectPlanedDate',
+            headerName: 'Project Plan date',
+            type: 'date',
+            width: 180,
+            editable: true,
+          },
 
         {
             field: "actions",
@@ -623,7 +650,7 @@ const Edittask = () => {
                 ];
             }
 
-        },
+        },Productautocomplete
     ];
 
     function EditToolbar() {

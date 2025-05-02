@@ -268,7 +268,9 @@ settingsgetUrl: "https://hr.beyondexs.com/api/HRSubscriptionCodeGetController.ph
 settingsPostUrl: "https://hr.beyondexs.com/api/HRChangePasswordController.php?",
 geolocationgetUrl: "https://ess.beyondexs.com/api/EmpGeoLocationGet.php",
 geolocationupdateUrl: "https://ess.beyondexs.com/api/EmpGeoLocationUpdate.php",
-
+//sprintget
+SprintgetUrl: "https://hr.beyondexs.com/api/SprintHeaderandDetailController.php",
+SprintPPGetUrl: "https://hr.beyondexs.com/api/SprintProjectPlanGetController.php",
   };
 
 export const getUrlSlice = createSlice({

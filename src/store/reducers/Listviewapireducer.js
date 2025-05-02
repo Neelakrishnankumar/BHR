@@ -542,6 +542,7 @@ export const fetchListview =
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
+        AccessID != "TR262" &&
          AccessID != "TR022"  
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -567,7 +568,10 @@ export const fetchListview =
         // filter = filter;
         filter = `CompanyID=${CompId}`;
       }
+     if(AccessID === "TR262"){
+      filter = "ProjectID=" + `'${filter}'`;
      
+     }
       // if (
       //   AccessID === "TR133" ||
       //   AccessID === "TR233" ||
@@ -2270,6 +2274,23 @@ export const fetchListview =
                     ) : (
                       false
                     )}
+   {AccessID == "TR133" ? (
+                      <Link
+                      to={`/Apps/Secondarylistview/TR262/Sprint/${params.row.RecordID}`}
+                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,projectName:params.row.Name}}
+                      >
+                        <Tooltip title="Sprint">
+                          <IconButton color="info" size="small">
+                            < ListAltOutlinedIcon />
+                          </IconButton>
+                          
+                         
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )}
+
                       {AccessID == "TR136" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}
@@ -3726,19 +3747,24 @@ export const fetchListview =
                 return (
                   <Stack direction="row">
                       <Link>
-                        <Tooltip title="Contracts In">
-                          <IconButton color="info">
-                            <RedoIcon />
-                          </IconButton>
-                        </Tooltip>
+                      {params.row.EmpType === "Contracts In" && (
+  <Tooltip title="Contracts In">
+    <IconButton color="info">
+      <RedoIcon />
+    </IconButton>
+  </Tooltip>
+)}
+
                       </Link>
                  
                       <Link>
+                      {params.row.EmpType === "Contracts Out" && (
                         <Tooltip title="Contracts Out">
                           <IconButton color="info">
                             <UndoIcon />
                           </IconButton>
                         </Tooltip>
+                        )}
                       </Link>
                       <Link>
                         <Tooltip title="Employee">

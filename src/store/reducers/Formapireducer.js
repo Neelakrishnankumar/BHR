@@ -56,6 +56,10 @@ purchaseorderratingData:[],
 searchLoading:false,
 empAttendanceData:{},
 AttendanceData:{},
+sprintget: {},
+sprintPPget: [],
+sprintgetstatus: "",
+sprintloading:false
 };
 
 export const subScriptionCheck = createAsyncThunk(
@@ -813,7 +817,58 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   }
 );
+//Sprint Get
+export const sprintGetData = createAsyncThunk(
+  "Project/Sprint",
+  async ({ SprintHeaderID }) => {
+    var url = store.getState().globalurl.SprintgetUrl;
+    const data = {
+      SprintHeaderID: SprintHeaderID,
+  
+         };
+    
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//Sprint Project Plan Get
+export const sprintprojectplanGetData = createAsyncThunk(
+  "Project Plan get/Sprint",
+  async ({ ActivitiesID,FromDate,ToDate }) => {
+    var url = store.getState().globalurl.SprintPPGetUrl;
+    const data = {
+      ActivitiesID: ActivitiesID,
+      FromDate: FromDate,
+      ToDate: ToDate
+         };
+    
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 
 /* settings Get*/
 export const getSettingsData = createAsyncThunk(
@@ -1468,7 +1523,50 @@ export const getApiSlice = createSlice({
        toast.error('Something Went Wrong')
       })
 
+//SprintGet
+.addCase(sprintGetData.pending, (state, action) => {
+  state.sprintgetstatus = "idle";
+  // state.sprintloading = true;
+  state.sprintget = {};
+  // state.msg =  "Loading..."
+})
+.addCase(sprintGetData.fulfilled, (state, action) => {
+  state.sprintgetstatus = "success";
+  // state.sprintloading = false;
+  state.sprintget = action.payload.Data ? action.payload.Data.headerData : {} ;
+  state.sprintPPget =  action.payload.Data.detailData;
+  // state.msg =  action.payload.Msg
+  console.log(state.sprintPPget, "--sprintGetData state.sprintPPget");
 
+})
+
+.addCase(sprintGetData.rejected, (state, action) => {
+  state.sprintgetstatus = "Error";
+  // state.sprintloading = false;
+  state.sprintget = [];
+//  toast.error('Something Went Wrong')
+})
+//Sprint PP GET 
+.addCase(sprintprojectplanGetData.pending, (state, action) => {
+  // state.sprintgetstatus = "idle";
+  state.sprintloading = true;
+  state.sprintPPget = [];
+  // state.msg =  "Loading..."
+})
+.addCase(sprintprojectplanGetData.fulfilled, (state, action) => {
+  // state.sprintgetstatus = "success";
+  state.sprintloading = false;
+  state.sprintPPget = action.payload.Data ? action.payload.Data : [] ;
+  // state.msg =  action.payload.Msg
+  console.log(state.sprintPPget, "--sprintprojectplanGetData state.sprintPPget");
+  
+})
+.addCase(sprintprojectplanGetData.rejected, (state, action) => {
+  // state.sprintgetstatus = "Error";
+  state.sprintloading = false;
+  state.sprintPPget = [];
+//  toast.error('Something Went Wrong')
+})
       
       .addCase(getSettingsData.pending, (state, action) => {
         state.Status = "idle";
