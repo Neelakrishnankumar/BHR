@@ -59,6 +59,9 @@ const EditSprint = () => {
   const sprintPPgetloading = useSelector((state) => state.formApi.sprintloading);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+  const CompanyID = sessionStorage.getItem("compID");
+  console.log("🚀 ~ EditSprint ~ CompanyID:", CompanyID)
+
   const location = useLocation();
   const state = location.state || {};
   const [pageSize, setPageSize] = React.useState(10);
@@ -178,6 +181,7 @@ const EditSprint = () => {
   };
 
   const handleSaveButtonClick = async (values, action) => {
+    console.log("🚀 ~ Details:rows.map ~ rows:", rows)
     const idata = {
       RecordID: recID,
       Code: values.code,
@@ -197,12 +201,12 @@ const EditSprint = () => {
       ProjectID: params.filtertype,
       LoginUser: 0,
       Details: rows.map((row, index) => ({
-          RecordID: row.RecordID || "",
-          Task: row.Task || "",
-          RoleID: row.RoleID || "",
-          Effort: row.Effort || "",
-          ProjectPlanDate: row.ProjectPlanDate || "",
-          ScheduledDate: row.ScheduledDate.substring(0, 10) || "",
+        RecordID: row.RecordID || "",
+        Task: row.Task || "",
+        RoleID: row.RoleID || "",
+        Effort: row.Effort || "",
+        ProjectPlanDate: row.ProjectPlanDate || "",
+          ScheduledDate: row.ScheduledDate.toString().substring(0, 10) || "",
           CompletedDate: row.CompletedDate || "",
           ScheduledTo: row.ScheduledTo?.RecordID || "0",
           Status: row.Status || "SH",
@@ -210,6 +214,8 @@ const EditSprint = () => {
         })) || [],
   
     };
+
+
 
     try {
       const response = await dispatch(
@@ -336,7 +342,27 @@ const EditSprint = () => {
         id="ScheduledTo"
         value={Employee}
         onChange={handleChange}
-        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2106","ScreenName":"Scheduled To","Filter":"ERank='${row.Rank}'","Any":""}}`}
+        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2106","ScreenName":"Scheduled To","Filter":"ERank='${row.Rank}' AND ComID='${CompanyID}'","Any":""}}`}
+      />
+    );
+  }
+
+  function EditDateCell(props) {
+    const { id, field, value, api } = props;
+
+    const handleChange = (event) => {
+      const newValue = event.target.value;
+      api.setEditCellValue({ id, field, value: newValue });
+    };
+
+    return (
+      <TextField
+        type="date"
+        fullWidth
+        size="small"
+        value={value ? new Date(value).toISOString().split("T")[0] : ""}
+        onChange={handleChange}
+        InputLabelProps={{ shrink: true }}
       />
     );
   }
@@ -383,10 +409,16 @@ const EditSprint = () => {
     {
       headerName: "Scheduled Date",
       field: "ScheduledDate",
-      type: "date",
       width: "100",
       hide: false,
       editable: true,
+      renderEditCell: (params) => {
+
+
+        return <EditDateCell {...params} />;
+
+    },
+
     },
     {
       field: "ScheduledTo",
