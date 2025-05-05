@@ -3,21 +3,14 @@ import {
   Box,
   useTheme,
   Typography,
-  FormControl,
-  FormLabel,
   Button,
   IconButton,
-  FormControlLabel,
   Tooltip,
-  Checkbox,
   Breadcrumbs,
   LinearProgress,
   Paper,
 } from "@mui/material";
 import dayjs from "dayjs";
-
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -27,17 +20,11 @@ import {
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import { Field, Formik } from "formik";
-import { CheckBox } from "@mui/icons-material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {
-  fetchApidata,
-  getFetchData,
-  postApidata,
   postData,
   sprintGetData,
   sprintprojectplanGetData,
@@ -51,82 +38,59 @@ import { tokens } from "../../../Theme";
 import {
   DataGrid,
   GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarExport,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
   GridActionsCellItem,
   GridRowModes,
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Productautocomplete, SprintEmpAutocomplete } from "../../../ui-components/global/Autocomplete";
-// import CryptoJS from "crypto-js";
+import { Formik } from "formik";
 const EditSprint = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
-  console.log("🚀 ~ EditSprint ~ params:", params);
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
-  var accessID = params.accessID;
-  const projectid = params.filtertype;
-  const data = useSelector((state) => state.formApi.Data) || {};
-  const Status = useSelector((state) => state.formApi.Status);
-  const Msg = useSelector((state) => state.formApi.msg);
-  const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
-
   const SprintGEtdata = useSelector((state) => state.formApi.sprintget) || {};
-
-  const sprintPPgetloading = useSelector(
-    (state) => state.formApi.sprintloading
-  );
-  const explorelistViewData = useSelector((state) => state.formApi.sprintPPget) || [];
-
-
+  const sprintPPgetloading = useSelector((state) => state.formApi.sprintloading);
   const YearFlag = sessionStorage.getItem("YearFlag");
-  const Year = sessionStorage.getItem("year");
-  const Finyear = sessionStorage.getItem("YearRecorid");
-  const CompanyID = sessionStorage.getItem("compID");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const state = location.state || {};
   const [pageSize, setPageSize] = React.useState(10);
+  console.log("🚀 ~ EditSprint ~ state:", state)
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   useEffect(() => {
     GetSprintData()
-    // dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
-
 
   async function GetSprintData  (){
     const data = await dispatch(sprintGetData({ SprintHeaderID: recID }));
     if (
       data.payload.Status == "Y"
       ) {
-      setRows(data.payload.Data.detailData);
+      const resData = data.payload.Data.detailData.map((value) =>{
+        return{
+          ...value,
+          ScheduledTo:{RecordID:value.ScheduledTo,Name:value.EmployeeName}
+        }
+      })
+      setRows(resData);
     } else {
       setRows([]); // Ensures rows don't break if explorelistViewData is undefined or not an array
     }
-    console.log("🚀 ~ useEffect ~ data:", data)
   }
   // *************** INITIALVALUE  *************** //
   const [rowModesModel, setRowModesModel] = useState({});
   const [funMode, setFunMode] = useState(mode);
 
-  const [selectedRoleOptions, setSelectedRoleOptions] = useState(null);
-
-  //Scheduled to
-  const [selectedScheduledToOptions, setSelectedScheduledToOptions] =
-    useState(null);
+  const [selectedRoleOptions, setSelectedRoleOptions] =useState(null);
+  const [selectedScheduledToOptions, setSelectedScheduledToOptions] =useState(null);
 
   const [rows, setRows] = useState([]);
 
@@ -207,25 +171,6 @@ const EditSprint = () => {
     }
   };
 
-  const processRowUpdate = (newRow, oldRow) => {
-    console.log("🚀 ~ processRowUpdate ~ newRow:", newRow)
-    const isNew = !oldRow?.RecordID;
-    const updatedRow = { ...newRow, isNew };
-
-    setRows((prev) => {
-      const index = prev.findIndex(
-        (row) => row.RecordID === updatedRow.RecordID
-      );
-      if (index !== -1) {
-        const newData = [...prev];
-        newData[index] = updatedRow;
-        return newData;
-      }
-      return [...prev, updatedRow];
-    });
-    return updatedRow;
-  };
-
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
     setSelectedRoleOptions(null);
@@ -259,7 +204,7 @@ const EditSprint = () => {
           ProjectPlanDate: row.ProjectPlanDate || "",
           ScheduledDate: row.ScheduledDate.substring(0, 10) || "",
           CompletedDate: row.CompletedDate || "",
-          ScheduledTo: row.ScheduledTo || "0",
+          ScheduledTo: row.ScheduledTo?.RecordID || "0",
           Status: row.Status || "SH",
           Comments: row.Comments || "",
         })) || [],
@@ -287,10 +232,6 @@ const EditSprint = () => {
             isUpdated: false,
           }))
         );
-
-        // Fetch updated data based on ManualSalesID
-        // dispatch(fetchExplorelitview("TR237", "Task Detail", `TaskID = ${recID}`, ""));
-        //dispatch(fetchExplorelitview("TR237", "Task Detail", "", ""));
       } else {
         toast.error(response.payload.Msg);
       }
@@ -350,26 +291,44 @@ const EditSprint = () => {
     );
   }
 
+  const processRowUpdate = (newRow, oldRow) => {
+    console.log("🚀 ~ processRowUpdate ~ oldRow:", oldRow)
+    console.log("🚀 ~ processRowUpdate ~ newRow:", newRow)
+    const isNew = !oldRow?.RecordID;
+    const updatedRow = { ...newRow, isNew };
+
+    setRows((prev) => {
+      const index = prev.findIndex(
+        (row) => row.RecordID === updatedRow.RecordID
+      );
+      if (index !== -1) {
+        const newData = [...prev];
+        newData[index] = updatedRow;
+        return newData;
+      }
+      return [...prev, updatedRow];
+    });
+    return updatedRow;
+  };
+
+
   function EditAutocompleteCell(props) {
     const { id, value, field, api, row } = props;
 
-    const handleChange = (event, newValue) => {
+    const handleChange = async (event, newValue) => {
       console.log("🚀 ~ handleChange ~ newValue:", newValue)
-      setEmployee(newValue)
-      api.setEditCellValue({
-        id,
-        field: "EmployeeName",
-        value: newValue.Name,
-      });
-      api.setEditCellValue({
+      if (!newValue) return;
+    
+      setEmployee(newValue);
+      await api.setEditCellValue({
         id,
         field: "ScheduledTo",
-        value: newValue.EmployeeID,
+        value:newValue,
       });
+    
       api.stopCellEditMode({ id, field });
     };
-    const [Employee,setEmployee] = useState(row.ScheduledTo ? { RecordID: row.ScheduledTo, Name: row.EmployeeName } : null)
-
+    const [Employee,setEmployee] = useState(row.ScheduledTo)
     return (
       <SprintEmpAutocomplete
         name="ScheduledTo"
@@ -382,22 +341,12 @@ const EditSprint = () => {
     );
   }
 
-
   const Sprintcolumns = [
     { field: "SLNO", headerName: "SL No", width: 70 },
     {
-      headerName: "RecordID",
-      field: "RecordID",
-      width: 100,
-      align: "left",
-      headerAlign: "center",
-      hide: true,
-      editable: false,
-    },
-    {
       headerName: "Task",
       field: "Task",
-      width: "100",
+      width: "250",
       align: "left",
       headerAlign: "center",
       hide: false,
@@ -425,7 +374,7 @@ const EditSprint = () => {
       headerName: "Project Plan Date",
       field: "ProjectPlanDate",
       type: "date",
-      width: "220",
+      width: "150",
       align: "left",
       headerAlign: "center",
       hide: false,
@@ -435,9 +384,7 @@ const EditSprint = () => {
       headerName: "Scheduled Date",
       field: "ScheduledDate",
       type: "date",
-      width: "220",
-      // align: "left",
-      // headerAlign: "center",
+      width: "100",
       hide: false,
       editable: true,
     },
@@ -448,22 +395,28 @@ const EditSprint = () => {
           Scheduled To <span style={{ color: "red" }}>*</span>
         </span>
       ),
-      width: 300,
+      width: 150,
       align: "left",
       headerAlign: "center",
       hide: false,
       editable: true,
       sortable: false,
-      renderEditCell: (params) => {
-        return <EditAutocompleteCell {...params} />;
+      renderCell: (params) => {
+        return params.value?.Name || ""; // show only the name
       },
-      renderCell: (params) => params.row.EmployeeName
+      renderEditCell: (params) => {
+
+
+          return <EditAutocompleteCell {...params} />;
+
+      },
+      
     },
     {
       headerName: "Completed Date",
       field: "CompletedDate",
       type: "date",
-      width: "220",
+      width: "150",
       hide: false,
       editable: false,
     },
@@ -487,7 +440,7 @@ const EditSprint = () => {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 200,
+      width: 150,
       cellClassName: "actions",
       getActions: (params) => {
         const isInEditMode =
@@ -560,7 +513,7 @@ const EditSprint = () => {
                   navigate("/Apps/TR133/Project");
                 }}
               >
-                {` Project(${state.projectName})`}
+                {`Project`}
               </Typography>
 
               <Typography
@@ -662,11 +615,7 @@ const EditSprint = () => {
                   getOptionLabel={(option) => option?.Name || ""}
                   onChange={(newValue) => {
                     setFieldValue("Milestone", newValue);
-                    console.log(newValue, "--newValue");
-                    console.log(newValue.RecordID, "////");
                   }}
-                  //  onChange={handleSelectionFunctionname}
-                  // defaultValue={selectedFunctionName}
                   url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2105","ScreenName":"Milestone","Filter":"ParentID=${params.filtertype}","Any":""}}`}
                 />
                 <Productautocomplete
@@ -678,11 +627,7 @@ const EditSprint = () => {
                   value={values.OperationStage}
                   onChange={(newValue) => {
                     setFieldValue("OperationStage", newValue);
-                    console.log(newValue, "--newValue");
-                    console.log(newValue.RecordID, "////");
                   }}
-                  //  onChange={handleSelectionFunctionname}
-                  // defaultValue={selectedFunctionName}
                   url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2104","ScreenName":"Operation Stage","Filter":"parentID=${
                     values.Milestone ? values.Milestone.RecordID : 0
                   }","Any":""}}`}
@@ -702,10 +647,8 @@ const EditSprint = () => {
                   error={!!touched.fromdate && !!errors.fromdate}
                   helperText={touched.fromdate && errors.fromdate}
                   sx={{ background: "" }}
-                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                 />
                 <Productautocomplete
-                  // sx={{ marginTop: "7px" }}
                   name="Activities"
                   label="Activities"
                   variant="outlined"
@@ -716,8 +659,6 @@ const EditSprint = () => {
                     console.log(newValue, "--newValue");
                     console.log(newValue.RecordID, "////");
                   }}
-                  //  onChange={handleSelectionFunctionname}
-                  // defaultValue={selectedFunctionName}
                   url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2103","ScreenName":"Activities","Filter":"parentID=${
                     values.OperationStage ? values.OperationStage.RecordID : 0
                   }","Any":""}}`}
@@ -744,13 +685,8 @@ const EditSprint = () => {
                             .add(6, "day")
                             .format("YYYY-MM-DD")
                         : undefined,
-                      // max: values.fromdate
-                      // ? dayjs(values.fromdate).add(6, "day").format("YYYY-MM-DD")
-                      // : undefined,
                     },
                   }}
-
-                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                 />
 
                 <Box display="flex" justifyContent="end" padding={1} gap={2}>
@@ -758,7 +694,6 @@ const EditSprint = () => {
                     color="secondary"
                     variant="contained"
                     type="submit"
-                    // onClick={handleApply}
                     loading={sprintPPgetloading}
                   >
                     Apply
@@ -767,7 +702,6 @@ const EditSprint = () => {
               </Box>
               {!getLoading ? (
                 <Box m="5px">
-                  {/* <Typography variant="h4">Sprint Details</Typography> */}
                   <Box
                     m="5px 0 0 0"
                     height={dataGridHeight}
@@ -845,68 +779,6 @@ const EditSprint = () => {
                       }
                       pagination
                     />
-                    {/* <DataGrid
-                      sx={{
-                        "& .MuiDataGrid-footerContainer": {
-                          height: dataGridHeaderFooterHeight,
-                          minHeight: dataGridHeaderFooterHeight,
-                        },
-                      }}
-                        rows={explorelistViewData}
-                        columns={Sprintcolumns}
-                        loading={sprintPPgetloading}
-                       getRowId={(row) => row.RecordID}
-                         editMode="row"
-                         disableRowSelectionOnClick
-                      rowHeight={dataGridRowHeight}
-                      headerHeight={dataGridHeaderFooterHeight}
-                      experimentalFeatures={{ newEditingApi: true }}
-                      onRowModesModelChange={handleRowModesModelChange}
-                      processRowUpdate={processRowUpdate}
-                      pageSize={pageSize}
-                      // onPageSizeChange={(newPageSize) =>
-                      //   setPageSize(newPageSize)
-                      // }
-                      // rowsPerPageOptions={[5, 10, 20]}
-                      pagination
-                      // onCellClick={(params) => {
-                      //   const currentRow = params.row;
-                      //   const currentcellField = params.field;
-                      //   // selectcelldata(currentRow, "E", currentcellField);
-                      //   console.log(JSON.stringify(params));
-                      // }}
-                      components={{
-                        Toolbar: Custombar,
-                      }}
-                      // onStateChange={(stateParams) =>
-                      //   setRowCount(stateParams.pagination.rowCount)
-                      // }
-                      // getRowClassName={(params) =>
-                      //   params.indexRelativeToCurrentPage % 2 === 0
-                      //     ? "odd-row"
-                      //     : "even-row"
-                      // }
-                      // componentsProps={{
-                      //   toolbar: {
-                      //     showQuickFilter: true,
-                      //     quickFilterProps: { debounceMs: 500 },
-                      //   },
-                      // }}
-                      componentsProps={{
-                        toolbar: { setRows, setRowModesModel },
-                    }}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    getRowClassName={(params) =>
-                        params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                    }
-                    /> */}
-
-                    {/* components={{
-                        Toolbar: Custombar,
-                      }} */}
                   </Box>
                 </Box>
               ) : (
@@ -920,8 +792,6 @@ const EditSprint = () => {
                     onClick={() => {
                       handleSaveButtonClick(values);
                     }}
-                    // type="submit"
-                    // loading={isLoading}
                   >
                     Save
                   </LoadingButton>
@@ -929,70 +799,22 @@ const EditSprint = () => {
                   <Button color="secondary" variant="contained" disabled={true}>
                     Save
                   </Button>
-                )}{" "}
-                {/* {YearFlag == "true" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Fnsave(values, "harddelete");
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  ) : (
-                    <Button color="error" variant="contained" disabled={true}>
-                      Delete
-                    </Button>
-                  )} */}
+                )}
                 <Button
                   color="warning"
                   variant="contained"
                   onClick={() => {
-                    // navigate(-1);
                     navigate(-1);
                   }}
                 >
                   Cancel
                 </Button>
               </Box>
-              {/* <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                <LoadingButton 
-                    color="secondary" 
-                    variant="contained" 
-                    type="submit" 
-                    loading={isLoading}
-                >
-                    Save
-                </LoadingButton>
-
-                <Button 
-                    color="error" 
-                    variant="contained"
-                    onClick={() => {
-                            Fnsave(values,  "harddelete");
-                          }}
-                >
-                    Delete
-                </Button>
-
-                <Button 
-                    color="error" 
-                    variant="contained"
-                    onClick={() => {
-                          navigate("/Apps/TR133/Project");
-                        }}
-                >
-                    Cancel
-                </Button>
-                </Box> */}
             </form>
           )}
         </Formik>
       </Paper>
-      {/* // ) : (
-      //   false
-      // )} */}
+ 
     </React.Fragment>
   );
 };
