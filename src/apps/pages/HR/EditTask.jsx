@@ -171,7 +171,6 @@ const Edittask = () => {
                 RecordID: row.RecordID,
                 TaskID: recID,
                 RoleID: row.TaskDetailRoleID,
-                // RoleName: row.RoleName,
                 Effort: row.TaskDetailEffort,
                 Unit: row.TaskDetailUnit,
                 ProjectPlanedDate: formatted,
@@ -309,22 +308,19 @@ const Edittask = () => {
         }));
     };
     const handleSave = (id, params, action) => () => {
-        console.log("-----Step1: Local save called");
-
         const rowToSave = params?.row;
         if (!rowToSave) {
             toast.error("Row not found.");
             return;
         }
-        const isNew = rowToSave.isNew;
-        console.log("Row to save:", rowToSave);
-        setRows((prev) =>
-            prev.map((row) =>
-                row.RecordID === id
-                    ? { ...row, ...rowToSave, isNew: isNew && action !== "delete", isUpdated: !isNew }
-                    : row
-            )
-        );
+        // const isNew = rowToSave.isNew;
+        // setRows((prev) =>
+        //     prev.map((row) =>
+        //         row.RecordID === id
+        //             ? { ...row, ...rowToSave, isNew: isNew && action !== "delete", isUpdated: !isNew }
+        //             : row
+        //     )
+        // );
 
         // Update row mode to view
         setRowModesModel((prev) => ({
@@ -380,13 +376,8 @@ const Edittask = () => {
     };
 
     const processRowUpdate = (newRow, oldRow) => {
-        console.log("------inside processrowupdate");
-        console.log(newRow, "--find newRow");
-
         const isNew = !oldRow?.RecordID;
         const updatedRow = { ...newRow, isNew };
-        // updatedRow.ManualItem = selectedProductName;
-        // updatedRow.ItemRecordID = selectedProductid;
 
         updatedRow.TaskDetailRoleID = Roleid;
         updatedRow.RoleName = RoleName;
@@ -405,9 +396,11 @@ const Edittask = () => {
             }
             return [...prev, updatedRow];
         });
-
-        const params = { row: updatedRow };
-        handleSave(updatedRow.RecordID, params, funMode);
+        setSelectedRoleOptions(null);
+        setRoleid("");
+        setRoleName("");
+  
+        // handleSave(updatedRow.RecordID, params, funMode);
 
         return updatedRow;
     };
@@ -560,7 +553,7 @@ const Edittask = () => {
             headerAlign: "center",
             editable: true,
             type: 'singleSelect',
-            valueOptions: ['Days', 'Month'],
+            valueOptions: ["Hours",'Days', 'Month',],
             renderCell: (params) => {
                 const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
                 if (isInEditMode) {
@@ -572,6 +565,7 @@ const Edittask = () => {
                             fullWidth
                             IconComponent={(props) => <ArrowDropDownIcon {...props} />} // Ensures dropdown icon is visible
                         >
+                            <MenuItem value="Hours">Hours</MenuItem>
                             <MenuItem value="Days">Days</MenuItem>
                             <MenuItem value="Months">Months</MenuItem>
                         </Select>
