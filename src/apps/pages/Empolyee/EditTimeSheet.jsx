@@ -17,6 +17,7 @@ import {
   Checkbox,
   FormControlLabel
 } from "@mui/material";
+import Edittimesheetreport from "./Edittimesheetreport";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
   explorePostData,
@@ -114,6 +115,9 @@ const EditTimeSheet = () => {
   console.log(formattedDate);
   const [selectedRow, setSelectedRow] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const handleClick=() =>{
+    navigate("/Apps/Edittimesheetreport");
+    };
   const handleUnlock = async () => {
     const idata = {
       action: "update",
@@ -355,108 +359,7 @@ const EditTimeSheet = () => {
         );
       },
     },
-// {
-//         field: 'actions',
-//         headerName: 'Actions',
-//         width: 120,
-//          sortable: false,
-// renderCell: (params) => {
-//   const isCompleted = params.row.Status === 'Completed';
-//   const isApproved = params.row.ApprovedStatus === 'A';
 
-//   if (!isCompleted) return null;
-
-//   if (isApproved) {
-//     return (
-//       <Tooltip title="Approved - Locked">
-//         <IconButton  
-//         onClick={handleClickOpen}>
-//           <LockOpenIcon color="success" size="small" />
-//         </IconButton>
-//       </Tooltip>
-//     );
-//   }
-
-//   return (
-//     <>
-//       <Tooltip title="Edit">
-//         <IconButton
-//           onClick={() => {
-//             navigate(
-//               `/Apps/TR132/TimeSheet/EditTimeDailytask/${params.row.RecordID}`,
-//               { state: { data: getData } }
-//             );
-//           }}
-//         >
-//           <EditIcon fontSize="small" />
-//         </IconButton>
-//       </Tooltip>
-
-//       <Tooltip title="Approve">
-//         <IconButton
-//           onClick={async () => {
-//             const idata = {
-//               action: "update",
-//               DailyTaskRecordID: params.row.RecordID,
-//               ApprovedBy: EMPID,
-//               ApprovedStatus: "A",
-//               DateTime: formattedDate,
-//               Remarks: "aaa"
-//             };
-
-//             try {
-//               const response = await dispatch(timeSheetPostData({ idata }));
-
-//               if (response.payload.Status === "Y") {
-//                 toast.success(response.payload.Msg);
-//                 dispatch(timeSheet({ data: getData }));
-//               } else {
-//                 toast.error(response.payload.Msg);
-//               }
-//             } catch (error) {
-//               console.error("Error during timesheet post:", error);
-//               toast.error("Something went wrong!");
-//             }
-//           }}
-//         >
-//           <DoneIcon fontSize="small" color="success" />
-//         </IconButton>
-//       </Tooltip>
-
-//       <Tooltip title="Reject">
-//         <IconButton
-//           onClick={async () => {
-//             const idata = {
-//               action: "update",
-//               DailyTaskRecordID: params.row.RecordID,
-//               ApprovedBy: EMPID,
-//               ApprovedStatus: "R",
-//               DateTime: formattedDate,
-//               Remarks: "aaa"
-//             };
-
-//             try {
-//               const response = await dispatch(timeSheetPostData({ idata }));
-
-//               if (response.payload.Status === "Y") {
-//                 toast.success(response.payload.Msg);
-//                 dispatch(timeSheet({ data: getData }));
-//               } else {
-//                 toast.error(response.payload.Msg);
-//               }
-//             } catch (error) {
-//               console.error("Error during timesheet post:", error);
-//               toast.error("Something went wrong!");
-//             }
-//           }}
-//         >
-//           <CloseIcon fontSize="small" color="error" />
-//         </IconButton>
-//       </Tooltip>
-//     </>
-//   );
-// }
-// }
   ];
   
 
@@ -550,7 +453,9 @@ console.log(ApprovedData, "===ApprovedData");
     setUseCurrentEmp(false)
   };
   const [open, setOpen] = React.useState(false);
-
+  const handlePdfClick = () => {
+  
+  };
   const handleDialogOpen = (row) => {
     setSelectedRow(row);
     setDialogOpen(true);
@@ -735,6 +640,7 @@ const [reason,setReason]=useState("")
                                   <Button type="reset" variant="contained" color="error" size="small">
                                     RESET
                                   </Button>
+                                  <PictureAsPdfIcon onClick={handleClick} sx={{ fontSize: 24, opacity: 0.5 }} style={{ color: "#d32f2f", cursor: "pointer" }}/>
 
 {isManager === "1" && ApprovedData?.length > 0 && (
   <PDFDownloadLink
@@ -760,7 +666,7 @@ const [reason,setReason]=useState("")
     }
   </PDFDownloadLink>
 )}
-
+ 
                                   {/* {isManager === "1" && AttendanceData?.length > 0 && (
                   <PDFDownloadLink
                     document={

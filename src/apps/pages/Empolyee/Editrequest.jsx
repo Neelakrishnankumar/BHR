@@ -553,7 +553,8 @@ import {
       VISIBLE_FIELDS = [
         "SLNO",
         "Date",
-        "Name",
+        //"Name",
+        "Purpose",
         "Amount",
         "Status",     
         "action",
@@ -575,8 +576,10 @@ import {
       VISIBLE_FIELDS = [
         "SLNO",
         "SalaryAdvanceDate",
-        "OverHeadsCode",
-        "OverHeadsName",
+        //"OverHeadsCode",
+        "OverHeads",
+        "Amount",
+        "Status",
         "action",
       ];
     } else {
