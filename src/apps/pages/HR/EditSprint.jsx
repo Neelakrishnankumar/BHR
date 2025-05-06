@@ -408,7 +408,7 @@ const EditSprint = () => {
     },
     {
       headerName: "Scheduled Date",
-      field: "ScheduledDate",
+      field: "Scheduleddate",
       width: "100",
       hide: false,
       editable: true,
