@@ -334,7 +334,7 @@ const EditSprint = () => {
     
       api.stopCellEditMode({ id, field });
     };
-    const [Employee,setEmployee] = useState(row.ScheduledTo)
+    const [Employee,setEmployee] = useState(row.ScheduledTo ? row.ScheduledTo : null)
     return (
       <SprintEmpAutocomplete
         name="ScheduledTo"
