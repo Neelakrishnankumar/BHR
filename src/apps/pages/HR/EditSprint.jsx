@@ -413,10 +413,7 @@ const EditSprint = () => {
       hide: false,
       editable: true,
       renderEditCell: (params) => {
-
-
         return <EditDateCell {...params} />;
-
     },
 
     },
@@ -437,10 +434,7 @@ const EditSprint = () => {
         return params.value?.Name || ""; // show only the name
       },
       renderEditCell: (params) => {
-
-
           return <EditAutocompleteCell {...params} />;
-
       },
       
     },
@@ -475,8 +469,7 @@ const EditSprint = () => {
       width: 150,
       cellClassName: "actions",
       getActions: (params) => {
-        const isInEditMode =
-          rowModesModel[params.id]?.mode === GridRowModes.Edit;
+        const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
 
         if (isInEditMode) {
           return [
