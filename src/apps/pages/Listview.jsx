@@ -79,19 +79,13 @@ const Listview = () => {
   var invoice;
   const mailData = useSelector((state) => state.listviewApi.mailData);
   const searchLoading = useSelector((state) => state.formApi.searchLoading);
-  console.log(
-    "🚀 ~ file: Secondarylistview.jsx:122 ~ ListviewSecondary ~ mailData:",
-    mailData
-  );
+
   const open = useSelector((state) => state.listviewApi.mailOpen);
   var screenName = params.screenName;
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
-  console.log(
-    "🚀 ~ file: Listview.jsx:55 ~ Listview ~ listViewData:",
-    listViewData
-  );
+
   const loading = useSelector((state) => state.listviewApi.loading);
   const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
     useSelector((state) => state.screenRights.data);

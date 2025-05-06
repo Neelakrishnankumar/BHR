@@ -64,8 +64,6 @@ const ListviewSecondary = () => {
   var CompId = sessionStorage.getItem("compID");
 
   const state = location.state || {};
-  console.log("🚀 ~ ListviewSecondary ~ params:", state);
-  console.log("🚀 ~ ListviewSecondary ~ params:", params);
   
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen

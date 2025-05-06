@@ -231,6 +231,7 @@ const Editemployee = () => {
     Fax: Data.Fax,
   };
 
+  console.log(Data.EmpType, "--Data.EmpType");
   const [openPopup, setOpenPopup] = useState(false);
   const [isPopupData, setisPopupdata] = React.useState(false);
   const [opendesignPopup, setOpendesignPopup] = useState(false);

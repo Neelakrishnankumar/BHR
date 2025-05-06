@@ -120,6 +120,7 @@ import Configuration from "./Security/Configuration";
 import Changepass from "./Security/Changepassword";
 import Editrequests from "./pages/Empolyee/Editrequest";
 import Editapprovals from "./pages/Empolyee/EditApproval";
+import EditSprint from "./pages/HR/EditSprint";
 import EditAttendance from "./pages/Empolyee/EditAttendance";
 import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
 import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
@@ -633,6 +634,13 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditTimeDailytask/:id"
                     element={<EditTimeDailytask />} />
+
+                  {/* Sprint */}
+
+                  <Route
+                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditSprint/:id/:Mode"
+                    element={<EditSprint />}
+                  />
                     <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
 
                    {/* <Route

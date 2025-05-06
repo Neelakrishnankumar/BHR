@@ -58,28 +58,12 @@ const currentDate = new Date().toISOString().split('T')[0];
 const location = useLocation();
 const passedData = location.state;  // Get the passed data
 
-console.log(passedData, "--passedData");
-  // const regfn = (params) => {
-  //   console.log(params, "--geting inputs");
-  // }
+
   useEffect(() => {
-    // regfn({ params });
-    //
-    
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
 
-  console.log(params.id, "--params.id");
-  // *************** INITIALVALUE  *************** //
-  const getTimeFromSplit = (datetimeStr) => {
-    const parts = datetimeStr?.split(" / ");
-    if (parts?.length === 3) {
-      return parts[2]; // third element if 2 splits
-    } else if (parts?.length === 2) {
-      return parts[1]; // second element if 1 split
-    }
-    return ""; // fallback
-  };
+
   const InitialValue = {
     EmployeeID: params.id,
     Name: passedData.Name,
@@ -101,7 +85,7 @@ console.log(passedData, "--passedData");
             ? "L"
             : "",
   };
-  console.log(InitialValue,"kkkk");
+
 
 
   const Fnsave = async (values, del) => {
@@ -186,6 +170,7 @@ console.log(passedData, "--passedData");
       }
     });
   };
+
 
   
   return (

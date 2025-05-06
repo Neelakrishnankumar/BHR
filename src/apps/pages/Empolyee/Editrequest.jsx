@@ -1392,7 +1392,7 @@ import {
         ApprovedDate:values.approvedDate,
         Status:values.Status,
         Reason:"",
-      
+        Source: "HR",
         // Finyear,
         // compID,
       };
@@ -1612,6 +1612,7 @@ import {
         ApprovedDate:values.approvedDate,
         SortOrder: "1",
         Disable: "N",
+        Source: "HR",
   
   
         //   LeaveTypeID: values.leavetype.RecordID || 0,
@@ -1753,6 +1754,8 @@ import {
         Reason:"",
         AppliedDate:currentDate,
         BalanceDay: selectedLeavetypebalance || 0,
+        Source: "HR",
+
       };
       const response = await dispatch(
         explorePostData({ accessID: "TR208", action, idata })
@@ -1843,7 +1846,8 @@ import {
         AppliedDate:currentDate,
         //BalanceDay: selectedLeavetypebalance || 0,
         ReimbursementOption:values.ReimbursementOption,
-        ProjectID:"1"
+        ProjectID:"1",
+        Source: "HR",
   
         
       };
@@ -1919,7 +1923,7 @@ import {
         ApprovedDate:values.approvedDate,
         Reason:"",
         AppliedDate:currentDate,
-        
+        Source: "HR",
   
         
       };
