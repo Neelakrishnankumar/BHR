@@ -206,7 +206,7 @@ const EditSprint = () => {
         RoleID: row.RoleID || "",
         Effort: row.Effort || "",
         ProjectPlanDate: row.ProjectPlanDate || "",
-          ScheduledDate: row.ScheduledDate.toString().substring(0, 10) || "",
+        ScheduledDate: row.ScheduledDate || "",
           CompletedDate: row.CompletedDate || "",
           ScheduledTo: row.ScheduledTo?.RecordID || "0",
           Status: row.Status || "SH",
@@ -380,7 +380,7 @@ const EditSprint = () => {
     },
     {
       headerName: "Role",
-      field: "DesignationName",
+      field: "DesignationsName",
       width: "200",
       align: "left",
       headerAlign: "center",
@@ -408,7 +408,7 @@ const EditSprint = () => {
     },
     {
       headerName: "Scheduled Date",
-      field: "Scheduleddate",
+      field: "ScheduledDate",
       width: "100",
       hide: false,
       editable: true,
