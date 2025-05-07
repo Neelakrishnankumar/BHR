@@ -131,6 +131,9 @@ import {
     const dispatch = useDispatch();
     var recID = params.id;
     var mode = params.Mode;
+
+    console.log(params, "--params");
+    
     //var accessID = params.accessID;
     var accessID = "TR027";
     const Data = useSelector((state) => state.formApi.Data);
@@ -3646,7 +3649,7 @@ import {
   
                                   });
                                 }}
-                                url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
+                                url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${params.id}'","Any":""}}`}
                               />
                         <FormControl focused variant="standard">
                           <InputLabel variant="standard" id="LeavePart">
