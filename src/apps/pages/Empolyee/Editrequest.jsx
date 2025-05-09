@@ -122,7 +122,8 @@ import {
     };
     const currentDate = new Date().toISOString().split('T')[0];
     const isNonMobile = useMediaQuery("(min-width:600px)");
-  
+    const [responseMsg, setResponseMsg] = useState("");
+    const [checkIN, setCheckIN ] = useState("")
 
     const YearFlag = sessionStorage.getItem("YearFlag");
   
@@ -6028,19 +6029,41 @@ import {
                       value={values.CheckInDate}
                       onBlur={handleBlur}
                       //onChange={handleChange}
+                      // onChange={(e) => {
+                      //   setFieldValue("CheckInDate", e.target.value);
+                      //   setCheckdate(e.target.value);
+                      //   if (e.target.value) {
+                      //     dispatch(
+                      //       RegGetData({
+                      //         data: {
+                      //           EmployeeID: recID,
+                      //           CheckInDate: e.target.value,
+                      //         },
+                      //       })
+                      //     );
+                      //   }
+                      // }}
                       onChange={(e) => {
-                        setFieldValue("CheckInDate", e.target.value);
-                        setCheckdate(e.target.value);
-                        if (e.target.value) {
+                        const selectedDate = e.target.value;
+                        if (selectedDate) {
                           dispatch(
                             RegGetData({
                               data: {
                                 EmployeeID: recID,
-                                CheckInDate: e.target.value,
+                                CheckInDate: selectedDate,
                               },
                             })
-                          );
+                          ).then((response) => {
+                            const msg = response.payload.Msg;
+                            if (msg) {
+                              setResponseMsg(msg);
+                            } else {
+                              setResponseMsg(""); // Clear if no message
+                            }
+                          });
                         }
+                        setCheckIN(selectedDate);
+                        setFieldValue("CheckInDate", selectedDate);
                       }}
                       error={!!touched.CheckInDate && !!errors.CheckInDate}
                       helperText={touched.CheckInDate && errors.CheckInDate}
@@ -6214,7 +6237,23 @@ import {
                      
                     />   
                       </FormControl>
+                      
                     </Box>
+                    {responseMsg && (
+        <div
+          style={{
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffeeba",
+            padding: "8px",
+            borderRadius: "4px",
+            fontSize: "0.875rem",
+            marginTop: "4px"
+          }}
+        >
+          {responseMsg}
+        </div>
+        )}
                     <Box
                       display="flex"
                       justifyContent="end"

@@ -572,15 +572,7 @@ export const fetchListview =
       filter = "ProjectID=" + `'${filter}'`;
      
      }
-      // if (
-      //   AccessID === "TR133" ||
-      //   AccessID === "TR233" ||
-      //   AccessID === "TR236" ||
-      //   AccessID === "TR234" ||
-      //   AccessID === "TR235"
-      // ) {
-      //   filter = `CompanyID=${CompId}&ParentID=${ParentID}`;
-      // }
+    
       
 
     }
@@ -1737,7 +1729,9 @@ export const fetchListview =
                 );
               },
             };
-          }else if (
+          }
+          
+          else if (
             AccessID == "TR236" || AccessID == "TR234" || AccessID == "TR235"|| AccessID=="TR233"
           ) {
             obj = {
@@ -2184,34 +2178,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {/* {AccessID == "TR236" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Activities">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                     {AccessID == "TR236" ? (
-                      <Link
-                      to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Activity Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )} */}
+                   
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
