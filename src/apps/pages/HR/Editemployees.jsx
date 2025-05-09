@@ -96,6 +96,8 @@ const Editemployee = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   console.log(SubscriptionCode, "codehr");
+  const EMPID = sessionStorage.getItem("EmpId");
+ 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -113,6 +115,7 @@ const Editemployee = () => {
 
   const navigate = useNavigate();
   let params = useParams();
+console.log(params, "--params");
 
   const dispatch = useDispatch();
   var recID = params.id;
@@ -124,7 +127,7 @@ const Editemployee = () => {
   const Msg = useSelector((state) => state.formApi.msg);
 
   const state = location.state || {};
-  // console.log(state, "emnployee");
+  console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
@@ -1370,9 +1373,9 @@ const Editemployee = () => {
     totaldays: LeaveCondata.totaldays,
     availableleave: LeaveCondata.availableleave,
     elligibledays: LeaveCondata.elligibledays,
-    Year: LeaveCondata.Year === "2024" ? "PY" 
-          :LeaveCondata.Year === "2025" ? "CY"
-          :LeaveCondata.Year === "2026" ? "NY" : "" ,
+    Year: LeaveCondata.Year === "2024" ? "2024" 
+          :LeaveCondata.Year === "2025" ? "2025"
+          :LeaveCondata.Year === "2026" ? "2026" : "" ,
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -7163,7 +7166,7 @@ const Editemployee = () => {
                             //value={selectedProjectOptions}
                             //onChange={handleSelectionProjectname}
                             // defaultValue={selectedProjectName}
-                            url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${CompanyID}","Any":""}}`}
+                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 
@@ -7311,9 +7314,12 @@ const Editemployee = () => {
                         // }}
                       >
                     
-                        <MenuItem value="PY">2024</MenuItem>
+                    <MenuItem value="2024">2024</MenuItem>
+                        <MenuItem value="2025">2025</MenuItem>
+                        <MenuItem value="2026">2026</MenuItem>
+                        {/* <MenuItem value="PY">2024</MenuItem>
                         <MenuItem value="CY">2025</MenuItem>
-                        <MenuItem value="NY">2026</MenuItem>
+                        <MenuItem value="NY">2026</MenuItem> */}
                       </TextField>
                       </FormControl>
 
