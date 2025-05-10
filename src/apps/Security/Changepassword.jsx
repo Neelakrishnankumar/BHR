@@ -223,7 +223,7 @@ const fnSave = async (values) => {
                   gap="20px"
                 >
                   <Button
-                    color={"success"}
+                    color={"secondary"}
                     variant="contained"
                     //   disabled={true}
                      type="submit" // This will trigger the onSubmit method of Formik
@@ -234,7 +234,7 @@ const fnSave = async (values) => {
                   </Button>
 
                   <Button
-                    color={"error"}
+                    color={"warning"}
                     variant="contained"
                     onClick={() => resetForm()}
                     // onClick={() => {

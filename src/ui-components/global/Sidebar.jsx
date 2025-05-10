@@ -985,7 +985,7 @@ const child = {
           UGA_ACCESSIDS: "TR124",
         },
         {
-          name: "Attendance Registry",
+          name: "Attendance Register",
           id: 457789,
           url: "./TR124/Attendance Registry",
           icon: (

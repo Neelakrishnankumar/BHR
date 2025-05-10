@@ -789,16 +789,20 @@ console.log(params, "--params");
   if (show == "6") {
     VISIBLE_FIELDS = ["SLNO", "Description", "action"];
   } else if (show == "1") {
-    VISIBLE_FIELDS = ["SLNO", "ProcessCode", "Comments", "action"];
-  } else if (show == "2") {
-    VISIBLE_FIELDS = ["SLNO", "FunctionCode", "FunctionName", "action"];
+    VISIBLE_FIELDS = ["SLNO", "Process", "Comments", "action"]
+  } else if (show == "3") {
+    VISIBLE_FIELDS = ["SLNO", "Manager","action"]
+  } 
+  else if (show == "2") {
+    VISIBLE_FIELDS = ["SLNO", "Functions", "action"];
   } else if (show == "7") {
     VISIBLE_FIELDS = ["SLNO", "ItemNumber", "ItemName", "action"];
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "SLNO",
-      "VendorCode",
-      "VendorName",
+      //"VendorCode",
+      //"VendorName",
+      "Vendors",
       "BillingUnits",
       "UnitRate",
       "action",

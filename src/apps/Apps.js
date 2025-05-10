@@ -125,6 +125,7 @@ import EditAttendance from "./pages/Empolyee/EditAttendance";
 import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
 import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
 import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
+// import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
 
 
 function App() {
@@ -640,6 +641,8 @@ function App() {
                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditSprint/:id/:Mode"
                     element={<EditSprint />}
                   />
+                    {/* <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} /> */}
+
                    {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
                     element={<EditStageweightage />}

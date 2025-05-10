@@ -124,6 +124,8 @@ import {
     };
     const currentDate = new Date().toISOString().split('T')[0];
     const isNonMobile = useMediaQuery("(min-width:600px)");
+    const [responseMsg, setResponseMsg] = useState("");
+    const [checkIN, setCheckIN ] = useState("");
   
 
     const YearFlag = sessionStorage.getItem("YearFlag");
@@ -152,8 +154,7 @@ import {
     const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
     const [openGATEPopup, setOpenGATEPopup] = useState(false);
     
-    const [responseMsg, setResponseMsg] = useState("");
-    const [checkIN, setCheckIN ] = useState("")
+
     const empAttendanceData = useSelector(
       (state) => state.formApi.empAttendanceData
     );
@@ -166,7 +167,7 @@ import {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     useEffect(() => {
       dispatch(fetchApidata(accessID, "get", recID));
-      
+       
       console.log("🚀 ~ useEffect ~ accessID redenerd ...........:")
     }, []);
     const [ini, setIni] = useState(true);
@@ -485,6 +486,7 @@ import {
         });
       }
       if (event.target.value == "10") {
+        setResponseMsg("");
         dispatch(fetchExplorelitview("TR219", "Regularization", `EmployeeID=${recID}`, ""));
         dispatch(fetchApidata(accessID, "get", recID));
         selectCellRowData({
@@ -577,7 +579,8 @@ import {
       VISIBLE_FIELDS = [
         "SLNO",
         "Date",
-        "Name",
+        //"Name",
+        "Purpose",
         "Amount",
         "Status",     
         "action",
@@ -599,8 +602,10 @@ import {
       VISIBLE_FIELDS = [
         "SLNO",
         "SalaryAdvanceDate",
-        "OverHeadsCode",
-        "OverHeadsName",
+        //"OverHeadsCode",
+        "OverHeads",
+        "Amount",
+        "Status",
         "action",
       ];
     } else {
@@ -6089,6 +6094,7 @@ import {
 
                       //check
                         onChange={(e) => {
+                          
                         setFieldValue("CheckInDate", e.target.value);
                         setCheckdate(e.target.value);
                         if (e.target.value) {
@@ -6300,6 +6306,21 @@ import {
         </div>
         )}
                     </Box>
+                    {/* {responseMsg && (
+        <div
+          style={{
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffeeba",
+            padding: "8px",
+            borderRadius: "4px",
+            fontSize: "0.875rem",
+            marginTop: "4px"
+          }}
+        >
+          {responseMsg}
+        </div>
+        )} */}
                     <Box
                       display="flex"
                       justifyContent="end"
