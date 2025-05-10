@@ -224,6 +224,8 @@ console.log(params, "--params");
         // ? "CT"
         : "",
     checkbox: Data.Disable,
+  scrummaster: Data.ScrumMaster === "Y" ? true : false,
+
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
@@ -434,7 +436,7 @@ console.log(params, "--params");
         ? "harddelete"
         : "update";
     var isCheck = "N";
-    if (values.checkbox == true) {
+    if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
     }
 
@@ -446,6 +448,7 @@ console.log(params, "--params");
       Name: values.Name,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
+      ScrumMaster: values.scrummaster === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -1510,7 +1513,20 @@ console.log(params, "--params");
           Name: deploymentData.StoregatemasterName,
         }
       : null,
-
+project: deploymentData.DefaultProject
+? {
+    RecordID: deploymentData.DefaultProject,
+    Code: deploymentData.ProjectCode,
+    Name: deploymentData.ProjectName,
+  }
+: null,
+function: deploymentData.DefaultFunction
+? {
+    RecordID: deploymentData.DefaultFunction,
+    Code: deploymentData.FunctionCode,
+    Name: deploymentData.FunctionName,
+  }
+: null,
     checkin: deploymentData.CheckInTime || "",
     checkout: deploymentData.CheckOutTime || "",
     monday: deploymentData.Monday === "Y" ? true : false,
@@ -1540,6 +1556,8 @@ console.log(params, "--params");
       DesignationID: values.Designation.RecordID || 0,
       LocationID: values.location.RecordID || 0,
       StoregatemasterID: values.gate.RecordID || 0,
+      DefaultProject: values.project.RecordID || 0,
+      DefaultFunction: values.function.RecordID || 0,
       // DesignationID: designLookup ? designLookup.RecordID : 0,
       // LocationID: locationLookup ? locationLookup.RecordID : 0,
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
@@ -2274,6 +2292,18 @@ console.log(params, "--params");
                         />
 
                         <FormLabel focused={false}>Disable</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="scrummaster"
+                          id="scrummaster"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Scrum Master"
+                        />
+
+                        <FormLabel focused={false}>Scrum Master</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -4311,6 +4341,9 @@ console.log(params, "--params");
                           values.location ? values.location.RecordID : 0
                         }'","Any":""}}`}
                       />
+                    
+
+
                       {/* <TextField
                         id="outlined-basic"
                         label="ID"
@@ -4350,6 +4383,69 @@ console.log(params, "--params");
                         inputProps={{ tabIndex: "-1" }}
                       /> */}
                     </FormControl>
+                    <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                    <Productautocomplete
+                      id="function"
+                        name="function"
+                        label={
+                          <span>
+                            Function
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        
+                        value={values.function}
+                        onChange={(newValue) => {
+                          setFieldValue("function", newValue);
+                          console.log(newValue, "--newvalue function");
+                          console.log(newValue.RecordID, "function RecordID");
+                       
+                        }}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+ ='${CompanyID}'","Any":""}}`}
+                      />
+                       </FormControl>
+                       <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+
+<Productautocomplete
+ id="project"
+                        name="project"
+                        label={
+                          <span>
+                            Project
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.project}
+                        onChange={(newValue) => {
+                          setFieldValue("project", newValue);
+                          console.log(newValue, "--newvalue project");
+                          console.log(newValue.RecordID, "project RecordID");
+
+                        }}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
+                       </FormControl>
                     <FormControl
                       sx={{
                         //gridColumn: "span 2",
