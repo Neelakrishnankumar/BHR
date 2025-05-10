@@ -103,6 +103,8 @@ import {
     const colors = tokens(theme.palette.mode);
     const EMPID = sessionStorage.getItem("EmpId");
     const compID = sessionStorage.getItem("compID");
+    const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
+  console.log(SubscriptionCode, "codehr");
     const UserName = sessionStorage.getItem("UserName");
     const UserRecordid = sessionStorage.getItem("loginrecordID");
     const location = useLocation();
@@ -149,6 +151,9 @@ import {
   
     const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
     const [openGATEPopup, setOpenGATEPopup] = useState(false);
+    
+    const [responseMsg, setResponseMsg] = useState("");
+    const [checkIN, setCheckIN ] = useState("")
     const empAttendanceData = useSelector(
       (state) => state.formApi.empAttendanceData
     );
@@ -205,41 +210,7 @@ import {
     //   }
     // }
     const [funMode, setFunMode] = useState("A");
-    var apiData = "";
-    apiData = {
-      Code: Data.Code,
-      Name: Data.Name,
-      Job: Data.Job,
-      Comm: Data.Comm,
-      Mgr: Data.Mgr,
-      Sal: Data.Sal,
-      Fax: Data.Fax,
-      SortOrder: Data.SortOrder,
-      Disable: Data.Disable,
-      Password: Data.Password,
-      Department: Data.DeptRecordID
-        ? {
-          RecordID: Data.DeptRecordID,
-          Code: Data.DeptCode,
-          Name: Data.DeptName,
-        }
-        : null,
-    };
-    //*******Assign Employee values from Database in  Yup initial value******* */
-    const initialValues = {
-      Code: apiData.Code,
-      Name: apiData.Name,
-      Job: apiData.Job,
-      // DeptRecordID:apiData.DeptRecordID,
-      Comm: apiData.Comm,
-      Mgr: apiData.Mgr,
-      Sal: apiData.Sal,
-      Fax: apiData.Fax,
-      SortOrder: apiData.SortOrder,
-      checkbox: apiData.Disable,
-      Password: apiData.Password,
-      Department: apiData.Department,
-    };
+   
   
     const [isPopupData, setisPopupdata] = React.useState(false);
     const [opendesignPopup, setOpendesignPopup] = useState(false);
@@ -340,6 +311,48 @@ import {
     };
     // **********Save Function*****************
   
+     var apiData = "";
+    apiData = {
+      Code: Data.Code,
+      Name: Data.Name,
+      Job: Data.Job,
+      Comm: Data.Comm,
+      Mgr: Data.Mgr,
+      Sal: Data.Sal,
+      Fax: Data.Fax,
+      SortOrder: Data.SortOrder,
+      Disable: Data.Disable,
+      Password: Data.Password,
+      Department: Data.DeptRecordID
+        ? {
+          RecordID: Data.DeptRecordID,
+          Code: Data.DeptCode,
+          Name: Data.DeptName,
+        }
+        : null,
+           EmpType: Data.EmpType,
+        DateOfJoin : Data.DateOfJoin,
+        DateOfConfirmation: Data.DateOfConfirmation,
+        // SubscriptionCode: Data.SubscriptionCode,
+        ScrumMaster: Data.ScrumMaster,
+        CompanyID: Data.CompanyID,
+    };
+    //*******Assign Employee values from Database in  Yup initial value******* */
+    const initialValues = {
+      Code: apiData.Code,
+      Name: apiData.Name,
+      Job: apiData.Job,
+      // DeptRecordID:apiData.DeptRecordID,
+      Comm: apiData.Comm,
+      Mgr: apiData.Mgr,
+      Sal: apiData.Sal,
+      Fax: apiData.Fax,
+      SortOrder: apiData.SortOrder,
+      checkbox: apiData.Disable,
+      Password: apiData.Password,
+      Department: apiData.Department,
+      // ScrumMaster: apiData.ScrumMaster,
+    };
     const fnSave = async (values) => {
       setLoading(true);
       setIni(false);
@@ -375,6 +388,14 @@ import {
         LocationRecID: 0,
         GateRecID: 0,
         WeekOff: 0,
+        compID,
+        EmpType: apiData.EmpType,
+        DateOfJoin : apiData.DateOfJoin,
+        DateOfConfirmation: apiData.DateOfConfirmation,
+        // SubscriptionCode: apiData.SubscriptionCode,
+        ScrumMaster: apiData.ScrumMaster,
+        CompanyID: apiData.CompanyID,
+        SubscriptionCode
       };
       var type = "";
   
@@ -6028,7 +6049,46 @@ import {
                       value={values.CheckInDate}
                       onBlur={handleBlur}
                       //onChange={handleChange}
-                      onChange={(e) => {
+                      // onChange={(e) => {
+                      //   setFieldValue("CheckInDate", e.target.value);
+                      //   setCheckdate(e.target.value);
+                      //   if (e.target.value) {
+                      //     dispatch(
+                      //       RegGetData({
+                      //         data: {
+                      //           EmployeeID: recID,
+                      //           CheckInDate: e.target.value,
+                      //         },
+                      //       })
+                      //     );
+                      //   }
+                      // }}
+                      // onChange={(e) => {
+                      //   const selectedDate = e.target.value;
+                      //   if (selectedDate) {
+                      //     dispatch(
+                      //       RegGetData({
+                      //         data: {
+                      //           EmployeeID: recID,
+                      //           CheckInDate: selectedDate,
+                      //         },
+                      //       })
+                      //     ).then((response) => {
+                      //       const msg = response.payload.Msg;
+                      //       if (msg) {
+                      //         setResponseMsg(msg);
+                      //       } else {
+                      //         setResponseMsg("");
+                      //       }
+                      //     });
+                      //   }
+                      //   setCheckIN(selectedDate);
+                      //   setFieldValue("CheckInDate", selectedDate);
+                      // }}
+
+
+                      //check
+                        onChange={(e) => {
                         setFieldValue("CheckInDate", e.target.value);
                         setCheckdate(e.target.value);
                         if (e.target.value) {
@@ -6039,9 +6099,18 @@ import {
                                 CheckInDate: e.target.value,
                               },
                             })
-                          );
+                          ).then((response) => {
+                            const msg = response.payload.Msg;
+                            if (msg) {
+                              setResponseMsg(msg);
+                            } else {
+                              setResponseMsg("");
+                            }
+                          });
+                         
                         }
                       }}
+
                       error={!!touched.CheckInDate && !!errors.CheckInDate}
                       helperText={touched.CheckInDate && errors.CheckInDate}
                      //sx={{ gridColumn: "span 2" }}
@@ -6214,6 +6283,22 @@ import {
                      
                     />   
                       </FormControl>
+
+                      {responseMsg && (
+        <div
+          style={{
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffeeba",
+            padding: "8px",
+            borderRadius: "4px",
+            fontSize: "0.875rem",
+            marginTop: "4px"
+          }}
+        >
+          {responseMsg}
+        </div>
+        )}
                     </Box>
                     <Box
                       display="flex"

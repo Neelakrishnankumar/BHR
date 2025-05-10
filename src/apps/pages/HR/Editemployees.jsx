@@ -4407,7 +4407,8 @@ function: deploymentData.DefaultFunction
                           console.log(newValue.RecordID, "function RecordID");
                        
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"","Any":""}}`}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+ ='${CompanyID}'","Any":""}}`}
                       />
                        </FormControl>
                        <FormControl
