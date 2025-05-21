@@ -16,6 +16,7 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import SafetyCheckIcon from '@mui/icons-material/SafetyCheck';
 import {
   Box,
   Avatar,
@@ -849,7 +850,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR243",
         },
-        
+         {
+          name: "Shift",
+          id: 45689,
+          url: "./TR265/Shift",
+          icon: (
+            <Tooltip title="Shift">
+              <SafetyCheckIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR265",
+        },
         {
           name: "Leave Type",
           id: 45680,
