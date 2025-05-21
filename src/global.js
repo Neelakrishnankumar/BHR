@@ -273,10 +273,13 @@ SprintgetUrl: "https://hr.beyondexs.com/api/SprintHeaderandDetailController.php"
 SprintPPGetUrl: "https://hr.beyondexs.com/api/SprintProjectPlanGetController.php",
 getLeaveentryDataUrl:"https://ess.beyondexs.com/api/EmpLeaveConfigurationGetController.php",
 regGetUrl:'https://hr.beyondexs.com/api/RegularizationGetController.php',
-payrollattendanceUrl: "https://hr.beyondexs.com/api/PayrollAttendanceController.php",
+//payrollattendanceUrl: "https://hr.beyondexs.com/api/PayrollAttendanceController.php",
 timesheetattendanceUrl: "https://ess.beyondexs.com/api/DailyTaskgetController.php",
 timesheetdtUrl: "https://ess.beyondexs.com/api/DailyTaskpostController.php",
-
+empAttachmentUrl:"https://ess.beyondexs.com/EmployeeAttachmentsController.php",
+empGetAttachmentUrl:"https://ess.beyondexs.com/api/getAttachmentsController.php",
+ leavelApprovalUrl:  "https://hr.beyondexs.com/api/EmployeeRequestUpdateController.php",
+  requestAcknowledgeUrl:  "https://hr.beyondexs.com/api/LeaveRequest.php",
   };
 
 export const getUrlSlice = createSlice({
