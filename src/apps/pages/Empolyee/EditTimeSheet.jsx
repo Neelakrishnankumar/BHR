@@ -931,14 +931,22 @@ const EditTimeSheet = () => {
   },[])
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
-  const companyID = sessionStorage.getItem("companyId");
+  // const companyID = sessionStorage.getItem("companyId");
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [pageSize, setPageSize] = useState(25);
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
-  const EMPID = sessionStorage.getItem("EmpId");
+  // const EMPID = sessionStorage.getItem("EmpId");
+    const EMPID = sessionStorage.getItem("empID");
+  const companyID = sessionStorage.getItem("compID");
+
+    
+  console.log(EMPID, "--EMPID");
+  console.log(companyID, "--companyID");
+  
+  
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const today = new Date();
@@ -1402,7 +1410,7 @@ const EditTimeSheet = () => {
                     id="Employee"
                     value={empData}
                     onChange={handleSelectionEmployeeChange}
-                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EMPID}","Any":"","CompId":${companyID}}}`}
+                    url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
                   />
                   <FormControlLabel
                     control={

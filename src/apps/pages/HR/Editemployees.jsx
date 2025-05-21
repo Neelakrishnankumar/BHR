@@ -97,7 +97,7 @@ const Editemployee = () => {
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   console.log(SubscriptionCode, "codehr");
   const EMPID = sessionStorage.getItem("EmpId");
- 
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -115,7 +115,7 @@ const Editemployee = () => {
 
   const navigate = useNavigate();
   let params = useParams();
-console.log(params, "--params");
+  console.log(params, "--params");
 
   const dispatch = useDispatch();
   var recID = params.id;
@@ -216,15 +216,15 @@ console.log(params, "--params");
         ? "PP"
         : Data.EmpType === "Permanent"
         ? "PM"
-          : Data.EmpType === "Contracts In"
+        : Data.EmpType === "Contracts In"
         ? "CI"
-          : Data.EmpType === "Contracts Out"
+        : Data.EmpType === "Contracts Out"
         ? "CO"
-        // : Data.EmpType === "Contractor"
-        // ? "CT"
-        : "",
+        : // : Data.EmpType === "Contractor"
+          // ? "CT"
+          "",
     checkbox: Data.Disable,
-  scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    scrummaster: Data.ScrumMaster === "Y" ? true : false,
 
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
@@ -555,12 +555,26 @@ console.log(params, "--params");
     }
     //Contractor
     if (event.target.value == "8") {
-      dispatch(fetchExplorelitview("TR244", "Contracts In", `EmployeeID='${recID}' AND Vendors='Y'`, ""))
+      dispatch(
+        fetchExplorelitview(
+          "TR244",
+          "Contracts In",
+          `EmployeeID='${recID}' AND Vendors='Y'`,
+          ""
+        )
+      );
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "11") {
-      dispatch(fetchExplorelitview("TR244", "Contracts Out", `EmployeeID='${recID}' AND Customer='Y'`, ""))
+      dispatch(
+        fetchExplorelitview(
+          "TR244",
+          "Contracts Out",
+          `EmployeeID='${recID}' AND Customer='Y'`,
+          ""
+        )
+      );
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -789,11 +803,10 @@ console.log(params, "--params");
   if (show == "6") {
     VISIBLE_FIELDS = ["SLNO", "Description", "action"];
   } else if (show == "1") {
-    VISIBLE_FIELDS = ["SLNO", "Process", "Comments", "action"]
+    VISIBLE_FIELDS = ["SLNO", "Process", "Comments", "action"];
   } else if (show == "3") {
-    VISIBLE_FIELDS = ["SLNO", "Manager","action"]
-  } 
-  else if (show == "2") {
+    VISIBLE_FIELDS = ["SLNO", "Manager", "action"];
+  } else if (show == "2") {
     VISIBLE_FIELDS = ["SLNO", "Functions", "action"];
   } else if (show == "7") {
     VISIBLE_FIELDS = ["SLNO", "ItemNumber", "ItemName", "action"];
@@ -1097,7 +1110,7 @@ console.log(params, "--params");
           RecordID: rowData.Vendor,
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
-        })
+        });
         SetDesignationLookup({
           RecordID: rowData.DesignationID,
           ManagerID: rowData.EmployeeID,
@@ -1158,7 +1171,7 @@ console.log(params, "--params");
                 Name: rowData.LeavePart,
               }
             : null,
-            Year: rowData.Year,
+          Year: rowData.Year,
         });
       }
     }
@@ -1279,7 +1292,7 @@ console.log(params, "--params");
   //Contractor Save Function
   const contractSavefn = async (values, resetForm, del) => {
     console.log(show, "--find show inside save ");
-    
+
     setLoading(true);
     let action =
       funMode === "A" && !del
@@ -1287,24 +1300,28 @@ console.log(params, "--params");
         : funMode === "E" && del
         ? "harddelete"
         : "update";
-        const idata = {
-          RecordID: contractorData.recordID,
-          EmployeeID: recID,
-          Vendor: show == "8" 
-            ? (vendorlookup ? vendorlookup.RecordID : 0) 
-            : show == "11" 
-              ? (customerlookup ? customerlookup.RecordID : 0) 
-              : 0,
-        // Vendors: show == "8" ? "Y" : "N",
-        // Customer: show == "11" ? "Y" : "N",
-          FromPeriod: values.FromPeriod,
-          ToPeriod: values.ToPeriod,
-          BillingUnits: values.BillingUnits,
-          UnitRate: values.UnitRate,
-          NotificationAlertDate: values.NotificationAlertDate,
-          RenewableNotification: values.RenewableNotification,
-        };
-        
+    const idata = {
+      RecordID: contractorData.recordID,
+      EmployeeID: recID,
+      Vendor:
+        show == "8"
+          ? vendorlookup
+            ? vendorlookup.RecordID
+            : 0
+          : show == "11"
+          ? customerlookup
+            ? customerlookup.RecordID
+            : 0
+          : 0,
+      // Vendors: show == "8" ? "Y" : "N",
+      // Customer: show == "11" ? "Y" : "N",
+      FromPeriod: values.FromPeriod,
+      ToPeriod: values.ToPeriod,
+      BillingUnits: values.BillingUnits,
+      UnitRate: values.UnitRate,
+      NotificationAlertDate: values.NotificationAlertDate,
+      RenewableNotification: values.RenewableNotification,
+    };
 
     const response = await dispatch(
       explorePostData({ accessID: "TR244", action, idata })
@@ -1312,11 +1329,24 @@ console.log(params, "--params");
     if (response.payload.Status == "Y") {
       setLoading(false);
       show == "8"
-      ? dispatch(fetchExplorelitview("TR244", "Contracts In", `EmployeeID='${recID}' AND Vendors='Y'`, ""))
-      : dispatch(fetchExplorelitview("TR244", "Contracts Out", `EmployeeID='${recID}' AND Customer='Y'`, ""));
-  
-     
-    toast.success(response.payload.Msg);
+        ? dispatch(
+            fetchExplorelitview(
+              "TR244",
+              "Contracts In",
+              `EmployeeID='${recID}' AND Vendors='Y'`,
+              ""
+            )
+          )
+        : dispatch(
+            fetchExplorelitview(
+              "TR244",
+              "Contracts Out",
+              `EmployeeID='${recID}' AND Customer='Y'`,
+              ""
+            )
+          );
+
+      toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm();
     } else {
@@ -1376,9 +1406,14 @@ console.log(params, "--params");
     totaldays: LeaveCondata.totaldays,
     availableleave: LeaveCondata.availableleave,
     elligibledays: LeaveCondata.elligibledays,
-    Year: LeaveCondata.Year === "2024" ? "2024" 
-          :LeaveCondata.Year === "2025" ? "2025"
-          :LeaveCondata.Year === "2026" ? "2026" : "" ,
+    Year:
+      LeaveCondata.Year === "2024"
+        ? "2024"
+        : LeaveCondata.Year === "2025"
+        ? "2025"
+        : LeaveCondata.Year === "2026"
+        ? "2026"
+        : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -1513,58 +1548,92 @@ console.log(params, "--params");
           Name: deploymentData.StoregatemasterName,
         }
       : null,
-project: deploymentData.DefaultProject
-? {
-    RecordID: deploymentData.DefaultProject,
-    Code: deploymentData.ProjectCode,
-    Name: deploymentData.ProjectName,
-  }
-: null,
-function: deploymentData.DefaultFunction
-? {
-    RecordID: deploymentData.DefaultFunction,
-    Code: deploymentData.FunctionCode,
-    Name: deploymentData.FunctionName,
-  }
-: null,
+    project: deploymentData.DefaultProject
+      ? {
+          RecordID: deploymentData.DefaultProject,
+          Code: deploymentData.ProjectCode,
+          Name: deploymentData.ProjectName,
+        }
+      : null,
+    function: deploymentData.DefaultFunction
+      ? {
+          RecordID: deploymentData.DefaultFunction,
+          Code: deploymentData.FunctionCode,
+          Name: deploymentData.FunctionName,
+        }
+      : null,
+    shift: deploymentData.ShiftID
+      ? {
+          RecordID: deploymentData.ShiftID,
+          Code: deploymentData.ShiftCode,
+          Name: deploymentData.ShiftName,
+        }
+      : null,
     checkin: deploymentData.CheckInTime || "",
     checkout: deploymentData.CheckOutTime || "",
-    monday: deploymentData.Monday === "Y" ? true : false,
-    tuesday: deploymentData.Tuesday === "Y" ? true : false,
-    wednesday: deploymentData.Wednesday === "Y" ? true : false,
-    thursday: deploymentData.Thursday === "Y" ? true : false,
-    friday: deploymentData.Friday === "Y" ? true : false,
-    saturday: deploymentData.Saturday === "Y" ? true : false,
-    sunday: deploymentData.Sunday === "Y" ? true : false,
+    // monday: deploymentData.Monday === "Y" ? true : false,
+    // tuesday: deploymentData.Tuesday === "Y" ? true : false,
+    // wednesday: deploymentData.Wednesday === "Y" ? true : false,
+    // thursday: deploymentData.Thursday === "Y" ? true : false,
+    // friday: deploymentData.Friday === "Y" ? true : false,
+    // saturday: deploymentData.Saturday === "Y" ? true : false,
+    // sunday: deploymentData.Sunday === "Y" ? true : false,
+    Monday: deploymentData.Monday === "Y" ? true : false,
+    Tuesday: deploymentData.Tuesday === "Y" ? true : false,
+    Wednesday: deploymentData.Wednesday === "Y" ? true : false,
+    Thursday: deploymentData.Thursday === "Y" ? true : false,
+    Friday: deploymentData.Friday === "Y" ? true : false,
+    Saturday: deploymentData.Saturday === "Y" ? true : false,
+    Sunday: deploymentData.Sunday === "Y" ? true : false,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
   console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
+    console.log(values, "--values");
+    
     const idata = {
       HeaderID: recID,
-      CheckInTime: values.checkin || "",
-      CheckOutTime: values.checkout || "",
-      Monday: values.monday === true ? "Y" : "N",
-      Tuesday: values.tuesday === true ? "Y" : "N",
-      Wednesday: values.wednesday === true ? "Y" : "N",
-      Thursday: values.thursday === true ? "Y" : "N",
-      Friday: values.friday === true ? "Y" : "N",
-      Saturday: values.saturday === true ? "Y" : "N",
-      Sunday: values.sunday === true ? "Y" : "N",
+      CheckInTime: values.shift?.ShiftStartTime || "",
+      CheckOutTime: values.shift?.ShiftendTime || "",
+      // CheckInTime: values.checkin || "",
+      // CheckOutTime: values.checkout || "",
+       Monday: values.Monday === true ? "Y" : "N",
+      Tuesday: values.Tuesday === true ? "Y" : "N",
+      Wednesday: values.Wednesday === true ? "Y" : "N",
+      Thursday: values.Thursday === true ? "Y" : "N",
+      Friday: values.Friday === true ? "Y" : "N",
+      Saturday: values.Saturday === true ? "Y" : "N",
+      Sunday: values.Sunday === true ? "Y" : "N",
+      // Monday: values.monday === true ? "Y" : "N",
+      // Tuesday: values.tuesday === true ? "Y" : "N",
+      // Wednesday: values.wednesday === true ? "Y" : "N",
+      // Thursday: values.thursday === true ? "Y" : "N",
+      // Friday: values.friday === true ? "Y" : "N",
+      // Saturday: values.saturday === true ? "Y" : "N",
+      // Sunday: values.sunday === true ? "Y" : "N",
       DesignationID: values.Designation.RecordID || 0,
       LocationID: values.location.RecordID || 0,
       StoregatemasterID: values.gate.RecordID || 0,
       DefaultProject: values.project.RecordID || 0,
+      ProjectCode: values.project.Code || "",
+      ProjectName: values.project.Name || "",
       DefaultFunction: values.function.RecordID || 0,
+      FunctionCode: values.function.Code || "",
+      FunctionName: values.function.Name || "",
+      ShiftID: values.shift.RecordID || 0,
+      ShiftCode: values.shift.Code || "",
+      ShiftName: values.shift.Name || "",
       // DesignationID: designLookup ? designLookup.RecordID : 0,
       // LocationID: locationLookup ? locationLookup.RecordID : 0,
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
       CompanyID,
     };
+
     // console.log(locationLookup.locationRecordID, "????????");
     const response = await dispatch(postDeployment({ data: idata }));
+    // return;
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
     } else {
@@ -1895,10 +1964,9 @@ function: deploymentData.DefaultFunction
                     </Typography>
                   ) : (
                     false
-
                   )}
 
-{show == "11" ? (
+                  {show == "11" ? (
                     <Typography
                       variant="h5"
                       color="#0000D1"
@@ -1948,10 +2016,10 @@ function: deploymentData.DefaultFunction
                     <MenuItem value={0}>Employee</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
                     {initialValues.employeetype === "CI" ? (
-                    <MenuItem value={8}>Contracts In</MenuItem>
+                      <MenuItem value={8}>Contracts In</MenuItem>
                     ) : null}
-                      {initialValues.employeetype === "CO" ? (
-                    <MenuItem value={11}>Contracts Out</MenuItem>
+                    {initialValues.employeetype === "CO" ? (
+                      <MenuItem value={11}>Contracts Out</MenuItem>
                     ) : null}
                     <MenuItem value={1}>Employee Process</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
@@ -4341,8 +4409,6 @@ function: deploymentData.DefaultFunction
                           values.location ? values.location.RecordID : 0
                         }'","Any":""}}`}
                       />
-                    
-
 
                       {/* <TextField
                         id="outlined-basic"
@@ -4391,8 +4457,8 @@ function: deploymentData.DefaultFunction
                         alignItems: "center",
                       }}
                     >
-                    <Productautocomplete
-                      id="function"
+                      <Productautocomplete
+                        id="function"
                         name="function"
                         label={
                           <span>
@@ -4403,19 +4469,17 @@ function: deploymentData.DefaultFunction
                           </span>
                         }
                         variant="outlined"
-                        
                         value={values.function}
                         onChange={(newValue) => {
                           setFieldValue("function", newValue);
                           console.log(newValue, "--newvalue function");
                           console.log(newValue.RecordID, "function RecordID");
-                       
                         }}
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
  ='${CompanyID}'","Any":""}}`}
                       />
-                       </FormControl>
-                       <FormControl
+                    </FormControl>
+                    <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -4423,9 +4487,8 @@ function: deploymentData.DefaultFunction
                         alignItems: "center",
                       }}
                     >
-
-<Productautocomplete
- id="project"
+                      <Productautocomplete
+                        id="project"
                         name="project"
                         label={
                           <span>
@@ -4441,12 +4504,12 @@ function: deploymentData.DefaultFunction
                           setFieldValue("project", newValue);
                           console.log(newValue, "--newvalue project");
                           console.log(newValue.RecordID, "project RecordID");
-
                         }}
                         url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
-                       </FormControl>
-                    <FormControl
+                    </FormControl>
+
+                    {/* <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -4493,9 +4556,166 @@ function: deploymentData.DefaultFunction
                         focused
                         // inputProps={{ readOnly: true }}
                       />
+                    </FormControl> */}
+                  </Box>
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5">Shift Details</Typography>
+
+                  {/* <Typography variant="body1" sx={{ minWidth: 80 }}>
+    Shift
+  </Typography> */}
+                  {/* <FormControl sx={{ width: 500, mb: 2 }}>
+  <TextField
+    select
+    variant="standard"
+    name="BillingUnits"
+    id="BillingUnits"
+    value={values.BillingUnits}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    required
+    focused
+    sx={{
+      width: 150, // Adjust width as needed
+    }}
+  >
+    <MenuItem value="HS">General</MenuItem>
+    <MenuItem value="DS">Days</MenuItem>
+    <MenuItem value="WS">Week</MenuItem>
+    <MenuItem value="MS">Month</MenuItem>
+  </TextField>
+</FormControl>
+
+  <FormControl sx={{ width: 500, mb: 2 }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="time"
+                        id="checkin"
+                        name="checkin"
+                        inputFormat="HH:mm:aa"
+                        value={values.checkin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Check In Time"
+                        focused
+                        // inputProps={{ maxLength:20}}
+                      />
+                      </FormControl>
+                  <FormControl sx={{ width: 500, mb: 2 }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="time"
+                        id="checkout"
+                        name="checkout"
+                        inputFormat="HH:mm:aa"
+                        value={values.checkout}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Check Out Time"
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+             </FormControl> */}
+
+                  <Stack
+                    direction="column"
+                    spacing={2}
+                    sx={{ width: 500, mt: 2 }}
+                  >
+                    {/* Shift */}
+                    <FormControl variant="standard" fullWidth>
+                      {/* <TextField
+    select // 👈 This is required for dropdown
+    fullWidth
+    type="text"
+    id="checkin"
+    name="checkin"
+    value={values.checkin}
+    onBlur={handleBlur}
+    onChange={handleChange}
+    label="Shift"
+    focused
+  >
+    <MenuItem value="HS">General</MenuItem>
+    <MenuItem value="DS">Days</MenuItem>
+    <MenuItem value="WS">Week</MenuItem>
+    <MenuItem value="MS">Month</MenuItem>
+  </TextField> */}
+                      <Productautocomplete
+                        id="shift"
+                        name="shift"
+                        label={
+                          <span>
+                            Shift
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.shift}
+                        onChange={(newValue) => {
+    //                        Monday: deploymentData.Monday === "Y" ? true : false,
+    // Tuesday: deploymentData.TuesdayTuesdayShift === "Y" ? true : false,
+    // Wednesday: deploymentData.Wednesday === "Y" ? true : false,
+    // Thursday: deploymentData.Thursday === "Y" ? true : false,
+    // Friday: deploymentData.Friday === "Y" ? true : false,
+    // Saturday: deploymentData.Saturday === "Y" ? true : false,
+    // Sunday: deploymentData.Sunday === "Y" ? true : false,
+    setFieldValue("shift", newValue);
+                          setFieldValue("Monday", newValue.Monday === "Y" ? true : false);
+                          setFieldValue("Tuesday", newValue.Tuesday === "Y" ? true : false);
+                          setFieldValue("Wednesday", newValue.Wednesday === "Y" ? true : false);
+                          setFieldValue("Thursday", newValue.Thursday === "Y" ? true : false);
+                          setFieldValue("Friday", newValue.Friday === "Y" ? true : false);
+                          setFieldValue("Saturday", newValue.Saturday === "Y" ? true : false);
+                          setFieldValue("Sunday", newValue.Sunday === "Y" ? true : false);
+                          console.log(newValue, "--newvalue shift");
+                          console.log(newValue.RecordID, "shift RecordID");
+                        }}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"","Any":""}}`}
+                      />
                     </FormControl>
 
-                    {/* <FormControl
+                    {/* Check In Time */}
+                    <FormControl variant="standard">
+                      <TextField
+                        fullWidth
+                        type="time"
+                        id="checkin"
+                        name="checkin"
+                        value={values.shift?.ShiftStartTime || ""}
+                        // value={values.checkin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Check In Time"
+                        focused
+                      />
+                    </FormControl>
+
+                    {/* Check Out Time */}
+                    <FormControl variant="standard">
+                      <TextField
+                        fullWidth
+                        type="time"
+                        id="checkout"
+                        name="checkout"
+                        value={values.shift?.ShiftendTime || ""}
+                        // value={values.checkout}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Check Out Time"
+                        focused
+                        inputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </FormControl>
+                  </Stack>
+
+                  {/* <FormControl
                       sx={{
                         gridColumn: "span 2",
                         display: "flex",
@@ -4538,19 +4758,20 @@ function: deploymentData.DefaultFunction
                         inputProps={{ tabIndex: "-1" }}
                       />
                     </FormControl> */}
-                  </Box>
+
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Week Off</Typography>
                   <Box>
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="monday"
-                      id="monday"
+                      name="Monday"
+                      id="Monday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -4558,12 +4779,13 @@ function: deploymentData.DefaultFunction
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="tuesday"
-                      id="tuesday"
+                      name="Tuesday"
+                      id="Tuesday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
+                      //  disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -4571,12 +4793,13 @@ function: deploymentData.DefaultFunction
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="wednesday"
-                      id="wednesday"
+                      name="Wednesday"
+                      id="Wednesday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
+                      //  disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -4584,12 +4807,13 @@ function: deploymentData.DefaultFunction
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="thursday"
-                      id="thursday"
+                      name="Thursday"
+                      id="Thursday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Thursday"
+                      //  disabled
                     />
 
                     <FormLabel focused={false}>Thursday</FormLabel>
@@ -4597,12 +4821,13 @@ function: deploymentData.DefaultFunction
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="friday"
-                      id="friday"
+                      name="Friday"
+                      id="Friday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Friday"
+                      //  disabled
                     />
 
                     <FormLabel focused={false}>Friday</FormLabel>
@@ -4610,12 +4835,13 @@ function: deploymentData.DefaultFunction
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="saturday"
-                      id="saturday"
+                      name="Saturday"
+                      id="Saturday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Saturday"
+                      //  disabled
                     />
 
                     <FormLabel focused={false}>Saturday</FormLabel>
@@ -4623,12 +4849,13 @@ function: deploymentData.DefaultFunction
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="sunday"
-                      id="sunday"
+                      name="Sunday"
+                      id="Sunday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Sunday"
+                      //  disabled
                     />
 
                     <FormLabel focused={false}>Sunday</FormLabel>
@@ -5496,8 +5723,8 @@ function: deploymentData.DefaultFunction
         ) : (
           false
         )}
-        
-{/*Contracts In */}
+
+        {/*Contracts In */}
         {show == "8" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -6096,8 +6323,8 @@ function: deploymentData.DefaultFunction
           false
         )}
 
-{/*Contracts Out */}
-{show == "11" ? (
+        {/*Contracts Out */}
+        {show == "11" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={ContractInitialValue}
@@ -6694,7 +6921,6 @@ function: deploymentData.DefaultFunction
         ) : (
           false
         )}
-
 
         {show == "9" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
@@ -7296,7 +7522,7 @@ function: deploymentData.DefaultFunction
                           variant="standard"
                           type="number"
                           // label="Total Days"
-                            label="Eligible Days"
+                          label="Eligible Days"
                           id="totaldays"
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -7389,34 +7615,33 @@ function: deploymentData.DefaultFunction
                             },
                           }}
                         />
-                            <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={<span>Year</span>}
-                        value={values.Year}
-                        id="Year"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Year"
-                        // required
-                        focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
-                      >
-                    
-                    <MenuItem value="2024">2024</MenuItem>
-                        <MenuItem value="2025">2025</MenuItem>
-                        <MenuItem value="2026">2026</MenuItem>
-                        {/* <MenuItem value="PY">2024</MenuItem>
+                        <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={<span>Year</span>}
+                          value={values.Year}
+                          id="Year"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Year"
+                          // required
+                          focused
+                          // sx={{
+                          //   gridColumn: "span 2",
+                          //   backgroundColor: "#ffffff",
+                          //   "& .MuiInputBase-root": {
+                          //     backgroundColor: "",
+                          //   },
+                          // }}
+                        >
+                          <MenuItem value="2024">2024</MenuItem>
+                          <MenuItem value="2025">2025</MenuItem>
+                          <MenuItem value="2026">2026</MenuItem>
+                          {/* <MenuItem value="PY">2024</MenuItem>
                         <MenuItem value="CY">2025</MenuItem>
                         <MenuItem value="NY">2026</MenuItem> */}
-                      </TextField>
+                        </TextField>
                       </FormControl>
 
                       <Box
