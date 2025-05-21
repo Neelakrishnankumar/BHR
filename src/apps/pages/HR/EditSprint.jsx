@@ -342,7 +342,7 @@ const EditSprint = () => {
         id="ScheduledTo"
         value={Employee}
         onChange={handleChange}
-        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2106","ScreenName":"Scheduled To","Filter":"ERank='${row.Rank}' AND ComID='${CompanyID}'","Any":""}}`}
+        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2106","ScreenName":"Scheduled To","Filter":"ERank='${row.Rank}' AND parentID='${CompanyID}'","Any":""}}`}
       />
     );
   }
