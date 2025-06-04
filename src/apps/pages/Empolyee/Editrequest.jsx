@@ -657,67 +657,67 @@ const Editrequests = () => {
       "action",
     ];
   }
-const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
-  const url = store.getState().globalurl.empGetAttachmentUrl;
+  const fetchAttachments = async (rowData, setFiles, setError, setLoading,appId) => {
+    const url = store.getState().globalurl.empGetAttachmentUrl;
 
-  setLoading(true);
-  try {
-    const response = await axios.get(url, {
-      params: {
-        empId: rowData.EmployeeID,
-        appId: rowData.RecordID,
-      },
-    });
-    setFiles(response.data);
-  } catch (err) {
-    setError('Failed to fetch attachments.');
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    try {
+      const response = await axios.get(url, {
+        params: {
+          empId: recID,
+          appId: rowData.RecordID,
+        },
+      });
+      setFiles(response.data);
+    } catch (err) {
+      setError('Failed to fetch attachments.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // const columns = React.useMemo(
-  //   () =>
-  //     explorelistViewcolumn.filter((column) =>
-  //       VISIBLE_FIELDS.includes(column.field)
-  //     ),
-  //   [explorelistViewcolumn]
-  // );
- const columns = React.useMemo(() => {
-  return explorelistViewcolumn
-    .filter((column) => VISIBLE_FIELDS.includes(column.field))
-    .map((column) => {
-      if (column.field === "action") {
-        return {
-          ...column,
-          renderCell: (params) => (
-            <Box display="flex" alignItems="center" gap={-1.5}>
-              
-              <EditIcon
-                color="primary"
-                size="small"
-                onClick={() => {
-                  selectCellRowData({ rowData: params.row, mode: "E", field: "action" });
-                  fetchAttachments(params.row, setFiles, setError, setLoading); 
-                }}
-              />
+  const columns = React.useMemo(
+    () =>
+      explorelistViewcolumn.filter((column) =>
+        VISIBLE_FIELDS.includes(column.field)
+      ),
+    [explorelistViewcolumn]
+  );
+  //  const columns = React.useMemo(() => {
+  //   return explorelistViewcolumn
+  //     .filter((column) => VISIBLE_FIELDS.includes(column.field))
+  //     .map((column) => {
+  //       if (column.field === "action") {
+  //         return {
+  //           ...column,
+  //           renderCell: (params) => (
+  //             <Box display="flex" alignItems="center" gap={-1.5}>
 
-              
-              <FileUploadIconButton
-                onFileSelect={(file) => {
-                   fetchAttachments(params.row, setFiles, setError, setLoading); 
-                  fileUpload(file, params.row);
-                 
-                }}
-              />
-            </Box>
-          ),
-        };
-      }
-      return column;
-    });
-}, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  //               <EditIcon
+  //                 color="primary"
+  //                 size="small"
+  //                 onClick={() => {
+  //                   selectCellRowData({ rowData: params.row, mode: "E", field: "action" });
+  //                   fetchAttachments(params.row, setFiles, setError, setLoading); 
+  //                 }}
+  //               />
+
+
+  //               <FileUploadIconButton
+  //                 onFileSelect={(file) => {
+  //                    fetchAttachments(params.row, setFiles, setError, setLoading); 
+  //                   fileUpload(file, params.row);
+
+  //                 }}
+  //               />
+  //             </Box>
+  //           ),
+  //         };
+  //       }
+  //       return column;
+  //     });
+  // }, [explorelistViewcolumn, VISIBLE_FIELDS]);
 
 
 
@@ -1335,6 +1335,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
       });
     } else {
       if (field == "action") {
+        fetchAttachments(rowData, setFiles, setError, setLoading);
         setItemCustodyData({
           recordID: rowData.RecordID,
           itemNO: rowData.ItemNumber,
@@ -2491,14 +2492,19 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
       }
     });
   };
-  async function fileUpload(file) {
+  const type = show == "2" ? "L" : show == "6" ? "OT" : show == "8" ? "OD" : show == "7" ? "SA" : show == "11" ? "P" : show == "9" ? "E" : show == "10" ? "R" : "";
+
+  async function fileUpload(file, appId) {
     console.log("🚀 ~ fileUpload ~ file:", file)
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('empId',leaveData.EmployeeID);
-    formData.append('appId', leaveData.recordID);
-    formData.append('type', "L");
-    formData.append('source', "Self");
+    formData.append('empId', recID);
+    formData.append('appId', appId);
+    //formData.append('type', "L");
+    if (type) {
+      formData.append('type', type);
+    }
+    formData.append('source', "HR");
     console.log("🚀 ~ fileUpload ~ formData:", formData)
     const respose = await dispatch(attachmentPost({ data: formData }))
 
@@ -2509,8 +2515,8 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
       axios
         .get(url, {
           params: {
-            empId: leaveData.EmployeeID,
-            appId: leaveData.recordID,
+            empId: recID,
+            appId: appId,
 
           }
         })
@@ -2667,7 +2673,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                     ) : (
                       false
                     )} */}
-                  {show == "1" ? (
+                  {show == "2" ? (
                     <Typography
                       variant="h5"
                       color="#0000D1"
@@ -4161,9 +4167,12 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                     padding={1}
                     gap={formGap}
                   >
-                    {/* <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={fileUpload} />
-                      </Box> */}
+                    {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, leaveData.recordID)} />
+                      </Box>
+                    )}
+
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -4234,6 +4243,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       />
                     </Popup>
                   </Box>
+                    {funMode !== "A" && (
                   <Box mt={2}
                   >
                     <Paper elevation={3} sx={{ padding: 2 }}>
@@ -4290,6 +4300,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       </TableContainer>
                     </Paper>
                   </Box>
+                    )}
                 </form>
               )}
             </Formik>
@@ -4683,6 +4694,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       </FormControl>
                     </FormControl>
                   </Box>
+
                   <Box
                     display="flex"
                     justifyContent="end"
@@ -4690,6 +4702,12 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                     gap={formGap}
 
                   >
+                    {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, otdata.RecordID)} />
+                      </Box>
+                    )}
+                    
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -4734,6 +4752,64 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       Cancel
                     </Button>
                   </Box>
+                  {funMode !== "A" && (
+                  <Box mt={2}
+                  >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                      <TableContainer component={Paper} >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow sx={rowSx}>
+                              <TableCell width={20}><strong>S.No</strong></TableCell>
+                              <TableCell><strong>Uploaded Date</strong></TableCell>
+                              <TableCell ><strong>Filename</strong></TableCell>
+                              <TableCell ><strong>Source</strong></TableCell>
+                              <TableCell><strong>View</strong></TableCell>
+
+
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                  No files uploaded yet.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              files.map((file, index) => (
+                                <TableRow key={file.id || index} sx={rowSx}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{file.uploadedDate}</TableCell>
+                                  <TableCell>{file.filename}</TableCell>
+                                  <TableCell>{file.source}</TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Open File">
+                                      <IconButton
+                                        color="primary"
+                                        component="a"
+                                        href={file.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        size="small"
+                                      >
+                                        <OpenInNewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </Box>
+                    )}
                 </form>
               )}
             </Formik>
@@ -5168,6 +5244,12 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                     gap={formGap}
 
                   >
+                    {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, saladdata.RecordID)} />
+                      </Box>
+                    )}
+                    
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -5212,6 +5294,64 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       Cancel
                     </Button>
                   </Box>
+                   {funMode !== "A" && (
+                  <Box mt={2}
+                  >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                      <TableContainer component={Paper} >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow sx={rowSx}>
+                              <TableCell width={20}><strong>S.No</strong></TableCell>
+                              <TableCell><strong>Uploaded Date</strong></TableCell>
+                              <TableCell ><strong>Filename</strong></TableCell>
+                              <TableCell ><strong>Source</strong></TableCell>
+                              <TableCell><strong>View</strong></TableCell>
+
+
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                  No files uploaded yet.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              files.map((file, index) => (
+                                <TableRow key={file.id || index} sx={rowSx}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{file.uploadedDate}</TableCell>
+                                  <TableCell>{file.filename}</TableCell>
+                                  <TableCell>{file.source}</TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Open File">
+                                      <IconButton
+                                        color="primary"
+                                        component="a"
+                                        href={file.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        size="small"
+                                      >
+                                        <OpenInNewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </Box>
+                    )}
                 </form>
               )}
             </Formik>
@@ -5574,6 +5714,12 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
 
                       <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
+                        {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, ondutydata.RecordID)} />
+                      </Box>
+                    )}
+                    
                         <LoadingButton
                           color="secondary"
                           variant="contained"
@@ -5671,7 +5817,64 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       </Box>
                     </FormControl>
                   </Box>
+{funMode !== "A" && (
+                  <Box mt={2}
+                  >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                      <TableContainer component={Paper} >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow sx={rowSx}>
+                              <TableCell width={20}><strong>S.No</strong></TableCell>
+                              <TableCell><strong>Uploaded Date</strong></TableCell>
+                              <TableCell ><strong>Filename</strong></TableCell>
+                              <TableCell ><strong>Source</strong></TableCell>
+                              <TableCell><strong>View</strong></TableCell>
 
+
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                  No files uploaded yet.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              files.map((file, index) => (
+                                <TableRow key={file.id || index} sx={rowSx}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{file.uploadedDate}</TableCell>
+                                  <TableCell>{file.filename}</TableCell>
+                                  <TableCell>{file.source}</TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Open File">
+                                      <IconButton
+                                        color="primary"
+                                        component="a"
+                                        href={file.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        size="small"
+                                      >
+                                        <OpenInNewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </Box>
+                    )}
                 </form>
               )}
             </Formik>
@@ -5845,6 +6048,64 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                             : "even-row"
                         }
                       />
+                        {funMode !== "A" && (
+                  <Box mt={2}
+                  >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                      <TableContainer component={Paper} >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow sx={rowSx}>
+                              <TableCell width={20}><strong>S.No</strong></TableCell>
+                              <TableCell><strong>Uploaded Date</strong></TableCell>
+                              <TableCell ><strong>Filename</strong></TableCell>
+                              <TableCell ><strong>Source</strong></TableCell>
+                              <TableCell><strong>View</strong></TableCell>
+
+
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                  No files uploaded yet.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              files.map((file, index) => (
+                                <TableRow key={file.id || index} sx={rowSx}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{file.uploadedDate}</TableCell>
+                                  <TableCell>{file.filename}</TableCell>
+                                  <TableCell>{file.source}</TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Open File">
+                                      <IconButton
+                                        color="primary"
+                                        component="a"
+                                        href={file.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        size="small"
+                                      >
+                                        <OpenInNewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </Box>
+                    )}
                     </Box>
 
                     <FormControl sx={{ gap: formGap }}>
@@ -6048,8 +6309,17 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                         {/* {mode == "E" && values.Status == "RJ" && <Alert variant="filled" sx={{mt:1}} severity="error">Your Leave Request Was Rejected.</Alert>} */}
                       </FormControl>
 
-                      <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
+                      
+                    </FormControl>
+                  </Box>
+<Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
+                        {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, perData.recordID)} />
+                      </Box>
+                    )}
+                    
                         <LoadingButton
                           color="secondary"
                           variant="contained"
@@ -6085,7 +6355,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                               confirmButtonText: "Confirm",
                             }).then((result) => {
                               if (result.isConfirmed) {
-                                ondutyFNsave(values, resetForm, "harddelete");
+                                PerFNsave(values, resetForm, "harddelete");
                                 // navigate(-1);
                               } else {
                                 return;
@@ -6145,9 +6415,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                           />
                         </Popup>
                       </Box>
-                    </FormControl>
-                  </Box>
-
+                    
                 </form>
               )}
             </Formik>
@@ -6630,7 +6898,7 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                   </Box> */}
                       <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
-                        <IconButton
+                        {/* <IconButton
                           size="small"
                           color="warning"
                           aria-label="upload picture"
@@ -6661,7 +6929,13 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                           }}
                         >
                           View
-                        </Button>
+                        </Button> */}
+                        {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, expensedata.RecordID)} />
+                      </Box>
+                    )}
+                    
                         <LoadingButton
                           color="secondary"
                           variant="contained"
@@ -6708,7 +6982,64 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       </Box>
                     </FormControl>
                   </Box>
+                  {funMode !== "A" && (
+                  <Box mt={2}
+                  >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                      <TableContainer component={Paper} >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow sx={rowSx}>
+                              <TableCell width={20}><strong>S.No</strong></TableCell>
+                              <TableCell><strong>Uploaded Date</strong></TableCell>
+                              <TableCell ><strong>Filename</strong></TableCell>
+                              <TableCell ><strong>Source</strong></TableCell>
+                              <TableCell><strong>View</strong></TableCell>
 
+
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                  No files uploaded yet.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              files.map((file, index) => (
+                                <TableRow key={file.id || index} sx={rowSx}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{file.uploadedDate}</TableCell>
+                                  <TableCell>{file.filename}</TableCell>
+                                  <TableCell>{file.source}</TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Open File">
+                                      <IconButton
+                                        color="primary"
+                                        component="a"
+                                        href={file.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        size="small"
+                                      >
+                                        <OpenInNewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </Box>
+                    )}
                 </form>
               )}
             </Formik>
@@ -7195,6 +7526,12 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                     padding={1}
                     gap={formGap}
                   >
+                    {funMode !== "A" && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, regdata.RecordID)} />
+                      </Box>
+                    )}
+                    
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -7265,6 +7602,64 @@ const fetchAttachments = async (rowData, setFiles, setError, setLoading) => {
                       />
                     </Popup>
                   </Box>
+                  {funMode !== "A" && (
+                  <Box mt={2}
+                  >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                      {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                      <TableContainer component={Paper} >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow sx={rowSx}>
+                              <TableCell width={20}><strong>S.No</strong></TableCell>
+                              <TableCell><strong>Uploaded Date</strong></TableCell>
+                              <TableCell ><strong>Filename</strong></TableCell>
+                              <TableCell ><strong>Source</strong></TableCell>
+                              <TableCell><strong>View</strong></TableCell>
+
+
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {files.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                  No files uploaded yet.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              files.map((file, index) => (
+                                <TableRow key={file.id || index} sx={rowSx}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>{file.uploadedDate}</TableCell>
+                                  <TableCell>{file.filename}</TableCell>
+                                  <TableCell>{file.source}</TableCell>
+                                  <TableCell>
+                                    <Tooltip title="Open File">
+                                      <IconButton
+                                        color="primary"
+                                        component="a"
+                                        href={file.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        size="small"
+                                      >
+                                        <OpenInNewIcon fontSize="small" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </Box>
+                    )}
                 </form>
               )}
             </Formik>
