@@ -1645,7 +1645,8 @@ console.log(Expiryin, "--in a sideBar Expiryin");
                   // sx={{ width: "100px" }}
                   sx={{ height: "110px", width: "140px" }}
                   onClick={() => {
-                    navigate("./Chart");
+                    // navigate("./Chart");
+                    navigate("./HR");
                   }}
                 ></Avatar>
                 {/* <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography> */}
