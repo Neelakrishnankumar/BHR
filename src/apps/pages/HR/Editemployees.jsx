@@ -225,7 +225,7 @@ const Editemployee = () => {
           "",
     checkbox: Data.Disable,
   scrummaster: Data.ScrumMaster === "Y" ? true : false,
-   prjmanager: Data.Projectmanager === "Y" ? true : false,
+   prjmanager: Data.ProjectManager === "Y" ? true : false,
 
 
     joindate: Data.DateOfJoin,
@@ -438,9 +438,10 @@ const Editemployee = () => {
         ? "harddelete"
         : "update";
     var isCheck = "N";
-    if (values.checkbox || values.scrummaster == true) {
+    if (values.checkbox || values.scrummaster || values.prjmanager == true) {
       isCheck = "Y";
     }
+    
 
     var saveData = {
       RecordID: recID,
@@ -451,7 +452,7 @@ const Editemployee = () => {
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
-    //Projectmanager: values.prjmanager === true ? "Y" : "N",
+    ProjectManager: values.prjmanager === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -1572,8 +1573,8 @@ const Editemployee = () => {
           Name: deploymentData.ShiftName,
         }
       : null,
-    checkin: deploymentData.CheckInTime || "",
-    checkout: deploymentData.CheckOutTime || "",
+    checkin: deploymentData.ShiftStartTime || "",
+    checkout: deploymentData.ShiftEndTime || "",
     // monday: deploymentData.Monday === "Y" ? true : false,
     // tuesday: deploymentData.Tuesday === "Y" ? true : false,
     // wednesday: deploymentData.Wednesday === "Y" ? true : false,
@@ -1581,13 +1582,13 @@ const Editemployee = () => {
     // friday: deploymentData.Friday === "Y" ? true : false,
     // saturday: deploymentData.Saturday === "Y" ? true : false,
     // sunday: deploymentData.Sunday === "Y" ? true : false,
-    Monday: deploymentData.Monday === "Y" ? true : false,
-    Tuesday: deploymentData.Tuesday === "Y" ? true : false,
-    Wednesday: deploymentData.Wednesday === "Y" ? true : false,
-    Thursday: deploymentData.Thursday === "Y" ? true : false,
-    Friday: deploymentData.Friday === "Y" ? true : false,
-    Saturday: deploymentData.Saturday === "Y" ? true : false,
-    Sunday: deploymentData.Sunday === "Y" ? true : false,
+    Monday: deploymentData.MondayShift === "Y" ? true : false,
+    Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
+    Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
+    Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
+    Friday: deploymentData.FridayShift === "Y" ? true : false,
+    Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+    Sunday: deploymentData.SundayShift === "Y" ? true : false,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
@@ -4701,11 +4702,11 @@ const Editemployee = () => {
                         type="time"
                         id="checkin"
                         name="checkin"
-                        value={values.shift?.ShiftStartTime || ""}
+                        value={values.shift?.ShiftStartTime || values.checkin}
                         // value={values.checkin}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Check In Time"
+                        label="Shift Start Time"
                         focused
                       />
                     </FormControl>
@@ -4717,11 +4718,11 @@ const Editemployee = () => {
                         type="time"
                         id="checkout"
                         name="checkout"
-                        value={values.shift?.ShiftendTime || ""}
+                        value={values.shift?.ShiftendTime || values.checkout}
                         // value={values.checkout}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Check Out Time"
+                        label="Shift End Time"
                         focused
                         inputProps={{
                           readOnly: true,

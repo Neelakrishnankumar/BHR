@@ -95,7 +95,7 @@ const EditAttendanceHistory = () => {
   const [show, setScreen] = React.useState("0");
   const EMPID = sessionStorage.getItem("empID");
   console.log(EMPID, '-------------djkvbwld')
-  const companyID = sessionStorage.getItem("compID")
+  const CompanyID = sessionStorage.getItem("compID")
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
@@ -225,7 +225,8 @@ const EditAttendanceHistory = () => {
       Month: values.month.toString(),
       Year: values.year,
       ManagerID: EMPID,
-      Etype: "H"
+      Etype: "H",
+      CompanyID
     };
 
     dispatch(empAttendance({ data }));
