@@ -2787,16 +2787,18 @@ const Editrequests = () => {
                     onChange={screenChange}
                   >
                     <MenuItem value={0}>Employee</MenuItem>
-
+                    <MenuItem value={11}>Permission</MenuItem>
                     {/* <MenuItem value={1}>Allowances</MenuItem>
                       <MenuItem value={5}>Deductions</MenuItem> */}
                     <MenuItem value={2}>Leave</MenuItem>
                     <MenuItem value={8}>On Duty</MenuItem>
                     <MenuItem value={6}>OT</MenuItem>
+                     <MenuItem value={10}>Regularization</MenuItem>
+                      <MenuItem value={9}>Expense</MenuItem>
                     <MenuItem value={7}>Salary Advance</MenuItem>
-                    <MenuItem value={9}>Expense</MenuItem>
-                    <MenuItem value={10}>Regularization</MenuItem>
-                    <MenuItem value={11}>Permission</MenuItem>
+                   
+                   
+                  
                     {/* <MenuItem value={3}>Attendance</MenuItem>
                       <MenuItem value={4}>Payroll Attendance</MenuItem> */}
                   </Select>

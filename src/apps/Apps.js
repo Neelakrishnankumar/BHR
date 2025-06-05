@@ -126,7 +126,7 @@ import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
 import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
 import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
 import Editshift from "./pages/HR/Editshift";
-// import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
+import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
 
 
 function App() {
@@ -646,7 +646,7 @@ function App() {
                    path="/:accessID/:screenName/EditShift/:id/:Mode"
                     element={<Editshift />}
                   />
-                    {/* <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} /> */}
+                    <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
 
                    {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"

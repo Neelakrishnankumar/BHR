@@ -21,57 +21,57 @@ const initialState = {
   postLoading: false,
   conversionData: {},
   userGroup: [],
-  materialStockData:{},
-  exploreData:{},
-  trackingData:[],
-  customerData:{},
-  productanalysisData:{},
-  pakingListCarton:[],
-  summeryData:[],
-  hashtokenData:{},
-  costingLeatherCost:{
-  materialCost:0,
-  leatherOneCost:0,
-  leatherTwoCost:0,
-  leatherThreeCost:0,
-  latestmaterialCost:0,
-  latestleatherOneCost:0,
-  latestleatherTwoCost:0,
-  latestleatherThreeCost:0,
+  materialStockData: {},
+  exploreData: {},
+  trackingData: [],
+  customerData: {},
+  productanalysisData: {},
+  pakingListCarton: [],
+  summeryData: [],
+  hashtokenData: {},
+  costingLeatherCost: {
+    materialCost: 0,
+    leatherOneCost: 0,
+    leatherTwoCost: 0,
+    leatherThreeCost: 0,
+    latestmaterialCost: 0,
+    latestleatherOneCost: 0,
+    latestleatherTwoCost: 0,
+    latestleatherThreeCost: 0,
   },
-customerLeatherData:{},
-summaryData:{},
-deploymentData:{},
-trackingLoading:false,
-materialTrackingData:{
-  Rateseries:{},
-                Qtyseries:{},
-                Amountseries:{},
-                categories:[],
-                TableData:{data:[]},
-},
-stockorderData:{},
-matrialDcTrackData:[],
-purchaseorderratingData:[],
-searchLoading:false,
-empAttendanceData:{},
-AttendanceData:{},
-RegGetData:{},
-timeSheetData:{},
-sprintget: {},
-sprintPPget: [],
-sprintgetstatus: "",
-sprintloading:false
+  customerLeatherData: {},
+  summaryData: {},
+  deploymentData: {},
+  trackingLoading: false,
+  materialTrackingData: {
+    Rateseries: {},
+    Qtyseries: {},
+    Amountseries: {},
+    categories: [],
+    TableData: { data: [] },
+  },
+  stockorderData: {},
+  matrialDcTrackData: [],
+  purchaseorderratingData: [],
+  searchLoading: false,
+  empAttendanceData: {},
+  AttendanceData: {},
+  RegGetData: {},
+  timeSheetData: {},
+  sprintget: {},
+  sprintPPget: [],
+  sprintgetstatus: "",
+  sprintloading: false
 
 };
 
 export const subScriptionCheck = createAsyncThunk(
   "sub/subScriptionCheck",
   async ({ data }) => {
-    
+
     var url = store.getState().globalurl.subCheckUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
-   
+
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -89,10 +89,10 @@ export const subScriptionCheck = createAsyncThunk(
 // export const empAttendance = createAsyncThunk(
 //   "employee/Payrollattendance",
 //   async ({ data }) => {
-    
+
 //     var url = store.getState().globalurl.payrollattendanceUrl;
 //     // var url = store.getState().globalurl.employeeattendanceUrl;
-   
+
 //     console.log("get" + JSON.stringify(data));
 //     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
 //     const response = await axios.post(url, data, {
@@ -108,11 +108,11 @@ export const subScriptionCheck = createAsyncThunk(
 //     return response.data;
 //   }
 // );
-export const CustomerpriceorderQty= createAsyncThunk(
+export const CustomerpriceorderQty = createAsyncThunk(
   "products/Customerprice",
   async ({ data }) => {
     var url = store.getState().globalurl.CustomerPriceorderQtyUrl;
-   
+
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -132,7 +132,7 @@ export const Attendance = createAsyncThunk(
   "employee/attendance",
   async ({ data }) => {
     var url = store.getState().globalurl.attendanceUrl;
-   
+
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -154,8 +154,8 @@ export const AttendanceProcess = createAsyncThunk(
   async ({ data }) => {
     console.log("get" + JSON.stringify(data));
     var url = store.getState().globalurl.attendanceprocessUrl;
-   
-   
+
+
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
       headers: {
@@ -224,11 +224,11 @@ export const geolocationData = createAsyncThunk(
     var url = store.getState().globalurl.geolocationgetUrl;
     var data = {
       Query: {
-      empID : empID,
+        empID: empID,
       }
     };
-    
-    data=JSON.stringify(data);
+
+    data = JSON.stringify(data);
     console.log("get" + data);
 
     const response = await axios.get(url, {
@@ -240,7 +240,7 @@ export const geolocationData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-   
+
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
       response
@@ -257,7 +257,7 @@ export const geolocUpdate = createAsyncThunk(
 
     console.log("get" + JSON.stringify(data));
     // console.log(data.idata, "--idata");
-    
+
     const response = await axios.post(url, data, {
       headers: {
         Authorization:
@@ -274,7 +274,7 @@ export const geolocUpdate = createAsyncThunk(
 
 export const searchData = createAsyncThunk(
   "all/search",
-  async ({data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.searchUrl;
 
     console.log("get" + JSON.stringify(data));
@@ -299,7 +299,7 @@ export const materialDcTrckChartData = createAsyncThunk(
     var data = {
       Query: {
         RecordID: RecordID,
-        Type:Type
+        Type: Type
       },
     };
     data = JSON.stringify(data);
@@ -326,7 +326,7 @@ export const stockorder = createAsyncThunk(
   async ({ data }) => {
     // var url = 'http://localhost:8080/MYPROJECT/lgems-api/materialStockOrderTrack.php'
     var url = store.getState().globalurl.stockorderUrl;
-   
+
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -347,7 +347,7 @@ export const purchaseorderrating = createAsyncThunk(
   async ({ data }) => {
 
     var url = store.getState().globalurl.PurchaseorderratingUrl;
-   
+
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -369,7 +369,7 @@ export const purchaseorderrating = createAsyncThunk(
 
 export const procurementTrackingGet = createAsyncThunk(
   "materil/procurement",
-  async ({ RecordID,Type }) => {
+  async ({ RecordID, Type }) => {
     var url = store.getState().globalurl.matProcurementUrl;
     var data = {
       Query: {
@@ -378,7 +378,7 @@ export const procurementTrackingGet = createAsyncThunk(
       },
     };
     console.log("get" + JSON.stringify(data));
-   const response =  await axios.get(url, {
+    const response = await axios.get(url, {
       params: {
         data: JSON.stringify(data),
       },
@@ -423,12 +423,12 @@ export const customerLeather = createAsyncThunk(
 //DC Summary
 export const dcSummary = createAsyncThunk(
   "delivery challan/summary",
-  async ({ HeaderID ,Type}) => {
+  async ({ HeaderID, Type }) => {
     var url = store.getState().globalurl.dcsummaryUrl;
     var data = {
       HeaderID: HeaderID,
       Type
-     
+
     };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -447,7 +447,7 @@ export const dcSummary = createAsyncThunk(
 );
 export const dcpostSummary = createAsyncThunk(
   "delivery challan/summary/postdata",
-  async ({ data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.dcpostsummaryUrl;
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -467,11 +467,11 @@ export const dcpostSummary = createAsyncThunk(
 //Employee Deployment
 export const getDeployment = createAsyncThunk(
   "employee/deployment",
-  async ({ HeaderID}) => {
+  async ({ HeaderID }) => {
     var url = store.getState().globalurl.getempdeploymentUrl;
     var data = {
       HeaderID: HeaderID,
-     
+
     };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -490,7 +490,7 @@ export const getDeployment = createAsyncThunk(
 );
 export const postDeployment = createAsyncThunk(
   "employee/deployment/postdata",
-  async ({ data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.postempdeployment;
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -508,7 +508,7 @@ export const postDeployment = createAsyncThunk(
 );
 export const costLeatherData = createAsyncThunk(
   "bom/costing/leather",
-  async ({ HeaderRecordID, LeatherRecordID,LeatherNumber }) => {
+  async ({ HeaderRecordID, LeatherRecordID, LeatherNumber }) => {
     var url = store.getState().globalurl.costingLeatherUrl;
     var data = {
       HeaderRecordID: HeaderRecordID,
@@ -550,9 +550,9 @@ export const conversionMaterialData = createAsyncThunk(
 
 export const uomMaterialRate = createAsyncThunk(
   "material/conversion",
-  async ({ fromUomID,toUomID,Type}) => {
+  async ({ fromUomID, toUomID, Type }) => {
     var url = store.getState().globalurl.materialUomCovUrl;
-    var data = {FromUOMID:fromUomID,ToUOMID:toUomID,Type};
+    var data = { FromUOMID: fromUomID, ToUOMID: toUomID, Type };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -569,10 +569,10 @@ export const uomMaterialRate = createAsyncThunk(
 );
 export const dpConversionData = createAsyncThunk(
   "Product/conversion",
-  async ({ Purchase,FromID,Type,MaterialID }) => {
+  async ({ Purchase, FromID, Type, MaterialID }) => {
     //alert("purchase"+Purchase);
     var url = store.getState().globalurl.designPUrl;
-    var data = { ConversionID: Purchase,FromID:FromID,Type:Type,MaterialID:MaterialID };
+    var data = { ConversionID: Purchase, FromID: FromID, Type: Type, MaterialID: MaterialID };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:98 ~ data:", data)
     //alert("data---"+data);
@@ -593,7 +593,7 @@ export const StockProcessApi = createAsyncThunk(
   "Stock/process",
   async (props) => {
     var url = store.getState().globalurl.imageNameUpdateUrl;
-    var data = { accessid: props.accessID, Recordid: props.recID ,ImageName:"" ,Action:""};
+    var data = { accessid: props.accessID, Recordid: props.recID, ImageName: "", Action: "" };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -608,7 +608,7 @@ export const StockProcessApi = createAsyncThunk(
 
 export const cbmCalculation = createAsyncThunk(
   "packinglist/cbmcalculation",
-  async ({data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.packinglistCbmUrl;
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -624,7 +624,7 @@ export const cbmCalculation = createAsyncThunk(
 
 export const bomCopyFn = createAsyncThunk(
   "Stock/process",
-  async ({data,accessID}) => {
+  async ({ data, accessID }) => {
     var url = accessID == 'TR001' ? store.getState().globalurl.bomCopyUrl : store.getState().globalurl.bomCopyJobworkUrl;
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -654,7 +654,7 @@ export const invoiceHeaderGetData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-     console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
   }
 );
@@ -676,7 +676,7 @@ export const invoiceExploreGetData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-     console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
   }
 );
@@ -701,13 +701,13 @@ export const RegGetData = createAsyncThunk(
 );
 export const getLeaveentryData = createAsyncThunk(
   "Leave Entry/get",
-  async ({ EmployeeID, LeaveTypeID }) => {  
+  async ({ EmployeeID, LeaveTypeID }) => {
     const url = store.getState().globalurl.getLeaveentryDataUrl;
-console.log(url, "--find url");
+    console.log(url, "--find url");
 
     const data = {
       EmployeeID: EmployeeID,
-      LeaveTypeID: LeaveTypeID,  
+      LeaveTypeID: LeaveTypeID,
     };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
@@ -715,7 +715,7 @@ console.log(url, "--find url");
     const response = await axios.post(url, data, {
       headers: {
         Authorization:
-        "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
     console.log(
@@ -727,7 +727,7 @@ console.log(url, "--find url");
 );
 export const stockGetData = createAsyncThunk(
   "stock/material",
-  async ({ accessID,Type , recID ,yearData}) => {
+  async ({ accessID, Type, recID, yearData }) => {
     var url = store.getState().globalurl.stockUrl;
     var data = {
       Query: {
@@ -741,16 +741,16 @@ export const stockGetData = createAsyncThunk(
 
     console.log("get" + data);
     const response = await axios
-    .get(url, {
-      params: {
-        data: data,
-      },
+      .get(url, {
+        params: {
+          data: data,
+        },
 
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    })
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      })
     console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data.Data;
   }
@@ -777,7 +777,7 @@ export const requestMail = createAsyncThunk(
 );
 export const leaveAppoval = createAsyncThunk(
   "leave/approval",
-  async ({data}, thunkAPI) => {
+  async ({ data }, thunkAPI) => {
     try {
       var url = store.getState().globalurl.leavelApprovalUrl;
       console.log("get" + JSON.stringify(data));
@@ -847,8 +847,8 @@ export const getFetchData = createAsyncThunk(
       accessid: accessID,
       action: get,
       recid: recID,
-         };
-    
+    };
+
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
@@ -871,9 +871,9 @@ export const sprintGetData = createAsyncThunk(
     var url = store.getState().globalurl.SprintgetUrl;
     const data = {
       SprintHeaderID: SprintHeaderID,
-  
-         };
-    
+
+    };
+
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
@@ -893,14 +893,14 @@ export const sprintGetData = createAsyncThunk(
 //Sprint Project Plan Get
 export const sprintprojectplanGetData = createAsyncThunk(
   "Project Plan get/Sprint",
-  async ({ ActivitiesID,FromDate,ToDate }) => {
+  async ({ ActivitiesID, FromDate, ToDate }) => {
     var url = store.getState().globalurl.SprintPPGetUrl;
     const data = {
       ActivitiesID: ActivitiesID,
       FromDate: FromDate,
       ToDate: ToDate
-         };
-    
+    };
+
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
@@ -922,12 +922,12 @@ export const getSettingsData = createAsyncThunk(
   "Settings/get",
   async ({ SubscriptionCode }) => {  // Destructure the SubscriptionCode here
     const url = store.getState().globalurl.settingsgetUrl;
-console.log(url, "--find url");
+    console.log(url, "--find url");
 
     const data = {
       SubscriptionCode: SubscriptionCode,  // Now using SubscriptionCode passed via the thunk
     };
-    
+
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
@@ -952,7 +952,7 @@ console.log(url, "--find url");
 //       action: get,
 //       recid: recID,
 //          };
-    
+
 //     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
 //     const response = await axios.post(url, data, {
@@ -1018,7 +1018,7 @@ export const SettingspostData = createAsyncThunk(
 );
 export const CompanydetailpostData = createAsyncThunk(
   "Company/Sub Post",
-  async ({idata}) => {
+  async ({ idata }) => {
     const url = store.getState().globalurl.compdetailPostUrl;
 
     // const data = {
@@ -1027,7 +1027,7 @@ export const CompanydetailpostData = createAsyncThunk(
     //   NewPassword: NewPassword,
     // };
     console.log("get" + JSON.stringify(idata));
-    const response = await axios.post(url,idata,{
+    const response = await axios.post(url, idata, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
@@ -1039,9 +1039,9 @@ export const CompanydetailpostData = createAsyncThunk(
 );
 export const getFetchWeightage = createAsyncThunk(
   "allScreen/Header",
-  async ({ Type, HeaderID,CompanyID }) => {
+  async ({ Type, HeaderID, CompanyID }) => {
     const url = store.getState().globalurl.apiweightageUrl;
-    
+
     const data = {
       Type: Type,  // Ensure lowercase if required by API
       HeaderID: HeaderID,
@@ -1103,7 +1103,7 @@ export const explorePostData = createAsyncThunk(
       action: action,
       data: idata,
     };
- 
+
     console.log("post" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -1118,15 +1118,15 @@ export const explorePostData = createAsyncThunk(
 
 export const PackingListPostData = createAsyncThunk(
   "packinglist/post",
-  async ({ accessID, action, idata,Type }) => {
+  async ({ accessID, action, idata, Type }) => {
     const url = store.getState().globalurl.apiUrl;
     const data = {
       accessid: accessID,
       action: action,
       data: idata,
-      type:Type,
+      type: Type,
     };
- 
+
     console.log("post" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -1141,7 +1141,7 @@ export const PackingListPostData = createAsyncThunk(
 
 export const getVersionBom = createAsyncThunk(
   "product/bom",
-  async ({recID}) => {
+  async ({ recID }) => {
     var url = store.getState().globalurl.commonUrl;
     var data = {
       recid: recID,
@@ -1162,7 +1162,7 @@ export const getVersionBom = createAsyncThunk(
 );
 export const getVersionJobworkBom = createAsyncThunk(
   "jobwork/bom",
-  async ({recID}) => {
+  async ({ recID }) => {
     var url = store.getState().globalurl.jobworkbomurl;
     var data = {
       recid: recID,
@@ -1183,9 +1183,9 @@ export const getVersionJobworkBom = createAsyncThunk(
 );
 export const hashtoken = createAsyncThunk(
   "hashtoken/data",
-  async ({hashtoken}) => {
+  async ({ hashtoken }) => {
     var url = store.getState().globalurl.decryptUrl;
-   console.log("Tokeeeeennn",hashtoken);
+    console.log("Tokeeeeennn", hashtoken);
 
 
     const response = await axios.post(url, hashtoken, {
@@ -1202,7 +1202,7 @@ export const hashtoken = createAsyncThunk(
 
 export const getBomList = createAsyncThunk(
   "listOfBom/getbom",
-  async ({recid,action,ProductID}) => {
+  async ({ recid, action, ProductID }) => {
     const url = store.getState().globalurl.bomHeaderUrl;
     const data = {
       recid,
@@ -1223,7 +1223,7 @@ export const getBomList = createAsyncThunk(
 );
 export const postPrdBthData = createAsyncThunk(
   "product/bom",
-  async ({data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.prdCardBthUrl;
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
     const response = await axios.post(url, data, {
@@ -1238,10 +1238,10 @@ export const postPrdBthData = createAsyncThunk(
 );
 export const getDCTracking = createAsyncThunk(
   "Deliverychalan/tracking",
-  async ({idata}) => {
+  async ({ idata }) => {
     var url = store.getState().globalurl.dcTrackingUrl;
     var data = {
-     ...idata
+      ...idata
     };
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
 
@@ -1257,10 +1257,10 @@ export const getDCTracking = createAsyncThunk(
 );
 export const proPriceTracking = createAsyncThunk(
   "Product/Price Tracking",
-  async ({idata}) => {
+  async ({ idata }) => {
     var url = store.getState().globalurl.producttrackingUrl;
     var data = {
-     ...idata
+      ...idata
     };
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
 
@@ -1278,11 +1278,11 @@ export const proPriceTracking = createAsyncThunk(
 
 export const setReg = createAsyncThunk(
   "Regularization/Price Tracking",
-  async ({params }) => {
-    console.log("Dispatch received idata:", params );
+  async ({ params }) => {
+    console.log("Dispatch received idata:", params);
     // var url = store.getState().globalurl.producttrackingUrl;
     var data = {
-     ...params 
+      ...params
     };
     // setAssignparams(params.rows);
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
@@ -1347,17 +1347,17 @@ export const setReg = createAsyncThunk(
 
 export const customerorderanalysis = createAsyncThunk(
   "Customer Order/Analysis",
-  async ({data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.customerorderanalysisUrl;
-   
+
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
 
-    const response = await axios.get(url,  {
+    const response = await axios.get(url, {
       params: {
-        data:  JSON.stringify(data),
+        data: JSON.stringify(data),
       },
       headers: {
-        Authorization:"eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
 
       },
     });
@@ -1367,17 +1367,17 @@ export const customerorderanalysis = createAsyncThunk(
 );
 export const productorderanalysis = createAsyncThunk(
   "Product Order/Analysis",
-  async ({data}) => {
+  async ({ data }) => {
     var url = store.getState().globalurl.prductorderanalysisUrl;
-   
+
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
 
-    const response = await axios.get(url,  {
+    const response = await axios.get(url, {
       params: {
-        data:  JSON.stringify(data),
+        data: JSON.stringify(data),
       },
       headers: {
-        Authorization:"eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
 
       },
     });
@@ -1390,44 +1390,44 @@ export const getApiSlice = createSlice({
   initialState,
   reducers: {
     resetTrackingData(state) {
-     state.trackingData = []
-     state.customerData = {}
-     state.productanalysisData = {}
-     state.summeryData = []
-     state.stockorderData=[]
-     state.purchaseorderratingData=[]
-     state.empAttendanceData=[];
-     state.AttendanceData=[];
-     state.timeSheetData=[];
-     state.costingLeatherCost.leatherOneCost = 0
-     state.costingLeatherCost.leatherTwoCost = 0
-     state.costingLeatherCost.leatherThreeCost = 0
-     state.costingLeatherCost.materialCost = 0
-     state.costingLeatherCost.latestmaterialCost = 0
-     state.costingLeatherCost.latestleatherOneCost = 0
-     state.costingLeatherCost.latestleatherTwoCost = 0
-     state.costingLeatherCost.latestleatherThreeCost = 0
+      state.trackingData = []
+      state.customerData = {}
+      state.productanalysisData = {}
+      state.summeryData = []
+      state.stockorderData = []
+      state.purchaseorderratingData = []
+      state.empAttendanceData = [];
+      state.AttendanceData = [];
+      state.timeSheetData = [];
+      state.costingLeatherCost.leatherOneCost = 0
+      state.costingLeatherCost.leatherTwoCost = 0
+      state.costingLeatherCost.leatherThreeCost = 0
+      state.costingLeatherCost.materialCost = 0
+      state.costingLeatherCost.latestmaterialCost = 0
+      state.costingLeatherCost.latestleatherOneCost = 0
+      state.costingLeatherCost.latestleatherTwoCost = 0
+      state.costingLeatherCost.latestleatherThreeCost = 0
     },
-    ratingChange(state,action){
+    ratingChange(state, action) {
       const index = [...action.payload.rowdata].findIndex((value) => value.RecordID === action.payload.id)
       action.payload.rowdata[index] = action.payload.rating;
-      state.purchaseorderratingData=action.payload.rowdata
+      state.purchaseorderratingData = action.payload.rowdata
     },
-    packingListCarton(state,action){
+    packingListCarton(state, action) {
       console.log("🚀 ~ file: Formapireducer.js:502 ~ packingListCarton ~ action:", action)
       console.log("action called");
-     switch(action.payload.type){
+      switch (action.payload.type) {
 
-      case "INSERTED":
-       state.pakingListCarton.push(...action.payload.data)
-        break
-      case "EDITED":
-        state.pakingListCarton = action.payload.data
-        break
-      case "RESET":
+        case "INSERTED":
+          state.pakingListCarton.push(...action.payload.data)
+          break
+        case "EDITED":
+          state.pakingListCarton = action.payload.data
+          break
+        case "RESET":
           state.pakingListCarton = []
-        break
-     }
+          break
+      }
     },
     pending(state) {
       return {
@@ -1481,21 +1481,23 @@ export const getApiSlice = createSlice({
       state.userGroup = action.payload.rowData;
 
     },
-    resetregularizedata(state, action){
-      state.RegGetData = {"RecordID":"",
-        "EmployeeID":"",
-        "EmployeeName":"",
-        "CheckInDate":"",
-        "CheckOutDate":"",
-        "CheckInType":"",
-        "CheckInTime":"",
-        "CheckOutTime":"",
-        "Status":"",
-        "Remarks":"",
-        "Date":"",
-		"Reason":"",
-		"ManagerComments":"",
-		"AppliedStatus":""};
+    resetregularizedata(state, action) {
+      state.RegGetData = {
+        "RecordID": "",
+        "EmployeeID": "",
+        "EmployeeName": "",
+        "CheckInDate": "",
+        "CheckOutDate": "",
+        "CheckInType": "",
+        "CheckInTime": "",
+        "CheckOutTime": "",
+        "Status": "",
+        "Remarks": "",
+        "Date": "",
+        "Reason": "",
+        "ManagerComments": "",
+        "AppliedStatus": ""
+      };
     }
   },
   extraReducers(builder) {
@@ -1573,83 +1575,83 @@ export const getApiSlice = createSlice({
         state.Status = "idle";
         state.getLoading = true;
         state.Data = {};
-        state.msg =  "Loading..."
+        state.msg = "Loading..."
       })
       .addCase(getFetchData.fulfilled, (state, action) => {
         state.Status = "success";
         state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {} ;
+        state.Data = action.payload.Data ? action.payload.Data : {};
         // state.msg =  action.payload.Msg
       })
       .addCase(getFetchData.rejected, (state, action) => {
         state.Status = "Error";
         state.getLoading = false;
         state.Data = {};
-       toast.error('Something Went Wrong')
+        toast.error('Something Went Wrong')
       })
 
-//SprintGet
-.addCase(sprintGetData.pending, (state, action) => {
-  state.sprintgetstatus = "idle";
-  // state.sprintloading = true;
-  state.sprintget = {};
-  // state.msg =  "Loading..."
-})
-.addCase(sprintGetData.fulfilled, (state, action) => {
-  state.sprintgetstatus = "success";
-  // state.sprintloading = false;
-  state.sprintget = action.payload.Data ? action.payload.Data.headerData : {} ;
-  state.sprintPPget =  action.payload.Data.detailData;
-  // state.msg =  action.payload.Msg
-  console.log(state.sprintPPget, "--sprintGetData state.sprintPPget");
+      //SprintGet
+      .addCase(sprintGetData.pending, (state, action) => {
+        state.sprintgetstatus = "idle";
+        // state.sprintloading = true;
+        state.sprintget = {};
+        // state.msg =  "Loading..."
+      })
+      .addCase(sprintGetData.fulfilled, (state, action) => {
+        state.sprintgetstatus = "success";
+        // state.sprintloading = false;
+        state.sprintget = action.payload.Data ? action.payload.Data.headerData : {};
+        state.sprintPPget = action.payload.Data.detailData;
+        // state.msg =  action.payload.Msg
+        console.log(state.sprintPPget, "--sprintGetData state.sprintPPget");
 
-})
+      })
 
-.addCase(sprintGetData.rejected, (state, action) => {
-  state.sprintgetstatus = "Error";
-  // state.sprintloading = false;
-  state.sprintget = [];
-//  toast.error('Something Went Wrong')
-})
-//Sprint PP GET 
-.addCase(sprintprojectplanGetData.pending, (state, action) => {
-  // state.sprintgetstatus = "idle";
-  state.sprintloading = true;
-  state.sprintPPget = [];
-  // state.msg =  "Loading..."
-})
-.addCase(sprintprojectplanGetData.fulfilled, (state, action) => {
-  // state.sprintgetstatus = "success";
-  state.sprintloading = false;
-  state.sprintPPget = action.payload.Data ? action.payload.Data : [] ;
-  // state.msg =  action.payload.Msg
-  console.log(state.sprintPPget, "--sprintprojectplanGetData state.sprintPPget");
-  
-})
-.addCase(sprintprojectplanGetData.rejected, (state, action) => {
-  // state.sprintgetstatus = "Error";
-  state.sprintloading = false;
-  state.sprintPPget = [];
-//  toast.error('Something Went Wrong')
-})
-      
+      .addCase(sprintGetData.rejected, (state, action) => {
+        state.sprintgetstatus = "Error";
+        // state.sprintloading = false;
+        state.sprintget = [];
+        //  toast.error('Something Went Wrong')
+      })
+      //Sprint PP GET 
+      .addCase(sprintprojectplanGetData.pending, (state, action) => {
+        // state.sprintgetstatus = "idle";
+        state.sprintloading = true;
+        state.sprintPPget = [];
+        // state.msg =  "Loading..."
+      })
+      .addCase(sprintprojectplanGetData.fulfilled, (state, action) => {
+        // state.sprintgetstatus = "success";
+        state.sprintloading = false;
+        state.sprintPPget = action.payload.Data ? action.payload.Data : [];
+        // state.msg =  action.payload.Msg
+        console.log(state.sprintPPget, "--sprintprojectplanGetData state.sprintPPget");
+
+      })
+      .addCase(sprintprojectplanGetData.rejected, (state, action) => {
+        // state.sprintgetstatus = "Error";
+        state.sprintloading = false;
+        state.sprintPPget = [];
+        //  toast.error('Something Went Wrong')
+      })
+
       .addCase(getSettingsData.pending, (state, action) => {
         state.Status = "idle";
         state.getLoading = true;
         state.Data = {};
-        state.msg =  "Loading..."
+        state.msg = "Loading..."
       })
       .addCase(getSettingsData.fulfilled, (state, action) => {
         state.Status = "success";
         state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {} ;
+        state.Data = action.payload.Data ? action.payload.Data : {};
         // state.msg =  action.payload.Msg
       })
       .addCase(getSettingsData.rejected, (state, action) => {
         state.Status = "Error";
         state.getLoading = false;
         state.Data = {};
-       toast.error('Something Went Wrong')
+        toast.error('Something Went Wrong')
       })
 
       // .addCase(Regularizationdata.pending, (state, action) => {
@@ -1688,9 +1690,9 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
- //settingspost
+      //settingspost
 
- 
+
       .addCase(SettingspostData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
@@ -1714,7 +1716,7 @@ export const getApiSlice = createSlice({
         state.Status = "idle";
         state.postLoading = true;
       })
-     
+
 
 
       .addCase(explorePostData.fulfilled, (state, action) => {
@@ -1743,7 +1745,7 @@ export const getApiSlice = createSlice({
 
         state.exploreData = action.payload.Data ? action.payload.Data : "N";
       })
-      .addCase( hashtoken.fulfilled, (state, action) => {
+      .addCase(hashtoken.fulfilled, (state, action) => {
         state.Status = "success";
 
         state.hashtokenData = action.payload;
@@ -1805,162 +1807,162 @@ export const getApiSlice = createSlice({
         state.productanalysisData = action.payload.Data;
       })
       .addCase(uomMaterialRate.fulfilled, (state, action) => {
-        state.conversionData= action.payload
+        state.conversionData = action.payload
       })
       .addCase(costLeatherData.fulfilled, (state, action) => {
         console.log("🚀 ~ file: Formapireducer.js:863 ~ .addCase ~ action:", action)
-        
-        if(action.meta.arg.LeatherNumber == 1 ){
-        state.costingLeatherCost.leatherOneCost =  Number(action.payload.LeatherCost).toFixed(2)
-        state.costingLeatherCost.latestleatherOneCost =  Number(action.payload.LeatherLatestCost).toFixed(2)
+
+        if (action.meta.arg.LeatherNumber == 1) {
+          state.costingLeatherCost.leatherOneCost = Number(action.payload.LeatherCost).toFixed(2)
+          state.costingLeatherCost.latestleatherOneCost = Number(action.payload.LeatherLatestCost).toFixed(2)
         }
-        if(action.meta.arg.LeatherNumber == 2 ){
-          state.costingLeatherCost.leatherTwoCost =  Number(action.payload.LeatherCost).toFixed(2)
-          state.costingLeatherCost.latestleatherTwoCost =  Number(action.payload.LeatherLatestCost).toFixed(2)
-          }
-        if(action.meta.arg.LeatherNumber == 3 ){
-            state.costingLeatherCost.leatherThreeCost =  Number(action.payload.LeatherCost).toFixed(2)
-            state.costingLeatherCost.latestleatherThreeCost =  Number(action.payload.LeatherLatestCost).toFixed(2)
+        if (action.meta.arg.LeatherNumber == 2) {
+          state.costingLeatherCost.leatherTwoCost = Number(action.payload.LeatherCost).toFixed(2)
+          state.costingLeatherCost.latestleatherTwoCost = Number(action.payload.LeatherLatestCost).toFixed(2)
+        }
+        if (action.meta.arg.LeatherNumber == 3) {
+          state.costingLeatherCost.leatherThreeCost = Number(action.payload.LeatherCost).toFixed(2)
+          state.costingLeatherCost.latestleatherThreeCost = Number(action.payload.LeatherLatestCost).toFixed(2)
         }
       })
       .addCase(costingBOMData.fulfilled, (state, action) => {
-        state.costingLeatherCost.materialCost =  Number(action.payload.Cost).toFixed(2)
-        state.costingLeatherCost.latestmaterialCost =  Number(action.payload.LatestCost).toFixed(2)
+        state.costingLeatherCost.materialCost = Number(action.payload.Cost).toFixed(2)
+        state.costingLeatherCost.latestmaterialCost = Number(action.payload.LatestCost).toFixed(2)
       })
       .addCase(customerLeather.fulfilled, (state, action) => {
         state.customerLeatherData = action.payload;
-        
+
       })
       .addCase(dcSummary.fulfilled, (state, action) => {
-      state.summaryData = action.payload.Data;
-        })
-        .addCase(getDeployment.fulfilled, (state, action) => {
-          state.deploymentData = action.payload.Data;
-            })
+        state.summaryData = action.payload.Data;
+      })
+      .addCase(getDeployment.fulfilled, (state, action) => {
+        state.deploymentData = action.payload.Data;
+      })
 
-            .addCase(procurementTrackingGet.pending, (state, action) => {
-              state.Status = "idle";
-              state.trackingLoading = true;
-              state.materialTrackingData={
-                Rateseries:{},
-                Qtyseries:{},
-                Amountseries:{},
-                categories:[],
-                TableData:{data:[]},
-              }
-            })
-            .addCase(procurementTrackingGet.fulfilled, (state, action) => {
-              state.Status = "success";
-              state.trackingLoading = false;
-              state.materialTrackingData = action.payload.Data;
-            })
-            .addCase(procurementTrackingGet.rejected, (state, action) => {
-              state.Status = "Error";
-              state.trackingLoading = false;
-              state.materialTrackingData = {};
-            })
-            //Employee Geo location get
-            .addCase(geolocationData.fulfilled, (state, action) => {
-              state.exploreData = action.payload.Data;
-                })
-         //Employee Geo location Update
-         .addCase(geolocUpdate.pending, (state, action) => {
-          state.Status = "idle";
-          state.loading = true;
-          state.Data = {};
-        })
-        .addCase(geolocUpdate.fulfilled, (state, action) => {
-          state.Status = "success";
-          state.loading = false;
-          state.Data = action.payload.Data;
-        })
-        .addCase(geolocUpdate.rejected, (state, action) => {
-          state.Status = "Error";
-          state.loading = false;
-          state.Data = {};
-        })
+      .addCase(procurementTrackingGet.pending, (state, action) => {
+        state.Status = "idle";
+        state.trackingLoading = true;
+        state.materialTrackingData = {
+          Rateseries: {},
+          Qtyseries: {},
+          Amountseries: {},
+          categories: [],
+          TableData: { data: [] },
+        }
+      })
+      .addCase(procurementTrackingGet.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.trackingLoading = false;
+        state.materialTrackingData = action.payload.Data;
+      })
+      .addCase(procurementTrackingGet.rejected, (state, action) => {
+        state.Status = "Error";
+        state.trackingLoading = false;
+        state.materialTrackingData = {};
+      })
+      //Employee Geo location get
+      .addCase(geolocationData.fulfilled, (state, action) => {
+        state.exploreData = action.payload.Data;
+      })
+      //Employee Geo location Update
+      .addCase(geolocUpdate.pending, (state, action) => {
+        state.Status = "idle";
+        state.loading = true;
+        state.Data = {};
+      })
+      .addCase(geolocUpdate.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+        state.Data = action.payload.Data;
+      })
+      .addCase(geolocUpdate.rejected, (state, action) => {
+        state.Status = "Error";
+        state.loading = false;
+        state.Data = {};
+      })
 
-            .addCase(materialDcTrckData.pending, (state, action) => {
-              state.Status = "idle";
-              state.trackingLoading = true;
-              state.matrialDcTrackData = []
-            })
-            .addCase(materialDcTrckData.fulfilled, (state, action) => {
-              state.Status = "success";
-              state.trackingLoading = false;
-              state.matrialDcTrackData = action.payload.Data;
-            })
-            .addCase(materialDcTrckData.rejected, (state, action) => {
-              state.Status = "Error";
-              state.trackingLoading = false;
-              state.matrialDcTrackData = []
-            })
+      .addCase(materialDcTrckData.pending, (state, action) => {
+        state.Status = "idle";
+        state.trackingLoading = true;
+        state.matrialDcTrackData = []
+      })
+      .addCase(materialDcTrckData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.trackingLoading = false;
+        state.matrialDcTrackData = action.payload.Data;
+      })
+      .addCase(materialDcTrckData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.trackingLoading = false;
+        state.matrialDcTrackData = []
+      })
 
-            .addCase(searchData.pending, (state, action) => {
-              state.Status = "idle";
-              state.searchLoading = true;
-            })
-            .addCase(searchData.fulfilled, (state, action) => {
-              state.Status = "success";
-              state.searchLoading = false;
-            })
-            .addCase(searchData.rejected, (state, action) => {
-              state.Status = "Error";
-              state.searchLoading = false;
-            })
-            .addCase(materialDcTrckChartData.fulfilled, (state, action) => {
-              // state.Status = "success";
-              // state.trackingLoading = false;
-              state.stockReqData = action.payload.Data;
-            })
-            .addCase(stockorder.pending, (state, action) => {
-              state.Status = "idle";
-              state.trackingLoading = true;
-              state.stockorderData = []
-            })
-            
-            .addCase(stockorder.fulfilled, (state, action) => {
-              state.trackingLoading = false;
-              state.stockorderData = action.payload.data;
-            })
-          //-----------------------------------------//
-          .addCase(purchaseorderrating.pending, (state, action) => {
-            state.Status = "idle";
-            state.trackingLoading = true;
-            state.purchaseorderratingData = [];
-          })
-          
-          .addCase(purchaseorderrating.fulfilled, (state, action) => {
-            state.trackingLoading = false;
-            state.purchaseorderratingData = action.payload.Data;
-          })
-          .addCase(empAttendance.fulfilled, (state, action) => {
+      .addCase(searchData.pending, (state, action) => {
+        state.Status = "idle";
+        state.searchLoading = true;
+      })
+      .addCase(searchData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.searchLoading = false;
+      })
+      .addCase(searchData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.searchLoading = false;
+      })
+      .addCase(materialDcTrckChartData.fulfilled, (state, action) => {
+        // state.Status = "success";
+        // state.trackingLoading = false;
+        state.stockReqData = action.payload.Data;
+      })
+      .addCase(stockorder.pending, (state, action) => {
+        state.Status = "idle";
+        state.trackingLoading = true;
+        state.stockorderData = []
+      })
 
-            state.empAttendanceData = action.payload.Data;
-            
-          })
-          .addCase(Attendance.fulfilled, (state, action) => {
-    
-            state.AttendanceData = action.payload.Data;
-            
-          })
-          .addCase(RegGetData.pending, (state, action) => {
-            state.RegGetData = {};
-            state.getLoading = true;
-          })
-          .addCase(RegGetData.fulfilled, (state, action) => {
-            state.RegGetData = action.payload.Data;
-            state.getLoading = false;
-          })
-          .addCase(RegGetData.rejected, (state, action) => {
-            state.RegGetData = {};
-            state.getLoading = false;
-          })
-          .addCase(timeSheet.fulfilled, (state, action) => {
+      .addCase(stockorder.fulfilled, (state, action) => {
+        state.trackingLoading = false;
+        state.stockorderData = action.payload.data;
+      })
+      //-----------------------------------------//
+      .addCase(purchaseorderrating.pending, (state, action) => {
+        state.Status = "idle";
+        state.trackingLoading = true;
+        state.purchaseorderratingData = [];
+      })
 
-            state.timeSheetData = action.payload.Data;
-            
-          })
+      .addCase(purchaseorderrating.fulfilled, (state, action) => {
+        state.trackingLoading = false;
+        state.purchaseorderratingData = action.payload.Data;
+      })
+      .addCase(empAttendance.fulfilled, (state, action) => {
+
+        state.empAttendanceData = action.payload.Data;
+
+      })
+      .addCase(Attendance.fulfilled, (state, action) => {
+
+        state.AttendanceData = action.payload.Data;
+
+      })
+      .addCase(RegGetData.pending, (state, action) => {
+        state.RegGetData = {};
+        state.getLoading = true;
+      })
+      .addCase(RegGetData.fulfilled, (state, action) => {
+        state.RegGetData = action.payload.Data;
+        state.getLoading = false;
+      })
+      .addCase(RegGetData.rejected, (state, action) => {
+        state.RegGetData = {};
+        state.getLoading = false;
+      })
+      .addCase(timeSheet.fulfilled, (state, action) => {
+        state.timeSheetData = action.payload?.Data?.Task || [];
+        state.projectName = action.payload?.Data?.ProjectName?.ProjectName || "";
+        state.managerName = action.payload?.Data?.ManagersName?.ManagersName || "";
+      })
   },
 });
 
@@ -2073,14 +2075,14 @@ export const fetchApidata =
               apidata.Data.Jobwork = true;
             } else apidata.Data.Jobwork = false;
 
-         
+
           }
           if (AccessID == "TR110") {
             if (apidata.Data.Sameplist == "Y") {
               apidata.Data.Sameplist = true;
             } else apidata.Data.Sameplist = false;
 
-         
+
           }
           if (AccessID == "TR085") {
             if (apidata.Data.Productcost == "Y") {
@@ -2131,21 +2133,21 @@ export function postApidata(AccessID, Action, idata) {
       return error;
     }
     try {
-      console.log("---",idata);
+      console.log("---", idata);
       var isCompanyID = Object.hasOwn(idata, 'CompanyID');
       var isFinyear = Object.hasOwn(idata, 'Finyear');
       const Finyear = sessionStorage.getItem("YearRecorid");
       const CompanyID = sessionStorage.getItem("compID");
-      if(!isCompanyID && AccessID !== 'TR030' && AccessID !== 'TR076'){
+      if (!isCompanyID && AccessID !== 'TR030' && AccessID !== 'TR076') {
         idata = {
           ...idata,
-          CompanyID,  
+          CompanyID,
         }
       }
-      if(!isFinyear && AccessID !== 'TR030'  && AccessID !== 'TR076'){
+      if (!isFinyear && AccessID !== 'TR030' && AccessID !== 'TR076') {
         idata = {
           ...idata,
-          Finyear,  
+          Finyear,
         }
       }
       console.log("🚀 ~ file: Formapireducer.js:734 ~ return ~ idata:", idata)
@@ -2207,7 +2209,7 @@ export function proformainvApidata(
         RecordID: RecordID,
         ProfoInvoiceNO: ProfoInvoiceNO,
         ProfoInvoiceDate: ProfoInvoiceDate,
-        type:parentID,
+        type: parentID,
         YearID: YearID,
         CompanyID,
         Finyear
@@ -2260,7 +2262,7 @@ export function finalinvApidata(
         RecordID: RecordID,
         FinalInvoiceNO: FinalInvoiceNO,
         FinalInvoiceDate: FinalInvoiceDate,
-        type:parentID,
+        type: parentID,
         YearID: YearID,
         CompanyID,
         Finyear
@@ -2412,8 +2414,8 @@ export function VersioningFetch(recid) {
 export function supplierTrackFetch(SupplierID) {
   return async (dispatch) => {
     function onSuccess(success) {
-      console.log("2---" +JSON.stringify(success));
-      console.log("2---" +JSON.stringify(success.data.Data));
+      console.log("2---" + JSON.stringify(success));
+      console.log("2---" + JSON.stringify(success.data.Data));
       const datawait = dispatch(
         Success({
           action: "get",
@@ -2430,7 +2432,7 @@ export function supplierTrackFetch(SupplierID) {
     }
     try {
       var url = store.getState().globalurl.supplierTrackUrl;
-      var data = {SupplierID: SupplierID};
+      var data = { SupplierID: SupplierID };
 
       dispatch(pending());
       console.log("get" + JSON.stringify(data));
@@ -2440,7 +2442,7 @@ export function supplierTrackFetch(SupplierID) {
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
         },
       });
-       console.log("Response---" + JSON.stringify(success));
+      console.log("Response---" + JSON.stringify(success));
       return onSuccess(success);
     } catch (error) {
       return onError(error);
@@ -2448,7 +2450,7 @@ export function supplierTrackFetch(SupplierID) {
   };
 }
 
-export function TrackingFetchfn(MaterialID,Type) {
+export function TrackingFetchfn(MaterialID, Type) {
   return async (dispatch) => {
     function onSuccess(success) {
       // console.log("2---" +JSON.stringify(success));
@@ -2471,8 +2473,8 @@ export function TrackingFetchfn(MaterialID,Type) {
       var url = store.getState().globalurl.trackingUrl;
       var data = {
         MaterialID: MaterialID,
-        Type:Type,
-      
+        Type: Type,
+
       };
 
       dispatch(pending());
@@ -2595,7 +2597,7 @@ export function stockFetchapiData(AccessID, Action, idata) {
     }
     try {
       var url = store.getState().globalurl.apiUrl;
-      
+
       var data = {
         accessid: AccessID,
         action: Action,
@@ -2829,10 +2831,10 @@ export function stockvalueFetchapiData(name) {
   };
 }
 
-export function MaterialTrackingFetchData(RecordID,Type) {
+export function MaterialTrackingFetchData(RecordID, Type) {
   return async (dispatch) => {
     function onSuccess(success) {
-       console.log("chartData---" +JSON.stringify(success));
+      console.log("chartData---" + JSON.stringify(success));
       const datawait = dispatch(
         stockReqSuccess({
           stockReqapiResponse: success.data.Data,
@@ -2850,11 +2852,11 @@ export function MaterialTrackingFetchData(RecordID,Type) {
       var data = {
         Query: {
           RecordID: RecordID,
-          Type:Type
+          Type: Type
         },
       };
       data = JSON.stringify(data);
-     console.log("---"+data);
+      console.log("---" + data);
       dispatch(pending());
 
       const success = await axios.get(url, {
@@ -2866,7 +2868,7 @@ export function MaterialTrackingFetchData(RecordID,Type) {
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
       });
-       console.log("chart Response---" + JSON.stringify(success));
+      console.log("chart Response---" + JSON.stringify(success));
       return onSuccess(success);
     } catch (error) {
       return onError(error);
@@ -2879,7 +2881,7 @@ export function MaterialTrackingFetchData(RecordID,Type) {
 export function supplierTrackingFetchData(RecordID) {
   return async (dispatch) => {
     function onSuccess(success) {
-       console.log("Inside Stock-" +JSON.stringify(success));
+      console.log("Inside Stock-" + JSON.stringify(success));
       const datawait = dispatch(
         stockReqSuccess({
           stockReqapiResponse: success.data.Data,
@@ -2968,7 +2970,7 @@ export const timeSheetPostData = createAsyncThunk(
   "timeSheetPostData/post",
   async ({ idata }) => {
     var url = store.getState().globalurl.timesheetdtUrl;
-    const response = await axios.post(url,idata, {
+    const response = await axios.post(url, idata, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
@@ -2984,10 +2986,10 @@ export const timeSheetPostData = createAsyncThunk(
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
-    
+
     var url = store.getState().globalurl.payrollattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
-   
+
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
@@ -3006,10 +3008,32 @@ export const empAttendance = createAsyncThunk(
 export const timeSheet = createAsyncThunk(
   "timeSheet/timeSheetattendance",
   async ({ data }) => {
-    
+
     var url = store.getState().globalurl.timesheetattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
-   
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const timeSheetreport = createAsyncThunk(
+  "timeSheet/timeSheetattendance",
+  async ({ data }) => {
+
+    var url = store.getState().globalurl.timesheetreportattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {

@@ -225,6 +225,8 @@ console.log(params, "--params");
         : "",
     checkbox: Data.Disable,
   scrummaster: Data.ScrumMaster === "Y" ? true : false,
+   prjmanager: Data.Projectmanager === "Y" ? true : false,
+
 
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
@@ -449,6 +451,7 @@ console.log(params, "--params");
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
+    //Projectmanager: values.prjmanager === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -2304,6 +2307,18 @@ function: deploymentData.DefaultFunction
                         />
 
                         <FormLabel focused={false}>Scrum Master</FormLabel>
+                         <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="prjmanager"
+                          id="prjmanager"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Project Manager"
+                        />
+
+                        <FormLabel focused={false}>Project Manager</FormLabel>
                       </Box>
                     </FormControl>
 

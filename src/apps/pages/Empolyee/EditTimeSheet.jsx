@@ -931,7 +931,8 @@ const EditTimeSheet = () => {
   },[])
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
-  const companyID = sessionStorage.getItem("companyId");
+  const projectName = useSelector((state) => state.formApi.projectName);
+  const managerName = useSelector((state) => state.formApi.managerName);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -939,6 +940,7 @@ const EditTimeSheet = () => {
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
   const EMPID = sessionStorage.getItem("EmpId");
+   const CompanyID = sessionStorage.getItem("compID");
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const today = new Date();
@@ -1017,7 +1019,7 @@ const EditTimeSheet = () => {
       width: 130,
     },
     {
-      field: "FuntionsName",
+      field: "DesignationsName",
       headerName: "FuntionsName",
       width: 130,
     },
@@ -1198,9 +1200,9 @@ const EditTimeSheet = () => {
     console.log(values.month, "Month");
     console.log(values.year, "Year");
 
-    // navigate("/Apps/Edittimesheetreport", {
-    //   state: { Month: values.month, Year: values.year },
-    // });
+    navigate("/Apps/Edittimesheetreport", {
+      state: { Month: values.month, Year: values.year },
+    });
   };
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
@@ -1212,6 +1214,12 @@ const EditTimeSheet = () => {
   const screenChange = (event) => {
     setScreen(event.target.value);
   };
+
+  const filteredColumns = useCurrentEmp
+    ? AttColumn.filter((col) => col.field !== "actions")
+    : AttColumn;
+
+ 
   const VISIBLE_FIELDS = [
     "SLNO",
     "OtDate",
@@ -1402,9 +1410,9 @@ const EditTimeSheet = () => {
                     id="Employee"
                     value={empData}
                     onChange={handleSelectionEmployeeChange}
-                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EMPID}","Any":"","CompId":${companyID}}}`}
+                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
                   />
-                  <FormControlLabel
+                  {/* <FormControlLabel
                     control={
                       <Checkbox
                         checked={useCurrentEmp}
@@ -1416,7 +1424,7 @@ const EditTimeSheet = () => {
                       />
                     }
                     label="Self"
-                  />
+                  /> */}
                 </Stack>
                 <Stack
                   direction="row"
@@ -1461,6 +1469,8 @@ const EditTimeSheet = () => {
                       document={
                         <TimeSheetPDF
                           data={ApprovedData}
+                          projectName={projectName}
+                          managerName={managerName}
                           filters={{
                             Month: values.month,
                             Year: values.year,
@@ -1483,7 +1493,7 @@ const EditTimeSheet = () => {
                         )
                       }
                     </PDFDownloadLink>
-                  )}
+                 )} 
 
                 </Stack>
               </Box>
@@ -1536,8 +1546,9 @@ const EditTimeSheet = () => {
                     }}
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
+                    //columns={AttColumn}
                     rows={AttendanceData}
-                    columns={AttColumn}
+                    columns={filteredColumns}
                     disableSelectionOnClick
                     getRowId={(row) => row.RecordID}
                     pageSize={pageSize}
