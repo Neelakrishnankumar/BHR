@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   tableColHeader1: {
-    width: 30,
+    width: "5%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
@@ -52,14 +52,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tableCol1: {
-    width: 30,
+    width: "5%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
     textAlign: "right",
   },
   tableColHeader: {
-    flex: 1,
+    width: "20%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tableColHeader2: {
-    width: 90,
+    width: "30%",
     flex: 1,
     borderRightWidth: 1,
     borderRightColor: "#000",
@@ -78,8 +78,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tableColHeader3: {
-    width: 30,
-    flex: 1,
+    width:"10%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
@@ -88,37 +87,34 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tableColHeaderLast: {
-    flex: 1,
+  
     padding: 5,
     fontWeight: "bold",
     backgroundColor: "#EEE",
     textAlign: "center",
-     width: 30
+     width: "15%",
   },
   tableCol: {
-    flex: 1,
+    width: "20%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
   },
   tableCol2: {
-    width: 90,
-    flex: 1,
+    width: "30%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
   },
    tableCol3: {
-    width: 30,
-    flex: 1,
+    width: "10%",
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
   },
   tableColLast: {
-    flex: 1,
     padding: 5,
-    width: 30,
+    width: "15%",
   },
 });
 
