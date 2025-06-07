@@ -22,6 +22,7 @@ import {
     resetTrackingData,
     Attendance,
     AttendanceProcess,
+    MonthlyAttendance,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -53,9 +54,8 @@ const EditdailyAttendance = () => {
     var recID = params.id;
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const EmpName = sessionStorage.getItem("EmpName");
-    const companyID = sessionStorage.getItem("companyId");
-
-    const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
+const CompanyID = sessionStorage.getItem("compID");
+    const AttendanceData = useSelector((state) => state.formApi.MonthlyAttendanceData);
     console.log("AttendanceData", AttendanceData);
 
     const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -100,9 +100,17 @@ const EditdailyAttendance = () => {
     const AttColumn = [
         {
             field: "SLNO",
-            headerName: "SL.NO",
+            headerName: "S.NO",
+            width: "50",
+            renderCell: (params) => (
+                <div style={{ textAlign: "right" }}>{params.value}</div>
+            ),
         },
-
+        {
+            field: "Name",
+            headerName: "Employee Name",
+            flex: 1,
+        },
         {
             field: "EmplyeeCheckInDateTime",
             headerName: "Emplyee CheckIn Date Time",
@@ -130,20 +138,20 @@ const EditdailyAttendance = () => {
     const currentMonthNumber = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
     const AttInitialvalues = {
-        code: data.Code,
-        description: data.Name,
-        Sal: data.Sal,
-        month: currentMonthNumber,
-        year: currentYear,
+        date: new Date().toISOString().split("T")[0],
+
     };
     const attendaceFnSave = async (values) => {
         const data = {
-            Month: values.month.toString(),
-            Year: values.year,
-            EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
+            // Month: values.month.toString(),
+            // Year: values.year,
+            Date: values.date,
+            CompanyID
+            //ManagerID: empData.RecordID,
+            //Self: "Y",
         };
         console.log(data, "=====DATA");
-        dispatch(Attendance({ data }));
+        dispatch(MonthlyAttendance({ data }));
 
         // setButtonVisible(true)
     };
@@ -256,12 +264,12 @@ const EditdailyAttendance = () => {
                                         onChange={handleChange}
                                         error={!!touched.date && !!errors.date}
                                         helperText={touched.date && errors.date}
-                                         sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "transparent", // optional: adjust if needed
-                      },
-                      width: 200,
-                    }}
+                                        sx={{
+                                            "& .MuiFilledInput-root": {
+                                                backgroundColor: "transparent", // optional: adjust if needed
+                                            },
+                                            width: 200,
+                                        }}
                                         inputProps={{ max: new Date().toISOString().split("T")[0] }}
                                     />
                                     {/* {isManager === "1" ? (
@@ -320,7 +328,7 @@ const EditdailyAttendance = () => {
                                         />
                                     )} */}
 
-                                    <FormControlLabel
+                                    {/* <FormControlLabel
                                         control={
                                             <Checkbox
                                                 checked={useCurrentEmp}
@@ -332,7 +340,18 @@ const EditdailyAttendance = () => {
                                             />
                                         }
                                         label="Self"
-                                    />
+                                    /> */}
+                                    {/* <Employeeautocomplete
+                                        sx={{ width: 400 }}
+                                        name="Employee"
+                                        label="Employee"
+                                        id="Employee"
+                                        value={empData}
+                                        onChange={handleSelectionEmployeeChange}
+                                        // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EmpId}","Any":"","CompId":${companyID}}}`}
+                                        url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
+
+                                    /> */}
                                 </Stack>
                                 <Stack
                                     direction="row"
@@ -347,15 +366,14 @@ const EditdailyAttendance = () => {
                                     <Button type="reset" variant="contained" color="error">
                                         RESET
                                     </Button>
-                                    {isManager === "1" && AttendanceData?.length > 0 && (
+                                    {AttendanceData?.length > 0 && (
                                         <PDFDownloadLink
                                             document={
                                                 <AttendancePDF
                                                     data={AttendanceData}
                                                     filters={{
-                                                        Month: values.month,
-                                                        Year: values.year,
-                                                        EmployeeID: empData?.Name || EmpName,
+                                                        Date: values.date,
+                                                        //EmployeeID: empData?.Name || EmpName,
                                                     }}
                                                 />
                                             }

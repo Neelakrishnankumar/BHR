@@ -98,6 +98,7 @@ const EditAttendance = () => {
     {
       field: "SLNO",
       headerName: "SL.NO",
+      width:50
     },
 
     {
@@ -184,7 +185,7 @@ const EditAttendance = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Attendance</Typography>
+            <Typography variant="h3">Monthly Attendance</Typography>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">

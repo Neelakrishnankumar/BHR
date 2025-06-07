@@ -973,7 +973,91 @@ const child = {
         },
       ],
     },
+   
     {
+      name: "Transaction",
+      id: 97659,
+      MenuID: "ST1600",
+      Tooltipname: "Transaction",
+      icon: (
+        <Tooltip title="Transaction">
+          <AssignmentTurnedInIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+         {
+          name: "Check In",
+          id: 5486,
+          url: "./TR123/Check In",
+          icon: (
+            <Tooltip title="Check In">
+              <ChecklistIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR123",
+        },
+        {
+          name: "Check Out",
+          id: 5589,
+          url: "./TR124/Check Out",
+          icon: (
+            <Tooltip title="Check Out">
+              <ChecklistRtlIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR124",
+        },
+        {
+          name: "Employee Request",
+          id: 5846,
+          url: "./TR257/Employee Request",
+          icon: (
+            <Tooltip title="Requests">
+              <PermContactCalendarIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR257",
+        },
+        // {
+        //   name: "Approval",
+        //   id: 5859,
+        //   url: "./TR027/Approval",
+        //   icon: (
+        //     <Tooltip title="Approval">
+        //       <TaskAltIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR258",
+        // },
+        
+        
+      ],
+    },
+     {
       name: "Time Sheet",
       id: 45678,
       MenuID: "EM900",
@@ -1070,89 +1154,6 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR261",
         },
-        
-      ],
-    },
-    {
-      name: "Transaction",
-      id: 97659,
-      MenuID: "ST1600",
-      Tooltipname: "Transaction",
-      icon: (
-        <Tooltip title="Transaction">
-          <AssignmentTurnedInIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-         {
-          name: "Check In",
-          id: 5486,
-          url: "./TR123/Check In",
-          icon: (
-            <Tooltip title="Check In">
-              <ChecklistIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR123",
-        },
-        {
-          name: "Check Out",
-          id: 5589,
-          url: "./TR124/Check Out",
-          icon: (
-            <Tooltip title="Check Out">
-              <ChecklistRtlIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR124",
-        },
-        {
-          name: "Employee Request",
-          id: 5846,
-          url: "./TR257/Employee Request",
-          icon: (
-            <Tooltip title="Requests">
-              <PermContactCalendarIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR257",
-        },
-        // {
-        //   name: "Approval",
-        //   id: 5859,
-        //   url: "./TR027/Approval",
-        //   icon: (
-        //     <Tooltip title="Approval">
-        //       <TaskAltIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR258",
-        // },
-        
         
       ],
     },

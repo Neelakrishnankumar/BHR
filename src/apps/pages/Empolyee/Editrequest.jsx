@@ -657,7 +657,7 @@ const Editrequests = () => {
       "action",
     ];
   }
-  const fetchAttachments = async (rowData, setFiles, setError, setLoading,appId) => {
+  const fetchAttachments = async (rowData, setFiles, setError, setLoading, appId) => {
     const url = store.getState().globalurl.empGetAttachmentUrl;
 
     setLoading(true);
@@ -2792,13 +2792,13 @@ const Editrequests = () => {
                       <MenuItem value={5}>Deductions</MenuItem> */}
                     <MenuItem value={2}>Leave</MenuItem>
                     <MenuItem value={8}>On Duty</MenuItem>
-                    <MenuItem value={6}>OT</MenuItem>
-                     <MenuItem value={10}>Regularization</MenuItem>
-                      <MenuItem value={9}>Expense</MenuItem>
+                    <MenuItem value={6}>Over Time</MenuItem>
+                    <MenuItem value={10}>Regularization</MenuItem>
+                    <MenuItem value={9}>Expense</MenuItem>
                     <MenuItem value={7}>Salary Advance</MenuItem>
-                   
-                   
-                  
+
+
+
                     {/* <MenuItem value={3}>Attendance</MenuItem>
                       <MenuItem value={4}>Payroll Attendance</MenuItem> */}
                   </Select>
@@ -3268,7 +3268,17 @@ const Editrequests = () => {
                     >
                       Cancel
                     </Button>
+
                   </Box>
+                  <Box ml={2} p={2} borderRadius={2}>
+                    <Typography variant="h6" align="right" color="primary">
+                      <strong>Explore:</strong>&nbsp;
+                      <span style={{ color: "#424242" }}>
+                        Permission, Leave, On Duty, Over Time, Regularization, Expense, Salary Advance
+                      </span>
+                    </Typography>
+                  </Box>
+
                   <Popup
                     title="Department"
                     openPopup={openDEPopup}
@@ -3316,6 +3326,7 @@ const Editrequests = () => {
                 </form>
               )}
             </Formik>
+
           </Paper>
         ) : (
           false
@@ -4245,64 +4256,64 @@ const Editrequests = () => {
                       />
                     </Popup>
                   </Box>
-                    {funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                  {funMode !== "A" && (
+                    <Box mt={2}
+                    >
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                        <TableContainer component={Paper} >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow sx={rowSx}>
+                                <TableCell width={20}><strong>S.No</strong></TableCell>
+                                <TableCell><strong>Uploaded Date</strong></TableCell>
+                                <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Source</strong></TableCell>
+                                <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
                               </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
+                            </TableHead>
+                            <TableBody>
+                              {files.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={4} align="center">
+                                    No files uploaded yet.
                                   </TableCell>
-
                                 </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                              ) : (
+                                files.map((file, index) => (
+                                  <TableRow key={file.id || index} sx={rowSx}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{file.uploadedDate}</TableCell>
+                                    <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.source}</TableCell>
+                                    <TableCell>
+                                      <Tooltip title="Open File">
+                                        <IconButton
+                                          color="primary"
+                                          component="a"
+                                          href={file.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          size="small"
+                                        >
+                                          <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </TableCell>
+
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    </Box>
+                  )}
                 </form>
               )}
             </Formik>
@@ -4709,7 +4720,7 @@ const Editrequests = () => {
                         <FileUploadIconButton onFileSelect={(file) => fileUpload(file, otdata.RecordID)} />
                       </Box>
                     )}
-                    
+
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -4755,63 +4766,63 @@ const Editrequests = () => {
                     </Button>
                   </Box>
                   {funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                    <Box mt={2}
+                    >
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                        <TableContainer component={Paper} >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow sx={rowSx}>
+                                <TableCell width={20}><strong>S.No</strong></TableCell>
+                                <TableCell><strong>Uploaded Date</strong></TableCell>
+                                <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Source</strong></TableCell>
+                                <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
                               </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
+                            </TableHead>
+                            <TableBody>
+                              {files.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={4} align="center">
+                                    No files uploaded yet.
                                   </TableCell>
-
                                 </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                              ) : (
+                                files.map((file, index) => (
+                                  <TableRow key={file.id || index} sx={rowSx}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{file.uploadedDate}</TableCell>
+                                    <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.source}</TableCell>
+                                    <TableCell>
+                                      <Tooltip title="Open File">
+                                        <IconButton
+                                          color="primary"
+                                          component="a"
+                                          href={file.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          size="small"
+                                        >
+                                          <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </TableCell>
+
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    </Box>
+                  )}
                 </form>
               )}
             </Formik>
@@ -5251,7 +5262,7 @@ const Editrequests = () => {
                         <FileUploadIconButton onFileSelect={(file) => fileUpload(file, saladdata.RecordID)} />
                       </Box>
                     )}
-                    
+
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
                       color="secondary"
@@ -5296,64 +5307,64 @@ const Editrequests = () => {
                       Cancel
                     </Button>
                   </Box>
-                   {funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                  {funMode !== "A" && (
+                    <Box mt={2}
+                    >
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                        <TableContainer component={Paper} >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow sx={rowSx}>
+                                <TableCell width={20}><strong>S.No</strong></TableCell>
+                                <TableCell><strong>Uploaded Date</strong></TableCell>
+                                <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Source</strong></TableCell>
+                                <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
                               </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
+                            </TableHead>
+                            <TableBody>
+                              {files.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={4} align="center">
+                                    No files uploaded yet.
                                   </TableCell>
-
                                 </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                              ) : (
+                                files.map((file, index) => (
+                                  <TableRow key={file.id || index} sx={rowSx}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{file.uploadedDate}</TableCell>
+                                    <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.source}</TableCell>
+                                    <TableCell>
+                                      <Tooltip title="Open File">
+                                        <IconButton
+                                          color="primary"
+                                          component="a"
+                                          href={file.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          size="small"
+                                        >
+                                          <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </TableCell>
+
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    </Box>
+                  )}
                 </form>
               )}
             </Formik>
@@ -5717,11 +5728,11 @@ const Editrequests = () => {
                       <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
                         {funMode !== "A" && (
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, ondutydata.RecordID)} />
-                      </Box>
-                    )}
-                    
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <FileUploadIconButton onFileSelect={(file) => fileUpload(file, ondutydata.RecordID)} />
+                          </Box>
+                        )}
+
                         <LoadingButton
                           color="secondary"
                           variant="contained"
@@ -5731,19 +5742,7 @@ const Editrequests = () => {
                         >
                           Save
                         </LoadingButton>
-                        {/* } */}
-                        {/* {mode == "M" &&  */}
-                        {/* <LoadingButton
-                                    color="secondary"
-                                    variant="contained"
-                                    type="submit"
-                                    loading={isLoading}
-              
-                                  >
-                                    Save
-                                  </LoadingButton> */}
-                        {/* } */}
-                        {/* {mode != "M" && values.Status == "AL" &&   */}
+
                         <Button
                           color="error"
                           variant="contained"
@@ -5767,32 +5766,7 @@ const Editrequests = () => {
                         >
                           Delete
                         </Button>
-                        {/* } */}
-                        {/* {mode == "M" &&  */}
-                        {/* <Button
-                                        color="error"
-                                        variant="contained"
-                                        onClick={() => {
-                                          Swal.fire({
-                                            title: `Do you want Delete?`,
-                                            icon: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonColor: "#3085d6",
-                                            cancelButtonColor: "#d33",
-                                            confirmButtonText: "Confirm",
-                                          }).then((result) => {
-                                            if (result.isConfirmed) {
-                                              ondutyFNsave(values, resetForm, "harddelete");
-                                              // navigate(-1);
-                                            } else {
-                                              return;
-                                            }
-                                          });
-                                        }}
-                                      >
-                                        Delete
-                                      </Button> */}
-                        {/* } */}
+
                         <Button
                           type="reset"
                           color="warning"
@@ -5803,6 +5777,7 @@ const Editrequests = () => {
                         >
                           Cancel
                         </Button>
+
                         <Popup
                           title="Leave Type"
                           openPopup={openLTpopup}
@@ -5819,64 +5794,64 @@ const Editrequests = () => {
                       </Box>
                     </FormControl>
                   </Box>
-{funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                  {funMode !== "A" && (
+                    <Box mt={2}
+                    >
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                        <TableContainer component={Paper} >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow sx={rowSx}>
+                                <TableCell width={20}><strong>S.No</strong></TableCell>
+                                <TableCell><strong>Uploaded Date</strong></TableCell>
+                                <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Source</strong></TableCell>
+                                <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
                               </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
+                            </TableHead>
+                            <TableBody>
+                              {files.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={4} align="center">
+                                    No files uploaded yet.
                                   </TableCell>
-
                                 </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                              ) : (
+                                files.map((file, index) => (
+                                  <TableRow key={file.id || index} sx={rowSx}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{file.uploadedDate}</TableCell>
+                                    <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.source}</TableCell>
+                                    <TableCell>
+                                      <Tooltip title="Open File">
+                                        <IconButton
+                                          color="primary"
+                                          component="a"
+                                          href={file.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          size="small"
+                                        >
+                                          <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </TableCell>
+
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    </Box>
+                  )}
                 </form>
               )}
             </Formik>
@@ -6050,64 +6025,64 @@ const Editrequests = () => {
                             : "even-row"
                         }
                       />
-                        {funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                      {funMode !== "A" && (
+                        <Box mt={2}
+                        >
+                          <Paper elevation={3} sx={{ padding: 2 }}>
+                            {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                            <TableContainer component={Paper} >
+                              <Table size="small">
+                                <TableHead>
+                                  <TableRow sx={rowSx}>
+                                    <TableCell width={20}><strong>S.No</strong></TableCell>
+                                    <TableCell><strong>Uploaded Date</strong></TableCell>
+                                    <TableCell ><strong>Filename</strong></TableCell>
+                                    <TableCell ><strong>Source</strong></TableCell>
+                                    <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
-                              </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
-                                  </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {files.length === 0 ? (
+                                    <TableRow>
+                                      <TableCell colSpan={4} align="center">
+                                        No files uploaded yet.
+                                      </TableCell>
+                                    </TableRow>
+                                  ) : (
+                                    files.map((file, index) => (
+                                      <TableRow key={file.id || index} sx={rowSx}>
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{file.uploadedDate}</TableCell>
+                                        <TableCell>{file.filename}</TableCell>
+                                        <TableCell>{file.source}</TableCell>
+                                        <TableCell>
+                                          <Tooltip title="Open File">
+                                            <IconButton
+                                              color="primary"
+                                              component="a"
+                                              href={file.url}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              size="small"
+                                            >
+                                              <OpenInNewIcon fontSize="small" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </TableCell>
 
-                                </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                                      </TableRow>
+                                    ))
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          </Paper>
+                        </Box>
+                      )}
                     </Box>
 
                     <FormControl sx={{ gap: formGap }}>
@@ -6311,29 +6286,29 @@ const Editrequests = () => {
                         {/* {mode == "E" && values.Status == "RJ" && <Alert variant="filled" sx={{mt:1}} severity="error">Your Leave Request Was Rejected.</Alert>} */}
                       </FormControl>
 
-                      
+
                     </FormControl>
                   </Box>
-<Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
-                        {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
-                        {funMode !== "A" && (
+                  <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
+                    {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
+                    {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
                         <FileUploadIconButton onFileSelect={(file) => fileUpload(file, perData.recordID)} />
                       </Box>
                     )}
-                    
-                        <LoadingButton
-                          color="secondary"
-                          variant="contained"
-                          type="submit"
-                          loading={isLoading}
 
-                        >
-                          Save
-                        </LoadingButton>
-                        {/* } */}
-                        {/* {mode == "M" &&  */}
-                        {/* <LoadingButton
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* } */}
+                    {/* {mode == "M" &&  */}
+                    {/* <LoadingButton
                                     color="secondary"
                                     variant="contained"
                                     type="submit"
@@ -6342,34 +6317,34 @@ const Editrequests = () => {
                                   >
                                     Save
                                   </LoadingButton> */}
-                        {/* } */}
-                        {/* {mode != "M" && values.Status == "AL" &&   */}
-                        <Button
-                          color="error"
-                          variant="contained"
-                          onClick={() => {
-                            Swal.fire({
-                              title: `Do you want Delete?`,
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Confirm",
-                            }).then((result) => {
-                              if (result.isConfirmed) {
-                                PerFNsave(values, resetForm, "harddelete");
-                                // navigate(-1);
-                              } else {
-                                return;
-                              }
-                            });
-                          }}
-                        >
-                          Delete
-                        </Button>
-                        {/* } */}
-                        {/* {mode == "M" &&  */}
-                        {/* <Button
+                    {/* } */}
+                    {/* {mode != "M" && values.Status == "AL" &&   */}
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: `Do you want Delete?`,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            PerFNsave(values, resetForm, "harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                    {/* } */}
+                    {/* {mode == "M" &&  */}
+                    {/* <Button
                                         color="error"
                                         variant="contained"
                                         onClick={() => {
@@ -6392,32 +6367,32 @@ const Editrequests = () => {
                                       >
                                         Delete
                                       </Button> */}
-                        {/* } */}
-                        <Button
-                          type="reset"
-                          color="warning"
-                          variant="contained"
-                          onClick={() => {
-                            setScreen(0);
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <Popup
-                          title="Leave Type"
-                          openPopup={openLTpopup}
-                          setOpenPopup={setOpenLTpopup}
-                        >
-                          <Listviewpopup
-                            accessID="2092"
-                            screenName="Leave Type"
-                            childToParent={childToParent}
-                            filterName={"parentID"}
-                            filterValue={CompanyID}
-                          />
-                        </Popup>
-                      </Box>
-                    
+                    {/* } */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Popup
+                      title="Leave Type"
+                      openPopup={openLTpopup}
+                      setOpenPopup={setOpenLTpopup}
+                    >
+                      <Listviewpopup
+                        accessID="2092"
+                        screenName="Leave Type"
+                        childToParent={childToParent}
+                        filterName={"parentID"}
+                        filterValue={CompanyID}
+                      />
+                    </Popup>
+                  </Box>
+
                 </form>
               )}
             </Formik>
@@ -6933,11 +6908,11 @@ const Editrequests = () => {
                           View
                         </Button> */}
                         {funMode !== "A" && (
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, expensedata.RecordID)} />
-                      </Box>
-                    )}
-                    
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <FileUploadIconButton onFileSelect={(file) => fileUpload(file, expensedata.RecordID)} />
+                          </Box>
+                        )}
+
                         <LoadingButton
                           color="secondary"
                           variant="contained"
@@ -6985,63 +6960,63 @@ const Editrequests = () => {
                     </FormControl>
                   </Box>
                   {funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                    <Box mt={2}
+                    >
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                        <TableContainer component={Paper} >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow sx={rowSx}>
+                                <TableCell width={20}><strong>S.No</strong></TableCell>
+                                <TableCell><strong>Uploaded Date</strong></TableCell>
+                                <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Source</strong></TableCell>
+                                <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
                               </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
+                            </TableHead>
+                            <TableBody>
+                              {files.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={4} align="center">
+                                    No files uploaded yet.
                                   </TableCell>
-
                                 </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                              ) : (
+                                files.map((file, index) => (
+                                  <TableRow key={file.id || index} sx={rowSx}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{file.uploadedDate}</TableCell>
+                                    <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.source}</TableCell>
+                                    <TableCell>
+                                      <Tooltip title="Open File">
+                                        <IconButton
+                                          color="primary"
+                                          component="a"
+                                          href={file.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          size="small"
+                                        >
+                                          <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </TableCell>
+
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    </Box>
+                  )}
                 </form>
               )}
             </Formik>
@@ -7533,7 +7508,7 @@ const Editrequests = () => {
                         <FileUploadIconButton onFileSelect={(file) => fileUpload(file, regdata.RecordID)} />
                       </Box>
                     )}
-                    
+
                     {/* {YearFlag == "true" ? ( */}
                     <LoadingButton
                       color="secondary"
@@ -7605,63 +7580,63 @@ const Editrequests = () => {
                     </Popup>
                   </Box>
                   {funMode !== "A" && (
-                  <Box mt={2}
-                  >
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                      {/* <Typography variant="h6" gutterBottom>
+                    <Box mt={2}
+                    >
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                      <TableContainer component={Paper} >
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow sx={rowSx}>
-                              <TableCell width={20}><strong>S.No</strong></TableCell>
-                              <TableCell><strong>Uploaded Date</strong></TableCell>
-                              <TableCell ><strong>Filename</strong></TableCell>
-                              <TableCell ><strong>Source</strong></TableCell>
-                              <TableCell><strong>View</strong></TableCell>
+                        <TableContainer component={Paper} >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow sx={rowSx}>
+                                <TableCell width={20}><strong>S.No</strong></TableCell>
+                                <TableCell><strong>Uploaded Date</strong></TableCell>
+                                <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Source</strong></TableCell>
+                                <TableCell><strong>View</strong></TableCell>
 
 
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {files.length === 0 ? (
-                              <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                  No files uploaded yet.
-                                </TableCell>
                               </TableRow>
-                            ) : (
-                              files.map((file, index) => (
-                                <TableRow key={file.id || index} sx={rowSx}>
-                                  <TableCell>{index + 1}</TableCell>
-                                  <TableCell>{file.uploadedDate}</TableCell>
-                                  <TableCell>{file.filename}</TableCell>
-                                  <TableCell>{file.source}</TableCell>
-                                  <TableCell>
-                                    <Tooltip title="Open File">
-                                      <IconButton
-                                        color="primary"
-                                        component="a"
-                                        href={file.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        size="small"
-                                      >
-                                        <OpenInNewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
+                            </TableHead>
+                            <TableBody>
+                              {files.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={4} align="center">
+                                    No files uploaded yet.
                                   </TableCell>
-
                                 </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Paper>
-                  </Box>
-                    )}
+                              ) : (
+                                files.map((file, index) => (
+                                  <TableRow key={file.id || index} sx={rowSx}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{file.uploadedDate}</TableCell>
+                                    <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.source}</TableCell>
+                                    <TableCell>
+                                      <Tooltip title="Open File">
+                                        <IconButton
+                                          color="primary"
+                                          component="a"
+                                          href={file.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          size="small"
+                                        >
+                                          <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </TableCell>
+
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    </Box>
+                  )}
                 </form>
               )}
             </Formik>
