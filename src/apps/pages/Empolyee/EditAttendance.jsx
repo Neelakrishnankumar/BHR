@@ -98,6 +98,7 @@ const EditAttendance = () => {
     {
       field: "SLNO",
       headerName: "SL.NO",
+      width:50
     },
 
     {
@@ -184,7 +185,7 @@ const EditAttendance = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Attendance</Typography>
+            <Typography variant="h3">Monthly Attendance</Typography>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -363,7 +364,7 @@ const EditAttendance = () => {
                   <Button type="reset" variant="contained" color="error">
                     RESET
                   </Button>
-                  {isManager === "1" && AttendanceData?.length > 0 && (
+                  {AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <AttendancePDF
@@ -378,13 +379,7 @@ const EditAttendance = () => {
                       fileName={`Attendance_Report_${
                         empData?.Name || "Employee"
                       }.pdf`}
-                      style={{
-                        textDecoration: "none",
-                        padding: "6px 12px",
-                        color: "#fff",
-                        backgroundColor: "#1976d2",
-                        borderRadius: 4,
-                      }}
+                     style={{ color: "#d32f2f", cursor: "pointer" }} 
                     >
 
                       {({ loading }) =>

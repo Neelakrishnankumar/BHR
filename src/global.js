@@ -275,11 +275,15 @@ getLeaveentryDataUrl:"https://ess.beyondexs.com/api/EmpLeaveConfigurationGetCont
 regGetUrl:'https://hr.beyondexs.com/api/RegularizationGetController.php',
 //payrollattendanceUrl: "https://hr.beyondexs.com/api/PayrollAttendanceController.php",
 timesheetattendanceUrl: "https://ess.beyondexs.com/api/DailyTaskgetController.php",
+ timesheetreportattendanceUrl: "https://ess.beyondexs.com/api/Dailytask_getController.php",
 timesheetdtUrl: "https://ess.beyondexs.com/api/DailyTaskpostController.php",
 empAttachmentUrl:"https://ess.beyondexs.com/EmployeeAttachmentsController.php",
 empGetAttachmentUrl:"https://ess.beyondexs.com/api/getAttachmentsController.php",
  leavelApprovalUrl:  "https://hr.beyondexs.com/api/EmployeeRequestUpdateController.php",
   requestAcknowledgeUrl:  "https://hr.beyondexs.com/api/LeaveRequest.php",
+   monthlyattendanceUrl:"https://hr.beyondexs.com/api/GetdatewiseEmpattendance.php",
+   biometricgetUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationGetContoller.php",
+   biometricPostUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationUpdateContoller.php"
   };
 
 export const getUrlSlice = createSlice({

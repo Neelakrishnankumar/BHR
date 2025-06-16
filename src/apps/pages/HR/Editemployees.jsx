@@ -224,7 +224,9 @@ const Editemployee = () => {
           // ? "CT"
           "",
     checkbox: Data.Disable,
-    scrummaster: Data.ScrumMaster === "Y" ? true : false,
+  scrummaster: Data.ScrumMaster === "Y" ? true : false,
+   prjmanager: Data.ProjectManager === "Y" ? true : false,
+
 
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
@@ -436,9 +438,10 @@ const Editemployee = () => {
         ? "harddelete"
         : "update";
     var isCheck = "N";
-    if (values.checkbox || values.scrummaster == true) {
+    if (values.checkbox || values.scrummaster  == true) {
       isCheck = "Y";
     }
+    
 
     var saveData = {
       RecordID: recID,
@@ -448,7 +451,8 @@ const Editemployee = () => {
       Name: values.Name,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
-      ScrumMaster: values.scrummaster === true ? "Y" : "N",
+     ScrumMaster : values.scrummaster === true ? "Y" : "N",
+    ProjectManager: values.prjmanager === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -1569,8 +1573,8 @@ const Editemployee = () => {
           Name: deploymentData.ShiftName,
         }
       : null,
-    checkin: deploymentData.CheckInTime || "",
-    checkout: deploymentData.CheckOutTime || "",
+    checkin: deploymentData.ShiftStartTime || "",
+    checkout: deploymentData.ShiftEndTime || "",
     // monday: deploymentData.Monday === "Y" ? true : false,
     // tuesday: deploymentData.Tuesday === "Y" ? true : false,
     // wednesday: deploymentData.Wednesday === "Y" ? true : false,
@@ -1578,13 +1582,13 @@ const Editemployee = () => {
     // friday: deploymentData.Friday === "Y" ? true : false,
     // saturday: deploymentData.Saturday === "Y" ? true : false,
     // sunday: deploymentData.Sunday === "Y" ? true : false,
-    Monday: deploymentData.Monday === "Y" ? true : false,
-    Tuesday: deploymentData.Tuesday === "Y" ? true : false,
-    Wednesday: deploymentData.Wednesday === "Y" ? true : false,
-    Thursday: deploymentData.Thursday === "Y" ? true : false,
-    Friday: deploymentData.Friday === "Y" ? true : false,
-    Saturday: deploymentData.Saturday === "Y" ? true : false,
-    Sunday: deploymentData.Sunday === "Y" ? true : false,
+    Monday: deploymentData.MondayShift === "Y" ? true : false,
+    Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
+    Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
+    Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
+    Friday: deploymentData.FridayShift === "Y" ? true : false,
+    Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+    Sunday: deploymentData.SundayShift === "Y" ? true : false,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
@@ -2372,6 +2376,18 @@ const Editemployee = () => {
                         />
 
                         <FormLabel focused={false}>Scrum Master</FormLabel>
+                         <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="prjmanager"
+                          id="prjmanager"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Project Manager"
+                        />
+
+                        <FormLabel focused={false}>Project Manager</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -4693,7 +4709,7 @@ const Editemployee = () => {
                   <Stack
                     direction="column"
                     spacing={2}
-                    sx={{ width: 500, mt: 2 }}
+                    sx={{ width: 500, mt: 2,padding:formGap}}
                   >
                     {/* Shift */}
                     <FormControl variant="standard" fullWidth>
@@ -4757,11 +4773,14 @@ const Editemployee = () => {
                         type="time"
                         id="checkin"
                         name="checkin"
-                        value={values.shift?.ShiftStartTime || ""}
+                        value={values.shift?.ShiftStartTime || values.checkin}
                         // value={values.checkin}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Check In Time"
+                        label="Shift Start Time"
+                         inputProps={{
+                          readOnly: true,
+                        }}
                         focused
                       />
                     </FormControl>
@@ -4773,11 +4792,11 @@ const Editemployee = () => {
                         type="time"
                         id="checkout"
                         name="checkout"
-                        value={values.shift?.ShiftendTime || ""}
+                        value={values.shift?.ShiftendTime || values.checkout}
                         // value={values.checkout}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Check Out Time"
+                        label="Shift End Time"
                         focused
                         inputProps={{
                           readOnly: true,
@@ -4786,50 +4805,7 @@ const Editemployee = () => {
                     </FormControl>
                   </Stack>
 
-                  {/* <FormControl
-                      sx={{
-                        gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={checkInLookup.cinRecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="CheckIn"
-                        variant="standard"
-                        value={checkInLookup.cinCode}
-                        focused
-                        required
-                        DESIGN
-                        inputProps={{ tabIndex: "-1" }}
-                      />
-
-                      <IconButton
-                        sx={{ height: 40, width: 40 }}
-                        onClick={() => handleShow("CIN")}
-                      >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
-                      <TextField
-                        id="outlined-basic"
-                        label="CheckIn"
-                        variant="standard"
-                        value={checkInLookup.cinName}
-                        fullWidth
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                      />
-                    </FormControl> */}
-
+                 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Week Off</Typography>
                   <Box>
@@ -4842,7 +4818,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
-                      // disabled
+                       disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -4856,7 +4832,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
-                      //  disabled
+                       disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -4870,7 +4846,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
-                      //  disabled
+                       disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -4884,7 +4860,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Thursday"
-                      //  disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Thursday</FormLabel>
@@ -4898,7 +4874,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Friday"
-                      //  disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Friday</FormLabel>
@@ -4912,7 +4888,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Saturday"
-                      //  disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Saturday</FormLabel>
@@ -4926,7 +4902,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Sunday"
-                      //  disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Sunday</FormLabel>
