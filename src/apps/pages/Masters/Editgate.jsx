@@ -10,6 +10,7 @@ import {
   Tooltip,
   Checkbox,
   Breadcrumbs,
+  Paper,
   LinearProgress,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -35,6 +36,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { HsnSchema } from "../../Security/validation";
 import { GateSchema } from "../../Security/validation";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { formGap } from "../../../ui-components/utils";
 // import CryptoJS from "crypto-js";
 const Editgate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -59,6 +61,7 @@ const Editgate = () => {
 
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+  const rowData = location.state || {};
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID: recid }));
   }, [location.key]);
@@ -69,6 +72,8 @@ const Editgate = () => {
     name: data.Name,
     comment: data.Comments,
     sortorder: data.SortOrder,
+    readercode:data.ReaderCode,
+    readername:data.ReaderName,
     disable: data.Disable === "Y" ? true : false,
   };
 
@@ -87,15 +92,17 @@ const Editgate = () => {
       SortOrder: values.sortorder,
       Disable: isCheck,
       LocRecordID: parentID,
-      Finyear,
-      CompanyID,
+      ReaderCode: values.readercode,
+      ReaderName:values.readername,
+      // Finyear,
+      // CompanyID,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(
-        `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`
+        `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`, { state: rowData }
       );
     } else {
       toast.error(response.payload.Msg);
@@ -137,72 +144,77 @@ const Editgate = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
 
-          <Breadcrumbs
-            maxItems={3}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR014/Company");
-              }}
+            <Breadcrumbs
+              maxItems={3}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
-              Company
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate(
-                  `/Apps/Secondarylistview/TR128/Location/${params.parentID}`
-                );
-              }}
-            >
-              Location
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate(
-                  `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`
-                );
-              }}
-            >
-              Gate Entry
-            </Typography>
-          </Breadcrumbs>
-          {/* <Typography variant="h3">Gate</Typography> */}
-        </Box>
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
+              {/* <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR014/Company",{state: rowData});
+                }}
+              >
+               {`Company(${rowData.CompanyName})`}
+              </Typography> */}
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    "/Apps/TR128/Location", { state: rowData }
+                  );
+                }}
+              >
+                {`Location(${rowData.LocationName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`, { state: rowData }
+                  );
+                }}
+              >
+                {mode === "E" ? `Gate(${rowData.GateName})` : "Gate(New)"}
 
+                {/* {`Gate(${rowData.GateName})`} */}
+              </Typography>
+            </Breadcrumbs>
+            {/* <Typography variant="h3">Gate</Typography> */}
+          </Box>
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
       {!getLoading ? (
-        <Box m="20px">
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          {/* <Box m="20px"> */}
+
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -226,23 +238,24 @@ const Editgate = () => {
                 <Box
                   display="grid"
                   gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 4",
                     },
                   }}
                 >
-                  <FormControl
+                  {/* <FormControl
                     fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
-                  >
+                    sx={{ gridColumn: "span 2", gap: formGap }}
+                  > */}
                     <TextField
                       name="code"
                       type="text"
                       id="code"
                       label="Code"
-                      variant="filled"
+                      variant="standard"
                       focused
                       required
                       value={values.code}
@@ -250,6 +263,7 @@ const Editgate = () => {
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
+                      sx={{ gridColumn: "span 2" }}
                       autoFocus
                     />
                     <TextField
@@ -257,27 +271,92 @@ const Editgate = () => {
                       type="text"
                       id="name"
                       label="Name"
-                      variant="filled"
+                      variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
+                      sx={{ gridColumn: "span 2" }}
                       autoFocus
+                    />
+                    <TextField
+                      name="readercode"
+                      type="text"
+                      id="readercode"
+                      label="Reader Code"
+                      variant="standard"
+                      focused
+                      value={values.readercode}
+                      onChange={handleChange}
+                      autoFocus
+                      sx={{ gridColumn: "span 2" }}
+                    />
+                    <TextField
+                      name="readername"
+                      type="text"
+                      id="readername"
+                      label="Reader Name"
+                      variant="standard"
+                      focused
+                      value={values.readername}
+                      onChange={handleChange}
+                      autoFocus
+                      sx={{ gridColumn: "span 2" }}
+                    />
+                    <TextField
+                      name="latitude"
+                      type="number"
+                      id="latitude"
+                      label="Latitude"
+                      variant="standard"
+                      focused
+                      value={values.latitude}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.latitude && !!errors.latitude}
+                      helperText={touched.latitude && errors.latitude}
+                      sx={{ gridColumn: "span 2" }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
+                    />
+
+                    <TextField
+                      name="longitude"
+                      type="number"
+                      id="longitude"
+                      label="Longitude"
+                      variant="standard"
+                      focused
+                      value={values.longitude}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.longitude && !!errors.longitude}
+                      helperText={touched.longitude && errors.longitude}
+                      sx={{ gridColumn: "span 2" }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
                     />
                     <TextField
                       name="comment"
                       type="text"
                       id="comment"
                       label="Comment"
-                      variant="filled"
+                      variant="standard"
                       focused
                       value={values.comment}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.comment && !!errors.comment}
                       helperText={touched.comment && errors.comment}
+                      sx={{ gridColumn: "span 2" }}
                       autoFocus
                     />
 
@@ -286,14 +365,14 @@ const Editgate = () => {
                       type="number"
                       id="sortorder"
                       label="Sort Order"
-                      variant="filled"
+                      variant="standard"
                       focused
                       value={values.sortorder}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.sortorder && !!errors.sortorder}
                       helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "#fff6c3" }}
+                      sx={{ gridColumn: "span 2" }}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
@@ -319,33 +398,40 @@ const Editgate = () => {
 
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box>
-                  </FormControl>
+                  {/* </FormControl> */}
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
-                  {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
+                <Box
+                  display="flex"
+                  padding={1}
+                  justifyContent="end"
+                  mt="20px"
+                  gap="20px"
+                >
+                  {/* {YearFlag == "true" ? ( */}
+                  <LoadingButton
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
+                    Save
+                  </LoadingButton>
+                  {/* ) : ( */}
+                  {/* <Button
                       color="secondary"
                       variant="contained"
                       disabled={true}
                     >
                       Save
-                    </Button>
-                  )}
+                    </Button> */}
+                  {/* )} */}
                   <Button
                     color="error"
                     variant="contained"
                     onClick={() => {
                       navigate(
-                        `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`
+                        -1
+                        // `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`,{state:rowData}
                       );
                     }}
                   >
@@ -355,7 +441,9 @@ const Editgate = () => {
               </form>
             )}
           </Formik>
-        </Box>
+
+          {/* </Box> */}
+        </Paper>
       ) : (
         false
       )}

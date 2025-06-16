@@ -944,6 +944,56 @@ export const getSettingsData = createAsyncThunk(
     return response.data;
   }
 );
+export const getBiometricData = createAsyncThunk(
+  "Biometric/get",
+  async ({ CompanyID }) => {  // Destructure the CompanyID here
+    const url = store.getState().globalurl.biometricgetUrl;
+    console.log(url, "--find url");
+
+    const data = {
+      CompanyID  // Now using SubscriptionCode passed via the thunk
+    };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+     headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const getJioData = createAsyncThunk(
+  "Biometric/getyyyyyy",
+  async ({ CompanyID }) => {  // Destructure the CompanyID here
+    const url = store.getState().globalurl.jiogetUrl;
+    console.log(url, "--find url");
+
+    const data = {
+      CompanyID  // Now using SubscriptionCode passed via the thunk
+    };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+     headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 // export const Regularizationdata = createAsyncThunk(
 //   "regularization",
 //   async ({ accessID, get, recID, }) => {
@@ -1021,6 +1071,27 @@ export const CompanydetailpostData = createAsyncThunk(
   "Company/Sub Post",
   async ({ idata }) => {
     const url = store.getState().globalurl.compdetailPostUrl;
+
+    // const data = {
+    //   UserName: UserName,
+    //   OldPassword: OldPassword,
+    //   NewPassword: NewPassword,
+    // };
+    console.log("get" + JSON.stringify(idata));
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+export const BiometricpostData = createAsyncThunk(
+  "biometric/Sub Post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.biometricPostUrl;
 
     // const data = {
     //   UserName: UserName,
@@ -1655,7 +1726,42 @@ export const getApiSlice = createSlice({
         state.Data = {};
         toast.error('Something Went Wrong')
       })
-
+      .addCase(getBiometricData.pending, (state, action) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.Data = {};
+        state.msg = "Loading..."
+      })
+      .addCase(getBiometricData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.Data = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(getBiometricData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.Data = {};
+        toast.error('Something Went Wrong')
+      })
+    // .addCase(getJioData.pending, (state, action) => {
+    //     state.Status = "idle";
+    //     state.getLoading = true;
+    //     state.Data = {};
+    //     state.msg = "Loading..."
+    //   })
+    //   .addCase(getJioData.fulfilled, (state, action) => {
+    //     state.Status = "success";
+    //     state.getLoading = false;
+    //     state.Data = action.payload.Data ? action.payload.Data : {};
+    //     // state.msg =  action.payload.Msg
+    //   })
+    //   .addCase(getJioData.rejected, (state, action) => {
+    //     state.Status = "Error";
+    //     state.getLoading = false;
+    //     state.Data = {};
+    //     toast.error('Something Went Wrong')
+    //   })
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;

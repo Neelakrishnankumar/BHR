@@ -282,6 +282,8 @@ empGetAttachmentUrl:"https://ess.beyondexs.com/api/getAttachmentsController.php"
  leavelApprovalUrl:  "https://hr.beyondexs.com/api/EmployeeRequestUpdateController.php",
   requestAcknowledgeUrl:  "https://hr.beyondexs.com/api/LeaveRequest.php",
    monthlyattendanceUrl:"https://hr.beyondexs.com/api/GetdatewiseEmpattendance.php",
+   biometricgetUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationGetContoller.php",
+   biometricPostUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationUpdateContoller.php"
   };
 
 export const getUrlSlice = createSlice({

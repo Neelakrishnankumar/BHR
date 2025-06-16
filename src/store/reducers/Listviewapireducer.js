@@ -486,6 +486,7 @@ export const fetchListview =
         AccessID == "TR079" ||
         AccessID == "TR080" ||
         AccessID == "TR032" ||
+       AccessID == "TR128" ||
         AccessID == "TR087"
       ) {
         if (AccessID == "TR080") {
@@ -500,7 +501,7 @@ export const fetchListview =
             year +
             "'";
         }
-        if (AccessID != "TR080") {
+        if (AccessID != "TR080" ) {
           filter = "parentID= " + filter + "'";
           // console.log("---3---",filter);
         }
@@ -542,8 +543,10 @@ export const fetchListview =
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
+        
         AccessID != "TR262" &&
-         AccessID != "TR022"  
+         AccessID != "TR022" 
+
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -560,8 +563,8 @@ export const fetchListview =
         AccessID == "TR105" ||
         AccessID == "TR002" ||
         AccessID == "TR086" ||
-
         AccessID == "TR091" 
+       
       
         
       ) {
@@ -572,6 +575,7 @@ export const fetchListview =
       filter = "ProjectID=" + `'${filter}'`;
      
      }
+  
     
       
 
@@ -584,7 +588,7 @@ export const fetchListview =
         // "ScreenName": screenName,
         AccessID: AccessID,
         ScreenName: screenName,
-        Filter: filter,
+        Filter: AccessID == "TR128" ? `parentID=${CompId}`:filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,
@@ -1952,7 +1956,19 @@ export const fetchListview =
                                 
                                 EmpName:params.row.Name
                               }
-                            : 
+                            :
+                            AccessID === "TR128"
+                            ? {
+                                LocationName: params.row.Name,
+                                CompanyName: params.row.CompanyName,
+                              } :
+                              AccessID === "TR127"
+                            ? {
+                                GateName: params.row.Name,
+                                LocationName: params.row.LocationName,
+                                CompanyName: params.row.CompanyName,
+                              }
+                            :
                             AccessID === "TR257"
                             ? {
                                 
@@ -2304,14 +2320,15 @@ export const fetchListview =
                       <Box>
                         <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                        >
+                        state={{Locationname:params.row.Name}}
+                       >
                           <Tooltip title="Gate">
                             <IconButton color="info" size="small">
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <Link
+                        {/* <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
                         >
                           <Tooltip title="Bin">
@@ -2319,7 +2336,7 @@ export const fetchListview =
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
-                        </Link>
+                        </Link> */}
                       </Box>
                     ) : (
                       false

@@ -128,6 +128,9 @@ import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
 import Editshift from "./pages/HR/Editshift";
 import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
 import EditdailyAttendance from "./pages/Empolyee/EditDailyattendance";
+import Biometricconfiguration from "./Security/Biometric";
+import Geoconfiguration from "./Security/Geoconfig";
+
 
 
 function App() {
@@ -205,6 +208,7 @@ function App() {
                 {/* Settings */}
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/configuration" element={<Configuration />} />
+                
 
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"
@@ -555,7 +559,7 @@ function App() {
                     element={<EditEmpCheckin/>}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLocation/:id/:Mode"
+                    path="/:accessID/:screenName/EditLocation/:id/:Mode"
                     element={<Editlocation />}
                   />
                   <Route path="/Secondarylistview/:accessID/:screenName/:Type/stock-care-by" element={ <Editstockcare/>}/>
@@ -652,6 +656,8 @@ function App() {
                     element={<Editshift />}
                   />
                     <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
+                    <Route path="/Biometric" element={<Biometricconfiguration />} />
+                     {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
 
                    {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"

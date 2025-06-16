@@ -17,6 +17,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SafetyCheckIcon from '@mui/icons-material/SafetyCheck';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import {
   Box,
   Avatar,
@@ -117,6 +118,7 @@ import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import FenceIcon from '@mui/icons-material/Fence';
 import { menuHeight } from "./utils";
 const child = {
 
@@ -799,23 +801,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
-        {
-          name: "Project",
-          id: 4346894,
-          url: "./TR133/Project",
-          icon: (
-            <Tooltip title="Project">
-              <SourceOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR133",
-        },
+        // {
+        //   name: "Project",
+        //   id: 4346894,
+        //   url: "./TR133/Project",
+        //   icon: (
+        //     <Tooltip title="Project">
+        //       <SourceOutlinedIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR133",
+        // },
         {
           name: "Functions",
           id: 567,
@@ -1288,12 +1290,46 @@ const child = {
 
 
         {
-          name: "Configuration",
+          name: "Company",
           id: 5846,
           url: "./configuration",
           icon: (
             <Tooltip title="Configuration">
               <DisplaySettingsIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR252",
+        },
+        {
+          name: "Biometric",
+          id: 58467,
+          url: "./Biometric",
+          icon: (
+            <Tooltip title="Biometric">
+              <FingerprintIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR252",
+        },
+        {
+          name: "Geo Fencing",
+          id: 58468,
+          url: "./TR128/Location",
+          icon: (
+            <Tooltip title="Geofencing">
+              <FenceIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
