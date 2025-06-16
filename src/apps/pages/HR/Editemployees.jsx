@@ -4557,7 +4557,78 @@ const Editemployee = () => {
                         // inputProps={{ readOnly: true }}
                       />
                     </FormControl> */}
+
+
                   </Box>
+                                  {/* <Box display="flex" flexDirection="column" gap={2}> */}
+  {/* Row 1: Horizontal */}
+  <Box display="flex" flexDirection="column" gap={2}>
+  <Box display="flex" alignItems="center" gap={1}>
+    <Field
+      type="checkbox"
+      name="isHorizontal"
+      as={Checkbox}
+      id="horizontal"
+    />
+    <FormLabel htmlFor="horizontal">Horizontal</FormLabel>
+  <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Horizontal"
+                        name="Horizontal"
+                        // value={values.Horizontal}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Minimum Numbers"
+                        sx={{
+                          width: "420px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+  </Box>
+
+  {/* Row 2: Vertical */}
+  <Box display="flex" alignItems="center" gap={1}>
+    <Field
+      type="checkbox"
+      name="isVertical"
+      as={Checkbox}
+      id="vertical"
+    />
+    <FormLabel htmlFor="vertical">Vertical</FormLabel>
+    <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Vertical"
+                        name="Vertical"
+                        // value={values.Vertical}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Minimum Numbers"
+                        sx={{
+                           width: "420px",
+                           marginLeft: "15px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+  </Box>
+
+  </Box>
+{/* </Box> */}
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Shift Details</Typography>
 
