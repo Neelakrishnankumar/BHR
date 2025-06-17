@@ -75,6 +75,8 @@ const Editgate = () => {
     readercode:data.ReaderCode,
     readername:data.ReaderName,
     disable: data.Disable === "Y" ? true : false,
+    latitude:data.Latitude,
+    longitude:data.Longitude
   };
 
   const Fnsave = async (values) => {
@@ -94,6 +96,8 @@ const Editgate = () => {
       LocRecordID: parentID,
       ReaderCode: values.readercode,
       ReaderName:values.readername,
+      Latitude:values.latitude,
+      Longitude:values.longitude
       // Finyear,
       // CompanyID,
     };
@@ -101,9 +105,10 @@ const Editgate = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(
-        `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`, { state: rowData }
-      );
+      // navigate(
+      //   `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`, { state: rowData }
+      // );
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
     }
@@ -132,9 +137,7 @@ const Editgate = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate(
-            `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`
-          );
+          navigate(-1);
         }
       } else {
         return;
