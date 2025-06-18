@@ -901,7 +901,7 @@ const Editemployee = () => {
   //     >
   //       <Box sx={{ display: "flex", flexDirection: "row" }}>
   //         <Typography>
-  //           {show == "6" && "List of Attachments"}
+  //           {show == "6" && "List of Documents"}
   //         </Typography>
   //         <Typography variant="h5">{`(${rowCount})`}</Typography>
   //       </Box>
@@ -936,14 +936,14 @@ const Editemployee = () => {
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           {/* <Typography>
-            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "list of Attachments"}
+            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
             
           </Typography> */}
           <Typography>
             {show == "2"
               ? "List of Functions"
               : show == "6"
-              ? "List of Attachments"
+              ? "List of Documents"
               : show == "3"
               ? "List of Managers"
               : show == "7"
@@ -1716,7 +1716,7 @@ VerticalMimNo: values.Verticalmin || 0,
       dispatch(
         fetchExplorelitview(
           "TR210",
-          "List Of Attachments",
+          "List of Documents",
           `EmployeeID=${recID}`,
           ""
         )
@@ -1827,7 +1827,7 @@ VerticalMimNo: values.Verticalmin || 0,
 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Functions</Typography>):false}
 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
-{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Attachments</Typography>):false} 
+{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Documents</Typography>):false} 
  {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false}
 
         </Breadcrumbs>
@@ -1851,7 +1851,7 @@ VerticalMimNo: values.Verticalmin || 0,
                   <MenuItem value={2}>Functions</MenuItem>
                   <MenuItem value={3}>Managers</MenuItem>
                   <MenuItem value={4}>Deployment</MenuItem>
-                   <MenuItem value={6}>List of Attachments</MenuItem> 
+                   <MenuItem value={6}>List of Documents</MenuItem> 
                   <MenuItem value={7}>Item Custody</MenuItem>
 
                 </Select>
@@ -1967,7 +1967,7 @@ VerticalMimNo: values.Verticalmin || 0,
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      List of Attachments
+                      List of Documents
                     </Typography>
                   ) : (
                     false
@@ -2056,7 +2056,7 @@ VerticalMimNo: values.Verticalmin || 0,
                     <MenuItem value={4}>Deployment</MenuItem>
                     <MenuItem value={9}>Geo Location</MenuItem>
                     <MenuItem value={10}>Leave Configuration</MenuItem>
-                    <MenuItem value={6}>List of Attachments</MenuItem>
+                    <MenuItem value={6}>List of Documents</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
                   </Select>
                 </FormControl>
