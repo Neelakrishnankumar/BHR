@@ -224,9 +224,8 @@ const Editemployee = () => {
           // ? "CT"
           "",
     checkbox: Data.Disable,
-  scrummaster: Data.ScrumMaster === "Y" ? true : false,
-   prjmanager: Data.ProjectManager === "Y" ? true : false,
-
+    scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    prjmanager: Data.ProjectManager === "Y" ? true : false,
 
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
@@ -438,10 +437,9 @@ const Editemployee = () => {
         ? "harddelete"
         : "update";
     var isCheck = "N";
-    if (values.checkbox || values.scrummaster  == true) {
+    if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
     }
-    
 
     var saveData = {
       RecordID: recID,
@@ -451,8 +449,8 @@ const Editemployee = () => {
       Name: values.Name,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
-     ScrumMaster : values.scrummaster === true ? "Y" : "N",
-    ProjectManager: values.prjmanager === true ? "Y" : "N",
+      ScrumMaster: values.scrummaster === true ? "Y" : "N",
+      ProjectManager: values.prjmanager === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -1008,6 +1006,10 @@ const Editemployee = () => {
     alertdate: "",
     renewalperiod: "",
     vendor: "",
+    hsnCode: "",
+    cgst: "",
+    sgst: "",
+    igst: "",
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1076,6 +1078,10 @@ const Editemployee = () => {
         alertdate: "",
         renewalperiod: "",
         vendor: "",
+        hsnCode: "",
+        cgst: "",
+        sgst: "",
+        igst: "",
       });
 
       setLeaveCondata({
@@ -1155,6 +1161,10 @@ const Editemployee = () => {
                 Name: rowData.VendorName,
               }
             : null,
+          hsnCode: rowData.Hsn,
+          cgst: rowData.Gst,
+          sgst: rowData.Sgst,
+          igst: rowData.Igst,
         });
 
         setselectLeaveconLTData({
@@ -1286,7 +1296,10 @@ const Editemployee = () => {
         : contractorData.units === "Month"
         ? "MS"
         : "",
-
+    Hsn: contractorData.hsnCode,
+    Gst: contractorData.cgst,
+    Sgst: contractorData.sgst,
+    Igst: contractorData.igst,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
@@ -1317,6 +1330,10 @@ const Editemployee = () => {
             ? customerlookup.RecordID
             : 0
           : 0,
+      Hsn: values.Hsn,
+      Gst: values.Gst,
+      Sgst: values.Sgst,
+      Igst: values.Igst,
       // Vendors: show == "8" ? "Y" : "N",
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
@@ -1589,6 +1606,10 @@ const Editemployee = () => {
     Friday: deploymentData.FridayShift === "Y" ? true : false,
     Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
     Sunday: deploymentData.SundayShift === "Y" ? true : false,
+    horizontal: deploymentData.Horizontal === "Y" ? true : false,
+    vertical: deploymentData.Vertical === "Y" ? true : false,
+    Horizontalmin: deploymentData.HorizontalMimNo,
+    Verticalmin: deploymentData.VerticalMimNo,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
@@ -1596,14 +1617,14 @@ const Editemployee = () => {
   console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
     console.log(values, "--values");
-    
+
     const idata = {
       HeaderID: recID,
       CheckInTime: values.shift?.ShiftStartTime || "",
       CheckOutTime: values.shift?.ShiftendTime || "",
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
-       Monday: values.Monday === true ? "Y" : "N",
+      Monday: values.Monday === true ? "Y" : "N",
       Tuesday: values.Tuesday === true ? "Y" : "N",
       Wednesday: values.Wednesday === true ? "Y" : "N",
       Thursday: values.Thursday === true ? "Y" : "N",
@@ -1629,6 +1650,10 @@ const Editemployee = () => {
       ShiftID: values.shift.RecordID || 0,
       ShiftCode: values.shift.Code || "",
       ShiftName: values.shift.Name || "",
+Horizontal: values.horizontal === true ? "Y" : "N",
+Vertical: values.vertical === true ? "Y" : "N",
+HorizontalMimNo: values.Horizontalmin || 0,
+VerticalMimNo: values.Verticalmin || 0,
       // DesignationID: designLookup ? designLookup.RecordID : 0,
       // LocationID: locationLookup ? locationLookup.RecordID : 0,
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
@@ -2376,7 +2401,7 @@ const Editemployee = () => {
                         />
 
                         <FormLabel focused={false}>Scrum Master</FormLabel>
-                         <Field
+                        <Field
                           //  size="small"
                           type="checkbox"
                           name="prjmanager"
@@ -4573,27 +4598,29 @@ const Editemployee = () => {
                         // inputProps={{ readOnly: true }}
                       />
                     </FormControl> */}
-
-
                   </Box>
-                                  {/* <Box display="flex" flexDirection="column" gap={2}> */}
-  {/* Row 1: Horizontal */}
-  <Box display="flex" flexDirection="column" gap={2}>
-  <Box display="flex" alignItems="center" gap={1}>
-    <Field
-      type="checkbox"
-      name="isHorizontal"
-      as={Checkbox}
-      id="horizontal"
-    />
-    <FormLabel htmlFor="horizontal">Horizontal</FormLabel>
-  <TextField
+                  {/* <Box display="flex" flexDirection="column" gap={2}> */}
+                  {/* Row 1: Horizontal */}
+                  <Box display="flex" flexDirection="column" gap={2}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="horizontal"
+                        name="horizontal"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Horizontal"
+                        
+                      />
+                      <FormLabel focused={false}>Horizontal</FormLabel>
+                      <TextField
                         fullWidth
                         variant="standard"
-                        type="text"
-                        id="Horizontal"
-                        name="Horizontal"
-                        // value={values.Horizontal}
+                        type="number"
+                        id="Horizontalmin"
+                        name="Horizontalmin"
+                        value={values.Horizontalmin}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Minimum Numbers"
@@ -4606,32 +4633,40 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                         InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
-  </Box>
+                    </Box>
 
-  {/* Row 2: Vertical */}
-  <Box display="flex" alignItems="center" gap={1}>
-    <Field
-      type="checkbox"
-      name="isVertical"
-      as={Checkbox}
-      id="vertical"
-    />
-    <FormLabel htmlFor="vertical">Vertical</FormLabel>
-    <TextField
+                    {/* Row 2: Vertical */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="vertical"
+                         onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="vertical"
+                        as={Checkbox}
+                        label="Vertical"
+                        
+                      />
+                      <FormLabel focused={false}>Vertical</FormLabel>
+                      <TextField
                         fullWidth
                         variant="standard"
-                        type="text"
-                        id="Vertical"
-                        name="Vertical"
-                        // value={values.Vertical}
+                        type="number"
+                        id="Verticalmin"
+                        name="Verticalmin"
+                        value={values.Verticalmin}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Minimum Numbers"
                         sx={{
-                           width: "420px",
-                           marginLeft: "15px",
+                          width: "420px",
+                          marginLeft: "15px",
                           //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
@@ -4639,12 +4674,15 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
-  </Box>
-
-  </Box>
-{/* </Box> */}
+                    </Box>
+                  </Box>
+                  {/* </Box> */}
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Shift Details</Typography>
 
@@ -4709,7 +4747,7 @@ const Editemployee = () => {
                   <Stack
                     direction="column"
                     spacing={2}
-                    sx={{ width: 500, mt: 2,padding:formGap}}
+                    sx={{ width: 500, mt: 2, padding: formGap }}
                   >
                     {/* Shift */}
                     <FormControl variant="standard" fullWidth>
@@ -4744,21 +4782,42 @@ const Editemployee = () => {
                         variant="outlined"
                         value={values.shift}
                         onChange={(newValue) => {
-    //                        Monday: deploymentData.Monday === "Y" ? true : false,
-    // Tuesday: deploymentData.TuesdayTuesdayShift === "Y" ? true : false,
-    // Wednesday: deploymentData.Wednesday === "Y" ? true : false,
-    // Thursday: deploymentData.Thursday === "Y" ? true : false,
-    // Friday: deploymentData.Friday === "Y" ? true : false,
-    // Saturday: deploymentData.Saturday === "Y" ? true : false,
-    // Sunday: deploymentData.Sunday === "Y" ? true : false,
-    setFieldValue("shift", newValue);
-                          setFieldValue("Monday", newValue.Monday === "Y" ? true : false);
-                          setFieldValue("Tuesday", newValue.Tuesday === "Y" ? true : false);
-                          setFieldValue("Wednesday", newValue.Wednesday === "Y" ? true : false);
-                          setFieldValue("Thursday", newValue.Thursday === "Y" ? true : false);
-                          setFieldValue("Friday", newValue.Friday === "Y" ? true : false);
-                          setFieldValue("Saturday", newValue.Saturday === "Y" ? true : false);
-                          setFieldValue("Sunday", newValue.Sunday === "Y" ? true : false);
+                          //                        Monday: deploymentData.Monday === "Y" ? true : false,
+                          // Tuesday: deploymentData.TuesdayTuesdayShift === "Y" ? true : false,
+                          // Wednesday: deploymentData.Wednesday === "Y" ? true : false,
+                          // Thursday: deploymentData.Thursday === "Y" ? true : false,
+                          // Friday: deploymentData.Friday === "Y" ? true : false,
+                          // Saturday: deploymentData.Saturday === "Y" ? true : false,
+                          // Sunday: deploymentData.Sunday === "Y" ? true : false,
+                          setFieldValue("shift", newValue);
+                          setFieldValue(
+                            "Monday",
+                            newValue.Monday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Tuesday",
+                            newValue.Tuesday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Wednesday",
+                            newValue.Wednesday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Thursday",
+                            newValue.Thursday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Friday",
+                            newValue.Friday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Saturday",
+                            newValue.Saturday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Sunday",
+                            newValue.Sunday === "Y" ? true : false
+                          );
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
@@ -4778,7 +4837,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Shift Start Time"
-                         inputProps={{
+                        inputProps={{
                           readOnly: true,
                         }}
                         focused
@@ -4805,7 +4864,6 @@ const Editemployee = () => {
                     </FormControl>
                   </Stack>
 
-                 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Week Off</Typography>
                   <Box>
@@ -4818,7 +4876,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
-                       disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -4832,7 +4890,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
-                       disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -4846,7 +4904,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
-                       disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -6102,6 +6160,104 @@ const Editemployee = () => {
                         multiline
                         inputProps={{ maxLength: 90 }}
                       />
+
+                      <TextField
+                        name="Hsn"
+                        type="text"
+                        id="Hsn"
+                        label="HSN Code"
+                        variant="standard"
+                        focused
+                        required
+                        value={values.Hsn}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Hsn && !!errors.Hsn}
+                        helperText={touched.Hsn && errors.Hsn}
+                        autoFocus
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Sgst"
+                        type="number"
+                        id="Sgst"
+                        label="SGST"
+                        variant="standard"
+                        value={values.Sgst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Sgst && !!errors.Sgst}
+                        helperText={touched.Sgst && errors.Sgst}
+                        sx={{
+                          background: "",
+                          input: { textAlign: "right" },
+                        }}
+                        inputprops={{
+                          maxlength: 13,
+                          step: 0.01,
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Gst"
+                        type="number"
+                        id="Gst"
+                        label="CGST"
+                        variant="standard"
+                        value={values.Gst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Gst && !!errors.Gst}
+                        helperText={touched.Gst && errors.Gst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        inputProps={{ maxLength: 25 }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Igst"
+                        type="number"
+                        id="Igst"
+                        label="IGST"
+                        variant="standard"
+                        value={values.Igst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Igst && !!errors.Igst}
+                        helperText={touched.Igst && errors.Igst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
+                      />
+
                       <TextField
                         name="FromPeriod"
                         type="date"
@@ -6701,6 +6857,103 @@ const Editemployee = () => {
                         multiline
                         inputProps={{ maxLength: 90 }}
                       />
+                      <TextField
+                        name="Hsn"
+                        type="text"
+                        id="Hsn"
+                        label="HSN Code"
+                        variant="standard"
+                        focused
+                        required
+                        value={values.Hsn}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Hsn && !!errors.Hsn}
+                        helperText={touched.Hsn && errors.Hsn}
+                        autoFocus
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Sgst"
+                        type="number"
+                        id="Sgst"
+                        label="SGST"
+                        variant="standard"
+                        value={values.Sgst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Sgst && !!errors.Sgst}
+                        helperText={touched.Sgst && errors.Sgst}
+                        sx={{
+                          background: "",
+                          input: { textAlign: "right" },
+                        }}
+                        inputprops={{
+                          maxlength: 13,
+                          step: 0.01,
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Gst"
+                        type="number"
+                        id="Gst"
+                        label="CGST"
+                        variant="standard"
+                        value={values.Gst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Gst && !!errors.Gst}
+                        helperText={touched.Gst && errors.Gst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        inputProps={{ maxLength: 25 }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Igst"
+                        type="number"
+                        id="Igst"
+                        label="IGST"
+                        variant="standard"
+                        value={values.Igst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Igst && !!errors.Igst}
+                        helperText={touched.Igst && errors.Igst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
+                      />
+
                       <TextField
                         name="FromPeriod"
                         type="date"

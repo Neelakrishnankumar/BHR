@@ -62,7 +62,12 @@ const initialState = {
   sprintget: {},
   sprintPPget: [],
   sprintgetstatus: "",
-  sprintloading: false
+  sprintloading: false,
+  partyBankgetdata: {},
+  partyBankgetstatus: "",
+  partyBankgetloading: false,
+  partyBankPostdata: {},
+  partyContactgetdata: {},
 
 };
 
@@ -865,6 +870,105 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   }
 );
+
+//PartyBank Get
+export const PartyBankget = createAsyncThunk(
+  "party bank/Get",
+  async ({ VendorID }) => {
+    var url = store.getState().globalurl.partyBankUrl;
+    const data = {
+      VendorID: VendorID,
+     
+      }
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+//partyBank Post
+export const partyBankpostData = createAsyncThunk(
+  "Party/partyBankpostData",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.partyBankPostUrl;
+
+    const data = {
+     
+      action: action,
+       ...idata,
+      // data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+
+//partyContact Get
+export const PartyContactget = createAsyncThunk(
+  "partycontact/Get",
+  async ({ VendorID }) => {
+    var url = store.getState().globalurl.partyContactgetUrl;
+    const data = {
+      VendorID: VendorID,
+     
+      }
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+//partyContact Post
+export const partyContactData = createAsyncThunk(
+  "Party/partycontact",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.partyContactPostUrl;
+
+    const data = {
+     
+      action: action,
+       ...idata,
+      // data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+
 //Sprint Get
 export const sprintGetData = createAsyncThunk(
   "Project/Sprint",
@@ -1662,6 +1766,87 @@ export const getApiSlice = createSlice({
         state.Data = {};
         toast.error('Something Went Wrong')
       })
+//PartyBank Details GET
+
+.addCase(PartyBankget.pending, (state, action) => {
+        state.partyBankgetstatus = "idle";
+        // state.partyBankgetloading = true;
+        state.partyBankgetdata = {};
+        // state.msg = "Loading..."
+      })
+      .addCase(PartyBankget.fulfilled, (state, action) => {
+        state.partyBankgetstatus = "success";
+        // state.partyBankgetloading = false;
+        state.partyBankgetdata = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(PartyBankget.rejected, (state, action) => {
+        state.partyBankgetstatus = "Error";
+        // state.partyBankgetloading = false;
+        state.partyBankgetdata = {};
+        // toast.error('Something Went Wrong')
+      })
+
+      
+
+
+      .addCase(PartyContactget.pending, (state, action) => {
+        state.partyBankgetstatus = "idle";
+        state.partyContactgetdata = {};
+      
+      })
+      .addCase(PartyContactget.fulfilled, (state, action) => {
+        state.partyBankgetstatus = "success";
+        state.partyContactgetdata = action.payload.Data ? action.payload.Data : {};
+      
+      })
+      .addCase(PartyContactget.rejected, (state, action) => {
+        state.partyBankgetstatus = "Error";
+        state.partyContactgetdata = {};
+ 
+      })
+
+//Partbank POST
+ .addCase(partyBankpostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(partyBankpostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+
+        state.partyBankPostdata = action.meta.arg.idata;
+              console.log(action.meta.arg.idata, "--partyBankPostdata");
+
+      })
+      
+      .addCase(partyBankpostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+
+
+ .addCase(partyContactData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(partyContactData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+        state.partyContactData = action.meta.arg.idata;
+              console.log(action.meta.arg.idata, "--partyBankPostdata");
+      })
+      .addCase(partyContactData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+
 
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {

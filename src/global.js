@@ -279,11 +279,16 @@ timesheetattendanceUrl: "https://ess.beyondexs.com/api/DailyTaskgetController.ph
 timesheetdtUrl: "https://ess.beyondexs.com/api/DailyTaskpostController.php",
 empAttachmentUrl:"https://ess.beyondexs.com/EmployeeAttachmentsController.php",
 empGetAttachmentUrl:"https://ess.beyondexs.com/api/getAttachmentsController.php",
- leavelApprovalUrl:  "https://hr.beyondexs.com/api/EmployeeRequestUpdateController.php",
-  requestAcknowledgeUrl:  "https://hr.beyondexs.com/api/LeaveRequest.php",
-   monthlyattendanceUrl:"https://hr.beyondexs.com/api/GetdatewiseEmpattendance.php",
-   biometricgetUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationGetContoller.php",
-   biometricPostUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationUpdateContoller.php"
+leavelApprovalUrl:  "https://hr.beyondexs.com/api/EmployeeRequestUpdateController.php",
+requestAcknowledgeUrl:  "https://hr.beyondexs.com/api/LeaveRequest.php",
+monthlyattendanceUrl:"https://hr.beyondexs.com/api/GetdatewiseEmpattendance.php",
+biometricgetUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationGetContoller.php",
+biometricPostUrl:"https://hr.beyondexs.com/api/BioMetricConfigrationUpdateContoller.php",
+partyBankUrl: "https://hr.beyondexs.com/api/PartyBankGetController.php",
+partyBankPostUrl: "https://hr.beyondexs.com/api/PartyBankUpdateController.php",
+partyContactgetUrl: "https://hr.beyondexs.com/api/PartyContractGetController.php",
+partyContactPostUrl: "https://hr.beyondexs.com/api/PartyContractUpdateController.php",
+
   };
 
 export const getUrlSlice = createSlice({

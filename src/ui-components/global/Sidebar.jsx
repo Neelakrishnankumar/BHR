@@ -63,7 +63,8 @@ import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 // import LgemsLogo from "../../assets/img/LgemsLogo.png";
-import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
+// import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
+import BackOfficelogo from "../../assets/img/Backoffceimage.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -1060,12 +1061,12 @@ const child = {
       ],
     },
      {
-      name: "Time Sheet",
+      name: "Agile",
       id: 45678,
       MenuID: "EM900",
-      Tooltipname: "Time Sheet",
+      Tooltipname: "Agile",
       icon: (
-        <Tooltip title="Time Sheet">
+        <Tooltip title="Agile">
           <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
         </Tooltip>
       ),
@@ -1712,7 +1713,8 @@ console.log(Expiryin, "--in a sideBar Expiryin");
                 <Avatar
                   variant="rounded"
                   // src={LgemsLogo}
-                  src={LgemsLogo}
+                  // src={LgemsLogo}
+                  src={BackOfficelogo}
                   // sx={{ width: "100px" }}
                   sx={{ height: "110px", width: "140px" }}
                   onClick={() => {
