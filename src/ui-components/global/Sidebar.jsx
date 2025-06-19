@@ -802,23 +802,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
-        // {
-        //   name: "Project",
-        //   id: 4346894,
-        //   url: "./TR133/Project",
-        //   icon: (
-        //     <Tooltip title="Project">
-        //       <SourceOutlinedIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR133",
-        // },
+        {
+          name: "Project",
+          id: 4346894,
+          url: "./TR133/Project",
+          icon: (
+            <Tooltip title="Project">
+              <SourceOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR133",
+        },
         {
           name: "Functions",
           id: 567,

@@ -4026,7 +4026,7 @@ const Editrequests = () => {
                           });
                         }}
                         // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"","Any":""}}`}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
                       />
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">

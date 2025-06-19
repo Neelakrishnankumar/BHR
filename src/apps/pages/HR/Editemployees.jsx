@@ -459,10 +459,10 @@ const Editemployee = () => {
       DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
-      DesignID: 0,
-      LocationRecID: 0,
-      GateRecID: 0,
-      WeekOff: 0,
+      // DesignID: 0,
+      // LocationRecID: 0,
+      // GateRecID: 0,
+      // WeekOff: 0,
       CompanyID,
       SubscriptionCode,
     };
@@ -4058,6 +4058,20 @@ VerticalMimNo: values.Verticalmin || 0,
                           value={designationLookup.desName}
                         /> */}
                       </Box>
+                       <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="Monday"
+                      id="Monday"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Manager"
+                      disabled
+                    />
+
+                    <FormLabel focused={false}>Manager</FormLabel>
+ 
                     </FormControl>
                   </Box>
                   <Box

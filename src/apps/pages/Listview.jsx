@@ -799,21 +799,21 @@ const [productFilter,setProductFilter] = useState();
         ) 
         : accessID == "TR133" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-            <Chip
+            {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
-            />
+            /> */}
              <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
             />
-             <Chip
+             {/* <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label="List of Milestone"
               variant="outlined"
-            />
+            /> */}
           </Box>
        )
        : (

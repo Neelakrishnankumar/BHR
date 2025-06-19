@@ -2224,7 +2224,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                   
+{/*                    
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
@@ -2272,7 +2272,7 @@ export const fetchListview =
                       </Link>
                     ) : (
                       false
-                    )}
+                    )} */}
 
                       {AccessID == "TR136" ? (
                       <Link
