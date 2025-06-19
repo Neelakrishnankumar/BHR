@@ -18,6 +18,9 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SafetyCheckIcon from '@mui/icons-material/SafetyCheck';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
 import {
   Box,
   Avatar,
@@ -1155,6 +1158,55 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR261",
+        },
+        
+      ],
+    },
+     {
+      name: "Invoice",
+      id: 4568,
+      MenuID: "EM900",
+      Tooltipname: "Invoice",
+      icon: (
+        <Tooltip title="Invoice">
+          <ReceiptIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+      
+        {
+          name: "Contracts In",
+          url: "/Apps/TR273/Contracts In",
+          id: 5593,
+          icon: (
+            <Tooltip title="Contracts In">
+              <RedoIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR273",
+        },
+        {
+          name: "Contracts Out",
+          url: "/Apps/TR274/Contracts Out",
+          id: 5594,
+          icon: (
+            <Tooltip title="Contracts Out">
+              <UndoIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR274",
         },
         
       ],
