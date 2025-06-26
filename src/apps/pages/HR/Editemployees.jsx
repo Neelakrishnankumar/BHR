@@ -206,10 +206,10 @@ const Editemployee = () => {
   const initialValues = {
     Department: Data.DeptRecordID
       ? {
-          RecordID: Data.DeptRecordID,
-          Code: Data.DeptCode,
-          Name: Data.DeptName,
-        }
+        RecordID: Data.DeptRecordID,
+        Code: Data.DeptCode,
+        Name: Data.DeptName,
+      }
       : null,
     Code: Data.Code,
     Name: Data.Name,
@@ -220,14 +220,14 @@ const Editemployee = () => {
       Data.EmpType === "Prohibition"
         ? "PP"
         : Data.EmpType === "Permanent"
-        ? "PM"
-        : Data.EmpType === "Contracts In"
-        ? "CI"
-        : Data.EmpType === "Contracts Out"
-        ? "CO"
-        : // : Data.EmpType === "Contractor"
-          // ? "CT"
-          "",
+          ? "PM"
+          : Data.EmpType === "Contracts In"
+            ? "CI"
+            : Data.EmpType === "Contracts Out"
+              ? "CO"
+              : // : Data.EmpType === "Contractor"
+              // ? "CT"
+              "",
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
@@ -439,8 +439,8 @@ const Editemployee = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
@@ -814,7 +814,7 @@ const Editemployee = () => {
   let VISIBLE_FIELDS;
 
   if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "Description", "action"];
+    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate","Description","Category", "action"];
   } else if (show == "1") {
     VISIBLE_FIELDS = ["SLNO", "Skills", "Comments", "action"];
   } else if (show == "3") {
@@ -954,16 +954,16 @@ const Editemployee = () => {
             {show == "2"
               ? "List of Functions"
               : show == "6"
-              ? "List of Documents"
-              : show == "3"
-              ? "List of Managers"
-              : show == "7"
-              ? "Item Custody"
-              : show == "10"
-              ? "List of Configurations"
-              : show == "8" || show == "11"
-              ? "List of Contracts"
-              : "List of Managers"}
+                ? "List of Documents"
+                : show == "3"
+                  ? "List of Managers"
+                  : show == "7"
+                    ? "Item Custody"
+                    : show == "10"
+                      ? "List of Configurations"
+                      : show == "8" || show == "11"
+                        ? "List of Contracts"
+                        : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -1021,6 +1021,7 @@ const Editemployee = () => {
     cgst: "",
     sgst: "",
     igst: "",
+    tds:""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1067,6 +1068,10 @@ const Editemployee = () => {
       SetEmpLoaData({
         description: "",
         recordID: "",
+        category: "",
+        RenewalDate: "",
+        personal: false,
+        renewal :false
       });
 
       setImgName("");
@@ -1093,6 +1098,7 @@ const Editemployee = () => {
         cgst: "",
         sgst: "",
         igst: "",
+        tds:""
       });
 
       setLeaveCondata({
@@ -1136,7 +1142,12 @@ const Editemployee = () => {
         SetEmpLoaData({
           description: rowData.Description,
           recordID: rowData.RecordID,
+          category: rowData.Category,
+          RenewalDate: rowData.NextRenewalRequiredDate,
+          personal: rowData.Personal,
+          renewal :rowData.RenewalRequired
         });
+        console.log(empLoaData,"empLoaData");
         setImgName(rowData.Attachment);
         setItemCustodyData({
           recordID: rowData.RecordID,
@@ -1157,17 +1168,18 @@ const Editemployee = () => {
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.Vendor
             ? {
-                RecordID: rowData.Vendor,
-                Code: rowData.VendorCode,
-                Name: rowData.VendorName,
-              }
+              RecordID: rowData.Vendor,
+              Code: rowData.VendorCode,
+              Name: rowData.VendorName,
+            }
             : null,
           hsnCode: rowData.Hsn,
           cgst: rowData.Gst,
           sgst: rowData.Sgst,
           igst: rowData.Igst,
+          tds: rowData.Tds,
         });
-
+      console.log(contractorData,contractorData);
         setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
           Code: "",
@@ -1181,10 +1193,10 @@ const Editemployee = () => {
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-                RecordID: rowData.LeaveTypeID,
-                Code: "",
-                Name: rowData.LeavePart,
-              }
+              RecordID: rowData.LeaveTypeID,
+              Code: "",
+              Name: rowData.LeavePart,
+            }
             : null,
           Year: rowData.Year,
         });
@@ -1236,8 +1248,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
@@ -1285,8 +1297,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: itemCustodyData.recordID,
       EmployeeID: recID,
@@ -1330,16 +1342,17 @@ const Editemployee = () => {
       contractorData.units === "Hours"
         ? "HS"
         : contractorData.units === "Days"
-        ? "DS"
-        : contractorData.units === "Week"
-        ? "WS"
-        : contractorData.units === "Month"
-        ? "MS"
-        : "",
+          ? "DS"
+          : contractorData.units === "Week"
+            ? "WS"
+            : contractorData.units === "Month"
+              ? "MS"
+              : "",
     Hsn: contractorData.hsnCode,
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
     Igst: contractorData.igst,
+    TDS : contractorData.tds,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
@@ -1355,8 +1368,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
@@ -1366,14 +1379,15 @@ const Editemployee = () => {
             ? vendorlookup.RecordID
             : 0
           : show == "11"
-          ? customerlookup
-            ? customerlookup.RecordID
-            : 0
-          : 0,
+            ? customerlookup
+              ? customerlookup.RecordID
+              : 0
+            : 0,
       Hsn: values.Hsn,
       Gst: values.Gst,
       Sgst: values.Sgst,
       Igst: values.Igst,
+      Tds: values.TDS,
       // Vendors: show == "8" ? "Y" : "N",
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
@@ -1391,21 +1405,21 @@ const Editemployee = () => {
       setLoading(false);
       show == "8"
         ? dispatch(
-            fetchExplorelitview(
-              "TR244",
-              "Contracts In",
-              `EmployeeID='${recID}' AND Vendors='Y'`,
-              ""
-            )
+          fetchExplorelitview(
+            "TR244",
+            "Contracts In",
+            `EmployeeID='${recID}' AND Vendors='Y'`,
+            ""
           )
+        )
         : dispatch(
-            fetchExplorelitview(
-              "TR244",
-              "Contracts Out",
-              `EmployeeID='${recID}' AND Customer='Y'`,
-              ""
-            )
-          );
+          fetchExplorelitview(
+            "TR244",
+            "Contracts Out",
+            `EmployeeID='${recID}' AND Customer='Y'`,
+            ""
+          )
+        );
 
       toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -1432,8 +1446,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       EmployeeID: recID,
       Longtitude: values.longitude,
@@ -1471,10 +1485,10 @@ const Editemployee = () => {
       LeaveCondata.Year === "2024"
         ? "2024"
         : LeaveCondata.Year === "2025"
-        ? "2025"
-        : LeaveCondata.Year === "2026"
-        ? "2026"
-        : "",
+          ? "2025"
+          : LeaveCondata.Year === "2026"
+            ? "2026"
+            : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -1488,8 +1502,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: LeaveCondata.recordID,
       CompanyID,
@@ -1573,8 +1587,8 @@ ApprovelTolerance: Data.ApprovelTolerance,
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
@@ -1620,45 +1634,45 @@ ApprovelTolerance: Data.ApprovelTolerance,
     description: Data.Name,
     Designation: deploymentData.DesignationID
       ? {
-          RecordID: deploymentData.DesignationID,
-          Code: deploymentData.DesignationCode,
-          Name: deploymentData.DesignationName,
-        }
+        RecordID: deploymentData.DesignationID,
+        Code: deploymentData.DesignationCode,
+        Name: deploymentData.DesignationName,
+      }
       : null,
     location: deploymentData.LocationID
       ? {
-          RecordID: deploymentData.LocationID,
-          Code: deploymentData.LocationCode,
-          Name: deploymentData.LocationName,
-        }
+        RecordID: deploymentData.LocationID,
+        Code: deploymentData.LocationCode,
+        Name: deploymentData.LocationName,
+      }
       : null,
     gate: deploymentData.StoregatemasterID
       ? {
-          RecordID: deploymentData.StoregatemasterID,
-          Code: deploymentData.StoregatemasterCode,
-          Name: deploymentData.StoregatemasterName,
-        }
+        RecordID: deploymentData.StoregatemasterID,
+        Code: deploymentData.StoregatemasterCode,
+        Name: deploymentData.StoregatemasterName,
+      }
       : null,
     project: deploymentData.DefaultProject
       ? {
-          RecordID: deploymentData.DefaultProject,
-          Code: deploymentData.ProjectCode,
-          Name: deploymentData.ProjectName,
-        }
+        RecordID: deploymentData.DefaultProject,
+        Code: deploymentData.ProjectCode,
+        Name: deploymentData.ProjectName,
+      }
       : null,
     function: deploymentData.DefaultFunction
       ? {
-          RecordID: deploymentData.DefaultFunction,
-          Code: deploymentData.FunctionCode,
-          Name: deploymentData.FunctionName,
-        }
+        RecordID: deploymentData.DefaultFunction,
+        Code: deploymentData.FunctionCode,
+        Name: deploymentData.FunctionName,
+      }
       : null,
     shift: deploymentData.ShiftID
       ? {
-          RecordID: deploymentData.ShiftID,
-          Code: deploymentData.ShiftCode,
-          Name: deploymentData.ShiftName,
-        }
+        RecordID: deploymentData.ShiftID,
+        Code: deploymentData.ShiftCode,
+        Name: deploymentData.ShiftName,
+      }
       : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
@@ -1821,6 +1835,10 @@ ApprovelTolerance: Data.ApprovelTolerance,
   const [empLoaData, SetEmpLoaData] = useState({
     recordID: "",
     description: "",
+    category: "",
+    RenewalDate: "",
+    personal: false,
+    renewal :false
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -1831,6 +1849,24 @@ ApprovelTolerance: Data.ApprovelTolerance,
     code: Data.Code,
     description: Data.Name,
     LoaDescription: empLoaData.description,
+    personal: empLoaData.personal === "Y" ? true : false,
+    renewal: empLoaData.renewal === "Y" ? true : false,
+    // category: Data.Category,
+    category:
+      empLoaData.category == "Education"
+        ? "EC"
+        : empLoaData.category == "Insurance "
+          ? "IS"
+          : empLoaData.category == "Award "
+            ? "AD"
+            : empLoaData.category == "Certificate "
+              ? "CT"
+              : empLoaData.category == "Warranty "
+              ? "WT"
+              :empLoaData.category == "Others "
+              ? "OS"
+              :"",
+    RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
   const FnAttachment = async (values, resetForm, del) => {
@@ -1838,8 +1874,8 @@ ApprovelTolerance: Data.ApprovelTolerance,
       laomode === "A" && !del
         ? "insert"
         : laomode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     console.log(values);
 
@@ -1849,6 +1885,10 @@ ApprovelTolerance: Data.ApprovelTolerance,
       Description: values.LoaDescription,
       //  ImageName: ImageName ? ImageName:Data.ImageName,
       Attachment: ImageName ? ImageName : Data.ImageName,
+      Personal: values.personal === true ? "Y" : "N",
+      RenewalRequired: values.renewal === true ? "Y" : "N",
+      Category: values.category,
+      NextRenewalRequiredDate: values.RenewalDate,
       Sortorder: "0",
       CompanyID,
     };
@@ -2692,7 +2732,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="confirmdate"
@@ -2708,7 +2748,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         fullWidth
@@ -2732,7 +2772,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         focused
                         inputProps={{ maxLength: 90 }}
                         multiline
-                        // rows={2}
+                      // rows={2}
                       />
                       <TextField
                         fullWidth
@@ -2812,7 +2852,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         color="error"
                         variant="contained"
                         disabled={true}
-                        //  color="error"
+                      //  color="error"
                       >
                         Delete
                       </Button>
@@ -2863,7 +2903,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                      // filterValue={locationLookup.locationRecordID}
+                    // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -2945,7 +2985,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -2966,7 +3006,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -3054,7 +3094,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -3068,7 +3108,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -3083,7 +3123,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -3672,8 +3712,8 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         }}
                         focused
 
-                        //  error={!!touched.Desc && !!errors.Desc}
-                        //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -4865,7 +4905,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -4886,7 +4926,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                       {/* <TextField
                         fullWidth
@@ -5114,9 +5154,8 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
-                          values.location ? values.location.RecordID : 0
-                        }'","Any":""}}`}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                          }'","Any":""}}`}
                       />
 
                       {/* <TextField
@@ -5806,7 +5845,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           onChange={handleChange}
                           label="Code"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <TextField
@@ -5820,7 +5859,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           onChange={handleChange}
                           label="Name"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -5935,6 +5974,46 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         />
+                        <FormControl focused variant="standard" required>
+                          <InputLabel id="category">Category</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-filled-label"
+                            id="category"
+                            name="category"
+                            value={values.category}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+
+                          >
+                            <MenuItem value="EC">Education</MenuItem>
+                            <MenuItem value="AD">Award</MenuItem>
+                            <MenuItem value="CT">Certificate</MenuItem>
+                            <MenuItem value="IS">Insurance</MenuItem>
+                            <MenuItem value="WT">Warranty</MenuItem>
+                            <MenuItem value="OS">Others</MenuItem>
+                          </Select>
+                        </FormControl>
+                        {values.renewal == true ? (
+                          <TextField
+                            name="RenewalDate"
+                            label="Next Renewal Required Date"
+                            type="date"
+                            variant="standard"
+                            focused
+                            value={values.RenewalDate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.RenewalDate &&
+                              !!errors.RenewalDate
+                            }
+                            helperText={
+                              touched.RenewalDate &&
+                              errors.RenewalDate
+                            }
+                          //inputProps={{ readOnly: true }}
+                          />
+                        ) : null}
                         <FormControl
                           sx={{
                             display: "flex",
@@ -5942,8 +6021,48 @@ ApprovelTolerance: Data.ApprovelTolerance,
                             justifyContent: "space-between",
                           }}
                         >
-                          {/* <FormControlLabel control={<Field type="checkbox" name="checkbox" id="checkbox"  label="Disable" />} label="Disable" /> */}
+                          {/* <FormControlLabel 
+                          control={
+                          <Field 
+                          type="checkbox" 
+                          name="personal" 
+                          id="personal"  
+                          label="Personal" 
+                          />}
+                           label="Personal" />
+                           <FormControlLabel 
+                          control={
+                          <Field 
+                          type="checkbox" 
+                          name="renewal" 
+                          id="renewal"  
+                          label="Renewal Required" 
+                          />}
+                           label="Renewal Required" /> */}
+
                           <Box>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="personal"
+                              id="personal"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Personal"
+                            />
+                            <FormLabel focused={false}>Personal</FormLabel>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="renewal"
+                              id="renewal"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Renewal Required"
+                            />
+                            <FormLabel focused={false}>Renewal Required</FormLabel>
                             <Typography variant="h6">
                               Certificate Attachment
                             </Typography>
@@ -6781,13 +6900,13 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         name="BillingUnits"
                         required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -6864,11 +6983,11 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -6891,11 +7010,11 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         inputProps={{ maxLength: 25 }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -6917,11 +7036,37 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="TDS"
+                        type="number"
+                        id="TDS"
+                        label="TDS"
+                        variant="standard"
+                        value={values.TDS}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.TDS && !!errors.TDS}
+                        helperText={touched.TDS && errors.TDS}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
 
                       <TextField
@@ -6937,10 +7082,10 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -7478,13 +7623,13 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         name="BillingUnits"
                         required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -7560,11 +7705,11 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -7587,11 +7732,11 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         inputProps={{ maxLength: 25 }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -7613,13 +7758,38 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
-
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="TDS"
+                        type="number"
+                        id="TDS"
+                        label="TDS"
+                        variant="standard"
+                        value={values.TDS}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.TDS && !!errors.TDS}
+                        helperText={touched.TDS && errors.TDS}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
                       <TextField
                         name="FromPeriod"
                         type="date"
@@ -7633,10 +7803,10 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -7947,7 +8117,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -7968,7 +8138,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -8260,8 +8430,8 @@ ApprovelTolerance: Data.ApprovelTolerance,
                         }}
                         focused
 
-                        //  error={!!touched.Desc && !!errors.Desc}
-                        //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -8507,14 +8677,14 @@ ApprovelTolerance: Data.ApprovelTolerance,
                               },
                             },
                           }}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(
-                          //     0,
-                          //     parseInt(e.target.value)
-                          //   )
-                          //     .toString()
-                          //     .slice(0, 8);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(
+                        //     0,
+                        //     parseInt(e.target.value)
+                        //   )
+                        //     .toString()
+                        //     .slice(0, 8);
+                        // }}
                         />
                         <TextField
                           fullWidth
@@ -8543,14 +8713,14 @@ ApprovelTolerance: Data.ApprovelTolerance,
                               },
                             },
                           }}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(
-                          //     0,
-                          //     parseInt(e.target.value)
-                          //   )
-                          //     .toString()
-                          //     .slice(0, 8);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(
+                        //     0,
+                        //     parseInt(e.target.value)
+                        //   )
+                        //     .toString()
+                        //     .slice(0, 8);
+                        // }}
                         />
                         <TextField
                           fullWidth
@@ -8593,13 +8763,13 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           name="Year"
                           // required
                           focused
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiInputBase-root": {
-                          //     backgroundColor: "",
-                          //   },
-                          // }}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
                         >
                           <MenuItem value="2024">2024</MenuItem>
                           <MenuItem value="2025">2025</MenuItem>

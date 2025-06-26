@@ -35,7 +35,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import { StockProcessApi } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from '@mui/icons-material/OpenInBrowserOutlined';
-
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
 import Person2Icon from '@mui/icons-material/Person2';
@@ -543,6 +542,7 @@ export const fetchListview =
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
+        // AccessID != "TR273" &&
         
         AccessID != "TR262" &&
          AccessID != "TR022" 
@@ -575,8 +575,6 @@ export const fetchListview =
       filter = "ProjectID=" + `'${filter}'`;
      
      }
-  
-    
       
 
     }
@@ -588,7 +586,7 @@ export const fetchListview =
         // "ScreenName": screenName,
         AccessID: AccessID,
         ScreenName: screenName,
-        Filter: AccessID == "TR128" ? `parentID=${CompId}`:filter,
+        Filter: AccessID == "TR128" ? `parentID=${CompId}`: AccessID == "TR273" ? "Type = 'CI'":AccessID == "TR274" ? "Type = 'CO'":filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,

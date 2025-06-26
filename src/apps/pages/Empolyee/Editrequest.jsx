@@ -26,12 +26,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Grid,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { CalendarToday } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import store from "../../../index";
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
@@ -54,6 +56,7 @@ import {
   getLeaveentryData,
   RegGetData,
   resetregularizedata,
+  getLeaveweeklyData,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -94,7 +97,7 @@ import {
   dataGridRowHeight,
   formGap,
 } from "../../../ui-components/global/utils";
-import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 import { attachmentPost } from "../../../store/reducers/LoginReducer";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import axios from "axios";
@@ -106,6 +109,8 @@ import axios from "axios";
 const Editrequests = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const RegData = useSelector((state) => state.formApi.RegGetData);
+  const leavegridData = useSelector((state)=> state.formApi.leaveweeklyData);
+  console.log(leavegridData,"leavegridData");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
   const data = useSelector((state) => state.formApi.Data);
@@ -181,9 +186,14 @@ const Editrequests = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
+  //  if (recID) {
+  //   dispatch(getLeaveweeklyData({ EmployeeID: recID }));
+  // }
 
     console.log("🚀 ~ useEffect ~ accessID redenerd ...........:")
   }, []);
+
+ 
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -255,6 +265,7 @@ const Editrequests = () => {
   });
   const [selectOHLookupData, setselectOHLookupData] = React.useState(null);
   const [selectleaveLookupData, setselectleaveLookupData] = React.useState(null);
+  const [selectODLookupData, setselectODLookupData] = React.useState(null);
   const [expenseOHData, setExpenseOHData] = React.useState(null);
   //   {
   //   OHlookupRecordid: "",
@@ -519,7 +530,11 @@ const Editrequests = () => {
     if (event.target.value == "2") {
       dispatch(
         fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
+        
       );
+    // dispatch(getLeaveweeklyData(`EmployeeID=${recID}`));
+    dispatch(getLeaveweeklyData({ EmployeeID: recID })); 
+
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "9") {
@@ -1162,6 +1177,8 @@ const Editrequests = () => {
     managerComments: "",
     approvedby: "",
     approvedDate: "",
+    ProName: "",
+    location: ""
   });
   const [saladdata, setSaladdata] = useState({
     RecordID: "",
@@ -1236,6 +1253,7 @@ const Editrequests = () => {
       // });
       setselectOHLookupData(null);
       setselectleaveLookupData(null);
+      setselectODLookupData(null);
       setExpenseOHData(null);
       //   {
       //   OHlookupRecordid: "",
@@ -1275,7 +1293,8 @@ const Editrequests = () => {
         ToDate: "",
         Status: "",
         AppliedDate: "",
-        //Status: "",
+        ProName: "",
+        location: "",
         comment: "",
         managerComments: "",
         approvedby: "",
@@ -1388,7 +1407,8 @@ const Editrequests = () => {
           FromDate: rowData.FromDate,
           ToDate: rowData.ToDate,
           AppliedDate: rowData.AppliedDate,
-
+          ProName: rowData.ProjectID,
+          location: rowData.Location,
           Status: rowData.Status,
           comment: rowData.Comments,
           managerComments: rowData.ManagerComments,
@@ -1411,6 +1431,11 @@ const Editrequests = () => {
           // OHlookupRecordid: rowData.OverHeadsID,
           // OHlookupCode: rowData.OverHeadsCode,
           // OHlookupDesc: rowData.OverHeadsName,
+        });
+        setselectODLookupData({
+          RecordID: rowData.ProjectID,
+          Code: rowData.ProjectCode,
+          Name: rowData.ProjectName,
         });
         setselectOHLookupData({
           RecordID: rowData.OverHeadsID,
@@ -1510,8 +1535,8 @@ const Editrequests = () => {
           ? "RJ"
           : expensedata.Status == "Approved"
             ? "AP"
-            : expensedata.Status == "Reconsider"
-              ? "RC"
+            : expensedata.Status == "Query"
+              ? "QR"
               : "",
   };
   const getExpenseFileChange = async (event) => {
@@ -1620,8 +1645,8 @@ const Editrequests = () => {
           ? "RJ"
           : regdata.appliedStatus == "Approved"
             ? "AP"
-            : regdata.appliedStatus == "Reconsider"
-              ? "RC"
+            : regdata.appliedStatus == "Query"
+              ? "QR"
               : "",
     remarks: funMode === "A" ? RegData.Remarks : regdata.remarks,
     managerComments: regdata.managerComments,
@@ -1653,8 +1678,8 @@ const Editrequests = () => {
     //         ? "RJ"
     //         : regdata.appliedStatus == "Approved"
     //           ? "AP"
-    //           : regdata.appliedStatus == "Reconsider"
-    //           ? "RC"
+    //           : regdata.appliedStatus == "Query"
+    //           ? "QR"
     //           : "",
     //   remarks: regdata.remarks,
     //   managerComments: regdata.managerComments,
@@ -1735,7 +1760,10 @@ const Editrequests = () => {
     ToDate: formatDate(ondutydata.ToDate),
     approvedby: UserName,
     approvedDate: mode != "A" ? currentDate : leaveData.approvedDate,
-
+    location: ondutydata.location,
+    ProName: ondutydata.ProName,
+    // ? { RecordID: Data.ProjectID, Code: Data.ProjectCode, Name: Data.ProjectName }
+    // : null,
     managerComments: ondutydata.managerComments,
     comment: ondutydata.comment,
     LeavePart:
@@ -1753,13 +1781,15 @@ const Editrequests = () => {
           ? "RJ"
           : ondutydata.Status == "Approved"
             ? "AP"
-            : ondutydata.Status == "Reconsider"
-              ? "RC"
+            : ondutydata.Status == "Query"
+              ? "QR"
               : "",
     //Status: ondutydata.Status,  
     //SortOrder: ondutydata.SortOrder,
     //Disable: ondutydata.Disable,
   };
+  console.log(ondutydata.ProName, "ondutydata");
+  console.log(ondutydata, "ondutydata");
 
   const ondutyFNsave = async (values, resetForm, del) => {
     setLoading(true);
@@ -1778,10 +1808,14 @@ const Editrequests = () => {
       LeavePart: values.LeavePart,
       Comments: values.comment,
       //Status: mode == "A" ? "AL" : values.Status,
+      ProjectID: selectODLookupData ? selectODLookupData.RecordID : 0,
+      ProjectCode: selectODLookupData ? selectODLookupData.Code : "",
+      ProjectName: selectODLookupData ? selectODLookupData.Name : "",
       Status: values.Status,
       ManagerComments: values.managerComments,
       Reason: "",
       AppliedDate: currentDate,
+      Location: values.location,
       //BalanceDay: selectedLeavetypebalance || 0,
       ApprovedBy: UserRecordid,
       ApprovedDate: values.approvedDate,
@@ -1892,8 +1926,8 @@ const Editrequests = () => {
           ? "RJ"
           : perData.Status == "Approved"
             ? "AP"
-            : perData.Status == "Reconsider"
-              ? "RC"
+            : perData.Status == "Query"
+              ? "QR"
               : "",
     SortOrder: "1",
     Disable: "N",
@@ -1992,8 +2026,8 @@ const Editrequests = () => {
           ? "RJ"
           : leaveData.Status == "Approved"
             ? "AP"
-            : leaveData.Status == "Reconsider"
-              ? "RC"
+            : leaveData.Status == "Query"
+              ? "QR"
               : "",
     SortOrder: "1",
     Disable: "N",
@@ -2103,8 +2137,8 @@ const Editrequests = () => {
           ? "AP"
           : otdata.Status === "Rejected"
             ? "RJ"
-            : otdata.Status === "Reconsider"
-              ? "RC"
+            : otdata.Status === "Query"
+              ? "QR"
               : "",
   };
 
@@ -2188,8 +2222,8 @@ const Editrequests = () => {
           ? "AP"
           : saladdata.Status === "Rejected"
             ? "RJ"
-            : saladdata.Status === "Reconsider"
-              ? "RC"
+            : saladdata.Status === "Query"
+              ? "QR"
               : "",
   };
   const salAdFNsave = async (values, resetForm, del) => {
@@ -3906,6 +3940,68 @@ const Editrequests = () => {
                           },
                         }}
                       />
+                      {/* Leave Box aligned below the DataGrid */}
+                      <Box mt={2}>
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          mb={2}
+                        >
+                          <Typography variant="subtitle1" fontWeight="bold">
+                            Leave Details
+                          </Typography>
+                        </Box>
+
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <Table aria-label="simple table" size="small">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell></TableCell>
+                                  <TableCell align="right">Total Leaves</TableCell>
+                                  <TableCell align="right">Taken</TableCell>
+                                  <TableCell align="right">Balance</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {leavegridData.LeaveDetailsData.TableData.map((row) => (
+                        <TableRow
+                          key={row.LeaveType}
+                          sx={{
+                            "& td, & th": {
+                              paddingTop: "4px",
+                              paddingBottom: "4px",
+                              height: "30px", // you can adjust this value
+                            },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.LeaveType}
+                          </TableCell>
+                          <TableCell align="right">{row.Total}</TableCell>
+                          <TableCell align="right">{row.Taken}</TableCell>
+                          
+                          <TableCell align="right">{row.Balance}</TableCell>
+                        </TableRow>
+                      ))}
+                              </TableBody>
+                            </Table>
+                          </Grid>
+
+                           {leavegridData.LeaveDetailsData.Others.map((item, index) => (
+                    <Grid item xs={4} key={index}>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.Label}
+                      </Typography>
+                      <Typography variant="h6" fontWeight="bold">
+                        {item.Value}
+                      </Typography>
+                    </Grid>
+                  ))}
+                        </Grid>
+                      </Box>
+
                     </Box>
 
                     <FormControl sx={{ gap: formGap }}>
@@ -3983,7 +4079,7 @@ const Editrequests = () => {
                           await Balancedayfind(newValue.RecordID);
                         }
                       }}
-                      //disabled={mode == "E" && values.Status != "AL" && values.Status != "RC"}
+                      //disabled={mode == "E" && values.Status != "AL" && values.Status != "QR"}
                       url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
                     /> */}
                       <Productautocomplete
@@ -4167,7 +4263,7 @@ const Editrequests = () => {
                           <MenuItem value="AL">Applied</MenuItem>
                           <MenuItem value="RJ">Rejected</MenuItem>
                           <MenuItem value="AP">Approved</MenuItem>
-                          <MenuItem value="RC">Reconsider</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
 
                         </Select>
                       </FormControl>
@@ -4701,7 +4797,7 @@ const Editrequests = () => {
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
                             <MenuItem value="RJ">Rejected</MenuItem>
-                            <MenuItem value="RC">Reconsider</MenuItem>
+                            <MenuItem value="QR">Query</MenuItem>
                           </Select>
                         </FormControl>
                       </FormControl>
@@ -5243,7 +5339,7 @@ const Editrequests = () => {
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
                             <MenuItem value="RJ">Rejected</MenuItem>
-                            <MenuItem value="RC">Reconsider</MenuItem>
+                            <MenuItem value="QR">Query</MenuItem>
                           </Select>
                         </FormControl>
 
@@ -5405,6 +5501,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -5623,6 +5720,88 @@ const Editrequests = () => {
                               values.FromDate || new Date().toISOString().split("T")[0],
                           }}
                         />
+                        {/* <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gridColumn: "span 2",
+                          }}
+                        > */}
+                        {/* <CheckinAutocomplete
+                            // disabled={
+                            //   mode == "E" &&
+                            //   values.Status != "AL" &&
+                            //   values.Status != "QR"
+                            // }
+                            name="ProName"
+                            label="Project"
+                            id="ProName"
+                            value={values.ProName}
+                            onChange={(newValue) => {
+                              setFieldValue("ProName", newValue);
+                            }}
+                            error={!!touched.ProName && !!errors.ProName}
+                            helperText={touched.ProName && errors.ProName}
+                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          /> */}
+                        <Productautocomplete
+                          name="ProName"
+                          label={
+                            <span>
+                              Project
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="ProName"
+                          value={selectODLookupData}
+                          // value={values.ProName}
+                          onChange={async (newValue) => {
+                            setFieldValue("ProName", newValue);
+
+                            console.log(
+                              selectODLookupData,
+                              "--selectODLookupData leavetype"
+                            );
+
+
+                            console.log(
+                              newValue.RecordID,
+                              "pROJECT RecordID"
+                            );
+
+                            setselectODLookupData({
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+
+                            });
+                          }}
+                          // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        />
+                        {/* </Box> */}
+                        <TextField
+                          name="location"
+                          type="text"
+                          id="location"
+                          label="Location"
+                          variant="standard"
+                          focused
+                          value={values.location}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.location && !!errors.location}
+                          helperText={touched.location && errors.location}
+                          // required
+                          sx={{ gridColumn: "span 2" }}
+
+                        />
                         <TextField
                           // disabled={mode == "E" && values.Status != "AL"}
 
@@ -5710,7 +5889,7 @@ const Editrequests = () => {
                           <MenuItem value="AL">Applied</MenuItem>
                           <MenuItem value="RJ">Rejected</MenuItem>
                           <MenuItem value="AP">Approved</MenuItem>
-                          <MenuItem value="RC">Reconsider</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
                           {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
                             <MenuItem disabled={mode != "M"} value="AP">
                               Approved
@@ -6271,7 +6450,7 @@ const Editrequests = () => {
                           <MenuItem value="AL">Applied</MenuItem>
                           <MenuItem value="RJ">Rejected</MenuItem>
                           <MenuItem value="AP">Approved</MenuItem>
-                          <MenuItem value="RC">Reconsider</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
                           {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
                             <MenuItem disabled={mode != "M"} value="AP">
                               Approved
@@ -6792,7 +6971,7 @@ const Editrequests = () => {
                           <MenuItem value="AL">Applied</MenuItem>
                           <MenuItem value="RJ">Rejected</MenuItem>
                           <MenuItem value="AP">Approved</MenuItem>
-                          <MenuItem value="RC">Reconsider</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
                         </TextField>
                       </FormControl>
 
@@ -7445,7 +7624,7 @@ const Editrequests = () => {
                         <MenuItem value="AL">Applied</MenuItem>
                         <MenuItem value="RJ">Rejected</MenuItem>
                         <MenuItem value="AP">Approved</MenuItem>
-                        <MenuItem value="RC">Reconsider</MenuItem>
+                        <MenuItem value="QR">Query</MenuItem>
                       </TextField>
                       <TextField
                         fullWidth

@@ -102,7 +102,6 @@ const Biometricconfiguration = () => {
         borderRight: 0,
     };
     const initialvalues = {
-
         appname: data.ApplicationName,
         authorization: data.Authorization,
         apikey: data.ApiKey,
@@ -280,21 +279,20 @@ const Biometricconfiguration = () => {
                                         sx={{ gridColumn: "span 2" }}
                                     />
 
-                                    {/* <TextField
+                                    <TextField
                                         name="input"
                                         type="text"
                                         id="input"
                                         label="Input"
-                                        variant="standard"
+                                        variant="outlined"
                                         focused
-                                        multiline                                      
-                                        onBlur={handleBlur}
+                                        rows={3}
+                                        multiline
+                                        value={Input}
                                         onChange={(e) => setInput(e.target.value)}
-                                        error={!!touched.input && !!errors.input}
-                                        helperText={touched.input && errors.input}
                                         sx={{ gridColumn: "span 2" }}
-                                    /> */}
-                                    <TextField
+                                    />
+                                    {/* <TextField
                                         name="input"
                                         type="text"
                                         id="input"
@@ -311,20 +309,20 @@ const Biometricconfiguration = () => {
                                         error={!!touched.input && !!errors.input}
                                         helperText={touched.input && errors.input}
                                         sx={{ gridColumn: "span 2" }}
-                                    />
+                                    /> */}
 
-                                    <FormControl
-                                        focused
-                                        variant="standard"
+                                    <Box
                                         sx={{
-                                            gridColumn: "span 2",
                                             display: "flex",
                                             flexDirection: "row",
                                             alignItems: "center",
-                                            gap: 2, // or use spacing like theme.spacing(2)
+                                            gap: 2,
+                                            gridColumn: "span 2",
+                                            mt: 2, // margin top for spacing
                                         }}
                                     >
-                                        <Box sx={{ flex: 1 }}>
+                                        {/* Pulling Cycle Select */}
+                                        <FormControl fullWidth focused>
                                             <InputLabel id="pulling">Pulling Cycle</InputLabel>
                                             <Select
                                                 labelId="pulling"
@@ -333,14 +331,15 @@ const Biometricconfiguration = () => {
                                                 value={pulling}
                                                 onBlur={handleBlur}
                                                 onChange={(e) => setpulling(e.target.value)}
-                                                fullWidth
+                                                label="Pulling Cycle"
                                             >
                                                 <MenuItem value="D">Daily</MenuItem>
                                                 <MenuItem value="H">Hourly</MenuItem>
                                             </Select>
-                                        </Box>
+                                        </FormControl>
 
-                                        {pulling == "D" &&
+                                        {/* Time Input Field - Only when pulling is "D" */}
+                                        {pulling === "D" && (
                                             <TextField
                                                 name="time"
                                                 type="time"
@@ -351,10 +350,10 @@ const Biometricconfiguration = () => {
                                                 onBlur={handleBlur}
                                                 onChange={(e) => settime(e.target.value)}
                                                 focused
-                                                sx={{ flex: 1 }}
+                                                fullWidth
                                             />
-                                        }
-                                    </FormControl>
+                                        )}
+                                    </Box>
 
                                 </Box>
 

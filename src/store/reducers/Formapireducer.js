@@ -57,6 +57,14 @@ const initialState = {
   empAttendanceData: {},
   AttendanceData: {},
   RegGetData: {},
+  leaveweeklyData: {
+    Employee: "",
+    Year: "",
+    LeaveDetailsData: {
+      TableData: [],
+      Others: [],
+    },
+  },
   timeSheetData: {},
   MonthlyAttendanceData: {},
   sprintget: {},
@@ -731,6 +739,32 @@ export const getLeaveentryData = createAsyncThunk(
     return response.data;
   }
 );
+export const getLeaveweeklyData = createAsyncThunk(
+  "Leave Weekly/get",
+  async ({ EmployeeID }) => {
+    const url = store.getState().globalurl.getLeaveweeklyDataUrl;
+    console.log(url, "--find url");
+
+    const data = {
+      EmployeeID: EmployeeID,
+
+    };
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const stockGetData = createAsyncThunk(
   "stock/material",
   async ({ accessID, Type, recID, yearData }) => {
@@ -878,8 +912,8 @@ export const PartyBankget = createAsyncThunk(
     var url = store.getState().globalurl.partyBankUrl;
     const data = {
       VendorID: VendorID,
-     
-      }
+
+    }
 
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
@@ -903,9 +937,9 @@ export const partyBankpostData = createAsyncThunk(
     const url = store.getState().globalurl.partyBankPostUrl;
 
     const data = {
-     
+
       action: action,
-       ...idata,
+      ...idata,
       // data: idata,
     };
     console.log("get" + JSON.stringify(data));
@@ -927,8 +961,8 @@ export const PartyContactget = createAsyncThunk(
     var url = store.getState().globalurl.partyContactgetUrl;
     const data = {
       VendorID: VendorID,
-     
-      }
+
+    }
 
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
@@ -952,9 +986,9 @@ export const partyContactData = createAsyncThunk(
     const url = store.getState().globalurl.partyContactPostUrl;
 
     const data = {
-     
+
       action: action,
-       ...idata,
+      ...idata,
       // data: idata,
     };
     console.log("get" + JSON.stringify(data));
@@ -1061,7 +1095,7 @@ export const getBiometricData = createAsyncThunk(
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
-     headers: {
+      headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
@@ -1127,31 +1161,31 @@ export const getJioData = createAsyncThunk(
     return response.data;
   }
 );
-// export const Regularizationdata = createAsyncThunk(
-//   "regularization",
-//   async ({ accessID, get, recID, }) => {
-//     var url = store.getState().globalurl.regularizationUrl;
-//     const data = {
-//       accessid: accessID,
-//       action: get,
-//       recid: recID,
-//          };
+export const Regularizationdata = createAsyncThunk(
+  "regularization",
+  async ({ accessID, get, recID, }) => {
+    var url = store.getState().globalurl.regularizationUrl;
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+         };
 
-//     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
-//     const response = await axios.post(url, data, {
-//       headers: {
-//         Authorization:
-//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-//       },
-//     });
-//     console.log(
-//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-//       response
-//     );
-//     return response.data;
-//   }
-// );
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 
 
 export const postData = createAsyncThunk(
@@ -1629,7 +1663,7 @@ export const getApiSlice = createSlice({
       state.empAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
-      state.MonthlyAttendanceData=[]
+      state.MonthlyAttendanceData = []
       state.costingLeatherCost.leatherOneCost = 0
       state.costingLeatherCost.leatherTwoCost = 0
       state.costingLeatherCost.leatherThreeCost = 0
@@ -1820,9 +1854,9 @@ export const getApiSlice = createSlice({
         state.Data = {};
         toast.error('Something Went Wrong')
       })
-//PartyBank Details GET
+      //PartyBank Details GET
 
-.addCase(PartyBankget.pending, (state, action) => {
+      .addCase(PartyBankget.pending, (state, action) => {
         state.partyBankgetstatus = "idle";
         // state.partyBankgetloading = true;
         state.partyBankgetdata = {};
@@ -1841,27 +1875,27 @@ export const getApiSlice = createSlice({
         // toast.error('Something Went Wrong')
       })
 
-      
+
 
 
       .addCase(PartyContactget.pending, (state, action) => {
         state.partyBankgetstatus = "idle";
         state.partyContactgetdata = {};
-      
+
       })
       .addCase(PartyContactget.fulfilled, (state, action) => {
         state.partyBankgetstatus = "success";
         state.partyContactgetdata = action.payload.Data ? action.payload.Data : {};
-      
+
       })
       .addCase(PartyContactget.rejected, (state, action) => {
         state.partyBankgetstatus = "Error";
         state.partyContactgetdata = {};
- 
+
       })
 
-//Partbank POST
- .addCase(partyBankpostData.pending, (state, action) => {
+      //Partbank POST
+      .addCase(partyBankpostData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
       })
@@ -1873,17 +1907,17 @@ export const getApiSlice = createSlice({
         // } else action.meta.arg.idata.Disable = false;
 
         state.partyBankPostdata = action.meta.arg.idata;
-              console.log(action.meta.arg.idata, "--partyBankPostdata");
+        console.log(action.meta.arg.idata, "--partyBankPostdata");
 
       })
-      
+
       .addCase(partyBankpostData.rejected, (state, action) => {
         state.Status = "Error";
         state.postLoading = false;
       })
 
 
- .addCase(partyContactData.pending, (state, action) => {
+      .addCase(partyContactData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
       })
@@ -1894,7 +1928,7 @@ export const getApiSlice = createSlice({
         //   action.meta.arg.idata.Disable = true;
         // } else action.meta.arg.idata.Disable = false;
         state.partyContactData = action.meta.arg.idata;
-              console.log(action.meta.arg.idata, "--partyBankPostdata");
+        console.log(action.meta.arg.idata, "--partyBankPostdata");
       })
       .addCase(partyContactData.rejected, (state, action) => {
         state.Status = "Error";
@@ -2330,6 +2364,59 @@ export const getApiSlice = createSlice({
         state.RegGetData = {};
         state.getLoading = false;
       })
+
+
+
+
+
+   .addCase(getLeaveweeklyData.pending, (state) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.leaveweeklyData = {
+          Employee: "",
+          Year: "",
+          LeaveDetailsData: {
+            TableData: [],
+            Others: []
+          }
+        };
+        state.msg = "Loading...";
+      })
+ 
+      .addCase(getLeaveweeklyData.rejected, (state) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.leaveweeklyData = {
+          Employee: "",
+          Year: "",
+          LeaveDetailsData: {
+            TableData: [],
+            Others: []
+          }
+        };
+        toast.error("Something Went Wrong");
+      })
+ 
+      // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.getLoading = false;
+      //   state.leaveweeklyData = action.payload.Data ? action.payload.Data : {};
+      //   // state.msg =  action.payload.Msg
+      // })
+      .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.leaveweeklyData = action.payload?.Data?.[0] || {
+          Employee: '',
+          Year: '',
+          LeaveDetailsData: {
+            TableData: [],
+            Others: [],
+          },
+        };
+      })
+
+
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
         state.projectName = action.payload?.Data?.ProjectName?.ProjectName || "";

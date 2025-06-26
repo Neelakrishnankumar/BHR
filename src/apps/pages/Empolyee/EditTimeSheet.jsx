@@ -1287,6 +1287,9 @@ const EditTimeSheet = () => {
               </IconButton>
             )}
             <Typography variant="h3">Time Sheet</Typography>
+            {/* <Typography variant="h4">
+                            Timesheet ({empData?.Name})
+                        </Typography> */}
           </Box>
           <Box display="flex">
             {/* <Tooltip title="Attendance ">
@@ -1494,7 +1497,24 @@ const EditTimeSheet = () => {
                       }
                     </PDFDownloadLink>
                  )} 
-
+                {/* <PDFDownloadLink
+                      document={
+                        <InvoicePDF
+                        />
+                      }
+                      fileName={"Invoice.pdf"}
+                      style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
+                    >
+                      {({ loading }) =>
+                        loading ? (
+                          <PictureAsPdfIcon
+                            sx={{ fontSize: 24, opacity: 0.5 }}
+                          />
+                        ) : (
+                          <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                        )
+                      }
+                    </PDFDownloadLink> */}
                 </Stack>
               </Box>
 

@@ -19,6 +19,9 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SafetyCheckIcon from '@mui/icons-material/SafetyCheck';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
 import {
   Box,
   Avatar,
@@ -806,7 +809,7 @@ const child = {
         {
           name: "Project",
           id: 4346894,
-          url: "./TR133/Project",
+          url: "./TR275/Project",
           icon: (
             <Tooltip title="Project">
               <SourceOutlinedIcon color="info" />
@@ -818,7 +821,7 @@ const child = {
           UGA_PRINT: true,
           UGA_PROCESS: true,
           UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR133",
+          UGA_ACCESSIDS: "TR275",
         },
         {
           name: "Functions",
@@ -1161,6 +1164,55 @@ const child = {
         
       ],
     },
+    //  {
+    //   name: "Invoice",
+    //   id: 4568,
+    //   MenuID: "EM900",
+    //   Tooltipname: "Invoice",
+    //   icon: (
+    //     <Tooltip title="Invoice">
+    //       <ReceiptIcon sx={{ color: "#651fff" }} />
+    //     </Tooltip>
+    //   ),
+    //   children: [
+      
+    //     {
+    //       name: "Contracts In",
+    //       url: "/Apps/TR273/Contracts In",
+    //       id: 5593,
+    //       icon: (
+    //         <Tooltip title="Contracts In">
+    //           <RedoIcon color="info" />
+    //         </Tooltip>
+    //       ),
+    //       UGA_ADD: true,
+    //       UGA_DEL: true,
+    //       UGA_MOD: true,
+    //       UGA_PRINT: true,
+    //       UGA_PROCESS: true,
+    //       UGA_VIEW: true,
+    //       UGA_ACCESSIDS: "TR273",
+    //     },
+    //     {
+    //       name: "Contracts Out",
+    //       url: "/Apps/TR274/Contracts Out",
+    //       id: 5594,
+    //       icon: (
+    //         <Tooltip title="Contracts Out">
+    //           <UndoIcon color="info" />
+    //         </Tooltip>
+    //       ),
+    //       UGA_ADD: true,
+    //       UGA_DEL: true,
+    //       UGA_MOD: true,
+    //       UGA_PRINT: true,
+    //       UGA_PROCESS: true,
+    //       UGA_VIEW: true,
+    //       UGA_ACCESSIDS: "TR274",
+    //     },
+        
+    //   ],
+    // },
     // {
     //   name: "Payroll",
     //   id: 34568,

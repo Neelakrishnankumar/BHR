@@ -290,6 +290,7 @@ partyContactgetUrl: "https://hr.beyondexs.com/api/PartyContractGetController.php
 partyContactPostUrl: "https://hr.beyondexs.com/api/PartyContractUpdateController.php",
 settingsapprovalGetUrl: "https://hr.beyondexs.com/api/getcompanyapprovals.php",
 settingsapprovalPOSTtUrl: "https://hr.beyondexs.com/api/postcompanyapprovals.php",
+getLeaveweeklyDataUrl:"https://ess.beyondexs.com/api/LeaveWeeklyController.php"
 
   };
 
