@@ -202,10 +202,10 @@ const Editemployee = () => {
   const initialValues = {
     Department: Data.DeptRecordID
       ? {
-          RecordID: Data.DeptRecordID,
-          Code: Data.DeptCode,
-          Name: Data.DeptName,
-        }
+        RecordID: Data.DeptRecordID,
+        Code: Data.DeptCode,
+        Name: Data.DeptName,
+      }
       : null,
     Code: Data.Code,
     Name: Data.Name,
@@ -215,18 +215,17 @@ const Editemployee = () => {
       Data.EmpType === "Prohibition"
         ? "PP"
         : Data.EmpType === "Permanent"
-        ? "PM"
-        : Data.EmpType === "Contracts In"
-        ? "CI"
-        : Data.EmpType === "Contracts Out"
-        ? "CO"
-        : // : Data.EmpType === "Contractor"
-          // ? "CT"
-          "",
+          ? "PM"
+          : Data.EmpType === "Contracts In"
+            ? "CI"
+            : Data.EmpType === "Contracts Out"
+              ? "CO"
+              : // : Data.EmpType === "Contractor"
+              // ? "CT"
+              "",
     checkbox: Data.Disable,
-  scrummaster: Data.ScrumMaster === "Y" ? true : false,
-   prjmanager: Data.ProjectManager === "Y" ? true : false,
-
+    scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    prjmanager: Data.ProjectManager === "Y" ? true : false,
 
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
@@ -435,13 +434,12 @@ const Editemployee = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
-    if (values.checkbox || values.scrummaster  == true) {
+    if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
     }
-    
 
     var saveData = {
       RecordID: recID,
@@ -451,8 +449,8 @@ const Editemployee = () => {
       Name: values.Name,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
-     ScrumMaster : values.scrummaster === true ? "Y" : "N",
-    ProjectManager: values.prjmanager === true ? "Y" : "N",
+      ScrumMaster: values.scrummaster === true ? "Y" : "N",
+      ProjectManager: values.prjmanager === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -461,10 +459,10 @@ const Editemployee = () => {
       DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
-      DesignID: 0,
-      LocationRecID: 0,
-      GateRecID: 0,
-      WeekOff: 0,
+      // DesignID: 0,
+      // LocationRecID: 0,
+      // GateRecID: 0,
+      // WeekOff: 0,
       CompanyID,
       SubscriptionCode,
     };
@@ -805,7 +803,7 @@ const Editemployee = () => {
   let VISIBLE_FIELDS;
 
   if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "Description", "action"];
+    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate","Description","Category", "action"];
   } else if (show == "1") {
     VISIBLE_FIELDS = ["SLNO", "Process", "Comments", "action"];
   } else if (show == "3") {
@@ -903,7 +901,7 @@ const Editemployee = () => {
   //     >
   //       <Box sx={{ display: "flex", flexDirection: "row" }}>
   //         <Typography>
-  //           {show == "6" && "List of Attachments"}
+  //           {show == "6" && "List of Documents"}
   //         </Typography>
   //         <Typography variant="h5">{`(${rowCount})`}</Typography>
   //       </Box>
@@ -938,23 +936,23 @@ const Editemployee = () => {
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           {/* <Typography>
-            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "list of Attachments"}
+            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
             
           </Typography> */}
           <Typography>
             {show == "2"
               ? "List of Functions"
               : show == "6"
-              ? "List of Attachments"
-              : show == "3"
-              ? "List of Managers"
-              : show == "7"
-              ? "Item Custody"
-              : show == "10"
-              ? "List of Configurations"
-              : show == "8" || show == "11"
-              ? "List of Contracts"
-              : "List of Managers"}
+                ? "List of Documents"
+                : show == "3"
+                  ? "List of Managers"
+                  : show == "7"
+                    ? "Item Custody"
+                    : show == "10"
+                      ? "List of Configurations"
+                      : show == "8" || show == "11"
+                        ? "List of Contracts"
+                        : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -1008,6 +1006,11 @@ const Editemployee = () => {
     alertdate: "",
     renewalperiod: "",
     vendor: "",
+    hsnCode: "",
+    cgst: "",
+    sgst: "",
+    igst: "",
+    tds:""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1054,6 +1057,10 @@ const Editemployee = () => {
       SetEmpLoaData({
         description: "",
         recordID: "",
+        category: "",
+        RenewalDate: "",
+        personal: false,
+        renewal :false
       });
 
       setImgName("");
@@ -1076,6 +1083,11 @@ const Editemployee = () => {
         alertdate: "",
         renewalperiod: "",
         vendor: "",
+        hsnCode: "",
+        cgst: "",
+        sgst: "",
+        igst: "",
+        tds:""
       });
 
       setLeaveCondata({
@@ -1129,7 +1141,12 @@ const Editemployee = () => {
         SetEmpLoaData({
           description: rowData.Description,
           recordID: rowData.RecordID,
+          category: rowData.Category,
+          RenewalDate: rowData.NextRenewalRequiredDate,
+          personal: rowData.Personal,
+          renewal :rowData.RenewalRequired
         });
+        console.log(empLoaData,"empLoaData");
         setImgName(rowData.Attachment);
         setItemCustodyData({
           recordID: rowData.RecordID,
@@ -1150,13 +1167,18 @@ const Editemployee = () => {
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.Vendor
             ? {
-                RecordID: rowData.Vendor,
-                Code: rowData.VendorCode,
-                Name: rowData.VendorName,
-              }
+              RecordID: rowData.Vendor,
+              Code: rowData.VendorCode,
+              Name: rowData.VendorName,
+            }
             : null,
+          hsnCode: rowData.Hsn,
+          cgst: rowData.Gst,
+          sgst: rowData.Sgst,
+          igst: rowData.Igst,
+          tds: rowData.Tds,
         });
-
+      console.log(contractorData,contractorData);
         setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
           Code: "",
@@ -1170,10 +1192,10 @@ const Editemployee = () => {
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-                RecordID: rowData.LeaveTypeID,
-                Code: "",
-                Name: rowData.LeavePart,
-              }
+              RecordID: rowData.LeaveTypeID,
+              Code: "",
+              Name: rowData.LeavePart,
+            }
             : null,
           Year: rowData.Year,
         });
@@ -1186,8 +1208,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
@@ -1235,8 +1257,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: itemCustodyData.recordID,
       EmployeeID: recID,
@@ -1280,13 +1302,17 @@ const Editemployee = () => {
       contractorData.units === "Hours"
         ? "HS"
         : contractorData.units === "Days"
-        ? "DS"
-        : contractorData.units === "Week"
-        ? "WS"
-        : contractorData.units === "Month"
-        ? "MS"
-        : "",
-
+          ? "DS"
+          : contractorData.units === "Week"
+            ? "WS"
+            : contractorData.units === "Month"
+              ? "MS"
+              : "",
+    Hsn: contractorData.hsnCode,
+    Gst: contractorData.cgst,
+    Sgst: contractorData.sgst,
+    Igst: contractorData.igst,
+    TDS : contractorData.tds,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
@@ -1302,8 +1328,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
@@ -1313,10 +1339,15 @@ const Editemployee = () => {
             ? vendorlookup.RecordID
             : 0
           : show == "11"
-          ? customerlookup
-            ? customerlookup.RecordID
-            : 0
-          : 0,
+            ? customerlookup
+              ? customerlookup.RecordID
+              : 0
+            : 0,
+      Hsn: values.Hsn,
+      Gst: values.Gst,
+      Sgst: values.Sgst,
+      Igst: values.Igst,
+      Tds: values.TDS,
       // Vendors: show == "8" ? "Y" : "N",
       // Customer: show == "11" ? "Y" : "N",
       FromPeriod: values.FromPeriod,
@@ -1334,21 +1365,21 @@ const Editemployee = () => {
       setLoading(false);
       show == "8"
         ? dispatch(
-            fetchExplorelitview(
-              "TR244",
-              "Contracts In",
-              `EmployeeID='${recID}' AND Vendors='Y'`,
-              ""
-            )
+          fetchExplorelitview(
+            "TR244",
+            "Contracts In",
+            `EmployeeID='${recID}' AND Vendors='Y'`,
+            ""
           )
+        )
         : dispatch(
-            fetchExplorelitview(
-              "TR244",
-              "Contracts Out",
-              `EmployeeID='${recID}' AND Customer='Y'`,
-              ""
-            )
-          );
+          fetchExplorelitview(
+            "TR244",
+            "Contracts Out",
+            `EmployeeID='${recID}' AND Customer='Y'`,
+            ""
+          )
+        );
 
       toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -1375,8 +1406,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       EmployeeID: recID,
       Longtitude: values.longitude,
@@ -1414,10 +1445,10 @@ const Editemployee = () => {
       LeaveCondata.Year === "2024"
         ? "2024"
         : LeaveCondata.Year === "2025"
-        ? "2025"
-        : LeaveCondata.Year === "2026"
-        ? "2026"
-        : "",
+          ? "2025"
+          : LeaveCondata.Year === "2026"
+            ? "2026"
+            : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -1431,8 +1462,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: LeaveCondata.recordID,
       CompanyID,
@@ -1500,8 +1531,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
@@ -1533,45 +1564,45 @@ const Editemployee = () => {
     description: Data.Name,
     Designation: deploymentData.DesignationID
       ? {
-          RecordID: deploymentData.DesignationID,
-          Code: deploymentData.DesignationCode,
-          Name: deploymentData.DesignationName,
-        }
+        RecordID: deploymentData.DesignationID,
+        Code: deploymentData.DesignationCode,
+        Name: deploymentData.DesignationName,
+      }
       : null,
     location: deploymentData.LocationID
       ? {
-          RecordID: deploymentData.LocationID,
-          Code: deploymentData.LocationCode,
-          Name: deploymentData.LocationName,
-        }
+        RecordID: deploymentData.LocationID,
+        Code: deploymentData.LocationCode,
+        Name: deploymentData.LocationName,
+      }
       : null,
     gate: deploymentData.StoregatemasterID
       ? {
-          RecordID: deploymentData.StoregatemasterID,
-          Code: deploymentData.StoregatemasterCode,
-          Name: deploymentData.StoregatemasterName,
-        }
+        RecordID: deploymentData.StoregatemasterID,
+        Code: deploymentData.StoregatemasterCode,
+        Name: deploymentData.StoregatemasterName,
+      }
       : null,
     project: deploymentData.DefaultProject
       ? {
-          RecordID: deploymentData.DefaultProject,
-          Code: deploymentData.ProjectCode,
-          Name: deploymentData.ProjectName,
-        }
+        RecordID: deploymentData.DefaultProject,
+        Code: deploymentData.ProjectCode,
+        Name: deploymentData.ProjectName,
+      }
       : null,
     function: deploymentData.DefaultFunction
       ? {
-          RecordID: deploymentData.DefaultFunction,
-          Code: deploymentData.FunctionCode,
-          Name: deploymentData.FunctionName,
-        }
+        RecordID: deploymentData.DefaultFunction,
+        Code: deploymentData.FunctionCode,
+        Name: deploymentData.FunctionName,
+      }
       : null,
     shift: deploymentData.ShiftID
       ? {
-          RecordID: deploymentData.ShiftID,
-          Code: deploymentData.ShiftCode,
-          Name: deploymentData.ShiftName,
-        }
+        RecordID: deploymentData.ShiftID,
+        Code: deploymentData.ShiftCode,
+        Name: deploymentData.ShiftName,
+      }
       : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
@@ -1589,6 +1620,10 @@ const Editemployee = () => {
     Friday: deploymentData.FridayShift === "Y" ? true : false,
     Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
     Sunday: deploymentData.SundayShift === "Y" ? true : false,
+    horizontal: deploymentData.Horizontal === "Y" ? true : false,
+    vertical: deploymentData.Vertical === "Y" ? true : false,
+    Horizontalmin: deploymentData.HorizontalMimNo,
+    Verticalmin: deploymentData.VerticalMimNo,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
@@ -1596,14 +1631,14 @@ const Editemployee = () => {
   console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
     console.log(values, "--values");
-    
+
     const idata = {
       HeaderID: recID,
       CheckInTime: values.shift?.ShiftStartTime || "",
       CheckOutTime: values.shift?.ShiftendTime || "",
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
-       Monday: values.Monday === true ? "Y" : "N",
+      Monday: values.Monday === true ? "Y" : "N",
       Tuesday: values.Tuesday === true ? "Y" : "N",
       Wednesday: values.Wednesday === true ? "Y" : "N",
       Thursday: values.Thursday === true ? "Y" : "N",
@@ -1629,6 +1664,10 @@ const Editemployee = () => {
       ShiftID: values.shift.RecordID || 0,
       ShiftCode: values.shift.Code || "",
       ShiftName: values.shift.Name || "",
+      Horizontal: values.horizontal === true ? "Y" : "N",
+      Vertical: values.vertical === true ? "Y" : "N",
+      HorizontalMimNo: values.Horizontalmin || 0,
+      VerticalMimNo: values.Verticalmin || 0,
       // DesignationID: designLookup ? designLookup.RecordID : 0,
       // LocationID: locationLookup ? locationLookup.RecordID : 0,
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
@@ -1649,6 +1688,10 @@ const Editemployee = () => {
   const [empLoaData, SetEmpLoaData] = useState({
     recordID: "",
     description: "",
+    category: "",
+    RenewalDate: "",
+    personal: false,
+    renewal :false
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -1659,6 +1702,24 @@ const Editemployee = () => {
     code: Data.Code,
     description: Data.Name,
     LoaDescription: empLoaData.description,
+    personal: empLoaData.personal === "Y" ? true : false,
+    renewal: empLoaData.renewal === "Y" ? true : false,
+    // category: Data.Category,
+    category:
+      empLoaData.category == "Education"
+        ? "EC"
+        : empLoaData.category == "Insurance "
+          ? "IS"
+          : empLoaData.category == "Award "
+            ? "AD"
+            : empLoaData.category == "Certificate "
+              ? "CT"
+              : empLoaData.category == "Warranty "
+              ? "WT"
+              :empLoaData.category == "Others "
+              ? "OS"
+              :"",
+    RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
   const FnAttachment = async (values, resetForm, del) => {
@@ -1666,8 +1727,8 @@ const Editemployee = () => {
       laomode === "A" && !del
         ? "insert"
         : laomode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     console.log(values);
 
@@ -1677,6 +1738,10 @@ const Editemployee = () => {
       Description: values.LoaDescription,
       //  ImageName: ImageName ? ImageName:Data.ImageName,
       Attachment: ImageName ? ImageName : Data.ImageName,
+      Personal: values.personal === true ? "Y" : "N",
+      RenewalRequired: values.renewal === true ? "Y" : "N",
+      Category: values.category,
+      NextRenewalRequiredDate: values.RenewalDate,
       Sortorder: "0",
       CompanyID,
     };
@@ -1691,7 +1756,7 @@ const Editemployee = () => {
       dispatch(
         fetchExplorelitview(
           "TR210",
-          "List Of Attachments",
+          "List of Documents",
           `EmployeeID=${recID}`,
           ""
         )
@@ -1802,7 +1867,7 @@ const Editemployee = () => {
 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Functions</Typography>):false}
 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
-{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Attachments</Typography>):false} 
+{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Documents</Typography>):false} 
  {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false}
 
         </Breadcrumbs>
@@ -1826,7 +1891,7 @@ const Editemployee = () => {
                   <MenuItem value={2}>Functions</MenuItem>
                   <MenuItem value={3}>Managers</MenuItem>
                   <MenuItem value={4}>Deployment</MenuItem>
-                   <MenuItem value={6}>List of Attachments</MenuItem> 
+                   <MenuItem value={6}>List of Documents</MenuItem> 
                   <MenuItem value={7}>Item Custody</MenuItem>
 
                 </Select>
@@ -1942,7 +2007,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      List of Attachments
+                      List of Documents
                     </Typography>
                   ) : (
                     false
@@ -2031,7 +2096,7 @@ const Editemployee = () => {
                     <MenuItem value={4}>Deployment</MenuItem>
                     <MenuItem value={9}>Geo Location</MenuItem>
                     <MenuItem value={10}>Leave Configuration</MenuItem>
-                    <MenuItem value={6}>List of Attachments</MenuItem>
+                    <MenuItem value={6}>List of Documents</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
                   </Select>
                 </FormControl>
@@ -2376,7 +2441,7 @@ const Editemployee = () => {
                         />
 
                         <FormLabel focused={false}>Scrum Master</FormLabel>
-                         <Field
+                        <Field
                           //  size="small"
                           type="checkbox"
                           name="prjmanager"
@@ -2519,7 +2584,7 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="confirmdate"
@@ -2535,7 +2600,7 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         fullWidth
@@ -2559,7 +2624,7 @@ const Editemployee = () => {
                         focused
                         inputProps={{ maxLength: 90 }}
                         multiline
-                        // rows={2}
+                      // rows={2}
                       />
                       <TextField
                         fullWidth
@@ -2639,7 +2704,7 @@ const Editemployee = () => {
                         color="error"
                         variant="contained"
                         disabled={true}
-                        //  color="error"
+                      //  color="error"
                       >
                         Delete
                       </Button>
@@ -2690,7 +2755,7 @@ const Editemployee = () => {
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                      // filterValue={locationLookup.locationRecordID}
+                    // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -2772,7 +2837,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -2793,7 +2858,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -2881,7 +2946,7 @@ const Editemployee = () => {
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2895,7 +2960,7 @@ const Editemployee = () => {
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2910,7 +2975,7 @@ const Editemployee = () => {
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -3109,8 +3174,8 @@ const Editemployee = () => {
                         }}
                         focused
 
-                        //  error={!!touched.Desc && !!errors.Desc}
-                        //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -4033,6 +4098,20 @@ const Editemployee = () => {
                           value={designationLookup.desName}
                         /> */}
                       </Box>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="Monday"
+                        id="Monday"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Manager"
+                        disabled
+                      />
+
+                      <FormLabel focused={false}>Manager</FormLabel>
+
                     </FormControl>
                   </Box>
                   <Box
@@ -4172,7 +4251,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -4193,7 +4272,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                       {/* <TextField
                         fullWidth
@@ -4421,9 +4500,8 @@ const Editemployee = () => {
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
-                          values.location ? values.location.RecordID : 0
-                        }'","Any":""}}`}
+                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                          }'","Any":""}}`}
                       />
 
                       {/* <TextField
@@ -4574,6 +4652,90 @@ const Editemployee = () => {
                       />
                     </FormControl> */}
                   </Box>
+                  {/* <Box display="flex" flexDirection="column" gap={2}> */}
+                  {/* Row 1: Horizontal */}
+                  <Box display="flex" flexDirection="column" gap={2}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="horizontal"
+                        name="horizontal"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Horizontal"
+
+                      />
+                      <FormLabel focused={false}>Horizontal</FormLabel>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="Horizontalmin"
+                        name="Horizontalmin"
+                        value={values.Horizontalmin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Minimum Numbers"
+                        sx={{
+                          width: "420px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    {/* Row 2: Vertical */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="vertical"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="vertical"
+                        as={Checkbox}
+                        label="Vertical"
+
+                      />
+                      <FormLabel focused={false}>Vertical</FormLabel>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="Verticalmin"
+                        name="Verticalmin"
+                        value={values.Verticalmin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Minimum Numbers"
+                        sx={{
+                          width: "420px",
+                          marginLeft: "15px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                  {/* </Box> */}
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Shift Details</Typography>
 
@@ -4638,7 +4800,7 @@ const Editemployee = () => {
                   <Stack
                     direction="column"
                     spacing={2}
-                    sx={{ width: 500, mt: 2,padding:formGap}}
+                    sx={{ width: 500, mt: 2, padding: formGap }}
                   >
                     {/* Shift */}
                     <FormControl variant="standard" fullWidth>
@@ -4673,21 +4835,42 @@ const Editemployee = () => {
                         variant="outlined"
                         value={values.shift}
                         onChange={(newValue) => {
-    //                        Monday: deploymentData.Monday === "Y" ? true : false,
-    // Tuesday: deploymentData.TuesdayTuesdayShift === "Y" ? true : false,
-    // Wednesday: deploymentData.Wednesday === "Y" ? true : false,
-    // Thursday: deploymentData.Thursday === "Y" ? true : false,
-    // Friday: deploymentData.Friday === "Y" ? true : false,
-    // Saturday: deploymentData.Saturday === "Y" ? true : false,
-    // Sunday: deploymentData.Sunday === "Y" ? true : false,
-    setFieldValue("shift", newValue);
-                          setFieldValue("Monday", newValue.Monday === "Y" ? true : false);
-                          setFieldValue("Tuesday", newValue.Tuesday === "Y" ? true : false);
-                          setFieldValue("Wednesday", newValue.Wednesday === "Y" ? true : false);
-                          setFieldValue("Thursday", newValue.Thursday === "Y" ? true : false);
-                          setFieldValue("Friday", newValue.Friday === "Y" ? true : false);
-                          setFieldValue("Saturday", newValue.Saturday === "Y" ? true : false);
-                          setFieldValue("Sunday", newValue.Sunday === "Y" ? true : false);
+                          //                        Monday: deploymentData.Monday === "Y" ? true : false,
+                          // Tuesday: deploymentData.TuesdayTuesdayShift === "Y" ? true : false,
+                          // Wednesday: deploymentData.Wednesday === "Y" ? true : false,
+                          // Thursday: deploymentData.Thursday === "Y" ? true : false,
+                          // Friday: deploymentData.Friday === "Y" ? true : false,
+                          // Saturday: deploymentData.Saturday === "Y" ? true : false,
+                          // Sunday: deploymentData.Sunday === "Y" ? true : false,
+                          setFieldValue("shift", newValue);
+                          setFieldValue(
+                            "Monday",
+                            newValue.Monday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Tuesday",
+                            newValue.Tuesday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Wednesday",
+                            newValue.Wednesday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Thursday",
+                            newValue.Thursday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Friday",
+                            newValue.Friday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Saturday",
+                            newValue.Saturday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Sunday",
+                            newValue.Sunday === "Y" ? true : false
+                          );
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
@@ -4707,7 +4890,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         label="Shift Start Time"
-                         inputProps={{
+                        inputProps={{
                           readOnly: true,
                         }}
                         focused
@@ -4734,7 +4917,6 @@ const Editemployee = () => {
                     </FormControl>
                   </Stack>
 
-                 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5">Week Off</Typography>
                   <Box>
@@ -4747,7 +4929,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
-                       disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -4761,7 +4943,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
-                       disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -4775,7 +4957,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
-                       disabled
+                      disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -5011,7 +5193,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Code"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <TextField
@@ -5025,7 +5207,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Name"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -5140,6 +5322,46 @@ const Editemployee = () => {
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         />
+                        <FormControl focused variant="standard" required>
+                          <InputLabel id="category">Category</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-filled-label"
+                            id="category"
+                            name="category"
+                            value={values.category}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+
+                          >
+                            <MenuItem value="EC">Education</MenuItem>
+                            <MenuItem value="AD">Award</MenuItem>
+                            <MenuItem value="CT">Certificate</MenuItem>
+                            <MenuItem value="IS">Insurance</MenuItem>
+                            <MenuItem value="WT">Warranty</MenuItem>
+                            <MenuItem value="OS">Others</MenuItem>
+                          </Select>
+                        </FormControl>
+                        {values.renewal == true ? (
+                          <TextField
+                            name="RenewalDate"
+                            label="Next Renewal Required Date"
+                            type="date"
+                            variant="standard"
+                            focused
+                            value={values.RenewalDate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.RenewalDate &&
+                              !!errors.RenewalDate
+                            }
+                            helperText={
+                              touched.RenewalDate &&
+                              errors.RenewalDate
+                            }
+                          //inputProps={{ readOnly: true }}
+                          />
+                        ) : null}
                         <FormControl
                           sx={{
                             display: "flex",
@@ -5147,8 +5369,48 @@ const Editemployee = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          {/* <FormControlLabel control={<Field type="checkbox" name="checkbox" id="checkbox"  label="Disable" />} label="Disable" /> */}
+                          {/* <FormControlLabel 
+                          control={
+                          <Field 
+                          type="checkbox" 
+                          name="personal" 
+                          id="personal"  
+                          label="Personal" 
+                          />}
+                           label="Personal" />
+                           <FormControlLabel 
+                          control={
+                          <Field 
+                          type="checkbox" 
+                          name="renewal" 
+                          id="renewal"  
+                          label="Renewal Required" 
+                          />}
+                           label="Renewal Required" /> */}
+
                           <Box>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="personal"
+                              id="personal"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Personal"
+                            />
+                            <FormLabel focused={false}>Personal</FormLabel>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="renewal"
+                              id="renewal"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Renewal Required"
+                            />
+                            <FormLabel focused={false}>Renewal Required</FormLabel>
                             <Typography variant="h6">
                               Certificate Attachment
                             </Typography>
@@ -5986,13 +6248,13 @@ const Editemployee = () => {
                         name="BillingUnits"
                         required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -6031,6 +6293,130 @@ const Editemployee = () => {
                         multiline
                         inputProps={{ maxLength: 90 }}
                       />
+
+                      <TextField
+                        name="Hsn"
+                        type="text"
+                        id="Hsn"
+                        label="HSN Code"
+                        variant="standard"
+                        focused
+                        required
+                        value={values.Hsn}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Hsn && !!errors.Hsn}
+                        helperText={touched.Hsn && errors.Hsn}
+                        autoFocus
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Sgst"
+                        type="number"
+                        id="Sgst"
+                        label="SGST"
+                        variant="standard"
+                        value={values.Sgst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Sgst && !!errors.Sgst}
+                        helperText={touched.Sgst && errors.Sgst}
+                        sx={{
+                          background: "",
+                          input: { textAlign: "right" },
+                        }}
+                        inputprops={{
+                          maxlength: 13,
+                          step: 0.01,
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Gst"
+                        type="number"
+                        id="Gst"
+                        label="CGST"
+                        variant="standard"
+                        value={values.Gst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Gst && !!errors.Gst}
+                        helperText={touched.Gst && errors.Gst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        inputProps={{ maxLength: 25 }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Igst"
+                        type="number"
+                        id="Igst"
+                        label="IGST"
+                        variant="standard"
+                        value={values.Igst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Igst && !!errors.Igst}
+                        helperText={touched.Igst && errors.Igst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="TDS"
+                        type="number"
+                        id="TDS"
+                        label="TDS"
+                        variant="standard"
+                        value={values.TDS}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.TDS && !!errors.TDS}
+                        helperText={touched.TDS && errors.TDS}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+
                       <TextField
                         name="FromPeriod"
                         type="date"
@@ -6044,10 +6430,10 @@ const Editemployee = () => {
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -6585,13 +6971,13 @@ const Editemployee = () => {
                         name="BillingUnits"
                         required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -6631,6 +7017,128 @@ const Editemployee = () => {
                         inputProps={{ maxLength: 90 }}
                       />
                       <TextField
+                        name="Hsn"
+                        type="text"
+                        id="Hsn"
+                        label="HSN Code"
+                        variant="standard"
+                        focused
+                        required
+                        value={values.Hsn}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Hsn && !!errors.Hsn}
+                        helperText={touched.Hsn && errors.Hsn}
+                        autoFocus
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Sgst"
+                        type="number"
+                        id="Sgst"
+                        label="SGST"
+                        variant="standard"
+                        value={values.Sgst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Sgst && !!errors.Sgst}
+                        helperText={touched.Sgst && errors.Sgst}
+                        sx={{
+                          background: "",
+                          input: { textAlign: "right" },
+                        }}
+                        inputprops={{
+                          maxlength: 13,
+                          step: 0.01,
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Gst"
+                        type="number"
+                        id="Gst"
+                        label="CGST"
+                        variant="standard"
+                        value={values.Gst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Gst && !!errors.Gst}
+                        helperText={touched.Gst && errors.Gst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        inputProps={{ maxLength: 25 }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Igst"
+                        type="number"
+                        id="Igst"
+                        label="IGST"
+                        variant="standard"
+                        value={values.Igst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Igst && !!errors.Igst}
+                        helperText={touched.Igst && errors.Igst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="TDS"
+                        type="number"
+                        id="TDS"
+                        label="TDS"
+                        variant="standard"
+                        value={values.TDS}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.TDS && !!errors.TDS}
+                        helperText={touched.TDS && errors.TDS}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
                         name="FromPeriod"
                         type="date"
                         id="FromPeriod"
@@ -6643,10 +7151,10 @@ const Editemployee = () => {
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -6957,7 +7465,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -6978,7 +7486,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -7270,8 +7778,8 @@ const Editemployee = () => {
                         }}
                         focused
 
-                        //  error={!!touched.Desc && !!errors.Desc}
-                        //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -7517,14 +8025,14 @@ const Editemployee = () => {
                               },
                             },
                           }}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(
-                          //     0,
-                          //     parseInt(e.target.value)
-                          //   )
-                          //     .toString()
-                          //     .slice(0, 8);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(
+                        //     0,
+                        //     parseInt(e.target.value)
+                        //   )
+                        //     .toString()
+                        //     .slice(0, 8);
+                        // }}
                         />
                         <TextField
                           fullWidth
@@ -7553,14 +8061,14 @@ const Editemployee = () => {
                               },
                             },
                           }}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(
-                          //     0,
-                          //     parseInt(e.target.value)
-                          //   )
-                          //     .toString()
-                          //     .slice(0, 8);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(
+                        //     0,
+                        //     parseInt(e.target.value)
+                        //   )
+                        //     .toString()
+                        //     .slice(0, 8);
+                        // }}
                         />
                         <TextField
                           fullWidth
@@ -7603,13 +8111,13 @@ const Editemployee = () => {
                           name="Year"
                           // required
                           focused
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiInputBase-root": {
-                          //     backgroundColor: "",
-                          //   },
-                          // }}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
                         >
                           <MenuItem value="2024">2024</MenuItem>
                           <MenuItem value="2025">2025</MenuItem>

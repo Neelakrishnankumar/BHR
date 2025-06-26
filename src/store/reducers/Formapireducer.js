@@ -57,12 +57,25 @@ const initialState = {
   empAttendanceData: {},
   AttendanceData: {},
   RegGetData: {},
+  leaveweeklyData: {
+    Employee: "",
+    Year: "",
+    LeaveDetailsData: {
+      TableData: [],
+      Others: [],
+    },
+  },
   timeSheetData: {},
   MonthlyAttendanceData: {},
   sprintget: {},
   sprintPPget: [],
   sprintgetstatus: "",
-  sprintloading: false
+  sprintloading: false,
+  partyBankgetdata: {},
+  partyBankgetstatus: "",
+  partyBankgetloading: false,
+  partyBankPostdata: {},
+  partyContactgetdata: {},
 
 };
 
@@ -726,6 +739,32 @@ export const getLeaveentryData = createAsyncThunk(
     return response.data;
   }
 );
+export const getLeaveweeklyData = createAsyncThunk(
+  "Leave Weekly/get",
+  async ({ EmployeeID }) => {
+    const url = store.getState().globalurl.getLeaveweeklyDataUrl;
+    console.log(url, "--find url");
+
+    const data = {
+      EmployeeID: EmployeeID,
+
+    };
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const stockGetData = createAsyncThunk(
   "stock/material",
   async ({ accessID, Type, recID, yearData }) => {
@@ -865,6 +904,105 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   }
 );
+
+//PartyBank Get
+export const PartyBankget = createAsyncThunk(
+  "party bank/Get",
+  async ({ VendorID }) => {
+    var url = store.getState().globalurl.partyBankUrl;
+    const data = {
+      VendorID: VendorID,
+
+    }
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+//partyBank Post
+export const partyBankpostData = createAsyncThunk(
+  "Party/partyBankpostData",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.partyBankPostUrl;
+
+    const data = {
+
+      action: action,
+      ...idata,
+      // data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+
+//partyContact Get
+export const PartyContactget = createAsyncThunk(
+  "partycontact/Get",
+  async ({ VendorID }) => {
+    var url = store.getState().globalurl.partyContactgetUrl;
+    const data = {
+      VendorID: VendorID,
+
+    }
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+//partyContact Post
+export const partyContactData = createAsyncThunk(
+  "Party/partycontact",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.partyContactPostUrl;
+
+    const data = {
+
+      action: action,
+      ...idata,
+      // data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+
 //Sprint Get
 export const sprintGetData = createAsyncThunk(
   "Project/Sprint",
@@ -957,7 +1095,7 @@ export const getBiometricData = createAsyncThunk(
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
-     headers: {
+      headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
@@ -969,31 +1107,31 @@ export const getBiometricData = createAsyncThunk(
     return response.data;
   }
 );
-export const getJioData = createAsyncThunk(
-  "Biometric/getyyyyyy",
-  async ({ CompanyID }) => {  // Destructure the CompanyID here
-    const url = store.getState().globalurl.jiogetUrl;
-    console.log(url, "--find url");
+// export const getGeoData = createAsyncThunk(
+//   "Biometric/getyyyyyy",
+//   async ({ CompanyID }) => {  // Destructure the CompanyID here
+//     const url = store.getState().globalurl.jiogetUrl;
+//     console.log(url, "--find url");
 
-    const data = {
-      CompanyID  // Now using SubscriptionCode passed via the thunk
-    };
+//     const data = {
+//       CompanyID  // Now using SubscriptionCode passed via the thunk
+//     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+//     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
-    const response = await axios.post(url, data, {
-     headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
-  }
-);
+//     const response = await axios.post(url, data, {
+//      headers: {
+//         Authorization:
+//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//       },
+//     });
+//     console.log(
+//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+//       response
+//     );
+//     return response.data;
+//   }
+// );
 // export const Regularizationdata = createAsyncThunk(
 //   "regularization",
 //   async ({ accessID, get, recID, }) => {
@@ -1471,7 +1609,7 @@ export const getApiSlice = createSlice({
       state.empAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
-      state.MonthlyAttendanceData=[]
+      state.MonthlyAttendanceData = []
       state.costingLeatherCost.leatherOneCost = 0
       state.costingLeatherCost.leatherTwoCost = 0
       state.costingLeatherCost.leatherThreeCost = 0
@@ -1662,6 +1800,87 @@ export const getApiSlice = createSlice({
         state.Data = {};
         toast.error('Something Went Wrong')
       })
+      //PartyBank Details GET
+
+      .addCase(PartyBankget.pending, (state, action) => {
+        state.partyBankgetstatus = "idle";
+        // state.partyBankgetloading = true;
+        state.partyBankgetdata = {};
+        // state.msg = "Loading..."
+      })
+      .addCase(PartyBankget.fulfilled, (state, action) => {
+        state.partyBankgetstatus = "success";
+        // state.partyBankgetloading = false;
+        state.partyBankgetdata = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(PartyBankget.rejected, (state, action) => {
+        state.partyBankgetstatus = "Error";
+        // state.partyBankgetloading = false;
+        state.partyBankgetdata = {};
+        // toast.error('Something Went Wrong')
+      })
+
+
+
+
+      .addCase(PartyContactget.pending, (state, action) => {
+        state.partyBankgetstatus = "idle";
+        state.partyContactgetdata = {};
+
+      })
+      .addCase(PartyContactget.fulfilled, (state, action) => {
+        state.partyBankgetstatus = "success";
+        state.partyContactgetdata = action.payload.Data ? action.payload.Data : {};
+
+      })
+      .addCase(PartyContactget.rejected, (state, action) => {
+        state.partyBankgetstatus = "Error";
+        state.partyContactgetdata = {};
+
+      })
+
+      //Partbank POST
+      .addCase(partyBankpostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(partyBankpostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+
+        state.partyBankPostdata = action.meta.arg.idata;
+        console.log(action.meta.arg.idata, "--partyBankPostdata");
+
+      })
+
+      .addCase(partyBankpostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+
+
+      .addCase(partyContactData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(partyContactData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        // if (action.meta.arg.idata.Disable == "Y") {
+        //   action.meta.arg.idata.Disable = true;
+        // } else action.meta.arg.idata.Disable = false;
+        state.partyContactData = action.meta.arg.idata;
+        console.log(action.meta.arg.idata, "--partyBankPostdata");
+      })
+      .addCase(partyContactData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+
 
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
@@ -1744,24 +1963,53 @@ export const getApiSlice = createSlice({
         state.Data = {};
         toast.error('Something Went Wrong')
       })
-    // .addCase(getJioData.pending, (state, action) => {
-    //     state.Status = "idle";
-    //     state.getLoading = true;
-    //     state.Data = {};
-    //     state.msg = "Loading..."
-    //   })
-    //   .addCase(getJioData.fulfilled, (state, action) => {
-    //     state.Status = "success";
-    //     state.getLoading = false;
-    //     state.Data = action.payload.Data ? action.payload.Data : {};
-    //     // state.msg =  action.payload.Msg
-    //   })
-    //   .addCase(getJioData.rejected, (state, action) => {
-    //     state.Status = "Error";
-    //     state.getLoading = false;
-    //     state.Data = {};
-    //     toast.error('Something Went Wrong')
-    //   })
+      .addCase(getLeaveweeklyData.pending, (state) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.leaveweeklyData = {
+          Employee: "",
+          Year: "",
+          LeaveDetailsData: {
+            TableData: [],
+            Others: []
+          }
+        };
+        state.msg = "Loading...";
+      })
+
+      .addCase(getLeaveweeklyData.rejected, (state) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.leaveweeklyData = {
+          Employee: "",
+          Year: "",
+          LeaveDetailsData: {
+            TableData: [],
+            Others: []
+          }
+        };
+        toast.error("Something Went Wrong");
+      })
+
+      // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.getLoading = false;
+      //   state.leaveweeklyData = action.payload.Data ? action.payload.Data : {};
+      //   // state.msg =  action.payload.Msg
+      // })
+      .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.leaveweeklyData = action.payload?.Data?.[0] || {
+          Employee: '',
+          Year: '',
+          LeaveDetailsData: {
+            TableData: [],
+            Others: [],
+          },
+        };
+      })
+
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;

@@ -93,7 +93,16 @@ const EditAttendance = () => {
       </GridToolbarContainer>
     );
   }
+ const [proData, setproData] = useState(null);
+  
+  const handleSelectionProjectChange = (newValue) => {
+    if (newValue) {
+      setproData(newValue);
+    } else {
+      setproData(null);
+    }
 
+  };
   const AttColumn = [
     {
       field: "SLNO",
@@ -139,6 +148,7 @@ const EditAttendance = () => {
       Month: values.month.toString(),
       Year: values.year,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
+      Project: proData.RecordID
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
@@ -292,6 +302,17 @@ const EditAttendance = () => {
                       },
                       width: 200,
                     }}
+                  />
+                   <Employeeautocomplete
+                     sx={{ width: 400 }}
+                    name="ProName"
+                    label="Project"
+                    id="ProName"
+                    value={proData}
+                    onChange={handleSelectionProjectChange}
+                    error={!!touched.ProName && !!errors.ProName}
+                    helperText={touched.ProName && errors.ProName}
+                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${companyID}","Any":""}}`}
                   />
                      <Employeeautocomplete
                         sx={{ width: 400 }}

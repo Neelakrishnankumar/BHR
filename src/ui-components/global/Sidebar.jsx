@@ -66,7 +66,8 @@ import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 // import LgemsLogo from "../../assets/img/LgemsLogo.png";
-import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
+// import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
+import BackOfficelogo from "../../assets/img/Backoffceimage.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -804,23 +805,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
-        // {
-        //   name: "Project",
-        //   id: 4346894,
-        //   url: "./TR133/Project",
-        //   icon: (
-        //     <Tooltip title="Project">
-        //       <SourceOutlinedIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR133",
-        // },
+        {
+          name: "Project",
+          id: 4346894,
+          url: "./TR275/Project",
+          icon: (
+            <Tooltip title="Project">
+              <SourceOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR275",
+        },
         {
           name: "Functions",
           id: 567,
@@ -1063,12 +1064,12 @@ const child = {
       ],
     },
      {
-      name: "Time Sheet",
+      name: "Agile",
       id: 45678,
       MenuID: "EM900",
-      Tooltipname: "Time Sheet",
+      Tooltipname: "Agile",
       icon: (
-        <Tooltip title="Time Sheet">
+        <Tooltip title="Agile">
           <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
         </Tooltip>
       ),
@@ -1162,55 +1163,55 @@ const child = {
         
       ],
     },
-     {
-      name: "Invoice",
-      id: 4568,
-      MenuID: "EM900",
-      Tooltipname: "Invoice",
-      icon: (
-        <Tooltip title="Invoice">
-          <ReceiptIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
+    //  {
+    //   name: "Invoice",
+    //   id: 4568,
+    //   MenuID: "EM900",
+    //   Tooltipname: "Invoice",
+    //   icon: (
+    //     <Tooltip title="Invoice">
+    //       <ReceiptIcon sx={{ color: "#651fff" }} />
+    //     </Tooltip>
+    //   ),
+    //   children: [
       
-        {
-          name: "Contracts In",
-          url: "/Apps/TR273/Contracts In",
-          id: 5593,
-          icon: (
-            <Tooltip title="Contracts In">
-              <RedoIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR273",
-        },
-        {
-          name: "Contracts Out",
-          url: "/Apps/TR274/Contracts Out",
-          id: 5594,
-          icon: (
-            <Tooltip title="Contracts Out">
-              <UndoIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR274",
-        },
+    //     {
+    //       name: "Contracts In",
+    //       url: "/Apps/TR273/Contracts In",
+    //       id: 5593,
+    //       icon: (
+    //         <Tooltip title="Contracts In">
+    //           <RedoIcon color="info" />
+    //         </Tooltip>
+    //       ),
+    //       UGA_ADD: true,
+    //       UGA_DEL: true,
+    //       UGA_MOD: true,
+    //       UGA_PRINT: true,
+    //       UGA_PROCESS: true,
+    //       UGA_VIEW: true,
+    //       UGA_ACCESSIDS: "TR273",
+    //     },
+    //     {
+    //       name: "Contracts Out",
+    //       url: "/Apps/TR274/Contracts Out",
+    //       id: 5594,
+    //       icon: (
+    //         <Tooltip title="Contracts Out">
+    //           <UndoIcon color="info" />
+    //         </Tooltip>
+    //       ),
+    //       UGA_ADD: true,
+    //       UGA_DEL: true,
+    //       UGA_MOD: true,
+    //       UGA_PRINT: true,
+    //       UGA_PROCESS: true,
+    //       UGA_VIEW: true,
+    //       UGA_ACCESSIDS: "TR274",
+    //     },
         
-      ],
-    },
+    //   ],
+    // },
     // {
     //   name: "Payroll",
     //   id: 34568,
@@ -1764,7 +1765,8 @@ console.log(Expiryin, "--in a sideBar Expiryin");
                 <Avatar
                   variant="rounded"
                   // src={LgemsLogo}
-                  src={LgemsLogo}
+                  // src={LgemsLogo}
+                  src={BackOfficelogo}
                   // sx={{ width: "100px" }}
                   sx={{ height: "110px", width: "140px" }}
                   onClick={() => {

@@ -258,7 +258,8 @@ const Login = () => {
                       variant="h6"
                       sx={{ marginBottom: 2, marginRight: 2 }}
                     >
-                      HR Management{" "}
+                      Back Office System{" "}
+                      {/* HR Management{" "} */}
                     </Typography>
                     {/* <Avatar
           variant="rounded"
