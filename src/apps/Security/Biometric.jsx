@@ -151,7 +151,7 @@ const Biometricconfiguration = () => {
         const response = await dispatch(BiometricpostData({ idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            navigate("/Apps/bioconfiguration");
+            // navigate("/Apps/bioconfiguration");
         } else {
             toast.error(response.payload.Msg);
         }

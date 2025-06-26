@@ -3724,8 +3724,8 @@ export const fetchListview =
               sortable: false,
               filterable: false,
               disableColumnMenu: true,
-              minWidth: 120,
-              maxWidth: 100,
+              minWidth: 60,
+              maxWidth: 60,
               disableExport: true,
               renderCell: (params) => {
                 return (
@@ -3750,6 +3750,29 @@ export const fetchListview =
                         </Tooltip>
                         )}
                       </Link>
+                      
+              
+                  </Stack>
+                );
+              },
+            };
+            listviewData.Data.columns.splice(2, 0, obj);
+          }
+           if (AccessID == "TR027") {
+            const obj = {
+              field: "emp",
+              headerName: " ",
+              headerAlign: "center",
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
+              minWidth: 40,
+              maxWidth: 40,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Stack direction="row">
+                   
                       <Link>
                         <Tooltip title="Employee">
                           <IconButton color="info">

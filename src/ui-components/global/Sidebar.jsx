@@ -18,6 +18,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SafetyCheckIcon from '@mui/icons-material/SafetyCheck';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import {
   Box,
   Avatar,
@@ -1306,6 +1307,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR252",
+        },
+          {
+          name: "Approval",
+          id: 58467,
+          url: "./Approval",
+          icon: (
+            <Tooltip title="Approval">
+              <EventAvailableIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR258",
         },
         {
           name: "Biometric",

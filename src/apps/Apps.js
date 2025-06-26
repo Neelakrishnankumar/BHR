@@ -130,6 +130,7 @@ import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
 import EditdailyAttendance from "./pages/Empolyee/EditDailyattendance";
 import Biometricconfiguration from "./Security/Biometric";
 import Geoconfiguration from "./Security/Geoconfig";
+import Approval from "./Security/Approval";
 
 
 
@@ -657,6 +658,8 @@ function App() {
                   />
                     <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
                     <Route path="/Biometric" element={<Biometricconfiguration />} />
+                                        <Route path="/Approval" element={<Approval />} />
+
                      {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
 
                    {/* <Route
