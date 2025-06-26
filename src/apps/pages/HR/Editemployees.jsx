@@ -23,7 +23,7 @@ import {
 import { subDays, differenceInDays } from "date-fns";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Formik, Field } from "formik";
+import { Formik, Field, useFormikContext } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -112,6 +112,7 @@ const Editemployee = () => {
     console.log(values);
   };
   const YearFlag = sessionStorage.getItem("YearFlag");
+console.log(YearFlag, "--YearFlag");
 
   const navigate = useNavigate();
   let params = useParams();
@@ -147,6 +148,8 @@ const Editemployee = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+  
+  // const { setFieldValue } = useFormikContext();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
   }, [location.key]);
@@ -297,7 +300,7 @@ const Editemployee = () => {
     gateCode: "",
     gateName: "",
   });
-  const [selectproLookupData, setselectproLookupData] = React.useState(null);
+  // const [selectproLookupData, setselectproLookupData] = React.useState(null);
 
   const [LeaveconLTData, setselectLeaveconLTData] = React.useState(null);
 
@@ -365,14 +368,14 @@ const Editemployee = () => {
       setOpenDEPopup(false);
     }
 
-    if (type == "Process") {
-      // setselectproLookupData({
-      //   PROlookupCode: childdata.Code,
-      //   PROlookupRecordid: childdata.RecordID,
-      //   PROlookupDesc: childdata.Name,
-      // });
-      setOpenPROPopup(false);
-    }
+    // if (type == "Process") {
+    //   // setselectproLookupData({
+    //   //   PROlookupCode: childdata.Code,
+    //   //   PROlookupRecordid: childdata.RecordID,
+    //   //   PROlookupDesc: childdata.Name,
+    //   // });
+    //   setOpenPROPopup(false);
+    // }
     if (type == "Designation") {
       setdesignLookup({
         designlookupRecordid: childdata.RecordID,
@@ -492,7 +495,7 @@ const Editemployee = () => {
     }
   };
 
-  /**************************************Employee Process***************** */
+  /**************************************Skills***************** */
 
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
@@ -508,6 +511,7 @@ const Editemployee = () => {
     RecordID: "",
     Comments: "",
     SortOrder: "",
+    Skills: "",
   });
 
   const [boMode, setBomode] = useState("A");
@@ -519,7 +523,7 @@ const Editemployee = () => {
       dispatch(fetchApidata(accessID, "get", recID));
     }
     if (event.target.value == "1") {
-      dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
+      dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
     }
@@ -606,8 +610,8 @@ const Editemployee = () => {
     setBomode(bMode);
     setIniProcess(true);
     if (bMode == "A") {
-      setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-      setselectproLookupData(null);
+      setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
+      // setselectproLookupData(null);
 
       //   {
       //   PROlookupRecordid: "",
@@ -621,16 +625,17 @@ const Editemployee = () => {
           RecordID: data.RecordID,
           Comments: data.Comments,
           SortOrder: data.SortOrder,
+          Skills: data.Skills,
         });
 
-        setselectproLookupData({
-          RecordID: data.PsRecordID,
-          Code: data.ProcessCode,
-          Name: data.ProcessDescription,
-          // PROlookupRecordid: data.PsRecordID,
-          // PROlookupCode: data.ProcessCode,
-          // PROlookupDesc: data.ProcessDescription,
-        });
+        // setselectproLookupData({
+        //   RecordID: data.PsRecordID,
+        //   Code: data.ProcessCode,
+        //   Name: data.ProcessDescription,
+        //   // PROlookupRecordid: data.PsRecordID,
+        //   // PROlookupCode: data.ProcessCode,
+        //   // PROlookupDesc: data.ProcessDescription,
+        // });
       }
     }
   };
@@ -638,6 +643,7 @@ const Editemployee = () => {
   const supprocessInitialvalues = {
     Comments: supprodata.Comments,
     SortOrder: supprodata.SortOrder,
+    Skills: supprodata.Skills
   };
 
   /******************************save  Function********** */
@@ -649,10 +655,10 @@ const Editemployee = () => {
         return;
       }
     }
-    if (selectproLookupData.PROlookupCode == "") {
-      toast.error("Please Choose Process Lookup");
-      return;
-    }
+    // if (selectproLookupData.PROlookupCode == "") {
+    //   toast.error("Please Choose Process Lookup");
+    //   return;
+    // }
 
     if (values.Comments == "") {
       toast.error("Please Enter Comments");
@@ -669,7 +675,8 @@ const Editemployee = () => {
       saveData = {
         RecordID: supprodata.RecordID,
         EmpRecordID: recID,
-        PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+         Skills: values.Skills,
+        // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
         // PsRecordID: selectproLookupData.PROlookupRecordid,
         Comments: values.Comments,
         SortOrder: values.SortOrder,
@@ -680,7 +687,8 @@ const Editemployee = () => {
         saveData = {
           RecordID: "",
           EmpRecordID: recID,
-          PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+           Skills: values.Skills,
+          // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
           // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
@@ -691,7 +699,8 @@ const Editemployee = () => {
         saveData = {
           RecordID: supprodata.RecordID,
           EmpRecordID: recID,
-          PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+          Skills: values.Skills,
+          // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
           // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
@@ -706,10 +715,10 @@ const Editemployee = () => {
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       setLoading(false);
-      dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
+      dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       resetForm();
 
-      setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
+      setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
       selectcelldata("", "A", "");
     } else {
       toast.error(data.payload.Msg);
@@ -760,7 +769,7 @@ const Editemployee = () => {
       setLoading(false);
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
 
-      // dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
+      // dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       // resetForm();
 
       // setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
@@ -778,8 +787,8 @@ const Editemployee = () => {
   };
 
   const clrForm = () => {
-    setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-    setselectproLookupData(null);
+    setSupprodata({ RecordID: "", Comments: "", SortOrder: "" ,Skills: ""});
+    // setselectproLookupData(null);
 
     //   {
     //   PROlookupRecordid: "",
@@ -805,7 +814,7 @@ const Editemployee = () => {
   if (show == "6") {
     VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate","Description","Category", "action"];
   } else if (show == "1") {
-    VISIBLE_FIELDS = ["SLNO", "Process", "Comments", "action"];
+    VISIBLE_FIELDS = ["SLNO", "Skills", "Comments", "action"];
   } else if (show == "3") {
     VISIBLE_FIELDS = ["SLNO", "Manager", "action"];
   } else if (show == "2") {
@@ -870,7 +879,7 @@ const Editemployee = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Process</Typography>
+          <Typography>List of Skills</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -1020,7 +1029,8 @@ const Editemployee = () => {
     elligibledays: "",
     Year: "",
   });
-  const selectCellRowData = ({ rowData, mode, field }) => {
+
+  const selectCellRowData = ({ rowData, mode, field, }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
       rowData
@@ -1046,7 +1056,6 @@ const Editemployee = () => {
       //   venCode: "",
       //   venName: "",
       // });
-      SetDesignationLookup(null);
       //   {
       //   desRecordID: "",
       //   desCode: "",
@@ -1098,10 +1107,14 @@ const Editemployee = () => {
         elligibledays: "",
         Year: "",
       });
+    
+      
+
     } else {
       console.log(rowData, "--rowData");
       if (field == "action") {
         console.log(LeaveCondata, "--LeaveCondata");
+       
 
         setFunMgrRecID(rowData.RecordID);
         setFunEmpRecID(rowData.RecordID);
@@ -1127,16 +1140,7 @@ const Editemployee = () => {
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
         });
-        SetDesignationLookup({
-          RecordID: rowData.DesignationID,
-          ManagerID: rowData.EmployeeID,
-          Code: rowData.EmployeeCode,
-          Name: rowData.EmployeeName,
-          // desRecordID: rowData.DesignationID,
-          // desCode: rowData.EmployeeCode,
-          // desName: rowData.EmployeeName,
-          // ManagerID: rowData.EmployeeID,
-        });
+     
 
         SetEmpLoaData({
           description: rowData.Description,
@@ -1203,6 +1207,51 @@ const Editemployee = () => {
     }
   };
 
+ const selectCellRowDataMGR = ({ rowData, mode, field, setFieldValue}) => {
+    console.log(
+      "🚀 ~ file: Editmanager.jsx:178 ~ selectCellRowDataMGR ~ rowData:",
+      rowData
+    );
+
+    setFunMode(mode);
+    setLaoMode(mode);
+    console.log(mode, "--mode");
+
+    if (mode == "A") {
+        SetDesignationLookup(null);
+
+      setFieldValue("hrmanager", false);
+    setFieldValue("financemanager", false);
+    setFieldValue("projectmanager", false);
+    setFieldValue("facilitymanager", false);
+      
+
+    } else {
+      console.log(rowData, "--rowData");
+      if (field == "action") {
+
+           SetDesignationLookup({
+          RecordID: rowData.DesignationID,
+          ManagerID: rowData.EmployeeID,
+          Code: rowData.EmployeeCode,
+          Name: rowData.EmployeeName,
+          // desRecordID: rowData.DesignationID,
+          // desCode: rowData.EmployeeCode,
+          // desName: rowData.EmployeeName,
+          // ManagerID: rowData.EmployeeID,
+        });
+
+        console.log(LeaveCondata, "--LeaveCondata");
+         setFieldValue("hrmanager", rowData.HrManager === "Y" );
+  setFieldValue("financemanager", rowData.FinanceManager === "Y");
+  setFieldValue("projectmanager", rowData.ProjectManager === "Y");
+  setFieldValue("facilitymanager", rowData.FacilityManager === "Y");
+
+
+      
+      }
+    }
+  };
   const empFunctionFn = async (values, resetForm, del) => {
     let action =
       funMode === "A" && !del
@@ -1523,10 +1572,21 @@ const Editemployee = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+   
+  //   hrmanager: Data.HrManager === "Y",
+  // financemanager: Data.FinanceManager === "Y",
+  // projectmanager: Data.ProjectManager === "Y",
+  // facilitymanager: Data.FacilityManager === "Y",
+  //  hrmanager: checkboxvalues.hrmanager === "Y" ? true : false,
+  //   financemanager: checkboxvalues.financemanager === "Y" ? true : false,
+
+  //   projectmanager: checkboxvalues.projectmanager === "Y" ? true : false,
+
+  //   facilitymanager: checkboxvalues.facilitymanager === "Y" ? true : false,
   };
   const [funMgrRecID, setFunMgrRecID] = useState("");
 
-  const mgrFunctionFn = async (values, resetForm, del) => {
+  const mgrFunctionFn = async (values, resetForm, del,setFieldValue) => {
     let action =
       funMode === "A" && !del
         ? "insert"
@@ -1539,6 +1599,10 @@ const Editemployee = () => {
       DesignationID: designationLookup.RecordID,
       ManagerID: designationLookup.ManagerID,
       CompanyID,
+      HrManager: values.hrmanager === true ? "Y" : "N",
+      FinanceManager: values.financemanager === true ? "Y" : "N",
+      ProjectManager: values.projectmanager === true ? "Y" : "N",
+      FacilityManager: values.facilitymanager === true ? "Y" : "N",
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1552,8 +1616,13 @@ const Editemployee = () => {
 
       toast.success(response.payload.Msg);
 
-      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      selectCellRowDataMGR({ rowData: {}, mode: "A", field: "" ,setFieldValue});
       resetForm();
+    //     setFieldValue("hrmanager", false);
+    // setFieldValue("financemanager", false);
+    // setFieldValue("projectmanager", false);
+    // setFieldValue("facilitymanager", false);
+       // ✅ Reset state & clear form mode
     } else {
       toast.error(response.payload.Msg);
     }
@@ -1664,10 +1733,10 @@ const Editemployee = () => {
       ShiftID: values.shift.RecordID || 0,
       ShiftCode: values.shift.Code || "",
       ShiftName: values.shift.Name || "",
-      Horizontal: values.horizontal === true ? "Y" : "N",
-      Vertical: values.vertical === true ? "Y" : "N",
-      HorizontalMimNo: values.Horizontalmin || 0,
-      VerticalMimNo: values.Verticalmin || 0,
+            Horizontal: values.horizontal === true ? "Y" : "N",
+            Vertical: values.vertical === true ? "Y" : "N",
+            HorizontalMimNo: values.Horizontalmin || 0,
+            VerticalMimNo: values.Verticalmin || 0,
       // DesignationID: designLookup ? designLookup.RecordID : 0,
       // LocationID: locationLookup ? locationLookup.RecordID : 0,
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
@@ -1863,7 +1932,7 @@ const Editemployee = () => {
         <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{color:'#0000D1'}}/>}>
         <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={()=> {setScreen(0)}}>Employee</Typography>
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Contact</Typography>):false}
-{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Employee Process</Typography>):false}
+{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Skills</Typography>):false}
 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Functions</Typography>):false}
 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
@@ -1887,7 +1956,7 @@ const Editemployee = () => {
                 >
                   <MenuItem value={0}>Employee</MenuItem>
                   <MenuItem value={5}>Contact</MenuItem>
-                  <MenuItem value={1}>Employee Process</MenuItem>
+                  <MenuItem value={1}>Skills</MenuItem>
                   <MenuItem value={2}>Functions</MenuItem>
                   <MenuItem value={3}>Managers</MenuItem>
                   <MenuItem value={4}>Deployment</MenuItem>
@@ -1963,7 +2032,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Employee Process
+                      Skills
                     </Typography>
                   ) : (
                     false
@@ -2090,7 +2159,7 @@ const Editemployee = () => {
                     {initialValues.employeetype === "CO" ? (
                       <MenuItem value={11}>Contracts Out</MenuItem>
                     ) : null}
-                    <MenuItem value={1}>Employee Process</MenuItem>
+                    <MenuItem value={1}>Skills</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
                     <MenuItem value={4}>Deployment</MenuItem>
@@ -3344,7 +3413,31 @@ const Editemployee = () => {
                                   alignItems: "center",
                                 }}
                               >
-                                <Productautocomplete
+                                 <TextField
+                                fullWidth
+                                variant="standard"
+                                type="text"
+                                value={values.Skills}
+                                id="Skills"
+                                name="Skills"
+                                label="Skills"
+                                required
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.Skills && !!errors.Skills}
+                                helperText={touched.Skills && errors.Skills}
+                                sx={{
+                                  //gridColumn: "span 2",
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  },
+                                }}
+                                focused
+                                multiline
+                                inputProps={{ maxLength: 90 }}
+                              />
+                                {/* <Productautocomplete
                                   name="process"
                                   label="process"
                                   variant="outlined"
@@ -3367,7 +3460,7 @@ const Editemployee = () => {
                                     });
                                   }}
                                   url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2001","ScreenName":"Process","Filter":"parentID=${CompanyID}","Any":""}}`}
-                                />
+                                /> */}
                                 {/* <TextField
                                   id="outlined-basic"
                                   label="ID"
@@ -3832,7 +3925,13 @@ const Editemployee = () => {
                         Delete
                       </Button>
                     )}
-                    <Button type="reset" color="warning" variant="contained">
+                    <Button type="reset"
+                     color="warning" variant="contained"
+                        onClick={() => {
+                      setScreen(0);
+                    }}
+                     >
+                      
                       Cancel
                     </Button>
                   </Box>
@@ -3862,9 +3961,9 @@ const Editemployee = () => {
             <Formik
               initialValues={managerInitialValue}
               enableReinitialize={true}
-              onSubmit={(values, { resetForm }) => {
+              onSubmit={(values, { resetForm,setFieldValue  }) => {
                 setTimeout(() => {
-                  mgrFunctionFn(values, resetForm, false);
+                  mgrFunctionFn(values, resetForm, false,setFieldValue );
                 }, 100);
               }}
             >
@@ -3877,11 +3976,12 @@ const Editemployee = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
                   onReset={() => {
-                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    selectCellRowDataMGR({ rowData: {}, mode: "A", field: "" ,setFieldValue});
                     resetForm();
                   }}
                 >
@@ -4013,10 +4113,11 @@ const Editemployee = () => {
                           setPageSize(newPageSize)
                         }
                         onCellClick={(params) => {
-                          selectCellRowData({
+                          selectCellRowDataMGR({
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -4043,6 +4144,7 @@ const Editemployee = () => {
                     </Box>
 
                     <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                      {/* Manager Autocomplete */}
                       <Box
                         sx={{
                           display: "flex",
@@ -4056,13 +4158,7 @@ const Editemployee = () => {
                           variant="outlined"
                           id="manager"
                           value={designationLookup}
-                          // value={values.manager}
                           onChange={(newValue) => {
-                            // setFieldValue("manager", newValue);
-                            console.log(newValue, "--newvalue manager");
-
-                            console.log(newValue.RecordID, "manager RecordID");
-
                             SetDesignationLookup({
                               RecordID: newValue.DesignationID,
                               ManagerID: newValue.RecordID,
@@ -4070,48 +4166,65 @@ const Editemployee = () => {
                               Name: newValue.Name,
                             });
                           }}
-                          //  onChange={handleSelectionFunctionname}
-                          // defaultValue={selectedFunctionName}
                           url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
                         />
-                        {/* <TextField
-                          id="manager"
-                          label="Manager"
-                          variant="standard"
-                          focused
-                          required
-                          inputProps={{ tabIndex: "-1" }}
-                          value={designationLookup.desCode}
-                        />
-                        <IconButton
-                          onClick={() => handleShow("DISG")}
-                          sx={{ height: 40, width: 40 }}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                        <TextField
-                          id="dies"
-                          variant="standard"
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                          focused
-                          value={designationLookup.desName}
-                        /> */}
                       </Box>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="Monday"
-                        id="Monday"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Manager"
-                        disabled
-                      />
 
-                      <FormLabel focused={false}>Manager</FormLabel>
-
+                      {/* Vertical Checkboxes */}
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="hrmanager"
+                              id="hrmanager"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="HR Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="financemanager"
+                              id="financemanager"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="Finance Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="projectmanager"
+                              id="projectmanager"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="Project Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="facilitymanager"
+                              id="facilitymanager"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="Facility Manager"
+                        />
+                      </Box>
                     </FormControl>
                   </Box>
                   <Box
@@ -4141,7 +4254,7 @@ const Editemployee = () => {
                     )}
                     {YearFlag == "true" ? (
                       <Button
-                        onClick={() => mgrFunctionFn(values, resetForm, true)}
+                        onClick={() => mgrFunctionFn(values, resetForm, true,setFieldValue)}
                         color="error"
                         variant="contained"
                       >
@@ -4152,7 +4265,11 @@ const Editemployee = () => {
                         Delete
                       </Button>
                     )}
-                    <Button type="reset" color="warning" variant="contained">
+                    <Button type="reset" color="warning" variant="contained"
+                    onClick={() => {
+                      setScreen(0);
+                    }}
+                    >
                       Cancel
                     </Button>
                   </Box>
@@ -4664,7 +4781,6 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         as={Checkbox}
                         label="Horizontal"
-
                       />
                       <FormLabel focused={false}>Horizontal</FormLabel>
                       <TextField
@@ -4676,7 +4792,7 @@ const Editemployee = () => {
                         value={values.Horizontalmin}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Minimum Numbers"
+                        label="Minimum Managers To Approve"
                         sx={{
                           width: "420px",
                           //gridColumn: "span 2",
@@ -4704,7 +4820,6 @@ const Editemployee = () => {
                         name="vertical"
                         as={Checkbox}
                         label="Vertical"
-
                       />
                       <FormLabel focused={false}>Vertical</FormLabel>
                       <TextField
@@ -4716,7 +4831,7 @@ const Editemployee = () => {
                         value={values.Verticalmin}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Minimum Numbers"
+                        label="Minimum Managers To Approve"
                         sx={{
                           width: "420px",
                           marginLeft: "15px",
