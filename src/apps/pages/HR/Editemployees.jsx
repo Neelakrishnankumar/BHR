@@ -1044,7 +1044,7 @@ const Editemployee = () => {
 
     if (mode == "A") {
       setFunMgrRecID("");
-      setFunEmpRecID("");
+     
       SetFunctionLookup(null);
       //   {
       //   funRecordID: "",
@@ -1114,7 +1114,7 @@ const Editemployee = () => {
       if (field == "action") {
         console.log(LeaveCondata, "--LeaveCondata");
 
-        setFunMgrRecID(rowData.RecordID);
+       
         setFunEmpRecID(rowData.RecordID);
         SetFunctionLookup({
           RecordID: rowData.FunctionsID,
@@ -1216,7 +1216,10 @@ const Editemployee = () => {
 
     if (mode == "A") {
       SetDesignationLookup(null);
-
+       setFunEmpRecID("");
+setLevelLookup({
+  levelfield: ""
+})
       setFieldValue("hrmanager", false);
       setFieldValue("financemanager", false);
       setFieldValue("projectmanager", false);
@@ -1225,8 +1228,8 @@ const Editemployee = () => {
       console.log(rowData, "--rowData");
       if (field == "action") {
         SetDesignationLookup({
-          RecordID: rowData.DesignationID,
-          ManagerID: rowData.EmployeeID,
+          RecordID: rowData.EmployeeID,
+          DesignationID: rowData.DesignationID,
           Code: rowData.EmployeeCode,
           Name: rowData.EmployeeName,
           // desRecordID: rowData.DesignationID,
@@ -1234,10 +1237,13 @@ const Editemployee = () => {
           // desName: rowData.EmployeeName,
           // ManagerID: rowData.EmployeeID,
         });
-
+  setLevelLookup({
+  levelfield: rowData.Level,
+});
+ setFunMgrRecID(rowData.RecordID);
         console.log(LeaveCondata, "--LeaveCondata");
         setFieldValue("hrmanager", rowData.HrManager == "Y");
-        setFieldValue("financemanager", rowData.FinanceManager == "Y");
+        setFieldValue("financemanager", rowData.FinanceManager == "Y" ? true : false);
         setFieldValue("projectmanager", rowData.ProjectManager == "Y");
         setFieldValue("facilitymanager", rowData.FacilityManager == "Y");
       }
@@ -1556,11 +1562,14 @@ const Editemployee = () => {
   };
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
-
+const [levellookup, setLevelLookup] = useState({
+  levelfield: ""
+});
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
 ApprovelTolerance: Data.ApprovelTolerance,
+Level: levellookup.levelfield,
     //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
@@ -1592,13 +1601,15 @@ ApprovelTolerance: Data.ApprovelTolerance,
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
-      DesignationID: designationLookup.RecordID,
-      ManagerID: designationLookup.ManagerID,
+      DesignationID: designationLookup.DesignationID || 0,
+      ManagerID: designationLookup.RecordID || 0,
       CompanyID,
       HrManager: values.hrmanager == true ? "Y" : "N",
       FinanceManager: values.financemanager == true ? "Y" : "N",
       ProjectManager: values.projectmanager == true ? "Y" : "N",
       FacilityManager: values.facilitymanager == true ? "Y" : "N",
+      // Level: level,
+        Level: values.Level,
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1628,6 +1639,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
       toast.error(response.payload.Msg);
     }
   };
+                      // const [level, setLevel] = useState('2');
 
   const deploymentInitialValue = {
     code: Data.Code,
@@ -4624,20 +4636,21 @@ ApprovelTolerance: Data.ApprovelTolerance,
                           fullWidth
                           variant="standard"
                           label={<span>Level</span>}
-                          value={values.Year}
+                          value={values.Level}
                           id="Level"
                           onBlur={handleBlur}
+  //                           value={level}
+  // onChange={(e) => setLevel(e.target.value)}
+  //                         onChange={(e) => {
+  //   const newLevel = e.target.value;
+    // setLevel(newLevel);
+  //   handleChange(e); // If using Formik
+  // }}
                           onChange={handleChange}
                           name="Level"
                           // required
                           focused
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiInputBase-root": {
-                          //     backgroundColor: "",
-                          //   },
-                          // }}
+                        
                         >
                           {/* <MenuItem value="1">Level 1</MenuItem>
                           <MenuItem value="2">Level 2</MenuItem>
@@ -4647,7 +4660,7 @@ ApprovelTolerance: Data.ApprovelTolerance,
   {Data.ApprovelTolerance >= 3 && <MenuItem value="3">Level 3</MenuItem>}
                         </TextField>
                     
-                      {/* Manager Autocomplete */}
+                   
                     
                       <Box
                         sx={{
@@ -4687,17 +4700,16 @@ ApprovelTolerance: Data.ApprovelTolerance,
   value={designationLookup}
   onChange={(newValue) => {
     SetDesignationLookup({
-      // RecordID: newValue.DesignationID,
-      RecordID: newValue.EmployeeID,
-      Level: newValue.Level,
-      Name: newValue.EmployeeName,
-  
+      DesignationID: newValue.DesignationID,
+      RecordID: newValue.RecordID,
+      Code: newValue.Code,
+      Name: newValue.Name,
     });
   }}
   url="https://hr.beyondexs.com/api/ManagerLevelController.php"
   payload={{
     EmployeeID: recID,
-    Level: 2, // You can make this dynamic if needed
+    Level: values.Level || 1, // You can make this dynamic if needed
   }}
 />
                       </Box>

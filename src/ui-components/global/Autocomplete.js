@@ -49,7 +49,7 @@ export const Productautocomplete = ({
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
+console.log(options, "Productautocomplete auto options");
     useEffect(() => {
       const fetchData = async () => {
         if (!url) return;
@@ -126,7 +126,7 @@ export const ProductautocompleteLevel = ({
   url,
   height = 20,
   defaultValue,
-  payload = {}, // 👈 Accept payload as a prop
+  payload = {}, 
   ...props
 }) => {
   const [options, setOptions] = useState([]);
@@ -149,7 +149,8 @@ console.log(options, "auto options");
         }
       );
           console.log(response,"check response");
-
+// const rawData = response?.data?.Data;
+// const data = Array.isArray(rawData) ? rawData : [];
       const data = response?.data?.Data || [];
                 console.log(data,"data response");
 
@@ -165,7 +166,7 @@ console.log(options, "auto options");
 
   useEffect(() => {
     fetchData();
-  }, [url]);
+  }, [url, payload.EmployeeID, payload.Level]);
 
   useEffect(() => {
     if (defaultValue) {
