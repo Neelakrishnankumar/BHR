@@ -49,7 +49,7 @@ export const Productautocomplete = ({
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-  
+console.log(options, "Productautocomplete auto options");
     useEffect(() => {
       const fetchData = async () => {
         if (!url) return;
@@ -66,6 +66,7 @@ export const Productautocomplete = ({
           const data = response.data.Data.rows || [];
           console.log(data,"cgheck-----------");
           setOptions(data);
+          
         } catch (err) {
           console.error("Error fetching data:", err);
           setOptions([]);
@@ -117,6 +118,98 @@ if(defaultValue){
       />
     );
   };
+
+  //For Levels
+export const ProductautocompleteLevel = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  payload = {}, 
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+console.log(options, "auto options");
+
+  const fetchData = async () => {
+    if (!url) return;
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        url,
+        payload,
+        {
+          headers: {
+              Authorization: 
+             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+            },
+        }
+      );
+          console.log(response,"check response");
+// const rawData = response?.data?.Data;
+// const data = Array.isArray(rawData) ? rawData : [];
+      const data = response?.data?.Data || [];
+                console.log(data,"data response");
+
+      setOptions(data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setOptions([]);
+      setError("Failed to load. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [url, payload.EmployeeID, payload.Level]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      const defaultOption = options.find((option) => option.Name === defaultValue);
+      if (defaultOption && !value) {
+        onChange(defaultOption);
+      }
+    }
+  }, [options, defaultValue, onChange]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          error={!!error}
+          helperText={error}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
 
  export const CheckinAutocomplete = ({
     value = null,
@@ -186,6 +279,97 @@ if(defaultValue){
     );
   };
   
+
+  
+  //For Levels
+// export const ProductautocompleteLevel = ({
+//   value = null,
+//   onChange,
+//   url,
+//   height = 20,
+//   defaultValue,
+//   payload = {}, // 👈 Accept payload as a prop
+//   ...props
+// }) => {
+//   const [options, setOptions] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+// console.log(options, "auto options");
+
+//   const fetchData = async () => {
+//     if (!url) return;
+//     setLoading(true);
+//     try {
+//       const response = await axios.post(
+//         url,
+//         payload,
+//         {
+//           headers: {
+//               Authorization: 
+//              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+//             },
+//         }
+//       );
+//           console.log(response,"check response");
+
+//       const data = response?.data?.Data || [];
+//                 console.log(data,"data response");
+
+//       setOptions(data);
+//     } catch (err) {
+//       console.error("Error fetching data:", err);
+//       setOptions([]);
+//       setError("Failed to load. Please try again.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchData();
+//   }, [url]);
+
+//   useEffect(() => {
+//     if (defaultValue) {
+//       const defaultOption = options.find((option) => option.Name === defaultValue);
+//       if (defaultOption && !value) {
+//         onChange(defaultOption);
+//       }
+//     }
+//   }, [options, defaultValue, onChange]);
+
+//   return (
+//     <Autocomplete
+//       size="small"
+//       fullWidth
+//       limitTags={1}
+//       options={options}
+//       loading={loading}
+//       value={value}
+//       isOptionEqualToValue={(option, value) => option.Name === value.Name}
+//       onChange={(event, newValue) => onChange(newValue)}
+//       getOptionLabel={(option) => option.Name}
+//       renderInput={(params) => (
+//         <TextField
+//           {...params}
+//           label={props.label || "Select Options"}
+//           error={!!error}
+//           helperText={error}
+//           InputProps={{
+//             ...params.InputProps,
+//             endAdornment: (
+//               <>
+//                 {loading ? <CircularProgress color="inherit" size={20} /> : null}
+//                 {params.InputProps.endAdornment}
+//               </>
+//             ),
+//           }}
+//         />
+//       )}
+//       {...props}
+//     />
+//   );
+// };
 export const SprintEmpAutocomplete = ({
   value = null,
   onChange,

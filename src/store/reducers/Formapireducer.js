@@ -1107,56 +1107,85 @@ export const getBiometricData = createAsyncThunk(
     return response.data;
   }
 );
-// export const getGeoData = createAsyncThunk(
-//   "Biometric/getyyyyyy",
-//   async ({ CompanyID }) => {  // Destructure the CompanyID here
-//     const url = store.getState().globalurl.jiogetUrl;
-//     console.log(url, "--find url");
 
-//     const data = {
-//       CompanyID  // Now using SubscriptionCode passed via the thunk
-//     };
+// Settings -- Approvals Checkbox
+export const setttingsApprovalsData = createAsyncThunk(
+  "Settings/Approvals get",
+  async ({ CompanyID }) => {  // Destructure the CompanyID here
+    const url = store.getState().globalurl.settingsapprovalGetUrl;
+    console.log(url, "--find url");
 
-//     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    const data = {
+      CompanyID  // Now using SubscriptionCode passed via the thunk
+    };
 
-//     const response = await axios.post(url, data, {
-//      headers: {
-//         Authorization:
-//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-//       },
-//     });
-//     console.log(
-//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-//       response
-//     );
-//     return response.data;
-//   }
-// );
-// export const Regularizationdata = createAsyncThunk(
-//   "regularization",
-//   async ({ accessID, get, recID, }) => {
-//     var url = store.getState().globalurl.regularizationUrl;
-//     const data = {
-//       accessid: accessID,
-//       action: get,
-//       recid: recID,
-//          };
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
-//     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    const response = await axios.post(url, data, {
+     headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 
-//     const response = await axios.post(url, data, {
-//       headers: {
-//         Authorization:
-//           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-//       },
-//     });
-//     console.log(
-//       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-//       response
-//     );
-//     return response.data;
-//   }
-// );
+
+export const getJioData = createAsyncThunk(
+  "Biometric/getyyyyyy",
+  async ({ CompanyID }) => {  // Destructure the CompanyID here
+    const url = store.getState().globalurl.jiogetUrl;
+    console.log(url, "--find url");
+
+    const data = {
+      CompanyID  // Now using SubscriptionCode passed via the thunk
+    };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+     headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const Regularizationdata = createAsyncThunk(
+  "regularization",
+  async ({ accessID, get, recID, }) => {
+    var url = store.getState().globalurl.regularizationUrl;
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+         };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 
 
 export const postData = createAsyncThunk(
@@ -1247,6 +1276,31 @@ export const BiometricpostData = createAsyncThunk(
     return response.data;
   }
 );
+
+//settings Approvals
+export const ApprovalsettingspostData = createAsyncThunk(
+  "settings/Approvals Post",
+  async ({ idata }) => {
+    const url = store.getState().globalurl.settingsapprovalPOSTtUrl;
+
+    // const data = {
+    //   UserName: UserName,
+    //   OldPassword: OldPassword,
+    //   NewPassword: NewPassword,
+    // };
+    console.log("get" + JSON.stringify(idata));
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+
+
 export const getFetchWeightage = createAsyncThunk(
   "allScreen/Header",
   async ({ Type, HeaderID, CompanyID }) => {
@@ -1963,53 +2017,49 @@ export const getApiSlice = createSlice({
         state.Data = {};
         toast.error('Something Went Wrong')
       })
-      .addCase(getLeaveweeklyData.pending, (state) => {
+
+      //settings approals get
+
+      
+   .addCase(setttingsApprovalsData.pending, (state, action) => {
         state.Status = "idle";
         state.getLoading = true;
-        state.leaveweeklyData = {
-          Employee: "",
-          Year: "",
-          LeaveDetailsData: {
-            TableData: [],
-            Others: []
-          }
-        };
-        state.msg = "Loading...";
+        state.Data = {};
+        state.msg = "Loading..."
       })
-
-      .addCase(getLeaveweeklyData.rejected, (state) => {
-        state.Status = "Error";
-        state.getLoading = false;
-        state.leaveweeklyData = {
-          Employee: "",
-          Year: "",
-          LeaveDetailsData: {
-            TableData: [],
-            Others: []
-          }
-        };
-        toast.error("Something Went Wrong");
-      })
-
-      // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
-      //   state.Status = "success";
-      //   state.getLoading = false;
-      //   state.leaveweeklyData = action.payload.Data ? action.payload.Data : {};
-      //   // state.msg =  action.payload.Msg
-      // })
-      .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+      .addCase(setttingsApprovalsData.fulfilled, (state, action) => {
         state.Status = "success";
         state.getLoading = false;
-        state.leaveweeklyData = action.payload?.Data?.[0] || {
-          Employee: '',
-          Year: '',
-          LeaveDetailsData: {
-            TableData: [],
-            Others: [],
-          },
-        };
+        state.Data = action.payload.Data ? action.payload.Data : {};
+        // state.msg =  action.payload.Msg
+      })
+      .addCase(setttingsApprovalsData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.Data = {};
+        toast.error('Something Went Wrong')
       })
 
+
+
+    // .addCase(getJioData.pending, (state, action) => {
+    //     state.Status = "idle";
+    //     state.getLoading = true;
+    //     state.Data = {};
+    //     state.msg = "Loading..."
+    //   })
+    //   .addCase(getJioData.fulfilled, (state, action) => {
+    //     state.Status = "success";
+    //     state.getLoading = false;
+    //     state.Data = action.payload.Data ? action.payload.Data : {};
+    //     // state.msg =  action.payload.Msg
+    //   })
+    //   .addCase(getJioData.rejected, (state, action) => {
+    //     state.Status = "Error";
+    //     state.getLoading = false;
+    //     state.Data = {};
+    //     toast.error('Something Went Wrong')
+    //   })
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;
@@ -2314,6 +2364,59 @@ export const getApiSlice = createSlice({
         state.RegGetData = {};
         state.getLoading = false;
       })
+
+
+
+
+
+   .addCase(getLeaveweeklyData.pending, (state) => {
+        state.Status = "idle";
+        state.getLoading = true;
+        state.leaveweeklyData = {
+          Employee: "",
+          Year: "",
+          LeaveDetailsData: {
+            TableData: [],
+            Others: []
+          }
+        };
+        state.msg = "Loading...";
+      })
+ 
+      .addCase(getLeaveweeklyData.rejected, (state) => {
+        state.Status = "Error";
+        state.getLoading = false;
+        state.leaveweeklyData = {
+          Employee: "",
+          Year: "",
+          LeaveDetailsData: {
+            TableData: [],
+            Others: []
+          }
+        };
+        toast.error("Something Went Wrong");
+      })
+ 
+      // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.getLoading = false;
+      //   state.leaveweeklyData = action.payload.Data ? action.payload.Data : {};
+      //   // state.msg =  action.payload.Msg
+      // })
+      .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.getLoading = false;
+        state.leaveweeklyData = action.payload?.Data?.[0] || {
+          Employee: '',
+          Year: '',
+          LeaveDetailsData: {
+            TableData: [],
+            Others: [],
+          },
+        };
+      })
+
+
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
         state.projectName = action.payload?.Data?.ProjectName?.ProjectName || "";

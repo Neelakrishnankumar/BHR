@@ -130,6 +130,7 @@ import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
 import EditdailyAttendance from "./pages/Empolyee/EditDailyattendance";
 import Biometricconfiguration from "./Security/Biometric";
 import Geoconfiguration from "./Security/Geoconfig";
+import Approval from "./Security/Approval";
 import EditContractsin from "./pages/HR/ContractsIN";
 import EditContractsout from "./pages/HR/ContractsOut";
 
@@ -661,6 +662,8 @@ function App() {
                   />
                   <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
                   <Route path="/Biometric" element={<Biometricconfiguration />} />
+                                        <Route path="/Approval" element={<Approval />} />
+
                   <Route
                     path="/:accessID/:screenName/EditContracts In/:id/:Mode"
                     element={<EditContractsin />}
