@@ -213,7 +213,7 @@ const Editemployee = () => {
       : null,
     Code: Data.Code,
     Name: Data.Name,
-    
+
     Password: Data.Password,
     Job: Data.Job,
     employeetype:
@@ -814,7 +814,7 @@ const Editemployee = () => {
   let VISIBLE_FIELDS;
 
   if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate","Description","Category", "action"];
+    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate", "Description", "Category", "action"];
   } else if (show == "1") {
     VISIBLE_FIELDS = ["SLNO", "Skills", "Comments", "action"];
   } else if (show == "3") {
@@ -1021,7 +1021,7 @@ const Editemployee = () => {
     cgst: "",
     sgst: "",
     igst: "",
-    tds:""
+    tds: ""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1044,7 +1044,7 @@ const Editemployee = () => {
 
     if (mode == "A") {
       setFunMgrRecID("");
-     
+
       SetFunctionLookup(null);
       //   {
       //   funRecordID: "",
@@ -1071,7 +1071,7 @@ const Editemployee = () => {
         category: "",
         RenewalDate: "",
         personal: false,
-        renewal :false
+        renewal: false
       });
 
       setImgName("");
@@ -1098,7 +1098,7 @@ const Editemployee = () => {
         cgst: "",
         sgst: "",
         igst: "",
-        tds:""
+        tds: ""
       });
 
       setLeaveCondata({
@@ -1114,7 +1114,7 @@ const Editemployee = () => {
       if (field == "action") {
         console.log(LeaveCondata, "--LeaveCondata");
 
-       
+
         setFunEmpRecID(rowData.RecordID);
         SetFunctionLookup({
           RecordID: rowData.FunctionsID,
@@ -1145,9 +1145,9 @@ const Editemployee = () => {
           category: rowData.Category,
           RenewalDate: rowData.NextRenewalRequiredDate,
           personal: rowData.Personal,
-          renewal :rowData.RenewalRequired
+          renewal: rowData.RenewalRequired
         });
-        console.log(empLoaData,"empLoaData");
+        console.log(empLoaData, "empLoaData");
         setImgName(rowData.Attachment);
         setItemCustodyData({
           recordID: rowData.RecordID,
@@ -1179,7 +1179,7 @@ const Editemployee = () => {
           igst: rowData.Igst,
           tds: rowData.Tds,
         });
-      console.log(contractorData,contractorData);
+        console.log(contractorData, contractorData);
         setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
           Code: "",
@@ -1216,10 +1216,10 @@ const Editemployee = () => {
 
     if (mode == "A") {
       SetDesignationLookup(null);
-       setFunEmpRecID("");
-setLevelLookup({
-  levelfield: ""
-})
+      setFunEmpRecID("");
+      setLevelLookup({
+        levelfield: ""
+      })
       setFieldValue("hrmanager", false);
       setFieldValue("financemanager", false);
       setFieldValue("projectmanager", false);
@@ -1237,10 +1237,10 @@ setLevelLookup({
           // desName: rowData.EmployeeName,
           // ManagerID: rowData.EmployeeID,
         });
-  setLevelLookup({
-  levelfield: rowData.Level,
-});
- setFunMgrRecID(rowData.RecordID);
+        setLevelLookup({
+          levelfield: rowData.Level,
+        });
+        setFunMgrRecID(rowData.RecordID);
         console.log(LeaveCondata, "--LeaveCondata");
         setFieldValue("hrmanager", rowData.HrManager == "Y");
         setFieldValue("financemanager", rowData.FinanceManager == "Y" ? true : false);
@@ -1358,7 +1358,7 @@ setLevelLookup({
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
     Igst: contractorData.igst,
-    TDS : contractorData.tds,
+    TDS: contractorData.tds,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
@@ -1562,14 +1562,14 @@ setLevelLookup({
   };
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
-const [levellookup, setLevelLookup] = useState({
-  levelfield: ""
-});
+  const [levellookup, setLevelLookup] = useState({
+    levelfield: ""
+  });
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
-ApprovelTolerance: Data.ApprovelTolerance,
-Level: levellookup.levelfield,
+    ApprovelTolerance: Data.ApprovelTolerance,
+    Level: levellookup.levelfield,
     //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
@@ -1609,7 +1609,7 @@ Level: levellookup.levelfield,
       ProjectManager: values.projectmanager == true ? "Y" : "N",
       FacilityManager: values.facilitymanager == true ? "Y" : "N",
       // Level: level,
-        Level: values.Level,
+      Level: values.Level,
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1639,7 +1639,7 @@ Level: levellookup.levelfield,
       toast.error(response.payload.Msg);
     }
   };
-                      // const [level, setLevel] = useState('2');
+  // const [level, setLevel] = useState('2');
 
   const deploymentInitialValue = {
     code: Data.Code,
@@ -1780,7 +1780,7 @@ Level: levellookup.levelfield,
   };
 
   //Approvals
-    const FndeploymentApprovals = async (values, resetForm, del) => {
+  const FndeploymentApprovals = async (values, resetForm, del) => {
     console.log(values, "--values");
 
     const idata = {
@@ -1790,12 +1790,12 @@ Level: levellookup.levelfield,
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
       Monday: deploymentData.MondayShift === "Y" ? true : false,
-     Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
-    Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
-    Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
-    Friday: deploymentData.FridayShift === "Y" ? true : false,
-    Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
-    Sunday: deploymentData.SundayShift === "Y" ? true : false,
+      Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
+      Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
+      Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
+      Friday: deploymentData.FridayShift === "Y" ? true : false,
+      Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+      Sunday: deploymentData.SundayShift === "Y" ? true : false,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -1810,7 +1810,7 @@ Level: levellookup.levelfield,
       ProjectCode: deploymentData.ProjectCode || "",
       ProjectName: deploymentData.ProjectName || "",
       DefaultFunction: deploymentData.DefaultFunction,
-       FunctionCode: deploymentData.FunctionCode || "",
+      FunctionCode: deploymentData.FunctionCode || "",
       FunctionName: deploymentData.FunctionName || "",
       ShiftID: deploymentData.ShiftID || 0,
       ShiftCode: deploymentData.ShiftCode || "",
@@ -1850,7 +1850,7 @@ Level: levellookup.levelfield,
     category: "",
     RenewalDate: "",
     personal: false,
-    renewal :false
+    renewal: false
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -1874,10 +1874,10 @@ Level: levellookup.levelfield,
             : empLoaData.category == "Certificate "
               ? "CT"
               : empLoaData.category == "Warranty "
-              ? "WT"
-              :empLoaData.category == "Others "
-              ? "OS"
-              :"",
+                ? "WT"
+                : empLoaData.category == "Others "
+                  ? "OS"
+                  : "",
     RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
@@ -3310,7 +3310,7 @@ Level: levellookup.levelfield,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -3331,7 +3331,7 @@ Level: levellookup.levelfield,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                   </Box>
@@ -3361,7 +3361,7 @@ Level: levellookup.levelfield,
                         label="No of levels to approve"
                         sx={{
                           width: "400px",
-                           marginLeft: "30px",
+                          marginLeft: "30px",
                           //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
@@ -3400,7 +3400,7 @@ Level: levellookup.levelfield,
                         onChange={handleChange}
                         label="Minimum managers to approve (0 for all managers)"
                         sx={{
-                         width: "400px",
+                          width: "400px",
                           marginLeft: "47px",
                           //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
@@ -3429,8 +3429,8 @@ Level: levellookup.levelfield,
                         as={Checkbox}
                       />
                       <FormLabel focused={false}>Auto Approval</FormLabel>
-                    
-                    <TextField
+
+                      <TextField
                         fullWidth
                         variant="standard"
                         type="number"
@@ -3439,12 +3439,12 @@ Level: levellookup.levelfield,
                         value={values.ApprovelTolerance}
                         onBlur={handleBlur}
                         // onChange={handleChange}
-                         onChange={(e) => {
-    const val = e.target.value;
-    if (/^[123]?$/.test(val)) {
-      handleChange(e); // only allow '', '1', '2', or '3'
-    }
-  }}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^[123]?$/.test(val)) {
+                            handleChange(e); // only allow '', '1', '2', or '3'
+                          }
+                        }}
                         label="Tolerance days"
                         sx={{
                           width: "400px",
@@ -3462,21 +3462,21 @@ Level: levellookup.levelfield,
                         //   },
                         // }}
 
-                         InputProps={{
-    inputProps: {
-      style: { textAlign: "right" },
-      min: 1,
-      max: 3,
-    },
-  }}
-  onKeyDown={(e) => {
-    const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-    if (!allowedKeys.includes(e.key)) {
-      e.preventDefault();
-    }
-  }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 1,
+                            max: 3,
+                          },
+                        }}
+                        onKeyDown={(e) => {
+                          const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+                          if (!allowedKeys.includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
-                      </Box>
+                    </Box>
 
                     {/* Second AutoRejectionYesOrNo Checkbox */}
                     <Box display="flex" alignItems="center" gap={1}>
@@ -3489,8 +3489,8 @@ Level: levellookup.levelfield,
                         as={Checkbox}
                       />
                       <FormLabel focused={false}>Auto Rejection</FormLabel>
-                    
-                    <TextField
+
+                      <TextField
                         fullWidth
                         variant="standard"
                         type="number"
@@ -4631,37 +4631,37 @@ Level: levellookup.levelfield,
                     </Box>
 
                     <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-                          <TextField
-                          select
-                          fullWidth
-                          variant="standard"
-                          label={<span>Level</span>}
-                          value={values.Level}
-                          id="Level"
-                          onBlur={handleBlur}
-  //                           value={level}
-  // onChange={(e) => setLevel(e.target.value)}
-  //                         onChange={(e) => {
-  //   const newLevel = e.target.value;
-    // setLevel(newLevel);
-  //   handleChange(e); // If using Formik
-  // }}
-                          onChange={handleChange}
-                          name="Level"
-                          // required
-                          focused
-                        
-                        >
-                          {/* <MenuItem value="1">Level 1</MenuItem>
+                      <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={<span>Level</span>}
+                        value={values.Level}
+                        id="Level"
+                        onBlur={handleBlur}
+                        //                           value={level}
+                        // onChange={(e) => setLevel(e.target.value)}
+                        //                         onChange={(e) => {
+                        //   const newLevel = e.target.value;
+                        // setLevel(newLevel);
+                        //   handleChange(e); // If using Formik
+                        // }}
+                        onChange={handleChange}
+                        name="Level"
+                        // required
+                        focused
+
+                      >
+                        {/* <MenuItem value="1">Level 1</MenuItem>
                           <MenuItem value="2">Level 2</MenuItem>
                           <MenuItem value="3">Level 3</MenuItem> */}
-                          {Data.ApprovelTolerance >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-  {Data.ApprovelTolerance >= 2 && <MenuItem value="2">Level 2</MenuItem>}
-  {Data.ApprovelTolerance >= 3 && <MenuItem value="3">Level 3</MenuItem>}
-                        </TextField>
-                    
-                   
-                    
+                        {Data.ApprovelTolerance >= 1 && <MenuItem value="1">Level 1</MenuItem>}
+                        {Data.ApprovelTolerance >= 2 && <MenuItem value="2">Level 2</MenuItem>}
+                        {Data.ApprovelTolerance >= 3 && <MenuItem value="3">Level 3</MenuItem>}
+                      </TextField>
+
+
+
                       <Box
                         sx={{
                           display: "flex",
@@ -4691,27 +4691,27 @@ Level: levellookup.levelfield,
                           url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
                         /> */}
 
-                        
-                      <ProductautocompleteLevel
-  name="manager"
-  label="Manager"
-  variant="outlined"
-  id="manager"
-  value={designationLookup}
-  onChange={(newValue) => {
-    SetDesignationLookup({
-      DesignationID: newValue.DesignationID,
-      RecordID: newValue.RecordID,
-      Code: newValue.Code,
-      Name: newValue.Name,
-    });
-  }}
-  url="https://hr.beyondexs.com/api/ManagerLevelController.php"
-  payload={{
-    EmployeeID: recID,
-    Level: values.Level || 1, // You can make this dynamic if needed
-  }}
-/>
+
+                        <ProductautocompleteLevel
+                          name="manager"
+                          label="Manager"
+                          variant="outlined"
+                          id="manager"
+                          value={designationLookup}
+                          onChange={(newValue) => {
+                            SetDesignationLookup({
+                              DesignationID: newValue.DesignationID,
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
+                          }}
+                          url="https://hr.beyondexs.com/api/ManagerLevelController.php"
+                          payload={{
+                            EmployeeID: recID,
+                            Level: values.Level || 1, // You can make this dynamic if needed
+                          }}
+                        />
                       </Box>
 
                       {/* Vertical Checkboxes */}
@@ -4723,8 +4723,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="hrmanager"
                               id="hrmanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="HR Manager"
@@ -4736,8 +4736,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="financemanager"
                               id="financemanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="Finance Manager"
@@ -4749,8 +4749,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="projectmanager"
                               id="projectmanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="Project Manager"
@@ -4762,8 +4762,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="facilitymanager"
                               id="facilitymanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="Facility Manager"
@@ -5811,8 +5811,16 @@ Level: levellookup.levelfield,
               initialValues={AttachmentInitialValues}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
+                if (values.renewal && (!values.RenewalDate || values.RenewalDate === "00-00-0000")) {
+                  toast.error("Renewal Date is Required");
+                  return;
+                }
+                const updatedValues = {
+                  ...values,
+                  RenewalDate: values.renewal ? values.RenewalDate : "00-00-0000",
+                };
                 setTimeout(() => {
-                  FnAttachment(values, resetForm, false);
+                  FnAttachment(updatedValues, resetForm, false);
                 }, 100);
               }}
             >
@@ -6005,27 +6013,45 @@ Level: levellookup.levelfield,
                             <MenuItem value="OS">Others</MenuItem>
                           </Select>
                         </FormControl>
-                        {values.renewal == true ? (
-                          <TextField
-                            name="RenewalDate"
-                            label="Next Renewal Required Date"
-                            type="date"
-                            variant="standard"
-                            focused
-                            value={values.RenewalDate}
-                            onBlur={handleBlur}
+                        <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="personal"
+                            id="personal"
                             onChange={handleChange}
-                            error={
-                              !!touched.RenewalDate &&
-                              !!errors.RenewalDate
-                            }
-                            helperText={
-                              touched.RenewalDate &&
-                              errors.RenewalDate
-                            }
-                          //inputProps={{ readOnly: true }}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Personal"
                           />
-                        ) : null}
+                          <FormLabel focused={false}>Personal</FormLabel></Box>
+                        {/* {values.renewal == true ? ( */}
+                        <TextField
+                          name="RenewalDate"
+                          label="Next Renewal Required Date"
+                          type="date"
+                          variant="standard"
+                          focused
+                          value={values.RenewalDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.RenewalDate && !!errors.RenewalDate}
+                          helperText={touched.RenewalDate && errors.RenewalDate}
+                          disabled={!values.renewal}
+                          InputProps={{
+                            sx: {
+                              pl: 1.5, // 👈 Add padding-left to separate value from label
+                            },
+                          }}
+                          InputLabelProps={{
+                            shrink: true, // 👈 Ensures label stays above even if no value
+                          }}
+                        />
+
+
+                        {/* //inputProps={{ readOnly: true }} */}
+
+                        {/* ) : null} */}
                         <FormControl
                           sx={{
                             display: "flex",
@@ -6053,17 +6079,7 @@ Level: levellookup.levelfield,
                            label="Renewal Required" /> */}
 
                           <Box>
-                            <Field
-                              //  size="small"
-                              type="checkbox"
-                              name="personal"
-                              id="personal"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              as={Checkbox}
-                              label="Personal"
-                            />
-                            <FormLabel focused={false}>Personal</FormLabel>
+
                             <Field
                               //  size="small"
                               type="checkbox"
@@ -6075,32 +6091,10 @@ Level: levellookup.levelfield,
                               label="Renewal Required"
                             />
                             <FormLabel focused={false}>Renewal Required</FormLabel>
-                            <Typography variant="h6">
+                            {/* <Typography variant="h6">
                               Certificate Attachment
-                            </Typography>
-                            <IconButton
-                              size="large"
-                              color="warning"
-                              aria-label="upload picture"
-                              component="label"
-                            >
-                              <input
-                                hidden
-                                accept=".pdf"
-                                type="file"
-                                onChange={changeHandler}
-                              />
-                              <PictureAsPdfOutlinedIcon fontSize="large" />
-                            </IconButton>
-                            <Button
-                              variant="contained"
-                              component={"a"}
-                              onClick={() => {
-                                fnViewFile();
-                              }}
-                            >
-                              View{" "}
-                            </Button>
+                            </Typography> */}
+
                           </Box>
                         </FormControl>
 
@@ -6156,6 +6150,29 @@ Level: levellookup.levelfield,
                           mt={29}
                           gap={2}
                         >
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept=".pdf"
+                              type="file"
+                              onChange={changeHandler}
+                            />
+                            <PictureAsPdfOutlinedIcon fontSize="large" />
+                          </IconButton>
+                          <Button
+                            variant="contained"
+                            component={"a"}
+                            onClick={() => {
+                              fnViewFile();
+                            }}
+                          >
+                            View{" "}
+                          </Button>
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -6219,6 +6236,7 @@ Level: levellookup.levelfield,
                           </Button>
                         </Box>
                       </FormControl>
+
                     </Box>
                   </Box>
                 </form>
