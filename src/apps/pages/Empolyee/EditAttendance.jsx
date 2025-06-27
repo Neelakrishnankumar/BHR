@@ -148,7 +148,7 @@ const EditAttendance = () => {
       Month: values.month.toString(),
       Year: values.year,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
-      Project: proData.RecordID
+      ProjectID: proData.RecordID
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
