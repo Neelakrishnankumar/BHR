@@ -6040,18 +6040,16 @@ const Editemployee = () => {
                           disabled={!values.renewal}
                           InputProps={{
                             sx: {
-                              pl: 1.5, // 👈 Add padding-left to separate value from label
+                              pl: 1.5,
                             },
                           }}
                           InputLabelProps={{
-                            shrink: true, // 👈 Ensures label stays above even if no value
+                            shrink: true, 
                           }}
                         />
 
 
-                        {/* //inputProps={{ readOnly: true }} */}
-
-                        {/* ) : null} */}
+                       
                         <FormControl
                           sx={{
                             display: "flex",
