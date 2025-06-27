@@ -443,7 +443,7 @@ const Editproject = () => {
   var recID = params.id;
   var mode = params.Mode;
   // var accessID = params.accessID;
-    var accessID = "TR133";
+    var accessID = params.accessID;
 
   const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
@@ -656,6 +656,34 @@ const Editproject = () => {
                       // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                       url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
+                     <Box>
+                    
+                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
+                    <Box display="flex" alignItems="center"> */}
+                    <Field
+                        type="checkbox"
+                        name="Routine"
+                        id="Routine"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false} htmlFor="Routine" sx={{ ml: 1 }}>
+                        Routine Tasks
+                      </FormLabel>
+                      <Field
+                        type="checkbox"
+                        name="ServiceMaintenance"
+                        id="ServiceMaintenance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false} htmlFor="ServiceMaintenance" sx={{ ml: 1 }}>
+                        Service & Maintenance
+                      </FormLabel>
+                    </Box>
+
                   <TextField
                     name="sortorder"
                     type="number"
@@ -692,9 +720,8 @@ const Editproject = () => {
                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
 
                 /> */}
-               
-                  <Box>
-                    <Field
+               <Box>
+                 <Field
                       //  size="small"
                       type="checkbox"
                       name="disable"
@@ -706,33 +733,8 @@ const Editproject = () => {
                     />
 
                     <FormLabel focused={false}>Disable</FormLabel>
-                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
-                    <Box display="flex" alignItems="center"> */}
-                      <Field
-                        type="checkbox"
-                        name="ServiceMaintenance"
-                        id="ServiceMaintenance"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                      />
-                      <FormLabel focused={false} htmlFor="ServiceMaintenance" sx={{ ml: 1 }}>
-                        Service & Maintenance
-                      </FormLabel>
-                    {/* </Box> */}
-
                     {/* <Box display="flex" alignItems="center"> */}
-                      <Field
-                        type="checkbox"
-                        name="Routine"
-                        id="Routine"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                      />
-                      <FormLabel focused={false} htmlFor="Routine" sx={{ ml: 1 }}>
-                        Routine Tasks
-                      </FormLabel>
+                      
                     {/* </Box>
                   </Box>*/}
                   </Box> 
