@@ -537,6 +537,7 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "3") {
+       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
         fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
       );
@@ -1568,8 +1569,19 @@ const Editemployee = () => {
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
+
+ Horizontal: Data.Horizontal === "Y" ? true : false,
+    Vertical: Data.Vertical === "Y" ? true : false,
+    HorizontalMimNo: Data.HorizontalMimNo,
+
+    VerticalMimNo: Data.VerticalMimNo,
+
+    AutoApprovalYesOrNo: Data.AutoApprovalYesOrNo === "Y" ? true : false,
     ApprovelTolerance: Data.ApprovelTolerance,
-    Level: levellookup.levelfield,
+    AutoRejectionYesOrNo: Data.AutoRejectionYesOrNo === "Y" ? true : false,
+    RejectionTolerance: Data.RejectionTolerance,
+
+Level: levellookup.levelfield,
     //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
@@ -1825,7 +1837,7 @@ const Editemployee = () => {
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
       CompanyID,
       Horizontal: values.Horizontal === true ? "Y" : "N",
-      Vertical: values.Vertical === "Y" ? true : false,
+      Vertical: values.Vertical === true ? "Y" : "N",
       HorizontalMimNo: values.HorizontalMimNo,
       VerticalMimNo: values.VerticalMimNo,
       AutoApprovalYesOrNo: values.AutoApprovalYesOrNo,
@@ -3357,7 +3369,13 @@ const Editemployee = () => {
                         name="HorizontalMimNo"
                         value={values.HorizontalMimNo}
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        // onChange={handleChange}
+                          onChange={(e) => {
+    const val = e.target.value;
+    if (/^[1]?$/.test(val)) {
+      handleChange(e); // only allow '', '1'
+    }
+  }}
                         label="No of levels to approve"
                         sx={{
                           width: "400px",
@@ -3369,11 +3387,25 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textAlign: "right" },
+                        //   },
+                        // }}
+                         InputProps={{
+    inputProps: {
+      style: { textAlign: "right" },
+      min: 1,
+      max: 1,
+    },
+  }}
+  onKeyDown={(e) => {
+    const allowedKeys = ["1", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+    if (!allowedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }}
+      
                       />
                     </Box>
 
@@ -3397,7 +3429,13 @@ const Editemployee = () => {
                         name="VerticalMimNo"
                         value={values.VerticalMimNo}
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        // onChange={handleChange}
+                            onChange={(e) => {
+    const val = e.target.value;
+    if (/^[123]?$/.test(val)) {
+      handleChange(e); // only allow '', '1', '2', or '3'
+    }
+  }}
                         label="Minimum managers to approve (0 for all managers)"
                         sx={{
                           width: "400px",
@@ -3409,11 +3447,25 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textAlign: "right" },
+                        //   },
+                        // }}
+                        
+                         InputProps={{
+    inputProps: {
+      style: { textAlign: "right" },
+      min: 1,
+      max: 3,
+    },
+  }}
+  onKeyDown={(e) => {
+    const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+    if (!allowedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }}
                       />
                     </Box>
                   </Box>
@@ -3438,13 +3490,13 @@ const Editemployee = () => {
                         name="ApprovelTolerance"
                         value={values.ApprovelTolerance}
                         onBlur={handleBlur}
-                        // onChange={handleChange}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (/^[123]?$/.test(val)) {
-                            handleChange(e); // only allow '', '1', '2', or '3'
-                          }
-                        }}
+                        onChange={handleChange}
+  //                        onChange={(e) => {
+  //   const val = e.target.value;
+  //   if (/^[123]?$/.test(val)) {
+  //     handleChange(e); // only allow '', '1', '2', or '3'
+  //   }
+  // }}
                         label="Tolerance days"
                         sx={{
                           width: "400px",
@@ -4630,38 +4682,55 @@ const Editemployee = () => {
                       />
                     </Box>
 
-                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-                      <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={<span>Level</span>}
-                        value={values.Level}
-                        id="Level"
-                        onBlur={handleBlur}
-                        //                           value={level}
-                        // onChange={(e) => setLevel(e.target.value)}
-                        //                         onChange={(e) => {
-                        //   const newLevel = e.target.value;
-                        // setLevel(newLevel);
-                        //   handleChange(e); // If using Formik
-                        // }}
-                        onChange={handleChange}
-                        name="Level"
-                        // required
-                        focused
+                   <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                    {Data.Vertical  == "Y" && Data.Horizontal  != "Y"  ? 
 
-                      >
-                        {/* <MenuItem value="1">Level 1</MenuItem>
+                       <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={<span>Level</span>}
+                          value={values.Level}
+                          id="Level"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Level"
+                          // required
+                          focused
+                        
+                        >
+                          {/* <MenuItem value="1">Level 1</MenuItem>
                           <MenuItem value="2">Level 2</MenuItem>
                           <MenuItem value="3">Level 3</MenuItem> */}
-                        {Data.ApprovelTolerance >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-                        {Data.ApprovelTolerance >= 2 && <MenuItem value="2">Level 2</MenuItem>}
-                        {Data.ApprovelTolerance >= 3 && <MenuItem value="3">Level 3</MenuItem>}
-                      </TextField>
+                          {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
+  {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
+  {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
+                        </TextField>
+                       : false 
+                      }
 
-
-
+                         {Data.Horizontal  == "Y" &&      <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={<span>Level</span>}
+                          value={values.Level}
+                          id="Level"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Level"
+                          // required
+                          focused
+                        
+                        >
+                          {/* <MenuItem value="1">Level 1</MenuItem>
+                          <MenuItem value="2">Level 2</MenuItem>
+                          <MenuItem value="3">Level 3</MenuItem> */}
+                          {Data.HorizontalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
+                        </TextField>}
+                    
+                   
+                    
                       <Box
                         sx={{
                           display: "flex",
