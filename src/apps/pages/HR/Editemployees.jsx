@@ -1714,10 +1714,10 @@ Level: levellookup.levelfield,
     Friday: deploymentData.FridayShift === "Y" ? true : false,
     Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
     Sunday: deploymentData.SundayShift === "Y" ? true : false,
-    Horizontal: deploymentData.Horizontal === "Y" ? true : false,
+    Horizontal:  true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
-    HorizontalMimNo: deploymentData.HorizontalMimNo,
-    VerticalMimNo: deploymentData.VerticalMimNo,
+    HorizontalMimNo: deploymentData.HorizontalMimNo || 1,
+    VerticalMimNo: deploymentData.VerticalMimNo || 3,
     AutoApprovalYesOrNo: deploymentData.AutoApprovalYesOrNo === "Y" ? true : false,
     ApprovelTolerance: deploymentData.ApprovelTolerance,
     AutoRejectionYesOrNo: deploymentData.AutoRejectionYesOrNo === "Y" ? true : false,
@@ -3355,8 +3355,9 @@ Level: levellookup.levelfield,
                         type="checkbox"
                         id="Horizontal"
                         name="Horizontal"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                        // onChange={handleChange}
+                        disabled
+                        // onBlur={handleBlur}
                         as={Checkbox}
                         label="Horizontal"
                       />
@@ -3368,15 +3369,18 @@ Level: levellookup.levelfield,
                         id="HorizontalMimNo"
                         name="HorizontalMimNo"
                         value={values.HorizontalMimNo}
+                        // inputProps={{readOnly:true}}
                         onBlur={handleBlur}
                         // onChange={handleChange}
-                          onChange={(e) => {
+                                            
+                            onChange={(e) => {
     const val = e.target.value;
-    if (/^[1]?$/.test(val)) {
-      handleChange(e); // only allow '', '1'
+    if (/^[012345]?$/.test(val)) {
+      handleChange(e); // only allow '', '1', '2', or '3'
     }
   }}
-                        label="No of levels to approve"
+      label="Minimum managers to approve (0 for all managers)"
+                        // label="No of levels to approve"
                         sx={{
                           width: "400px",
                            marginLeft: "30px",
@@ -3395,17 +3399,17 @@ Level: levellookup.levelfield,
                          InputProps={{
     inputProps: {
       style: { textAlign: "right" },
-      min: 1,
-      max: 1,
+      min: 0,
+      max: 5,
     },
   }}
-  onKeyDown={(e) => {
-    const allowedKeys = ["1", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+
+       onKeyDown={(e) => {
+    const allowedKeys = ["0","1", "2", "3","4", "5", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
     if (!allowedKeys.includes(e.key)) {
       e.preventDefault();
     }
   }}
-      
                       />
                     </Box>
 
@@ -3429,14 +3433,16 @@ Level: levellookup.levelfield,
                         name="VerticalMimNo"
                         value={values.VerticalMimNo}
                         onBlur={handleBlur}
-                        // onChange={handleChange}
+          
+                         
                             onChange={(e) => {
     const val = e.target.value;
     if (/^[123]?$/.test(val)) {
       handleChange(e); // only allow '', '1', '2', or '3'
     }
   }}
-                        label="Minimum managers to approve (0 for all managers)"
+   label="No of levels to approve(minimum level of 3)"
+                        // label="Minimum managers to approve (0 for all managers)"
                         sx={{
                          width: "400px",
                           marginLeft: "47px",
@@ -3455,6 +3461,7 @@ Level: levellookup.levelfield,
                         
                          InputProps={{
     inputProps: {
+      readOnly:values.Vertical ? false : true,
       style: { textAlign: "right" },
       min: 1,
       max: 3,
@@ -4683,7 +4690,7 @@ Level: levellookup.levelfield,
                     </Box>
 
                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-                    {Data.Vertical  == "Y" && Data.Horizontal  != "Y"  ? 
+                   
 
                        <TextField
                           select
@@ -4699,35 +4706,13 @@ Level: levellookup.levelfield,
                           focused
                         
                         >
-                          {/* <MenuItem value="1">Level 1</MenuItem>
-                          <MenuItem value="2">Level 2</MenuItem>
-                          <MenuItem value="3">Level 3</MenuItem> */}
                           {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-  {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
-  {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
+                          {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
+                           {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
                         </TextField>
-                       : false 
-                      }
+                     
 
-                         {Data.Horizontal  == "Y" &&      <TextField
-                          select
-                          fullWidth
-                          variant="standard"
-                          label={<span>Level</span>}
-                          value={values.Level}
-                          id="Level"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Level"
-                          // required
-                          focused
-                        
-                        >
-                          {/* <MenuItem value="1">Level 1</MenuItem>
-                          <MenuItem value="2">Level 2</MenuItem>
-                          <MenuItem value="3">Level 3</MenuItem> */}
-                          {Data.HorizontalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-                        </TextField>}
+                       
                     
                    
                     
@@ -4778,7 +4763,9 @@ Level: levellookup.levelfield,
   url="https://hr.beyondexs.com/api/ManagerLevelController.php"
   payload={{
     EmployeeID: recID,
-    Level: values.Level || 1, // You can make this dynamic if needed
+    Level: values.Level || 1,
+    CompanyID: CompanyID
+    // You can make this dynamic if needed
   }}
 />
                       </Box>
@@ -5873,15 +5860,23 @@ Level: levellookup.levelfield,
         ) : (
           false
         )}
-        {show == "6" ? (
+       {show == "6" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               // onSubmit={handleFormSubmit}
               initialValues={AttachmentInitialValues}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
+                if (values.renewal && (!values.RenewalDate || values.RenewalDate === "00-00-0000")) {
+                  toast.error("Renewal Date is Required");
+                  return;
+                }
+                const updatedValues = {
+                  ...values,
+                  RenewalDate: values.renewal ? values.RenewalDate : "00-00-0000",
+                };
                 setTimeout(() => {
-                  FnAttachment(values, resetForm, false);
+                  FnAttachment(updatedValues, resetForm, false);
                 }, 100);
               }}
             >
@@ -6074,27 +6069,43 @@ Level: levellookup.levelfield,
                             <MenuItem value="OS">Others</MenuItem>
                           </Select>
                         </FormControl>
-                        {values.renewal == true ? (
-                          <TextField
-                            name="RenewalDate"
-                            label="Next Renewal Required Date"
-                            type="date"
-                            variant="standard"
-                            focused
-                            value={values.RenewalDate}
-                            onBlur={handleBlur}
+                        <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="personal"
+                            id="personal"
                             onChange={handleChange}
-                            error={
-                              !!touched.RenewalDate &&
-                              !!errors.RenewalDate
-                            }
-                            helperText={
-                              touched.RenewalDate &&
-                              errors.RenewalDate
-                            }
-                          //inputProps={{ readOnly: true }}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Personal"
                           />
-                        ) : null}
+                          <FormLabel focused={false}>Personal</FormLabel></Box>
+                        {/* {values.renewal == true ? ( */}
+                        <TextField
+                          name="RenewalDate"
+                          label="Next Renewal Required Date"
+                          type="date"
+                          variant="standard"
+                          focused
+                          value={values.RenewalDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.RenewalDate && !!errors.RenewalDate}
+                          helperText={touched.RenewalDate && errors.RenewalDate}
+                          disabled={!values.renewal}
+                          InputProps={{
+                            sx: {
+                              pl: 1.5,
+                            },
+                          }}
+                          InputLabelProps={{
+                            shrink: true, 
+                          }}
+                        />
+
+
+                       
                         <FormControl
                           sx={{
                             display: "flex",
@@ -6122,17 +6133,7 @@ Level: levellookup.levelfield,
                            label="Renewal Required" /> */}
 
                           <Box>
-                            <Field
-                              //  size="small"
-                              type="checkbox"
-                              name="personal"
-                              id="personal"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              as={Checkbox}
-                              label="Personal"
-                            />
-                            <FormLabel focused={false}>Personal</FormLabel>
+
                             <Field
                               //  size="small"
                               type="checkbox"
@@ -6144,32 +6145,10 @@ Level: levellookup.levelfield,
                               label="Renewal Required"
                             />
                             <FormLabel focused={false}>Renewal Required</FormLabel>
-                            <Typography variant="h6">
+                            {/* <Typography variant="h6">
                               Certificate Attachment
-                            </Typography>
-                            <IconButton
-                              size="large"
-                              color="warning"
-                              aria-label="upload picture"
-                              component="label"
-                            >
-                              <input
-                                hidden
-                                accept=".pdf"
-                                type="file"
-                                onChange={changeHandler}
-                              />
-                              <PictureAsPdfOutlinedIcon fontSize="large" />
-                            </IconButton>
-                            <Button
-                              variant="contained"
-                              component={"a"}
-                              onClick={() => {
-                                fnViewFile();
-                              }}
-                            >
-                              View{" "}
-                            </Button>
+                            </Typography> */}
+
                           </Box>
                         </FormControl>
 
@@ -6225,6 +6204,29 @@ Level: levellookup.levelfield,
                           mt={29}
                           gap={2}
                         >
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept=".pdf"
+                              type="file"
+                              onChange={changeHandler}
+                            />
+                            <PictureAsPdfOutlinedIcon fontSize="large" />
+                          </IconButton>
+                          <Button
+                            variant="contained"
+                            component={"a"}
+                            onClick={() => {
+                              fnViewFile();
+                            }}
+                          >
+                            View{" "}
+                          </Button>
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -6288,6 +6290,7 @@ Level: levellookup.levelfield,
                           </Button>
                         </Box>
                       </FormControl>
+
                     </Box>
                   </Box>
                 </form>
