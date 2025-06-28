@@ -213,7 +213,7 @@ const Editemployee = () => {
       : null,
     Code: Data.Code,
     Name: Data.Name,
-    
+
     Password: Data.Password,
     Job: Data.Job,
     employeetype:
@@ -815,7 +815,7 @@ const Editemployee = () => {
   let VISIBLE_FIELDS;
 
   if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate","Description","Category", "action"];
+    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate", "Description", "Category", "action"];
   } else if (show == "1") {
     VISIBLE_FIELDS = ["SLNO", "Skills", "Comments", "action"];
   } else if (show == "3") {
@@ -1022,7 +1022,7 @@ const Editemployee = () => {
     cgst: "",
     sgst: "",
     igst: "",
-    tds:""
+    tds: ""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1045,7 +1045,7 @@ const Editemployee = () => {
 
     if (mode == "A") {
       setFunMgrRecID("");
-     
+
       SetFunctionLookup(null);
       //   {
       //   funRecordID: "",
@@ -1072,7 +1072,7 @@ const Editemployee = () => {
         category: "",
         RenewalDate: "",
         personal: false,
-        renewal :false
+        renewal: false
       });
 
       setImgName("");
@@ -1099,7 +1099,7 @@ const Editemployee = () => {
         cgst: "",
         sgst: "",
         igst: "",
-        tds:""
+        tds: ""
       });
 
       setLeaveCondata({
@@ -1115,7 +1115,7 @@ const Editemployee = () => {
       if (field == "action") {
         console.log(LeaveCondata, "--LeaveCondata");
 
-       
+
         setFunEmpRecID(rowData.RecordID);
         SetFunctionLookup({
           RecordID: rowData.FunctionsID,
@@ -1146,9 +1146,9 @@ const Editemployee = () => {
           category: rowData.Category,
           RenewalDate: rowData.NextRenewalRequiredDate,
           personal: rowData.Personal,
-          renewal :rowData.RenewalRequired
+          renewal: rowData.RenewalRequired
         });
-        console.log(empLoaData,"empLoaData");
+        console.log(empLoaData, "empLoaData");
         setImgName(rowData.Attachment);
         setItemCustodyData({
           recordID: rowData.RecordID,
@@ -1180,7 +1180,7 @@ const Editemployee = () => {
           igst: rowData.Igst,
           tds: rowData.Tds,
         });
-      console.log(contractorData,contractorData);
+        console.log(contractorData, contractorData);
         setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
           Code: "",
@@ -1217,10 +1217,10 @@ const Editemployee = () => {
 
     if (mode == "A") {
       SetDesignationLookup(null);
-       setFunEmpRecID("");
-setLevelLookup({
-  levelfield: ""
-})
+      setFunEmpRecID("");
+      setLevelLookup({
+        levelfield: ""
+      })
       setFieldValue("hrmanager", false);
       setFieldValue("financemanager", false);
       setFieldValue("projectmanager", false);
@@ -1238,10 +1238,10 @@ setLevelLookup({
           // desName: rowData.EmployeeName,
           // ManagerID: rowData.EmployeeID,
         });
-  setLevelLookup({
-  levelfield: rowData.Level,
-});
- setFunMgrRecID(rowData.RecordID);
+        setLevelLookup({
+          levelfield: rowData.Level,
+        });
+        setFunMgrRecID(rowData.RecordID);
         console.log(LeaveCondata, "--LeaveCondata");
         setFieldValue("hrmanager", rowData.HrManager == "Y");
         setFieldValue("financemanager", rowData.FinanceManager == "Y" ? true : false);
@@ -1359,7 +1359,7 @@ setLevelLookup({
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
     Igst: contractorData.igst,
-    TDS : contractorData.tds,
+    TDS: contractorData.tds,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
@@ -1563,9 +1563,9 @@ setLevelLookup({
   };
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
-const [levellookup, setLevelLookup] = useState({
-  levelfield: ""
-});
+  const [levellookup, setLevelLookup] = useState({
+    levelfield: ""
+  });
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
@@ -1621,7 +1621,7 @@ Level: levellookup.levelfield,
       ProjectManager: values.projectmanager == true ? "Y" : "N",
       FacilityManager: values.facilitymanager == true ? "Y" : "N",
       // Level: level,
-        Level: values.Level,
+      Level: values.Level,
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1651,7 +1651,7 @@ Level: levellookup.levelfield,
       toast.error(response.payload.Msg);
     }
   };
-                      // const [level, setLevel] = useState('2');
+  // const [level, setLevel] = useState('2');
 
   const deploymentInitialValue = {
     code: Data.Code,
@@ -1792,7 +1792,7 @@ Level: levellookup.levelfield,
   };
 
   //Approvals
-    const FndeploymentApprovals = async (values, resetForm, del) => {
+  const FndeploymentApprovals = async (values, resetForm, del) => {
     console.log(values, "--values");
 
     const idata = {
@@ -1802,12 +1802,12 @@ Level: levellookup.levelfield,
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
       Monday: deploymentData.MondayShift === "Y" ? true : false,
-     Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
-    Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
-    Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
-    Friday: deploymentData.FridayShift === "Y" ? true : false,
-    Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
-    Sunday: deploymentData.SundayShift === "Y" ? true : false,
+      Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
+      Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
+      Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
+      Friday: deploymentData.FridayShift === "Y" ? true : false,
+      Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+      Sunday: deploymentData.SundayShift === "Y" ? true : false,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -1822,7 +1822,7 @@ Level: levellookup.levelfield,
       ProjectCode: deploymentData.ProjectCode || "",
       ProjectName: deploymentData.ProjectName || "",
       DefaultFunction: deploymentData.DefaultFunction,
-       FunctionCode: deploymentData.FunctionCode || "",
+      FunctionCode: deploymentData.FunctionCode || "",
       FunctionName: deploymentData.FunctionName || "",
       ShiftID: deploymentData.ShiftID || 0,
       ShiftCode: deploymentData.ShiftCode || "",
@@ -1862,7 +1862,7 @@ Level: levellookup.levelfield,
     category: "",
     RenewalDate: "",
     personal: false,
-    renewal :false
+    renewal: false
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -1886,10 +1886,10 @@ Level: levellookup.levelfield,
             : empLoaData.category == "Certificate "
               ? "CT"
               : empLoaData.category == "Warranty "
-              ? "WT"
-              :empLoaData.category == "Others "
-              ? "OS"
-              :"",
+                ? "WT"
+                : empLoaData.category == "Others "
+                  ? "OS"
+                  : "",
     RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
@@ -1916,7 +1916,7 @@ Level: levellookup.levelfield,
       Sortorder: "0",
       CompanyID,
     };
-    //
+
     console.log("save" + JSON.stringify(idata));
 
     const response = await dispatch(
@@ -3322,7 +3322,7 @@ Level: levellookup.levelfield,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -3343,7 +3343,7 @@ Level: levellookup.levelfield,
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                   </Box>
@@ -3383,7 +3383,7 @@ Level: levellookup.levelfield,
                         // label="No of levels to approve"
                         sx={{
                           width: "400px",
-                           marginLeft: "30px",
+                          marginLeft: "30px",
                           //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
@@ -3444,7 +3444,7 @@ Level: levellookup.levelfield,
    label="No of levels to approve(minimum level of 3)"
                         // label="Minimum managers to approve (0 for all managers)"
                         sx={{
-                         width: "400px",
+                          width: "400px",
                           marginLeft: "47px",
                           //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
@@ -3488,8 +3488,8 @@ Level: levellookup.levelfield,
                         as={Checkbox}
                       />
                       <FormLabel focused={false}>Auto Approval</FormLabel>
-                    
-                    <TextField
+
+                      <TextField
                         fullWidth
                         variant="standard"
                         type="number"
@@ -3515,27 +3515,27 @@ Level: levellookup.levelfield,
                           },
                         }}
                         focused
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textAlign: "right" },
+                        //   },
+                        // }}
+
                         InputProps={{
                           inputProps: {
                             style: { textAlign: "right" },
+                            min: 1,
+                            max: 3,
                           },
                         }}
-
-  //                        InputProps={{
-  //   inputProps: {
-  //     style: { textAlign: "right" },
-  //     min: 1,
-  //     max: 3,
-  //   },
-  // }}
-  // onKeyDown={(e) => {
-  //   const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-  //   if (!allowedKeys.includes(e.key)) {
-  //     e.preventDefault();
-  //   }
-  // }}
+                        onKeyDown={(e) => {
+                          const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+                          if (!allowedKeys.includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
-                      </Box>
+                    </Box>
 
                     {/* Second AutoRejectionYesOrNo Checkbox */}
                     <Box display="flex" alignItems="center" gap={1}>
@@ -3548,8 +3548,8 @@ Level: levellookup.levelfield,
                         as={Checkbox}
                       />
                       <FormLabel focused={false}>Auto Rejection</FormLabel>
-                    
-                    <TextField
+
+                      <TextField
                         fullWidth
                         variant="standard"
                         type="number"
@@ -4779,8 +4779,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="hrmanager"
                               id="hrmanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="HR Manager"
@@ -4792,8 +4792,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="financemanager"
                               id="financemanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="Finance Manager"
@@ -4805,8 +4805,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="projectmanager"
                               id="projectmanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="Project Manager"
@@ -4818,8 +4818,8 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="facilitymanager"
                               id="facilitymanager"
-                              // onChange={handleChange}
-                              // onBlur={handleBlur}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
                             />
                           }
                           label="Facility Manager"
