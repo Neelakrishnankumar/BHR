@@ -43,6 +43,7 @@
     "react-toastify": "^9.1.1",
     "resizer": "^0.0.6",
     "sweetalert2": "^11.7.1",
+    "trinity": "file:",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5",
     "yup": "^0.32.11"

@@ -11,7 +11,11 @@ import {
   InputLabel,
   MenuItem,
   LinearProgress,
+  Paper,
+  Breadcrumbs,
+  Tooltip,
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Formik, Field } from "formik";
@@ -31,6 +35,7 @@ import { LoadingButton } from "@mui/lab";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { OverheadSchema } from "../../Security/validation";
+import { formGap } from "../../../ui-components/utils";
 const Editoverhead = () => {
   const dispatch = useDispatch();
   const params = useParams();
@@ -128,30 +133,55 @@ const Editoverhead = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Typography variant="h3">Over Head</Typography>
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+
+                >
+                   Over Head
+                </Typography>
+
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-        <Box display="flex">
-          <IconButton color="error" onClick={() => fnLogOut("Close")}>
-            <ResetTvIcon />
-          </IconButton>
-          <IconButton>
-            <LogoutOutlinedIcon
-              color="error"
-              onClick={() => fnLogOut("Logout")}
-            />
-          </IconButton>
-        </Box>
-      </Box>
+      </Paper>
 
       {!getLoading ? (
-        <Box m="20px">
+       
+       <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={initialValue}
             onSubmit={(values, { resetForm }) => {
@@ -173,25 +203,24 @@ const Editoverhead = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <FormControl
-                    fullWidth
-                    sx={{ gridColumn: "span 2", gap: "40px" }}
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
                   >
+                 
                     <TextField
                       name="code"
                       type="text"
                       id="code"
                       label="Code"
-                      variant="filled"
+                     variant="standard"
                       focused
                       value={values.code}
                       onBlur={handleBlur}
@@ -205,7 +234,7 @@ const Editoverhead = () => {
                       type="text"
                       id="name"
                       label="Name"
-                      variant="filled"
+                     variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
@@ -216,8 +245,8 @@ const Editoverhead = () => {
                     />
                     <FormControl
                       focused
-                      variant="filled"
-                      sx={{ gridColumn: "span 2" }}
+                     variant="standard"
+                      //sx={{ gridColumn: "span 2" }}
                     >
                       <InputLabel id="frequency">Frequency</InputLabel>
                       <Select
@@ -242,8 +271,8 @@ const Editoverhead = () => {
 
                     <FormControl
                       focused
-                      variant="filled"
-                      sx={{ gridColumn: "span 2" }}
+                     variant="standard"
+                      //sx={{ gridColumn: "span 2" }}
                     >
                       <InputLabel id="productCost">Type</InputLabel>
                       <Select
@@ -258,11 +287,12 @@ const Editoverhead = () => {
                         <MenuItem value="E">Cost Of Employee</MenuItem>
                         <MenuItem value="M">Cost Of Material</MenuItem>
                         <MenuItem value="F">Cost Of Fixed Assets</MenuItem>
+                        <MenuItem value="S">Salary</MenuItem>
                       </Select>
                     </FormControl>
-                  </FormControl>
+                 
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1}  gap={formGap}>
                   <LoadingButton
                     variant="contained"
                     color="secondary"
@@ -273,7 +303,7 @@ const Editoverhead = () => {
                   </LoadingButton>
                   <Button
                     variant="contained"
-                    color="error"
+                    color="warning"
                     onClick={() => {
                       navigate("/Apps/TR085/Over Head");
                     }}
@@ -284,7 +314,7 @@ const Editoverhead = () => {
               </form>
             )}
           </Formik>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

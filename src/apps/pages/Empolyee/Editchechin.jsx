@@ -74,7 +74,6 @@ const Editcheckin = () => {
     borderRadius: "5px",
     backgroundColor: "#EDEDED",
   };
-console.log(data.EmployeeName);
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split('T')[0];
   const InitialValue = {
@@ -360,58 +359,7 @@ console.log(data.EmployeeName);
                     },
                   }}
                 >
-                  {/* <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
-                    <FormControl
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={selectEMPLOYEELookupData.EMPLOYEERecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Employee Id"
-                        variant="standard"
-                        value={selectEMPLOYEELookupData.EMPLOYEElookupCode}
-                        focused
-                        required
-                        inputProps={{ tabIndex: "-1" }}
-                      />
-                      {mode == "A" ? (
-                        <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("EMPLOYEE")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                      ) : (
-                        <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("EMPLOYEE")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                      )}
-
-                      <TextField
-                        id="outlined-basic"
-                        label=""
-                        variant="standard"
-                        value={selectEMPLOYEELookupData.EMPLOYEElookupDesc}
-                        fullWidth
-                        inputProps={{ tabIndex: "-1" }}
-                        focused
-                      />
-                    </FormControl>
-                  </FormControl> */}
+            
                   <FormControl
                     sx={{
                      
@@ -455,94 +403,10 @@ console.log(data.EmployeeName);
 
                       }}
                       
-                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
-                  {/* <FormControl
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <TextField
-                      id="outlined-basic"
-                      label="ID"
-                      variant="standard"
-                      value={locationLookup.locationRecordID}
-                      focused
-                      sx={{ display: "none" }}
-                    />
-                    <TextField
-                      id="outlined-basic"
-                      label="Location"
-                      variant="standard"
-                      value={locationLookup.locationCode}
-                      focused
-                      required
-                      DESIGN
-                      inputProps={{ tabIndex: "-1" }}
-                    />
-                  
-                    <IconButton
-                      sx={{ height: 40, width: 40 }}
-                      onClick={() => handleShow("LOCATION")}
-                    >
-                      <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                    </IconButton>
-                    <TextField
-                      id="outlined-basic"
-                      label=""
-                      variant="standard"
-                      value={locationLookup.locationName}
-                      fullWidth
-                      focused
-                      inputProps={{ tabIndex: "-1" }}
-                    />
-                  </FormControl> */}                 
-                  {/* <FormControl
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <TextField
-                      id="outlined-basic"
-                      label="ID"
-                      variant="standard"
-                      value={gateLookup.gateRecordID}
-                      focused
-                      sx={{ display: "none" }}
-                    />
-                    <TextField
-                      id="outlined-basic"
-                      label="Gate"
-                      variant="standard"
-                      value={gateLookup.gateCode}
-                      focused
-                      required
-                      DESIGN
-                      inputProps={{ tabIndex: "-1" }}
-                    />
-                    <IconButton
-                      sx={{ height: 40, width: 40 }}
-                      onClick={() => handleShow("GATE")}
-                    >
-                      <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                    </IconButton>
-                    <TextField
-                      id="outlined-basic"
-                      label=""
-                      variant="standard"
-                      value={gateLookup.gateName}
-                      fullWidth
-                      focused
-                      inputProps={{ tabIndex: "-1" }}
-                    />
-                  </FormControl> */}
+             
                    <FormControl
                     sx={{
                      
@@ -562,7 +426,7 @@ console.log(data.EmployeeName);
                       }}
                       //  onChange={handleSelectionFunctionname}
                       // defaultValue={selectedFunctionName}
-                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
+                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
                       //url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate} AND CompanyID=${CompId}","Any":""}}`}
 
                     />
@@ -581,7 +445,7 @@ console.log(data.EmployeeName);
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     sx={{background: "#f5f5f5" }}
-                    inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    // inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
 
                   <FormControl

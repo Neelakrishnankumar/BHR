@@ -488,10 +488,14 @@ const LeaveType = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                       >
-                        <MenuItem value="S">Sick</MenuItem>
+                         
+                        <MenuItem value="M">Medical</MenuItem>
+                        <MenuItem value="G">General</MenuItem>
+                        <MenuItem value="O">Others</MenuItem>
+                        {/* <MenuItem value="S">Sick</MenuItem>
                         <MenuItem value="M">Medical</MenuItem>
                         <MenuItem value="A">Approvel</MenuItem>
-                        <MenuItem value="C">Casual</MenuItem>
+                        <MenuItem value="C">Casual</MenuItem> */}
 
                       </Select>
                     </FormControl>

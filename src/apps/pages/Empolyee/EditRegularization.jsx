@@ -13,7 +13,9 @@ import {
   MenuItem,
   Select,
   LinearProgress,
+  Paper,Breadcrumbs
 } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
@@ -29,8 +31,10 @@ import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { formGap } from "../../../ui-components/utils";
 
-const Regularization = ({ onCancel }) => {
+ const Regularization = ({ onCancel }) => {
+  //const Regularization = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
   let params = useParams();
@@ -50,30 +54,23 @@ const Regularization = ({ onCancel }) => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
  
 const[getParams, setGetparams] = useState("");
-
+const currentDate = new Date().toISOString().split('T')[0];
 const location = useLocation();
 const passedData = location.state;  // Get the passed data
-console.log(passedData, "--passedData");
-  // const regfn = (params) => {
-  //   console.log(params, "--geting inputs");
-  // }
+
+
   useEffect(() => {
-    // regfn({ params });
-    //
-    
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
 
-  console.log(params.id, "--params.id");
-  // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
-    EmployeeID: passedData.EmployeeID,
+    EmployeeID: params.id,
     Name: passedData.Name,
     CheckInDate: passedData.CheckInDate,
     CheckOutDate: passedData.CheckOutDate,
-   
-    MonthDate: passedData.MonthDate,
+    MonthDate:currentDate,
+    //MonthDate: passedData.MonthDate,
     EmplyeeCheckInDateTime: passedData.EmplyeeCheckInDateTime,
     EmplyeeCheckOutDateTime: passedData.EmplyeeCheckOutDateTime,
     Status: passedData.Status === "Present" 
@@ -87,73 +84,61 @@ console.log(passedData, "--passedData");
             : passedData.Status === "Leave"
             ? "L"
             : "",
-   
-    // employeeid: data.EmployeeID,
-    // date: data.RegularizationDate,
-    // employeeName: data.EmployeeName,
-    // checkindate: data.CheckInDate,
-    // checkoutdate: data.CheckOutDate,
-    // checkintime: data.CheckInTime,
-    // checkouttime: data.CheckOutTime,
-    // remarks: data.Remarks,
-    // status: data.Status,
-    // CheckInDate: data.CheckInDate,
-    // newcheckoutdate: data.NewCheckOutDate,
-    // newcheckintime: data.NewCheckInTime,
-    // newcheckouttime: data.NewCheckOutTime,
-    // newstatus: data.NewStatus,
   };
+
+
 
   const Fnsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
-    let action =
-      mode === "A" && !del
-        ? "insert"
-        : mode === "E" && del
-        ? "harddelete"
-        : "update";
-    var isCheck = "N";
+    // let action =
+    //   mode === "A" && !del
+    //     ? "insert"
+    //     : mode === "E" && del
+    //     ? "harddelete"
+    //     : "update";
+     var isCheck = "N";
+    let action = "insert"; 
     if (values.disable == true) {
       isCheck = "Y";
     }
 
     const idata = {
-      // RecordID: recID,
-      RecordID: values.EmployeeID,
-      // EmployeeID: values.passedData,
-      Name: values.Name,
-      CheckInDate: values.CheckInDate,
-      CheckOutDate: values.CheckOutDate,
-    
-      MonthDate: values.MonthDate,
-      EmplyeeCheckInDateTime: values.EmplyeeCheckInDateTime,
-      EmplyeeCheckOutDateTime: values.EmplyeeCheckOutDateTime,
+      RecordID: recID,
+      //RecordID: values.EmployeeID,
+      EmployeeID:params.id,
+      RegularizationDate: values.MonthDate,
+      //Name: values.Name,
+      CheckInDate:passedData.CheckInDate,
+      CheckOutDate: passedData.CheckOutDate,  
+      //MonthDate: values.MonthDate,
+      // CheckInTime: values.EmplyeeCheckInDateTime,
+      // CheckOutTime: values.EmplyeeCheckOutDateTime,
+      // CheckInTime: getTimeFromSplit(passedData.EmplyeeCheckInDateTime),
+      // CheckOutTime: getTimeFromSplit(passedData.EmplyeeCheckOutDateTime),
+      CheckInTime: passedData.EmplyeeCheckInDateTime?.split(" / ")[1] || "", 
+      CheckOutTime: passedData.EmplyeeCheckOutDateTime?.split(" / ")[1] || "", 
       Status: values.Status,
-     
-      // EmployeeID: values.employeeid,
-      // RegularizationDate: values.date,
-     
-      // CheckInDate: values.checkindate,
-      // CheckOutDate: values.checkoutdate,
-      // CheckInTime: values.checkintime,
-      // CheckOutTime: values.checkouttime,
-      // Remarks: values.remarks,
-      // Status: values.status,
-      // CheckInDate: values.CheckInDate,
-      // NewCheckOutDate: values.newcheckoutdate,
-      // NewCheckInTime: values.newcheckintime,
-      // NewCheckOutTime: values.newcheckouttime,
-      // NewStatus: values.newstatus,
+      Remarks: values.remarks,
+      NewCheckInDate : values.CheckInDate,
+      NewCheckOutDate: values.CheckOutDate,
+      NewCheckInTime:values.EmplyeeCheckInDateTime
+      ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
+      : "",
+      NewCheckOutTime:  values.EmplyeeCheckOutDateTime
+      ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
+      : "",
+      NewStatus: values.Status,
     };
-console.log(idata, "-idata");
+    console.log(idata, "-idata");
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/TR219/Regularization");
+      //navigate("/Apps/TR219/Regularization");
     } else {
       toast.error(response.payload.Msg);
     }
   };
+  
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
     //     if(props === 'Logout'){
@@ -186,35 +171,59 @@ console.log(idata, "-idata");
     });
   };
 
+
   
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
       <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Typography variant="h3">Regularization</Typography>
-        </Box>
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
+      <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+
+                >
+                  Regularization
+                </Typography>
+
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          </Box>
+      </Paper>
 
       {!getLoading ? (
-        <Box m="20px">
+       <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -237,17 +246,19 @@ console.log(idata, "-idata");
               <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
-                  gridTemplateColumns="repeat(4 , minMax(0,1fr))"
-                  gap="30px"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
                   sx={{
                     "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
                   <TextField
                     fullWidth
-                    variant="filled"
+                    variant="standard"
                     type="text"
                     id="Name"
                     name="Name"
@@ -255,7 +266,7 @@ console.log(idata, "-idata");
                     label="EmployeeName"
                     focused
                     inputProps={{ readOnly: true }}
-                    sx={{ gridColumn: "span 2" }}
+                   //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -263,7 +274,7 @@ console.log(idata, "-idata");
                     type="date"
                     id="MonthDate"
                     label="Date"
-                    variant="filled"
+                    variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.MonthDate}
@@ -271,7 +282,7 @@ console.log(idata, "-idata");
                     onChange={handleChange}
                     error={!!touched.MonthDate && !!errors.MonthDate}
                     helperText={touched.MonthDate && errors.MonthDate}
-                    sx={{ gridColumn: "span 2" }}
+                   //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -279,7 +290,7 @@ console.log(idata, "-idata");
                     type="date"
                     id="CheckInDate"
                     label="Check In Date"
-                    variant="filled"
+                    variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.CheckInDate}
@@ -287,7 +298,7 @@ console.log(idata, "-idata");
                     onChange={handleChange}
                     error={!!touched.CheckInDate && !!errors.CheckInDate}
                     helperText={touched.CheckInDate && errors.CheckInDate}
-                    sx={{ gridColumn: "span 2" }}
+                   //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -297,12 +308,17 @@ console.log(idata, "-idata");
                     label="Check In Time"
                       inputFormat="HH:mm"
                     // inputFormat="HH:mm:aa"
-                    variant="filled"
-                    value={values.EmplyeeCheckInDateTime}
+                    variant="standard"
+                    //value={values.EmplyeeCheckInDateTime}
+                    value={
+                      values.EmplyeeCheckInDateTime
+                        ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
+                        : ""
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2" }}
+                   //sx={{ gridColumn: "span 2" }}
                   />
 
                   <TextField
@@ -310,7 +326,7 @@ console.log(idata, "-idata");
                     type="date"
                     id="CheckOutDate"
                     label="Check Out Date"
-                    variant="filled"
+                    variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.CheckOutDate}
@@ -318,7 +334,7 @@ console.log(idata, "-idata");
                     onChange={handleChange}
                     error={!!touched.CheckOutDate && !!errors.CheckOutDate}
                     helperText={touched.CheckOutDate && errors.CheckOutDate}
-                    sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                    //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
                   />
 
                   <TextField
@@ -327,18 +343,23 @@ console.log(idata, "-idata");
                     id="EmplyeeCheckOutDateTime"
                     label="Check Out Time"
                     inputFormat="HH:mm:aa"
-                    value={values.EmplyeeCheckOutDateTime}
+                    //value={values.EmplyeeCheckOutDateTime}
+                    value={
+                      values.EmplyeeCheckOutDateTime
+                        ? values.EmplyeeCheckOutDateTime.split(" / ")[1] // gets "09:02"
+                        : ""
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
-                    variant="filled"
+                    //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                    variant="standard"
                   />
 
                   <FormControl
                     focused
-                    variant="filled"
-                    sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
+                    variant="standard"
+                    //sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
                   >
                     <InputLabel id="Status">Status</InputLabel>
                     <Select
@@ -356,7 +377,23 @@ console.log(idata, "-idata");
                       <MenuItem value="L">Leave</MenuItem>
                     </Select>
                   </FormControl>
-
+                  <TextField
+                    fullWidth
+                   variant="standard"
+                    type="text"
+                    label="Remarks"
+                    value={values.remarks}
+                    id="remarks"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="remarks"
+                    error={!!touched.remarks && !!errors.remarks}
+                    helperText={touched.remarks && errors.remarks}
+                    focused
+                    required
+                    inputProps={{ maxLength: 90 }}
+                   
+                  />
                   {/* <Box>
                       <Field
                         //  size="small"
@@ -372,7 +409,7 @@ console.log(idata, "-idata");
                       <FormLabel focused={false}>Disable</FormLabel>
                     </Box> */}
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px" gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap={2}>
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -409,12 +446,13 @@ console.log(idata, "-idata");
                   <Button
                     color="warning"
                     variant="contained"
-                    onClick={onCancel}
-                    // onClick={() => {
-                    //   navigate(
-                    //     `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
-                    //   );
-                    // }}
+                    //onClick={onCancel}
+                    onClick={() => {
+                      // navigate(
+                      //   `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${recID}/E/M`
+                      // );
+                      navigate(-1);
+                    }}
                   >
                     Cancel
                   </Button>
@@ -422,7 +460,7 @@ console.log(idata, "-idata");
               </form>
             )}
           </Formik>
-        </Box>
+        </Paper>
       ) : (
         false
       )}

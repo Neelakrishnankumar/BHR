@@ -60,6 +60,10 @@ const Holidaylist = () => {
     if (recID && mode === "E") {
       dispatch(getFetchData({ accessID, get: "get", recID }));
     }
+    else{
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+
+    }
   }, [location.key, recID, mode]);
 
   // Ensure data is available before rendering form

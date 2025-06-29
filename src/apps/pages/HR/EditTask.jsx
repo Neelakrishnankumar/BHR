@@ -145,28 +145,39 @@ const Edittask = () => {
         }
 
     };
+
+  
+
     const handleSaveButtonClick = async (action) => {
 
-        console.log("---Saving rows:", rows);
-        console.log(funMode, "--finding action");
-        ;
 
-
-
-
+       
         const idata = rows.map((row, index) => {
+            var formatted = null;
+            if(row.ProjectPlanedDate && !isNaN(new Date(row.ProjectPlanedDate))){
+                //format Date
+                const date = new Date(row.ProjectPlanedDate);
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed
+                const dd = String(date.getDate()).padStart(2, "0");
+              
+               formatted = `${yyyy}-${mm}-${dd}`;
+                console.log(formatted); // Output: 2025-04-30
+            }
 
+       
 
-            return {
+        return {
                 RecordID: row.RecordID,
                 TaskID: recID,
                 RoleID: row.TaskDetailRoleID,
-                // RoleName: row.RoleName,
                 Effort: row.TaskDetailEffort,
                 Unit: row.TaskDetailUnit,
+                ProjectPlanedDate: formatted,
                 CompanyID,
 
             };
+
         });
 
 
@@ -236,6 +247,7 @@ const Edittask = () => {
                 RoleName: "",
                 TaskDetailEffort: 0,
                 TaskDetailUnit: "",
+                ProjectPlanedDate: "",
                 isNew: true,
 
             };
@@ -276,6 +288,7 @@ const Edittask = () => {
                 RoleName: "",
                 TaskDetailEffort: 0,
                 TaskDetailUnit: "",
+                ProjectPlanedDate: "",
                 isNew: true,
             };
 
@@ -295,22 +308,19 @@ const Edittask = () => {
         }));
     };
     const handleSave = (id, params, action) => () => {
-        console.log("-----Step1: Local save called");
-
         const rowToSave = params?.row;
         if (!rowToSave) {
             toast.error("Row not found.");
             return;
         }
-        const isNew = rowToSave.isNew;
-        console.log("Row to save:", rowToSave);
-        setRows((prev) =>
-            prev.map((row) =>
-                row.RecordID === id
-                    ? { ...row, ...rowToSave, isNew: isNew && action !== "delete", isUpdated: !isNew }
-                    : row
-            )
-        );
+        // const isNew = rowToSave.isNew;
+        // setRows((prev) =>
+        //     prev.map((row) =>
+        //         row.RecordID === id
+        //             ? { ...row, ...rowToSave, isNew: isNew && action !== "delete", isUpdated: !isNew }
+        //             : row
+        //     )
+        // );
 
         // Update row mode to view
         setRowModesModel((prev) => ({
@@ -366,13 +376,8 @@ const Edittask = () => {
     };
 
     const processRowUpdate = (newRow, oldRow) => {
-        console.log("------inside processrowupdate");
-        console.log(newRow, "--find newRow");
-
         const isNew = !oldRow?.RecordID;
         const updatedRow = { ...newRow, isNew };
-        // updatedRow.ManualItem = selectedProductName;
-        // updatedRow.ItemRecordID = selectedProductid;
 
         updatedRow.TaskDetailRoleID = Roleid;
         updatedRow.RoleName = RoleName;
@@ -391,9 +396,11 @@ const Edittask = () => {
             }
             return [...prev, updatedRow];
         });
-
-        const params = { row: updatedRow };
-        handleSave(updatedRow.RecordID, params, funMode);
+        setSelectedRoleOptions(null);
+        setRoleid("");
+        setRoleName("");
+  
+        // handleSave(updatedRow.RecordID, params, funMode);
 
         return updatedRow;
     };
@@ -426,8 +433,8 @@ const Edittask = () => {
         const response = await dispatch(postData({ accessID, action, idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
-
+            //navigate(`/Apps/Secondarylistview/TR235/Task/${OPRecid}`);
+            navigate(-1);
         } else {
             toast.error(response.payload.Msg);
         }
@@ -502,7 +509,8 @@ const Edittask = () => {
             width: "100",
             align: "left",
             headerAlign: "center",
-            hide: true
+            hide: true,
+            editable: true,
         },
 
         {
@@ -529,7 +537,7 @@ const Edittask = () => {
                             value={selectedRoleOptions}
                             onChange={(newValue) => handleRoleChange(newValue, params.row.RecordID)}
                             defaultValue={params.row.Role}
-                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2097","ScreenName":"Role","Filter":"","Any":""}}`}
+                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Role","Filter":"parentID=${CompanyID}","Any":""}}`}
                         />
                     );
                 }
@@ -540,12 +548,12 @@ const Edittask = () => {
         {
             field: "TaskDetailUnit",
             headerName: "Unit",
-            width: 300,
+            width: 200,
             align: "left",
             headerAlign: "center",
             editable: true,
             type: 'singleSelect',
-            valueOptions: ['Days', 'Month'],
+            valueOptions: ["Hours",'Days', 'Month',],
             renderCell: (params) => {
                 const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
                 if (isInEditMode) {
@@ -557,6 +565,7 @@ const Edittask = () => {
                             fullWidth
                             IconComponent={(props) => <ArrowDropDownIcon {...props} />} // Ensures dropdown icon is visible
                         >
+                            <MenuItem value="Hours">Hours</MenuItem>
                             <MenuItem value="Days">Days</MenuItem>
                             <MenuItem value="Months">Months</MenuItem>
                         </Select>
@@ -565,7 +574,14 @@ const Edittask = () => {
                 return params.value || "";
             },
         },
-
+        {
+            // field: 'TaskDetailTargetDate',
+            field: 'ProjectPlanedDate',
+            headerName: 'Project Plan date',
+            type: 'date',
+            width: 180,
+            editable: true,
+          },
 
         {
             field: "actions",
@@ -623,7 +639,7 @@ const Edittask = () => {
                 ];
             }
 
-        },
+        },Productautocomplete
     ];
 
     function EditToolbar() {

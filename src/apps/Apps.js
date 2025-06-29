@@ -3,7 +3,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import Sidebars from "../ui-components/global/Sidebar";
 import React from "react";
-import Changepassword from "./Security/Changepassword";
+//import Changepassword from "./Security/Changepassword";
 import Listview from "./pages/Listview";
 import { useParams } from "react-router-dom";
 import Productdetail from "./pages/Inventory/Productdetail";
@@ -79,9 +79,7 @@ import Editlocation from "./pages/Masters/Editlocation";
 import Editgate from "./pages/Masters/Editgate";
 import Editbin from "./pages/Masters/Editbin";
 import Editproject from "./pages/HR/Editproject";
-
 import EditDailytask from "./pages/Empolyee/Editdailytask";
-
 import EditDailyHourstask from "./pages/Empolyee/EditDailyHourTask";
 import Editfixedassettype from "./pages/FinanceModule/Editfixedassettype";
 import Editfixedassetcategory from "./pages/FinanceModule/Editfixedassetcategory";
@@ -94,20 +92,18 @@ import EditEmpfinance from "./pages/Empolyee/EditEmpfinance";
 import Editpostshipment from "./pages/Trascation/Editpostshipment";
 import Editjobworkcategory from "./pages/Inventory/Editjobworkcategory";
 import EditJobwork from "./pages/Inventory/EditJobwork";
-
-
 import Editinspection from "./pages/Inventory/Editinspection";
 import Editpurchaseorder from "./pages/FinanceModule/Editpurchaseorder";
- import Editpurchaseorderopen from "./pages/FinanceModule/Editpurchaseorderopen";
+import Editpurchaseorderopen from "./pages/FinanceModule/Editpurchaseorderopen";
 import { PDFViewer } from "@react-pdf/renderer";
 import MyDocument from "./pages/pdf/pdf";
 import EditPurchaseOrderParameter from "./pages/Masters/EditrPurchaseOrderParameter";
 // import Editcostingnew from "./pages/FinanceModule/Editproductcosting";
- import EditSalaryComponent from "./pages/Empolyee/EditSalaryComponent";
- import EditSatuaryComponent from "./pages/Empolyee/EditSatuaryComponent";
- import EditemployeePayroll from "./pages/Empolyee/EditemployeePayroll";
- import Editrunpayroll from "./pages/Empolyee/Editrunpayroll";
- import LeaveType from "./pages/HR/Editleavetype";
+import EditSalaryComponent from "./pages/Empolyee/EditSalaryComponent";
+import EditSatuaryComponent from "./pages/Empolyee/EditSatuaryComponent";
+import EditemployeePayroll from "./pages/Empolyee/EditemployeePayroll";
+import Editrunpayroll from "./pages/Empolyee/Editrunpayroll";
+import LeaveType from "./pages/HR/Editleavetype";
 import Holidaylist from "./pages/HR/Editholidaylist";
 import Regularization from "./pages/Empolyee/EditRegularization";
 import EditRole from "./pages/HR/Editrole";
@@ -120,6 +116,23 @@ import Edittask from "./pages/HR/EditTask";
 import EditmileWeightage from "./pages/HR/Editweightage";
 import Settings from "./Security/Settings";
 import Editvendor from "./pages/HR/Editvendor";
+import Configuration from "./Security/Configuration";
+import Changepass from "./Security/Changepassword";
+import Editrequests from "./pages/Empolyee/Editrequest";
+import Editapprovals from "./pages/Empolyee/EditApproval";
+import EditSprint from "./pages/HR/EditSprint";
+import EditAttendance from "./pages/Empolyee/EditAttendance";
+import EditAttendanceHistory from "./pages/Empolyee/EditAttendaceHistory";
+import EditTimeSheet from "./pages/Empolyee/EditTimeSheet";
+import EditTimeDailytask from "./pages/Empolyee/EditTimeDailyTask";
+import Editshift from "./pages/HR/Editshift";
+import Edittimesheetreport from "./pages/Empolyee/Edittimesheetreport";
+import EditdailyAttendance from "./pages/Empolyee/EditDailyattendance";
+import Biometricconfiguration from "./Security/Biometric";
+import Geoconfiguration from "./Security/Geoconfig";
+import Approval from "./Security/Approval";
+import EditContractsin from "./pages/HR/ContractsIN";
+import EditContractsout from "./pages/HR/ContractsOut";
 
 
 
@@ -139,20 +152,22 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-                <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={ <EditemployeePayroll/>}/>
-                <Route path="/:accessID/:screenName/Editrunpayroll" element={ <Editrunpayroll/>}/>
-                <Route path="/:accessID/Regularization/:id/" element={ <Regularization/>}/>
-               
-               <Route
+                  <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={<EditemployeePayroll />} />
+                  <Route path="/:accessID/:screenName/EditEmployee Request/:id/:Mode" element={<Editrequests />} />
+                  <Route path="/:accessID/:screenName/EditApproval/:id/:Mode" element={<Editapprovals />} />
+                  <Route path="/:accessID/:screenName/Editrunpayroll" element={<Editrunpayroll />} />
+                  <Route path="/:accessID/Regularization/:id/" element={<Regularization />} />
+
+                  <Route
                     path="/:accessID/:screenName/EditSalary Component/:id/:Mode"
-                    element={<EditSalaryComponent/>}
+                    element={<EditSalaryComponent />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditSatuary Component/:id/:Mode"
                     element={<EditSatuaryComponent />}
                   />
                   <Route path="/:accessID/:screenName" element={<Listview />} />
-                  <Route path="/pdf" element={<MyDocument/> }/>
+                  <Route path="/pdf" element={<MyDocument />} />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number/:Desc/all-bom/:bomproductid/EditList of BOM/:id/:mode"
                     element={<Editbom />}
@@ -176,13 +191,13 @@ function App() {
                     path="/:accessID/:screenName/EditHoliday List/:id/:Mode"
                     element={<Holidaylist />}
                   />
-                  
-                
-                   <Route
+
+
+                  <Route
                     path="/:accessID/:screenName/EditJobwork Category/:id/:Mode"
                     element={<Editjobworkcategory />}
                   />
-                   <Route
+                  <Route
                     path="/:accessID/:screenName/EditJob-Work/:id/:Mode"
                     element={<EditJobwork />}
                   />
@@ -194,9 +209,11 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:invoiceType/EditLocal Invoice/:id/:Mode"
                     element={<Editlocalinvoce />}
                   />
-                  <Route path="/changepassword" element={<Changepassword />} />
-                {/* Settings */}
-                <Route path="/settings" element={<Settings />} />
+                  <Route path="/change Password" element={<Changepass />} />
+                  {/* Settings */}
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/configuration" element={<Configuration />} />
+
 
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"
@@ -252,9 +269,9 @@ function App() {
                     path="/:accessID/:screenName/EditEmployees/:id/:Mode"
                     element={<Editemployee />}
                   />
-                  <Route 
-                  path="/:accessID/:screenName/EditEmpfinance entry/E/:RecordID/:Name" 
-                  element={ <EditEmpfinance/>}/>
+                  <Route
+                    path="/:accessID/:screenName/EditEmpfinance entry/E/:RecordID/:Name"
+                    element={<EditEmpfinance />} />
                   <Route
                     path="/:accessID/:screenName/EditUOM/:id/:Mode"
                     element={<Edituom />}
@@ -307,7 +324,7 @@ function App() {
                     path="/:accessID/:screenName/EditGrade/:id/:Mode"
                     element={<Editgrade />}
                   />
-                    <Route
+                  <Route
                     path="/:accessID/:screenName/EditPaurchase Order Parameter/:id/:Mode"
                     element={<EditPurchaseOrderParameter />}
                   />
@@ -323,7 +340,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:invFilter/EditProforma Invoice/:id/:Mode"
                     element={<Editproformainvoice />}
                   />
-                   <Route
+                  <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:invFilter/Editpostshipment/:id/:Mode"
                     element={<Editpostshipment />}
                   />
@@ -421,7 +438,7 @@ function App() {
                     path="/:accessID/:screenName/EditLeather Packing List/:id/:Mode"
                     element={<Editpacking />}
                   />
-                   <Route
+                  <Route
                     path="/:accessID/Production Card/EditInspection Form/:id"
                     element={<Editinspection />}
                   />
@@ -429,11 +446,11 @@ function App() {
                     path="/:accessID/:screenName/EditOver Head/:id/:Mode"
                     element={<Editoverhead />}
                   />
-                   <Route
+                  <Route
                     path="/:accessID/:screenName/EditIndent Purchase Order/:id/:Mode"
                     element={<Editpurchaseorder />}
                   />
-                      <Route
+                  <Route
                     path="/:accessID/:screenName/EditOpen Purchase Order/:id/:Mode"
                     element={<Editpurchaseorderopen />}
                   />
@@ -469,7 +486,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenNamePre/:filtertype/:prdNumber/:secondaryAccessID/:screenName/PC/:remarkType/:remarkDec"
                     element={<ListviewSecondary />}
                   />
-                  <Route 
+                  <Route
                     path="/Secondarylistview/:accessID/:screenName/:productID/:productDescription/:customerID/costing-product/:bomVersion/:bomID/:secondaryAccessID"
                     element={<ListviewSecondary />}
                   />
@@ -477,11 +494,11 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:productID/:productDescription/:customerID/costing-product/:bomVersion/:bomID/:secondaryAccessID/:FirstLeatherID/EditCosting/:id/:Mode"
                     element={<Editcosting />}
                   />
-                   <Route
+                  <Route
                     path="/TR140/Customer-Product/EditCustomer-Product/:id/:Mode"
                     element={<Editcosting />}
                   />
-                   {/* <Route
+                  {/* <Route
                     path="/TR140/Customer-Product/EditCustomer-Product-new/:id/:Mode"
                     element={<Editcostingnew />}
                   /> */}
@@ -540,17 +557,17 @@ function App() {
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck Out/:id/:Mode"
-                    element={<EditEmpCheckout/>}
-                  />
-                     <Route
-                    path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck In/:id/:Mode"
-                    element={<EditEmpCheckin/>}
+                    element={<EditEmpCheckout />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLocation/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck In/:id/:Mode"
+                    element={<EditEmpCheckin />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditLocation/:id/:Mode"
                     element={<Editlocation />}
                   />
-                  <Route path="/Secondarylistview/:accessID/:screenName/:Type/stock-care-by" element={ <Editstockcare/>}/>
+                  <Route path="/Secondarylistview/:accessID/:screenName/:Type/stock-care-by" element={<Editstockcare />} />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:parentID/EditGate Entry/:id/:Mode"
                     element={<Editgate />}
@@ -583,36 +600,81 @@ function App() {
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
                     element={<Editproject />}
                   />
-              
-                <Route
-                   path="/:accessID/:screenName/EditRole/:id/:Mode"
+
+                  <Route
+                    path="/:accessID/:screenName/EditRole/:id/:Mode"
                     element={<EditRole />}
                   />
                   <Route
-                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditMilestones/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditMilestones/:id/:Mode"
                     element={<EditMilestones />}
                   />
                   <Route
-                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditStages/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditStages/:id/:Mode"
                     element={<Editoperation />}
                   />
                   <Route
-                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditActivities/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditActivities/:id/:Mode"
                     element={<EditActivities />}
                   />
-                   <Route
-                   path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTask/:id/:Mode"
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditTask/:id/:Mode"
                     element={<Edittask />}
                   />
                   <Route
-                   path="/:accessID/:screenName/Editweightage/:Type/:id/:Mode"
+                    path="/:accessID/:screenName/Editweightage/:Type/:id/:Mode"
                     element={<EditmileWeightage />}
                   />
                   <Route
-                   path="/:accessID/:screenName/EditVendor/:id/:Mode"
+                    path="/:accessID/:screenName/EditParty/:id/:Mode"
                     element={<Editvendor />}
                   />
-                   {/* <Route
+
+                  <Route
+                    path="/:accessID/Editattendance"
+                    element={<EditAttendance />}
+                  />
+                  <Route
+                    path="/:accessID/Editdailyattendance"
+                    element={<EditdailyAttendance />}
+                  />
+                  <Route
+                    path="/:accessID/EditAttendanceHistory"
+                    element={<EditAttendanceHistory />}
+                  />
+                  <Route
+                    path="/:accessID/EditTimeSheet"
+                    element={<EditTimeSheet />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditTimeDailytask/:id"
+                    element={<EditTimeDailytask />} />
+
+                  {/* Sprint */}
+
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditSprint/:id/:Mode"
+                    element={<EditSprint />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditShift/:id/:Mode"
+                    element={<Editshift />}
+                  />
+                  <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
+                  <Route path="/Biometric" element={<Biometricconfiguration />} />
+                                        <Route path="/Approval" element={<Approval />} />
+
+                  <Route
+                    path="/:accessID/:screenName/EditContracts In/:id/:Mode"
+                    element={<EditContractsin />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
+                    element={<EditContractsout/>}
+                  />
+                  {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
+
+                  {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
                     element={<EditStageweightage />}
                   />

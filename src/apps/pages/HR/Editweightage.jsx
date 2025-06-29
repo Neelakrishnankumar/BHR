@@ -90,7 +90,7 @@ const EditmileWeightage = () => {
         const fetchData = async () => {
             try {
                 const response = await dispatch(
-                    getFetchWeightage({ Type: type, HeaderID: recID })
+                    getFetchWeightage({ Type: type, HeaderID: recID,CompanyID })
                 );
 
                 if (

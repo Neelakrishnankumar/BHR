@@ -11,6 +11,7 @@ import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
 import BalanceIcon from '@mui/icons-material/Balance';
+
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -34,6 +35,14 @@ import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import { StockProcessApi } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from '@mui/icons-material/OpenInBrowserOutlined';
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
+import Person2Icon from '@mui/icons-material/Person2';
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import SwipeRightIcon from "@mui/icons-material/SwipeRight";
+import UTurnLeftIcon from "@mui/icons-material/UTurnLeft";
+import UTurnRightIcon from "@mui/icons-material/UTurnRight";
+
 import Swal from "sweetalert2";
 const initialState = {
   rowData: [],
@@ -476,6 +485,7 @@ export const fetchListview =
         AccessID == "TR079" ||
         AccessID == "TR080" ||
         AccessID == "TR032" ||
+       AccessID == "TR128" ||
         AccessID == "TR087"
       ) {
         if (AccessID == "TR080") {
@@ -490,7 +500,7 @@ export const fetchListview =
             year +
             "'";
         }
-        if (AccessID != "TR080") {
+        if (AccessID != "TR080" ) {
           filter = "parentID= " + filter + "'";
           // console.log("---3---",filter);
         }
@@ -532,7 +542,11 @@ export const fetchListview =
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
-         AccessID != "TR022"  
+        // AccessID != "TR273" &&
+        
+        AccessID != "TR262" &&
+         AccessID != "TR022" 
+
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -549,24 +563,18 @@ export const fetchListview =
         AccessID == "TR105" ||
         AccessID == "TR002" ||
         AccessID == "TR086" ||
-
         AccessID == "TR091" 
+       
       
         
       ) {
         // filter = filter;
         filter = `CompanyID=${CompId}`;
       }
+     if(AccessID === "TR262"){
+      filter = "ProjectID=" + `'${filter}'`;
      
-      // if (
-      //   AccessID === "TR133" ||
-      //   AccessID === "TR233" ||
-      //   AccessID === "TR236" ||
-      //   AccessID === "TR234" ||
-      //   AccessID === "TR235"
-      // ) {
-      //   filter = `CompanyID=${CompId}&ParentID=${ParentID}`;
-      // }
+     }
       
 
     }
@@ -578,7 +586,7 @@ export const fetchListview =
         // "ScreenName": screenName,
         AccessID: AccessID,
         ScreenName: screenName,
-        Filter: filter,
+        Filter: AccessID == "TR128" ? `parentID=${CompId}`: AccessID == "TR273" ? "Type = 'CI'":AccessID == "TR274" ? "Type = 'CO'":filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,
@@ -1723,7 +1731,9 @@ export const fetchListview =
                 );
               },
             };
-          }else if (
+          }
+          
+          else if (
             AccessID == "TR236" || AccessID == "TR234" || AccessID == "TR235"|| AccessID=="TR233"
           ) {
             obj = {
@@ -1944,7 +1954,25 @@ export const fetchListview =
                                 
                                 EmpName:params.row.Name
                               }
-                            : AccessID === "TR132"
+                            :
+                            AccessID === "TR128"
+                            ? {
+                                LocationName: params.row.Name,
+                                CompanyName: params.row.CompanyName,
+                              } :
+                              AccessID === "TR127"
+                            ? {
+                                GateName: params.row.Name,
+                                LocationName: params.row.LocationName,
+                                CompanyName: params.row.CompanyName,
+                              }
+                            :
+                            AccessID === "TR257"
+                            ? {
+                                
+                                EmpName:params.row.Name
+                              }
+                              :AccessID === "TR132"
                             ? {
 
                               proName:params.row.ProjectName,Date:params.row.Date,EmpName:params.row.EmployeeName,Locname:params.row.LocationName
@@ -2164,34 +2192,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {/* {AccessID == "TR236" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Activities">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                     {AccessID == "TR236" ? (
-                      <Link
-                      to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Activity Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )} */}
+                   
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
@@ -2221,7 +2222,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                   
+{/*                    
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
@@ -2254,6 +2255,23 @@ export const fetchListview =
                     ) : (
                       false
                     )}
+   {AccessID == "TR133" ? (
+                      <Link
+                      to={`/Apps/Secondarylistview/TR262/Sprint/${params.row.RecordID}`}
+                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,projectName:params.row.Name}}
+                      >
+                        <Tooltip title="Sprint">
+                          <IconButton color="info" size="small">
+                            < ListAltOutlinedIcon />
+                          </IconButton>
+                          
+                         
+                        </Tooltip>
+                      </Link>
+                    ) : (
+                      false
+                    )} */}
+
                       {AccessID == "TR136" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}
@@ -2300,14 +2318,15 @@ export const fetchListview =
                       <Box>
                         <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                        >
+                        state={{Locationname:params.row.Name}}
+                       >
                           <Tooltip title="Gate">
                             <IconButton color="info" size="small">
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <Link
+                        {/* <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
                         >
                           <Tooltip title="Bin">
@@ -2315,7 +2334,7 @@ export const fetchListview =
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
-                        </Link>
+                        </Link> */}
                       </Box>
                     ) : (
                       false
@@ -3493,6 +3512,60 @@ export const fetchListview =
                         </Link>
                       ) : AccessID == "TR027" ? (
                         <Box>
+
+{/* {accessID === "TR245" && params.row.ELeave == "Y" ? (
+          <Tooltip title="Contracts In">
+            <IconButton
+              // color= {params.row.LeaveStatus == "Y" ? "warning" :"info"}
+                color= "info"
+              size="small"
+              onClick={() =>
+                navigate(
+                  `/Apps/Secondarylistview/TR248/leave-approval/${params.row.RecordID}`,
+                  {
+                    state: {
+                      EmpLeaveOTOnduty: params.row.Name
+                    }
+                  }
+                )
+              }
+            >
+           <RedoIcon />
+           
+            </IconButton>
+          </Tooltip>
+          
+        // ) : (
+        //   <div></div>
+        // )}
+      ) : null}
+
+        {accessID === "TR245" && params.row.ELeave == "Y" ? (
+          <Tooltip title="Contracts Out">
+            <IconButton
+              // color= {params.row.LeaveStatus == "Y" ? "warning" :"info"}
+              color= "info"
+              size="small"
+              onClick={() =>
+                navigate(
+                  `/Apps/Secondarylistview/TR248/leave-approval/${params.row.RecordID}`,
+                  {
+                    state: {
+                      EmpLeaveOTOnduty: params.row.Name
+                    }
+                  }
+                )
+              }
+            >
+              <UndoIcon />
+           
+            </IconButton>
+          </Tooltip>
+          
+        // ) : (
+        //   <div></div>
+        // )}
+      ) : null} */}
                         <Link
                           to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
                           state={{EmpName:params.row.Name}}
@@ -3641,6 +3714,77 @@ export const fetchListview =
             listviewData.Data.columns.splice(2, 0, obj);
           }
 
+          if (AccessID == "TR027") {
+            const obj = {
+              field: "Type",
+              headerName: "Type",
+              headerAlign: "center",
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
+              minWidth: 60,
+              maxWidth: 60,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Stack direction="row">
+                      <Link>
+                      {params.row.EmpType === "Contracts In" && (
+  <Tooltip title="Contracts In">
+    <IconButton color="info">
+      <RedoIcon />
+    </IconButton>
+  </Tooltip>
+)}
+
+                      </Link>
+                 
+                      <Link>
+                      {params.row.EmpType === "Contracts Out" && (
+                        <Tooltip title="Contracts Out">
+                          <IconButton color="info">
+                            <UndoIcon />
+                          </IconButton>
+                        </Tooltip>
+                        )}
+                      </Link>
+                      
+              
+                  </Stack>
+                );
+              },
+            };
+            listviewData.Data.columns.splice(2, 0, obj);
+          }
+           if (AccessID == "TR027") {
+            const obj = {
+              field: "emp",
+              headerName: " ",
+              headerAlign: "center",
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
+              minWidth: 40,
+              maxWidth: 40,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Stack direction="row">
+                   
+                      <Link>
+                        <Tooltip title="Employee">
+                          <IconButton color="info">
+                            <Person2Icon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+              
+                  </Stack>
+                );
+              },
+            };
+            listviewData.Data.columns.splice(2, 0, obj);
+          }
           listviewData.Data.columns.push(obj);
 
           dispatch(

@@ -79,19 +79,13 @@ const Listview = () => {
   var invoice;
   const mailData = useSelector((state) => state.listviewApi.mailData);
   const searchLoading = useSelector((state) => state.formApi.searchLoading);
-  console.log(
-    "🚀 ~ file: Secondarylistview.jsx:122 ~ ListviewSecondary ~ mailData:",
-    mailData
-  );
+
   const open = useSelector((state) => state.listviewApi.mailOpen);
   var screenName = params.screenName;
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
   const year = sessionStorage.getItem("year");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
-  console.log(
-    "🚀 ~ file: Listview.jsx:55 ~ Listview ~ listViewData:",
-    listViewData
-  );
+
   const loading = useSelector((state) => state.listviewApi.loading);
   const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
     useSelector((state) => state.screenRights.data);
@@ -328,6 +322,8 @@ const [productFilter,setProductFilter] = useState();
             false
           ) : accessID == "TR135" ? (
             false
+          ): accessID == "TR257" ? (
+            false
           ) : YearFlag == "true" ? (
             // UGA_ADD ? (
 
@@ -465,7 +461,7 @@ const [productFilter,setProductFilter] = useState();
             </IconButton>
           </Paper>:false}
           <Box m="5px">
-        <Box
+          <Box
           m="5px 0 0 0"
           padding={2}
           height={dataGridHeight}
@@ -498,7 +494,7 @@ const [productFilter,setProductFilter] = useState();
               color: "", // Color for odd rows
             },
             "& .even-row": {
-              backgroundColor: "#D3D3D3",
+              backgroundColor: "#d0edec",
               color: "", // Color for even rows
             },
           }}
@@ -533,7 +529,8 @@ const [productFilter,setProductFilter] = useState();
               Toolbar: CustomToolbar,
             }}
           />
-        </Box> </Box>
+        </Box> 
+        </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
@@ -800,23 +797,23 @@ const [productFilter,setProductFilter] = useState();
             />
           </Box>
         ) 
-        : accessID == "TR133" ? (
+        : accessID == "TR275" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-            <Chip
+            {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
-            />
+            /> */}
              <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
             />
-             <Chip
+             {/* <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label="List of Milestone"
               variant="outlined"
-            />
+            /> */}
           </Box>
        )
        : (
