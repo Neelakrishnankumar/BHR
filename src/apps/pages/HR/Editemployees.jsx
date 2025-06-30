@@ -1205,7 +1205,7 @@ const Editemployee = () => {
     }
   };
 
-  const selectCellRowDataMGR = ({ rowData, mode, field, setFieldValue }) => {
+  const selectCellRowDataMGR = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editmanager.jsx:178 ~ selectCellRowDataMGR ~ rowData:",
       rowData
@@ -1219,12 +1219,13 @@ const Editemployee = () => {
       SetDesignationLookup(null);
       setFunEmpRecID("");
       setLevelLookup({
-        levelfield: ""
+        levelfield: "",
+           hrmanager: "",
+    financemanager: "",
+    projectmanager: "",
+    facilitymanager: "",
       })
-      setFieldValue("hrmanager", false);
-      setFieldValue("financemanager", false);
-      setFieldValue("projectmanager", false);
-      setFieldValue("facilitymanager", false);
+
     } else {
       console.log(rowData, "--rowData");
       if (field == "action") {
@@ -1233,20 +1234,16 @@ const Editemployee = () => {
           DesignationID: rowData.DesignationID,
           Code: rowData.EmployeeCode,
           Name: rowData.EmployeeName,
-          // desRecordID: rowData.DesignationID,
-          // desCode: rowData.EmployeeCode,
-          // desName: rowData.EmployeeName,
-          // ManagerID: rowData.EmployeeID,
         });
         setLevelLookup({
           levelfield: rowData.Level,
+            hrmanager: rowData.HrManager == "Y" ? true : false,
+    financemanager: rowData.FinanceManager == "Y" ? true : false,
+    projectmanager: rowData.ProjectManager == "Y" ? true : false,
+    facilitymanager: rowData.FacilityManager == "Y" ? true : false,
         });
         setFunMgrRecID(rowData.RecordID);
         console.log(LeaveCondata, "--LeaveCondata");
-        setFieldValue("hrmanager", rowData.HrManager == "Y");
-        setFieldValue("financemanager", rowData.FinanceManager == "Y" ? true : false);
-        setFieldValue("projectmanager", rowData.ProjectManager == "Y");
-        setFieldValue("facilitymanager", rowData.FacilityManager == "Y");
       }
     }
   };
@@ -1564,7 +1561,11 @@ const Editemployee = () => {
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
   const [levellookup, setLevelLookup] = useState({
-    levelfield: ""
+    levelfield: "",
+    hrmanager: "",
+    financemanager: "",
+    projectmanager: "",
+    facilitymanager: "",
   });
   const managerInitialValue = {
     code: Data.Code,
@@ -1586,10 +1587,10 @@ Level: levellookup.levelfield,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-    hrmanager: false,
-    financemanager: false,
-    projectmanager: false,
-    facilitymanager: false,
+    hrmanager: levellookup.hrmanager,
+    financemanager: levellookup.financemanager,
+    projectmanager: levellookup.projectmanager,
+    facilitymanager: levellookup.facilitymanager,
     //   hrmanager: Data.HrManager === "Y",
     // financemanager: Data.FinanceManager === "Y",
     // projectmanager: Data.ProjectManager === "Y",
@@ -4778,9 +4779,10 @@ Level: levellookup.levelfield,
                               as={Checkbox}
                               type="checkbox"
                               name="hrmanager"
+                               checked={values.hrmanager}
                               id="hrmanager"
-                            // onChange={handleChange}
-                            // onBlur={handleBlur}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             />
                           }
                           label="HR Manager"
@@ -4792,8 +4794,9 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="financemanager"
                               id="financemanager"
-                            // onChange={handleChange}
-                            // onBlur={handleBlur}
+                               checked={values.financemanager}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             />
                           }
                           label="Finance Manager"
@@ -4805,8 +4808,9 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="projectmanager"
                               id="projectmanager"
-                            // onChange={handleChange}
-                            // onBlur={handleBlur}
+                              checked={values.projectmanager}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             />
                           }
                           label="Project Manager"
@@ -4818,8 +4822,9 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="facilitymanager"
                               id="facilitymanager"
-                            // onChange={handleChange}
-                            // onBlur={handleBlur}
+                               checked={values.facilitymanager}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             />
                           }
                           label="Facility Manager"
