@@ -1413,7 +1413,7 @@ const EditTimeSheet = () => {
                     id="Employee"
                     value={empData}
                     onChange={handleSelectionEmployeeChange}
-                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
+                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2116","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                   />
                   {/* <FormControlLabel
                     control={
