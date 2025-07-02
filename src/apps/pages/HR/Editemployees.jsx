@@ -1841,9 +1841,9 @@ Level: levellookup.levelfield,
       Vertical: values.Vertical === true ? "Y" : "N",
       HorizontalMimNo: values.HorizontalMimNo,
       VerticalMimNo: values.VerticalMimNo,
-      AutoApprovalYesOrNo: values.AutoApprovalYesOrNo,
+      AutoApprovalYesOrNo: values.AutoApprovalYesOrNo === true ? "Y" : "N",
       ApprovelTolerance: values.ApprovelTolerance,
-      AutoRejectionYesOrNo: values.AutoRejectionYesOrNo,
+      AutoRejectionYesOrNo: values.AutoRejectionYesOrNo === true ? "Y" : "N",
       RejectionTolerance: values.RejectionTolerance,
     };
 
