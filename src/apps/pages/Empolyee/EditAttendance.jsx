@@ -180,11 +180,36 @@ const EditAttendance = () => {
     if (newValue) {
       setempData(newValue);
       console.log(newValue.RecordID, "--selectedproductid");
+
+
+
     } else {
       setempData(null);
     }
     setUseCurrentEmp(false)
   };
+
+  let employeeFilter = `CompanyID='${companyID}'`;
+if (proData) {
+  employeeFilter += ` AND ProjectID='${proData.RecordID}' GROUP BY RecordID`;
+}
+if (!proData) {
+  employeeFilter = `CompanyID='${companyID}' GROUP BY RecordID`;
+}
+
+const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+  Query: {
+    AccessID: "2024", // or "2101" if you're using EMPLOYEETEAMS
+    ScreenName: "Employee",
+    Filter: employeeFilter,
+    Any: "",
+    CompId: ""
+  }
+}))}`;
+
+console.log(proData, "--find proData");
+
+
   const [useCurrentEmp, setUseCurrentEmp] = useState(false);
   return (
     <React.Fragment>
@@ -304,7 +329,7 @@ const EditAttendance = () => {
                       width: 200,
                     }}
                   />
-                   <Employeeautocomplete
+                   {/* <Employeeautocomplete
                      sx={{ width: 400 }}
                     name="ProName"
                     label="Project"
@@ -315,6 +340,7 @@ const EditAttendance = () => {
                     helperText={touched.ProName && errors.ProName}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${companyID}","Any":""}}`}
                   />
+                  
                      <Employeeautocomplete
                         sx={{ width: 400 }}
                         name="Employee"
@@ -323,9 +349,41 @@ const EditAttendance = () => {
                         value={empData}
                         onChange={handleSelectionEmployeeChange}
                         // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EmpId}","Any":"","CompId":${companyID}}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
+                       url={employeeUrl}
+                        // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${companyID}'","Any":"","CompId":""}}`}
 
-                     />
+                     /> */}
+
+
+                     <Employeeautocomplete
+  sx={{ width: 400 }}
+  name="ProName"
+  label="Project"
+  id="ProName"
+  value={proData}
+  onChange={handleSelectionProjectChange}
+  error={!!touched.ProName && !!errors.ProName}
+  helperText={touched.ProName && errors.ProName}
+  url={`${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+    Query: {
+      AccessID: "2054",
+      ScreenName: "Project",
+      Filter: `parentID=${companyID}`,
+      Any: ""
+    }
+  }))}`}
+/>
+
+<Employeeautocomplete
+  sx={{ width: 400 }}
+  name="Employee"
+  label="Employee"
+  id="Employee"
+  value={empData}
+  onChange={handleSelectionEmployeeChange}
+  url={employeeUrl}
+/>
+
                   {/* {isManager === "1" ? (
                     <>
                       <Employeeautocomplete

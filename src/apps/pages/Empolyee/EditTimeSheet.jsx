@@ -1414,7 +1414,7 @@ const EditTimeSheet = () => {
                     id="Employee"
                     value={empData}
                     onChange={handleSelectionEmployeeChange}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                   />
                   {/* <FormControlLabel
                     control={
