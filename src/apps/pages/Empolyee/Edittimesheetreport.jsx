@@ -95,6 +95,7 @@ const Edittimesheetreport = () => {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const listViewData = useSelector((state) => state.listviewApi.rowData);
     const listViewColumn = useSelector((state) => state.listviewApi.columnData);
+      const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     // const empAttendanceData = useSelector(
     //   (state) => state.formApi.empAttendanceData
     // );
@@ -513,6 +514,21 @@ const Edittimesheetreport = () => {
 
                                 <Box display="flex" alignItems="center" gap={2} sx={{ flexWrap: 'wrap', gridColumn: "span 2" }}>
                                     {/* {isManager == "1" && ( */}
+                                    <Box sx={{ minWidth: 250 }}>
+                                        <MultiFormikOptimizedAutocomplete
+                                            sx={{ width: "100%" }}
+                                            name="ProName"
+                                            label="Project"
+                                            id="ProName"
+                                            value={selectedPro}
+                                            onChange={(e, newValue) => {
+                                                setFieldValue("block", newValue);
+                                                setSelectedPro(newValue);
+                                            }}
+                                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                                        />
+                                    </Box>
+
                                         <Box sx={{ minWidth: 250 }}>
                                             <Productautocomplete
                                                 name="Employee"
@@ -527,25 +543,11 @@ const Edittimesheetreport = () => {
                                                 value={empData}
                                                 //disabled={isManager === "0"}
                                                 onChange={handleSelectionEmployeeChange}
-                                                url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
+                                                url={`${listViewurl}?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
                                             />
                                         </Box>
                                     {/* )} */}
-                                    <Box sx={{ minWidth: 250 }}>
-                                        <MultiFormikOptimizedAutocomplete
-                                            sx={{ width: "100%" }}
-                                            name="ProName"
-                                            label="Project"
-                                            id="ProName"
-                                            value={selectedPro}
-                                            onChange={(e, newValue) => {
-                                                setFieldValue("block", newValue);
-                                                setSelectedPro(newValue);
-                                            }}
-                                            url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
-                                        />
-                                    </Box>
-
+                                    
                                     {/* <FormControlLabel
                                         control={
                                             <Checkbox

@@ -65,7 +65,7 @@ const Editcheckout = () => {
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
-
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -364,7 +364,7 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Employee");
                           console.log(newValue.RecordID, "Employee RecordID");
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       {/* <TextField
                         id="outlined-basic"
@@ -464,7 +464,7 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Location");
                           console.log(newValue.RecordID, "Location RecordID");
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                   </FormControl>
                   <FormControl
@@ -529,7 +529,7 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Gate");
                           console.log(newValue.RecordID, "Gate RecordID");
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
                       />
 
 

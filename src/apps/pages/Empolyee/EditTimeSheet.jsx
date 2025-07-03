@@ -926,6 +926,7 @@ const EditTimeSheet = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewColumn = useSelector((state) => state.listviewApi.columnData);
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   useEffect(() => {
     dispatch(resetTrackingData());
   },[])
@@ -1413,7 +1414,7 @@ const EditTimeSheet = () => {
                     id="Employee"
                     value={empData}
                     onChange={handleSelectionEmployeeChange}
-                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
                   />
                   {/* <FormControlLabel
                     control={

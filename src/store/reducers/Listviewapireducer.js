@@ -1980,7 +1980,7 @@ export const fetchListview =
                               : AccessID === "TR123"
                               ? {
   
-                                EmpName:params.row.EmployeeName
+                                EmpName:params.row.Name
                                 }
                              
                               : AccessID === "TR134"

@@ -113,6 +113,7 @@ const Editrequests = () => {
   console.log(leavegridData,"leavegridData");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const data = useSelector((state) => state.formApi.Data);
   const [pageSize, setPageSize] = React.useState(10);
   const [error, setError] = useState('');
@@ -2973,7 +2974,7 @@ const Editrequests = () => {
                           }}
                           //  onChange={handleSelectionFunctionname}
                           // defaultValue={selectedFunctionName}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"","Any":""}}`}
                         />
                       </FormControl>
 
@@ -3600,7 +3601,7 @@ const Editrequests = () => {
                               SalaryCategory: newValue.SalaryCategory,
                             });
                           }}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D'","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D'","Any":""}}`}
                         />
                       </FormControl>
 
@@ -4122,7 +4123,7 @@ const Editrequests = () => {
                           });
                         }}
                         // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
                       />
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
@@ -5203,7 +5204,7 @@ const Editrequests = () => {
 
                                 });
                               }}
-                              url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                             />
                           </FormControl>
                         </FormControl>
@@ -5783,7 +5784,7 @@ const Editrequests = () => {
                             });
                           }}
                           // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                         />
                         {/* </Box> */}
                         <TextField
@@ -6840,7 +6841,7 @@ const Editrequests = () => {
 
                                 });
                               }}
-                              url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                             />
                           </FormControl>
                         </FormControl>

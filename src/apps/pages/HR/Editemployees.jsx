@@ -127,7 +127,9 @@ const Editemployee = () => {
   // console.log(Data, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
-
+const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+const baseApiUrl = useSelector((state) => state.globalurl.baseApiUrl);
+console.log("API URL:", baseApiUrl); 
   const state = location.state || {};
   console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -2454,7 +2456,7 @@ Level: levellookup.levelfield,
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth
@@ -4399,7 +4401,7 @@ Level: levellookup.levelfield,
                           }}
                           //  onChange={handleSelectionFunctionname}
                           // defaultValue={selectedFunctionName}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                         />
                         {/* <TextField
                           id="function"
@@ -4760,8 +4762,8 @@ Level: levellookup.levelfield,
       Name: newValue.Name,
     });
   }}
-  url="https://hr.beyondexs.com/api/ManagerLevelController.php"
-  payload={{
+ url={`${baseApiUrl}ManagerLevelController.php`}
+   payload={{
     EmployeeID: recID,
     Level: values.Level || 1,
     CompanyID: CompanyID
@@ -5080,7 +5082,7 @@ Level: levellookup.levelfield,
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                       {/* <TextField
                         id="outlined-basic"
@@ -5186,7 +5188,7 @@ Level: levellookup.levelfield,
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
                     <FormControl
@@ -5222,7 +5224,7 @@ Level: levellookup.levelfield,
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
                           }'","Any":""}}`}
                       />
 
@@ -5291,7 +5293,7 @@ Level: levellookup.levelfield,
                           console.log(newValue, "--newvalue function");
                           console.log(newValue.RecordID, "function RecordID");
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
  ='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
@@ -5321,7 +5323,7 @@ Level: levellookup.levelfield,
                           console.log(newValue, "--newvalue project");
                           console.log(newValue.RecordID, "project RecordID");
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
 
@@ -5594,7 +5596,7 @@ Level: levellookup.levelfield,
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"","Any":""}}`}
                       />
                     </FormControl>
 
@@ -6200,8 +6202,7 @@ Level: levellookup.levelfield,
                         <Box
                           display="flex"
                           justifyContent="end"
-                          padding={1}
-                          mt={29}
+                          padding={1}                          
                           gap={2}
                         >
                           <IconButton
@@ -6216,7 +6217,7 @@ Level: levellookup.levelfield,
                               type="file"
                               onChange={changeHandler}
                             />
-                            <PictureAsPdfOutlinedIcon fontSize="large" />
+                            <PictureAsPdfOutlinedIcon fontSize="small" />
                           </IconButton>
                           <Button
                             variant="contained"
@@ -6941,7 +6942,7 @@ Level: levellookup.levelfield,
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       {/* <SingleFormikOptimizedAutocomplete
                        
@@ -7664,7 +7665,7 @@ Level: levellookup.levelfield,
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       {/* <SingleFormikOptimizedAutocomplete
                        
@@ -8708,7 +8709,7 @@ Level: levellookup.levelfield,
                             //value={selectedProjectOptions}
                             //onChange={handleSelectionProjectname}
                             // defaultValue={selectedProjectName}
-                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 

@@ -54,6 +54,7 @@ const EditAttendance = () => {
   const EmpName = sessionStorage.getItem("EmpName");
   const EmpId = sessionStorage.getItem("EmpId");
   const companyID = sessionStorage.getItem("compID");
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   console.log("AttendanceData", AttendanceData);
@@ -312,7 +313,7 @@ const EditAttendance = () => {
                     onChange={handleSelectionProjectChange}
                     error={!!touched.ProName && !!errors.ProName}
                     helperText={touched.ProName && errors.ProName}
-                    url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${companyID}","Any":""}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${companyID}","Any":""}}`}
                   />
                      <Employeeautocomplete
                         sx={{ width: 400 }}
@@ -322,7 +323,7 @@ const EditAttendance = () => {
                         value={empData}
                         onChange={handleSelectionEmployeeChange}
                         // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EmpId}","Any":"","CompId":${companyID}}}`}
-                        url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
 
                      />
                   {/* {isManager === "1" ? (

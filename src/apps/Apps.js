@@ -555,9 +555,13 @@ function App() {
                     path="/:accessID/:screenName/EditCheck Out/:id/:Mode"
                     element={<Editcheckout />}
                   />
-                  <Route
+                  {/* <Route
                     path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck Out/:id/:Mode"
                     element={<EditEmpCheckout />}
+                  /> */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck Out/:id/:Mode"
+                    element={<Editcheckout />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:parentID/EditCheck In/:id/:Mode"

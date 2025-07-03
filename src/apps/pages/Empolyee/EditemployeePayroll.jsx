@@ -94,6 +94,7 @@ const EditemployeePayroll = () => {
 
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const [pageSize, setPageSize] = React.useState(10);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -2273,7 +2274,7 @@ const RegInitialValue = {
                           }}
                           //  onChange={handleSelectionFunctionname}
                           // defaultValue={selectedFunctionName}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"","Any":""}}`}
                         />
                       </FormControl>
 
@@ -2903,7 +2904,7 @@ const RegInitialValue = {
                               SalaryCategory: newValue.SalaryCategory,
                             });
                           }}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2082","ScreenName":"Allowances","Filter":"SalaryCategory='A'","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Allowances","Filter":"SalaryCategory='A'","Any":""}}`}
                         />
                         {/* <TextField
                           id="outlined-basic"
@@ -3345,7 +3346,7 @@ const RegInitialValue = {
                               SalaryCategory: newValue.SalaryCategory,
                             });
                           }}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D'","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D'","Any":""}}`}
                         />
                       </FormControl>
 
@@ -3782,7 +3783,7 @@ const RegInitialValue = {
 
                             });
                           }}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"","Any":""}}`}
                         />
 
                       </FormControl>
@@ -4593,7 +4594,7 @@ const RegInitialValue = {
 
                                 });
                               }}
-                              url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                             />
                           </FormControl>
                         </FormControl>
@@ -5478,7 +5479,7 @@ const RegInitialValue = {
                               }}
                               //  onChange={handleSelectionFunctionname}
                               // defaultValue={selectedFunctionName}
-                              url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
+                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
 
                             />
                           </FormControl>

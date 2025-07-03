@@ -60,6 +60,7 @@ const EditDailytask = () => {
   const loading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
@@ -303,7 +304,7 @@ console.log(statenew,"dailytask");
             >
              {`Employee(${statenew.EmpName})`}
             </Typography>
-            <Typography
+            {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -313,7 +314,7 @@ console.log(statenew,"dailytask");
               }}
             >
                {`Check In(${statenew.Locname})`}
-            </Typography>
+            </Typography> */}
             <Typography
               variant="h5"
               color="#0000D1"
@@ -447,7 +448,7 @@ console.log(statenew,"dailytask");
                       }}
                       //  onChange={handleSelectionFunctionname}
                       // defaultValue={selectedFunctionName}
-                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID=${CompanyID}","Any":""}}`}
 
                     />
 
@@ -475,7 +476,7 @@ console.log(statenew,"dailytask");
                       //value={selectedProjectOptions}
                       //onChange={handleSelectionProjectname}
                       // defaultValue={selectedProjectName}
-                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
 
                     />
 
@@ -559,7 +560,7 @@ console.log(statenew,"dailytask");
 
                         }}
 
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                       />
                     </Box>
                   ) : (

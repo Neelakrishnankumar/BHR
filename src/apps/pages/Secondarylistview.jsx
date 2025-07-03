@@ -2103,7 +2103,7 @@ else if (accessID == "TR234") {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
-             <Typography
+             {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -2112,7 +2112,7 @@ else if (accessID == "TR234") {
               }}
             >
                {`Employee(${state.EmpName})`}
-            </Typography>
+            </Typography> */}
             <Typography
               variant="h5"
               color="#0000D1"

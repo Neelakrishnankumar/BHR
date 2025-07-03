@@ -450,6 +450,7 @@ const Editproject = () => {
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
@@ -654,7 +655,7 @@ const Editproject = () => {
                         
                       }}
                       // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
-                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                      <Box>
                     
