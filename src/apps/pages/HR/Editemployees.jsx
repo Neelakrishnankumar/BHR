@@ -215,7 +215,6 @@ console.log("API URL:", baseApiUrl);
       : null,
     Code: Data.Code,
     Name: Data.Name,
-
     Password: Data.Password,
     Job: Data.Job,
     employeetype:
@@ -452,6 +451,7 @@ console.log("API URL:", baseApiUrl);
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
       DeptRecordID: values.Department.RecordID || 0,
+      DeptName: values.Department.Name || "",
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder,
@@ -1260,7 +1260,7 @@ console.log("API URL:", baseApiUrl);
       RecordID: funEmpRecID,
       EmployeeID: recID,
       FunctionsID: functionLookup ? functionLookup.RecordID : 0,
-
+      FunctionName: functionLookup? functionLookup.Name : "",
       // FunctionsID: functionLookup.funRecordID,
       CompanyID,
     };
@@ -1389,6 +1389,16 @@ console.log("API URL:", baseApiUrl);
               ? customerlookup.RecordID
               : 0
             : 0,
+            VendorName:
+        show == "8"
+          ? vendorlookup
+            ? vendorlookup.Name
+            : 0
+          : show == "11"
+            ? customerlookup
+              ? customerlookup.Name
+              : 0
+            : 0,
       Hsn: values.Hsn,
       Gst: values.Gst,
       Sgst: values.Sgst,
@@ -1419,7 +1429,7 @@ console.log("API URL:", baseApiUrl);
           )
         )
         : dispatch(
-          fetchExplorelitview(
+                    fetchExplorelitview(
             "TR244",
             "Contracts Out",
             `EmployeeID='${recID}' AND Customer='Y'`,
@@ -1517,6 +1527,7 @@ console.log("API URL:", baseApiUrl);
       Year: values.Year,
       EmployeeID: recID,
       LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+      LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
       TotalDays: Number(values.totaldays),
       AvailDays: Number(values.availableleave),
       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
@@ -1618,6 +1629,7 @@ Level: levellookup.levelfield,
       EmployeeID: recID,
       DesignationID: designationLookup.DesignationID || 0,
       ManagerID: designationLookup.RecordID || 0,
+      ManagerName: designationLookup.Name || "",
       CompanyID,
       HrManager: values.hrmanager == true ? "Y" : "N",
       FinanceManager: values.financemanager == true ? "Y" : "N",
@@ -1755,8 +1767,11 @@ Level: levellookup.levelfield,
       // Saturday: values.saturday === true ? "Y" : "N",
       // Sunday: values.sunday === true ? "Y" : "N",
       DesignationID: values.Designation.RecordID || 0,
+      DesignationName: values.Designation.Name || "",
       LocationID: values.location.RecordID || 0,
+      LocationName: values.location.Name || "",
       StoregatemasterID: values.gate.RecordID || 0,
+      StoregatemasterName: values.gate.Name || "",
       DefaultProject: values.project.RecordID || 0,
       ProjectCode: values.project.Code || "",
       ProjectName: values.project.Name || "",
@@ -2344,105 +2359,6 @@ Level: levellookup.levelfield,
                     )}
 
                     <FormControl sx={{ gap: formGap }}>
-                      {/* <TextField
-                          id="outlined-basic"
-                          label="ID"
-                          variant="standard"
-                          value={selectLookupData.lookupRecordid}
-                          focused
-                          sx={{ display: "none" }}
-                        />
-                        <FormControl
-                          sx={{
-                           
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          <TextField
-                            id="outlined-basic"
-                            label="Department"
-                            variant="standard"
-                            value={selectLookupData.lookupCode}
-                            focused
-                            required
-                            DE
-                            inputProps={{ tabIndex: "-1" }}
-                          />
-                          
-                          <IconButton
-                            sx={{ height: 40, width: 40 }}
-                            onClick={() => handleShow("DE")}
-                          >
-                            <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                          </IconButton>
-                          <TextField
-                            id="outlined-basic"
-                            label=""
-                            variant="standard"
-                            value={selectLookupData.lookupDesc}
-                            fullWidth
-                            focused
-                            inputProps={{ tabIndex: "-1" }}
-                          />
-                        </FormControl> */}
-
-                      {/* <FormControl
-                        focused
-                        variant="standard"
-                        sx={{ gridColumn: "span 2" }}
-                      >
-                        <InputLabel variant="filled" id="employeetype">
-                          {
-                            <span>
-                              Employee Type <span style={{ color: "red",marginBottom:"2px" }}>*</span>
-                            </span>
-                          }
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          label=""
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          value={values.employeetype}
-                          id="employeetype"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="employeetype"
-                          required
-                          focused
-                        >
-                          <MenuItem value="FH">Prohibition Period</MenuItem>
-                          <MenuItem value="SH">Permanent</MenuItem>
-                          <MenuItem value="N">Contractor</MenuItem>
-                        </Select>
-                      </FormControl> */}
-                      {/* <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={<span>Employee Type</span>}
-                        value={values.employeetype}
-                        id="employeetype"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="employeetype"
-                        required
-                        focused
-                        sx={{
-                          gridColumn: "span 2",
-                          // backgroundColor: "#ffffff",
-                          // "& .MuiInputBase-root": {
-                          //   backgroundColor: "",
-                          // },
-                        }}
-                      >
-                        <MenuItem value="PP">Prohibition Period</MenuItem>
-                        <MenuItem value="PM">Permanent</MenuItem>
-                        <MenuItem value="CT">Contractor</MenuItem>
-                      </TextField> */}
                       <Productautocomplete
                         sx={{ marginTop: "7px" }}
                         name="Department"
@@ -2547,24 +2463,6 @@ Level: levellookup.levelfield,
                         inputProps={{ maxLength: 90 }}
                       />
 
-                      {/* <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Comments"
-                        value={values.Comm}
-                        id="Comm"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                        rows={2}
-                      /> */}
                       <TextField
                         select
                         fullWidth
@@ -2651,99 +2549,6 @@ Level: levellookup.levelfield,
                           />
                         </Stack>
                       )}
-
-                      {/* <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Manager"
-                        value={values.Mgr}
-                        id="Mgr"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Mgr"
-                        error={!!touched.Mgr && !!errors.Mgr}
-                        helperText={touched.Mgr && errors.Mgr}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                       
-                      /> */}
-
-                      {/* <FormControl
-                        sx={{
-                          gridColumn: "span 2",
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        
-                       <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={designLookup.designlookupRecordid}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-
-                        <TextField
-                          id="outlined-basic"
-                          label="Designation"
-                          variant="standard"
-                          value={designLookup.designlookupCode}
-                          focused
-                          required
-                          DE
-                          inputProps={{tabIndex:"-1"}}
-                        />
-                        {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                      {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                      {/* </Button> */}
-                      {/* <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("DESIGN")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                        <TextField
-                          id="outlined-basic"
-                          label=""
-                          variant="standard"
-                          value={designLookup.designlookupDesc}
-                          fullWidth
-                          focused
-                          inputProps={{tabIndex:"-1"}}
-                        />
-                      </FormControl> */}
-
-                      {/* <TextField
-                          fullWidth
-                          variant="standard"
-                          type="number"
-                          label="Salary"
-                          value={values.Sal}
-                          id="Sal"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Sal"
-                          error={!!touched.Sal && !!errors.Sal}
-                          helperText={touched.Sal && errors.Sal}
-                          sx={{ background: "" }}
-                          focused
-                          onWheel={(e) => e.target.blur()}
-                          onInput={(e) => {
-                            e.target.value = Math.max(0, parseInt(e.target.value))
-                              .toString()
-                              .slice(0, 8);
-                          }}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                        /> */}
 
                       <TextField
                         name="joindate"

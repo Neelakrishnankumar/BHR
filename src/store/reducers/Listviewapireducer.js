@@ -2164,7 +2164,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {AccessID == "TR123" ? (
+                    {/* {AccessID == "TR123" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR132/DailyTask/${params.row.RecordID}`}
                         state={{EmpName:params.row.EmployeeName,Locname:params.row.LocationName,Date:params.row.CheckInDate}}
@@ -2177,8 +2177,8 @@ export const fetchListview =
                       </Link>
                     ) : (
                       false
-                    )}
-                    {AccessID == "TR132" ? (
+                    )} */}
+                    {/* {AccessID == "TR132" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR134/Daily Hour Task/${params.row.RecordID}/${params.row.parentID}`}
                         state={{EmpName:params.row.EmployeeName,Locname:params.row.LocationName,proName:params.row.ProjectName,EmployeeID:params.row.EmployeesID,Date:params.row.Date}}
@@ -2192,7 +2192,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                   
+                    */}
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
@@ -3576,7 +3576,7 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <Link
+                        {/* <Link
                         to={`/Apps/Secondarylistview/TR123/Check In/${params.row.RecordID}`}
                         state={{EmpName:params.row.Name,Locname:params.row.LocationName}}
                       >
@@ -3596,7 +3596,7 @@ export const fetchListview =
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
+                      </Link> */}
                       {/* <Link
                         to={`/Apps/TR027/Employees/EditEmpfinance entry/E/${params.row.RecordID}/${params.row.Name}`}
                       >

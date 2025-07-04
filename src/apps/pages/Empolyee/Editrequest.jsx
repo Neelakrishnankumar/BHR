@@ -369,6 +369,22 @@ const Editrequests = () => {
     Code: apiData.Code,
     Name: apiData.Name,
     Job: apiData.Job,
+     scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    prjmanager: Data.ProjectManager === "Y" ? true : false,
+    employeetype:
+      Data.EmpType === "Prohibition"
+        ? "PP"
+        : Data.EmpType === "Permanent"
+          ? "PM"
+          : Data.EmpType === "Contracts In"
+            ? "CI"
+            : Data.EmpType === "Contracts Out"
+              ? "CO"
+              : // : Data.EmpType === "Contractor"
+              // ? "CT"
+              "",
+    joindate: Data.DateOfJoin,
+    confirmdate: Data.DateOfConfirmation,
     // DeptRecordID:apiData.DeptRecordID,
     Comm: apiData.Comm,
     Mgr: apiData.Mgr,
@@ -401,12 +417,18 @@ const Editrequests = () => {
     var saveData = {
       RecordID: recID,
       DeptRecordID: values.Department.RecordID || 0,
+      DeptName: values.Department.Name || "",
       // DeptRecordID: selectLookupData.lookupRecordid,
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       Job: values.Job,
+      ScrumMaster: values.scrummaster === true ? "Y" : "N",
+      ProjectManager: values.prjmanager === true ? "Y" : "N",
+      EmpType: values.employeetype,
+      DateOfJoin: values.joindate,
+      DateOfConfirmation: values.confirmdate,
       Mgr: values.Mgr,
       Sal: values.Sal,
       Comm: values.Comm,
@@ -2855,9 +2877,8 @@ const Editrequests = () => {
             </Box>
           </Box>
         </Paper>
-        {show == "0" ? (
+        {/* {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-            {/* { <Header title="Products" subtitle="" /> } */}
 
             <Formik
               // onSubmit={handleFormSubmit}
@@ -2923,35 +2944,7 @@ const Editrequests = () => {
                           alignItems: "center",
                         }}
                       >
-                        {/* <TextField
-                            id="outlined-basic"
-                            label="Department"
-                            variant="standard"
-                            value={selectLookupData.lookupCode}
-                            focused
-                            required
-                            DE
-                            inputProps={{ tabIndex: "-1" }}
-                          /> */}
-                        {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                        {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                        {/* </Button> */}
-                        {/* <IconButton
-                            sx={{ height: 40, width: 40 }}
-                            onClick={() => handleShow("DE")}
-                          >
-                            <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                          </IconButton>
-                          <TextField
-                            id="outlined-basic"
-                            label=""
-                            variant="standard"
-                            value={selectLookupData.lookupDesc}
-                            fullWidth
-                            focused
-                            inputProps={{ tabIndex: "-1" }}
-                          /> */}
-
+                        
                         <Productautocomplete
                           sx={{ marginTop: "7px" }}
                           name="Department"
@@ -3069,25 +3062,7 @@ const Editrequests = () => {
                         focused
                         inputProps={{ maxLength: 90 }}
                       />
-                      {/* <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          label="Comments"
-                          value={values.Comm}
-                          id="Comm"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Comm"
-                          error={!!touched.Comm && !!errors.Comm}
-                          helperText={touched.Comm && errors.Comm}
-                          sx={{ gridColumn: "span 2" }}
-                          focused
-                          inputProps={{ maxLength: 90 }}
-                          multiline
-                          rows={2}
-                        /> */}
-
+                     
                       <FormControl>
                         <Box>
                           <Field
@@ -3127,71 +3102,6 @@ const Editrequests = () => {
                         </Stack>
                       )}
 
-                      {/* <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          label="Manager"
-                          value={values.Mgr}
-                          id="Mgr"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Mgr"
-                          error={!!touched.Mgr && !!errors.Mgr}
-                          helperText={touched.Mgr && errors.Mgr}
-                          sx={{ gridColumn: "span 2" }}
-                          focused
-                          inputProps={{ maxLength: 90 }}
-                         
-                        /> */}
-
-                      {/* <FormControl
-                          sx={{
-                            gridColumn: "span 2",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          
-                         <TextField
-                          id="outlined-basic"
-                          label="ID"
-                          variant="standard"
-                          value={designLookup.designlookupRecordid}
-                          focused
-                          sx={{ display: "none" }}
-                        />
-  
-                          <TextField
-                            id="outlined-basic"
-                            label="Designation"
-                            variant="standard"
-                            value={designLookup.designlookupCode}
-                            focused
-                            required
-                            DE
-                            inputProps={{tabIndex:"-1"}}
-                          />
-                          {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                      {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                      {/* </Button> */}
-                      {/* <IconButton
-                            sx={{ height: 40, width: 40 }}
-                            onClick={() => handleShow("DESIGN")}
-                          >
-                            <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                          </IconButton>
-                          <TextField
-                            id="outlined-basic"
-                            label=""
-                            variant="standard"
-                            value={designLookup.designlookupDesc}
-                            fullWidth
-                            focused
-                            inputProps={{tabIndex:"-1"}}
-                          />
-                        </FormControl> */}
                       <TextField
                         fullWidth
                         variant="standard"
@@ -3365,8 +3275,459 @@ const Editrequests = () => {
           </Paper>
         ) : (
           false
-        )}
+        )} */}
+ {show == "0" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            {/* { <Header title="Products" subtitle="" /> } */}
 
+            <Formik
+              // onSubmit={handleFormSubmit}
+              initialValues={initialValues}
+              enableReinitialize={true}
+              validationSchema={basicSchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                setFieldValue,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    {!isNonMobile && (
+                      <Stack
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "150px" }}
+                        />
+                      </Stack>
+                    )}
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <Productautocomplete
+                        sx={{ marginTop: "7px" }}
+                        name="Department"
+                        label="Department"
+                        variant="outlined"
+                        id="Department"
+                        value={values.Department}
+                        onChange={(newValue) => {
+                          setFieldValue("Department", newValue);
+                          console.log(newValue, "--newValue");
+                          console.log(newValue.RecordID, "////");
+                        }}
+                        //  onChange={handleSelectionFunctionname}
+                        // defaultValue={selectedFunctionName}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Code"
+                        value={values.Code}
+                        id="Code"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Code"
+                        // error={!!touched.Code && !!errors.Code}
+                        // helperText={touched.Code && errors.Code}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        required
+                        autoFocus
+                        inputProps={{ maxLength: 8 }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Name"
+                        value={values.Name}
+                        id="Name"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Name"
+                        // error={!!touched.Name && !!errors.Name}
+                        // helperText={touched.Name && errors.Name}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="Password"
+                        label="Password"
+                        value={values.Password}
+                        id="Password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Password"
+                        // error={!!touched.Password && !!errors.Password}
+                        // helperText={touched.Password && errors.Password}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Job"
+                        value={values.Job}
+                        id="Job"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Job"
+                        error={!!touched.Job && !!errors.Job}
+                        helperText={touched.Job && errors.Job}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                      />
+
+                      <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={<span>Employee Type</span>}
+                        value={values.employeetype}
+                        id="employeetype"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="employeetype"
+                        required
+                        focused
+                        sx={{
+                          gridColumn: "span 2",
+                          // backgroundColor: "#ffffff",
+                          // "& .MuiInputBase-root": {
+                          //   backgroundColor: "",
+                          // },
+                        }}
+                      >
+                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PM">Permanent</MenuItem>
+                        <MenuItem value="CI">Contracts In</MenuItem>
+                        <MenuItem value="CO">Contracts Out</MenuItem>
+                        {/* <MenuItem value="CT">Contractor</MenuItem> */}
+                      </TextField>
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="checkbox"
+                          id="checkbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="scrummaster"
+                          id="scrummaster"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Scrum Master"
+                        />
+
+                        <FormLabel focused={false}>Scrum Master</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="prjmanager"
+                          id="prjmanager"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Project Manager"
+                        />
+
+                        <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box>
+                    </FormControl>
+
+                    <FormControl sx={{ gap: formGap }}>
+                      {isNonMobile && (
+                        <Stack
+                          sx={{
+                            //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                            alignContent: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "relative",
+                            right: "0px",
+                          }}
+                        >
+                          <Avatar
+                            variant="rounded"
+                            src={userimg}
+                            sx={{ width: "200px", height: "155px" }}
+                          />
+                        </Stack>
+                      )}
+
+                      <TextField
+                        name="joindate"
+                        type="date"
+                        id="joindate"
+                        label="Date of Joining"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.joindate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.joindate && !!errors.joindate}
+                        helperText={touched.joindate && errors.joindate}
+                        sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        name="confirmdate"
+                        type="date"
+                        id="confirmdate"
+                        label="Date of Confirmation"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.confirmdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.confirmdate && !!errors.confirmdate}
+                        helperText={touched.confirmdate && errors.confirmdate}
+                        sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Comments"
+                        value={values.Comm}
+                        id="Comm"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Comm"
+                        error={!!touched.Comm && !!errors.Comm}
+                        helperText={touched.Comm && errors.Comm}
+                        // sx={{
+
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "", // Ensure the filled variant also has a white background
+                        //   }
+                        // }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      // rows={2}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        label="Sort Order"
+                        value={values.SortOrder}
+                        id="SortOrder"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="SortOrder"
+                        error={!!touched.SortOrder && !!errors.SortOrder}
+                        helperText={touched.SortOrder && errors.SortOrder}
+                        sx={{ background: "" }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        onInput={(e) => {
+                          e.target.value = Math.max(0, parseInt(e.target.value))
+                            .toString()
+                            .slice(0, 8);
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={loading}
+                        onClick={() => {
+                          fnSave(values, false);
+                        }}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Swal.fire({
+                            title: `Do you want Delete?`,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              fnSave(values, true);
+                            } else {
+                              return;
+                            }
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        disabled={true}
+                      //  color="error"
+                      >
+                        Delete
+                      </Button>
+                    )}
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        navigate(`/Apps/TR027/Employees`);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  <Popup
+                    title="Department"
+                    openPopup={openDEPopup}
+                    setOpenPopup={setOpenDEPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2010"
+                      screenName="Department"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Location"
+                    openPopup={openLOCATIONPopup}
+                    setOpenPopup={setOpenLOCATIONPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2051"
+                      screenName="Location"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Gate"
+                    openPopup={openGATEPopup}
+                    setOpenPopup={setOpenGATEPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2050"
+                      screenName="Gate"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                    // filterValue={locationLookup.locationRecordID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Designation"
+                    openPopup={opendesignPopup}
+                    setOpenPopup={setOpendesignPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2047"
+                      screenName="Designation"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
 
 
 

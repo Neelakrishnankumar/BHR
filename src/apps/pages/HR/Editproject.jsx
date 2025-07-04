@@ -495,6 +495,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
       Code: values.code,
       Name: values.name,
       ProjectIncharge:values.incharge.RecordID || 0,
+      ProjectInchargeName: values.incharge.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
       SortOrder: values.sortorder,
