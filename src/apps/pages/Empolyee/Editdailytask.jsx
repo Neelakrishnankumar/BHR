@@ -165,6 +165,20 @@ console.log(statenew,"dailytask");
     Comment: data.Comments,
     sortOrder: data.SortOrder,
     disable: data.Disable === "Y" ? false : true,
+     ProName: data.ProjectID
+      ? {
+          RecordID: data.ProjectID,
+          Code: data.ProjectCode,
+          Name: data.ProjectName,
+        }
+      : null, 
+       FunName: data.FunctionsID
+      ? {
+          RecordID: data.FunctionsID,
+          Code: data.FunctionCode,
+          Name: data.FunctionName,
+        }
+      : null, 
   };
 
   const DTSaveFn = async (values, del) => {
@@ -193,7 +207,9 @@ console.log(statenew,"dailytask");
       //EmployeeID: values.employee.RecordID || 0,
      
       FunctionsID: values.FunName.RecordID || 0,
+      FunctionName: values.FunName.Name || "s",
       ProjectID: values.ProName.RecordID || 0,
+      ProjectName: values.ProName.Name || "",
       EmployeesID: employeeLookup.empRecordID,
       //FunctionsID: functionLookup.funRecordID,
       //ProjectID: projectLookup.proRecordID,

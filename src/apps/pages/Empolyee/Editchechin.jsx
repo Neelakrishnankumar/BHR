@@ -83,6 +83,15 @@ const Editcheckin = () => {
     comment: data.CheckInComment,
     checkintime: data.CheckInTime,
     disable: data.WorkAtHome === "Y" ? false : true,
+     location: data.LocationRecID
+      ? { RecordID: data.LocationRecID, Name: data.LocationName }
+      : null,
+    gate: data.GateRecID
+      ? { RecordID: data.GateRecID, Name: data.GateName }
+      : null,
+       employee: data.EmployeeID
+      ? { RecordID: data.EmployeeID, Name: data.EmployeeName }
+      : null,
   };
 
   const Fnsave = async (values, del) => {
@@ -105,10 +114,13 @@ const Editcheckin = () => {
       CheckInComment: values.comment,
       //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
       EmployeeID:values.employee.RecordID || 0,
+      EmployeeName:values.employee.Name || "",
       WorkAtHome: isCheck,
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
       LocationRecID: values.location.RecordID || 0,
+      LocationName: values.location.Name || "",
+      GateName: values.gate.Name || 0,
       GateRecID: values.gate.RecordID || 0,
       CheckInTime: values.checkintime,
       Finyear,
