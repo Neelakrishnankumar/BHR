@@ -1459,7 +1459,7 @@ const EditTimeSheet = () => {
                     size="small"
                     onClick={() => handleClick(values)}
                   >
-                Filter
+                More
                   </Button>
                 
                   {/* <PictureAsPdfIcon
