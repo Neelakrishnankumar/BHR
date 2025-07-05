@@ -287,13 +287,15 @@ const Edittimesheetreport = () => {
 
     const currentMonthNumber = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
-    const AttInitialvalues = {
+  const AttInitialvalues = {
         checkbox1: true,
         checkbox5: true,
         checkbox2: false,
         checkbox3: false,
         checkbox4: false,
         checkbox6: false,
+        checkbox7: false,
+        checkbox8: false,
     };
     const [getData, setData] = useState("")
     const [useCurrentEmp, setUseCurrentEmp] = useState(false);
@@ -338,7 +340,9 @@ const Edittimesheetreport = () => {
             checkbox2: 'M',  // TaskSource
             checkbox3: 'SH',  // TaskSource
             checkbox5: 'AP',  // Status
-            checkbox6: 'RJ'   // Status
+            checkbox6: 'C',   // Status
+            checkbox7: 'AS,SH',
+            checkbox8: 'I',
         };
 
         let taskSourceValues = [];
@@ -352,7 +356,9 @@ const Edittimesheetreport = () => {
         // Group 2: Status (checkbox4-6)
         if (values.checkbox4) statusValues.push('N', 'SH', 'A'); // special handling for checkbox4
         if (values.checkbox5) statusValues.push('AP');
-        if (values.checkbox6) statusValues.push('RJ');
+        if (values.checkbox6) statusValues.push('C');
+        if (values.checkbox7) statusValues.push('AS','SH');
+        if (values.checkbox8) statusValues.push('I');
 
         let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID})`;
 
@@ -368,7 +374,6 @@ const Edittimesheetreport = () => {
         setData(data);
         dispatch(timeSheetreport({ data }));
     };
-
 
     console.log(getData, '---------------------GETDATA');
 
@@ -525,7 +530,7 @@ const Edittimesheetreport = () => {
                                                 setFieldValue("block", newValue);
                                                 setSelectedPro(newValue);
                                             }}
-                                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                         />
                                     </Box>
 
@@ -543,7 +548,7 @@ const Edittimesheetreport = () => {
                                                 value={empData}
                                                 //disabled={isManager === "0"}
                                                 onChange={handleSelectionEmployeeChange}
-                                                url={`${listViewurl}?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"","Any":"","CompId":${CompanyID}}}`}
+                                                url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
                                             />
                                         </Box>
                                     {/* )} */}
@@ -565,7 +570,7 @@ const Edittimesheetreport = () => {
                                 </Box>
 
                                 {/* Below: Other Checkboxes */}
-                                <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
+                                {/* <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
                                     <Box sx={{ paddingX: 3, paddingY: 2 }}>
                                         <Grid container spacing={1}>
                                             <Grid item xs={12} sm={6}>
@@ -606,7 +611,90 @@ const Edittimesheetreport = () => {
                                             </Grid>
                                         </Grid>
                                     </Box>
-                                </FormControl>
+                                </FormControl> */}
+
+                                                             <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
+  <Box sx={{ paddingX: 3, paddingY: 2 }}>
+    <Grid container spacing={2}>
+      {/* Left Section (Main Checkboxes) */}
+      <Grid item xs={12} sm={8}>
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox1" as={Checkbox} />}
+              label="Self Task"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox4" as={Checkbox} />}
+              label="Created"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox2" as={Checkbox} />}
+              label="Manager Assigned Task"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox7" as={Checkbox} />}
+              label="Backlog"
+            />
+            {/* <FormControlLabel
+              control={<Field type="checkbox" name="checkbox5" as={Checkbox} />}
+              label="Approved"
+            /> */}
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox3" as={Checkbox} />}
+              label="Scheduled Task"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox8" as={Checkbox} />}
+              label="Inprogress"
+            />
+            {/* <FormControlLabel
+              control={<Field type="checkbox" name="checkbox6" as={Checkbox} />}
+              label="Rejected"
+            /> */}
+          </Grid>
+        </Grid>
+      </Grid>
+
+      {/* Right Section (New Column for Last 2 Checkboxes) */}
+      <Grid item xs={12} sm={4}>
+        <Grid container spacing={1} direction="column">
+          <Grid item>
+            {/* <FormControlLabel
+              control={<Field type="checkbox" name="checkbox7" as={Checkbox} />}
+              label="In Progressnew"
+            /> */}
+            <FormControlLabel
+              control={<Field type="checkbox" name="checkbox6" as={Checkbox} />}
+              label="Completed"
+            /> 
+          </Grid>
+          <Grid item>
+            {/* <FormControlLabel
+              control={<Field type="checkbox" name="checkbox8" as={Checkbox} />}
+              label="Completed new"
+            /> */}
+              <FormControlLabel
+              control={<Field type="checkbox" name="checkbox5" as={Checkbox} />}
+              label="Approved"
+            />
+           
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Box>
+</FormControl>
                             </Box>
 
                             <Box
