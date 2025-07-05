@@ -109,11 +109,11 @@ import axios from "axios";
 const Editrequests = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const RegData = useSelector((state) => state.formApi.RegGetData);
-  const leavegridData = useSelector((state)=> state.formApi.leaveweeklyData);
-  console.log(leavegridData,"leavegridData");
+  const leavegridData = useSelector((state) => state.formApi.leaveweeklyData);
+  console.log(leavegridData, "leavegridData");
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
-    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const data = useSelector((state) => state.formApi.Data);
   const [pageSize, setPageSize] = React.useState(10);
   const [error, setError] = useState('');
@@ -187,14 +187,14 @@ const Editrequests = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
-  //  if (recID) {
-  //   dispatch(getLeaveweeklyData({ EmployeeID: recID }));
-  // }
+    //  if (recID) {
+    //   dispatch(getLeaveweeklyData({ EmployeeID: recID }));
+    // }
 
     console.log("🚀 ~ useEffect ~ accessID redenerd ...........:")
   }, []);
 
- 
+
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -369,7 +369,7 @@ const Editrequests = () => {
     Code: apiData.Code,
     Name: apiData.Name,
     Job: apiData.Job,
-     scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     employeetype:
       Data.EmpType === "Prohibition"
@@ -418,6 +418,7 @@ const Editrequests = () => {
       RecordID: recID,
       DeptRecordID: values.Department.RecordID || 0,
       DeptName: values.Department.Name || "",
+      //EmpType:"CO",
       // DeptRecordID: selectLookupData.lookupRecordid,
       Code: values.Code,
       Name: values.Name,
@@ -438,7 +439,7 @@ const Editrequests = () => {
       GateRecID: 0,
       WeekOff: 0,
       CompanyID,
-      EmpType: apiData.EmpType,
+      //EmpType: apiData.EmpType,
       DateOfJoin: apiData.DateOfJoin,
       DateOfConfirmation: apiData.DateOfConfirmation,
       // SubscriptionCode: apiData.SubscriptionCode,
@@ -553,10 +554,10 @@ const Editrequests = () => {
     if (event.target.value == "2") {
       dispatch(
         fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
-        
+
       );
-    // dispatch(getLeaveweeklyData(`EmployeeID=${recID}`));
-    dispatch(getLeaveweeklyData({ EmployeeID: recID })); 
+      // dispatch(getLeaveweeklyData(`EmployeeID=${recID}`));
+      dispatch(getLeaveweeklyData({ EmployeeID: recID }));
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -3276,7 +3277,7 @@ const Editrequests = () => {
         ) : (
           false
         )} */}
- {show == "0" ? (
+        {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             {/* { <Header title="Products" subtitle="" /> } */}
 
@@ -4328,39 +4329,39 @@ const Editrequests = () => {
                               </TableHead>
                               <TableBody>
                                 {leavegridData.LeaveDetailsData.TableData.map((row) => (
-                        <TableRow
-                          key={row.LeaveType}
-                          sx={{
-                            "& td, & th": {
-                              paddingTop: "4px",
-                              paddingBottom: "4px",
-                              height: "30px", // you can adjust this value
-                            },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.LeaveType}
-                          </TableCell>
-                          <TableCell align="right">{row.Total}</TableCell>
-                          <TableCell align="right">{row.Taken}</TableCell>
-                          
-                          <TableCell align="right">{row.Balance}</TableCell>
-                        </TableRow>
-                      ))}
+                                  <TableRow
+                                    key={row.LeaveType}
+                                    sx={{
+                                      "& td, & th": {
+                                        paddingTop: "4px",
+                                        paddingBottom: "4px",
+                                        height: "30px", // you can adjust this value
+                                      },
+                                    }}
+                                  >
+                                    <TableCell component="th" scope="row">
+                                      {row.LeaveType}
+                                    </TableCell>
+                                    <TableCell align="right">{row.Total}</TableCell>
+                                    <TableCell align="right">{row.Taken}</TableCell>
+
+                                    <TableCell align="right">{row.Balance}</TableCell>
+                                  </TableRow>
+                                ))}
                               </TableBody>
                             </Table>
                           </Grid>
 
-                           {leavegridData.LeaveDetailsData.Others.map((item, index) => (
-                    <Grid item xs={4} key={index}>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.Label}
-                      </Typography>
-                      <Typography variant="h6" fontWeight="bold">
-                        {item.Value}
-                      </Typography>
-                    </Grid>
-                  ))}
+                          {leavegridData.LeaveDetailsData.Others.map((item, index) => (
+                            <Grid item xs={4} key={index}>
+                              <Typography variant="body2" color="text.secondary">
+                                {item.Label}
+                              </Typography>
+                              <Typography variant="h6" fontWeight="bold">
+                                {item.Value}
+                              </Typography>
+                            </Grid>
+                          ))}
                         </Grid>
                       </Box>
 

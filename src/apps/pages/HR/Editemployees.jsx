@@ -1729,6 +1729,12 @@ Level: levellookup.levelfield,
     Friday: deploymentData.FridayShift === "Y" ? true : false,
     Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
     Sunday: deploymentData.SundayShift === "Y" ? true : false,
+    // biometric: deploymentData.Biometric === "Y"? true : false,
+    // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
+    biometric:deploymentData.BioMetric === "Y" ? true : false,
+    mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
+    managermanual: deploymentData.ManagerManual === "Y" ? true : false,
+    cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal:  true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
     HorizontalMimNo: deploymentData.HorizontalMimNo || 1,
@@ -1759,6 +1765,10 @@ Level: levellookup.levelfield,
       Friday: values.Friday === true ? "Y" : "N",
       Saturday: values.Saturday === true ? "Y" : "N",
       Sunday: values.Sunday === true ? "Y" : "N",
+       BioMetric: values.biometric === true ? "Y" : "N",
+    ManagerManual: values.managermanual === true ? "Y" : "N",
+    CloudApplication: values.cloud === true ? "Y" : "N",
+    MobileGeoFencing: values.mobile === true ? "Y" : "N",
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -5450,7 +5460,7 @@ Level: levellookup.levelfield,
                   </Stack>
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                  <Typography variant="h5">Week Off</Typography>
+                  <Typography variant="h5" padding={1}>Week Off</Typography>
                   <Box>
                     <Field
                       //  size="small"
@@ -5549,6 +5559,66 @@ Level: levellookup.levelfield,
                     />
 
                     <FormLabel focused={false}>Sunday</FormLabel>
+                  </Box>
+                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                   <Typography variant="h5" padding={1}>Checkin & Checkout Options</Typography>
+                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="biometric"
+                      id="biometric"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="biometric"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Biometric</FormLabel>
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="mobile"
+                      id="mobile"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="mobile"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Mobile Geofencing</FormLabel>
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="cloud"
+                      id="cloud"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="cloud"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Cloud Application</FormLabel>
+
+                     <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="managermanual"
+                      id="managermanual"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="managermanual"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Manager Manual</FormLabel>
+
                   </Box>
                   <Box
                     display="flex"
