@@ -149,7 +149,9 @@ const EditAttendance = () => {
       Month: values.month.toString(),
       Year: values.year,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
-      ProjectID: proData.RecordID
+      // ProjectID: proData.RecordID 
+      ProjectID: proData && proData.RecordID ? proData.RecordID : 0
+
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
@@ -199,7 +201,7 @@ if (!proData) {
 
 const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
   Query: {
-    AccessID: "2024", // or "2101" if you're using EMPLOYEETEAMS
+    AccessID: proData ? "2024" : "2117" , // or "2101" if you're using EMPLOYEETEAMS
     ScreenName: "Employee",
     Filter: employeeFilter,
     Any: "",
