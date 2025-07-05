@@ -120,7 +120,7 @@ const EditemployeePayroll = () => {
     console.log(values);
   };
   const YearFlag = sessionStorage.getItem("YearFlag");
-
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
@@ -391,6 +391,8 @@ const EditemployeePayroll = () => {
       LocationRecID: 0,
       GateRecID: 0,
       WeekOff: 0,
+      CompanyID,
+      SubscriptionCode
     };
     var type = "";
 

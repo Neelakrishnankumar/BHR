@@ -10,8 +10,12 @@ import {
   Stack,
   useTheme,
   MenuItem,
-  Checkbox, FormControlLabel
+  Checkbox, 
+  FormControlLabel,
+  Chip
 } from "@mui/material";
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import DeckIcon from '@mui/icons-material/Deck';
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -110,7 +114,24 @@ const EditAttendance = () => {
       headerName: "SL.NO",
       width:50
     },
+ {
+      field: "action",
+      headerName: "Action",
+      width: 60,
+      headerAlign: "center",
+      renderCell: (params) => {
+        if (params.row.Status === "WeekOff") {
+          return <AlarmOffIcon color="primary" titleAccess="WeekOff" />;
 
+
+        }
+        if (params.row.Status === "Holiday") {
+          return <DeckIcon color="primary" titleAccess="Holiday" />;
+
+        }
+        return null;
+      }
+    },
     {
       field: "EmplyeeCheckInDateTime",
       headerName: "Emplyee CheckIn Date Time",
@@ -512,6 +533,14 @@ console.log(proData, "--find proData");
                       backgroundColor: "#d0edec",
                       color: "", // Color for even rows
                     },
+                     "& .weekoff-row": {
+                      backgroundColor: "#f2acb7", // light red
+                      color: "#b71c1c",            // dark red text
+                    },
+                    "& .holiday-row": {
+                      backgroundColor: "#c9f5cc", // light green
+                      color: "#1b5e20",            // dark green text
+                    },
                   }}
                 >
                   <DataGrid
@@ -545,13 +574,39 @@ console.log(proData, "--find proData");
                         quickFilterProps: { debounceMs: 500 },
                       },
                     }}
-                    getRowClassName={(params) =>
-                      params.indexRelativeToCurrentPage % 2 === 0
-                        ? "odd-row"
-                        : "even-row"
-                    }
+                    // getRowClassName={(params) =>
+                    //   params.indexRelativeToCurrentPage % 2 === 0
+                    //     ? "odd-row"
+                    //     : "even-row"
+                    // }
+                    getRowClassName={(params) => {
+                      const status = params.row.Status;
+                      if (status === "WeekOff") return "weekoff-row";
+                      if (status === "Holiday") return "holiday-row";
+                      return params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row";
+                    }}
                   />
                 </Box>
+                 <Box display="flex" flexDirection="row" padding="15px" gap={formGap}>
+          <Chip
+            icon={<AlarmOffIcon color="primary" />}
+            label="WeekOff"
+            variant="outlined"
+            sx={{
+              backgroundColor: "#f2acb7",
+              borderColor: "#ef5350",
+            }}
+          />
+          <Chip
+            icon={<DeckIcon color="primary" />}
+            label="Holiday"
+            variant="outlined"
+            sx={{
+              backgroundColor: "#c9f5cc",
+              borderColor: "#66bb6a",
+            }}
+          />
+        </Box>
               </Box>
             </form>
           )}
