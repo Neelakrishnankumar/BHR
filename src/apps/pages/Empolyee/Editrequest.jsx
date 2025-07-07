@@ -3670,6 +3670,14 @@ const Editrequests = () => {
                       Cancel
                     </Button>
                   </Box>
+                  <Box ml={2} p={2} borderRadius={2}>
+                    <Typography variant="h6" align="right" color="primary">
+                      <strong>Explore:</strong>&nbsp;
+                      <span style={{ color: "#424242" }}>
+                        Permission, Leave, On Duty, Over Time, Regularization, Expense, Salary Advance
+                      </span>
+                    </Typography>
+                  </Box>
                   <Popup
                     title="Department"
                     openPopup={openDEPopup}
