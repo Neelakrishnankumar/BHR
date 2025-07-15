@@ -77,7 +77,7 @@ const Configuration = () => {
             setGstImage(data.CM_GSTIMAGE || "");
         }
     }, [data]);
-    
+
     useEffect(() => {
         dispatch(getSettingsData({
             SubscriptionCode: Subscriptioncode,
@@ -88,7 +88,7 @@ const Configuration = () => {
     //       setGst(initialvalues.gstnumber);
     //     }
     //   }, [initialvalues]);
-      
+
     // const getFilepanChange = async (e) => {
     //     let files = e.target.files;
     //     let fileReader = new FileReader();
@@ -169,49 +169,49 @@ const Configuration = () => {
     // };
     const getFilepanChange = async (event) => {
         setlogoimage(event.target.files[0]);
-    
+
         console.log(event.target.files[0]);
-    
+
         const formData = new FormData();
         formData.append("file", event.target.files[0]);
         formData.append("type", "images");
-    
+
         const fileData = await dispatch(fileUpload({ formData }));
         setlogoimage(fileData.payload.name);
         console.log(">>>", fileData.payload);
         console.log(
-          "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-          fileData
+            "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
+            fileData
         );
         if (fileData.payload.Status == "Y") {
-          // console.log("I am here");
-          toast.success(fileData.payload.Msg);
+            // console.log("I am here");
+            toast.success(fileData.payload.Msg);
         }
-      };
-      const getFilegstChange = async (event) => {
+    };
+    const getFilegstChange = async (event) => {
         setGstImage(event.target.files[0]);
-    
+
         console.log(event.target.files[0]);
-    
+
         const formData = new FormData();
         formData.append("file", event.target.files[0]);
         formData.append("type", "images");
-    
+
         const fileData = await dispatch(fileUpload({ formData }));
         setGstImage(fileData.payload.name);
         console.log(">>>", fileData.payload);
         console.log(
-          "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-          fileData
+            "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
+            fileData
         );
         if (fileData.payload.Status == "Y") {
-          // console.log("I am here");
-          toast.success(fileData.payload.Msg);
+            // console.log("I am here");
+            toast.success(fileData.payload.Msg);
         }
-      };
-   
-   
-   
+    };
+
+
+
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const style = {
         height: "55px",
@@ -235,11 +235,12 @@ const Configuration = () => {
         gstnumber: data.CM_GST,
         // address: data?.address || "", // Set default value if data.address is undefined
         // gstnumber: data?.gstnumber || "",
-        logoimage: data.CM_IMAGE ,
-        GstImg: data.CM_GSTIMAGE
+        logoimage: data.CM_IMAGE,
+        GstImg: data.CM_GSTIMAGE,
+
     };
-console.log(data.CM_IMAGE,"logo");
-console.log(data.CM_GSTIMAGE,"GST");
+    console.log(data.CM_IMAGE, "logo");
+    console.log(data.CM_GSTIMAGE, "GST");
     // const [value, setValues] = React.useState({
     //     showPassword: false,
     // });
@@ -268,7 +269,7 @@ console.log(data.CM_GSTIMAGE,"GST");
             Address: offaddress,
             GstNo: gst,
             Image: logoimage,
-            GstImage: gstImage
+            GstImage: gstImage,
 
         };
         console.log(offaddress, "Address");
@@ -287,7 +288,7 @@ console.log(data.CM_GSTIMAGE,"GST");
         <React.Fragment>
             <Box m="10px">
                 <Typography variant="h2" fontSize="1.2rem" fontWeight="bold" marginBottom={3}>
-                    Configuration
+                   Company Configuration
                 </Typography>
                 <Paper elevation={3} sx={{ margin: "1px" }}>
                     <Formik
@@ -319,7 +320,7 @@ console.log(data.CM_GSTIMAGE,"GST");
                         }) => (
                             <form onSubmit={handleSubmit}>
 
-                                <Typography variant="h5">Subscriptions:</Typography>
+                                <Typography variant="h5"  padding={1}>Subscriptions:</Typography>
 
                                 <Box
                                     display="grid"
@@ -491,7 +492,7 @@ console.log(data.CM_GSTIMAGE,"GST");
 
 
                                 <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                                <Typography variant="h5">Company Details:</Typography>
+                                <Typography variant="h5"  padding={1}>Company Details:</Typography>
 
                                 <Box
                                     display="grid"
@@ -575,6 +576,7 @@ console.log(data.CM_GSTIMAGE,"GST");
 
                                     </FormControl>
                                 </Box>
+                               
                                 <Box
                                     display="flex"
                                     padding={1}
@@ -653,7 +655,7 @@ console.log(data.CM_GSTIMAGE,"GST");
                                     >
                                         View GST
                                     </Button>
-                                     {/* <IconButton
+                                    {/* <IconButton
                       size="large"
                       color="warning"
                       aria-label="upload picture"
@@ -699,7 +701,7 @@ console.log(data.CM_GSTIMAGE,"GST");
 
 
                                     <Button
-                                        color={"error"}
+                                        color={"warning"}
                                         variant="contained"
                                         onClick={() => resetForm()}
                                     // onClick={() => {

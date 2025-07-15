@@ -10,8 +10,12 @@ import {
   Stack,
   useTheme,
   MenuItem,
-  Checkbox, FormControlLabel
+  Checkbox, 
+  FormControlLabel,
+  Chip
 } from "@mui/material";
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import DeckIcon from '@mui/icons-material/Deck';
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -54,6 +58,7 @@ const EditAttendance = () => {
   const EmpName = sessionStorage.getItem("EmpName");
   const EmpId = sessionStorage.getItem("EmpId");
   const companyID = sessionStorage.getItem("compID");
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   console.log("AttendanceData", AttendanceData);
@@ -93,13 +98,40 @@ const EditAttendance = () => {
       </GridToolbarContainer>
     );
   }
+ const [proData, setproData] = useState(null);
+  
+  const handleSelectionProjectChange = (newValue) => {
+    if (newValue) {
+      setproData(newValue);
+    } else {
+      setproData(null);
+    }
 
+  };
   const AttColumn = [
     {
       field: "SLNO",
       headerName: "SL.NO",
+      width:50
     },
+ {
+      field: "action",
+      headerName: "Action",
+      width: 60,
+      headerAlign: "center",
+      renderCell: (params) => {
+        if (params.row.Status === "WeekOff") {
+          return <AlarmOffIcon color="primary" titleAccess="WeekOff" />;
 
+
+        }
+        if (params.row.Status === "Holiday") {
+          return <DeckIcon color="primary" titleAccess="Holiday" />;
+
+        }
+        return null;
+      }
+    },
     {
       field: "EmplyeeCheckInDateTime",
       headerName: "Emplyee CheckIn Date Time",
@@ -138,6 +170,9 @@ const EditAttendance = () => {
       Month: values.month.toString(),
       Year: values.year,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
+      // ProjectID: proData.RecordID 
+      ProjectID: proData && proData.RecordID ? proData.RecordID : 0
+
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
@@ -168,11 +203,36 @@ const EditAttendance = () => {
     if (newValue) {
       setempData(newValue);
       console.log(newValue.RecordID, "--selectedproductid");
+
+
+
     } else {
       setempData(null);
     }
     setUseCurrentEmp(false)
   };
+
+  let employeeFilter = `CompanyID='${companyID}'`;
+if (proData) {
+  employeeFilter += ` AND ProjectID='${proData.RecordID}' GROUP BY RecordID`;
+}
+if (!proData) {
+  employeeFilter = `CompanyID='${companyID}' GROUP BY RecordID`;
+}
+
+const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+  Query: {
+    AccessID: proData ? "2024" : "2117" , // or "2101" if you're using EMPLOYEETEAMS
+    ScreenName: "Employee",
+    Filter: employeeFilter,
+    Any: "",
+    CompId: ""
+  }
+}))}`;
+
+console.log(proData, "--find proData");
+
+
   const [useCurrentEmp, setUseCurrentEmp] = useState(false);
   return (
     <React.Fragment>
@@ -184,7 +244,7 @@ const EditAttendance = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Attendance</Typography>
+            <Typography variant="h3">Monthly Attendance</Typography>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -292,6 +352,18 @@ const EditAttendance = () => {
                       width: 200,
                     }}
                   />
+                   {/* <Employeeautocomplete
+                     sx={{ width: 400 }}
+                    name="ProName"
+                    label="Project"
+                    id="ProName"
+                    value={proData}
+                    onChange={handleSelectionProjectChange}
+                    error={!!touched.ProName && !!errors.ProName}
+                    helperText={touched.ProName && errors.ProName}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${companyID}","Any":""}}`}
+                  />
+                  
                      <Employeeautocomplete
                         sx={{ width: 400 }}
                         name="Employee"
@@ -300,9 +372,41 @@ const EditAttendance = () => {
                         value={empData}
                         onChange={handleSelectionEmployeeChange}
                         // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EmpId}","Any":"","CompId":${companyID}}}`}
-                        url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
+                       url={employeeUrl}
+                        // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${companyID}'","Any":"","CompId":""}}`}
 
-                     />
+                     /> */}
+
+
+                     <Employeeautocomplete
+  sx={{ width: 400 }}
+  name="ProName"
+  label="Project"
+  id="ProName"
+  value={proData}
+  onChange={handleSelectionProjectChange}
+  error={!!touched.ProName && !!errors.ProName}
+  helperText={touched.ProName && errors.ProName}
+  url={`${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+    Query: {
+      AccessID: "2054",
+      ScreenName: "Project",
+      Filter: `parentID=${companyID}`,
+      Any: ""
+    }
+  }))}`}
+/>
+
+<Employeeautocomplete
+  sx={{ width: 400 }}
+  name="Employee"
+  label="Employee"
+  id="Employee"
+  value={empData}
+  onChange={handleSelectionEmployeeChange}
+  url={employeeUrl}
+/>
+
                   {/* {isManager === "1" ? (
                     <>
                       <Employeeautocomplete
@@ -363,7 +467,7 @@ const EditAttendance = () => {
                   <Button type="reset" variant="contained" color="error">
                     RESET
                   </Button>
-                  {isManager === "1" && AttendanceData?.length > 0 && (
+                  {AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <AttendancePDF
@@ -378,13 +482,7 @@ const EditAttendance = () => {
                       fileName={`Attendance_Report_${
                         empData?.Name || "Employee"
                       }.pdf`}
-                      style={{
-                        textDecoration: "none",
-                        padding: "6px 12px",
-                        color: "#fff",
-                        backgroundColor: "#1976d2",
-                        borderRadius: 4,
-                      }}
+                     style={{ color: "#d32f2f", cursor: "pointer" }} 
                     >
 
                       {({ loading }) =>
@@ -437,6 +535,14 @@ const EditAttendance = () => {
                       backgroundColor: "#d0edec",
                       color: "", // Color for even rows
                     },
+                     "& .weekoff-row": {
+                      backgroundColor: "#f2acb7", // light red
+                      color: "#b71c1c",            // dark red text
+                    },
+                    "& .holiday-row": {
+                      backgroundColor: "#c9f5cc", // light green
+                      color: "#1b5e20",            // dark green text
+                    },
                   }}
                 >
                   <DataGrid
@@ -470,13 +576,39 @@ const EditAttendance = () => {
                         quickFilterProps: { debounceMs: 500 },
                       },
                     }}
-                    getRowClassName={(params) =>
-                      params.indexRelativeToCurrentPage % 2 === 0
-                        ? "odd-row"
-                        : "even-row"
-                    }
+                    // getRowClassName={(params) =>
+                    //   params.indexRelativeToCurrentPage % 2 === 0
+                    //     ? "odd-row"
+                    //     : "even-row"
+                    // }
+                    getRowClassName={(params) => {
+                      const status = params.row.Status;
+                      if (status === "WeekOff") return "weekoff-row";
+                      if (status === "Holiday") return "holiday-row";
+                      return params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row";
+                    }}
                   />
                 </Box>
+                 <Box display="flex" flexDirection="row" padding="15px" gap={formGap}>
+          <Chip
+            icon={<AlarmOffIcon color="primary" />}
+            label="WeekOff"
+            variant="outlined"
+            sx={{
+              backgroundColor: "#f2acb7",
+              borderColor: "#ef5350",
+            }}
+          />
+          <Chip
+            icon={<DeckIcon color="primary" />}
+            label="Holiday"
+            variant="outlined"
+            sx={{
+              backgroundColor: "#c9f5cc",
+              borderColor: "#66bb6a",
+            }}
+          />
+        </Box>
               </Box>
             </form>
           )}

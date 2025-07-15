@@ -10,7 +10,7 @@ const Logopage = () => {
         height: "100vh" 
       }}>
         <img src="/bexlogo.jpg" alt="Logo" style={{ width: "300px", height: "auto" }} />
-        <h3 style={{ marginTop: "10px" }}>HR Management</h3>  
+        <h3 style={{ marginTop: "10px" }}>Back Office System</h3>  
       </div>
       
   );

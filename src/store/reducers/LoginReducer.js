@@ -150,5 +150,25 @@ export function fetchApidata(emailID, password,license, company, year) {
       return onError(error);
     }
   };
+  
 }
-
+export const attachmentPost = createAsyncThunk(
+  "attachmentPost/postdata",
+  async ({ data }, thunkAPI) => {
+    try {
+      var url = store.getState().globalurl.empAttachmentUrl;
+      console.log("get" + JSON.stringify(data));
+      const response = await axios.post(url, data, {
+        headers: {
+           'Content-Type': 'multipart/form-data',
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+      console.log("🚀 ~ response.data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);

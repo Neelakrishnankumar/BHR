@@ -57,6 +57,7 @@ const Editcheckin = () => {
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -82,6 +83,15 @@ const Editcheckin = () => {
     comment: data.CheckInComment,
     checkintime: data.CheckInTime,
     disable: data.WorkAtHome === "Y" ? false : true,
+     location: data.LocationRecID
+      ? { RecordID: data.LocationRecID, Name: data.LocationName }
+      : null,
+    gate: data.GateRecID
+      ? { RecordID: data.GateRecID, Name: data.GateName }
+      : null,
+       employee: data.EmployeeID
+      ? { RecordID: data.EmployeeID, Name: data.EmployeeName }
+      : null,
   };
 
   const Fnsave = async (values, del) => {
@@ -104,10 +114,13 @@ const Editcheckin = () => {
       CheckInComment: values.comment,
       //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
       EmployeeID:values.employee.RecordID || 0,
+      EmployeeName:values.employee.Name || "",
       WorkAtHome: isCheck,
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
       LocationRecID: values.location.RecordID || 0,
+      LocationName: values.location.Name || "",
+      GateName: values.gate.Name || 0,
       GateRecID: values.gate.RecordID || 0,
       CheckInTime: values.checkintime,
       Finyear,
@@ -380,7 +393,7 @@ const Editcheckin = () => {
 
                       }}
                       
-                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
                   <FormControl
@@ -403,7 +416,7 @@ const Editcheckin = () => {
 
                       }}
                       
-                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
              
@@ -426,7 +439,7 @@ const Editcheckin = () => {
                       }}
                       //  onChange={handleSelectionFunctionname}
                       // defaultValue={selectedFunctionName}
-                      url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
                       //url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate} AND CompanyID=${CompId}","Any":""}}`}
 
                     />

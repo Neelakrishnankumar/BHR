@@ -23,7 +23,7 @@ import {
 import { subDays, differenceInDays } from "date-fns";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Formik, Field } from "formik";
+import { Formik, Field, useFormikContext } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -78,6 +78,7 @@ import {
 } from "../../../ui-components/global/utils";
 import {
   Productautocomplete,
+  ProductautocompleteLevel,
   SingleFormikOptimizedAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
 // ***********************************************
@@ -97,7 +98,7 @@ const Editemployee = () => {
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   console.log(SubscriptionCode, "codehr");
   const EMPID = sessionStorage.getItem("EmpId");
- 
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -112,10 +113,11 @@ const Editemployee = () => {
     console.log(values);
   };
   const YearFlag = sessionStorage.getItem("YearFlag");
+  console.log(YearFlag, "--YearFlag");
 
   const navigate = useNavigate();
   let params = useParams();
-console.log(params, "--params");
+  console.log(params, "--params");
 
   const dispatch = useDispatch();
   var recID = params.id;
@@ -125,7 +127,9 @@ console.log(params, "--params");
   // console.log(Data, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
-
+const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+const baseApiUrl = useSelector((state) => state.globalurl.baseApiUrl);
+console.log("API URL:", baseApiUrl); 
   const state = location.state || {};
   console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -147,6 +151,8 @@ console.log(params, "--params");
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+
+  // const { setFieldValue } = useFormikContext();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
   }, [location.key]);
@@ -202,10 +208,10 @@ console.log(params, "--params");
   const initialValues = {
     Department: Data.DeptRecordID
       ? {
-          RecordID: Data.DeptRecordID,
-          Code: Data.DeptCode,
-          Name: Data.DeptName,
-        }
+        RecordID: Data.DeptRecordID,
+        Code: Data.DeptCode,
+        Name: Data.DeptName,
+      }
       : null,
     Code: Data.Code,
     Name: Data.Name,
@@ -215,15 +221,18 @@ console.log(params, "--params");
       Data.EmpType === "Prohibition"
         ? "PP"
         : Data.EmpType === "Permanent"
-        ? "PM"
+          ? "PM"
           : Data.EmpType === "Contracts In"
-        ? "CI"
-          : Data.EmpType === "Contracts Out"
-        ? "CO"
-        // : Data.EmpType === "Contractor"
-        // ? "CT"
-        : "",
+            ? "CI"
+            : Data.EmpType === "Contracts Out"
+              ? "CO"
+              : // : Data.EmpType === "Contractor"
+              // ? "CT"
+              "",
     checkbox: Data.Disable,
+    scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    prjmanager: Data.ProjectManager === "Y" ? true : false,
+
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
@@ -294,7 +303,7 @@ console.log(params, "--params");
     gateCode: "",
     gateName: "",
   });
-  const [selectproLookupData, setselectproLookupData] = React.useState(null);
+  // const [selectproLookupData, setselectproLookupData] = React.useState(null);
 
   const [LeaveconLTData, setselectLeaveconLTData] = React.useState(null);
 
@@ -362,14 +371,14 @@ console.log(params, "--params");
       setOpenDEPopup(false);
     }
 
-    if (type == "Process") {
-      // setselectproLookupData({
-      //   PROlookupCode: childdata.Code,
-      //   PROlookupRecordid: childdata.RecordID,
-      //   PROlookupDesc: childdata.Name,
-      // });
-      setOpenPROPopup(false);
-    }
+    // if (type == "Process") {
+    //   // setselectproLookupData({
+    //   //   PROlookupCode: childdata.Code,
+    //   //   PROlookupRecordid: childdata.RecordID,
+    //   //   PROlookupDesc: childdata.Name,
+    //   // });
+    //   setOpenPROPopup(false);
+    // }
     if (type == "Designation") {
       setdesignLookup({
         designlookupRecordid: childdata.RecordID,
@@ -431,10 +440,10 @@ console.log(params, "--params");
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
-    if (values.checkbox == true) {
+    if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
     }
 
@@ -442,10 +451,13 @@ console.log(params, "--params");
       RecordID: recID,
       //DeptRecordID: selectLookupData.lookupRecordid,
       DeptRecordID: values.Department.RecordID || 0,
+      DeptName: values.Department.Name || "",
       Code: values.Code,
       Name: values.Name,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
+      ScrumMaster: values.scrummaster === true ? "Y" : "N",
+      ProjectManager: values.prjmanager === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -454,10 +466,10 @@ console.log(params, "--params");
       DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
-      DesignID: 0,
-      LocationRecID: 0,
-      GateRecID: 0,
-      WeekOff: 0,
+      // DesignID: 0,
+      // LocationRecID: 0,
+      // GateRecID: 0,
+      // WeekOff: 0,
       CompanyID,
       SubscriptionCode,
     };
@@ -487,7 +499,7 @@ console.log(params, "--params");
     }
   };
 
-  /**************************************Employee Process***************** */
+  /**************************************Skills***************** */
 
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
@@ -503,6 +515,7 @@ console.log(params, "--params");
     RecordID: "",
     Comments: "",
     SortOrder: "",
+    Skills: "",
   });
 
   const [boMode, setBomode] = useState("A");
@@ -514,7 +527,7 @@ console.log(params, "--params");
       dispatch(fetchApidata(accessID, "get", recID));
     }
     if (event.target.value == "1") {
-      dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
+      dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
     }
@@ -526,12 +539,13 @@ console.log(params, "--params");
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "3") {
+       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
         fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
-    if (event.target.value == "4") {
+    if (event.target.value == "4" || event.target.value == "12") {
       dispatch(getDeployment({ HeaderID: recID }));
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -552,12 +566,26 @@ console.log(params, "--params");
     }
     //Contractor
     if (event.target.value == "8") {
-      dispatch(fetchExplorelitview("TR244", "Contracts In", `EmployeeID='${recID}' AND Vendors='Y'`, ""))
+      dispatch(
+        fetchExplorelitview(
+          "TR244",
+          "Contracts In",
+          `EmployeeID='${recID}' AND Vendors='Y'`,
+          ""
+        )
+      );
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "11") {
-      dispatch(fetchExplorelitview("TR244", "Contracts Out", `EmployeeID='${recID}' AND Customer='Y'`, ""))
+      dispatch(
+        fetchExplorelitview(
+          "TR244",
+          "Contracts Out",
+          `EmployeeID='${recID}' AND Customer='Y'`,
+          ""
+        )
+      );
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -587,8 +615,8 @@ console.log(params, "--params");
     setBomode(bMode);
     setIniProcess(true);
     if (bMode == "A") {
-      setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-      setselectproLookupData(null);
+      setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
+      // setselectproLookupData(null);
 
       //   {
       //   PROlookupRecordid: "",
@@ -602,16 +630,17 @@ console.log(params, "--params");
           RecordID: data.RecordID,
           Comments: data.Comments,
           SortOrder: data.SortOrder,
+          Skills: data.Skills,
         });
 
-        setselectproLookupData({
-          RecordID: data.PsRecordID,
-          Code: data.ProcessCode,
-          Name: data.ProcessDescription,
-          // PROlookupRecordid: data.PsRecordID,
-          // PROlookupCode: data.ProcessCode,
-          // PROlookupDesc: data.ProcessDescription,
-        });
+        // setselectproLookupData({
+        //   RecordID: data.PsRecordID,
+        //   Code: data.ProcessCode,
+        //   Name: data.ProcessDescription,
+        //   // PROlookupRecordid: data.PsRecordID,
+        //   // PROlookupCode: data.ProcessCode,
+        //   // PROlookupDesc: data.ProcessDescription,
+        // });
       }
     }
   };
@@ -619,6 +648,7 @@ console.log(params, "--params");
   const supprocessInitialvalues = {
     Comments: supprodata.Comments,
     SortOrder: supprodata.SortOrder,
+    Skills: supprodata.Skills,
   };
 
   /******************************save  Function********** */
@@ -630,10 +660,10 @@ console.log(params, "--params");
         return;
       }
     }
-    if (selectproLookupData.PROlookupCode == "") {
-      toast.error("Please Choose Process Lookup");
-      return;
-    }
+    // if (selectproLookupData.PROlookupCode == "") {
+    //   toast.error("Please Choose Process Lookup");
+    //   return;
+    // }
 
     if (values.Comments == "") {
       toast.error("Please Enter Comments");
@@ -650,7 +680,8 @@ console.log(params, "--params");
       saveData = {
         RecordID: supprodata.RecordID,
         EmpRecordID: recID,
-        PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+        Skills: values.Skills,
+        // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
         // PsRecordID: selectproLookupData.PROlookupRecordid,
         Comments: values.Comments,
         SortOrder: values.SortOrder,
@@ -661,7 +692,8 @@ console.log(params, "--params");
         saveData = {
           RecordID: "",
           EmpRecordID: recID,
-          PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+          Skills: values.Skills,
+          // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
           // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
@@ -672,7 +704,8 @@ console.log(params, "--params");
         saveData = {
           RecordID: supprodata.RecordID,
           EmpRecordID: recID,
-          PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
+          Skills: values.Skills,
+          // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
           // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
           SortOrder: values.SortOrder,
@@ -687,10 +720,10 @@ console.log(params, "--params");
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       setLoading(false);
-      dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
+      dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       resetForm();
 
-      setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
+      setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
       selectcelldata("", "A", "");
     } else {
       toast.error(data.payload.Msg);
@@ -741,7 +774,7 @@ console.log(params, "--params");
       setLoading(false);
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
 
-      // dispatch(fetchExplorelitview("TR038", "Employee Process", recID, ""));
+      // dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       // resetForm();
 
       // setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
@@ -759,8 +792,8 @@ console.log(params, "--params");
   };
 
   const clrForm = () => {
-    setSupprodata({ RecordID: "", Comments: "", SortOrder: "" });
-    setselectproLookupData(null);
+    setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
+    // setselectproLookupData(null);
 
     //   {
     //   PROlookupRecordid: "",
@@ -784,18 +817,21 @@ console.log(params, "--params");
   let VISIBLE_FIELDS;
 
   if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "Description", "action"];
+    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate", "Description", "Category", "action"];
   } else if (show == "1") {
-    VISIBLE_FIELDS = ["SLNO", "ProcessCode", "Comments", "action"];
+    VISIBLE_FIELDS = ["SLNO", "Skills", "Comments", "action"];
+  } else if (show == "3") {
+    VISIBLE_FIELDS = ["SLNO", "Manager", "action"];
   } else if (show == "2") {
-    VISIBLE_FIELDS = ["SLNO", "FunctionCode", "FunctionName", "action"];
+    VISIBLE_FIELDS = ["SLNO", "Functions", "action"];
   } else if (show == "7") {
     VISIBLE_FIELDS = ["SLNO", "ItemNumber", "ItemName", "action"];
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "SLNO",
-      "VendorCode",
-      "VendorName",
+      //"VendorCode",
+      //"VendorName",
+      "Vendors",
       "BillingUnits",
       "UnitRate",
       "action",
@@ -848,7 +884,7 @@ console.log(params, "--params");
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Process</Typography>
+          <Typography>List of Skills</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -879,7 +915,7 @@ console.log(params, "--params");
   //     >
   //       <Box sx={{ display: "flex", flexDirection: "row" }}>
   //         <Typography>
-  //           {show == "6" && "List of Attachments"}
+  //           {show == "6" && "List of Documents"}
   //         </Typography>
   //         <Typography variant="h5">{`(${rowCount})`}</Typography>
   //       </Box>
@@ -914,23 +950,23 @@ console.log(params, "--params");
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           {/* <Typography>
-            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "list of Attachments"}
+            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
             
           </Typography> */}
           <Typography>
             {show == "2"
               ? "List of Functions"
               : show == "6"
-              ? "List of Attachments"
-              : show == "3"
-              ? "List of Managers"
-              : show == "7"
-              ? "Item Custody"
-              : show == "10"
-              ? "List of Configurations"
-              : show == "8" || show == "11"
-              ? "List of Contracts"
-              : "List of Managers"}
+                ? "List of Documents"
+                : show == "3"
+                  ? "List of Managers"
+                  : show == "7"
+                    ? "Item Custody"
+                    : show == "10"
+                      ? "List of Configurations"
+                      : show == "8" || show == "11"
+                        ? "List of Contracts"
+                        : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -984,6 +1020,11 @@ console.log(params, "--params");
     alertdate: "",
     renewalperiod: "",
     vendor: "",
+    hsnCode: "",
+    cgst: "",
+    sgst: "",
+    igst: "",
+    tds: ""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -993,6 +1034,7 @@ console.log(params, "--params");
     elligibledays: "",
     Year: "",
   });
+
   const selectCellRowData = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
@@ -1005,7 +1047,7 @@ console.log(params, "--params");
 
     if (mode == "A") {
       setFunMgrRecID("");
-      setFunEmpRecID("");
+
       SetFunctionLookup(null);
       //   {
       //   funRecordID: "",
@@ -1019,7 +1061,6 @@ console.log(params, "--params");
       //   venCode: "",
       //   venName: "",
       // });
-      SetDesignationLookup(null);
       //   {
       //   desRecordID: "",
       //   desCode: "",
@@ -1030,6 +1071,10 @@ console.log(params, "--params");
       SetEmpLoaData({
         description: "",
         recordID: "",
+        category: "",
+        RenewalDate: "",
+        personal: false,
+        renewal: false
       });
 
       setImgName("");
@@ -1052,6 +1097,11 @@ console.log(params, "--params");
         alertdate: "",
         renewalperiod: "",
         vendor: "",
+        hsnCode: "",
+        cgst: "",
+        sgst: "",
+        igst: "",
+        tds: ""
       });
 
       setLeaveCondata({
@@ -1067,7 +1117,7 @@ console.log(params, "--params");
       if (field == "action") {
         console.log(LeaveCondata, "--LeaveCondata");
 
-        setFunMgrRecID(rowData.RecordID);
+
         setFunEmpRecID(rowData.RecordID);
         SetFunctionLookup({
           RecordID: rowData.FunctionsID,
@@ -1090,22 +1140,17 @@ console.log(params, "--params");
           RecordID: rowData.Vendor,
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
-        })
-        SetDesignationLookup({
-          RecordID: rowData.DesignationID,
-          ManagerID: rowData.EmployeeID,
-          Code: rowData.EmployeeCode,
-          Name: rowData.EmployeeName,
-          // desRecordID: rowData.DesignationID,
-          // desCode: rowData.EmployeeCode,
-          // desName: rowData.EmployeeName,
-          // ManagerID: rowData.EmployeeID,
         });
 
         SetEmpLoaData({
           description: rowData.Description,
           recordID: rowData.RecordID,
+          category: rowData.Category,
+          RenewalDate: rowData.NextRenewalRequiredDate,
+          personal: rowData.Personal,
+          renewal: rowData.RenewalRequired
         });
+        console.log(empLoaData, "empLoaData");
         setImgName(rowData.Attachment);
         setItemCustodyData({
           recordID: rowData.RecordID,
@@ -1126,13 +1171,18 @@ console.log(params, "--params");
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.Vendor
             ? {
-                RecordID: rowData.Vendor,
-                Code: rowData.VendorCode,
-                Name: rowData.VendorName,
-              }
+              RecordID: rowData.Vendor,
+              Code: rowData.VendorCode,
+              Name: rowData.VendorName,
+            }
             : null,
+          hsnCode: rowData.Hsn,
+          cgst: rowData.Gst,
+          sgst: rowData.Sgst,
+          igst: rowData.Igst,
+          tds: rowData.Tds,
         });
-
+        console.log(contractorData, contractorData);
         setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
           Code: "",
@@ -1146,29 +1196,71 @@ console.log(params, "--params");
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-                RecordID: rowData.LeaveTypeID,
-                Code: "",
-                Name: rowData.LeavePart,
-              }
+              RecordID: rowData.LeaveTypeID,
+              Code: "",
+              Name: rowData.LeavePart,
+            }
             : null,
-            Year: rowData.Year,
+          Year: rowData.Year,
         });
       }
     }
   };
 
+  const selectCellRowDataMGR = ({ rowData, mode, field }) => {
+    console.log(
+      "🚀 ~ file: Editmanager.jsx:178 ~ selectCellRowDataMGR ~ rowData:",
+      rowData
+    );
+
+    setFunMode(mode);
+    setLaoMode(mode);
+    console.log(mode, "--mode");
+
+    if (mode == "A") {
+      SetDesignationLookup(null);
+      setFunEmpRecID("");
+      setLevelLookup({
+        levelfield: "",
+           hrmanager: "",
+    financemanager: "",
+    projectmanager: "",
+    facilitymanager: "",
+      })
+
+    } else {
+      console.log(rowData, "--rowData");
+      if (field == "action") {
+        SetDesignationLookup({
+          RecordID: rowData.EmployeeID,
+          DesignationID: rowData.DesignationID,
+          Code: rowData.EmployeeCode,
+          Name: rowData.EmployeeName,
+        });
+        setLevelLookup({
+          levelfield: rowData.Level,
+            hrmanager: rowData.HrManager == "Y" ? true : false,
+    financemanager: rowData.FinanceManager == "Y" ? true : false,
+    projectmanager: rowData.ProjectManager == "Y" ? true : false,
+    facilitymanager: rowData.FacilityManager == "Y" ? true : false,
+        });
+        setFunMgrRecID(rowData.RecordID);
+        console.log(LeaveCondata, "--LeaveCondata");
+      }
+    }
+  };
   const empFunctionFn = async (values, resetForm, del) => {
     let action =
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
       FunctionsID: functionLookup ? functionLookup.RecordID : 0,
-
+      FunctionName: functionLookup? functionLookup.Name : "",
       // FunctionsID: functionLookup.funRecordID,
       CompanyID,
     };
@@ -1211,8 +1303,8 @@ console.log(params, "--params");
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: itemCustodyData.recordID,
       EmployeeID: recID,
@@ -1256,13 +1348,17 @@ console.log(params, "--params");
       contractorData.units === "Hours"
         ? "HS"
         : contractorData.units === "Days"
-        ? "DS"
-        : contractorData.units === "Week"
-        ? "WS"
-        : contractorData.units === "Month"
-        ? "MS"
-        : "",
-
+          ? "DS"
+          : contractorData.units === "Week"
+            ? "WS"
+            : contractorData.units === "Month"
+              ? "MS"
+              : "",
+    Hsn: contractorData.hsnCode,
+    Gst: contractorData.cgst,
+    Sgst: contractorData.sgst,
+    Igst: contractorData.igst,
+    TDS: contractorData.tds,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
@@ -1272,32 +1368,51 @@ console.log(params, "--params");
   //Contractor Save Function
   const contractSavefn = async (values, resetForm, del) => {
     console.log(show, "--find show inside save ");
-    
+
     setLoading(true);
     let action =
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
-        const idata = {
-          RecordID: contractorData.recordID,
-          EmployeeID: recID,
-          Vendor: show == "8" 
-            ? (vendorlookup ? vendorlookup.RecordID : 0) 
-            : show == "11" 
-              ? (customerlookup ? customerlookup.RecordID : 0) 
-              : 0,
-        // Vendors: show == "8" ? "Y" : "N",
-        // Customer: show == "11" ? "Y" : "N",
-          FromPeriod: values.FromPeriod,
-          ToPeriod: values.ToPeriod,
-          BillingUnits: values.BillingUnits,
-          UnitRate: values.UnitRate,
-          NotificationAlertDate: values.NotificationAlertDate,
-          RenewableNotification: values.RenewableNotification,
-        };
-        
+          ? "harddelete"
+          : "update";
+    const idata = {
+      RecordID: contractorData.recordID,
+      EmployeeID: recID,
+      Vendor:
+        show == "8"
+          ? vendorlookup
+            ? vendorlookup.RecordID
+            : 0
+          : show == "11"
+            ? customerlookup
+              ? customerlookup.RecordID
+              : 0
+            : 0,
+            VendorName:
+        show == "8"
+          ? vendorlookup
+            ? vendorlookup.Name
+            : 0
+          : show == "11"
+            ? customerlookup
+              ? customerlookup.Name
+              : 0
+            : 0,
+      Hsn: values.Hsn,
+      Gst: values.Gst,
+      Sgst: values.Sgst,
+      Igst: values.Igst,
+      Tds: values.TDS,
+      // Vendors: show == "8" ? "Y" : "N",
+      // Customer: show == "11" ? "Y" : "N",
+      FromPeriod: values.FromPeriod,
+      ToPeriod: values.ToPeriod,
+      BillingUnits: values.BillingUnits,
+      UnitRate: values.UnitRate,
+      NotificationAlertDate: values.NotificationAlertDate,
+      RenewableNotification: values.RenewableNotification,
+    };
 
     const response = await dispatch(
       explorePostData({ accessID: "TR244", action, idata })
@@ -1305,11 +1420,24 @@ console.log(params, "--params");
     if (response.payload.Status == "Y") {
       setLoading(false);
       show == "8"
-      ? dispatch(fetchExplorelitview("TR244", "Contracts In", `EmployeeID='${recID}' AND Vendors='Y'`, ""))
-      : dispatch(fetchExplorelitview("TR244", "Contracts Out", `EmployeeID='${recID}' AND Customer='Y'`, ""));
-  
-     
-    toast.success(response.payload.Msg);
+        ? dispatch(
+          fetchExplorelitview(
+            "TR244",
+            "Contracts In",
+            `EmployeeID='${recID}' AND Vendors='Y'`,
+            ""
+          )
+        )
+        : dispatch(
+                    fetchExplorelitview(
+            "TR244",
+            "Contracts Out",
+            `EmployeeID='${recID}' AND Customer='Y'`,
+            ""
+          )
+        );
+
+      toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm();
     } else {
@@ -1334,8 +1462,8 @@ console.log(params, "--params");
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       EmployeeID: recID,
       Longtitude: values.longitude,
@@ -1369,9 +1497,14 @@ console.log(params, "--params");
     totaldays: LeaveCondata.totaldays,
     availableleave: LeaveCondata.availableleave,
     elligibledays: LeaveCondata.elligibledays,
-    Year: LeaveCondata.Year === "2024" ? "2024" 
-          :LeaveCondata.Year === "2025" ? "2025"
-          :LeaveCondata.Year === "2026" ? "2026" : "" ,
+    Year:
+      LeaveCondata.Year === "2024"
+        ? "2024"
+        : LeaveCondata.Year === "2025"
+          ? "2025"
+          : LeaveCondata.Year === "2026"
+            ? "2026"
+            : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -1385,8 +1518,8 @@ console.log(params, "--params");
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: LeaveCondata.recordID,
       CompanyID,
@@ -1394,6 +1527,7 @@ console.log(params, "--params");
       Year: values.Year,
       EmployeeID: recID,
       LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+      LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
       TotalDays: Number(values.totaldays),
       AvailDays: Number(values.availableleave),
       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
@@ -1439,29 +1573,70 @@ console.log(params, "--params");
   };
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
-
+  const [levellookup, setLevelLookup] = useState({
+    levelfield: "",
+    hrmanager: "",
+    financemanager: "",
+    projectmanager: "",
+    facilitymanager: "",
+  });
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
+
+ Horizontal: Data.Horizontal === "Y" ? true : false,
+    Vertical: Data.Vertical === "Y" ? true : false,
+    HorizontalMimNo: Data.HorizontalMimNo,
+
+    VerticalMimNo: Data.VerticalMimNo,
+
+    AutoApprovalYesOrNo: Data.AutoApprovalYesOrNo === "Y" ? true : false,
+    ApprovelTolerance: Data.ApprovelTolerance,
+    AutoRejectionYesOrNo: Data.AutoRejectionYesOrNo === "Y" ? true : false,
+    RejectionTolerance: Data.RejectionTolerance,
+
+Level: levellookup.levelfield,
+    //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+    hrmanager: levellookup.hrmanager,
+    financemanager: levellookup.financemanager,
+    projectmanager: levellookup.projectmanager,
+    facilitymanager: levellookup.facilitymanager,
+    //   hrmanager: Data.HrManager === "Y",
+    // financemanager: Data.FinanceManager === "Y",
+    // projectmanager: Data.ProjectManager === "Y",
+    // facilitymanager: Data.FacilityManager === "Y",
+    //  hrmanager: checkboxvalues.hrmanager === "Y" ? true : false,
+    //   financemanager: checkboxvalues.financemanager === "Y" ? true : false,
+
+    //   projectmanager: checkboxvalues.projectmanager === "Y" ? true : false,
+
+    //   facilitymanager: checkboxvalues.facilitymanager === "Y" ? true : false,
   };
   const [funMgrRecID, setFunMgrRecID] = useState("");
 
-  const mgrFunctionFn = async (values, resetForm, del) => {
+  const mgrFunctionFn = async (values, resetForm, del, setFieldValue) => {
     let action =
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
-      DesignationID: designationLookup.RecordID,
-      ManagerID: designationLookup.ManagerID,
+      DesignationID: designationLookup.DesignationID || 0,
+      ManagerID: designationLookup.RecordID || 0,
+      ManagerName: designationLookup.Name || "",
       CompanyID,
+      HrManager: values.hrmanager == true ? "Y" : "N",
+      FinanceManager: values.financemanager == true ? "Y" : "N",
+      ProjectManager: values.projectmanager == true ? "Y" : "N",
+      FacilityManager: values.facilitymanager == true ? "Y" : "N",
+      // Level: level,
+      Level: values.Level,
     };
     // console.log("save" + JSON.stringify(saveData));
 
@@ -1475,74 +1650,168 @@ console.log(params, "--params");
 
       toast.success(response.payload.Msg);
 
-      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      selectCellRowDataMGR({
+        rowData: {},
+        mode: "A",
+        field: "",
+        setFieldValue,
+      });
       resetForm();
+      //     setFieldValue("hrmanager", false);
+      // setFieldValue("financemanager", false);
+      // setFieldValue("projectmanager", false);
+      // setFieldValue("facilitymanager", false);
+      // ✅ Reset state & clear form mode
     } else {
       toast.error(response.payload.Msg);
     }
   };
+  // const [level, setLevel] = useState('2');
 
   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
     Designation: deploymentData.DesignationID
       ? {
-          RecordID: deploymentData.DesignationID,
-          Code: deploymentData.DesignationCode,
-          Name: deploymentData.DesignationName,
-        }
+        RecordID: deploymentData.DesignationID,
+        Code: deploymentData.DesignationCode,
+        Name: deploymentData.DesignationName,
+      }
       : null,
     location: deploymentData.LocationID
       ? {
-          RecordID: deploymentData.LocationID,
-          Code: deploymentData.LocationCode,
-          Name: deploymentData.LocationName,
-        }
+        RecordID: deploymentData.LocationID,
+        Code: deploymentData.LocationCode,
+        Name: deploymentData.LocationName,
+      }
       : null,
     gate: deploymentData.StoregatemasterID
       ? {
-          RecordID: deploymentData.StoregatemasterID,
-          Code: deploymentData.StoregatemasterCode,
-          Name: deploymentData.StoregatemasterName,
-        }
+        RecordID: deploymentData.StoregatemasterID,
+        Code: deploymentData.StoregatemasterCode,
+        Name: deploymentData.StoregatemasterName,
+      }
       : null,
+    project: deploymentData.DefaultProject
+      ? {
+        RecordID: deploymentData.DefaultProject,
+        Code: deploymentData.ProjectCode,
+        Name: deploymentData.ProjectName,
+      }
+      : null,
+    function: deploymentData.DefaultFunction
+      ? {
+        RecordID: deploymentData.DefaultFunction,
+        Code: deploymentData.FunctionCode,
+        Name: deploymentData.FunctionName,
+      }
+      : null,
+    shift: deploymentData.ShiftID
+      ? {
+        RecordID: deploymentData.ShiftID,
+        Code: deploymentData.ShiftCode,
+        Name: deploymentData.ShiftName,
+      }
+      : null,
+    checkin: deploymentData.ShiftStartTime || "",
+    checkout: deploymentData.ShiftEndTime || "",
+    // monday: deploymentData.Monday === "Y" ? true : false,
+    // tuesday: deploymentData.Tuesday === "Y" ? true : false,
+    // wednesday: deploymentData.Wednesday === "Y" ? true : false,
+    // thursday: deploymentData.Thursday === "Y" ? true : false,
+    // friday: deploymentData.Friday === "Y" ? true : false,
+    // saturday: deploymentData.Saturday === "Y" ? true : false,
+    // sunday: deploymentData.Sunday === "Y" ? true : false,
+    Monday: deploymentData.MondayShift === "Y" ? true : false,
+    Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
+    Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
+    Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
+    Friday: deploymentData.FridayShift === "Y" ? true : false,
+    Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+    Sunday: deploymentData.SundayShift === "Y" ? true : false,
+    // biometric: deploymentData.Biometric === "Y"? true : false,
+    // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
+    biometric:deploymentData.BioMetric === "Y" ? true : false,
+    mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
+    managermanual: deploymentData.ManagerManual === "Y" ? true : false,
+    cloud: deploymentData.CloudApplication === "Y" ? true : false,
+    Horizontal:  true,
+    Vertical: deploymentData.Vertical === "Y" ? true : false,
+    HorizontalMimNo: deploymentData.HorizontalMimNo || 1,
+    VerticalMimNo: deploymentData.VerticalMimNo || 3,
+    AutoApprovalYesOrNo: deploymentData.AutoApprovalYesOrNo === "Y" ? true : false,
+    ApprovelTolerance: deploymentData.ApprovelTolerance,
+    AutoRejectionYesOrNo: deploymentData.AutoRejectionYesOrNo === "Y" ? true : false,
+    RejectionTolerance: deploymentData.RejectionTolerance,
 
-    checkin: deploymentData.CheckInTime || "",
-    checkout: deploymentData.CheckOutTime || "",
-    monday: deploymentData.Monday === "Y" ? true : false,
-    tuesday: deploymentData.Tuesday === "Y" ? true : false,
-    wednesday: deploymentData.Wednesday === "Y" ? true : false,
-    thursday: deploymentData.Thursday === "Y" ? true : false,
-    friday: deploymentData.Friday === "Y" ? true : false,
-    saturday: deploymentData.Saturday === "Y" ? true : false,
-    sunday: deploymentData.Sunday === "Y" ? true : false,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
   console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
+    console.log(values, "--values");
+
     const idata = {
       HeaderID: recID,
-      CheckInTime: values.checkin || "",
-      CheckOutTime: values.checkout || "",
-      Monday: values.monday === true ? "Y" : "N",
-      Tuesday: values.tuesday === true ? "Y" : "N",
-      Wednesday: values.wednesday === true ? "Y" : "N",
-      Thursday: values.thursday === true ? "Y" : "N",
-      Friday: values.friday === true ? "Y" : "N",
-      Saturday: values.saturday === true ? "Y" : "N",
-      Sunday: values.sunday === true ? "Y" : "N",
+      CheckInTime: values.shift?.ShiftStartTime || "",
+      CheckOutTime: values.shift?.ShiftendTime || "",
+      // CheckInTime: values.checkin || "",
+      // CheckOutTime: values.checkout || "",
+      Monday: values.Monday === true ? "Y" : "N",
+      Tuesday: values.Tuesday === true ? "Y" : "N",
+      Wednesday: values.Wednesday === true ? "Y" : "N",
+      Thursday: values.Thursday === true ? "Y" : "N",
+      Friday: values.Friday === true ? "Y" : "N",
+      Saturday: values.Saturday === true ? "Y" : "N",
+      Sunday: values.Sunday === true ? "Y" : "N",
+       BioMetric: values.biometric === true ? "Y" : "N",
+    ManagerManual: values.managermanual === true ? "Y" : "N",
+    CloudApplication: values.cloud === true ? "Y" : "N",
+    MobileGeoFencing: values.mobile === true ? "Y" : "N",
+      // Monday: values.monday === true ? "Y" : "N",
+      // Tuesday: values.tuesday === true ? "Y" : "N",
+      // Wednesday: values.wednesday === true ? "Y" : "N",
+      // Thursday: values.thursday === true ? "Y" : "N",
+      // Friday: values.friday === true ? "Y" : "N",
+      // Saturday: values.saturday === true ? "Y" : "N",
+      // Sunday: values.sunday === true ? "Y" : "N",
       DesignationID: values.Designation.RecordID || 0,
+      DesignationName: values.Designation.Name || "",
       LocationID: values.location.RecordID || 0,
+      LocationName: values.location.Name || "",
       StoregatemasterID: values.gate.RecordID || 0,
+      StoregatemasterName: values.gate.Name || "",
+      DefaultProject: values.project.RecordID || 0,
+      ProjectCode: values.project.Code || "",
+      ProjectName: values.project.Name || "",
+      DefaultFunction: values.function.RecordID || 0,
+      FunctionCode: values.function.Code || "",
+      FunctionName: values.function.Name || "",
+      ShiftID: values.shift.RecordID || 0,
+      ShiftCode: values.shift.Code || "",
+      ShiftName: values.shift.Name || "",
+      // Horizontal: values.horizontal === true ? "Y" : "N",
+      // Vertical: values.vertical === true ? "Y" : "N",
+      // HorizontalMimNo: values.Horizontalmin || 0,
+      // VerticalMimNo: values.Verticalmin || 0,
       // DesignationID: designLookup ? designLookup.RecordID : 0,
       // LocationID: locationLookup ? locationLookup.RecordID : 0,
       // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
       CompanyID,
+      Horizontal: deploymentData.Horizontal,
+      Vertical: deploymentData.Vertical,
+      HorizontalMimNo: deploymentData.HorizontalMimNo || 0,
+      VerticalMimNo: deploymentData.VerticalMimNo || 0,
+      AutoApprovalYesOrNo: deploymentData.AutoApprovalYesOrNo,
+      ApprovelTolerance: deploymentData.ApprovelTolerance || 0,
+      AutoRejectionYesOrNo: deploymentData.AutoRejectionYesOrNo,
+      RejectionTolerance: deploymentData.RejectionTolerance || 0,
     };
+
     // console.log(locationLookup.locationRecordID, "????????");
     const response = await dispatch(postDeployment({ data: idata }));
+    // return;
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
     } else {
@@ -1550,10 +1819,78 @@ console.log(params, "--params");
     }
   };
 
+  //Approvals
+  const FndeploymentApprovals = async (values, resetForm, del) => {
+    console.log(values, "--values");
+
+    const idata = {
+      HeaderID: recID,
+      CheckInTime: deploymentData.ShiftStartTime || "",
+      CheckOutTime: deploymentData.ShiftEndTime || "",
+      // CheckInTime: values.checkin || "",
+      // CheckOutTime: values.checkout || "",
+      Monday: deploymentData.MondayShift === "Y" ? true : false,
+      Tuesday: deploymentData.TuesdayShift === "Y" ? true : false,
+      Wednesday: deploymentData.WednesdayShift === "Y" ? true : false,
+      Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
+      Friday: deploymentData.FridayShift === "Y" ? true : false,
+      Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
+      Sunday: deploymentData.SundayShift === "Y" ? true : false,
+      // Monday: values.monday === true ? "Y" : "N",
+      // Tuesday: values.tuesday === true ? "Y" : "N",
+      // Wednesday: values.wednesday === true ? "Y" : "N",
+      // Thursday: values.thursday === true ? "Y" : "N",
+      // Friday: values.friday === true ? "Y" : "N",
+      // Saturday: values.saturday === true ? "Y" : "N",
+      // Sunday: values.sunday === true ? "Y" : "N",
+      DesignationID: deploymentData.DesignationID || 0,
+      LocationID: deploymentData.LocationID || 0,
+      StoregatemasterID: deploymentData.StoregatemasterID || 0,
+      DefaultProject: deploymentData.DefaultProject || 0,
+      ProjectCode: deploymentData.ProjectCode || "",
+      ProjectName: deploymentData.ProjectName || "",
+      DefaultFunction: deploymentData.DefaultFunction,
+      FunctionCode: deploymentData.FunctionCode || "",
+      FunctionName: deploymentData.FunctionName || "",
+      ShiftID: deploymentData.ShiftID || 0,
+      ShiftCode: deploymentData.ShiftCode || "",
+      ShiftName: deploymentData.ShiftName || "",
+
+      // Horizontal: values.horizontal === true ? "Y" : "N",
+      // Vertical: values.vertical === true ? "Y" : "N",
+      // HorizontalMimNo: values.Horizontalmin || 0,
+      // VerticalMimNo: values.Verticalmin || 0,
+      // DesignationID: designLookup ? designLookup.RecordID : 0,
+      // LocationID: locationLookup ? locationLookup.RecordID : 0,
+      // StoregatemasterID: gateLookup ? gateLookup.RecordID : 0,
+      CompanyID,
+      Horizontal: values.Horizontal === true ? "Y" : "N",
+      Vertical: values.Vertical === true ? "Y" : "N",
+      HorizontalMimNo: values.HorizontalMimNo,
+      VerticalMimNo: values.VerticalMimNo,
+      AutoApprovalYesOrNo: values.AutoApprovalYesOrNo === true ? "Y" : "N",
+      ApprovelTolerance: values.ApprovelTolerance,
+      AutoRejectionYesOrNo: values.AutoRejectionYesOrNo === true ? "Y" : "N",
+      RejectionTolerance: values.RejectionTolerance,
+    };
+
+    // console.log(locationLookup.locationRecordID, "????????");
+    const response = await dispatch(postDeployment({ data: idata }));
+    // return;
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
   /*************LOA************* */
   const [empLoaData, SetEmpLoaData] = useState({
     recordID: "",
     description: "",
+    category: "",
+    RenewalDate: "",
+    personal: false,
+    renewal: false
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -1564,6 +1901,24 @@ console.log(params, "--params");
     code: Data.Code,
     description: Data.Name,
     LoaDescription: empLoaData.description,
+    personal: empLoaData.personal === "Y" ? true : false,
+    renewal: empLoaData.renewal === "Y" ? true : false,
+    // category: Data.Category,
+    category:
+      empLoaData.category == "Education"
+        ? "EC"
+        : empLoaData.category == "Insurance "
+          ? "IS"
+          : empLoaData.category == "Award "
+            ? "AD"
+            : empLoaData.category == "Certificate "
+              ? "CT"
+              : empLoaData.category == "Warranty "
+                ? "WT"
+                : empLoaData.category == "Others "
+                  ? "OS"
+                  : "",
+    RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
   const FnAttachment = async (values, resetForm, del) => {
@@ -1571,8 +1926,8 @@ console.log(params, "--params");
       laomode === "A" && !del
         ? "insert"
         : laomode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     console.log(values);
 
@@ -1582,10 +1937,14 @@ console.log(params, "--params");
       Description: values.LoaDescription,
       //  ImageName: ImageName ? ImageName:Data.ImageName,
       Attachment: ImageName ? ImageName : Data.ImageName,
+      Personal: values.personal === true ? "Y" : "N",
+      RenewalRequired: values.renewal === true ? "Y" : "N",
+      Category: values.category,
+      NextRenewalRequiredDate: values.RenewalDate,
       Sortorder: "0",
       CompanyID,
     };
-    //
+
     console.log("save" + JSON.stringify(idata));
 
     const response = await dispatch(
@@ -1596,7 +1955,7 @@ console.log(params, "--params");
       dispatch(
         fetchExplorelitview(
           "TR210",
-          "List Of Attachments",
+          "List of Documents",
           `EmployeeID=${recID}`,
           ""
         )
@@ -1703,11 +2062,11 @@ console.log(params, "--params");
         <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{color:'#0000D1'}}/>}>
         <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={()=> {setScreen(0)}}>Employee</Typography>
 {show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Contact</Typography>):false}
-{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Employee Process</Typography>):false}
+{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Skills</Typography>):false}
 {show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Functions</Typography>):false}
 {show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
 {show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
-{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Attachments</Typography>):false} 
+{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Documents</Typography>):false} 
  {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false}
 
         </Breadcrumbs>
@@ -1727,11 +2086,11 @@ console.log(params, "--params");
                 >
                   <MenuItem value={0}>Employee</MenuItem>
                   <MenuItem value={5}>Contact</MenuItem>
-                  <MenuItem value={1}>Employee Process</MenuItem>
+                  <MenuItem value={1}>Skills</MenuItem>
                   <MenuItem value={2}>Functions</MenuItem>
                   <MenuItem value={3}>Managers</MenuItem>
                   <MenuItem value={4}>Deployment</MenuItem>
-                   <MenuItem value={6}>List of Attachments</MenuItem> 
+                   <MenuItem value={6}>List of Documents</MenuItem> 
                   <MenuItem value={7}>Item Custody</MenuItem>
 
                 </Select>
@@ -1803,7 +2162,7 @@ console.log(params, "--params");
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Employee Process
+                      Skills
                     </Typography>
                   ) : (
                     false
@@ -1847,7 +2206,7 @@ console.log(params, "--params");
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      List of Attachments
+                      List of Documents
                     </Typography>
                   ) : (
                     false
@@ -1873,10 +2232,9 @@ console.log(params, "--params");
                     </Typography>
                   ) : (
                     false
-
                   )}
 
-{show == "11" ? (
+                  {show == "11" ? (
                     <Typography
                       variant="h5"
                       color="#0000D1"
@@ -1926,18 +2284,19 @@ console.log(params, "--params");
                     <MenuItem value={0}>Employee</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
                     {initialValues.employeetype === "CI" ? (
-                    <MenuItem value={8}>Contracts In</MenuItem>
+                      <MenuItem value={8}>Contracts In</MenuItem>
                     ) : null}
-                      {initialValues.employeetype === "CO" ? (
-                    <MenuItem value={11}>Contracts Out</MenuItem>
+                    {initialValues.employeetype === "CO" ? (
+                      <MenuItem value={11}>Contracts Out</MenuItem>
                     ) : null}
-                    <MenuItem value={1}>Employee Process</MenuItem>
+                    <MenuItem value={1}>Skills</MenuItem>
+                    <MenuItem value={12}>Approvals</MenuItem>
                     <MenuItem value={2}>Functions</MenuItem>
                     <MenuItem value={3}>Managers</MenuItem>
                     <MenuItem value={4}>Deployment</MenuItem>
                     <MenuItem value={9}>Geo Location</MenuItem>
                     <MenuItem value={10}>Leave Configuration</MenuItem>
-                    <MenuItem value={6}>List of Attachments</MenuItem>
+                    <MenuItem value={6}>List of Documents</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
                   </Select>
                 </FormControl>
@@ -2010,105 +2369,6 @@ console.log(params, "--params");
                     )}
 
                     <FormControl sx={{ gap: formGap }}>
-                      {/* <TextField
-                          id="outlined-basic"
-                          label="ID"
-                          variant="standard"
-                          value={selectLookupData.lookupRecordid}
-                          focused
-                          sx={{ display: "none" }}
-                        />
-                        <FormControl
-                          sx={{
-                           
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          <TextField
-                            id="outlined-basic"
-                            label="Department"
-                            variant="standard"
-                            value={selectLookupData.lookupCode}
-                            focused
-                            required
-                            DE
-                            inputProps={{ tabIndex: "-1" }}
-                          />
-                          
-                          <IconButton
-                            sx={{ height: 40, width: 40 }}
-                            onClick={() => handleShow("DE")}
-                          >
-                            <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                          </IconButton>
-                          <TextField
-                            id="outlined-basic"
-                            label=""
-                            variant="standard"
-                            value={selectLookupData.lookupDesc}
-                            fullWidth
-                            focused
-                            inputProps={{ tabIndex: "-1" }}
-                          />
-                        </FormControl> */}
-
-                      {/* <FormControl
-                        focused
-                        variant="standard"
-                        sx={{ gridColumn: "span 2" }}
-                      >
-                        <InputLabel variant="filled" id="employeetype">
-                          {
-                            <span>
-                              Employee Type <span style={{ color: "red",marginBottom:"2px" }}>*</span>
-                            </span>
-                          }
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          label=""
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          value={values.employeetype}
-                          id="employeetype"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="employeetype"
-                          required
-                          focused
-                        >
-                          <MenuItem value="FH">Prohibition Period</MenuItem>
-                          <MenuItem value="SH">Permanent</MenuItem>
-                          <MenuItem value="N">Contractor</MenuItem>
-                        </Select>
-                      </FormControl> */}
-                      {/* <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={<span>Employee Type</span>}
-                        value={values.employeetype}
-                        id="employeetype"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="employeetype"
-                        required
-                        focused
-                        sx={{
-                          gridColumn: "span 2",
-                          // backgroundColor: "#ffffff",
-                          // "& .MuiInputBase-root": {
-                          //   backgroundColor: "",
-                          // },
-                        }}
-                      >
-                        <MenuItem value="PP">Prohibition Period</MenuItem>
-                        <MenuItem value="PM">Permanent</MenuItem>
-                        <MenuItem value="CT">Contractor</MenuItem>
-                      </TextField> */}
                       <Productautocomplete
                         sx={{ marginTop: "7px" }}
                         name="Department"
@@ -2123,7 +2383,7 @@ console.log(params, "--params");
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth
@@ -2213,24 +2473,6 @@ console.log(params, "--params");
                         inputProps={{ maxLength: 90 }}
                       />
 
-                      {/* <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Comments"
-                        value={values.Comm}
-                        id="Comm"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Comm"
-                        error={!!touched.Comm && !!errors.Comm}
-                        helperText={touched.Comm && errors.Comm}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                        multiline
-                        rows={2}
-                      /> */}
                       <TextField
                         select
                         fullWidth
@@ -2270,6 +2512,30 @@ console.log(params, "--params");
                         />
 
                         <FormLabel focused={false}>Disable</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="scrummaster"
+                          id="scrummaster"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Scrum Master"
+                        />
+
+                        <FormLabel focused={false}>Scrum Master</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="prjmanager"
+                          id="prjmanager"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Project Manager"
+                        />
+
+                        <FormLabel focused={false}>Project Manager</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -2294,99 +2560,6 @@ console.log(params, "--params");
                         </Stack>
                       )}
 
-                      {/* <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Manager"
-                        value={values.Mgr}
-                        id="Mgr"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Mgr"
-                        error={!!touched.Mgr && !!errors.Mgr}
-                        helperText={touched.Mgr && errors.Mgr}
-                        sx={{ gridColumn: "span 2" }}
-                        focused
-                        inputProps={{ maxLength: 90 }}
-                       
-                      /> */}
-
-                      {/* <FormControl
-                        sx={{
-                          gridColumn: "span 2",
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        
-                       <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={designLookup.designlookupRecordid}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-
-                        <TextField
-                          id="outlined-basic"
-                          label="Designation"
-                          variant="standard"
-                          value={designLookup.designlookupCode}
-                          focused
-                          required
-                          DE
-                          inputProps={{tabIndex:"-1"}}
-                        />
-                        {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                      {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                      {/* </Button> */}
-                      {/* <IconButton
-                          sx={{ height: 40, width: 40 }}
-                          onClick={() => handleShow("DESIGN")}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                        <TextField
-                          id="outlined-basic"
-                          label=""
-                          variant="standard"
-                          value={designLookup.designlookupDesc}
-                          fullWidth
-                          focused
-                          inputProps={{tabIndex:"-1"}}
-                        />
-                      </FormControl> */}
-
-                      {/* <TextField
-                          fullWidth
-                          variant="standard"
-                          type="number"
-                          label="Salary"
-                          value={values.Sal}
-                          id="Sal"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Sal"
-                          error={!!touched.Sal && !!errors.Sal}
-                          helperText={touched.Sal && errors.Sal}
-                          sx={{ background: "" }}
-                          focused
-                          onWheel={(e) => e.target.blur()}
-                          onInput={(e) => {
-                            e.target.value = Math.max(0, parseInt(e.target.value))
-                              .toString()
-                              .slice(0, 8);
-                          }}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                        /> */}
-
                       <TextField
                         name="joindate"
                         type="date"
@@ -2401,7 +2574,7 @@ console.log(params, "--params");
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="confirmdate"
@@ -2417,7 +2590,7 @@ console.log(params, "--params");
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         fullWidth
@@ -2441,7 +2614,7 @@ console.log(params, "--params");
                         focused
                         inputProps={{ maxLength: 90 }}
                         multiline
-                        // rows={2}
+                      // rows={2}
                       />
                       <TextField
                         fullWidth
@@ -2521,7 +2694,7 @@ console.log(params, "--params");
                         color="error"
                         variant="contained"
                         disabled={true}
-                        //  color="error"
+                      //  color="error"
                       >
                         Delete
                       </Button>
@@ -2572,7 +2745,7 @@ console.log(params, "--params");
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                      // filterValue={locationLookup.locationRecordID}
+                    // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -2654,7 +2827,7 @@ console.log(params, "--params");
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -2675,7 +2848,7 @@ console.log(params, "--params");
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -2763,7 +2936,7 @@ console.log(params, "--params");
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2777,7 +2950,7 @@ console.log(params, "--params");
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2792,7 +2965,7 @@ console.log(params, "--params");
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                      //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                     />
                     <TextField
                       fullWidth
@@ -2907,6 +3080,443 @@ console.log(params, "--params");
         ) : (
           false
         )}
+        {show == "12" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={deploymentInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  FndeploymentApprovals(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                  </Box>
+                  {/* <Box display="flex" flexDirection="column" gap={2}> */}
+                  {/* Row 1: Horizontal */}
+                  <Box display="flex" flexDirection="column" gap={2}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="Horizontal"
+                        name="Horizontal"
+                        // onChange={handleChange}
+                        disabled
+                        // onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Horizontal"
+                      />
+                      <FormLabel focused={false}>Horizontal</FormLabel>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="HorizontalMimNo"
+                        name="HorizontalMimNo"
+                        value={values.HorizontalMimNo}
+                        // inputProps={{readOnly:true}}
+                        onBlur={handleBlur}
+                        // onChange={handleChange}
+                                            
+                            onChange={(e) => {
+    const val = e.target.value;
+    if (/^[012345]?$/.test(val)) {
+      handleChange(e); // only allow '', '1', '2', or '3'
+    }
+  }}
+      label="Minimum managers to approve (0 for all managers)"
+                        // label="No of levels to approve"
+                        sx={{
+                          width: "400px",
+                          marginLeft: "30px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textAlign: "right" },
+                        //   },
+                        // }}
+                         InputProps={{
+    inputProps: {
+      style: { textAlign: "right" },
+      min: 0,
+      max: 5,
+    },
+  }}
+
+       onKeyDown={(e) => {
+    const allowedKeys = ["0","1", "2", "3","4", "5", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+    if (!allowedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }}
+                      />
+                    </Box>
+
+                    {/* Row 2: Vertical */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="Vertical"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="Vertical"
+                        as={Checkbox}
+                        label="Vertical"
+                      />
+                      <FormLabel focused={false}>Vertical</FormLabel>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="VerticalMimNo"
+                        name="VerticalMimNo"
+                        value={values.VerticalMimNo}
+                        onBlur={handleBlur}
+          
+                         
+                            onChange={(e) => {
+    const val = e.target.value;
+    if (/^[123]?$/.test(val)) {
+      handleChange(e); // only allow '', '1', '2', or '3'
+    }
+  }}
+   label="No of levels to approve(minimum level of 3)"
+                        // label="Minimum managers to approve (0 for all managers)"
+                        sx={{
+                          width: "400px",
+                          marginLeft: "47px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textAlign: "right" },
+                        //   },
+                        // }}
+                        
+                         InputProps={{
+    inputProps: {
+      readOnly:values.Vertical ? false : true,
+      style: { textAlign: "right" },
+      min: 1,
+      max: 3,
+    },
+  }}
+  onKeyDown={(e) => {
+    const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+    if (!allowedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }}
+                      />
+                    </Box>
+                  </Box>
+                  <Box display="flex" flexDirection="column" marginTop={1} gap={2}>
+                    {/* First AutoApprovalYesOrNo Checkbox */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="AutoApprovalYesOrNo"
+                        name="AutoApprovalYesOrNo"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Auto Approval</FormLabel>
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="ApprovelTolerance"
+                        name="ApprovelTolerance"
+                        value={values.ApprovelTolerance}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+  //                        onChange={(e) => {
+  //   const val = e.target.value;
+  //   if (/^[123]?$/.test(val)) {
+  //     handleChange(e); // only allow '', '1', '2', or '3'
+  //   }
+  // }}
+                        label="Tolerance days"
+                        sx={{
+                          width: "400px",
+                          marginLeft: "10px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // InputProps={{
+                        //   inputProps: {
+                        //     style: { textAlign: "right" },
+                        //   },
+                        // }}
+
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 1,
+                            max: 3,
+                          },
+                        }}
+                        onKeyDown={(e) => {
+                          const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+                          if (!allowedKeys.includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
+                      />
+                    </Box>
+
+                    {/* Second AutoRejectionYesOrNo Checkbox */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="AutoRejectionYesOrNo"
+                        name="AutoRejectionYesOrNo"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Auto Rejection</FormLabel>
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="RejectionTolerance"
+                        name="RejectionTolerance"
+                        value={values.RejectionTolerance}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Tolerance days"
+                        sx={{
+                          width: "400px",
+                          marginLeft: "10px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      /></Box>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    mt="30px"
+                    padding={1}
+                    gap={2}
+                  >
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          fnSave(values, "harddelete");
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )}
+                    {/* {YearFlag == "true" ? (
+                      <Button
+                        onClick={() => mgrFunctionFn(values, resetForm, true)}
+                        color="error"
+                        variant="contained"
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+
+                  <Popup
+                    title="Location"
+                    openPopup={openLOCATIONPopup}
+                    setOpenPopup={setOpenLOCATIONPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2051"
+                      screenName="Location"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Gate"
+                    openPopup={openGATEPopup}
+                    setOpenPopup={setOpenGATEPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2050"
+                      screenName="Gate"
+                      filterName={"parentID"}
+                      // filterValue={locationLookup.locationRecordID}
+                      childToParent={childToParent}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Designation"
+                    openPopup={opendesignPopup}
+                    setOpenPopup={setOpendesignPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2047"
+                      screenName="Designation"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  {/* <Popup
+                    title="CheckIn"
+                    openPopup={openCHECKINPopup}
+                    setOpenPopup={setOpenCHECKINPopup}
+                  >
+                    <Listviewpopup
+                      accessID=""
+                      screenName="CheckIn"
+                      childToParent={childToParent}
+                    />
+                  </Popup> */}
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
         {show == "1" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -2991,8 +3601,8 @@ console.log(params, "--params");
                         }}
                         focused
 
-                        //  error={!!touched.Desc && !!errors.Desc}
-                        //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -3161,7 +3771,31 @@ console.log(params, "--params");
                                   alignItems: "center",
                                 }}
                               >
-                                <Productautocomplete
+                                <TextField
+                                  fullWidth
+                                  variant="standard"
+                                  type="text"
+                                  value={values.Skills}
+                                  id="Skills"
+                                  name="Skills"
+                                  label="Skills"
+                                  required
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  error={!!touched.Skills && !!errors.Skills}
+                                  helperText={touched.Skills && errors.Skills}
+                                  sx={{
+                                    //gridColumn: "span 2",
+                                    backgroundColor: "#ffffff", // Set the background to white
+                                    "& .MuiFilledInput-root": {
+                                      backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                    },
+                                  }}
+                                  focused
+                                  multiline
+                                  inputProps={{ maxLength: 90 }}
+                                />
+                                {/* <Productautocomplete
                                   name="process"
                                   label="process"
                                   variant="outlined"
@@ -3184,7 +3818,7 @@ console.log(params, "--params");
                                     });
                                   }}
                                   url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2001","ScreenName":"Process","Filter":"parentID=${CompanyID}","Any":""}}`}
-                                />
+                                /> */}
                                 {/* <TextField
                                   id="outlined-basic"
                                   label="ID"
@@ -3583,7 +4217,7 @@ console.log(params, "--params");
                           }}
                           //  onChange={handleSelectionFunctionname}
                           // defaultValue={selectedFunctionName}
-                          url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                         />
                         {/* <TextField
                           id="function"
@@ -3649,7 +4283,14 @@ console.log(params, "--params");
                         Delete
                       </Button>
                     )}
-                    <Button type="reset" color="warning" variant="contained">
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
                       Cancel
                     </Button>
                   </Box>
@@ -3679,9 +4320,9 @@ console.log(params, "--params");
             <Formik
               initialValues={managerInitialValue}
               enableReinitialize={true}
-              onSubmit={(values, { resetForm }) => {
+              onSubmit={(values, { resetForm, setFieldValue }) => {
                 setTimeout(() => {
-                  mgrFunctionFn(values, resetForm, false);
+                  mgrFunctionFn(values, resetForm, false, setFieldValue);
                 }, 100);
               }}
             >
@@ -3694,11 +4335,17 @@ console.log(params, "--params");
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
                   onReset={() => {
-                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    selectCellRowDataMGR({
+                      rowData: {},
+                      mode: "A",
+                      field: "",
+                      setFieldValue,
+                    });
                     resetForm();
                   }}
                 >
@@ -3830,10 +4477,11 @@ console.log(params, "--params");
                           setPageSize(newPageSize)
                         }
                         onCellClick={(params) => {
-                          selectCellRowData({
+                          selectCellRowDataMGR({
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue,
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -3859,7 +4507,33 @@ console.log(params, "--params");
                       />
                     </Box>
 
-                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                   <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+                   
+
+                       <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={<span>Level</span>}
+                          value={values.Level}
+                          id="Level"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Level"
+                          // required
+                          focused
+                        
+                        >
+                          {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
+                          {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
+                           {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
+                        </TextField>
+                     
+
+                       
+                    
+                   
+                    
                       <Box
                         sx={{
                           display: "flex",
@@ -3867,53 +4541,111 @@ console.log(params, "--params");
                           alignItems: "center",
                         }}
                       >
-                        <Productautocomplete
+                        {/* <Productautocomplete
                           name="manager"
-                          label="manager"
+                          label="Manager"
                           variant="outlined"
                           id="manager"
                           value={designationLookup}
-                          // value={values.manager}
                           onChange={(newValue) => {
-                            // setFieldValue("manager", newValue);
-                            console.log(newValue, "--newvalue manager");
-
-                            console.log(newValue.RecordID, "manager RecordID");
-
+                            
                             SetDesignationLookup({
                               RecordID: newValue.DesignationID,
                               ManagerID: newValue.RecordID,
                               Code: newValue.Code,
                               Name: newValue.Name,
+                              
                             });
+                            
                           }}
-                          //  onChange={handleSelectionFunctionname}
-                          // defaultValue={selectedFunctionName}
+
+                          
                           url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
-                        />
-                        {/* <TextField
-                          id="manager"
-                          label="Manager"
-                          variant="standard"
-                          focused
-                          required
-                          inputProps={{ tabIndex: "-1" }}
-                          value={designationLookup.desCode}
-                        />
-                        <IconButton
-                          onClick={() => handleShow("DISG")}
-                          sx={{ height: 40, width: 40 }}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                        <TextField
-                          id="dies"
-                          variant="standard"
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                          focused
-                          value={designationLookup.desName}
                         /> */}
+
+                        
+                      <ProductautocompleteLevel
+  name="manager"
+  label="Manager"
+  variant="outlined"
+  id="manager"
+  value={designationLookup}
+  onChange={(newValue) => {
+    SetDesignationLookup({
+      DesignationID: newValue.DesignationID,
+      RecordID: newValue.RecordID,
+      Code: newValue.Code,
+      Name: newValue.Name,
+    });
+  }}
+ url={`${baseApiUrl}ManagerLevelController.php`}
+   payload={{
+    EmployeeID: recID,
+    Level: values.Level || 1,
+    CompanyID: CompanyID
+    // You can make this dynamic if needed
+  }}
+/>
+                      </Box>
+
+                      {/* Vertical Checkboxes */}
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="hrmanager"
+                               checked={values.hrmanager}
+                              id="hrmanager"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            />
+                          }
+                          label="HR Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="financemanager"
+                              id="financemanager"
+                               checked={values.financemanager}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            />
+                          }
+                          label="Finance Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="projectmanager"
+                              id="projectmanager"
+                              checked={values.projectmanager}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            />
+                          }
+                          label="Project Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="facilitymanager"
+                              id="facilitymanager"
+                               checked={values.facilitymanager}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            />
+                          }
+                          label="Facility Manager"
+                        />
                       </Box>
                     </FormControl>
                   </Box>
@@ -3944,7 +4676,9 @@ console.log(params, "--params");
                     )}
                     {YearFlag == "true" ? (
                       <Button
-                        onClick={() => mgrFunctionFn(values, resetForm, true)}
+                        onClick={() =>
+                          mgrFunctionFn(values, resetForm, true, setFieldValue)
+                        }
                         color="error"
                         variant="contained"
                       >
@@ -3955,7 +4689,14 @@ console.log(params, "--params");
                         Delete
                       </Button>
                     )}
-                    <Button type="reset" color="warning" variant="contained">
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
                       Cancel
                     </Button>
                   </Box>
@@ -4054,7 +4795,7 @@ console.log(params, "--params");
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -4075,7 +4816,7 @@ console.log(params, "--params");
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                       {/* <TextField
                         fullWidth
@@ -4161,7 +4902,7 @@ console.log(params, "--params");
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                       {/* <TextField
                         id="outlined-basic"
@@ -4267,7 +5008,7 @@ console.log(params, "--params");
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
                     <FormControl
@@ -4303,10 +5044,10 @@ console.log(params, "--params");
                           //   Name: newValue.Name,
                           // });
                         }}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
-                          values.location ? values.location.RecordID : 0
-                        }'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                          }'","Any":""}}`}
                       />
+
                       {/* <TextField
                         id="outlined-basic"
                         label="ID"
@@ -4347,6 +5088,66 @@ console.log(params, "--params");
                       /> */}
                     </FormControl>
                     <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Productautocomplete
+                        id="function"
+                        name="function"
+                        label={
+                          <span>
+                            Function
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.function}
+                        onChange={(newValue) => {
+                          setFieldValue("function", newValue);
+                          console.log(newValue, "--newvalue function");
+                          console.log(newValue.RecordID, "function RecordID");
+                        }}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+ ='${CompanyID}'","Any":""}}`}
+                      />
+                    </FormControl>
+                    <FormControl
+                      sx={{
+                        //gridColumn: "span 2",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Productautocomplete
+                        id="project"
+                        name="project"
+                        label={
+                          <span>
+                            Project
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.project}
+                        onChange={(newValue) => {
+                          setFieldValue("project", newValue);
+                          console.log(newValue, "--newvalue project");
+                          console.log(newValue.RecordID, "project RecordID");
+                        }}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
+                    </FormControl>
+
+                    {/* <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -4393,64 +5194,284 @@ console.log(params, "--params");
                         focused
                         // inputProps={{ readOnly: true }}
                       />
-                    </FormControl>
-
-                    {/* <FormControl
-                      sx={{
-                        gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={checkInLookup.cinRecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="CheckIn"
-                        variant="standard"
-                        value={checkInLookup.cinCode}
-                        focused
-                        required
-                        DESIGN
-                        inputProps={{ tabIndex: "-1" }}
-                      />
-
-                      <IconButton
-                        sx={{ height: 40, width: 40 }}
-                        onClick={() => handleShow("CIN")}
-                      >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
-                      <TextField
-                        id="outlined-basic"
-                        label="CheckIn"
-                        variant="standard"
-                        value={checkInLookup.cinName}
-                        fullWidth
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                      />
                     </FormControl> */}
                   </Box>
+                  {/* <Box display="flex" flexDirection="column" gap={2}> */}
+                  {/* Row 1: Horizontal */}
+                  {/* <Box display="flex" flexDirection="column" gap={2}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="horizontal"
+                        name="horizontal"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Horizontal"
+                      />
+                      <FormLabel focused={false}>Horizontal</FormLabel>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="Horizontalmin"
+                        name="Horizontalmin"
+                        value={values.Horizontalmin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Minimum managers to approve"
+                        sx={{
+                          width: "420px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    {/* Row 2: Vertical */}
+                  {/* <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="vertical"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="vertical"
+                        as={Checkbox}
+                        label="Vertical"
+                      />
+                      <FormLabel focused={false}>Vertical</FormLabel>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="Verticalmin"
+                        name="Verticalmin"
+                        value={values.Verticalmin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Minimum managers to approve"
+                        sx={{
+                          width: "420px",
+                          marginLeft: "15px",
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box> */}
+                  {/* </Box> */}
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                  <Typography variant="h5">Week Off</Typography>
+                  <Typography variant="h5">Shift Details</Typography>
+
+                  {/* <Typography variant="body1" sx={{ minWidth: 80 }}>
+    Shift
+  </Typography> */}
+                  {/* <FormControl sx={{ width: 500, mb: 2 }}>
+  <TextField
+    select
+    variant="standard"
+    name="BillingUnits"
+    id="BillingUnits"
+    value={values.BillingUnits}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    required
+    focused
+    sx={{
+      width: 150, // Adjust width as needed
+    }}
+  >
+    <MenuItem value="HS">General</MenuItem>
+    <MenuItem value="DS">Days</MenuItem>
+    <MenuItem value="WS">Week</MenuItem>
+    <MenuItem value="MS">Month</MenuItem>
+  </TextField>
+</FormControl>
+
+  <FormControl sx={{ width: 500, mb: 2 }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="time"
+                        id="checkin"
+                        name="checkin"
+                        inputFormat="HH:mm:aa"
+                        value={values.checkin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Check In Time"
+                        focused
+                        // inputProps={{ maxLength:20}}
+                      />
+                      </FormControl>
+                  <FormControl sx={{ width: 500, mb: 2 }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="time"
+                        id="checkout"
+                        name="checkout"
+                        inputFormat="HH:mm:aa"
+                        value={values.checkout}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Check Out Time"
+                        focused
+                        // inputProps={{ readOnly: true }}
+                      />
+             </FormControl> */}
+
+                  <Stack
+                    direction="column"
+                    spacing={2}
+                    sx={{ width: 500, mt: 2, padding: formGap }}
+                  >
+                    {/* Shift */}
+                    <FormControl variant="standard" fullWidth>
+                      {/* <TextField
+    select // 👈 This is required for dropdown
+    fullWidth
+    type="text"
+    id="checkin"
+    name="checkin"
+    value={values.checkin}
+    onBlur={handleBlur}
+    onChange={handleChange}
+    label="Shift"
+    focused
+  >
+    <MenuItem value="HS">General</MenuItem>
+    <MenuItem value="DS">Days</MenuItem>
+    <MenuItem value="WS">Week</MenuItem>
+    <MenuItem value="MS">Month</MenuItem>
+  </TextField> */}
+                      <Productautocomplete
+                        id="shift"
+                        name="shift"
+                        label={
+                          <span>
+                            Shift
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.shift}
+                        onChange={(newValue) => {
+                          //                        Monday: deploymentData.Monday === "Y" ? true : false,
+                          // Tuesday: deploymentData.TuesdayTuesdayShift === "Y" ? true : false,
+                          // Wednesday: deploymentData.Wednesday === "Y" ? true : false,
+                          // Thursday: deploymentData.Thursday === "Y" ? true : false,
+                          // Friday: deploymentData.Friday === "Y" ? true : false,
+                          // Saturday: deploymentData.Saturday === "Y" ? true : false,
+                          // Sunday: deploymentData.Sunday === "Y" ? true : false,
+                          setFieldValue("shift", newValue);
+                          setFieldValue(
+                            "Monday",
+                            newValue.Monday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Tuesday",
+                            newValue.Tuesday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Wednesday",
+                            newValue.Wednesday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Thursday",
+                            newValue.Thursday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Friday",
+                            newValue.Friday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Saturday",
+                            newValue.Saturday === "Y" ? true : false
+                          );
+                          setFieldValue(
+                            "Sunday",
+                            newValue.Sunday === "Y" ? true : false
+                          );
+                          console.log(newValue, "--newvalue shift");
+                          console.log(newValue.RecordID, "shift RecordID");
+                        }}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"","Any":""}}`}
+                      />
+                    </FormControl>
+
+                    {/* Check In Time */}
+                    <FormControl variant="standard">
+                      <TextField
+                        fullWidth
+                        type="time"
+                        id="checkin"
+                        name="checkin"
+                        value={values.shift?.ShiftStartTime || values.checkin}
+                        // value={values.checkin}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Shift Start Time"
+                        inputProps={{
+                          readOnly: true,
+                        }}
+                        focused
+                      />
+                    </FormControl>
+
+                    {/* Check Out Time */}
+                    <FormControl variant="standard">
+                      <TextField
+                        fullWidth
+                        type="time"
+                        id="checkout"
+                        name="checkout"
+                        value={values.shift?.ShiftendTime || values.checkout}
+                        // value={values.checkout}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Shift End Time"
+                        focused
+                        inputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </FormControl>
+                  </Stack>
+
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5" padding={1}>Week Off</Typography>
                   <Box>
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="monday"
-                      id="monday"
+                      name="Monday"
+                      id="Monday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Monday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Monday</FormLabel>
@@ -4458,12 +5479,13 @@ console.log(params, "--params");
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="tuesday"
-                      id="tuesday"
+                      name="Tuesday"
+                      id="Tuesday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Tuesday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Tuesday</FormLabel>
@@ -4471,12 +5493,13 @@ console.log(params, "--params");
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="wednesday"
-                      id="wednesday"
+                      name="Wednesday"
+                      id="Wednesday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Wednesday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Wednesday</FormLabel>
@@ -4484,12 +5507,13 @@ console.log(params, "--params");
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="thursday"
-                      id="thursday"
+                      name="Thursday"
+                      id="Thursday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Thursday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Thursday</FormLabel>
@@ -4497,12 +5521,13 @@ console.log(params, "--params");
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="friday"
-                      id="friday"
+                      name="Friday"
+                      id="Friday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Friday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Friday</FormLabel>
@@ -4510,12 +5535,13 @@ console.log(params, "--params");
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="saturday"
-                      id="saturday"
+                      name="Saturday"
+                      id="Saturday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Saturday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Saturday</FormLabel>
@@ -4523,15 +5549,76 @@ console.log(params, "--params");
                     <Field
                       //  size="small"
                       type="checkbox"
-                      name="sunday"
-                      id="sunday"
+                      name="Sunday"
+                      id="Sunday"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="Sunday"
+                      disabled
                     />
 
                     <FormLabel focused={false}>Sunday</FormLabel>
+                  </Box>
+                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                   <Typography variant="h5" padding={1}>Checkin & Checkout Options</Typography>
+                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="biometric"
+                      id="biometric"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="biometric"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Biometric</FormLabel>
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="mobile"
+                      id="mobile"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="mobile"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Mobile Geofencing</FormLabel>
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="cloud"
+                      id="cloud"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="cloud"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Cloud Application</FormLabel>
+
+                     <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="managermanual"
+                      id="managermanual"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="managermanual"
+                      // disabled
+                    />
+
+                    <FormLabel focused={false}>Manager Manual</FormLabel>
+
                   </Box>
                   <Box
                     display="flex"
@@ -4655,15 +5742,23 @@ console.log(params, "--params");
         ) : (
           false
         )}
-        {show == "6" ? (
+       {show == "6" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               // onSubmit={handleFormSubmit}
               initialValues={AttachmentInitialValues}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
+                if (values.renewal && (!values.RenewalDate || values.RenewalDate === "00-00-0000")) {
+                  toast.error("Renewal Date is Required");
+                  return;
+                }
+                const updatedValues = {
+                  ...values,
+                  RenewalDate: values.renewal ? values.RenewalDate : "00-00-0000",
+                };
                 setTimeout(() => {
-                  FnAttachment(values, resetForm, false);
+                  FnAttachment(updatedValues, resetForm, false);
                 }, 100);
               }}
             >
@@ -4708,7 +5803,7 @@ console.log(params, "--params");
                           onChange={handleChange}
                           label="Code"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <TextField
@@ -4722,7 +5817,7 @@ console.log(params, "--params");
                           onChange={handleChange}
                           label="Name"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -4837,6 +5932,62 @@ console.log(params, "--params");
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         />
+                        <FormControl focused variant="standard" required>
+                          <InputLabel id="category">Category</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-filled-label"
+                            id="category"
+                            name="category"
+                            value={values.category}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+
+                          >
+                            <MenuItem value="EC">Education</MenuItem>
+                            <MenuItem value="AD">Award</MenuItem>
+                            <MenuItem value="CT">Certificate</MenuItem>
+                            <MenuItem value="IS">Insurance</MenuItem>
+                            <MenuItem value="WT">Warranty</MenuItem>
+                            <MenuItem value="OS">Others</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="personal"
+                            id="personal"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Personal"
+                          />
+                          <FormLabel focused={false}>Personal</FormLabel></Box>
+                        {/* {values.renewal == true ? ( */}
+                        <TextField
+                          name="RenewalDate"
+                          label="Next Renewal Required Date"
+                          type="date"
+                          variant="standard"
+                          focused
+                          value={values.RenewalDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.RenewalDate && !!errors.RenewalDate}
+                          helperText={touched.RenewalDate && errors.RenewalDate}
+                          disabled={!values.renewal}
+                          InputProps={{
+                            sx: {
+                              pl: 1.5,
+                            },
+                          }}
+                          InputLabelProps={{
+                            shrink: true, 
+                          }}
+                        />
+
+
+                       
                         <FormControl
                           sx={{
                             display: "flex",
@@ -4844,34 +5995,42 @@ console.log(params, "--params");
                             justifyContent: "space-between",
                           }}
                         >
-                          {/* <FormControlLabel control={<Field type="checkbox" name="checkbox" id="checkbox"  label="Disable" />} label="Disable" /> */}
+                          {/* <FormControlLabel 
+                          control={
+                          <Field 
+                          type="checkbox" 
+                          name="personal" 
+                          id="personal"  
+                          label="Personal" 
+                          />}
+                           label="Personal" />
+                           <FormControlLabel 
+                          control={
+                          <Field 
+                          type="checkbox" 
+                          name="renewal" 
+                          id="renewal"  
+                          label="Renewal Required" 
+                          />}
+                           label="Renewal Required" /> */}
+
                           <Box>
-                            <Typography variant="h6">
+
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="renewal"
+                              id="renewal"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Renewal Required"
+                            />
+                            <FormLabel focused={false}>Renewal Required</FormLabel>
+                            {/* <Typography variant="h6">
                               Certificate Attachment
-                            </Typography>
-                            <IconButton
-                              size="large"
-                              color="warning"
-                              aria-label="upload picture"
-                              component="label"
-                            >
-                              <input
-                                hidden
-                                accept=".pdf"
-                                type="file"
-                                onChange={changeHandler}
-                              />
-                              <PictureAsPdfOutlinedIcon fontSize="large" />
-                            </IconButton>
-                            <Button
-                              variant="contained"
-                              component={"a"}
-                              onClick={() => {
-                                fnViewFile();
-                              }}
-                            >
-                              View{" "}
-                            </Button>
+                            </Typography> */}
+
                           </Box>
                         </FormControl>
 
@@ -4923,10 +6082,32 @@ console.log(params, "--params");
                         <Box
                           display="flex"
                           justifyContent="end"
-                          padding={1}
-                          mt={29}
+                          padding={1}                          
                           gap={2}
                         >
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept=".pdf"
+                              type="file"
+                              onChange={changeHandler}
+                            />
+                            <PictureAsPdfOutlinedIcon fontSize="small" />
+                          </IconButton>
+                          <Button
+                            variant="contained"
+                            component={"a"}
+                            onClick={() => {
+                              fnViewFile();
+                            }}
+                          >
+                            View{" "}
+                          </Button>
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -4990,6 +6171,7 @@ console.log(params, "--params");
                           </Button>
                         </Box>
                       </FormControl>
+
                     </Box>
                   </Box>
                 </form>
@@ -5396,8 +6578,8 @@ console.log(params, "--params");
         ) : (
           false
         )}
-        
-{/*Contracts In */}
+
+        {/*Contracts In */}
         {show == "8" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -5640,7 +6822,7 @@ console.log(params, "--params");
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       {/* <SingleFormikOptimizedAutocomplete
                        
@@ -5683,13 +6865,13 @@ console.log(params, "--params");
                         name="BillingUnits"
                         required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -5728,6 +6910,130 @@ console.log(params, "--params");
                         multiline
                         inputProps={{ maxLength: 90 }}
                       />
+
+                      <TextField
+                        name="Hsn"
+                        type="text"
+                        id="Hsn"
+                        label="HSN Code"
+                        variant="standard"
+                        focused
+                        required
+                        value={values.Hsn}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Hsn && !!errors.Hsn}
+                        helperText={touched.Hsn && errors.Hsn}
+                        autoFocus
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Sgst"
+                        type="number"
+                        id="Sgst"
+                        label="SGST"
+                        variant="standard"
+                        value={values.Sgst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Sgst && !!errors.Sgst}
+                        helperText={touched.Sgst && errors.Sgst}
+                        sx={{
+                          background: "",
+                          input: { textAlign: "right" },
+                        }}
+                        inputprops={{
+                          maxlength: 13,
+                          step: 0.01,
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Gst"
+                        type="number"
+                        id="Gst"
+                        label="CGST"
+                        variant="standard"
+                        value={values.Gst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Gst && !!errors.Gst}
+                        helperText={touched.Gst && errors.Gst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        inputProps={{ maxLength: 25 }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Igst"
+                        type="number"
+                        id="Igst"
+                        label="IGST"
+                        variant="standard"
+                        value={values.Igst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Igst && !!errors.Igst}
+                        helperText={touched.Igst && errors.Igst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="TDS"
+                        type="number"
+                        id="TDS"
+                        label="TDS"
+                        variant="standard"
+                        value={values.TDS}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.TDS && !!errors.TDS}
+                        helperText={touched.TDS && errors.TDS}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+
                       <TextField
                         name="FromPeriod"
                         type="date"
@@ -5741,10 +7047,10 @@ console.log(params, "--params");
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -5996,8 +7302,8 @@ console.log(params, "--params");
           false
         )}
 
-{/*Contracts Out */}
-{show == "11" ? (
+        {/*Contracts Out */}
+        {show == "11" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={ContractInitialValue}
@@ -6239,7 +7545,7 @@ console.log(params, "--params");
                         }}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       {/* <SingleFormikOptimizedAutocomplete
                        
@@ -6282,13 +7588,13 @@ console.log(params, "--params");
                         name="BillingUnits"
                         required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -6328,6 +7634,128 @@ console.log(params, "--params");
                         inputProps={{ maxLength: 90 }}
                       />
                       <TextField
+                        name="Hsn"
+                        type="text"
+                        id="Hsn"
+                        label="HSN Code"
+                        variant="standard"
+                        focused
+                        required
+                        value={values.Hsn}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Hsn && !!errors.Hsn}
+                        helperText={touched.Hsn && errors.Hsn}
+                        autoFocus
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Sgst"
+                        type="number"
+                        id="Sgst"
+                        label="SGST"
+                        variant="standard"
+                        value={values.Sgst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Sgst && !!errors.Sgst}
+                        helperText={touched.Sgst && errors.Sgst}
+                        sx={{
+                          background: "",
+                          input: { textAlign: "right" },
+                        }}
+                        inputprops={{
+                          maxlength: 13,
+                          step: 0.01,
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Gst"
+                        type="number"
+                        id="Gst"
+                        label="CGST"
+                        variant="standard"
+                        value={values.Gst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Gst && !!errors.Gst}
+                        helperText={touched.Gst && errors.Gst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        inputProps={{ maxLength: 25 }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="Igst"
+                        type="number"
+                        id="Igst"
+                        label="IGST"
+                        variant="standard"
+                        value={values.Igst}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Igst && !!errors.Igst}
+                        helperText={touched.Igst && errors.Igst}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
+                        // disabled={mode === "V"}
+                        name="TDS"
+                        type="number"
+                        id="TDS"
+                        label="TDS"
+                        variant="standard"
+                        value={values.TDS}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.TDS && !!errors.TDS}
+                        helperText={touched.TDS && errors.TDS}
+                        sx={{ background: "" }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
+                      />
+                      <TextField
                         name="FromPeriod"
                         type="date"
                         id="FromPeriod"
@@ -6340,10 +7768,10 @@ console.log(params, "--params");
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -6595,7 +8023,6 @@ console.log(params, "--params");
           false
         )}
 
-
         {show == "9" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -6655,7 +8082,7 @@ console.log(params, "--params");
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -6676,7 +8103,7 @@ console.log(params, "--params");
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -6968,8 +8395,8 @@ console.log(params, "--params");
                         }}
                         focused
 
-                        //  error={!!touched.Desc && !!errors.Desc}
-                        //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -7162,7 +8589,7 @@ console.log(params, "--params");
                             //value={selectedProjectOptions}
                             //onChange={handleSelectionProjectname}
                             // defaultValue={selectedProjectName}
-                            url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 
@@ -7196,7 +8623,7 @@ console.log(params, "--params");
                           variant="standard"
                           type="number"
                           // label="Total Days"
-                            label="Eligible Days"
+                          label="Eligible Days"
                           id="totaldays"
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -7215,14 +8642,14 @@ console.log(params, "--params");
                               },
                             },
                           }}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(
-                          //     0,
-                          //     parseInt(e.target.value)
-                          //   )
-                          //     .toString()
-                          //     .slice(0, 8);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(
+                        //     0,
+                        //     parseInt(e.target.value)
+                        //   )
+                        //     .toString()
+                        //     .slice(0, 8);
+                        // }}
                         />
                         <TextField
                           fullWidth
@@ -7251,14 +8678,14 @@ console.log(params, "--params");
                               },
                             },
                           }}
-                          // onInput={(e) => {
-                          //   e.target.value = Math.max(
-                          //     0,
-                          //     parseInt(e.target.value)
-                          //   )
-                          //     .toString()
-                          //     .slice(0, 8);
-                          // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(
+                        //     0,
+                        //     parseInt(e.target.value)
+                        //   )
+                        //     .toString()
+                        //     .slice(0, 8);
+                        // }}
                         />
                         <TextField
                           fullWidth
@@ -7289,18 +8716,18 @@ console.log(params, "--params");
                             },
                           }}
                         />
-                            <TextField
-                        select
-                        fullWidth
-                        variant="standard"
-                        label={<span>Year</span>}
-                        value={values.Year}
-                        id="Year"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Year"
-                        // required
-                        focused
+                        <TextField
+                          select
+                          fullWidth
+                          variant="standard"
+                          label={<span>Year</span>}
+                          value={values.Year}
+                          id="Year"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Year"
+                          // required
+                          focused
                         // sx={{
                         //   gridColumn: "span 2",
                         //   backgroundColor: "#ffffff",
@@ -7308,15 +8735,14 @@ console.log(params, "--params");
                         //     backgroundColor: "",
                         //   },
                         // }}
-                      >
-                    
-                    <MenuItem value="2024">2024</MenuItem>
-                        <MenuItem value="2025">2025</MenuItem>
-                        <MenuItem value="2026">2026</MenuItem>
-                        {/* <MenuItem value="PY">2024</MenuItem>
+                        >
+                          <MenuItem value="2024">2024</MenuItem>
+                          <MenuItem value="2025">2025</MenuItem>
+                          <MenuItem value="2026">2026</MenuItem>
+                          {/* <MenuItem value="PY">2024</MenuItem>
                         <MenuItem value="CY">2025</MenuItem>
                         <MenuItem value="NY">2026</MenuItem> */}
-                      </TextField>
+                        </TextField>
                       </FormControl>
 
                       <Box

@@ -35,7 +35,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import { StockProcessApi } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from '@mui/icons-material/OpenInBrowserOutlined';
-
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
 import Person2Icon from '@mui/icons-material/Person2';
@@ -486,6 +485,7 @@ export const fetchListview =
         AccessID == "TR079" ||
         AccessID == "TR080" ||
         AccessID == "TR032" ||
+       AccessID == "TR128" ||
         AccessID == "TR087"
       ) {
         if (AccessID == "TR080") {
@@ -500,7 +500,7 @@ export const fetchListview =
             year +
             "'";
         }
-        if (AccessID != "TR080") {
+        if (AccessID != "TR080" ) {
           filter = "parentID= " + filter + "'";
           // console.log("---3---",filter);
         }
@@ -542,8 +542,11 @@ export const fetchListview =
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
+        // AccessID != "TR273" &&
+        
         AccessID != "TR262" &&
-         AccessID != "TR022"  
+         AccessID != "TR022" 
+
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -560,8 +563,8 @@ export const fetchListview =
         AccessID == "TR105" ||
         AccessID == "TR002" ||
         AccessID == "TR086" ||
-
         AccessID == "TR091" 
+       
       
         
       ) {
@@ -572,15 +575,6 @@ export const fetchListview =
       filter = "ProjectID=" + `'${filter}'`;
      
      }
-      // if (
-      //   AccessID === "TR133" ||
-      //   AccessID === "TR233" ||
-      //   AccessID === "TR236" ||
-      //   AccessID === "TR234" ||
-      //   AccessID === "TR235"
-      // ) {
-      //   filter = `CompanyID=${CompId}&ParentID=${ParentID}`;
-      // }
       
 
     }
@@ -592,7 +586,7 @@ export const fetchListview =
         // "ScreenName": screenName,
         AccessID: AccessID,
         ScreenName: screenName,
-        Filter: filter,
+        Filter: AccessID == "TR128" ? `parentID=${CompId}`: AccessID == "TR273" ? "Type = 'CI'":AccessID == "TR274" ? "Type = 'CO'":filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,
@@ -1737,7 +1731,9 @@ export const fetchListview =
                 );
               },
             };
-          }else if (
+          }
+          
+          else if (
             AccessID == "TR236" || AccessID == "TR234" || AccessID == "TR235"|| AccessID=="TR233"
           ) {
             obj = {
@@ -1958,7 +1954,19 @@ export const fetchListview =
                                 
                                 EmpName:params.row.Name
                               }
-                            : 
+                            :
+                            AccessID === "TR128"
+                            ? {
+                                LocationName: params.row.Name,
+                                CompanyName: params.row.CompanyName,
+                              } :
+                              AccessID === "TR127"
+                            ? {
+                                GateName: params.row.Name,
+                                LocationName: params.row.LocationName,
+                                CompanyName: params.row.CompanyName,
+                              }
+                            :
                             AccessID === "TR257"
                             ? {
                                 
@@ -1972,7 +1980,7 @@ export const fetchListview =
                               : AccessID === "TR123"
                               ? {
   
-                                EmpName:params.row.EmployeeName
+                                EmpName:params.row.Name
                                 }
                              
                               : AccessID === "TR134"
@@ -2170,7 +2178,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {AccessID == "TR132" ? (
+                    {/* {AccessID == "TR132" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR134/Daily Hour Task/${params.row.RecordID}/${params.row.parentID}`}
                         state={{EmpName:params.row.EmployeeName,Locname:params.row.LocationName,proName:params.row.ProjectName,EmployeeID:params.row.EmployeesID,Date:params.row.Date}}
@@ -2184,34 +2192,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    {/* {AccessID == "TR236" ? (
-                      <Link
-                        to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Activities">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )}
-                     {AccessID == "TR236" ? (
-                      <Link
-                      to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
-                      >
-                        <Tooltip title="Activity Weightage">
-                          <IconButton color="info" size="small">
-                            <BalanceIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : (
-                      false
-                    )} */}
+                    */}
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
@@ -2241,7 +2222,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                   
+{/*                    
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
@@ -2289,7 +2270,7 @@ export const fetchListview =
                       </Link>
                     ) : (
                       false
-                    )}
+                    )} */}
 
                       {AccessID == "TR136" ? (
                       <Link
@@ -2337,14 +2318,15 @@ export const fetchListview =
                       <Box>
                         <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                        >
+                        state={{Locationname:params.row.Name}}
+                       >
                           <Tooltip title="Gate">
                             <IconButton color="info" size="small">
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <Link
+                        {/* <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID1}/${params.row.ChildName1}/${params.row.RecordID}/${params.row.parentID}`}
                         >
                           <Tooltip title="Bin">
@@ -2352,7 +2334,7 @@ export const fetchListview =
                               <ListAltOutlinedIcon />
                             </IconButton>
                           </Tooltip>
-                        </Link>
+                        </Link> */}
                       </Box>
                     ) : (
                       false
@@ -3594,7 +3576,7 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <Link
+                        {/* <Link
                         to={`/Apps/Secondarylistview/TR123/Check In/${params.row.RecordID}`}
                         state={{EmpName:params.row.Name,Locname:params.row.LocationName}}
                       >
@@ -3614,7 +3596,7 @@ export const fetchListview =
                             <ListAltOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>
+                      </Link> */}
                       {/* <Link
                         to={`/Apps/TR027/Employees/EditEmpfinance entry/E/${params.row.RecordID}/${params.row.Name}`}
                       >
@@ -3740,8 +3722,8 @@ export const fetchListview =
               sortable: false,
               filterable: false,
               disableColumnMenu: true,
-              minWidth: 120,
-              maxWidth: 100,
+              minWidth: 60,
+              maxWidth: 60,
               disableExport: true,
               renderCell: (params) => {
                 return (
@@ -3766,6 +3748,29 @@ export const fetchListview =
                         </Tooltip>
                         )}
                       </Link>
+                      
+              
+                  </Stack>
+                );
+              },
+            };
+            listviewData.Data.columns.splice(2, 0, obj);
+          }
+           if (AccessID == "TR027") {
+            const obj = {
+              field: "emp",
+              headerName: " ",
+              headerAlign: "center",
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
+              minWidth: 40,
+              maxWidth: 40,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Stack direction="row">
+                   
                       <Link>
                         <Tooltip title="Employee">
                           <IconButton color="info">

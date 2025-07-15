@@ -140,6 +140,7 @@ else if (accessID == "TR234") {
     filter = `CompanyID='${CompId}' AND ActivitesID='${parentID}'`;
     console.log(filter,"--calling TR235");
   }
+  
   else if (accessID == "TR063") {
     filter = `Finyear='${year}'`;
   } else if (accessID == "TR004") {
@@ -1786,7 +1787,7 @@ else if (accessID == "TR234") {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
-            <Typography
+            {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -1795,7 +1796,7 @@ else if (accessID == "TR234") {
               }}
             >
               Company
-            </Typography>
+            </Typography> */}
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
               Location
             </Typography>
@@ -1809,7 +1810,7 @@ else if (accessID == "TR234") {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
-            <Typography
+            {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -1818,18 +1819,19 @@ else if (accessID == "TR234") {
               }}
             >
               Company
-            </Typography>
+            </Typography> */}
             <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
                 navigate(
-                  `/Apps/Secondarylistview/TR128/Location/${params.Number}`
+                  `/Apps/TR128/Location`
                 );
               }}
             >
-              Location
+              {/* Location */}
+               {`Location(${state.Locationname})`}
             </Typography>
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
               Gate Entry
@@ -1895,7 +1897,8 @@ else if (accessID == "TR234") {
             </Typography>
           </Breadcrumbs>
         ) 
-        : accessID == "TR233" ? (
+        : 
+        accessID == "TR233" ? (
           <Breadcrumbs
             maxItems={2}
             aria-label="breadcrumb"
@@ -2100,7 +2103,7 @@ else if (accessID == "TR234") {
             aria-label="breadcrumb"
             separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
           >
-             <Typography
+             {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -2109,7 +2112,7 @@ else if (accessID == "TR234") {
               }}
             >
                {`Employee(${state.EmpName})`}
-            </Typography>
+            </Typography> */}
             <Typography
               variant="h5"
               color="#0000D1"

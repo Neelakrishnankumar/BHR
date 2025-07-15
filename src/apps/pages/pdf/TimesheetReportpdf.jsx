@@ -1,194 +1,3 @@
-// import React from "react";
-// import {
-//   Page,
-//   Text,
-//   View,
-//   Document,
-//   StyleSheet,
-// } from "@react-pdf/renderer";
-
-// // Styles
-// const styles = StyleSheet.create({
-//   page: {
-//     padding: 20,
-//     fontSize: 10,
-//   },
-//   section: {
-//     marginBottom: 10,
-//   },
-//   headerContainer: {
-//     alignItems: "center",
-//     justifyContent: "flex-start",
-//     marginTop: 20,
-//   },
-//   headerText: {
-//     fontSize: 16,
-//     fontWeight: "bold",
-//     textAlign: "center",
-//   },
-//   table: {
-//     display: "table",
-//     width: "100%",
-//     borderWidth: 1,
-//     borderColor: "#000",
-//     borderStyle: "solid",
-//   },
-//   tableRow: {
-//     flexDirection: "row",
-//     borderBottomWidth: 1,
-//     borderBottomColor: "#000",
-//     borderBottomStyle: "solid",
-//   },
-//   tableRowLast: {
-//     flexDirection: "row",
-//   },
-//   tableColHeader1: {
-//     width: "35px",
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     fontWeight: "bold",
-//     backgroundColor: "#EEE",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableCol1: {
-//     width: "35px",
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableColHeader: {
-//     flex: 1,
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     fontWeight: "bold",
-//     backgroundColor: "#EEE",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableColHeaderDescription: {
-//     flex: 2.5,
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     fontWeight: "bold",
-//     backgroundColor: "#EEE",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableColHeaderLast: {
-//     flex: 1,
-//     padding: 5,
-//     fontWeight: "bold",
-//     backgroundColor: "#EEE",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableCol: {
-//     flex: 1,
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableColDescription: {
-//     flex: 2.5,
-//     borderRightWidth: 1,
-//     borderRightColor: "#000",
-//     padding: 5,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-//   tableColLast: {
-//     flex: 1,
-//     padding: 5,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     textAlign: "center",
-//   },
-// });
-
-// // Split data: 20 on first page, 26 afterwards
-// const paginateData = (data) => {
-//   const firstPage = data.slice(0, 20);
-//   const otherPages = [];
-
-//   for (let i = 20; i < data.length; i += 26) {
-//     otherPages.push(data.slice(i, i + 26));
-//   }
-
-//   return [firstPage, ...otherPages];
-// };
-
-// const TimeSheetPDF = ({ data = [], filters = {} }) => {
-//   const pages = paginateData(data);
-
-//   return (
-//     <Document>
-//       {pages.map((pageData, pageIndex) => (
-//         <Page size="A4" style={styles.page} key={pageIndex}>
-//           {pageIndex === 0 && (
-//             <View style={styles.headerContainer}>
-//               <Text style={styles.headerText}>
-//                 {`TimeSheet - ${filters.EmployeeID} (${filters.Month} - ${filters.Year})`}
-//               </Text>
-//             </View>
-//           )}
-
-//           {/* Table Header */}
-//           <View style={styles.table}>
-//             <View style={styles.tableRow}>
-//               <Text style={styles.tableColHeader1}>SLNO</Text>
-//               <Text style={styles.tableColHeader}>CheckInDate</Text>
-//               <Text style={styles.tableColHeader}>Employee</Text>
-//               <Text style={styles.tableColHeader}>Project</Text>
-//               <Text style={styles.tableColHeader}>Function</Text>
-//               <Text style={styles.tableColHeaderDescription}>Description</Text>
-//               <Text style={styles.tableColHeaderLast}>Status</Text>
-//             </View>
-
-//             {/* Table Body */}
-//             {pageData.map((row, rowIndex) => {
-//               const isLast = rowIndex === pageData.length - 1;
-//               return (
-//                 <View
-//                   key={rowIndex}
-//                   style={isLast ? styles.tableRowLast : styles.tableRow}
-//                 >
-//                   <Text style={styles.tableCol1}>{row.SLNO}</Text>
-//                   <Text style={styles.tableCol}>{row.CheckInDate}</Text>
-//                   <Text style={styles.tableCol}>{row.EmployeeName}</Text>
-//                   <Text style={styles.tableCol}>{row.ProjectName}</Text>
-//                   <Text style={styles.tableCol}>{row.FuntionsName}</Text>
-//                   <Text style={styles.tableColDescription}>
-//                     {row.Description}
-//                   </Text>
-//                   <Text style={styles.tableColLast}>{row.Status}</Text>
-//                 </View>
-//               );
-//             })}
-//           </View>
-//         </Page>
-//       ))}
-//     </Document>
-//   );
-// };
-
-// export default TimeSheetPDF;
-
-
 import React from "react";
 import {
   Page,
@@ -198,7 +7,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 
-// Styles
+
 const styles = StyleSheet.create({
   page: {
     padding: 20,
@@ -426,18 +235,18 @@ const styles = StyleSheet.create({
 
 // Split data: 20 on first page, 26 afterwards
 const paginateData = (data) => {
-  const firstPage = data.slice(0, 20);
+  const firstPage = data.slice(0, 30);
   const otherPages = [];
 
-  for (let i = 20; i < data.length; i += 26) {
+  for (let i = 30; i < data.length; i += 26) {
     otherPages.push(data.slice(i, i + 26));
   }
 
   return [firstPage, ...otherPages];
 };
 
-//const TimeSheetPDF = ({ data = [], filters = {} }) => {
-const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName = "" }) => {
+//const TimeSheetreportpdf = ({ data = [], filters = {} }) => {
+const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", managerName = "" }) => {
   const pages = paginateData(data);
   pages.forEach((page, i) => {
     console.log(`Page ${i + 1} first row index:`, data.indexOf(page[0]));
@@ -448,74 +257,46 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
     return `${day}-${month}-${year}`;
   };
 
+
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
+  console.log(filters.EmployeeID, "EMP");
   return (
     <Document>
-
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
-
           {pageIndex === 0 && (
+            // <View style={styles.headerContainer}>
+            //   <Text style={styles.headerText}>
 
+            //     {`TimeSheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
+            //   </Text>
+            // </View>
             <View style={styles.headerTextContainer}>
               <Text style={styles.headerText}>
                 {`TimeSheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
               </Text>
-             
-
               <Text style={styles.subHeaderText}>
                 {`Project: ${projectName}`}
               </Text>
               {/* <Text style={styles.subHeaderText}>
-             {`Manager: ${managerName}`}
-           </Text> */}
+          {`Manager: ${managerName}`}
+        </Text> */}
               {managerName !== "" && (
                 <Text style={styles.subHeaderText}>
                   {`Manager: ${managerName}`}
                 </Text>
-             )} 
+              )}
               <Text style={styles.subHeaderText}>
                 {"Comp -> Completed ||Appr -> Approved"}
               </Text>
             </View>
 
           )}
-          {/* Table Header */}
-          {/* <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <Text style={styles.tableColHeader1}>S.No</Text>
-              <Text style={styles.tableColHeader}>Date</Text>
-              <Text style={styles.tableColHeader}>Project</Text>
-              <Text style={styles.tableColHeaderDescription}>Description</Text>
-              <Text style={styles.tableColHeader}>Comp Date</Text>
-              <Text style={styles.tableColHeader}>Appr By</Text>
-              <Text style={styles.tableColHeader}>Appr Date</Text>
-            </View>
 
-           
-            {pageData.map((row, rowIndex) => {
-              const isLast = rowIndex === pageData.length - 1;
-              return (
-                <View
-                  key={rowIndex}
-                  style={isLast ? styles.tableRowLast : styles.tableRow}
-                >
-                  <Text style={styles.tableCol1}>{rowIndex + 1}</Text>
-                  <Text style={styles.tableCol}>{row.DaliytaskCorrectDate}</Text>
-                  <Text style={styles.tableCol}>{row.ProjectCode}</Text>
-                  <Text style={styles.tableColDescription}>
-                    {row.Description}
-                  </Text>
-                  <Text style={styles.tableCol}>{row.CompletedDate?.split(" ")[0]}</Text>
-                  <Text style={styles.tableCol}>{row.ManagerCode}</Text>
-                  <Text style={styles.tableCol}>{row.ApprovedDate}</Text>
-                </View>
-              );
-            })}
-          </View> */}
+          {/* Table Header */}
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableColHeader1}>S.No</Text>
@@ -535,7 +316,7 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
                   style={isLast ? styles.tableRowLast : styles.tableRow}
                 >
                   <Text style={styles.tableCol1}>{rowIndex + 1}</Text>
-                  <Text style={styles.tableCol}>{row.DaliytaskCorrectDate}</Text>
+                  <Text style={styles.tableCol}>{row.Date}</Text>
                   <Text style={styles.tableColSmall}>{row.ProjectCode}</Text>
                   <Text style={styles.tableColDescription}>{row.Description}</Text>
                   <Text style={styles.tableCol}>{row.CompletedDate?.split(" ")[0]}</Text>
@@ -545,24 +326,23 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
               );
             })}
           </View>
-              <View
-                fixed
-                style={{
-                  position: "absolute",
-                  bottom: 10,
-                  left: 0,
-                  right: 0,
-                  textAlign: "center",
-                  fontSize: 10,
-                }}
-              >
-                <Text>Page {pageIndex + 1} of {pages.length}</Text>
-              </View>
+          <View
+            fixed
+            style={{
+              position: "absolute",
+              bottom: 10,
+              left: 0,
+              right: 0,
+              textAlign: "center",
+              fontSize: 10,
+            }}
+          >
+            <Text>Page {pageIndex + 1} of {pages.length}</Text>
+          </View>
         </Page>
       ))}
     </Document>
   );
 };
 
-export default TimeSheetPDF;
-
+export default TimeSheetreportpdf;
