@@ -3607,7 +3607,8 @@ export const fetchListview =
                         </Tooltip>
                       </Link> */}
                       </Box>
-                      )  : AccessID == "TR003" ? (
+                     
+                    )  : AccessID == "TR003" ? (
                         <Link
                           to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
                         >

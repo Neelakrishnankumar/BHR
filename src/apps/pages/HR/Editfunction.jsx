@@ -423,121 +423,121 @@ const Editfunction = () => {
                   gap={formGap}
                   padding={1}
                   gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                 // gap="30px"
+                  // gap="30px"
                   sx={{
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
                 >
-                
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
-                      variant="standard"
-                      focused
-                      required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      sx={{ 
-                        
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      autoFocus
-                    />
-                    <TextField
-                      name="name"
-                      type="text"
-                      id="name"
-                      label="Name"
-                      variant="standard"
-                      focused
-                      value={values.name}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      sx={{ 
-                       
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      autoFocus
-                    />
 
-    <FormControl
-                      focused
-                      variant="standard"
-                      sx={{  background: "#ffffff"  }}
-                      // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
+                  <TextField
+                    name="code"
+                    type="text"
+                    id="code"
+                    label="Code"
+                    variant="standard"
+                    focused
+                    required
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.code && !!errors.code}
+                    helperText={touched.code && errors.code}
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Name"
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    // autoFocus
+                  />
+
+                  <FormControl
+                    focused
+                    variant="standard"
+                    sx={{ background: "#ffffff" }}
+                  // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
+                  >
+                    <InputLabel id="status">Categories</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="categories"
+                      name="categories"
+                      value={values.categories}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
                     >
-                      <InputLabel id="status">Categories</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="categories"
-                        name="categories"
-                        value={values.categories}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="TS">Technology Stack</MenuItem>
-                        <MenuItem value="BV">Business Vertical</MenuItem>
-                       
+                      <MenuItem value="TS">Technology Stack</MenuItem>
+                      <MenuItem value="BV">Business Vertical</MenuItem>
 
-                      </Select>
-                      
-                    </FormControl>
 
-                    <TextField
-                      name="sortorder"
-                      type="number"
-                      id="sortorder"
-                      label="Sort Order"
-                      variant="standard"
-                      focused
-                      value={values.sortorder}
-                      onBlur={handleBlur}
+                    </Select>
+
+                  </FormControl>
+
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    focused
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ background: "" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
                       onChange={handleChange}
-                      error={!!touched.sortorder && !!errors.sortorder}
-                      helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      onWheel={(e) => e.target.blur()} 
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
                     />
-                    <Box>
-                      <Field
-                        type="checkbox"
-                        name="disable"
-                        id="disable"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
-                      />
 
-                      <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
-                
-                </Box> 
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
+                </Box>
                 {/* {/* <Box
                   display="grid"
                   gap={2}
@@ -646,7 +646,7 @@ const Editfunction = () => {
 
 
 
-                <Box display="flex" justifyContent="end"padding={1} gap="20px">
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -664,7 +664,8 @@ const Editfunction = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )} 
+                  {/* {YearFlag === "true" && mode !== "A" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -682,7 +683,20 @@ const Editfunction = () => {
                     >
                       Delete
                     </Button>
-                  )}
+                  )} */}
+                   {YearFlag === "true" && mode =="E" ? ( 
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Fnsave(values, "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                   ) : (
+                    null
+                   )} 
                   <Button
                     color="warning"
                     variant="contained"

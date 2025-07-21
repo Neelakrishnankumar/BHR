@@ -312,7 +312,7 @@ const Editdept = () => {
 
                   <TextField
                     fullWidth
-                   variant="standard"
+                    variant="standard"
                     type="text"
                     label="Name"
                     value={values.Name}
@@ -344,7 +344,7 @@ const Editdept = () => {
                   />
                   <TextField
                     fullWidth
-                   variant="standard"
+                    variant="standard"
                     type="text"
                     label="Location"
                     value={values.Loc}
@@ -365,7 +365,7 @@ const Editdept = () => {
                   />
                   <TextField
                     fullWidth
-                   variant="standard"
+                    variant="standard"
                     type="Number"
                     label="Sort Order"
                     value={values.SortOrder}
@@ -428,7 +428,8 @@ const Editdept = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )}
+                  {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -446,6 +447,19 @@ const Editdept = () => {
                     >
                       Delete
                     </Button>
+                  )} */}
+                  {mode == "E" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values, "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    null
                   )}
                   {/* <Button
                     color="error"

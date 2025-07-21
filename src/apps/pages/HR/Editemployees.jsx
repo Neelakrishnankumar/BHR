@@ -86,6 +86,7 @@ import {
 // Purpose:To Create Employee
 
 // ***********************************************
+
 const Editemployee = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -1653,6 +1654,11 @@ const Editemployee = () => {
   const [funMgrRecID, setFunMgrRecID] = useState("");
 
   const mgrFunctionFn = async (values, resetForm, del, setFieldValue) => {
+
+    // if (!designationLookup || !designationLookup.DesignationID) {
+    //   toast.error("Please select a Manager.");
+    //   return;
+    // }
     let action =
       funMode === "A" && !del
         ? "insert"
@@ -2701,7 +2707,7 @@ const Editemployee = () => {
                         Save
                       </Button>
                     )}
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && mode == "E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -2725,14 +2731,15 @@ const Editemployee = () => {
                         Delete
                       </Button>
                     ) : (
-                      <Button
-                        color="error"
-                        variant="contained"
-                        disabled={true}
-                      //  color="error"
-                      >
-                        Delete
-                      </Button>
+                      // <Button
+                      //   color="error"
+                      //   variant="contained"
+                      //   disabled={true}
+                      // //  color="error"
+                      // >
+                      //   Delete
+                      // </Button>
+                      null
                     )}
                     <Button
                       color="warning"
@@ -4371,7 +4378,8 @@ const Editemployee = () => {
                 setFieldValue,
               }) => (
                 <form
-                  onSubmit={handleSubmit}
+                  //onSubmit={handleSubmit}
+
                   onReset={() => {
                     selectCellRowDataMGR({
                       rowData: {},
@@ -4405,6 +4413,7 @@ const Editemployee = () => {
                         label="Code"
                         focused
                         inputProps={{ readOnly: true }}
+
                       />
 
                       <TextField
@@ -4546,6 +4555,7 @@ const Editemployee = () => {
                       <TextField
                         select
                         fullWidth
+                        type="text"
                         variant="standard"
                         label={<span>Level</span>}
                         value={values.Level}
@@ -4555,12 +4565,12 @@ const Editemployee = () => {
                         name="Level"
                         // required
                         focused
-
                       >
                         {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
                         {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
                         {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
                       </TextField>
+
 
 
 
@@ -4618,6 +4628,7 @@ const Editemployee = () => {
                             CompanyID: CompanyID
                             // You can make this dynamic if needed
                           }}
+                          required
                         />
                       </Box>
 
@@ -4693,7 +4704,8 @@ const Editemployee = () => {
                       <LoadingButton
                         color="secondary"
                         variant="contained"
-                        type="submit"
+                        // type="submit"
+                        onClick={mgrFunctionFn}
                         loading={isLoading}
                       >
                         Save
@@ -5023,7 +5035,7 @@ const Editemployee = () => {
                         name="location"
                         label={
                           <span>
-                            location
+                            Location
                             <span style={{ color: "red", fontWeight: "bold" }}>
                               *
                             </span>
@@ -6481,6 +6493,11 @@ const Editemployee = () => {
                         focused
                         multiline
                         inputProps={{ maxLength: 90 }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
 
                       <TextField
@@ -6511,6 +6528,11 @@ const Editemployee = () => {
                         focused
                         multiline
                         inputProps={{ maxLength: 90 }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
                     </FormControl>
                   </Box>
