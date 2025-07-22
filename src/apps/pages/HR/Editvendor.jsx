@@ -642,8 +642,9 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     id="code"
                     label="Code"
                     variant="standard"
+                    placeholder="Auto"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -655,7 +656,8 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    InputProps={{readOnly:true}}
+                    // autoFocus
                   />
                   <TextField
                     name="name"
@@ -700,7 +702,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="gstnumber"
@@ -726,7 +728,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="mobilenumber"
@@ -753,7 +755,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    // autoFocus
                   />
 
                   <TextField
@@ -772,7 +774,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="date"

@@ -127,7 +127,7 @@ const EditAttendanceHistory = () => {
   }
 
   const AttColumn = [
-    { field: "SLNO", headerName: "SL.NO", width: 5 },
+    { field: "SLNO", headerName: "SL#", width: 5 },
     { field: "Name", headerName: "EMPLOYEE", width: 150 },
     { field: "Day1", headerName: "1", width: 5 },
     { field: "Day2", headerName: "2", width: 5 },

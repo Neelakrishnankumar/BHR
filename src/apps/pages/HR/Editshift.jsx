@@ -249,9 +249,10 @@ const Editshift = () => {
                                         type="text"
                                         id="code"
                                         label="Code"
+                                        placeholder="Auto"
                                         variant="standard"
                                         focused
-                                        required
+                                        // required
                                         value={values.code}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
@@ -264,7 +265,8 @@ const Editshift = () => {
                                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                             }
                                         }}
-                                        autoFocus
+                                        InputProps={{readOnly:true}}
+                                        // autoFocus
                                     />
                                     <TextField
                                         name="name"

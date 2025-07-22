@@ -437,8 +437,9 @@ const Editfunction = () => {
                     id="code"
                     label="Code"
                     variant="standard"
+                    placeholder="Auto"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -451,7 +452,8 @@ const Editfunction = () => {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
                     }}
-                    autoFocus
+                    InputProps={{readOnly:true}}
+                    // autoFocus
                   />
                   <TextField
                     name="name"
@@ -472,7 +474,7 @@ const Editfunction = () => {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
                     }}
-                    // autoFocus
+                    autoFocus
                   />
 
                   <FormControl

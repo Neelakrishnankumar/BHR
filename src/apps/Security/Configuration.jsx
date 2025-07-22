@@ -69,12 +69,19 @@ const Configuration = () => {
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
     const [gst, setGst] = useState("");
+    const [autocode, setAutocode] = useState(data?.CM_AUTOCODE === "Y");
+
+
+    // const handleCheckboxChange = (event) => {
+    //     setAutocode(event.target.checked ? "Y" : "N");
+    // };
     useEffect(() => {
         if (data) {
             setOffaddress(data.CM_ADDRESS || "");
             setGst(data.CM_GST || "");
             setlogoimage(data.CM_IMAGE || "");
             setGstImage(data.CM_GSTIMAGE || "");
+            setAutocode(data.CM_AUTOCODE === "Y");
         }
     }, [data]);
 
@@ -83,6 +90,13 @@ const Configuration = () => {
             SubscriptionCode: Subscriptioncode,
         }));
     }, [location.key]);
+    const handleAutocodeChange = (e) => {
+        const checked = e.target.checked;
+        setAutocode(checked);
+        sessionStorage.setItem("CompanyAutoCode", checked ? "Y" : "N");
+        console.log(checked,"CompanyAutoCode")
+    };
+
     // useEffect(() => {
     //     if (initialvalues?.gstnumber) {
     //       setGst(initialvalues.gstnumber);
@@ -237,6 +251,7 @@ const Configuration = () => {
         // gstnumber: data?.gstnumber || "",
         logoimage: data.CM_IMAGE,
         GstImg: data.CM_GSTIMAGE,
+        // checkbox: data.CM_AUTOCODE === "Y" ? "Y" : "N",
 
     };
     console.log(data.CM_IMAGE, "logo");
@@ -270,6 +285,7 @@ const Configuration = () => {
             GstNo: gst,
             Image: logoimage,
             GstImage: gstImage,
+            AutoCode: autocode ? "Y" : "N"
 
         };
         console.log(offaddress, "Address");
@@ -288,7 +304,7 @@ const Configuration = () => {
         <React.Fragment>
             <Box m="10px">
                 <Typography variant="h2" fontSize="1.2rem" fontWeight="bold" marginBottom={3}>
-                   Company Configuration
+                    Company Configuration
                 </Typography>
                 <Paper elevation={3} sx={{ margin: "1px" }}>
                     <Formik
@@ -320,7 +336,7 @@ const Configuration = () => {
                         }) => (
                             <form onSubmit={handleSubmit}>
 
-                                <Typography variant="h5"  padding={1}>Subscriptions:</Typography>
+                                <Typography variant="h5" padding={1}>Subscriptions:</Typography>
 
                                 <Box
                                     display="grid"
@@ -419,6 +435,7 @@ const Configuration = () => {
                                             }}
 
                                         />
+
                                     </FormControl>
                                     <FormControl
                                         fullWidth
@@ -487,12 +504,14 @@ const Configuration = () => {
 
                                         />
 
+
+
                                     </FormControl>
                                 </Box>
 
 
                                 <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                                <Typography variant="h5"  padding={1}>Company Details:</Typography>
+                                <Typography variant="h5" padding={1}>Company Details:</Typography>
 
                                 <Box
                                     display="grid"
@@ -575,8 +594,29 @@ const Configuration = () => {
                                         />
 
                                     </FormControl>
+                                    <Box>
+                                        {/* <Checkbox
+                                            checked={autocode}
+                                            onChange={(e) => setAutocode(e.target.checked)}
+                                            id="checkbox"
+                                            name="checkbox"
+                                        />
+                                        <FormLabel htmlFor="checkbox" focused={false}>
+                                            Autocode
+                                        </FormLabel> */}
+                                        <Checkbox
+                                            checked={autocode}
+                                            onChange={handleAutocodeChange}
+                                            id="checkbox"
+                                            name="checkbox"
+                                        />
+                                        <FormLabel htmlFor="checkbox" focused={false}>
+                                            Autocode
+                                        </FormLabel>
+
+                                    </Box>
                                 </Box>
-                               
+
                                 <Box
                                     display="flex"
                                     padding={1}

@@ -2436,6 +2436,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Code"
+                        placeholder="Auto"
                         // error={!!touched.Code && !!errors.Code}
                         // helperText={touched.Code && errors.Code}
                         sx={{
@@ -2445,9 +2446,10 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        required
-                        autoFocus
+                        // required
+                        // autoFocus
                         inputProps={{ maxLength: 8 }}
+                        InputProps={{readOnly:true}}
                       />
 
                       <TextField

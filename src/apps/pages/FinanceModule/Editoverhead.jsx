@@ -220,14 +220,16 @@ const Editoverhead = () => {
                       type="text"
                       id="code"
                       label="Code"
-                     variant="standard"
+                      placeholder="Auto"
+                      variant="standard"
                       focused
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      autoFocus
+                      InputProps={{readOnly:true}}
+                      // autoFocus
                     />
                     <TextField
                       name="name"

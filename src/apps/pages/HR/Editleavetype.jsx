@@ -434,9 +434,10 @@ const LeaveType = () => {
                       type="text"
                       id="code"
                       label="Code"
-                     variant="standard"
+                      placeholder="Auto"
+                      variant="standard"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -448,7 +449,8 @@ const LeaveType = () => {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
                       }}
-                      autoFocus
+                      InputProps={{readOnly:true}}
+                      // autoFocus
                     />
 
 

@@ -111,7 +111,7 @@ const EditAttendance = () => {
   const AttColumn = [
     {
       field: "SLNO",
-      headerName: "SL.NO",
+      headerName: "SL#",
       width:50
     },
  {

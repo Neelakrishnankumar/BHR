@@ -622,15 +622,17 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                     type="text"
                     id="code"
                     label="Code"
-                  variant="standard"
+                    placeholder="Auto"
+                    variant="standard"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.code && !!errors.code}
                     helperText={touched.code && errors.code}
-                    autoFocus
+                    InputProps={{readOnly:true}}
+                    // autoFocus
                   />
                   <TextField
                     name="name"
