@@ -266,28 +266,6 @@ const Editcheckin = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      {/* <Box display="flex" justifyContent="space-between" p={2}>
-        <Box display="flex" borderRadius="3px" alignItems="center">
-          {broken && !rtl && (
-            <IconButton onClick={() => toggleSidebar()}>
-              <MenuOutlinedIcon />
-            </IconButton>
-          )}
-          <Typography variant="h3">Check In</Typography>
-        </Box>
-        <Box display="flex">
-          <Tooltip title="Close">
-            <IconButton onClick={() => fnLogOut("Close")} color="error">
-              <ResetTvIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Logout">
-            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box> */}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -393,7 +371,7 @@ const Editcheckin = () => {
 
                       }}
                       
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
                   <FormControl

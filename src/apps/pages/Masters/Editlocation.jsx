@@ -95,7 +95,7 @@ const Editlocation = () => {
       Email: values.contactmail,
       ContactPersonNum: values.contactnumber,
       Number: values.locationnumber,
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: values.disable == true ? "Y" : "N",
       CompanyRecordID,
       // ContactPerson: values.contactperson ? values.contactperson.RecordID : 0,
@@ -241,7 +241,6 @@ const Editlocation = () => {
       </Paper>
       {!getLoading ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
-          {/* <Box m="20px"> */}
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -337,49 +336,6 @@ const Editlocation = () => {
                       },
                     }}
                   />
-                  {/* <FormControl sx={{ gridColumn: "span 2", gap: formGap }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    > */}
-                         {/* <SingleFormikOptimizedAutocomplete 
-                                          label="Contact Person"
-                                          id="contactperson"
-                                          name="contactperson"
-                                          value={values.contactperson}
-                                          onChange={(e,newValue)=> {
-                                            setFieldValue("contactperson",newValue)
-                                          }}
-                                          log
-                                         url={`${store.getState().globalurl.listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Contact Person","Filter":"CompanyID='${CompID}'","Any":"","CompId":"4"}}`}
-                                          /> */}
-                      {/* <TextField
-                        id="employee"
-                        label="Contact Person"
-                        variant="standard"
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                        value={selectCPLookupData.CPlookupCode}
-                      />
-                      <IconButton
-                        onClick={() => handleShow("CP")}
-                        sx={{ height: 40, width: 40 }}
-                      >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
-                      <TextField
-                        id="employee"
-                        variant="standard"
-                        fullWidth
-                        inputProps={{ tabIndex: "-1" }}
-                        focused
-                        value={selectCPLookupData.CPlookupDesc}
-                      /> */}
-                    {/* </Box>
-                  </FormControl> */}
                   <TextField
                     name="contactnumber"
                     type="number"
@@ -470,7 +426,7 @@ const Editlocation = () => {
                   </LoadingButton>
 
                   <Button
-                    color="error"
+                    color="warning"
                     variant="contained"
                     onClick={() => {
                       navigate(

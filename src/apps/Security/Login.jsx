@@ -259,18 +259,7 @@ const Login = () => {
                       sx={{ marginBottom: 2, marginRight: 2 }}
                     >
                       Back Office System{" "}
-                      {/* HR Management{" "} */}
                     </Typography>
-                    {/* <Avatar
-          variant="rounded"
-         // sx={{ width: "100px" }}
-          onClick={() => {
-            navigate("./Chart");
-          }}
-        >
-        
-        </Avatar>  */}
-                    {/* <Avatar variant='rounded' src={LgemsLogo} sx={{width:'227px',height:'100px'}}></Avatar> */}
                   </Stack>
 
                   <Stack
@@ -279,28 +268,6 @@ const Login = () => {
                     }}
                     spacing={2}
                   >
-                    {/* <FormControl fullWidth>
-                      <Field
-                        as="select"
-                        label="Company"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.company}
-                        id="company"
-                        name="company"
-                        focused
-                        style={style}
-                      >
-                        <option value="">Select company</option>
-                        {CompanyCombo.map((company, index) => (
-                          <option value={company.RecordID}>
-                            {company.Name}
-                          </option>
-                        ))}
-                      </Field>
-                     
-                    </FormControl> */}
-
                     <FormControl sx={{marginTop:"30px"}}>
                       <TextField
                         margin="normal"
@@ -346,7 +313,6 @@ const Login = () => {
                         }
                         label="Password"
                       />
-                      {/* {errors.password &&<FormHelperText  sx={{color: "red"}} >{errors.password}</FormHelperText>} */}
                     </FormControl>
                     <TextField
                         margin="normal"
@@ -363,28 +329,7 @@ const Login = () => {
                         error={!!touched.license && !!errors.license}
                         helperText={touched.license && errors.license}
                       />
-                    {/* <FormControl fullWidth>
-                      <Field
-                        as="select"
-                        label="Year"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.year}
-                        id="year"
-                        name="year"
-                        focused
-                        style={style}
-                      >
-                        <option value="">Select Year</option>
-                        {YearCombo.map((year, index) => (
-                          <option value={year.RecordID}>{year.Id}</option>
-                        ))}
-                      </Field>
-                      <ErrorMessage name="year" />
-                      
-                    </FormControl> */}
                     <Stack direction={"row"} justifyContent="end" gap={"10px"}>
-                      {/* <Button variant="contained" color={"success"} onClick={() => {fnLogin(values)}}>Ok</Button> */}
                       <LoadingButton
                         onClick={() => {
                           fnLogin(values);
@@ -397,7 +342,7 @@ const Login = () => {
                       </LoadingButton>
                       <Button
                         variant="contained"
-                        color={"error"}
+                        color={"warning"}
                         onClick={() => {
                           {
                             clear(values);

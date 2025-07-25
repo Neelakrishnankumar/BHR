@@ -112,7 +112,7 @@ const Editfunction = () => {
       Code: values.code,
       Description: values.name,
       Categories: values.categories,
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: isCheck,
       Finyear,
       CompanyID,

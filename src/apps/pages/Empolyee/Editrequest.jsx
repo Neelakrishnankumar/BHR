@@ -347,7 +347,7 @@ const Editrequests = () => {
     Mgr: Data.Mgr,
     Sal: Data.Sal,
     Fax: Data.Fax,
-    SortOrder: Data.SortOrder,
+    SortOrder: Data.SortOrder || 0,
     Disable: Data.Disable,
     Password: Data.Password,
     Department: Data.DeptRecordID
@@ -390,7 +390,7 @@ const Editrequests = () => {
     Mgr: apiData.Mgr,
     Sal: apiData.Sal,
     Fax: apiData.Fax,
-    SortOrder: apiData.SortOrder,
+    SortOrder: apiData.SortOrder ||0,
     checkbox: apiData.Disable,
     Password: apiData.Password,
     Department: apiData.Department,
@@ -422,7 +422,7 @@ const Editrequests = () => {
       // DeptRecordID: selectLookupData.lookupRecordid,
       Code: values.Code,
       Name: values.Name,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || 0,
       Disable: values.checkbox === true ? "Y" : "N",
       Job: values.Job,
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
@@ -2339,7 +2339,7 @@ const Editrequests = () => {
 
     // type: ADLookupData.adType,
     value: allDecData.value,
-    sortorder: allDecData.sortOrder,
+    sortorder: allDecData.sortOrder ||0,
   };
 
   const AllDedFNsave = async (values, resetForm, del) => {
@@ -2367,7 +2367,7 @@ const Editrequests = () => {
         show == "1"
           ? Number(Data.Sal) + Number(values.value)
           : Number(Data.Sal) - Number(values.value),
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder ||0,
       Disable: "N",
 
       parentID: recID,

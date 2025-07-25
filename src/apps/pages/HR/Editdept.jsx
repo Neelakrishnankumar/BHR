@@ -99,7 +99,7 @@ const Editdept = () => {
     Code: apiData.Code,
     Name: apiData.Name,
     Loc: apiData.Loc,
-    SortOrder: apiData.SortOrder,
+    SortOrder: apiData.SortOrder || 0,
     checkbox: Data.Disable === "Y" ? true : false,
   };
   // **********Save Function*****************

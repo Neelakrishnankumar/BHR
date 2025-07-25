@@ -111,7 +111,7 @@ const LeaveType = () => {
       Code: values.code,
       Name: values.name,
       LeaveTypeCategories: values.leavetypecategories,
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: isCheck,
       // Finyear,
       CompanyID,
