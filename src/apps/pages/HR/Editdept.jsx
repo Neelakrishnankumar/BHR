@@ -360,7 +360,7 @@ const Editdept = () => {
                     error={!!touched.Name && !!errors.Name}
                     helperText={touched.Name && errors.Name}
                     focused
-                    autoFocus
+                    autoFocus={CompanyAutoCode === "Y"}
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white

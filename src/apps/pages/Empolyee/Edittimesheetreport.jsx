@@ -183,6 +183,17 @@ const Edittimesheetreport = () => {
 
     const AttColumn = [
         {
+    field: "serialNo",
+    headerName: "SL#",
+    width: 40,
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    renderCell: (params) => {
+      return params.api.getRowIndex(params.id) + 1;
+    },
+  },
+   {
             field: 'RecordID',
             headerName: 'RecordID',
             width: 80,
@@ -197,7 +208,7 @@ const Edittimesheetreport = () => {
         {
             field: 'Date',
             headerName: 'Date',
-            width: 130,
+            width: 100,
 
         },
         {

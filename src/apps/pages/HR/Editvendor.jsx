@@ -68,6 +68,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const [panImage, setPanImage] = useState("");
   const [panUrl, setPanUrl] = useState(null);
   const [gstImage, setGstImage] = useState("");
@@ -762,7 +763,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     name="emailid"
                     type="text"
                     id="emailid"
-                    label="Contact Email id"
+                    label="Email ID"
                     variant="standard"
                     focused
                     value={values.emailid}

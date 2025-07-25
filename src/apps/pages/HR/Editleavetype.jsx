@@ -76,6 +76,7 @@ const LeaveType = () => {
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const [pageSize, setPageSize] = React.useState(10);
@@ -584,7 +585,7 @@ const LeaveType = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR213/LeaveType");
+                      navigate(-1);
                     }}
                   >
                     Cancel

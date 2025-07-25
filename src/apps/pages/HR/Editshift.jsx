@@ -53,7 +53,7 @@ const Editshift = () => {
     const Year = sessionStorage.getItem("year");
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
-
+    const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     // Page params
     const recID = params.id;
     const mode = params.Mode;

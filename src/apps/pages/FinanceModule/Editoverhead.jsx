@@ -56,6 +56,7 @@ const Editoverhead = () => {
   // const CompanyID = sessionStorage.getItem("compID");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const initialValue = {
     code: data.Code,
     name: data.Name,
@@ -235,7 +236,7 @@ const Editoverhead = () => {
                       name="name"
                       type="text"
                       id="name"
-                      label="Name"
+                      label="Overhead"
                      variant="standard"
                       focused
                       value={values.name}

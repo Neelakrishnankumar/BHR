@@ -455,6 +455,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
    const [employee, setEmployee] = useState("");
    console.log(employee,"employeelookup");
@@ -650,7 +651,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                   />
                     <Productautocomplete
                       name="incharge"
-                      label="Project Incharge"
+                      label="Incharge"
                       id="incharge"
                       value={values.incharge}
                       onChange={async (newValue) => {
