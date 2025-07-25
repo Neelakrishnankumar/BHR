@@ -429,8 +429,7 @@ const LeaveType = () => {
                     },
                   }}
                 >
-                 
-                    <TextField
+     {CompanyAutoCode=="Y"?(<TextField
                       name="code"
                       type="text"
                       id="code"
@@ -452,7 +451,28 @@ const LeaveType = () => {
                       }}
                       InputProps={{readOnly:true}}
                       // autoFocus
-                    />
+                    />):(<TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"                    
+                      variant="standard"
+                      focused
+                       required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}                    
+                       autoFocus
+                    />)}            
+                    
 
 
                     <TextField
@@ -474,7 +494,7 @@ const LeaveType = () => {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
                       }}
-                      autoFocus
+                      autoFocus={CompanyAutoCode=="Y"}
                     />
 
                     <FormControl
