@@ -185,7 +185,7 @@ export function fnFileUpload(formData, id, accessid) {
   return async (dispatch) => {
     function onSuccess(success) {
       console.log("2---" + JSON.stringify(success.data));
-      toast.success("Document uploaded Sucessfully");
+      toast.success(success.data.Msg||"Document Uploaded Sucessfully");
 
       const datawait = dispatch(
         Success({

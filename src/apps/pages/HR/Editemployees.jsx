@@ -21,7 +21,7 @@ import {
   Paper,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
-
+import * as Yup from "yup";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field, useFormikContext } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -86,6 +86,7 @@ import {
 // Purpose:To Create Employee
 
 // ***********************************************
+
 const Editemployee = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -98,7 +99,7 @@ const Editemployee = () => {
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   console.log(SubscriptionCode, "codehr");
   const EMPID = sessionStorage.getItem("EmpId");
-
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -127,9 +128,9 @@ const Editemployee = () => {
   // console.log(Data, "geteting Data");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
-const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-const baseApiUrl = useSelector((state) => state.globalurl.baseApiUrl);
-console.log("API URL:", baseApiUrl); 
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const baseApiUrl = useSelector((state) => state.globalurl.baseApiUrl);
+  console.log("API URL:", baseApiUrl);
   const state = location.state || {};
   console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -193,6 +194,35 @@ console.log("API URL:", baseApiUrl);
   //   employeetype: Data.employeetype,
   // };
   //*******Assign Employee values from Database in  Yup initial value******* */
+  const contactvalidationSchema = Yup.object({
+    aadharcardnumber: Yup.string()
+      .matches(/^\d{12}$/, 'Aadhar Number must be exactly 12 digits')
+      .required('Aadhar Number is required'),
+    pfnumber: Yup.string()
+      .matches(/^[A-Za-z0-9]{22}$/, 'PF Number must be exactly 22 alphanumeric characters')
+      .required('PF Number is required'),
+    //     pfnumber: Yup.string()
+    // .matches(/^[A-Z]{2}\/[A-Z]{3}\/\d{7}\/\d{3}\/\d{4}$/, 'Invalid PF Number format')
+    // .required('PF Number is required'),
+    email: Yup.string()
+      .email('Invalid email format')
+      .matches(
+        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
+        'Email must be valid'
+      )
+      .required('Email is required'),
+    esinumber: Yup.string()
+      .matches(/^\d{17}$/, 'ESI Number must be exactly 17 digits')
+      .required('ESI Number is required'),
+    phonenumber: Yup.string()
+      .matches(/^\d{10}$/, 'Phone Number must be valid')
+      .required('Phone Number is required'),
+
+
+
+
+  });
+
   const formatDateForInput = (dateStr) => {
     if (!dateStr) return "";
     const parts = dateStr.split("-");
@@ -539,7 +569,7 @@ console.log("API URL:", baseApiUrl);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "3") {
-       dispatch(fetchApidata(accessID, "get", recID));
+      dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
         fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
       );
@@ -656,7 +686,7 @@ console.log("API URL:", baseApiUrl);
     setIniProcess(false);
     if (types == "harddelete") {
       if (supprodata.RecordID == "") {
-        toast.error("Please select Process");
+        toast.error("Please select the data");
         return;
       }
     }
@@ -667,6 +697,10 @@ console.log("API URL:", baseApiUrl);
 
     if (values.Comments == "") {
       toast.error("Please Enter Comments");
+      return;
+    }
+    if (values.Skills == "") {
+      toast.error("Please Enter Skills");
       return;
     }
 
@@ -723,7 +757,7 @@ console.log("API URL:", baseApiUrl);
       dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       resetForm();
 
-      setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
+      // setSupprodata({ RecordID: "", Comments: "", SortOrder: "", Skills: "" });
       selectcelldata("", "A", "");
     } else {
       toast.error(data.payload.Msg);
@@ -1041,7 +1075,7 @@ console.log("API URL:", baseApiUrl);
 
     if (mode == "A") {
       setFunMgrRecID("");
-
+      setFunEmpRecID("");
       SetFunctionLookup(null);
       SetVendorlookup(null);
       SetCustomerlookup(null);
@@ -1198,10 +1232,10 @@ console.log("API URL:", baseApiUrl);
       setFunEmpRecID("");
       setLevelLookup({
         levelfield: "",
-           hrmanager: "",
-    financemanager: "",
-    projectmanager: "",
-    facilitymanager: "",
+        hrmanager: "",
+        financemanager: "",
+        projectmanager: "",
+        facilitymanager: "",
       })
 
     } else {
@@ -1215,16 +1249,18 @@ console.log("API URL:", baseApiUrl);
         });
         setLevelLookup({
           levelfield: rowData.Level,
-            hrmanager: rowData.HrManager == "Y" ? true : false,
-    financemanager: rowData.FinanceManager == "Y" ? true : false,
-    projectmanager: rowData.ProjectManager == "Y" ? true : false,
-    facilitymanager: rowData.FacilityManager == "Y" ? true : false,
+          hrmanager: rowData.HrManager == "Y" ? true : false,
+          financemanager: rowData.FinanceManager == "Y" ? true : false,
+          projectmanager: rowData.ProjectManager == "Y" ? true : false,
+          facilitymanager: rowData.FacilityManager == "Y" ? true : false,
         });
         setFunMgrRecID(rowData.RecordID);
         console.log(LeaveCondata, "--LeaveCondata");
       }
     }
   };
+
+
   const empFunctionFn = async (values, resetForm, del) => {
     let action =
       funMode === "A" && !del
@@ -1236,7 +1272,7 @@ console.log("API URL:", baseApiUrl);
       RecordID: funEmpRecID,
       EmployeeID: recID,
       FunctionsID: functionLookup ? functionLookup.RecordID : 0,
-      FunctionName: functionLookup? functionLookup.Name : "",
+      FunctionName: functionLookup ? functionLookup.Name : "",
       // FunctionsID: functionLookup.funRecordID,
       CompanyID,
     };
@@ -1365,7 +1401,7 @@ console.log("API URL:", baseApiUrl);
               ? customerlookup.RecordID
               : 0
             : 0,
-            VendorName:
+      VendorName:
         show == "8"
           ? vendorlookup
             ? vendorlookup.Name
@@ -1405,7 +1441,7 @@ console.log("API URL:", baseApiUrl);
           )
         )
         : dispatch(
-                    fetchExplorelitview(
+          fetchExplorelitview(
             "TR244",
             "Contracts Out",
             `EmployeeID='${recID}' AND Customer='Y'`,
@@ -1541,7 +1577,7 @@ console.log("API URL:", baseApiUrl);
     code: Data.Code,
     description: Data.Name,
 
- Horizontal: Data.Horizontal === "Y" ? true : false,
+    Horizontal: Data.Horizontal === "Y" ? true : false,
     Vertical: Data.Vertical === "Y" ? true : false,
     HorizontalMimNo: Data.HorizontalMimNo,
 
@@ -1552,7 +1588,7 @@ console.log("API URL:", baseApiUrl);
     AutoRejectionYesOrNo: Data.AutoRejectionYesOrNo === "Y" ? true : false,
     RejectionTolerance: Data.RejectionTolerance,
 
-Level: levellookup.levelfield,
+    Level: levellookup.levelfield,
     //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
@@ -1572,9 +1608,15 @@ Level: levellookup.levelfield,
 
     //   facilitymanager: checkboxvalues.facilitymanager === "Y" ? true : false,
   };
+  console.log(Data.VerticalMimNo, "VerticalMimNo");
   const [funMgrRecID, setFunMgrRecID] = useState("");
 
   const mgrFunctionFn = async (values, resetForm, del, setFieldValue) => {
+
+    // if (!designationLookup || !designationLookup.DesignationID) {
+    //   toast.error("Please select a Manager.");
+    //   return;
+    // }
     let action =
       funMode === "A" && !del
         ? "insert"
@@ -1588,13 +1630,15 @@ Level: levellookup.levelfield,
       ManagerID: designationLookup.RecordID || 0,
       ManagerName: designationLookup.Name || "",
       CompanyID,
+      Level: values.Level,
       HrManager: values.hrmanager == true ? "Y" : "N",
       FinanceManager: values.financemanager == true ? "Y" : "N",
       ProjectManager: values.projectmanager == true ? "Y" : "N",
       FacilityManager: values.facilitymanager == true ? "Y" : "N",
       // Level: level,
-      Level: values.Level,
+
     };
+    console.log(values.Level, "values.Level");
     // console.log("save" + JSON.stringify(saveData));
 
     const response = await dispatch(
@@ -1688,11 +1732,11 @@ Level: levellookup.levelfield,
     Sunday: deploymentData.SundayShift === "Y" ? true : false,
     // biometric: deploymentData.Biometric === "Y"? true : false,
     // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
-    biometric:deploymentData.BioMetric === "Y" ? true : false,
+    biometric: deploymentData.BioMetric === "Y" ? true : false,
     mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
     managermanual: deploymentData.ManagerManual === "Y" ? true : false,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
-    Horizontal:  true,
+    Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
     HorizontalMimNo: deploymentData.HorizontalMimNo || 1,
     VerticalMimNo: deploymentData.VerticalMimNo || 3,
@@ -1722,10 +1766,10 @@ Level: levellookup.levelfield,
       Friday: values.Friday === true ? "Y" : "N",
       Saturday: values.Saturday === true ? "Y" : "N",
       Sunday: values.Sunday === true ? "Y" : "N",
-       BioMetric: values.biometric === true ? "Y" : "N",
-    ManagerManual: values.managermanual === true ? "Y" : "N",
-    CloudApplication: values.cloud === true ? "Y" : "N",
-    MobileGeoFencing: values.mobile === true ? "Y" : "N",
+      BioMetric: values.biometric === true ? "Y" : "N",
+      ManagerManual: values.managermanual === true ? "Y" : "N",
+      CloudApplication: values.cloud === true ? "Y" : "N",
+      MobileGeoFencing: values.mobile === true ? "Y" : "N",
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -1829,6 +1873,10 @@ Level: levellookup.levelfield,
       ApprovelTolerance: values.ApprovelTolerance,
       AutoRejectionYesOrNo: values.AutoRejectionYesOrNo === true ? "Y" : "N",
       RejectionTolerance: values.RejectionTolerance,
+      BioMetric: "N",
+      MobileGeoFencing: "N",
+      CloudApplication: "N",
+      ManagerManual: "N"
     };
 
     // console.log(locationLookup.locationRecordID, "????????");
@@ -1939,7 +1987,7 @@ Level: levellookup.levelfield,
 
     const formData = new FormData();
     formData.append("file", event.target.files[0]);
-    formData.append("type", "attachments");
+    formData.append("type", "images");
 
     const fileData = await dispatch(fnFileUpload(formData));
 
@@ -2353,6 +2401,7 @@ Level: levellookup.levelfield,
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Code"
+                        placeholder="Auto"
                         // error={!!touched.Code && !!errors.Code}
                         // helperText={touched.Code && errors.Code}
                         sx={{
@@ -2362,9 +2411,10 @@ Level: levellookup.levelfield,
                           },
                         }}
                         focused
-                        required
-                        autoFocus
+                        // required
+                        // autoFocus
                         inputProps={{ maxLength: 8 }}
+                        InputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -2624,7 +2674,7 @@ Level: levellookup.levelfield,
                         Save
                       </Button>
                     )}
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && mode == "E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -2648,14 +2698,15 @@ Level: levellookup.levelfield,
                         Delete
                       </Button>
                     ) : (
-                      <Button
-                        color="error"
-                        variant="contained"
-                        disabled={true}
-                      //  color="error"
-                      >
-                        Delete
-                      </Button>
+                      // <Button
+                      //   color="error"
+                      //   variant="contained"
+                      //   disabled={true}
+                      // //  color="error"
+                      // >
+                      //   Delete
+                      // </Button>
+                      null
                     )}
                     <Button
                       color="warning"
@@ -2731,6 +2782,7 @@ Level: levellookup.levelfield,
             <Formik
               initialValues={contactInitialvalues}
               enableReinitialize={true}
+              validationSchema={contactvalidationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   fncontact(values, resetForm, false);
@@ -2838,6 +2890,8 @@ Level: levellookup.levelfield,
                       onChange={handleChange}
                       label="Phone No"
                       focused
+                      error={touched.phonenumber && Boolean(errors.phonenumber)}
+                      helperText={touched.phonenumber && errors.phonenumber}
                       onWheel={(e) => e.target.blur()}
                       sx={
                         {
@@ -2853,9 +2907,17 @@ Level: levellookup.levelfield,
                       name="email"
                       value={values.email}
                       onBlur={handleBlur}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const value = e.target.value.toLowerCase().trim();
+                        handleChange({
+                          target: { name: 'email', value }
+                        });
+                      }}
+
                       label="Email Id"
                       focused
+                      error={touched.email && Boolean(errors.email)}
+                      helperText={touched.email && errors.email}
                       sx={{
                         //gridColumn: "span 2",
                         backgroundColor: "#ffffff", // Set the background to white
@@ -2876,12 +2938,14 @@ Level: levellookup.levelfield,
                       label="Aadhar Card No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                    // sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      error={touched.aadharcardnumber && Boolean(errors.aadharcardnumber)}
+                      helperText={touched.aadharcardnumber && errors.aadharcardnumber}
                     />
+
                     <TextField
                       fullWidth
                       variant="standard"
-                      type="number"
+                      type="text"
                       id="pfnumber"
                       name="pfnumber"
                       value={values.pfnumber}
@@ -2890,23 +2954,27 @@ Level: levellookup.levelfield,
                       label="PF No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      error={touched.pfnumber && Boolean(errors.pfnumber)}
+                      helperText={touched.pfnumber && errors.pfnumber}
                     />
+
                     <TextField
                       fullWidth
                       variant="standard"
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       id="esinumber"
                       name="esinumber"
-                      inputFormat="HH:mm:aa"
                       value={values.esinumber}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       label="ESI No"
                       focused
                       onWheel={(e) => e.target.blur()}
-                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                      error={touched.esinumber && Boolean(errors.esinumber)}
+                      helperText={touched.esinumber && errors.esinumber}
                     />
+
                     <TextField
                       fullWidth
                       variant="standard"
@@ -2956,24 +3024,24 @@ Level: levellookup.levelfield,
                     padding={1}
                     gap={2}
                   >
-                    {YearFlag == "true" ? (
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
-                    ) : (
-                      <Button
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* ) : ( */}
+                    {/* <Button
                         color="secondary"
                         variant="contained"
                         disabled={true}
                       >
                         Save
-                      </Button>
-                    )}
+                      </Button> */}
+                    {/* )} */}
                     {YearFlag == "true" ? (
                       <Button
                         color="error"
@@ -3130,14 +3198,14 @@ Level: levellookup.levelfield,
                         // inputProps={{readOnly:true}}
                         onBlur={handleBlur}
                         // onChange={handleChange}
-                                            
-                            onChange={(e) => {
-    const val = e.target.value;
-    if (/^[012345]?$/.test(val)) {
-      handleChange(e); // only allow '', '1', '2', or '3'
-    }
-  }}
-      label="Minimum managers to approve (0 for all managers)"
+
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^[012345]?$/.test(val)) {
+                            handleChange(e); // only allow '', '1', '2', or '3'
+                          }
+                        }}
+                        label="Minimum managers to approve (0 for all managers)"
                         // label="No of levels to approve"
                         sx={{
                           width: "400px",
@@ -3154,20 +3222,20 @@ Level: levellookup.levelfield,
                         //     style: { textAlign: "right" },
                         //   },
                         // }}
-                         InputProps={{
-    inputProps: {
-      style: { textAlign: "right" },
-      min: 0,
-      max: 5,
-    },
-  }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 0,
+                            max: 5,
+                          },
+                        }}
 
-       onKeyDown={(e) => {
-    const allowedKeys = ["0","1", "2", "3","4", "5", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-    if (!allowedKeys.includes(e.key)) {
-      e.preventDefault();
-    }
-  }}
+                        onKeyDown={(e) => {
+                          const allowedKeys = ["0", "1", "2", "3", "4", "5", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+                          if (!allowedKeys.includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </Box>
 
@@ -3191,15 +3259,15 @@ Level: levellookup.levelfield,
                         name="VerticalMimNo"
                         value={values.VerticalMimNo}
                         onBlur={handleBlur}
-          
-                         
-                            onChange={(e) => {
-    const val = e.target.value;
-    if (/^[123]?$/.test(val)) {
-      handleChange(e); // only allow '', '1', '2', or '3'
-    }
-  }}
-   label="No of levels to approve(minimum level of 3)"
+
+
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^[123]?$/.test(val)) {
+                            handleChange(e); // only allow '', '1', '2', or '3'
+                          }
+                        }}
+                        label="No of levels to approve(minimum level of 3)"
                         // label="Minimum managers to approve (0 for all managers)"
                         sx={{
                           width: "400px",
@@ -3216,21 +3284,21 @@ Level: levellookup.levelfield,
                         //     style: { textAlign: "right" },
                         //   },
                         // }}
-                        
-                         InputProps={{
-    inputProps: {
-      readOnly:values.Vertical ? false : true,
-      style: { textAlign: "right" },
-      min: 1,
-      max: 3,
-    },
-  }}
-  onKeyDown={(e) => {
-    const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
-    if (!allowedKeys.includes(e.key)) {
-      e.preventDefault();
-    }
-  }}
+
+                        InputProps={{
+                          inputProps: {
+                            readOnly: values.Vertical ? false : true,
+                            style: { textAlign: "right" },
+                            min: 1,
+                            max: 3,
+                          },
+                        }}
+                        onKeyDown={(e) => {
+                          const allowedKeys = ["1", "2", "3", "Backspace", "Delete", "ArrowLeft", "ArrowRight"];
+                          if (!allowedKeys.includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </Box>
                   </Box>
@@ -3256,12 +3324,12 @@ Level: levellookup.levelfield,
                         value={values.ApprovelTolerance}
                         onBlur={handleBlur}
                         onChange={handleChange}
-  //                        onChange={(e) => {
-  //   const val = e.target.value;
-  //   if (/^[123]?$/.test(val)) {
-  //     handleChange(e); // only allow '', '1', '2', or '3'
-  //   }
-  // }}
+                        //                        onChange={(e) => {
+                        //   const val = e.target.value;
+                        //   if (/^[123]?$/.test(val)) {
+                        //     handleChange(e); // only allow '', '1', '2', or '3'
+                        //   }
+                        // }}
                         label="Tolerance days"
                         sx={{
                           width: "400px",
@@ -3664,7 +3732,7 @@ Level: levellookup.levelfield,
                         enableReinitialize={iniProcess}
                         validationSchema={basicSchema}
                         onSubmit={async (values) => {
-                          alert("submit", values);
+                          alert("submit", values); // <--- this is being triggered!
                         }}
                       >
                         {({
@@ -3735,65 +3803,7 @@ Level: levellookup.levelfield,
                                   multiline
                                   inputProps={{ maxLength: 90 }}
                                 />
-                                {/* <Productautocomplete
-                                  name="process"
-                                  label="process"
-                                  variant="outlined"
-                                  id="process"
-                                  value={selectproLookupData}
-                                  // value={values.process}
-                                  onChange={(newValue) => {
-                                    // setFieldValue("process", newValue);
-                                    console.log(newValue, "--newvalue process");
 
-                                    console.log(
-                                      newValue.RecordID,
-                                      "process RecordID"
-                                    );
-
-                                    setselectproLookupData({
-                                      RecordID: newValue.RecordID,
-                                      Code: newValue.Code,
-                                      Name: newValue.Name,
-                                    });
-                                  }}
-                                  url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2001","ScreenName":"Process","Filter":"parentID=${CompanyID}","Any":""}}`}
-                                /> */}
-                                {/* <TextField
-                                  id="outlined-basic"
-                                  label="ID"
-                                  variant="standard"
-                                  value={selectproLookupData.PROlookupRecordid}
-                                  focused
-                                  sx={{ display: "none" }}
-                                />
-
-                                <TextField
-                                  id="outlined-basic"
-                                  label="Process"
-                                  variant="standard"
-                                  value={selectproLookupData.PROlookupCode}
-                                  focused
-                                  required
-                                  inputProps={{ tabIndex: "-1" }}
-                                /> */}
-                                {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                                {/* <MoreHorizIcon onClick={()=>handleShow('SM')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                                {/* <IconButton
-                                  sx={{ height: 40, width: 40 }}
-                                  onClick={() => handleShow("PRO")}
-                                >
-                                  <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                                </IconButton> */}
-                                {/* </Button> */}
-                                {/* <TextField
-                                  id="outlined-basic"
-                                  variant="standard"
-                                  value={selectproLookupData.PROlookupDesc}
-                                  fullWidth
-                                  focused
-                                  inputProps={{ tabIndex: "-1" }}
-                                /> */}
                               </FormControl>
 
                               <TextField
@@ -3867,27 +3877,28 @@ Level: levellookup.levelfield,
                               gap={2}
                               mt={30}
                             >
-                              {YearFlag == "true" ? (
-                                <LoadingButton
-                                  color="secondary"
-                                  variant="contained"
-                                  type="submit"
-                                  loading={loading}
-                                  onClick={() => {
-                                    fnProcess(values, resetForm, "");
-                                  }}
-                                >
-                                  Save
-                                </LoadingButton>
-                              ) : (
-                                <Button
+                              {/* {YearFlag == "true" ? ( */}
+                              <LoadingButton
+                                color="secondary"
+                                variant="contained"
+                                // type="submit"
+                                // loading={loading}
+                                onClick={() => {
+                                  fnProcess(values, resetForm, "");
+                                  //navigate("")
+                                }}
+                              >
+                                Save
+                              </LoadingButton>
+                              {/* ) : ( */}
+                              {/* <Button
                                   color="secondary"
                                   variant="contained"
                                   disabled={true}
                                 >
                                   Save
-                                </Button>
-                              )}
+                                </Button> */}
+                              {/* )} */}
                               {YearFlag == "true" ? (
                                 <Button
                                   color="error"
@@ -3948,11 +3959,23 @@ Level: levellookup.levelfield,
             <Formik
               initialValues={functionInitialValue}
               enableReinitialize={true}
+
+              // onSubmit={(values, { resetForm }) => {
+              //   setTimeout(() => {
+              //     empFunctionFn(values, resetForm, false);
+              //   }, 100);
+              // }}
               onSubmit={(values, { resetForm }) => {
+                if (!functionLookup || !functionLookup.RecordID) {
+                  toast.error("Function is required");
+                  return;
+                }
+
                 setTimeout(() => {
                   empFunctionFn(values, resetForm, false);
                 }, 100);
               }}
+
             >
               {({
                 errors,
@@ -4192,7 +4215,7 @@ Level: levellookup.levelfield,
                     padding={1}
                     gap={2}
                   >
-                    {YearFlag == "true" ? (
+                    {/* {YearFlag == "true" ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"
@@ -4209,8 +4232,18 @@ Level: levellookup.levelfield,
                       >
                         Save
                       </Button>
-                    )}
-                    {YearFlag == "true" ? (
+                    )} */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+
+                    >
+                      Save
+                    </LoadingButton>
+
+                    {/* {YearFlag == "true" ? (
                       <Button
                         onClick={() => empFunctionFn(values, resetForm, true)}
                         color="error"
@@ -4222,7 +4255,23 @@ Level: levellookup.levelfield,
                       <Button color="error" variant="contained" disabled={true}>
                         Delete
                       </Button>
-                    )}
+                    )} */}
+
+                    <Button
+                      onClick={() => {
+                        if (funMode !== "E") {
+                          toast.warning("Select a function to delete.");
+                          return;
+                        }
+                        empFunctionFn(values, resetForm, true);
+                      }}
+                      color="error"
+                      variant="contained"
+                    >
+                      Delete
+                    </Button>
+
+
                     <Button
                       type="reset"
                       color="warning"
@@ -4257,6 +4306,387 @@ Level: levellookup.levelfield,
 
         {show == "3" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
+
+            {/* <Formik
+              initialValues={managerInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm, setFieldValue }) => {
+                setTimeout(() => {
+                  mgrFunctionFn(values, resetForm, false, setFieldValue);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  //onSubmit={handleSubmit}
+
+                  onReset={() => {
+                    selectCellRowDataMGR({
+                      rowData: {},
+                      mode: "A",
+                      field: "",
+                      setFieldValue,
+                    });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        label="Code"
+                        focused
+                        inputProps={{ readOnly: true }}
+
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        label="Description"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                   
+
+                    <Stack
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
+                   
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowDataMGR({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        loading={exploreLoading}
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
+
+
+                      <TextField
+                        select
+                        fullWidth
+                        type="text"
+                        variant="standard"
+                        label={<span>Level</span>}
+                        value={values.Level}
+                        id="Level"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Level"
+                        required
+                        focused
+                      >
+                        {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
+                        {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
+                        {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
+                      </TextField>
+
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                       
+
+
+                        <ProductautocompleteLevel
+                          name="manager"
+                          label="Manager"
+                          variant="outlined"
+                          id="manager"
+                          value={designationLookup}
+                          onChange={(newValue) => {
+                            SetDesignationLookup({
+                              DesignationID: newValue.DesignationID,
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
+                          }}
+                          url={`${baseApiUrl}ManagerLevelController.php`}
+                          payload={{
+                            EmployeeID: recID,
+                            Level: values.Level || 1,
+                            CompanyID: CompanyID
+                            // You can make this dynamic if needed
+                          }}
+                          required
+                        />
+                      </Box>
+
+                     
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="hrmanager"
+                              checked={values.hrmanager}
+                              id="hrmanager"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="HR Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="financemanager"
+                              id="financemanager"
+                              checked={values.financemanager}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="Finance Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="projectmanager"
+                              id="projectmanager"
+                              checked={values.projectmanager}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="Project Manager"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Field
+                              as={Checkbox}
+                              type="checkbox"
+                              name="facilitymanager"
+                              id="facilitymanager"
+                              checked={values.facilitymanager}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          }
+                          label="Facility Manager"
+                        />
+                      </Box>
+                    </FormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    style={{ marginTop: "-32px" }}
+                    padding={1}
+                    gap={2}
+                  >
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        // type="submit"
+                        onClick={mgrFunctionFn}
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? (
+                      <Button
+                        onClick={() =>
+                          mgrFunctionFn(values, resetForm, true, setFieldValue)
+                        }
+                        color="error"
+                        variant="contained"
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  <Popup
+                    title="Functions"
+                    openPopup={openFunPopup}
+                    setOpenPopup={setOpenFunPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2048"
+                      screenName="Functions"
+                      childToParent={childToParent}
+                      filterName={"CompanyID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Designations"
+                    openPopup={openDesPopup}
+                    setOpenPopup={setOpenDesPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2049"
+                      screenName="Designations"
+                      childToParent={childToParent}
+                      // filterName={"ERank"}
+                      // filterValue={Data.Rank}
+                      filterName={"parentID"}
+                      filterValue={`${CompanyID}' AND EmployeeID='${recID}`}
+                    />
+                  </Popup>
+                </form>
+              )}
+            </Formik> */}
             <Formik
               initialValues={managerInitialValue}
               enableReinitialize={true}
@@ -4432,33 +4862,29 @@ Level: levellookup.levelfield,
                       />
                     </Box>
 
-                   <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-                   
+                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
 
-                       <TextField
-                          select
-                          fullWidth
-                          variant="standard"
-                          label={<span>Level</span>}
-                          value={values.Level}
-                          id="Level"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="Level"
-                          // required
-                          focused
-                        
-                        >
-                          {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-                          {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
-                           {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
-                        </TextField>
-                     
 
-                       
-                    
-                   
-                    
+                      <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={<span>Level</span>}
+                        value={values.Level}
+                        id="Level"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Level"
+                        // required
+                        focused
+
+                      >
+                        {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
+                        {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
+                        {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
+                      </TextField>
+
+
                       <Box
                         sx={{
                           display: "flex",
@@ -4488,29 +4914,29 @@ Level: levellookup.levelfield,
                           url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2049","ScreenName":"Manager","Filter":"parentID='${CompanyID}' AND EmployeeID='${recID}'","Any":""}}`}
                         /> */}
 
-                        
-                      <ProductautocompleteLevel
-  name="manager"
-  label="Manager"
-  variant="outlined"
-  id="manager"
-  value={designationLookup}
-  onChange={(newValue) => {
-    SetDesignationLookup({
-      DesignationID: newValue.DesignationID,
-      RecordID: newValue.RecordID,
-      Code: newValue.Code,
-      Name: newValue.Name,
-    });
-  }}
- url={`${baseApiUrl}ManagerLevelController.php`}
-   payload={{
-    EmployeeID: recID,
-    Level: values.Level || 1,
-    CompanyID: CompanyID
-    // You can make this dynamic if needed
-  }}
-/>
+
+                        <ProductautocompleteLevel
+                          name="manager"
+                          label="Manager"
+                          variant="outlined"
+                          id="manager"
+                          value={designationLookup}
+                          onChange={(newValue) => {
+                            SetDesignationLookup({
+                              DesignationID: newValue.DesignationID,
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
+                          }}
+                          url={`${baseApiUrl}ManagerLevelController.php`}
+                          payload={{
+                            EmployeeID: recID,
+                            Level: values.Level || 1,
+                            CompanyID: CompanyID
+                            // You can make this dynamic if needed
+                          }}
+                        />
                       </Box>
 
                       {/* Vertical Checkboxes */}
@@ -4521,10 +4947,10 @@ Level: levellookup.levelfield,
                               as={Checkbox}
                               type="checkbox"
                               name="hrmanager"
-                               checked={values.hrmanager}
+                              checked={values.hrmanager}
                               id="hrmanager"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           }
                           label="HR Manager"
@@ -4536,9 +4962,9 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="financemanager"
                               id="financemanager"
-                               checked={values.financemanager}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                              checked={values.financemanager}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           }
                           label="Finance Manager"
@@ -4551,8 +4977,8 @@ Level: levellookup.levelfield,
                               name="projectmanager"
                               id="projectmanager"
                               checked={values.projectmanager}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           }
                           label="Project Manager"
@@ -4564,9 +4990,9 @@ Level: levellookup.levelfield,
                               type="checkbox"
                               name="facilitymanager"
                               id="facilitymanager"
-                               checked={values.facilitymanager}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                              checked={values.facilitymanager}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
                             />
                           }
                           label="Facility Manager"
@@ -4915,7 +5341,7 @@ Level: levellookup.levelfield,
                         name="location"
                         label={
                           <span>
-                            location
+                            Location
                             <span style={{ color: "red", fontWeight: "bold" }}>
                               *
                             </span>
@@ -5485,9 +5911,9 @@ Level: levellookup.levelfield,
 
                     <FormLabel focused={false}>Sunday</FormLabel>
                   </Box>
-                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                   <Typography variant="h5" padding={1}>Checkin & Checkout Options</Typography>
-                   <Box>
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5" padding={1}>Checkin & Checkout Options</Typography>
+                  <Box>
                     <Field
                       //  size="small"
                       type="checkbox"
@@ -5497,7 +5923,7 @@ Level: levellookup.levelfield,
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="biometric"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Biometric</FormLabel>
@@ -5511,7 +5937,7 @@ Level: levellookup.levelfield,
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="mobile"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Mobile Geofencing</FormLabel>
@@ -5525,12 +5951,12 @@ Level: levellookup.levelfield,
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="cloud"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Cloud Application</FormLabel>
 
-                     <Field
+                    <Field
                       //  size="small"
                       type="checkbox"
                       name="managermanual"
@@ -5539,7 +5965,7 @@ Level: levellookup.levelfield,
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="managermanual"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Manager Manual</FormLabel>
@@ -5667,7 +6093,7 @@ Level: levellookup.levelfield,
         ) : (
           false
         )}
-       {show == "6" ? (
+        {show == "6" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               // onSubmit={handleFormSubmit}
@@ -5907,12 +6333,12 @@ Level: levellookup.levelfield,
                             },
                           }}
                           InputLabelProps={{
-                            shrink: true, 
+                            shrink: true,
                           }}
                         />
 
 
-                       
+
                         <FormControl
                           sx={{
                             display: "flex",
@@ -6007,7 +6433,7 @@ Level: levellookup.levelfield,
                         <Box
                           display="flex"
                           justifyContent="end"
-                          padding={1}                          
+                          padding={1}
                           gap={2}
                         >
                           <IconButton
@@ -6091,6 +6517,9 @@ Level: levellookup.levelfield,
                             type="reset"
                             color="warning"
                             variant="contained"
+                            onClick={() => {
+                              setScreen(0);
+                            }}
                           >
                             Cancel
                           </Button>
@@ -6373,6 +6802,11 @@ Level: levellookup.levelfield,
                         focused
                         multiline
                         inputProps={{ maxLength: 90 }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
 
                       <TextField
@@ -6403,6 +6837,11 @@ Level: levellookup.levelfield,
                         focused
                         multiline
                         inputProps={{ maxLength: 90 }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
                     </FormControl>
                   </Box>

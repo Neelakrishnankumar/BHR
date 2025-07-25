@@ -76,6 +76,7 @@ const LeaveType = () => {
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const [pageSize, setPageSize] = React.useState(10);
@@ -434,9 +435,10 @@ const LeaveType = () => {
                       type="text"
                       id="code"
                       label="Code"
-                     variant="standard"
+                      placeholder="Auto"
+                      variant="standard"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -448,7 +450,8 @@ const LeaveType = () => {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
                       }}
-                      autoFocus
+                      InputProps={{readOnly:true}}
+                      // autoFocus
                     />
 
 
@@ -558,7 +561,7 @@ const LeaveType = () => {
                     >
                       Save
                     </Button>
-                  )}   {YearFlag == "true" ? (
+                  )}   {YearFlag == "true" && mode=="E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -569,19 +572,20 @@ const LeaveType = () => {
                       Delete
                     </Button>
                   ) : (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Delete
-                    </Button>
+                    // <Button
+                    //   color="error"
+                    //   variant="contained"
+                    //   disabled={true}
+                    // >
+                    //   Delete
+                    // </Button>
+                    null
                   )}
                   <Button
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR213/LeaveType");
+                      navigate(-1);
                     }}
                   >
                     Cancel

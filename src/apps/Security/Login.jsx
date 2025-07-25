@@ -163,7 +163,8 @@ const Login = () => {
        var UserName=data.payload.apiResponse.Name
        var SubscriptionCode=data.payload.SubscriptionCode
        var Expiryin = data.payload.Expiryin
-      console.log(Expiryin, "--login screen Expiryin");
+       var CompanyAutoCode = data.payload.CompanyAutoCode
+      console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
     
        
        sessionStorage.setItem("Expiryin",Expiryin);
@@ -183,7 +184,8 @@ const Login = () => {
        sessionStorage.setItem("Cifbyair",Cifbyair)
        sessionStorage.setItem("Fob",Fob)
       //  sessionStorage.setItem("EmpId",EmpId)
-       sessionStorage.setItem("Overhead",Overhead)
+       sessionStorage.setItem("CompanyAutoCode",CompanyAutoCode)
+        sessionStorage.setItem("Overhead",Overhead)
        sessionStorage.setItem("YearRecorid",YearRecorid)
        sessionStorage.setItem("Groupaccess",JSON.stringify(Groupaccess))
        sessionStorage.setItem("Modules",JSON.stringify(Modules))

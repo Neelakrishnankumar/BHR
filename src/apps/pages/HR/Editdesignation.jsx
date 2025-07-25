@@ -10,7 +10,7 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
-  Paper,Breadcrumbs
+  Paper, Breadcrumbs
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -53,6 +53,7 @@ const Editdesignation = () => {
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const location = useLocation();
@@ -136,7 +137,7 @@ const Editdesignation = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-      <Box display="flex" justifyContent="space-between" p={2}>
+        <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
@@ -157,11 +158,11 @@ const Editdesignation = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-                
+
                 >
                   Designation
                 </Typography>
-             
+
               </Breadcrumbs>
             </Box>
           </Box>
@@ -215,29 +216,55 @@ const Editdesignation = () => {
                     },
                   }}
                 >
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      placeholder="Auto"
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
 
-                  <TextField
-                    name="code"
-                    type="text"
-                    id="code"
-                    label="Code"
-                    variant="standard"
-                    focused
-                    required
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                    sx={{
-                     
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
-                    }}
-                    autoFocus
-                  />
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        }
+                      }}
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
+                    />
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      focused
+                      required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        }
+                      }}
+
+                      autoFocus
+                    />)}
                   <TextField
                     name="name"
                     type="text"
@@ -251,13 +278,13 @@ const Editdesignation = () => {
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     sx={{
-                     
+
                       backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       }
                     }}
-                    autoFocus
+                    autoFocus= {CompanyAutoCode == "Y"}
                   />
                   <TextField
                     name="rank"
@@ -278,7 +305,7 @@ const Editdesignation = () => {
                     }}
                     error={!!touched.rank && !!errors.rank}
                     helperText={touched.rank && errors.rank}
-                    autoFocus
+
                   />
                   <TextField
                     name="sortorder"
@@ -339,7 +366,8 @@ const Editdesignation = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )}
+                  {/* {YearFlag === "true" && mode !== "A" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -357,7 +385,21 @@ const Editdesignation = () => {
                     >
                       Delete
                     </Button>
+                  )} */}
+                  {mode == "E" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Fnsave(values, "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    null
                   )}
+
                   <Button
                     color="warning"
                     variant="contained"

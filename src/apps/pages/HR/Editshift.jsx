@@ -53,7 +53,7 @@ const Editshift = () => {
     const Year = sessionStorage.getItem("year");
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
-
+    const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     // Page params
     const recID = params.id;
     const mode = params.Mode;
@@ -249,9 +249,10 @@ const Editshift = () => {
                                         type="text"
                                         id="code"
                                         label="Code"
+                                        placeholder="Auto"
                                         variant="standard"
                                         focused
-                                        required
+                                        // required
                                         value={values.code}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
@@ -264,7 +265,8 @@ const Editshift = () => {
                                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                             }
                                         }}
-                                        autoFocus
+                                        InputProps={{readOnly:true}}
+                                        // autoFocus
                                     />
                                     <TextField
                                         name="name"
@@ -531,7 +533,7 @@ const Editshift = () => {
                                         >
                                             Save
                                         </Button>
-                                    )}   {YearFlag == "true" ? (
+                                    )}   {YearFlag == "true" && mode=="E" ? (
                                         <Button
                                             color="error"
                                             variant="contained"
@@ -542,13 +544,14 @@ const Editshift = () => {
                                             Delete
                                         </Button>
                                     ) : (
-                                        <Button
-                                            color="error"
-                                            variant="contained"
-                                            disabled={true}
-                                        >
-                                            Delete
-                                        </Button>
+                                        // <Button
+                                        //     color="error"
+                                        //     variant="contained"
+                                        //     disabled={true}
+                                        // >
+                                        //     Delete
+                                        // </Button>
+                                        null
                                     )}
                                     <Button
                                         color="warning"

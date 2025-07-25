@@ -56,6 +56,7 @@ const Editoverhead = () => {
   // const CompanyID = sessionStorage.getItem("compID");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const initialValue = {
     code: data.Code,
     name: data.Name,
@@ -220,20 +221,22 @@ const Editoverhead = () => {
                       type="text"
                       id="code"
                       label="Code"
-                     variant="standard"
+                      placeholder="Auto"
+                      variant="standard"
                       focused
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      autoFocus
+                      InputProps={{readOnly:true}}
+                      // autoFocus
                     />
                     <TextField
                       name="name"
                       type="text"
                       id="name"
-                      label="Name"
+                      label="Overhead"
                      variant="standard"
                       focused
                       value={values.name}

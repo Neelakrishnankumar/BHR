@@ -1002,7 +1002,18 @@ const EditTimeSheet = () => {
 
 
   const AttColumn = [
-    {
+     {
+    field: "serialNo",
+    headerName: "SL#",
+    width: 40,
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    renderCell: (params) => {
+      return params.api.getRowIndex(params.id) + 1;
+    },
+  },
+  {
       field: "RecordID",
       headerName: "RecordID",
       width: 80,
@@ -1014,14 +1025,19 @@ const EditTimeSheet = () => {
       width: 130,
       hide: true,
     },
+     {
+      field: "Date",
+      headerName: "Date",
+      width: 80,
+    },
     {
       field: "ProjectName",
-      headerName: "ProjectName",
+      headerName: "Project",
       width: 130,
     },
     {
       field: "DesignationsName",
-      headerName: "FuntionsName",
+      headerName: "Function",
       width: 130,
     },
     {

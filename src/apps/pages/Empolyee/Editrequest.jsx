@@ -779,13 +779,13 @@ const Editrequests = () => {
             {show == "2"
               ? "List of Leave"
               : show == "6"
-                ? "List of OT"
+                ? "List of Over Time"
                 : show == "7"
                   ? "List of SalaryAdvance"
                   : show == "1"
                     ? "List of Allowance"
                     : show == "8"
-                      ? "List of OnDuty"
+                      ? "List of On Duty"
                       : show == "10"
                         ? "List of Attendance"
                         : show == "11"
@@ -2550,7 +2550,7 @@ const Editrequests = () => {
       }
     });
   };
-  const type = show == "2" ? "L" : show == "6" ? "OT" : show == "8" ? "OD" : show == "7" ? "SA" : show == "11" ? "P" : show == "9" ? "E" : show == "10" ? "R" : "";
+  const type = show == "2" ? "L" : show == "6" ? "Over Time" : show == "8" ? "OD" : show == "7" ? "SA" : show == "11" ? "P" : show == "9" ? "E" : show == "10" ? "R" : "";
 
   async function fileUpload(file, appId) {
     console.log("🚀 ~ fileUpload ~ file:", file)
@@ -2748,7 +2748,7 @@ const Editrequests = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      OT
+                      Over Time
                     </Typography>
                   ) : (
                     false
@@ -5027,7 +5027,7 @@ const Editrequests = () => {
                           variant="standard"
                         //sx={{ gridColumn: "span 2" }}
                         >
-                          <InputLabel id="OtType">OT Type</InputLabel>
+                          <InputLabel id="OtType">Over Time Type</InputLabel>
                           <Select
                             labelId="demo-simple-select-filled-label"
                             id="OtType"

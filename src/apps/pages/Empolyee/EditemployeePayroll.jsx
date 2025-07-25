@@ -2924,7 +2924,7 @@ const EditemployeePayroll = () => {
                         Save
                       </Button>
                     )}
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && mode=="E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -2948,14 +2948,15 @@ const EditemployeePayroll = () => {
                         Delete
                       </Button>
                     ) : (
-                      <Button
-                        color="error"
-                        variant="contained"
-                        disabled={true}
-                      //  color="error"
-                      >
-                        Delete
-                      </Button>
+                      // <Button
+                      //   color="error"
+                      //   variant="contained"
+                      //   disabled={true}
+                      // //  color="error"
+                      // >
+                      //   Delete
+                      // </Button>
+                      null
                     )}
                     <Button
                       color="warning"

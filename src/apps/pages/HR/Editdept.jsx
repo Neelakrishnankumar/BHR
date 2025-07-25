@@ -68,6 +68,7 @@ const Editdept = () => {
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
@@ -278,41 +279,77 @@ const Editdept = () => {
                   }}
                 >
 
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      label="Code"
+                      placeholder="Auto"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.Code}
+                      id="Code"
+                      name="Code"
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      InputProps={{ readOnly: true }}
+                      // required
+                      focused
+                      // autoFocus
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        }
+                      }}
+                      inputProps={{ maxLength: 8 }}
+                      onInvalid={(e) => {
+                        e.target.setCustomValidity("Please Fill The Code");
+                      }}
+                      onInput={(e) => {
+                        e.target.setCustomValidity("");
+                      }}
+                    />
+                   ) : (              
+                    
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      label="Code"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.Code}
+                      id="Code"
+                      name="Code"
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      required
+                      focused
+                      autoFocus
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        }
+                      }}
+                      inputProps={{ maxLength: 8 }}
+                      onInvalid={(e) => {
+                        e.target.setCustomValidity("Please Fill The Code");
+                      }}
+                      onInput={(e) => {
+                        e.target.setCustomValidity("");
+                      }}
+                    /> 
+                  )}
+
 
                   <TextField
                     fullWidth
                     variant="standard"
-                    type="text"
-                    label="Code"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.Code}
-                    id="Code"
-                    name="Code"
-                    error={!!touched.Code && !!errors.Code}
-                    helperText={touched.Code && errors.Code}
-                    required
-                    focused
-                    autoFocus
-                    sx={{
-
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
-                    }}
-                    inputProps={{ maxLength: 8 }}
-                    onInvalid={(e) => {
-                      e.target.setCustomValidity("Please Fill The Code");
-                    }}
-                    onInput={(e) => {
-                      e.target.setCustomValidity("");
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                   variant="standard"
                     type="text"
                     label="Name"
                     value={values.Name}
@@ -323,6 +360,7 @@ const Editdept = () => {
                     error={!!touched.Name && !!errors.Name}
                     helperText={touched.Name && errors.Name}
                     focused
+                    autoFocus={CompanyAutoCode === "Y"}
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white
@@ -344,7 +382,7 @@ const Editdept = () => {
                   />
                   <TextField
                     fullWidth
-                   variant="standard"
+                    variant="standard"
                     type="text"
                     label="Location"
                     value={values.Loc}
@@ -365,7 +403,7 @@ const Editdept = () => {
                   />
                   <TextField
                     fullWidth
-                   variant="standard"
+                    variant="standard"
                     type="Number"
                     label="Sort Order"
                     value={values.SortOrder}
@@ -428,7 +466,8 @@ const Editdept = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )}
+                  {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -446,6 +485,19 @@ const Editdept = () => {
                     >
                       Delete
                     </Button>
+                  )} */}
+                  {mode == "E" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values, "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    null
                   )}
                   {/* <Button
                     color="error"

@@ -455,6 +455,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
    const [employee, setEmployee] = useState("");
    console.log(employee,"employeelookup");
@@ -622,15 +623,17 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                     type="text"
                     id="code"
                     label="Code"
-                  variant="standard"
+                    placeholder="Auto"
+                    variant="standard"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.code && !!errors.code}
                     helperText={touched.code && errors.code}
-                    autoFocus
+                    InputProps={{readOnly:true}}
+                    // autoFocus
                   />
                   <TextField
                     name="name"
@@ -648,7 +651,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                   />
                     <Productautocomplete
                       name="incharge"
-                      label="Project Incharge"
+                      label="Incharge"
                       id="incharge"
                       value={values.incharge}
                       onChange={async (newValue) => {
@@ -760,7 +763,8 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )} 
+                  {YearFlag == "true"&& mode =="E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -771,13 +775,14 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                       Delete
                     </Button>
                   ) : (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Delete
-                    </Button>
+                    // <Button
+                    //   color="error"
+                    //   variant="contained"
+                    //   disabled={true}
+                    // >
+                    //   Delete
+                    // </Button>
+                    null
                   )}
                   <Button
                     color="warning"

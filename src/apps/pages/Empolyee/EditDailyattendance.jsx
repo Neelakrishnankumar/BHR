@@ -100,7 +100,7 @@ const CompanyID = sessionStorage.getItem("compID");
     const AttColumn = [
         {
             field: "SLNO",
-            headerName: "S.NO",
+            headerName: "SL#",
             width: "50",
             renderCell: (params) => (
                 <div style={{ textAlign: "right" }}>{params.value}</div>

@@ -68,6 +68,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const [panImage, setPanImage] = useState("");
   const [panUrl, setPanUrl] = useState(null);
   const [gstImage, setGstImage] = useState("");
@@ -642,8 +643,9 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     id="code"
                     label="Code"
                     variant="standard"
+                    placeholder="Auto"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -655,7 +657,8 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    InputProps={{readOnly:true}}
+                    // autoFocus
                   />
                   <TextField
                     name="name"
@@ -700,7 +703,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="gstnumber"
@@ -726,7 +729,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="mobilenumber"
@@ -753,14 +756,14 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    // autoFocus
                   />
 
                   <TextField
                     name="emailid"
                     type="text"
                     id="emailid"
-                    label="Contact Email id"
+                    label="Email ID"
                     variant="standard"
                     focused
                     value={values.emailid}
@@ -772,7 +775,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="date"
@@ -935,7 +938,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       Save
                     </Button>
                   )}{" "}
-                  {YearFlag == "true" ? (
+                  {YearFlag == "true" && mode =="E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -946,9 +949,10 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       Delete
                     </Button>
                   ) : (
-                    <Button color="error" variant="contained" disabled={true}>
-                      Delete
-                    </Button>
+                    // <Button color="error" variant="contained" disabled={true}>
+                    //   Delete
+                    // </Button>
+                    null
                   )}
                   <Button
                     color="warning"
@@ -1254,6 +1258,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       Delete
                     </Button>
                   )} */}
+                  
                   <Button
                     color="warning"
                     variant="contained"

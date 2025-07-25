@@ -524,7 +524,7 @@ const Editcheckin = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true" ? (
+                  )} {YearFlag == "true"&& mode=="E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -535,13 +535,14 @@ const Editcheckin = () => {
                       Delete
                     </Button>
                   ) : (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Delete
-                    </Button>
+                    // <Button
+                    //   color="error"
+                    //   variant="contained"
+                    //   disabled={true}
+                    // >
+                    //   Delete
+                    // </Button>
+                    null
                   )}
                   <Button
                     color="warning"
