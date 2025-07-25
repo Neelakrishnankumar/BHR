@@ -88,7 +88,7 @@ const Editdesignation = () => {
       Code: values.code,
       Description: values.name,
       DesignationRank: values.rank,
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: isCheck,
       Finyear,
       CompanyID,

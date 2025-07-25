@@ -110,7 +110,7 @@ const Editshift = () => {
             Name: values.name,
             StartTime: values.starttime,
             EndTime: values.endtime,
-            SortOrder: values.sortorder,
+            SortOrder: values.sortorder || 0,
             //WeekOff: values.weekoff,
             Monday: values.monday === true ? "Y" : "N",
             Tuesday: values.tuesday === true ? "Y" : "N",

@@ -499,7 +499,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
       ProjectInchargeName: values.incharge.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: isCheck,
       Finyear,
       CompanyID,

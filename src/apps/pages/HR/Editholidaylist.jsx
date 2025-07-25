@@ -96,7 +96,7 @@ const Holidaylist = () => {
       Occasion: values.oscc,
       Description: values.name,
       HolidayDate: values.Date,
-      SortOrder: values.Sortorder,
+      SortOrder: values.Sortorder || 0,
       Disable: isCheck,
       Finyear,
       CompanyID,

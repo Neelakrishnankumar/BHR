@@ -210,7 +210,7 @@ const EditemployeePayroll = () => {
     Mgr: Data.Mgr,
     Sal: Data.Sal,
     Fax: Data.Fax,
-    SortOrder: Data.SortOrder,
+    SortOrder: Data.SortOrder || 0,
     Disable: Data.Disable,
     Password: Data.Password,
     Department: Data.DeptRecordID
@@ -375,7 +375,7 @@ const EditemployeePayroll = () => {
       // DeptRecordID: selectLookupData.lookupRecordid,
       Code: values.Code,
       Name: values.Name,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || 0,
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
@@ -1700,7 +1700,7 @@ const EditemployeePayroll = () => {
 
     // type: ADLookupData.adType,
     value: allDecData.value,
-    sortorder: allDecData.sortOrder,
+    sortorder: allDecData.sortOrder || 0,
   };
 
   const AllDedFNsave = async (values, resetForm, del) => {
@@ -1728,7 +1728,7 @@ const EditemployeePayroll = () => {
         show == "1"
           ? Number(Data.Sal) + Number(values.value)
           : Number(Data.Sal) - Number(values.value),
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: "N",
 
       parentID: recID,

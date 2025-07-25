@@ -202,7 +202,7 @@ console.log(statenew,"dailytask");
       TaskDate: values.date,
       Status: values.status,
       Comments: values.Comment,
-      SortOrder: values.sortOrder,
+      SortOrder: values.sortOrder || 0,
       Disable: isCheck,
       //EmployeeID: values.employee.RecordID || 0,
      

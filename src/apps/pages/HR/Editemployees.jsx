@@ -266,7 +266,7 @@ const Editemployee = () => {
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
-    SortOrder: Data.SortOrder,
+    SortOrder: Data.SortOrder || 0,
 
     Mgr: Data.Mgr,
     Sal: Data.Sal,
@@ -484,7 +484,7 @@ const Editemployee = () => {
       DeptName: values.Department.Name || "",
       Code: values.Code,
       Name: values.Name,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || 0,
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
@@ -718,7 +718,7 @@ const Editemployee = () => {
         // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
         // PsRecordID: selectproLookupData.PROlookupRecordid,
         Comments: values.Comments,
-        SortOrder: values.SortOrder,
+        SortOrder: values.SortOrder || 0,
       };
     } else {
       setLoading(true);
@@ -730,7 +730,7 @@ const Editemployee = () => {
           // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
           // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
-          SortOrder: values.SortOrder,
+          SortOrder: values.SortOrder || 0,
           CompanyID,
         };
         type = "insert";
@@ -742,7 +742,7 @@ const Editemployee = () => {
           // PsRecordID: selectproLookupData ? selectproLookupData.RecordID : 0,
           // PsRecordID: selectproLookupData.PROlookupRecordid,
           Comments: values.Comments,
-          SortOrder: values.SortOrder,
+          SortOrder: values.SortOrder || 0,
           CompanyID,
         };
         type = "update";
@@ -1070,49 +1070,25 @@ const Editemployee = () => {
   });
 
   const selectCellRowData = ({ rowData, mode, field }) => {
-    console.log(
-      "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
-      rowData
-    );
-
     setFunMode(mode);
     setLaoMode(mode);
-    console.log(mode, "--mode");
 
     if (mode == "A") {
       setFunMgrRecID("");
       setFunEmpRecID("");
       SetFunctionLookup(null);
-      //   {
-      //   funRecordID: "",
-      //   funCode: "",
-      //   funName: "",
-      // });
       SetVendorlookup(null);
       SetCustomerlookup(null);
-      //   {
-      //   venRecordID: "",
-      //   venCode: "",
-      //   venName: "",
-      // });
-      //   {
-      //   desRecordID: "",
-      //   desCode: "",
-      //   desName: "",
-      //   ManagerID: "",
-      // });
-
       SetEmpLoaData({
         description: "",
+        Attachment: "",
         recordID: "",
         category: "",
         RenewalDate: "",
         personal: false,
         renewal: false
       });
-
       setImgName("");
-
       setItemCustodyData({
         recordID: "",
         itemNO: "",
@@ -1182,9 +1158,9 @@ const Editemployee = () => {
           category: rowData.Category,
           RenewalDate: rowData.NextRenewalRequiredDate,
           personal: rowData.Personal,
-          renewal: rowData.RenewalRequired
+          renewal: rowData.RenewalRequired,
+          Attachment: rowData.Attachment
         });
-        console.log(empLoaData, "empLoaData");
         setImgName(rowData.Attachment);
         setItemCustodyData({
           recordID: rowData.RecordID,
@@ -1545,10 +1521,8 @@ const Editemployee = () => {
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
 
-  console.log(currentYear, "currentYear");
 
   const LCsaveFn = async (values, resetForm, del) => {
-    console.log("--calling LCsave");
     setLoading(true);
     let action =
       funMode === "A" && !del
@@ -1559,7 +1533,6 @@ const Editemployee = () => {
     const idata = {
       RecordID: LeaveCondata.recordID,
       CompanyID,
-      // Year: currentYear,
       Year: values.Year,
       EmployeeID: recID,
       LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
@@ -1569,23 +1542,6 @@ const Editemployee = () => {
       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
       LeavePart: "N",
     };
-    // console.log("save" + JSON.stringify(LCsaveFn));
-    console.log(idata, "--idat LCsaveFna");
-    // const response = await dispatch(
-    //   explorePostData({ accessID: "TR249", action, idata })
-    // );
-    // if (response.payload.Status == "Y") {
-    //     //  setLoading(false);
-    //   dispatch(fetchExplorelitview("TR249", "Leave Configuration", `EmployeeID='${recID}'`, "")
-    //   );
-
-    //   toast.success(response.payload.Msg);
-
-    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    //   resetForm();
-    // } else {
-    //   toast.error(response.payload.Msg);
-    // }
     const response = await dispatch(
       explorePostData({ accessID: "TR249", action, idata })
     );
@@ -1603,6 +1559,7 @@ const Editemployee = () => {
       toast.success(response.payload.Msg);
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm()
     } else {
       toast.error(response.payload.Msg);
     }
@@ -1938,7 +1895,8 @@ const Editemployee = () => {
     category: "",
     RenewalDate: "",
     personal: false,
-    renewal: false
+    renewal: false,
+    Attachment:""
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -1989,7 +1947,7 @@ const Editemployee = () => {
       RenewalRequired: values.renewal === true ? "Y" : "N",
       Category: values.category,
       NextRenewalRequiredDate: values.RenewalDate,
-      Sortorder: "0",
+      Sortorder: 0,
       CompanyID,
     };
 
@@ -2903,24 +2861,6 @@ const Editemployee = () => {
                       // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
-                    {/* <Stack
-                      sx={{
-                       // gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-
-                    >
-
-                      <img
-                        src={userimg}
-                        style={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack> */}
-
                     <Stack
                       sx={{
                         //    width: {sm:'100%',md:'100%',lg:'100%'},
@@ -4816,21 +4756,6 @@ const Editemployee = () => {
                         inputProps={{ readOnly: true }}
                       />
                     </FormControl>
-                    {/* <Stack
-                      sx={{
-                        //gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <img
-                        src={values.imageurl}
-                        style={{ width: "200px", height: "150px" }}
-                      />
-                    </Stack> */}
 
                     <Stack
                       sx={{
@@ -8781,8 +8706,6 @@ const Editemployee = () => {
                     {!isNonMobile && (
                       <Stack
                         sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
-                          //gridColumn: "span 2",
                           alignContent: "center",
                           justifyContent: "center",
                           alignItems: "center",
@@ -8797,22 +8720,6 @@ const Editemployee = () => {
                         />
                       </Stack>
                     )}
-                    {/* <Stack
-                      sx={{
-                        gap: formGap,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <Avatar
-                        variant="rounded"
-                        src={userimg}
-                        sx={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack> */}
                     <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
@@ -8826,16 +8733,12 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         sx={{
-                          // gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
                             backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                           },
                         }}
                         focused
-
-                      //  error={!!touched.Desc && !!errors.Desc}
-                      //  helperText={touched.Desc && errors.Desc}
                       />
 
                       <TextField
@@ -8851,10 +8754,9 @@ const Editemployee = () => {
                         error={!!touched.Name && !!errors.Name}
                         helperText={touched.Name && errors.Name}
                         sx={{
-                          //gridColumn: "span 2",
-                          backgroundColor: "#ffffff", // Set the background to white
+                          backgroundColor: "#ffffff", 
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                            backgroundColor: "#ffffff", 
                           },
                         }}
                         focused
@@ -8984,84 +8886,26 @@ const Editemployee = () => {
                           variant="filled"
                           sx={{ gridColumn: "span 2" }}
                         >
-                          {/* <InputLabel variant="standard" id="LeavePart">
-                                  {
-                                    <span>
-                                      Leave Part{" "}
-                                      <span style={{ color: "red" }}>*</span>
-                                    </span>
-                                  }
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-filled-label"
-                                  fullWidth
-                                  variant="standard"
-                                  type="text"
-                                  // value={values.LeavePart}
-                                  id="LeavePart"
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  name="LeavePart"
-                                  required
-                                  focused
-                                >
-                                  <MenuItem value="FH">First Half</MenuItem>
-                                  <MenuItem value="SH">Second Half</MenuItem>
-                                  <MenuItem value="N">Full Day</MenuItem>
-                                </Select> */}
                           <Productautocomplete
                             name="leavetype"
                             label="Leave Type"
                             id="leavetype"
-                            // value={values.leavetype}
                             value={LeaveconLTData}
                             onChange={(newValue) => {
-                              // setFieldValue("leavetype", newValue);
                               setselectLeaveconLTData({
                                 RecordID: newValue.RecordID,
                                 Code: newValue.Code,
                                 Name: newValue.Name,
                               });
-                              console.log(newValue, "--newValue");
                             }}
-                            // disabled={mode == "E" && values.Status != "AL"}
-                            //value={selectedProjectOptions}
-                            //onChange={handleSelectionProjectname}
-                            // defaultValue={selectedProjectName}
                             url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
-
-                        {/* <TextField
-                                fullWidth
-                                variant="standard"
-                                type="text"
-                                value={values.employeename}
-                                id="employeename"
-                                name="employeename"
-                                label="Employee Name"
-                                // required
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                error={!!touched.employeename && !!errors.employeename}
-                                helperText={touched.employeename && errors.employeename}
-                                sx={{
-                                  //gridColumn: "span 2",
-                                  backgroundColor: "#ffffff", // Set the background to white
-                                  "& .MuiFilledInput-root": {
-                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                                  },
-                                }}
-                                focused
-                                multiline
-                                inputProps={{ maxLength: 90 }}
-                              /> */}
 
                         <TextField
                           fullWidth
                           variant="standard"
                           type="number"
-                          // label="Total Days"
                           label="Eligible Days"
                           id="totaldays"
                           onBlur={handleBlur}
@@ -9070,25 +8914,16 @@ const Editemployee = () => {
                           name="totaldays"
                           error={!!touched.totaldays && !!errors.totaldays}
                           helperText={touched.totaldays && errors.totaldays}
-                          // sx={{ gridColumn: "span 2" }}
                           focused
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
                               style: {
                                 textAlign: "right",
-                                //background: "#fff6c3",
                               },
                             },
                           }}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(
-                        //     0,
-                        //     parseInt(e.target.value)
-                        //   )
-                        //     .toString()
-                        //     .slice(0, 8);
-                        // }}
+
                         />
                         <TextField
                           fullWidth
@@ -9106,25 +8941,15 @@ const Editemployee = () => {
                           helperText={
                             touched.availableleave && errors.availableleave
                           }
-                          // sx={{ gridColumn: "span 2" }}
                           focused
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
                               style: {
                                 textAlign: "right",
-                                //background: "#fff6c3",
                               },
                             },
                           }}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(
-                        //     0,
-                        //     parseInt(e.target.value)
-                        //   )
-                        //     .toString()
-                        //     .slice(0, 8);
-                        // }}
                         />
                         <TextField
                           fullWidth
@@ -9134,7 +8959,6 @@ const Editemployee = () => {
                           id="elligibledays"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          // value={values.elligibledays}
                           value={
                             Number(values.totaldays) -
                             Number(values.availableleave)
@@ -9165,22 +8989,11 @@ const Editemployee = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           name="Year"
-                          // required
                           focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
                         >
                           <MenuItem value="2024">2024</MenuItem>
                           <MenuItem value="2025">2025</MenuItem>
                           <MenuItem value="2026">2026</MenuItem>
-                          {/* <MenuItem value="PY">2024</MenuItem>
-                        <MenuItem value="CY">2025</MenuItem>
-                        <MenuItem value="NY">2026</MenuItem> */}
                         </TextField>
                       </FormControl>
 
@@ -9200,17 +9013,6 @@ const Editemployee = () => {
                         >
                           Save
                         </LoadingButton>
-                        {/* ) : (
-                                <Button
-                                  color="secondary"
-                                  variant="contained"
-                                  disabled={true}
-                                  
-                                >
-                                  Save
-                                </Button>
-                     )}
-                              {YearFlag == "true" ? (  */}
                         <Button
                           color="error"
                           variant="contained"
@@ -9233,15 +9035,6 @@ const Editemployee = () => {
                         >
                           Delete
                         </Button>
-                        {/* ) : (
-                                <Button
-                                  color="error"
-                                  variant="contained"
-                                  disabled={true}
-                                >
-                                  Delete
-                                </Button>
-                              )}  */}
                         <Button
                           type="reset"
                           color="warning"

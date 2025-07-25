@@ -91,7 +91,7 @@ const Editgate = () => {
       Code: values.code,
       Name: values.name,
       Comments: values.comment,
-      SortOrder: values.sortorder,
+      SortOrder: values.sortorder || 0,
       Disable: isCheck,
       LocRecordID: parentID,
       ReaderCode: values.readercode,
@@ -429,7 +429,7 @@ const Editgate = () => {
                     </Button> */}
                   {/* )} */}
                   <Button
-                    color="error"
+                    color="warning"
                     variant="contained"
                     onClick={() => {
                       navigate(
