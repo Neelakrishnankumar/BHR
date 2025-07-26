@@ -2391,7 +2391,8 @@ const Editemployee = () => {
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
-                      <TextField
+                      {CompanyAutoCode =="Y"?(
+                        <TextField
                         fullWidth
                         variant="standard"
                         type="text"
@@ -2416,6 +2417,31 @@ const Editemployee = () => {
                         inputProps={{ maxLength: 8 }}
                         InputProps={{ readOnly: true }}
                       />
+                    ):(
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Code"
+                        value={values.Code}
+                        id="Code"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Code"                       
+                        // error={!!touched.Code && !!errors.Code}
+                        // helperText={touched.Code && errors.Code}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        required
+                        autoFocus
+                        inputProps={{ maxLength: 8 }}                     
+                      />)}
+                      
 
                       <TextField
                         fullWidth

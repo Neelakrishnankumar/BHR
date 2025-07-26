@@ -215,7 +215,7 @@ const Editoverhead = () => {
                       },
                     }}
                   >
-                 
+                 {CompanyAutoCode == "Y" ? (
                     <TextField
                       name="code"
                       type="text"
@@ -232,19 +232,36 @@ const Editoverhead = () => {
                       InputProps={{readOnly:true}}
                       // autoFocus
                     />
+                 ):( 
+                 <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"                     
+                      variant="standard"
+                      focused
+                      required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}                     
+                      autoFocus
+                    />
+                    )}
                     <TextField
                       name="name"
                       type="text"
                       id="name"
                       label="Overhead"
-                     variant="standard"
+                      variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
-                      autoFocus
+                      autoFocus={CompanyAutoCode=="Y"}
                     />
                     <FormControl
                       focused

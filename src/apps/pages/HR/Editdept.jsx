@@ -69,6 +69,7 @@ const Editdept = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+  console.log(CompanyAutoCode,"CompanyAutoCode");
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();

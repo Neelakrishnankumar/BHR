@@ -637,6 +637,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     },
                   }}
                 >
+                   {CompanyAutoCode == "Y" ? (
                   <TextField
                     name="code"
                     type="text"
@@ -660,6 +661,27 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     InputProps={{readOnly:true}}
                     // autoFocus
                   />
+                  ):( <TextField
+                    name="code"
+                    type="text"
+                    id="code"
+                    label="Code"
+                    variant="standard"                   
+                    focused
+                    required
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.code && !!errors.code}
+                    helperText={touched.code && errors.code}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}                  
+                    autoFocus
+                  />)}
                   <TextField
                     name="name"
                     type="text"
@@ -678,7 +700,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    autoFocus
+                    autoFocus={CompanyAutoCode=="Y"}
                   />
                   <TextField
                     name="Pancardnumber"
