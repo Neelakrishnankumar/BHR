@@ -244,30 +244,57 @@ const Editshift = () => {
                                         },
                                     }}
                                 >
-                                    <TextField
-                                        name="code"
-                                        type="text"
-                                        id="code"
-                                        label="Code"
-                                        placeholder="Auto"
-                                        variant="standard"
-                                        focused
-                                        // required
-                                        value={values.code}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.code && !!errors.code}
-                                        helperText={touched.code && errors.code}
-                                        sx={{
+                                    {CompanyAutoCode == "Y" ? (
+                                        <TextField
+                                            name="code"
+                                            type="text"
+                                            id="code"
+                                            label="Code"
+                                            placeholder="Auto"
+                                            variant="standard"
+                                            focused
+                                            // required
+                                            value={values.code}
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            error={!!touched.code && !!errors.code}
+                                            helperText={touched.code && errors.code}
+                                            sx={{
 
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            }
-                                        }}
-                                        InputProps={{readOnly:true}}
+                                                backgroundColor: "#ffffff", // Set the background to white
+                                                "& .MuiFilledInput-root": {
+                                                    backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                                }
+                                            }}
+                                            InputProps={{ readOnly: true }}
                                         // autoFocus
-                                    />
+                                        />
+                                    ) : (
+                                        <TextField
+                                            name="code"
+                                            type="text"
+                                            id="code"
+                                            label="Code"
+
+                                            variant="standard"
+                                            focused
+                                            required
+                                            value={values.code}
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            error={!!touched.code && !!errors.code}
+                                            helperText={touched.code && errors.code}
+                                            sx={{
+
+                                                backgroundColor: "#ffffff", // Set the background to white
+                                                "& .MuiFilledInput-root": {
+                                                    backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                                                }
+                                            }}
+
+                                            autoFocus
+                                        />
+                                    )}
                                     <TextField
                                         name="name"
                                         type="text"
@@ -287,7 +314,7 @@ const Editshift = () => {
                                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                             }
                                         }}
-                                        autoFocus
+                                        autoFocus={CompanyAutoCode == "Y"}
                                     />
 
 
@@ -341,7 +368,7 @@ const Editshift = () => {
                                     </FormControl>
                                     {/* <Typography variant="h6">Week Off</Typography> */}
                                     <Box>
-                                        <Typography variant="subtitle1" sx={{ mb:-1, fontWeight: 'bold' }}>
+                                        <Typography variant="subtitle1" sx={{ mb: -1, fontWeight: 'bold' }}>
                                             Week Off
                                         </Typography>
                                         <Field
@@ -533,7 +560,7 @@ const Editshift = () => {
                                         >
                                             Save
                                         </Button>
-                                    )}   {YearFlag == "true" && mode=="E" ? (
+                                    )}   {YearFlag == "true" && mode == "E" ? (
                                         <Button
                                             color="error"
                                             variant="contained"

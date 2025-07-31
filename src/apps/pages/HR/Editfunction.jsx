@@ -431,31 +431,55 @@ const Editfunction = () => {
                     },
                   }}
                 >
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      placeholder="Auto"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
 
-                  <TextField
-                    name="code"
-                    type="text"
-                    id="code"
-                    label="Code"
-                    variant="standard"
-                    placeholder="Auto"
-                    focused
-                    // required
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                    sx={{
-
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                      }
-                    }}
-                    InputProps={{readOnly:true}}
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}
+                      InputProps={{ readOnly: true }}
                     // autoFocus
-                  />
+                    />
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      focused
+                      required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        }
+                      }}                     
+                     autoFocus
+                    />
+                  )}
                   <TextField
                     name="name"
                     type="text"
@@ -475,7 +499,7 @@ const Editfunction = () => {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
                     }}
-                    autoFocus
+                    autoFocus={CompanyAutoCode == "Y"}
                   />
 
                   <FormControl
@@ -667,7 +691,7 @@ const Editfunction = () => {
                     >
                       Save
                     </Button>
-                  )} 
+                  )}
                   {/* {YearFlag === "true" && mode !== "A" ? (
                     <Button
                       color="error"
@@ -687,7 +711,7 @@ const Editfunction = () => {
                       Delete
                     </Button>
                   )} */}
-                   {YearFlag === "true" && mode =="E" ? ( 
+                  {YearFlag === "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -697,9 +721,9 @@ const Editfunction = () => {
                     >
                       Delete
                     </Button>
-                   ) : (
+                  ) : (
                     null
-                   )} 
+                  )}
                   <Button
                     color="warning"
                     variant="contained"

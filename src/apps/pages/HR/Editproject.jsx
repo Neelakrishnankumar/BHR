@@ -101,7 +101,7 @@
 //   //     toast.error(response.payload.Msg);
 //   //   }
 //   // };
-  
+
 //   const Fnsave = async (values, del) => {
 //   let action;
 //   if (del) {
@@ -443,22 +443,22 @@ const Editproject = () => {
   var recID = params.id;
   var mode = params.Mode;
   // var accessID = params.accessID;
- var accessID = params.accessID;
+  var accessID = params.accessID;
 
   const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
-const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
-   const [employee, setEmployee] = useState("");
-   console.log(employee,"employeelookup");
+  const [employee, setEmployee] = useState("");
+  console.log(employee, "employeelookup");
   const location = useLocation();
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -471,10 +471,10 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
-     incharge: data.ProjectIncharge
+    incharge: data.ProjectIncharge
       ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
       : null,
-       ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
+    ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
   };
 
@@ -495,7 +495,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
       RecordID: recID,
       Code: values.code,
       Name: values.name,
-      ProjectIncharge:values.incharge.RecordID || 0,
+      ProjectIncharge: values.incharge.RecordID || 0,
       ProjectInchargeName: values.incharge.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
@@ -617,84 +617,101 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                     },
                   }}
                 >
-
-                  <TextField
-                    name="code"
-                    type="text"
-                    id="code"
-                    label="Code"
-                    placeholder="Auto"
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                    InputProps={{readOnly:true}}
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      placeholder="Auto"
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      InputProps={{ readOnly: true }}
                     // autoFocus
-                  />
+                    />
+                  ) : (
+                  <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      focused
+                      required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      autoFocus
+                    />)}
+
                   <TextField
                     name="name"
                     type="text"
                     id="name"
                     label="Description"
-                  variant="standard"
+                    variant="standard"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
-                    autoFocus
+                    autoFocus={CompanyAutoCode == "Y"}
                   />
-                    <Productautocomplete
-                      name="incharge"
-                      label="Incharge"
-                      id="incharge"
-                      value={values.incharge}
-                      onChange={async (newValue) => {
-                        setFieldValue("incharge", newValue);
-                        
-                      }}
-                      // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    />
-                     <Box>
-                    
-                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
+                  <Productautocomplete
+                    name="incharge"
+                    label="Incharge"
+                    id="incharge"
+                    value={values.incharge}
+                    onChange={async (newValue) => {
+                      setFieldValue("incharge", newValue);
+
+                    }}
+                    // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                  />
+                  <Box>
+
+                    {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
-                        type="checkbox"
-                        name="Routine"
-                        id="Routine"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                      />
-                      <FormLabel focused={false} htmlFor="Routine" sx={{ ml: 1 }}>
-                        Routine Tasks
-                      </FormLabel>
-                      <Field
-                        type="checkbox"
-                        name="ServiceMaintenance"
-                        id="ServiceMaintenance"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                      />
-                      <FormLabel focused={false} htmlFor="ServiceMaintenance" sx={{ ml: 1 }}>
-                        Service & Maintenance
-                      </FormLabel>
-                    </Box>
+                      type="checkbox"
+                      name="Routine"
+                      id="Routine"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel focused={false} htmlFor="Routine" sx={{ ml: 1 }}>
+                      Routine Tasks
+                    </FormLabel>
+                    <Field
+                      type="checkbox"
+                      name="ServiceMaintenance"
+                      id="ServiceMaintenance"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel focused={false} htmlFor="ServiceMaintenance" sx={{ ml: 1 }}>
+                      Service & Maintenance
+                    </FormLabel>
+                  </Box>
 
                   <TextField
                     name="sortorder"
                     type="number"
                     id="sortorder"
                     label="Sort Order"
-                  variant="standard"
+                    variant="standard"
                     focused
                     value={values.sortorder}
                     onBlur={handleBlur}
@@ -714,7 +731,7 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                         .slice(0, 8);
                     }}
                   />
-                   {/* <Productautocomplete
+                  {/* <Productautocomplete
                     name="incharge"
                     label="Project Incharge"
                     id="incharge"
@@ -725,8 +742,8 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                      url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
 
                 /> */}
-               <Box>
-                 <Field
+                  <Box>
+                    <Field
                       //  size="small"
                       type="checkbox"
                       name="disable"
@@ -739,10 +756,10 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
                     <FormLabel focused={false}>Disable</FormLabel>
                     {/* <Box display="flex" alignItems="center"> */}
-                      
+
                     {/* </Box>
                   </Box>*/}
-                  </Box> 
+                  </Box>
 
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
@@ -763,8 +780,8 @@ const listViewurl = useSelector((state) => state.globalurl.listViewurl);
                     >
                       Save
                     </Button>
-                  )} 
-                  {YearFlag == "true"&& mode =="E" ? (
+                  )}
+                  {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"

@@ -322,32 +322,32 @@ const LeaveType = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-         <Box display="flex" justifyContent="space-between" p={2}>
-                  <Box display="flex" borderRadius="3px" alignItems="center">
-                    {broken && !rtl && (
-                      <IconButton onClick={() => toggleSidebar()}>
-                        <MenuOutlinedIcon />
-                      </IconButton>
-                    )}
-                    <Box
-                      display={isNonMobile ? "flex" : "none"}
-                      borderRadius="3px"
-                      alignItems="center"
-                    >
-                      <Breadcrumbs
-                        maxItems={3}
-                        aria-label="breadcrumb"
-                        separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                      >
-                        <Typography
-                          variant="h5"
-                          color="#0000D1"
-                          sx={{ cursor: "default" }}
-                         
-                        >
-                          Leave Type
-                        </Typography>
-                        {/* {show == "1" ? (
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Box
+              display={isNonMobile ? "flex" : "none"}
+              borderRadius="3px"
+              alignItems="center"
+            >
+              <Breadcrumbs
+                maxItems={3}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+
+                >
+                  Leave Type
+                </Typography>
+                {/* {show == "1" ? (
                         <Typography
                           variant="h5"
                           color="#0000D1"
@@ -358,12 +358,12 @@ const LeaveType = () => {
                       ) : (
                         false
                       )} */}
-                      </Breadcrumbs>
-                    </Box>
-                  </Box>
-        
-                  <Box display="flex">
-                    {/* {mode !== "A" ? (
+              </Breadcrumbs>
+            </Box>
+          </Box>
+
+          <Box display="flex">
+            {/* {mode !== "A" ? (
                     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                       <InputLabel id="demo-select-small">Explore</InputLabel>
                       <Select
@@ -380,23 +380,23 @@ const LeaveType = () => {
                   ) : (
                     false
                   )} */}
-                    <Tooltip title="Close">
-                      <IconButton onClick={() => fnLogOut("Close")} color="error">
-                        <ResetTvIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Logout">
-                      <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                        <LogoutOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </Box>
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
       </Paper>
 
       {show == 0 && !getLoading ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
-           
+
           <Formik
             initialValues={InitialValue}
             onSubmit={(values, setSubmitting) => {
@@ -429,7 +429,8 @@ const LeaveType = () => {
                     },
                   }}
                 >
-     {CompanyAutoCode=="Y"?(<TextField
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
                       name="code"
                       type="text"
                       id="code"
@@ -449,16 +450,18 @@ const LeaveType = () => {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
                       }}
-                      InputProps={{readOnly:true}}
-                      // autoFocus
-                    />):(<TextField
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
+                    />
+                  ) : (
+                    <TextField
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"                    
+                      label="Code"
                       variant="standard"
                       focused
-                       required
+                      required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -469,99 +472,99 @@ const LeaveType = () => {
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
-                      }}                    
-                       autoFocus
-                    />)}            
-                    
+                      }}
+                      autoFocus
+                    />)}
 
 
-                    <TextField
-                      name="name"
-                      type="text"
-                      id="name"
-                      label="Name"
-                     variant="standard"
-                      focused
-                      value={values.name}
+
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Name"
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                    autoFocus={CompanyAutoCode == "Y"}
+                  />
+
+                  <FormControl
+                    focused
+                    variant="standard"
+                    sx={{ backgroundColor: "#f5f5f5" }}
+                  >
+                    <InputLabel id="status">Categories</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="leavetypecategories"
+                      name="leavetypecategories"
+                      value={values.leavetypecategories}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      sx={{
- 
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      autoFocus={CompanyAutoCode=="Y"}
-                    />
-
-                    <FormControl
-                      focused
-                     variant="standard"
-                      sx={{  backgroundColor: "#f5f5f5" }}
                     >
-                      <InputLabel id="status">Categories</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="leavetypecategories"
-                        name="leavetypecategories"
-                        value={values.leavetypecategories}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                      >
-                         
-                        <MenuItem value="M">Medical</MenuItem>
-                        <MenuItem value="G">General</MenuItem>
-                        <MenuItem value="O">Others</MenuItem>
-                        {/* <MenuItem value="S">Sick</MenuItem>
+
+                      <MenuItem value="M">Medical</MenuItem>
+                      <MenuItem value="G">General</MenuItem>
+                      <MenuItem value="O">Others</MenuItem>
+                      {/* <MenuItem value="S">Sick</MenuItem>
                         <MenuItem value="M">Medical</MenuItem>
                         <MenuItem value="A">Approvel</MenuItem>
                         <MenuItem value="C">Casual</MenuItem> */}
 
-                      </Select>
-                    </FormControl>
+                    </Select>
+                  </FormControl>
 
-                    <TextField
-                      name="sortorder"
-                      type="number"
-                      id="sortorder"
-                      label="Sort Order"
-                     variant="standard"
-                      focused
-                      value={values.sortorder}
-                      onBlur={handleBlur}
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    focused
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ background: "" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
                       onChange={handleChange}
-                      error={!!touched.sortorder && !!errors.sortorder}
-                      helperText={touched.sortorder && errors.sortorder}
-                      sx={{ background: "" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      onWheel={(e) => e.target.blur()}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
                     />
-                    <Box>
-                      <Field
-                        type="checkbox"
-                        name="disable"
-                        id="disable"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
-                      />
 
-                      <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
-               
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
@@ -581,7 +584,7 @@ const LeaveType = () => {
                     >
                       Save
                     </Button>
-                  )}   {YearFlag == "true" && mode=="E" ? (
+                  )}   {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -666,7 +669,7 @@ const LeaveType = () => {
                     type="text"
                     id="code"
                     label="Code"
-                   variant="standard"
+                    variant="standard"
                     focused
                     required
                     value={values.code}
@@ -683,7 +686,7 @@ const LeaveType = () => {
                     type="text"
                     id="name"
                     label="Name"
-                   variant="standard"
+                    variant="standard"
                     focused
                     sx={{ gridColumn: "span 2" }}
                     value={values.name}
@@ -772,7 +775,7 @@ const LeaveType = () => {
                       <TextField
                         id="employee"
                         label="Employee"
-                       variant="standard"
+                        variant="standard"
                         focused
                         required
                         inputProps={{ tabIndex: "-1" }}
@@ -786,7 +789,7 @@ const LeaveType = () => {
                       </IconButton>
                       <TextField
                         id="employee"
-                       variant="standard"
+                        variant="standard"
                         fullWidth
                         inputProps={{ tabIndex: "-1" }}
                         focused
