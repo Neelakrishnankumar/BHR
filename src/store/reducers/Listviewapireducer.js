@@ -60,12 +60,12 @@ const initialState = {
 };
 
 
+
+
+
 const Finyear = sessionStorage.getItem("year");
 export const getMail = createAsyncThunk("mail/get", async (data) => {
   var url = store.getState().globalurl.mailContentGeturl;
-
-  // console.log("get" + JSON.stringify(data));
-  // console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
   const response = await axios.post(url, data, {
     headers: {
       Authorization:

@@ -105,6 +105,7 @@ getLeaveentryDataUrl:APIurl +"EmpLeaveConfigurationGetController.php",
 geolocationgetUrl:APIurl + "EmpGeoLocationGet.php",
 geolocationupdateUrl:APIurl + "EmpGeoLocationUpdate.php",
 LeaveTypeurl: APIurl +"APIController.php",
+subsNewUrl: APIurl +"SubscriptionPostController.php",
 
 
   };
