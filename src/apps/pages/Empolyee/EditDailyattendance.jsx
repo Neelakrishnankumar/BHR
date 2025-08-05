@@ -113,12 +113,12 @@ const CompanyID = sessionStorage.getItem("compID");
         },
         {
             field: "EmplyeeCheckInDateTime",
-            headerName: "Emplyee CheckIn Date Time",
+            headerName: "Employee Check In Date Time",
             flex: 1,
         },
         {
             field: "EmplyeeCheckOutDateTime",
-            headerName: "Emplyee CheckOut Date Time",
+            headerName: "Employee Check Out Date Time",
             flex: 1,
         },
         {

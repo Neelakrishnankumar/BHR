@@ -258,7 +258,7 @@ const Login = () => {
                   >
                     <Typography
                       variant="h6"
-                      sx={{ marginBottom: 2, marginRight: 2 }}
+                      sx={{ marginBottom: 6, marginRight: 2 }}
                     >
                       Back Office System{" "}
                     </Typography>

@@ -408,7 +408,10 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
-  Paper
+  Paper,
+  InputLabel,
+  MenuItem,
+  Select
 } from "@mui/material";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -468,7 +471,7 @@ const Editproject = () => {
   const InitialValue = {
     code: data.Code,
     name: data.Name,
-
+    currentstatus: data.CurrentStatus,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
     incharge: data.ProjectIncharge
@@ -497,6 +500,7 @@ const Editproject = () => {
       Name: values.name,
       ProjectIncharge: values.incharge.RecordID || 0,
       ProjectInchargeName: values.incharge.Name || "",
+      CurrentStatus:values.currentstatus,
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
       SortOrder: values.sortorder || 0,
@@ -636,7 +640,7 @@ const Editproject = () => {
                     // autoFocus
                     />
                   ) : (
-                  <TextField
+                    <TextField
                       name="code"
                       type="text"
                       id="code"
@@ -668,7 +672,7 @@ const Editproject = () => {
                   />
                   <Productautocomplete
                     name="incharge"
-                    label="Incharge"
+                    label="Owner"
                     id="incharge"
                     value={values.incharge}
                     onChange={async (newValue) => {
@@ -678,6 +682,26 @@ const Editproject = () => {
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
+                  <FormControl
+                    focused
+                    variant="standard"
+                    sx={{ backgroundColor: "#f5f5f5" }}
+                  >
+                    <InputLabel id="status">Current Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="currentstatus"
+                      name="currentstatus"
+                      value={values.currentstatus}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="Current">Current</MenuItem>
+                      <MenuItem value="Completed">Completed</MenuItem>
+                      <MenuItem value="Old">Old</MenuItem>
+
+                    </Select>
+                  </FormControl>
                   <Box>
 
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>

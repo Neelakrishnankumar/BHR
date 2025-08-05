@@ -35,6 +35,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CalendarToday } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import store from "../../../index";
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
 import FileUploadIconButton from "../../../ui-components/global/Fileuploadbutton";
@@ -382,7 +383,7 @@ const Editrequests = () => {
     Mgr: apiData.Mgr,
     Sal: apiData.Sal,
     Fax: apiData.Fax,
-    SortOrder: apiData.SortOrder ||0,
+    SortOrder: apiData.SortOrder || 0,
     checkbox: apiData.Disable,
     Password: apiData.Password,
     Department: apiData.Department,
@@ -715,7 +716,7 @@ const Editrequests = () => {
       ),
     [explorelistViewcolumn]
   );
-  
+
 
 
 
@@ -1134,7 +1135,7 @@ const Editrequests = () => {
     approvedDate: "",
     permissiondate: ""
   });
-  
+
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
@@ -1213,7 +1214,7 @@ const Editrequests = () => {
 
   const selectCellRowData = ({ rowData, mode, field }) => {
 
-    
+
 
     setFunMode(mode);
 
@@ -1576,9 +1577,9 @@ const Editrequests = () => {
         requestMail({ EmployeeID: recID, Type: "EE", RecordID: response.payload.FinanceEntryRecid })
       );
 
-        if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.FinanceEntryRecid,ManagerID:0,"EmployeeID": recID, "Type": "EE","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.FinanceEntryRecid, ManagerID: 0, "EmployeeID": recID, "Type": "EE", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -1715,9 +1716,9 @@ const Editrequests = () => {
           RecordID: response.payload.RegRecID,
         })
       );
-  if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.RegRecID,ManagerID:0,"EmployeeID": recID, "Type": "RG","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.RegRecID, ManagerID: 0, "EmployeeID": recID, "Type": "RG", "Status": "AP", Reason: "" } }))
       }
 
       // }
@@ -1846,10 +1847,10 @@ const Editrequests = () => {
         })
       );
 
-      
-      if(values.Status == "AP"){
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.OndutyRecid,ManagerID:0,"EmployeeID": recID, "Type": "OD","Status":"AP",Reason: "" } }))
+      if (values.Status == "AP") {
+
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.OndutyRecid, ManagerID: 0, "EmployeeID": recID, "Type": "OD", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2065,9 +2066,9 @@ const Editrequests = () => {
         })
       );
 
-      if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EleaveRecid,ManagerID:0,"EmployeeID": recID, "Type": "L","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EleaveRecid, ManagerID: 0, "EmployeeID": recID, "Type": "L", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2177,9 +2178,9 @@ const Editrequests = () => {
         })
       );
 
-            if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EmpOtRecid,ManagerID:0,"EmployeeID": recID, "Type": "OT","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EmpOtRecid, ManagerID: 0, "EmployeeID": recID, "Type": "OT", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2270,9 +2271,9 @@ const Editrequests = () => {
       );
 
 
-      if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.SalaryAdvanceRecid,ManagerID:0,"EmployeeID": recID, "Type": "SA","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.SalaryAdvanceRecid, ManagerID: 0, "EmployeeID": recID, "Type": "SA", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2318,7 +2319,7 @@ const Editrequests = () => {
 
     // type: ADLookupData.adType,
     value: allDecData.value,
-    sortorder: allDecData.sortOrder ||0,
+    sortorder: allDecData.sortOrder || 0,
   };
 
   const AllDedFNsave = async (values, resetForm, del) => {
@@ -2346,7 +2347,7 @@ const Editrequests = () => {
         show == "1"
           ? Number(Data.Sal) + Number(values.value)
           : Number(Data.Sal) - Number(values.value),
-      SortOrder: values.sortorder ||0,
+      SortOrder: values.sortorder || 0,
       Disable: "N",
 
       parentID: recID,
@@ -2531,18 +2532,23 @@ const Editrequests = () => {
   };
   const type = show == "2" ? "L" : show == "6" ? "Over Time" : show == "8" ? "OD" : show == "7" ? "SA" : show == "11" ? "P" : show == "9" ? "E" : show == "10" ? "R" : "";
 
-  async function fileUpload(file, appId) {
+  async function fileUpload(file, appId, action, id, purpose) {
     console.log("🚀 ~ fileUpload ~ file:", file)
     const formData = new FormData();
     formData.append('file', file);
     formData.append('empId', recID);
     formData.append('appId', appId);
+    formData.append("action", action);
+    formData.append("id", id);
+    formData.append("purpose", purpose);
     //formData.append('type', "L");
     if (type) {
       formData.append('type', type);
     }
     formData.append('source', "HR");
     console.log("🚀 ~ fileUpload ~ formData:", formData)
+    console.log("Uploading with:", { file, appId, action, id, purpose, recID, type });
+
     const respose = await dispatch(attachmentPost({ data: formData }))
 
     if (respose.payload.success) {
@@ -2754,7 +2760,7 @@ const Editrequests = () => {
             </Box>
           </Box>
         </Paper>
-       
+
         {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             {/* { <Header title="Products" subtitle="" /> } */}
@@ -4127,7 +4133,27 @@ const Editrequests = () => {
                   >
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, leaveData.recordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, leaveData.recordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "");
+                        }}
+                        />
                       </Box>
                     )}
 
@@ -4215,6 +4241,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -4234,6 +4261,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.purpose}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -4246,6 +4274,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            "",
+                                            leaveData.recordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -4287,6 +4330,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -4662,7 +4706,26 @@ const Editrequests = () => {
                   >
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, otdata.RecordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, otdata.RecordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "");
+                        }} />
                       </Box>
                     )}
 
@@ -4724,6 +4787,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -4743,6 +4807,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -4755,6 +4820,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            "",
+                                            otdata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -4795,6 +4875,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -5203,8 +5284,28 @@ const Editrequests = () => {
 
                   >
                     {funMode !== "A" && (
+
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, saladdata.RecordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, saladdata.RecordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "")
+                        }} />
                       </Box>
                     )}
 
@@ -5266,6 +5367,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -5285,6 +5387,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -5297,6 +5400,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            "",
+                                            saladdata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -5757,7 +5875,25 @@ const Editrequests = () => {
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
                         {funMode !== "A" && (
                           <Box display="flex" alignItems="center" gap={1}>
-                            <FileUploadIconButton onFileSelect={(file) => fileUpload(file, ondutydata.RecordID)} />
+                            <TextField
+                              name="purpose"
+                              type="text"
+                              id="purpose"
+                              label="Purpose"
+                              variant="standard"
+                              focused
+                              value={values.purpose}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.purpose && !!errors.purpose}
+                              helperText={touched.purpose && errors.purpose}
+                              sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                              InputLabelProps={{ shrink: true }}
+
+                            />
+                            <FileUploadIconButton onFileSelect={(file) => {fileUpload(file, ondutydata.RecordID, "upload", "", values.purpose)
+                              setFieldValue("purpose","");
+                            }} />
                           </Box>
                         )}
 
@@ -5836,6 +5972,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -5855,6 +5992,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -5867,6 +6005,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            "",
+                                            ondutydata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -5907,6 +6060,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -6067,6 +6221,7 @@ const Editrequests = () => {
                                     <TableCell width={20}><strong>S.No</strong></TableCell>
                                     <TableCell><strong>Uploaded Date</strong></TableCell>
                                     <TableCell ><strong>Filename</strong></TableCell>
+                                    <TableCell ><strong>Purpose</strong></TableCell>
                                     <TableCell ><strong>Source</strong></TableCell>
                                     <TableCell><strong>View</strong></TableCell>
 
@@ -6086,6 +6241,7 @@ const Editrequests = () => {
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{file.uploadedDate}</TableCell>
                                         <TableCell>{file.filename}</TableCell>
+                                        <TableCell>{file.id}</TableCell>
                                         <TableCell>{file.source}</TableCell>
                                         <TableCell>
                                           <Tooltip title="Open File">
@@ -6098,6 +6254,21 @@ const Editrequests = () => {
                                               size="small"
                                             >
                                               <OpenInNewIcon fontSize="small" />
+                                            </IconButton>
+                                          </Tooltip>
+                                          <Tooltip title="delete">
+                                            <IconButton
+                                              color="error"
+                                              onClick={() => fileUpload(
+                                                "",
+                                                saladdata.RecordID,
+                                                "delete",
+                                                file.id,
+                                                file.purpose
+                                              )}
+                                              size="small"
+                                            >
+                                              <DeleteForeverIcon fontSize="small" />
                                             </IconButton>
                                           </Tooltip>
                                         </TableCell>
@@ -6321,7 +6492,28 @@ const Editrequests = () => {
                     {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, perData.recordID)} />
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <TextField
+                            name="purpose"
+                            type="text"
+                            id="purpose"
+                            label="Purpose"
+                            variant="standard"
+                            focused
+                            value={values.purpose}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.purpose && !!errors.purpose}
+                            helperText={touched.purpose && errors.purpose}
+                            sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                            InputLabelProps={{ shrink: true }}
+
+                          />
+                          <FileUploadIconButton onFileSelect={(file) => {
+                            fileUpload(file, perData.recordID, "upload", "", values.purpose)
+                            setFieldValue("purpose", "");
+                          }} />
+                        </Box>
                       </Box>
                     )}
 
@@ -6937,7 +7129,26 @@ const Editrequests = () => {
                         </Button> */}
                         {funMode !== "A" && (
                           <Box display="flex" alignItems="center" gap={1}>
-                            <FileUploadIconButton onFileSelect={(file) => fileUpload(file, expensedata.RecordID)} />
+                            <TextField
+                              name="purpose"
+                              type="text"
+                              id="purpose"
+                              label="Purpose"
+                              variant="standard"
+                              focused
+                              value={values.purpose}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.purpose && !!errors.purpose}
+                              helperText={touched.purpose && errors.purpose}
+                              sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                              InputLabelProps={{ shrink: true }}
+
+                            />
+                            <FileUploadIconButton onFileSelect={(file) => {
+                              fileUpload(file, expensedata.RecordID, "upload", "", values.purpose)
+                              setFieldValue("purpose", "")
+                            }} />
                           </Box>
                         )}
 
@@ -7001,6 +7212,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -7020,6 +7232,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                     <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -7032,6 +7245,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            "",
+                                            expensedata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -7533,7 +7761,26 @@ const Editrequests = () => {
                   >
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, regdata.RecordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, regdata.RecordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "")
+                        }} />
                       </Box>
                     )}
 
@@ -7621,6 +7868,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -7640,6 +7888,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -7652,6 +7901,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            "",
+                                            regdata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
