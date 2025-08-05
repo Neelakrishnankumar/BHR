@@ -410,8 +410,13 @@ import {
   LinearProgress,
   Paper,
   InputLabel,
+<<<<<<< HEAD
   MenuItem,
   Select
+=======
+  Select,
+  MenuItem,
+>>>>>>> 5ec912de39b14b42354d4516c118eba868f101df
 } from "@mui/material";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -471,7 +476,10 @@ const Editproject = () => {
   const InitialValue = {
     code: data.Code,
     name: data.Name,
+<<<<<<< HEAD
     currentstatus: data.CurrentStatus,
+=======
+>>>>>>> 5ec912de39b14b42354d4516c118eba868f101df
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
     incharge: data.ProjectIncharge
@@ -479,6 +487,7 @@ const Editproject = () => {
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
+    CurrentStatus: data.CurrentStatus,
   };
 
   const Fnsave = async (values, del) => {
@@ -487,12 +496,13 @@ const Editproject = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "softdelete"
+        : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
     }
+
 
     const idata = {
       RecordID: recID,
@@ -504,6 +514,7 @@ const Editproject = () => {
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
       SortOrder: values.sortorder || 0,
+      CurrentStatus: values.CurrentStatus || "",
       Disable: isCheck,
       Finyear,
       CompanyID,
@@ -561,12 +572,7 @@ const Editproject = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-
-            >
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
               Project
             </Typography>
           </Box>
@@ -606,7 +612,7 @@ const Editproject = () => {
               isSubmitting,
               values,
               handleSubmit,
-              setFieldValue
+              setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -637,7 +643,7 @@ const Editproject = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -654,7 +660,8 @@ const Editproject = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       autoFocus
-                    />)}
+                    />
+                  )}
 
                   <TextField
                     name="name"
@@ -677,7 +684,6 @@ const Editproject = () => {
                     value={values.incharge}
                     onChange={async (newValue) => {
                       setFieldValue("incharge", newValue);
-
                     }}
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
@@ -703,7 +709,6 @@ const Editproject = () => {
                     </Select>
                   </FormControl>
                   <Box>
-
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
@@ -725,11 +730,42 @@ const Editproject = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                     />
-                    <FormLabel focused={false} htmlFor="ServiceMaintenance" sx={{ ml: 1 }}>
+                    <FormLabel
+                      focused={false}
+                      htmlFor="ServiceMaintenance"
+                      sx={{ ml: 1 }}
+                    >
                       Service & Maintenance
                     </FormLabel>
                   </Box>
+                  <FormControl
+                    focused
+                    variant="standard"
+                    // sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="CurrentStatus">Status</InputLabel>
+                    <Select
+                      labelId="demo"
+                      id="CurrentStatus"
+                      name="CurrentStatus"
+                      value={values.CurrentStatus}
+                      onBlur={handleBlur}
+                      onChange={(e) =>{
+                        setFieldValue("CurrentStatus",e.target.value)
+                        if(e.target.value == "CU"){
 
+                          setFieldValue("disable",false)
+                        }else{
+                          setFieldValue("disable",true)
+
+                        }
+                      }}
+                    >
+                      <MenuItem value="CU">Current</MenuItem>
+                      <MenuItem value="CO">Completed</MenuItem>
+                      <MenuItem value="H">Hold</MenuItem>
+                    </Select>
+                  </FormControl>
                   <TextField
                     name="sortorder"
                     type="number"
@@ -755,17 +791,7 @@ const Editproject = () => {
                         .slice(0, 8);
                     }}
                   />
-                  {/* <Productautocomplete
-                    name="incharge"
-                    label="Project Incharge"
-                    id="incharge"
-                    value={employee}
-                    onChange={(newValue) => setEmployee(newValue)}
-                    getOptionLabel={(option) => option?.Name || ""}
-                    // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2106","ScreenName":"Scheduled To","Filter":"ERank='${selectedDesignation?.ERank}' AND parentID='${CompanyID}'","Any":""}}`}
-                     url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
-
-                /> */}
+                 
                   <Box>
                     <Field
                       //  size="small"
@@ -779,12 +805,7 @@ const Editproject = () => {
                     />
 
                     <FormLabel focused={false}>Disable</FormLabel>
-                    {/* <Box display="flex" alignItems="center"> */}
-
-                    {/* </Box>
-                  </Box>*/}
                   </Box>
-
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
@@ -815,16 +836,14 @@ const Editproject = () => {
                     >
                       Delete
                     </Button>
-                  ) : (
-                    // <Button
-                    //   color="error"
-                    //   variant="contained"
-                    //   disabled={true}
-                    // >
-                    //   Delete
-                    // </Button>
-                    null
-                  )}
+                  ) : // <Button
+                  //   color="error"
+                  //   variant="contained"
+                  //   disabled={true}
+                  // >
+                  //   Delete
+                  // </Button>
+                  null}
                   <Button
                     color="warning"
                     variant="contained"
@@ -848,4 +867,3 @@ const Editproject = () => {
 };
 
 export default Editproject;
-

@@ -157,7 +157,6 @@ function App() {
                   <Route path="/:accessID/:screenName/EditApproval/:id/:Mode" element={<Editapprovals />} />
                   <Route path="/:accessID/:screenName/Editrunpayroll" element={<Editrunpayroll />} />
                   <Route path="/:accessID/Regularization/:id/" element={<Regularization />} />
-
                   <Route
                     path="/:accessID/:screenName/EditSalary Component/:id/:Mode"
                     element={<EditSalaryComponent />}
@@ -172,13 +171,10 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number/:Desc/all-bom/:bomproductid/EditList of BOM/:id/:mode"
                     element={<Editbom />}
                   />
-
-                  {/* <Route path="/Secondarylistview/:accessID/:screenName/:headerid/:Type/EditProduct Master/:id/:Mode" element={ <Productdetail/>}/> */}
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:headerid/:Type/EditProduct Master/:id/:Mode"
                     element={<Editproduct />}
                   />
-                  {/* <Route path="/Secondarylistview/:accessID/:screenName/:productid/EditList of BOM/:id/:Mode" element={ <Bomproduct/>}/> */}
                   <Route
                     path="/:accessID/:screenName/EditCategories/:id/:Mode"
                     element={<Editproductcategory />}

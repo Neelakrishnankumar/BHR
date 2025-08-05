@@ -154,10 +154,7 @@ const Login = () => {
        var UserName=data.payload.apiResponse.Name
        var loginrecordID = data.payload.apiResponse.Recordid
       
-       console.log(SubscriptionCode,"SubscriptionCode");
 
-       console.log("🚀 ~ file: Login.jsx:144 ~ Login ~ Groupaccess:", Groupaccess)
-       console.log("🚀 ~ file: Login.jsx:144 ~ Login ~ UserName:", UserName)
        var Modules=data.payload.apiResponse.Modules
 
        var UserName=data.payload.apiResponse.Name
@@ -193,6 +190,9 @@ const Login = () => {
        navigate("/Apps/HR");  
       }
       else {
+        if(data.payload.subscription == 0){
+          navigate("/SubscriptionScreen",{state:{subCode:values.license}});  
+        }
        setLoading(false);
        toast.error(data.payload.Msg);
      }
