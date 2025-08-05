@@ -410,13 +410,8 @@ import {
   LinearProgress,
   Paper,
   InputLabel,
-<<<<<<< HEAD
-  MenuItem,
-  Select
-=======
   Select,
   MenuItem,
->>>>>>> 5ec912de39b14b42354d4516c118eba868f101df
 } from "@mui/material";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -476,10 +471,6 @@ const Editproject = () => {
   const InitialValue = {
     code: data.Code,
     name: data.Name,
-<<<<<<< HEAD
-    currentstatus: data.CurrentStatus,
-=======
->>>>>>> 5ec912de39b14b42354d4516c118eba868f101df
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
     incharge: data.ProjectIncharge
@@ -510,7 +501,6 @@ const Editproject = () => {
       Name: values.name,
       ProjectIncharge: values.incharge.RecordID || 0,
       ProjectInchargeName: values.incharge.Name || "",
-      CurrentStatus:values.currentstatus,
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
       SortOrder: values.sortorder || 0,
@@ -688,7 +678,7 @@ const Editproject = () => {
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
-                  <FormControl
+                  {/* <FormControl
                     focused
                     variant="standard"
                     sx={{ backgroundColor: "#f5f5f5" }}
@@ -706,6 +696,34 @@ const Editproject = () => {
                       <MenuItem value="Completed">Completed</MenuItem>
                       <MenuItem value="Old">Old</MenuItem>
 
+                    </Select>
+                  </FormControl> */}
+                    <FormControl
+                    focused
+                    variant="standard"
+                    // sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="CurrentStatus">Status</InputLabel>
+                    <Select
+                      labelId="demo"
+                      id="CurrentStatus"
+                      name="CurrentStatus"
+                      value={values.CurrentStatus}
+                      onBlur={handleBlur}
+                      onChange={(e) =>{
+                        setFieldValue("CurrentStatus",e.target.value)
+                        if(e.target.value == "CU"){
+
+                          setFieldValue("disable",false)
+                        }else{
+                          setFieldValue("disable",true)
+
+                        }
+                      }}
+                    >
+                      <MenuItem value="CU">Current</MenuItem>
+                      <MenuItem value="CO">Completed</MenuItem>
+                      <MenuItem value="H">Hold</MenuItem>
                     </Select>
                   </FormControl>
                   <Box>
@@ -738,34 +756,7 @@ const Editproject = () => {
                       Service & Maintenance
                     </FormLabel>
                   </Box>
-                  <FormControl
-                    focused
-                    variant="standard"
-                    // sx={{ gridColumn: "span 2" }}
-                  >
-                    <InputLabel id="CurrentStatus">Status</InputLabel>
-                    <Select
-                      labelId="demo"
-                      id="CurrentStatus"
-                      name="CurrentStatus"
-                      value={values.CurrentStatus}
-                      onBlur={handleBlur}
-                      onChange={(e) =>{
-                        setFieldValue("CurrentStatus",e.target.value)
-                        if(e.target.value == "CU"){
-
-                          setFieldValue("disable",false)
-                        }else{
-                          setFieldValue("disable",true)
-
-                        }
-                      }}
-                    >
-                      <MenuItem value="CU">Current</MenuItem>
-                      <MenuItem value="CO">Completed</MenuItem>
-                      <MenuItem value="H">Hold</MenuItem>
-                    </Select>
-                  </FormControl>
+                
                   <TextField
                     name="sortorder"
                     type="number"
