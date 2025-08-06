@@ -2514,7 +2514,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Job"
-                        required
+                        // required
                         error={!!touched.Job && !!errors.Job}
                         helperText={touched.Job && errors.Job}
                         sx={{
@@ -2628,7 +2628,7 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                        required
+                        // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
@@ -2645,7 +2645,7 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                        required
+                        // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
