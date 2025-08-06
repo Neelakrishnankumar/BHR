@@ -152,7 +152,11 @@ const Editemployee = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
-
+ const validationSchema = Yup.object().shape({
+    Department: Yup.object()
+      .nullable()
+      .required("Department is required"),
+  });
   // const { setFieldValue } = useFormikContext();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
@@ -2330,7 +2334,8 @@ const Editemployee = () => {
               // onSubmit={handleFormSubmit}
               initialValues={initialValues}
               enableReinitialize={true}
-              validationSchema={basicSchema}
+              //validationSchema={basicSchema}
+              validationSchema={validationSchema}
             >
               {({
                 values,
@@ -2375,10 +2380,15 @@ const Editemployee = () => {
                     )}
 
                     <FormControl sx={{ gap: formGap }}>
+                      <FormControl>
                       <Productautocomplete
                         sx={{ marginTop: "7px" }}
                         name="Department"
-                        label="Department"
+                        label={
+                            <>
+                              Department<span style={{ color: "red" }}> * </span>
+                            </>
+                          }
                         variant="outlined"
                         id="Department"
                         value={values.Department}
@@ -2391,6 +2401,12 @@ const Editemployee = () => {
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
+                        {touched.Department && errors.Department && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {errors.Department}
+                        </div>
+                      )}
+                      </FormControl>
                       {CompanyAutoCode =="Y"?(
                         <TextField
                         fullWidth
@@ -2440,7 +2456,8 @@ const Editemployee = () => {
                         required
                         autoFocus
                         inputProps={{ maxLength: 8 }}                     
-                      />)}
+                      />
+                      )}
                       
 
                       <TextField
@@ -2462,6 +2479,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
+                        required
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -2475,6 +2493,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Password"
+                        required
                         // error={!!touched.Password && !!errors.Password}
                         // helperText={touched.Password && errors.Password}
                         sx={{
@@ -2495,6 +2514,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Job"
+                        required
                         error={!!touched.Job && !!errors.Job}
                         helperText={touched.Job && errors.Job}
                         sx={{
@@ -2608,6 +2628,7 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
+                        required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
@@ -2624,6 +2645,7 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
+                        required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
@@ -2679,8 +2701,7 @@ const Editemployee = () => {
                     </FormControl>
                   </Box>
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
-                    {YearFlag == "true" ? (
-                      <LoadingButton
+                     <Button
                         color="secondary"
                         variant="contained"
                         type="submit"
@@ -2690,7 +2711,9 @@ const Editemployee = () => {
                         }}
                       >
                         Save
-                      </LoadingButton>
+                      </Button>
+                    {/* {YearFlag == "true" ? (
+                     
                     ) : (
                       <Button
                         color="secondary"
@@ -2699,7 +2722,7 @@ const Editemployee = () => {
                       >
                         Save
                       </Button>
-                    )}
+                    )} */}
                     {YearFlag == "true" && mode == "E" ? (
                       <Button
                         color="error"

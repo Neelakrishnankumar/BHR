@@ -314,6 +314,7 @@ const Editshift = () => {
                                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                             }
                                         }}
+                                        required
                                         autoFocus={CompanyAutoCode == "Y"}
                                     />
 
@@ -339,6 +340,7 @@ const Editshift = () => {
                                             onChange={handleChange}
                                             label="Shift Start Time"
                                             focused
+                                            required
                                         // inputProps={{ maxLength:20}}
                                         />
                                     </FormControl>
@@ -363,6 +365,7 @@ const Editshift = () => {
                                             onChange={handleChange}
                                             label="Shift End Time"
                                             focused
+                                            required
                                         // inputProps={{ readOnly: true }}
                                         />
                                     </FormControl>

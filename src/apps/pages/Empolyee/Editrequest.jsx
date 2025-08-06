@@ -29,6 +29,7 @@ import {
   Grid,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import * as Yup from "yup";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -192,6 +193,24 @@ const Editrequests = () => {
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const validationSchema = Yup.object().shape({
+    leavetype: Yup.object()
+      .nullable()
+      .required("Leavetype is required"),
+
+  });
+  const validationSchema2 = Yup.object().shape({
+
+    ProName: Yup.object()
+      .nullable()
+      .required("Project is required"),
+  });
+   const validationSchema3 = Yup.object().shape({
+
+    overhead: Yup.object()
+      .nullable()
+      .required("Overhead is required"),
+  });
   const handleButtonClick = (params) => {
     const rowData = {
       CheckInDate: params.row.CheckInDate,
@@ -3621,6 +3640,7 @@ const Editrequests = () => {
             <Formik
               initialValues={leaveInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   leaveFNsave(values, resetForm, false);
@@ -3937,48 +3957,54 @@ const Editrequests = () => {
                       //disabled={mode == "E" && values.Status != "AL" && values.Status != "QR"}
                       url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
                     /> */}
-                      <Productautocomplete
-                        name="leavetype"
-                        label={
-                          <span>
-                            Leave Type
-                            <span
-                              style={{ color: "red", fontWeight: "bold" }}
-                            >
-                              *
+                      <FormControl>
+                        <Productautocomplete
+                          name="leavetype"
+                          label={
+                            <span>
+                              Leave Type
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
                             </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        id="leavetype"
-                        value={selectleaveLookupData}
-                        // value={values.leavetype}
-                        onChange={async (newValue) => {
-                          setFieldValue("leavetype", newValue);
-                          if (newValue?.RecordID) {
-                            await Balancedayfind(newValue.RecordID);
                           }
-                          console.log(
-                            selectleaveLookupData,
-                            "--selectleaveLookupData leavetype"
-                          );
+                          variant="outlined"
+                          id="leavetype"
+                          value={selectleaveLookupData}
+                          // value={values.leavetype}
+                          onChange={async (newValue) => {
+                            setFieldValue("leavetype", newValue);
+                            if (newValue?.RecordID) {
+                              await Balancedayfind(newValue.RecordID);
+                            }
+                            console.log(
+                              selectleaveLookupData,
+                              "--selectleaveLookupData leavetype"
+                            );
 
 
-                          console.log(
-                            newValue.RecordID,
-                            "leave RecordID"
-                          );
+                            console.log(
+                              newValue.RecordID,
+                              "leave RecordID"
+                            );
 
-                          setselectleaveLookupData({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
+                            setselectleaveLookupData({
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
 
-                          });
-                        }}
-                        // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
-                      />
+                            });
+                          }}
+                          // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
+                        />
+                        {touched.leavetype && errors.leavetype && (
+                          <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                            {errors.leavetype}
+                          </div>
+                        )}</FormControl>
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
                           {
@@ -4535,6 +4561,7 @@ const Editrequests = () => {
                             id="PaymentMethod"
                             name="PaymentMethod"
                             value={values.PaymentMethod}
+                            required
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={!!touched.PaymentMethod && !!errors.PaymentMethod}
@@ -4555,6 +4582,7 @@ const Editrequests = () => {
                             id="OtType"
                             name="OtType"
                             value={values.OtType}
+                            required
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={!!touched.OtType && !!errors.OtType}
@@ -4676,6 +4704,7 @@ const Editrequests = () => {
                             name="Status"
                             value={values.Status}
                             onBlur={handleBlur}
+                            required
                             onChange={handleChange}
                             error={!!touched.Status && !!errors.Status}
                             helperText={touched.Status && errors.Status}
@@ -4860,6 +4889,7 @@ const Editrequests = () => {
             <Formik
               initialValues={salAdinitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema3}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   salAdFNsave(values, resetForm, false);
@@ -5044,6 +5074,7 @@ const Editrequests = () => {
                           error={!!touched.date && !!errors.date}
                           helperText={touched.date && errors.date}
                           autoFocus
+                          required
                         />
 
                         <TextField
@@ -5066,13 +5097,13 @@ const Editrequests = () => {
                         />
 
                         <FormControl sx={{ display: "flex" }}>
-                          <FormControl
+                          {/* <FormControl
                             sx={{
                               display: "flex",
                               flexDirection: "row",
                               alignItems: "center",
                             }}
-                          >
+                          > */}
                             {/* <TextField
                                 id="outlined-basic"
                                 label="ID"
@@ -5113,7 +5144,7 @@ const Editrequests = () => {
                                 <span>
                                   Purpose
                                   <span
-                                    style={{ color: "red", fontWeight: "bold" }}
+                                    style={{ color: "red" }}
                                   >
                                     *
                                   </span>
@@ -5135,8 +5166,13 @@ const Editrequests = () => {
                               }}
                               url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                             />
+                             {touched.overhead && errors.overhead && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {errors.overhead}
+                        </div>
+                      )}
                           </FormControl>
-                        </FormControl>
+                        {/* </FormControl> */}
 
                         <TextField
                           name="amount"
@@ -5158,6 +5194,7 @@ const Editrequests = () => {
                           error={!!touched.amount && !!errors.amount}
                           helperText={touched.amount && errors.amount}
                           autoFocus
+                          required
                         />
                         {/* <TextField
                             name="comments"
@@ -5256,6 +5293,7 @@ const Editrequests = () => {
                             value={values.Status}
                             onBlur={handleBlur}
                             onChange={handleChange}
+                            required
                             error={!!touched.Status && !!errors.Status}
                             helperText={touched.Status && errors.Status}
                           // sx={{
@@ -5453,6 +5491,7 @@ const Editrequests = () => {
             <Formik
               initialValues={ondutyInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   ondutyFNsave(values, resetForm, false);
@@ -5712,46 +5751,53 @@ const Editrequests = () => {
                             helperText={touched.ProName && errors.ProName}
                             url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           /> */}
-                        <Productautocomplete
-                          name="ProName"
-                          label={
-                            <span>
-                              Project
-                              <span
-                                style={{ color: "red", fontWeight: "bold" }}
-                              >
-                                *
+                        <FormControl>
+                          <Productautocomplete
+                            name="ProName"
+                            label={
+                              <span>
+                                Project
+                                <span
+                                  style={{ color: "red" }}
+                                >
+                                  *
+                                </span>
                               </span>
-                            </span>
-                          }
-                          variant="outlined"
-                          id="ProName"
-                          value={selectODLookupData}
-                          // value={values.ProName}
-                          onChange={async (newValue) => {
-                            setFieldValue("ProName", newValue);
+                            }
+                            variant="outlined"
+                            id="ProName"
+                            value={selectODLookupData}
+                            // value={values.ProName}
+                            onChange={async (newValue) => {
+                              setFieldValue("ProName", newValue);
 
-                            console.log(
-                              selectODLookupData,
-                              "--selectODLookupData leavetype"
-                            );
+                              console.log(
+                                selectODLookupData,
+                                "--selectODLookupData leavetype"
+                              );
 
 
-                            console.log(
-                              newValue.RecordID,
-                              "pROJECT RecordID"
-                            );
+                              console.log(
+                                newValue.RecordID,
+                                "pROJECT RecordID"
+                              );
 
-                            setselectODLookupData({
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
+                              setselectODLookupData({
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
 
-                            });
-                          }}
-                          // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        />
+                              });
+                            }}
+                            // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          />
+                          {touched.ProName && errors.ProName && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                              {errors.ProName}
+                            </div>
+                          )}
+                        </FormControl>
                         {/* </Box> */}
                         <TextField
                           name="location"
@@ -5891,8 +5937,9 @@ const Editrequests = () => {
                               InputLabelProps={{ shrink: true }}
 
                             />
-                            <FileUploadIconButton onFileSelect={(file) => {fileUpload(file, ondutydata.RecordID, "upload", "", values.purpose)
-                              setFieldValue("purpose","");
+                            <FileUploadIconButton onFileSelect={(file) => {
+                              fileUpload(file, ondutydata.RecordID, "upload", "", values.purpose)
+                              setFieldValue("purpose", "");
                             }} />
                           </Box>
                         )}
@@ -6326,6 +6373,7 @@ const Editrequests = () => {
                           error={!!touched.permissiondate && !!errors.permissiondate}
                           helperText={touched.permissiondate && errors.permissiondate}
                           sx={{ gridColumn: "span 2" }}
+                          required
                         // inputProps={{
                         //   max: new Date().toISOString().split("T")[0],
                         //   readOnly: true,
@@ -6345,6 +6393,7 @@ const Editrequests = () => {
                           onChange={handleChange}
                           label="From Time"
                           focused
+                          required
                         // inputProps={{ maxLength:20}}
                         />
                         <TextField
@@ -6360,6 +6409,7 @@ const Editrequests = () => {
                           onChange={handleChange}
                           label="To Time"
                           focused
+                          required
                         // inputProps={{ readOnly: true }}
                         />
                         <TextField
@@ -6374,7 +6424,7 @@ const Editrequests = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           sx={{ gridColumn: "span 2" }}
-                        //required
+                          required
                         />
                         <TextField
 
@@ -6625,6 +6675,7 @@ const Editrequests = () => {
             <Formik
               initialValues={expenseinitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema3}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   expensefnSave(values, resetForm, false);
@@ -6811,6 +6862,7 @@ const Editrequests = () => {
                           error={!!touched.date && !!errors.date}
                           helperText={touched.date && errors.date}
                           autoFocus
+                          required
                         />
                         <TextField
                           name="referenceifany"
@@ -6831,7 +6883,7 @@ const Editrequests = () => {
                           autoFocus
                         />
 
-                        <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                        {/* <FormControl sx={{ gridColumn: "span 2", display: "flex" }}> */}
 
                           <FormControl
                             sx={{
@@ -6855,36 +6907,43 @@ const Editrequests = () => {
                                 url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
   
                               /> */}
-                            <Productautocomplete
-                              name="overhead"
-                              label={
-                                <span>
-                                  Over Head
-                                  <span
-                                    style={{ color: "red", fontWeight: "bold" }}
-                                  >
-                                    *
+                         
+                              <Productautocomplete
+                                name="overhead"
+                                label={
+                                  <span>
+                                    Over Head
+                                    <span
+                                      style={{ color: "red" }}
+                                    >
+                                      *
+                                    </span>
                                   </span>
-                                </span>
-                              }
-                              variant="outlined"
-                              id="overhead"
-                              value={expenseOHData}
-                              // value={values.overhead}
-                              onChange={(newValue) => {
+                                }
+                                variant="outlined"
+                                id="overhead"
+                                value={expenseOHData}
+                                // value={values.overhead}
+                                onChange={(newValue) => {
 
 
-                                setExpenseOHData({
-                                  RecordID: newValue.RecordID,
-                                  Code: newValue.Code,
-                                  Name: newValue.Name,
+                                  setExpenseOHData({
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
 
-                                });
-                              }}
-                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
-                            />
+                                  });
+                                }}
+                                url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                              />
+                              {touched.overhead && errors.overhead && (
+                                <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                                  {errors.overhead}
+                                </div>
+                              )}
+                           
                           </FormControl>
-                        </FormControl>
+                        {/* </FormControl> */}
 
                         <TextField
                           name="amount"
@@ -6905,6 +6964,7 @@ const Editrequests = () => {
                               max: 24,
                             },
                           }}
+                          required
                           autoFocus
                         />
                         {/* <TextField
@@ -7000,6 +7060,7 @@ const Editrequests = () => {
                           onChange={handleChange}
                           required
                           focused
+                          
                           variant="standard"
                         >
                           {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
@@ -7232,7 +7293,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
-                                     <TableCell>{file.id}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -7469,6 +7530,7 @@ const Editrequests = () => {
                         value={values.MonthDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        required
                         error={!!touched.MonthDate && !!errors.MonthDate}
                         helperText={touched.MonthDate && errors.MonthDate}
                       //sx={{ gridColumn: "span 2" }}
@@ -7485,6 +7547,7 @@ const Editrequests = () => {
                         // inputFormat="DD-MM-YYYY"
                         value={values.CheckInDate}
                         onBlur={handleBlur}
+                        required
                         //onChange={handleChange}
                         // onChange={(e) => {
                         //   setFieldValue("CheckInDate", e.target.value);
@@ -7670,6 +7733,7 @@ const Editrequests = () => {
                           value={values.Status}
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          required
                         >
                           <MenuItem value="P">Present</MenuItem>
                           <MenuItem value="A">Absent</MenuItem>

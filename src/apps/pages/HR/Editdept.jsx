@@ -391,6 +391,7 @@ const Editdept = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     name="Loc"
+                    required
                     error={!!touched.Loc && !!errors.Loc}
                     helperText={touched.Loc && errors.Loc}
                     sx={{

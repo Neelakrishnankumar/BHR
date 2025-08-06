@@ -487,6 +487,7 @@ const Editfunction = () => {
                     label="Name"
                     variant="standard"
                     focused
+                    required
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -513,6 +514,7 @@ const Editfunction = () => {
                       labelId="demo-simple-select-filled-label"
                       id="categories"
                       name="categories"
+                      required
                       value={values.categories}
                       onBlur={handleBlur}
                       onChange={handleChange}

@@ -262,6 +262,7 @@ const Editoverhead = () => {
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
                       autoFocus={CompanyAutoCode=="Y"}
+                      required
                     />
                     <FormControl
                       focused
@@ -276,6 +277,7 @@ const Editoverhead = () => {
                         value={values.frequency}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        required
                       >
                         <MenuItem>Select</MenuItem>
                         <MenuItem value="D">Daily</MenuItem>
@@ -299,6 +301,7 @@ const Editoverhead = () => {
                         labelId="demo-simple-select-filled-label"
                         id="productCost"
                         name="productCost"
+                        required
                         value={values.productCost}
                         onBlur={handleBlur}
                         onChange={handleChange}

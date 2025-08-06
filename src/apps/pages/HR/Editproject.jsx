@@ -429,6 +429,7 @@ import {
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
+import * as Yup from "yup";
 import React, { useState, useEffect, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -467,7 +468,11 @@ const Editproject = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
   // *************** INITIALVALUE  *************** //
-
+  const validationSchema = Yup.object().shape({
+    incharge: Yup.object()
+      .nullable()
+      .required("Owner is required"),
+  });
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -487,8 +492,8 @@ const Editproject = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "softdelete"
-        : "update";
+          ? "softdelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -591,7 +596,7 @@ const Editproject = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ DesignationSchema}
+              validationSchema={ validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -633,7 +638,7 @@ const Editproject = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -665,11 +670,17 @@ const Editproject = () => {
                     onChange={handleChange}
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
+                    required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
+                  <FormControl>
                   <Productautocomplete
                     name="incharge"
-                    label="Owner"
+                     label={
+                            <>
+                              Owner<span style={{ color: "red" }}> * </span>
+                            </>
+                          }
                     id="incharge"
                     value={values.incharge}
                     onChange={async (newValue) => {
@@ -678,6 +689,12 @@ const Editproject = () => {
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
+                   {touched.incharge && errors.incharge && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {errors.incharge}
+                        </div>
+                      )}
+                      </FormControl>
                   {/* <FormControl
                     focused
                     variant="standard"
@@ -698,25 +715,26 @@ const Editproject = () => {
 
                     </Select>
                   </FormControl> */}
-                    <FormControl
+                  <FormControl
                     focused
                     variant="standard"
-                    // sx={{ gridColumn: "span 2" }}
+                  // sx={{ gridColumn: "span 2" }}
                   >
                     <InputLabel id="CurrentStatus">Status</InputLabel>
                     <Select
                       labelId="demo"
                       id="CurrentStatus"
                       name="CurrentStatus"
+                      required
                       value={values.CurrentStatus}
                       onBlur={handleBlur}
-                      onChange={(e) =>{
-                        setFieldValue("CurrentStatus",e.target.value)
-                        if(e.target.value == "CU"){
+                      onChange={(e) => {
+                        setFieldValue("CurrentStatus", e.target.value)
+                        if (e.target.value == "CU") {
 
-                          setFieldValue("disable",false)
-                        }else{
-                          setFieldValue("disable",true)
+                          setFieldValue("disable", false)
+                        } else {
+                          setFieldValue("disable", true)
 
                         }
                       }}
@@ -756,7 +774,7 @@ const Editproject = () => {
                       Service & Maintenance
                     </FormLabel>
                   </Box>
-                
+
                   <TextField
                     name="sortorder"
                     type="number"
@@ -782,7 +800,7 @@ const Editproject = () => {
                         .slice(0, 8);
                     }}
                   />
-                 
+
                   <Box>
                     <Field
                       //  size="small"
@@ -828,13 +846,13 @@ const Editproject = () => {
                       Delete
                     </Button>
                   ) : // <Button
-                  //   color="error"
-                  //   variant="contained"
-                  //   disabled={true}
-                  // >
-                  //   Delete
-                  // </Button>
-                  null}
+                    //   color="error"
+                    //   variant="contained"
+                    //   disabled={true}
+                    // >
+                    //   Delete
+                    // </Button>
+                    null}
                   <Button
                     color="warning"
                     variant="contained"

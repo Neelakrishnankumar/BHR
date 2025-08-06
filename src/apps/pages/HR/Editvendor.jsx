@@ -700,6 +700,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    required
                     autoFocus={CompanyAutoCode=="Y"}
                   />
                   <TextField
@@ -760,6 +761,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="Contact Mobile Number"
                     variant="standard"
                     focused
+                    required
                     value={values.mobilenumber}
                     onBlur={handleBlur}
                     onChange={(e) => {
@@ -812,6 +814,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
+                    required
                     sx={{
                       backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
@@ -829,6 +832,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.verifieddate}
+                    required
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}

@@ -488,6 +488,7 @@ const LeaveType = () => {
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
+                    required
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     sx={{
@@ -510,6 +511,7 @@ const LeaveType = () => {
                       labelId="demo-simple-select-filled-label"
                       id="leavetypecategories"
                       name="leavetypecategories"
+                      required
                       value={values.leavetypecategories}
                       onBlur={handleBlur}
                       onChange={handleChange}
