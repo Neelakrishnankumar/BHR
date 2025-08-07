@@ -2334,9 +2334,11 @@ const fnLogOut = (props) => {
             slotProps={{ toolbar: { csvOptions: { allColumns: true } } }}
           />
 
-          <IconButton onClick={() => fnLogOut("Logout")} color="error">
-            <LogoutOutlinedIcon />
-          </IconButton>
+           <Tooltip arrow title="Logout">
+                     <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                       <LogoutOutlinedIcon />
+                     </IconButton>
+                   </Tooltip>
         </Box>
       </GridToolbarContainer>
     );

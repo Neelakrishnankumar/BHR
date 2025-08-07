@@ -4306,7 +4306,7 @@ const Editrequests = () => {
                                         <IconButton
                                           color="error"
                                           onClick={() => fileUpload(
-                                            "",
+                                            file.filename,
                                             leaveData.recordID,
                                             "delete",
                                             file.id,
@@ -4855,7 +4855,7 @@ const Editrequests = () => {
                                         <IconButton
                                           color="error"
                                           onClick={() => fileUpload(
-                                            "",
+                                            file.filename,
                                             otdata.RecordID,
                                             "delete",
                                             file.id,
@@ -5444,7 +5444,7 @@ const Editrequests = () => {
                                         <IconButton
                                           color="error"
                                           onClick={() => fileUpload(
-                                            "",
+                                            file.filename,
                                             saladdata.RecordID,
                                             "delete",
                                             file.id,
@@ -6058,7 +6058,7 @@ const Editrequests = () => {
                                         <IconButton
                                           color="error"
                                           onClick={() => fileUpload(
-                                            "",
+                                            file.filename,
                                             ondutydata.RecordID,
                                             "delete",
                                             file.id,
@@ -6307,7 +6307,7 @@ const Editrequests = () => {
                                             <IconButton
                                               color="error"
                                               onClick={() => fileUpload(
-                                                "",
+                                                file.filename,
                                                 saladdata.RecordID,
                                                 "delete",
                                                 file.id,
@@ -7312,7 +7312,7 @@ const Editrequests = () => {
                                         <IconButton
                                           color="error"
                                           onClick={() => fileUpload(
-                                            "",
+                                            file.filename,
                                             expensedata.RecordID,
                                             "delete",
                                             file.id,
@@ -7971,7 +7971,7 @@ const Editrequests = () => {
                                         <IconButton
                                           color="error"
                                           onClick={() => fileUpload(
-                                            "",
+                                            file.filename,
                                             regdata.RecordID,
                                             "delete",
                                             file.id,
