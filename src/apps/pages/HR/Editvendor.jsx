@@ -59,12 +59,12 @@ const Editvendor = () => {
   // Redux state
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
-  const partyBankgetloading = useSelector((state)=> state.formApi.partyBankgetloading);
+  const partyBankgetloading = useSelector((state) => state.formApi.partyBankgetloading);
   const partyBankgetdata = useSelector((state) => state.formApi.partyBankgetdata);
-const partyContactgetdata = useSelector((state) => state.formApi.partyContactgetdata);
-console.log(partyContactgetdata, "--partyContactgetdata");
+  const partyContactgetdata = useSelector((state) => state.formApi.partyContactgetdata);
+  console.log(partyContactgetdata, "--partyContactgetdata");
 
-const YearFlag = sessionStorage.getItem("YearFlag");
+  const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
@@ -160,11 +160,11 @@ const YearFlag = sessionStorage.getItem("YearFlag");
   };
 
   // **********ScreenChange Function*********
-  
+
   const screenChange = (event) => {
     setScreen(event.target.value);
     if (event.target.value == "0") {
-        console.log(event.target.value, "--find event.target.value");
+      console.log(event.target.value, "--find event.target.value");
 
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -173,12 +173,12 @@ const YearFlag = sessionStorage.getItem("YearFlag");
       }
     }
     if (event.target.value == "1") {
-           dispatch(PartyContactget({ VendorID: recID }));
-     }
+      dispatch(PartyContactget({ VendorID: recID }));
+    }
 
     if (event.target.value == "2") {
-     dispatch(PartyBankget({ VendorID: recID }));
-    
+      dispatch(PartyBankget({ VendorID: recID }));
+
     }
     // if (event.target.value == "3") {
     //   dispatch(
@@ -255,10 +255,9 @@ const YearFlag = sessionStorage.getItem("YearFlag");
 
   useEffect(() => {
     if (recID && mode === "E") {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
+      dispatch(getFetchData({ accessID, get: "get", recID }));
     }
-    else
-    {
+    else {
       dispatch(getFetchData({ accessID, get: "", recID }));
     }
   }, [location.key, recID, mode]);
@@ -269,45 +268,47 @@ const YearFlag = sessionStorage.getItem("YearFlag");
 
   const validationSchema = Yup.object({
     Pancardnumber: Yup.string()
-      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Card Number")
-      .required("PAN card number is required"),
+      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Card Number"),
+      // .required("PAN card number is required"),
     gstnumber: Yup.string()
       .matches(
         /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
         "Invalid GST Number"
       )
-      .required("GST number is required"),
+      // .required("GST number is required"),
   });
-    const BankvalidationSchema = Yup.object({
+  const BankvalidationSchema = Yup.object({
     bankname: Yup.string().required('Bank Name is required'),
-  branchname: Yup.string().required('Branch Name is required'),
-  Accounttype: Yup.string().required('Account Type is required'),
-  // ifsc: Yup.string()
-  //   .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code')
-  //   .required('IFSC Code is required'),
-  bankloc: Yup.string().required('Bank Location is required'),
-  accountholdname: Yup.string().required('Account Holder Name is required'),
-  accountnumber: Yup.string()
-    .matches(/^[0-9]+$/, 'Account Number must be numeric')
-    .required('Account Number is required'),
-  bankaddress: Yup.string().required('Bank Address is required'),
+    branchname: Yup.string().required('Branch Name is required'),
+    Accounttype: Yup.string().required('Account Type is required'),
+    ifsc: Yup.string()
+      .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code')
+      .required('IFSC Code is required'),
+    bankloc: Yup.string().required('Bank Location is required'),
+    accountholdname: Yup.string().required('Account Holder Name is required'),
+     accountnumber: Yup.string()
+    .matches(/^\d+$/, "Account number must be digits only")
+    .min(9, "Account number must be at least 9 digits")
+    .max(18, "Account number can't exceed 18 digits")
+    .required("Account number is required"),
+    bankaddress: Yup.string().required('Bank Address is required'),
   });
   const contactvalidationSchema = Yup.object().shape({
-  name1: Yup.string().required('Name is required'),
-  emailid1: Yup.string()
-    .email('Invalid email format')
-    .required('Email ID is required'),
-  mobileno1: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
-    .required('Mobile No is required'),
-  name2: Yup.string().required('Name is required'),
-  emailid2: Yup.string()
-    .email('Invalid email format')
-    .required('Email ID is required'),
-  mobileno2: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
-    .required('Mobile No is required'),
-});
+    name1: Yup.string().required('Name is required'),
+    emailid1: Yup.string()
+      .email('Invalid email format')
+      .required('Email ID is required'),
+    mobileno1: Yup.string()
+      .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
+      .required('Mobile No is required'),
+    // name2: Yup.string().required('Name is required'),
+    // emailid2: Yup.string()
+    //   .email('Invalid email format')
+    //   .required('Email ID is required'),
+    // mobileno2: Yup.string()
+    //   .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
+    //   .required('Mobile No is required'),
+  });
   const InitialValue = {
     code: data.Code || "",
     name: data.Name || "",
@@ -330,8 +331,8 @@ const YearFlag = sessionStorage.getItem("YearFlag");
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     // var isCheck = "N";
     // if (values.disable == true) {
     //   isCheck = "Y";
@@ -371,7 +372,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
       setLoading(false);
     }
   };
-//Bank details 
+  //Bank details 
   console.log(partyBankgetdata, "partyBankgetdata");
 
   const BankInitialValue = {
@@ -383,7 +384,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
     accountnumber: partyBankgetdata.BankAccountNo || "",
     bankaddress: partyBankgetdata.BankAddress || "",
     accountholdname: partyBankgetdata.BankAccountHolderName || ""
-   
+
   };
 
   const Banksave = async (values, del) => {
@@ -393,9 +394,9 @@ const YearFlag = sessionStorage.getItem("YearFlag");
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
-    
+          ? "harddelete"
+          : "update";
+
     const idata = {
       VendorID: recID,
       BankName: values.bankname,
@@ -409,7 +410,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
     };
 
     try {
-      const response = await dispatch(partyBankpostData({action, idata }));
+      const response = await dispatch(partyBankpostData({ action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
@@ -426,14 +427,14 @@ const YearFlag = sessionStorage.getItem("YearFlag");
 
 
   //Contact Details
- const contactInitialValue = {
+  const contactInitialValue = {
     name1: partyContactgetdata.ContactPerson1 || "",
     name2: partyContactgetdata.ContactPerson2 || "",
     emailid1: partyContactgetdata.ContactPersonEmailID1 || "",
     emailid2: partyContactgetdata.ContactPersonEmailID2 || "",
     mobileno1: partyContactgetdata.ContactPersonMobileNo1 || "",
     mobileno2: partyContactgetdata.ContactPersonMobileNo2 || "",
-   
+
   };
   const contactsave = async (values, del) => {
     setLoading(true);
@@ -442,9 +443,9 @@ const YearFlag = sessionStorage.getItem("YearFlag");
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
-   
+          ? "harddelete"
+          : "update";
+
     const idata = {
       VendorID: recID,
       ContactPerson1: values.name1,
@@ -453,11 +454,11 @@ const YearFlag = sessionStorage.getItem("YearFlag");
       ContactPersonEmailID2: values.emailid2,
       ContactPersonMobileNo1: values.mobileno1,
       ContactPersonMobileNo2: values.mobileno2,
-   
+
     };
 
     try {
-      const response = await dispatch(partyContactData({action, idata }));
+      const response = await dispatch(partyContactData({ action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
@@ -523,9 +524,9 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-                   onClick={() => {
-                      setScreen(0);
-                    }}
+                  onClick={() => {
+                    setScreen(0);
+                  }}
                 >
                   Party
                 </Typography>
@@ -568,7 +569,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                 >
                   <MenuItem value={0}>Party</MenuItem>
                   <MenuItem value={2}>Bank Details</MenuItem>
-                   <MenuItem value={1}>Contact Details</MenuItem>
+                  <MenuItem value={1}>Contact Details</MenuItem>
                   {/* {initialValues.employeetype === "CI" ? (
                                               <MenuItem value={8}>Contracts In</MenuItem>
                                             ) : null}
@@ -637,36 +638,36 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     },
                   }}
                 >
-                   {CompanyAutoCode == "Y" ? (
-                  <TextField
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      placeholder="Auto"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
+                    />
+                  ) : (<TextField
                     name="code"
                     type="text"
                     id="code"
                     label="Code"
                     variant="standard"
-                    placeholder="Auto"
-                    focused
-                    // required
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{readOnly:true}}
-                    // autoFocus
-                  />
-                  ):( <TextField
-                    name="code"
-                    type="text"
-                    id="code"
-                    label="Code"
-                    variant="standard"                   
                     focused
                     required
                     value={values.code}
@@ -679,7 +680,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
-                    }}                  
+                    }}
                     autoFocus
                   />)}
                   <TextField
@@ -701,7 +702,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       },
                     }}
                     required
-                    autoFocus={CompanyAutoCode=="Y"}
+                    autoFocus={CompanyAutoCode == "Y"}
                   />
                   <TextField
                     name="Pancardnumber"
@@ -710,6 +711,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     focused
                     value={values.Pancardnumber}
                     onBlur={handleBlur}
+                    // required
                     onChange={(e) => {
                       const input = e.target.value.toUpperCase();
                       if (/^[A-Z0-9]*$/.test(input) || input === "") {
@@ -726,7 +728,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
                   <TextField
                     name="gstnumber"
@@ -734,6 +736,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     variant="standard"
                     focused
                     value={values.gstnumber}
+                    // required
                     onBlur={handleBlur}
                     onChange={(e) => {
                       const input = e.target.value.toUpperCase();
@@ -752,7 +755,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
                   <TextField
                     name="mobilenumber"
@@ -780,7 +783,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
 
                   <TextField
@@ -799,7 +802,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
                   <TextField
                     name="date"
@@ -814,25 +817,25 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    required
+                    // required
                     sx={{
                       backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     name="verifieddate"
                     type="date"
                     id="verifieddate"
-                    label="Date of verification & confirmation"
+                    label="Date of Verification & Confirmation"
                     variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
                     value={values.verifieddate}
-                    required
+                    // required
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
@@ -898,13 +901,13 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     onClick={() => {
                       data.PanImg || panImage
                         ? window.open(
+                          panImage
+                            ? store.getState().globalurl.attachmentUrl +
                             panImage
-                              ? store.getState().globalurl.attachmentUrl +
-                                  panImage
-                              : store.getState().globalurl.attachmentUrl +
-                                  data.PanImg,
-                            "_blank"
-                          )
+                            : store.getState().globalurl.attachmentUrl +
+                            data.PanImg,
+                          "_blank"
+                        )
                         : toast.error("Please Upload File");
                     }}
                   >
@@ -934,13 +937,13 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     onClick={() => {
                       data.GstImg || gstImage
                         ? window.open(
+                          gstImage
+                            ? store.getState().globalurl.attachmentUrl +
                             gstImage
-                              ? store.getState().globalurl.attachmentUrl +
-                                  gstImage
-                              : store.getState().globalurl.attachmentUrl +
-                                  data.GstImg,
-                            "_blank"
-                          )
+                            : store.getState().globalurl.attachmentUrl +
+                            data.GstImg,
+                          "_blank"
+                        )
                         : toast.error("Please Upload File");
                     }}
                   >
@@ -964,7 +967,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       Save
                     </Button>
                   )}{" "}
-                  {YearFlag == "true" && mode =="E" ? (
+                  {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -1077,29 +1080,29 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                                         autoFocus
                                     /> */}
 
-{/* <Box display="flex" gap={2}> */}
-  <Box
-    sx={{
-      padding: 1.5,
-      backgroundColor: '#b2dfdb', // light green
-      borderRadius: 1,
-      width: '100%',
-    }}
-  >
-    <Typography variant="h5" fontWeight="bold">Contact Person 1</Typography>
-  </Box>
+                  {/* <Box display="flex" gap={2}> */}
+                  <Box
+                    sx={{
+                      padding: 1.5,
+                      backgroundColor: '#b2dfdb', // light green
+                      borderRadius: 1,
+                      width: '100%',
+                    }}
+                  >
+                    <Typography variant="h5" fontWeight="bold">Contact Person 1</Typography>
+                  </Box>
 
-  <Box
-    sx={{
-      padding: 1.5,
-      backgroundColor: '#b2dfdb',
-      borderRadius: 1,
-      width: '100%',
-    }}
-  >
-    <Typography variant="h5" fontWeight="bold">Contact Person 2</Typography>
-  </Box>
-{/* </Box> */}
+                  <Box
+                    sx={{
+                      padding: 1.5,
+                      backgroundColor: '#b2dfdb',
+                      borderRadius: 1,
+                      width: '100%',
+                    }}
+                  >
+                    <Typography variant="h5" fontWeight="bold">Contact Person 2</Typography>
+                  </Box>
+                  {/* </Box> */}
 
 
                   {/* <Typography>Contact Person 2</Typography> */}
@@ -1216,7 +1219,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     onBlur={handleBlur}
                     onChange={handleChange}
                     required
-                     inputProps={{ maxLength: 10 }}
+                    inputProps={{ maxLength: 10 }}
                     sx={{
                       backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
@@ -1232,7 +1235,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="Mobile No"
                     variant="standard"
                     focused
-                     inputProps={{ maxLength: 10 }}
+                    inputProps={{ maxLength: 10 }}
                     value={values.mobileno2}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1284,13 +1287,13 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       Delete
                     </Button>
                   )} */}
-                  
+
                   <Button
                     color="warning"
                     variant="contained"
-                   onClick={() => {
-                        setScreen(0);
-                      }}
+                    onClick={() => {
+                      setScreen(0);
+                    }}
                   >
                     Cancel
                   </Button>
@@ -1365,7 +1368,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="Account Type"
                     variant="standard"
                     focused
-                     required
+                    required
                     value={values.Accounttype}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1384,10 +1387,10 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="Branch Name"
                     variant="standard"
                     focused
-                     required
+                    required
                     value={values.branchname}
                     onBlur={handleBlur}
-                     onChange={handleChange}
+                    onChange={handleChange}
                     // onChange={(e) => {
                     //   const input = e.target.value.toUpperCase();
                     //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
@@ -1411,22 +1414,22 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="IFSC Code"
                     variant="standard"
                     focused
-                     required
+                    required
                     value={values.ifsc}
                     onBlur={handleBlur}
-                     onChange={handleChange}
-                    // onChange={(e) => {
-                    //   const input = e.target.value.toUpperCase();
-                    //   if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                    //     // This updates Formik value correctly
-                    //     handleChange({
-                    //       target: {
-                    //         name: "ifsc",
-                    //         value: input,
-                    //       },
-                    //     });
-                    //   }
-                    // }}
+                    //  onChange={handleChange}
+                    onChange={(e) => {
+                      const input = e.target.value.toUpperCase();
+                      if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                        // This updates Formik value correctly
+                        handleChange({
+                          target: {
+                            name: "ifsc",
+                            value: input,
+                          },
+                        });
+                      }
+                    }}
                     error={!!touched.ifsc && !!errors.ifsc}
                     helperText={touched.ifsc && errors.ifsc}
                     sx={{
@@ -1438,13 +1441,13 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     name="accountholdname"
                     type="text"
                     id="accountholdname"
-                    label="Account holder Name"
+                    label="Account Holder Name"
                     variant="standard"
                     focused
-                     required
+                    required
                     value={values.accountholdname}
                     onBlur={handleBlur}
-                     onChange={handleChange}
+                    onChange={handleChange}
                     // onChange={(e) => {
                     //   const value = e.target.value;
                     //   // Only allow numbers and max 10 digits
@@ -1482,7 +1485,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="Bank Location"
                     variant="standard"
                     focused
-                     required
+                    required
                     value={values.bankloc}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1494,7 +1497,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     }}
                     autoFocus
                   />
-                  <TextField
+                  {/* <TextField
                     name="accountnumber"
                     type="number"
                     id="accountnumber"
@@ -1512,6 +1515,35 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                       },
                     }}
                     autoFocus
+                  /> */}
+                  <TextField
+                    name="accountnumber"
+                    type="text" // use "text" instead of "number" to preserve leading 0s and better control
+                    id="accountnumber"
+                    label="Account Number"
+                    variant="standard"
+                    focused
+                    required
+                    value={values.accountnumber}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const input = e.target.value;
+                      // Allow only digits
+                      if (/^\d*$/.test(input)) {
+                        handleChange({
+                          target: {
+                            name: "accountnumber",
+                            value: input,
+                          },
+                        });
+                      }
+                    }}
+                    error={!!touched.accountnumber && !!errors.accountnumber}
+                    helperText={touched.accountnumber && errors.accountnumber}
+                    sx={{
+                      backgroundColor: "#ffffff",
+                    }}
+                    autoFocus
                   />
                   <TextField
                     name="bankaddress"
@@ -1520,7 +1552,7 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     label="Bank Address"
                     variant="standard"
                     focused
-                     required
+                    required
                     value={values.bankaddress}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1576,8 +1608,8 @@ const YearFlag = sessionStorage.getItem("YearFlag");
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                        setScreen(0);
-                      }}
+                      setScreen(0);
+                    }}
                   >
                     Cancel
                   </Button>

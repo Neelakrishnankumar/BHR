@@ -506,7 +506,7 @@ const LeaveType = () => {
                     variant="standard"
                     sx={{ backgroundColor: "#f5f5f5" }}
                   >
-                    <InputLabel id="status">Categories</InputLabel>
+                    <InputLabel id="status">Categories<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="leavetypecategories"

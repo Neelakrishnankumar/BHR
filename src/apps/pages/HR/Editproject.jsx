@@ -473,6 +473,7 @@ const Editproject = () => {
       .nullable()
       .required("Owner is required"),
   });
+  
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -509,7 +510,7 @@ const Editproject = () => {
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
       SortOrder: values.sortorder || 0,
-      CurrentStatus: values.CurrentStatus || "",
+      CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       Finyear,
       CompanyID,
@@ -596,7 +597,7 @@ const Editproject = () => {
                 Fnsave(values);
               }, 100);
             }}
-              validationSchema={ validationSchema}
+              validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -720,13 +721,16 @@ const Editproject = () => {
                     variant="standard"
                   // sx={{ gridColumn: "span 2" }}
                   >
-                    <InputLabel id="CurrentStatus">Status</InputLabel>
+                    <InputLabel id="CurrentStatus">Status<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
                     <Select
                       labelId="demo"
                       id="CurrentStatus"
                       name="CurrentStatus"
                       required
-                      value={values.CurrentStatus}
+                      value={
+                        mode == "A" ? "CU" : values.CurrentStatus
+                      }
+                      // value={values.CurrentStatus}
                       onBlur={handleBlur}
                       onChange={(e) => {
                         setFieldValue("CurrentStatus", e.target.value)
