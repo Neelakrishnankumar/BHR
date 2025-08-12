@@ -374,7 +374,7 @@ const Editdept = () => {
                     multiline
                     onInvalid={(e) => {
                       e.target.setCustomValidity(
-                        "Please Fill The Description"
+                        "Please fill the Name"
                       );
                     }}
                     onInput={(e) => {

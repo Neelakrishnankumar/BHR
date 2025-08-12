@@ -223,13 +223,50 @@ const Editemployee = () => {
   //   employeetype: Data.employeetype,
   // };
   //*******Assign Employee values from Database in  Yup initial value******* */
+  // const contactvalidationSchema = Yup.object({
+  //   aadharcardnumber: Yup.string()
+  //     .matches(/^\d{12}$/, 'Aadhar Number must be exactly 12 digits'),
+  //   // .required('Aadhar Number is required'),
+  //   pfnumber: Yup.string()
+  //     .matches(/^[A-Za-z0-9]{22}$/, 'PF Number must be exactly 22 alphanumeric characters'),
+  //   // .required('PF Number is required'),
+
+  //   email: Yup.string()
+  //     .email('Invalid email format')
+  //     .matches(
+  //       /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
+  //       'Email must be valid'
+  //     )
+  //     .required('Email is required'),
+  //   esinumber: Yup.string()
+  //     .matches(/^\d{17}$/, 'ESI Number must be exactly 17 digits'),
+  //   // .required('ESI Number is required'),
+  //   phonenumber: Yup.string()
+  //     .matches(/^\d{10}$/, 'Phone Number must be valid'),
+  //   // .required('Phone Number is required'),
+
+
+
+
+  // });
   const contactvalidationSchema = Yup.object({
     aadharcardnumber: Yup.string()
-      .matches(/^\d{12}$/, 'Aadhar Number must be exactly 12 digits'),
-    // .required('Aadhar Number is required'),
+      .nullable()
+      .notRequired()
+      .test(
+        'aadharcardnumber',
+        'Aadhar Number must be exactly 12 digits',
+        (value) => !value || /^\d{12}$/.test(value)
+      ),
+
     pfnumber: Yup.string()
-      .matches(/^[A-Za-z0-9]{22}$/, 'PF Number must be exactly 22 alphanumeric characters'),
-    // .required('PF Number is required'),
+      .nullable()
+      .notRequired()
+      .test(
+        'pfnumber',
+        'PF Number must be exactly 22 alphanumeric characters',
+        (value) => !value || /^[A-Za-z0-9]{22}$/.test(value)
+      ),
 
     email: Yup.string()
       .email('Invalid email format')
@@ -237,18 +274,28 @@ const Editemployee = () => {
         /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
         'Email must be valid'
       )
-      .required('Email is required'),
+      .required('Email is required'), // Email is still required
+
     esinumber: Yup.string()
-      .matches(/^\d{17}$/, 'ESI Number must be exactly 17 digits'),
-    // .required('ESI Number is required'),
+      .nullable()
+      .notRequired()
+      .test(
+        'esinumber',
+        'ESI Number must be exactly 17 digits',
+        (value) => !value || /^\d{17}$/.test(value)
+      ),
+
     phonenumber: Yup.string()
-      .matches(/^\d{10}$/, 'Phone Number must be valid'),
-    // .required('Phone Number is required'),
-
-
-
-
+      .nullable()
+      .notRequired()
+      .test(
+        'phonenumber',
+        'Phone Number must be valid',
+        (value) => !value || /^\d{10}$/.test(value)
+      ),
   });
+
+
 
   const formatDateForInput = (dateStr) => {
     if (!dateStr) return "";
@@ -289,7 +336,7 @@ const Editemployee = () => {
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
-
+    qualityassurance: Data.QualityAssurance === "Y" ? true : false,
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
@@ -515,6 +562,7 @@ const Editemployee = () => {
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
+      QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -723,11 +771,11 @@ const Editemployee = () => {
     // }
 
     if (values.Comments == "") {
-      toast.error("Please Enter Comments");
+      toast.error("Please enter the Comments");
       return;
     }
     if (values.Skills == "") {
-      toast.error("Please Enter Skills");
+      toast.error("Please enter the Skills");
       return;
     }
 
@@ -1551,12 +1599,18 @@ const Editemployee = () => {
 
   const LCsaveFn = async (values, resetForm, del) => {
     setLoading(true);
+    if (funMode === "E" && del && LeaveCondata.recordID === "") {
+      toast.error("Please select the data to delete");
+      setLoading(false);
+      return;
+    }
     let action =
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
           ? "harddelete"
           : "update";
+
     const idata = {
       RecordID: LeaveCondata.recordID,
       CompanyID,
@@ -1588,10 +1642,109 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm()
     } else {
+      setLoading(false);
       toast.error(response.payload.Msg);
     }
   };
+  // const LCsaveFn = async (values, resetForm, types) => {
+  //   setLoading(true);
+  //   if (types == "harddelete") {
+  //     if (LeaveCondata.recordID == "") {
+  //       toast.error("Please select the data");
+  //       return;
+  //     }
+  //   }
+  //   // if (selectproLookupData.PROlookupCode == "") {
+  //   //   toast.error("Please Choose Process Lookup");
+  //   //   return;
+  //   // }
 
+  //   // if (values.Comments == "") {
+  //   //   toast.error("Please enter the Comments");
+  //   //   return;
+  //   // }
+  //   // if (values.Skills == "") {
+  //   //   toast.error("Please enter the Skills");
+  //   //   return;
+  //   // }
+
+  //   console.log(values);
+
+  //   var saveData = "";
+  //   var type = "";
+
+  //   if (types === "harddelete") {
+  //     type = "harddelete";
+  //     saveData = {
+  //       RecordID: LeaveCondata.recordID,
+  //       CompanyID,
+  //       Year: values.Year,
+  //       EmployeeID: recID,
+  //       LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+  //       LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+  //       TotalDays: Number(values.totaldays),
+  //       AvailDays: Number(values.availableleave),
+  //       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+  //       LeavePart: "N",
+  //     };
+  //     console.log(LeaveCondata.recordID, "RecordID");
+  //   } else {
+  //     setLoading(true);
+  //     if (boMode == "A") {
+  //       saveData = {
+  //         RecordID: LeaveCondata.recordID,
+  //         CompanyID,
+  //         Year: values.Year,
+  //         EmployeeID: recID,
+  //         LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+  //         LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+  //         TotalDays: Number(values.totaldays),
+  //         AvailDays: Number(values.availableleave),
+  //         EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+  //         LeavePart: "N",
+  //       };
+  //       type = "insert";
+  //     } else {
+  //       saveData = {
+  //         RecordID: LeaveCondata.recordID,
+  //         CompanyID,
+  //         Year: values.Year,
+  //         EmployeeID: recID,
+  //         LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+  //         LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+  //         TotalDays: Number(values.totaldays),
+  //         AvailDays: Number(values.availableleave),
+  //         EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+  //         LeavePart: "N",
+  //       };
+  //       type = "update";
+  //     }
+  //   }
+  //   console.log("save" + JSON.stringify(saveData));
+
+  //   const response = await dispatch(
+  //     postApidata("TR249", type, saveData)
+  //   );
+  //   if (response.payload.Status == "Y") {
+  //     setLoading(false);
+  //     await dispatch(
+  //       fetchExplorelitview(
+  //         "TR249",
+  //         "Leave Configuration",
+  //         `EmployeeID='${recID}'`,
+  //         ""
+  //       )
+  //     );
+
+  //     toast.success(response.payload.Msg);
+
+  //     selectCellRowData({ rowData: {}, mode: "A", field: "" });
+  //     resetForm()
+  //   } else {
+  //     setLoading(false);
+  //     toast.error(response.payload.Msg);
+  //   }
+  // };
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
   const [levellookup, setLevelLookup] = useState({
     levelfield: "",
@@ -2583,15 +2736,15 @@ const Editemployee = () => {
                         <Field
                           //  size="small"
                           type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
+                          name="qualityassurance"
+                          id="qualityassurance"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           as={Checkbox}
-                          label="Disable"
+                          label="Quality Assurance"
                         />
 
-                        <FormLabel focused={false}>Disable</FormLabel>
+                        <FormLabel focused={false}>Quality Assurance</FormLabel>
                         <Field
                           //  size="small"
                           type="checkbox"
@@ -2616,6 +2769,20 @@ const Editemployee = () => {
                         />
 
                         <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box>
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="checkbox"
+                          id="checkbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -2724,6 +2891,7 @@ const Editemployee = () => {
                           },
                         }}
                       />
+
                     </FormControl>
                   </Box>
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
@@ -3879,6 +4047,14 @@ const Editemployee = () => {
                                     },
                                   }}
                                   focused
+                                  //            onInvalid={(e) => {
+                                  //   e.target.setCustomValidity(
+                                  //     "Please fill the Name"
+                                  //   );
+                                  // }}
+                                  // onInput={(e) => {
+                                  //   e.target.setCustomValidity("");
+                                  // }}
                                   multiline
                                   inputProps={{ maxLength: 90 }}
                                 />
@@ -3969,6 +4145,43 @@ const Editemployee = () => {
                               >
                                 Save
                               </LoadingButton>
+                              {YearFlag == "true" ? (
+                                <Button
+                                  color="error"
+                                  variant="contained"
+                                  disabled={boMode == "A"}
+                                  onClick={() => {
+                                    Swal.fire({
+                                      title: `Do you want Delete?`,
+                                      icon: "warning",
+                                      showCancelButton: true,
+                                      confirmButtonColor: "#3085d6",
+                                      cancelButtonColor: "#d33",
+                                      confirmButtonText: "Confirm",
+                                    }).then((result) => {
+                                      if (result.isConfirmed) {
+                                        fnProcess(
+                                          values,
+                                          resetForm,
+                                          "harddelete"
+                                        );
+                                      } else {
+                                        return;
+                                      }
+                                    });
+                                  }}
+                                >
+                                  Delete
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="error"
+                                  variant="contained"
+                                  disabled={true}
+                                >
+                                  Delete
+                                </Button>
+                              )}
                               {/* ) : ( */}
                               {/* <Button
                                   color="secondary"
@@ -3978,7 +4191,7 @@ const Editemployee = () => {
                                   Save
                                 </Button> */}
                               {/* )} */}
-                              {YearFlag == "true" ? (
+                              {/* {YearFlag == "true" ? (
                                 <Button
                                   color="error"
                                   variant="contained"
@@ -3996,7 +4209,7 @@ const Editemployee = () => {
                                 >
                                   Delete
                                 </Button>
-                              )}
+                              )} */}
                               <Button
                                 type="reset"
                                 color="warning"
@@ -6033,7 +6246,7 @@ const Editemployee = () => {
                         Save
                       </Button>
                     )} */}
-                   
+
                     <Button
                       type="reset"
                       color="warning"
@@ -6491,6 +6704,7 @@ const Editemployee = () => {
                             <Button
                               color="error"
                               variant="contained"
+                              disabled={funMode == "A"}
                               onClick={() => {
                                 Swal.fire({
                                   title: `Do you want Delete?`,
@@ -8541,6 +8755,15 @@ const Editemployee = () => {
                           min: -180,
                           max: 180,
                           style: { textAlign: "right" },
+                          onKeyDown: (e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          },
+                          onInput: (e) => {
+                            e.target.value = e.target.value.replace(/[eE+\-]/g, "");
+                          },
+
                         }}
                       />
                       {/* </FormControl> */}
@@ -8570,6 +8793,15 @@ const Editemployee = () => {
                           min: -90,
                           max: 90,
                           style: { textAlign: "right" },
+                          onKeyDown: (e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          },
+                          onInput: (e) => {
+                            e.target.value = e.target.value.replace(/[eE+\-]/g, "");
+                          },
+
                         }}
                       />
                       {/* </FormControl> */}
@@ -8597,6 +8829,15 @@ const Editemployee = () => {
                           step: "any",
                           min: 0,
                           style: { textAlign: "right" },
+                          onKeyDown: (e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          },
+                          onInput: (e) => {
+                            e.target.value = e.target.value.replace(/[eE+\-]/g, "");
+                          },
+
                         }}
                       />
                     </FormControl>
@@ -8678,11 +8919,11 @@ const Editemployee = () => {
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={LCInitialValue}
-
+              // validationSchema={LcvalidationSchema}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 if (!LeaveconLTData || !LeaveconLTData.RecordID) {
-                  toast.error("Leave Type is required");
+                  toast.error("Please select the Leave Type");
                   return;
                 }
                 setTimeout(() => {
@@ -8775,6 +9016,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
+
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -8925,6 +9167,11 @@ const Editemployee = () => {
                           />
 
                         </FormControl>
+                        {/* {touched.leavetype && errors.leavetype && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "-8px" }}>
+                              {errors.leavetype}
+                            </div>
+                          )} */}
 
                         <TextField
                           fullWidth
@@ -8939,6 +9186,7 @@ const Editemployee = () => {
                           error={!!touched.totaldays && !!errors.totaldays}
                           helperText={touched.totaldays && errors.totaldays}
                           focused
+                          required
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
@@ -9037,28 +9285,64 @@ const Editemployee = () => {
                         >
                           Save
                         </LoadingButton>
-                        <Button
-                          color="error"
-                          variant="contained"
-                          onClick={() => {
-                            Swal.fire({
-                              title: `Do you want Delete?`,
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Confirm",
-                            }).then((result) => {
-                              if (result.isConfirmed) {
-                                LCsaveFn(values, resetForm, "harddelete");
-                              } else {
-                                return;
-                              }
-                            });
-                          }}
-                        >
-                          Delete
-                        </Button>
+                        {YearFlag == "true" ? (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={funMode == "A"}
+                            onClick={() => {
+                              Swal.fire({
+                                title: `Do you want Delete?`,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  LCsaveFn(
+                                    values,
+                                    resetForm,
+                                    "harddelete"
+                                  );
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Delete
+                          </Button>
+                        )}
+                        {/* {YearFlag == "true" ? (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              LCsaveFn(values, resetForm, "harddelete");
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Delete
+                          </Button>
+                        )} */}
+
                         <Button
                           type="reset"
                           color="warning"
@@ -9078,9 +9362,10 @@ const Editemployee = () => {
           </Paper>
         ) : (
           false
-        )}
-      </Box>
-    </React.Fragment>
+        )
+        }
+      </Box >
+    </React.Fragment >
   );
 };
 
