@@ -56,6 +56,7 @@ import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapire
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { FunctionSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
+
 // import {  HsnSchema } from "../../Security/validation";
 // import CryptoJS from "crypto-js";
 const Editfunction = () => {
@@ -487,6 +488,7 @@ const Editfunction = () => {
                     label="Name"
                     variant="standard"
                     focused
+                    required
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -508,11 +510,12 @@ const Editfunction = () => {
                     sx={{ background: "#ffffff" }}
                   // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                   >
-                    <InputLabel id="status">Categories</InputLabel>
+                    <InputLabel id="status">Categories<span style={{ color: 'red',fontSize:'20px' }}>*</span></InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="categories"
                       name="categories"
+                      required
                       value={values.categories}
                       onBlur={handleBlur}
                       onChange={handleChange}

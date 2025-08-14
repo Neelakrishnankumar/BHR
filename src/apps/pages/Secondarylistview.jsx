@@ -20,6 +20,7 @@ import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import BalanceIcon from '@mui/icons-material/Balance';
 import EditIcon from "@mui/icons-material/Edit";
+import Swal from "sweetalert2";
 import {
   DataGrid,
   GridToolbarQuickFilter,
@@ -563,7 +564,28 @@ else if (accessID == "TR234") {
   }
 
   var openstackname = "Opening Stock";
-
+const fnLogOut = (props) => {
+      Swal.fire({
+        title: `Do you want ${props}?`,
+        // text:data.payload.Msg,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: props,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (props === "Logout") {
+            navigate("/");
+          }
+          if (props === "Close") {
+            navigate("/Apps/TR027/Employees");
+          }
+        } else {
+          return;
+        }
+      });
+    };
   function CustomToolbar(listViewData) {
     function doesArrayContainNegative() {
       for (var arr of listViewData) {
@@ -2312,9 +2334,11 @@ else if (accessID == "TR234") {
             slotProps={{ toolbar: { csvOptions: { allColumns: true } } }}
           />
 
-          <IconButton onClick={() => navigate("/")} color="error">
-            <LogoutOutlinedIcon />
-          </IconButton>
+           <Tooltip arrow title="Logout">
+                     <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                       <LogoutOutlinedIcon />
+                     </IconButton>
+                   </Tooltip>
         </Box>
       </GridToolbarContainer>
     );

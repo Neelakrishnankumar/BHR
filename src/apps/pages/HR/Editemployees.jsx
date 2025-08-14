@@ -149,10 +149,39 @@ const Editemployee = () => {
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
 
   const [openPROPopup, setOpenPROPopup] = useState(false);
+  const deployvalidationSchema = Yup.object().shape({
+    Designation: Yup.object()
+      .nullable()
+      .required("Designation is required"),
+    location: Yup.object()
+      .nullable()
+      .required("Location is required"),
+    gate: Yup.object()
+      .nullable()
+      .required("Gate is required"),
+    function: Yup.object()
+      .nullable()
+      .required("Function is required"),
+
+    shift: Yup.object()
+      .nullable()
+      .required("Shift is required"),
+  });
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+  const validationSchema = Yup.object().shape({
+    Department: Yup.object()
+      .nullable()
+      .required("Department is required"),
 
+
+  });
+  // const LcvalidationSchema = Yup.object().shape({
+  //   leavetype: Yup.object()
+  //     .nullable()
+  //     .required("Leave Type is required"),
+  // });
   // const { setFieldValue } = useFormikContext();
   useEffect(() => {
     dispatch(fetchApidata(accessID, "get", recID));
@@ -194,34 +223,79 @@ const Editemployee = () => {
   //   employeetype: Data.employeetype,
   // };
   //*******Assign Employee values from Database in  Yup initial value******* */
+  // const contactvalidationSchema = Yup.object({
+  //   aadharcardnumber: Yup.string()
+  //     .matches(/^\d{12}$/, 'Aadhar Number must be exactly 12 digits'),
+  //   // .required('Aadhar Number is required'),
+  //   pfnumber: Yup.string()
+  //     .matches(/^[A-Za-z0-9]{22}$/, 'PF Number must be exactly 22 alphanumeric characters'),
+  //   // .required('PF Number is required'),
+
+  //   email: Yup.string()
+  //     .email('Invalid email format')
+  //     .matches(
+  //       /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
+  //       'Email must be valid'
+  //     )
+  //     .required('Email is required'),
+  //   esinumber: Yup.string()
+  //     .matches(/^\d{17}$/, 'ESI Number must be exactly 17 digits'),
+  //   // .required('ESI Number is required'),
+  //   phonenumber: Yup.string()
+  //     .matches(/^\d{10}$/, 'Phone Number must be valid'),
+  //   // .required('Phone Number is required'),
+
+
+
+
+  // });
   const contactvalidationSchema = Yup.object({
     aadharcardnumber: Yup.string()
-      .matches(/^\d{12}$/, 'Aadhar Number must be exactly 12 digits')
-      .required('Aadhar Number is required'),
+      .nullable()
+      .notRequired()
+      .test(
+        'aadharcardnumber',
+        'Aadhar Number must be exactly 12 digits',
+        (value) => !value || /^\d{12}$/.test(value)
+      ),
+
     pfnumber: Yup.string()
-      .matches(/^[A-Za-z0-9]{22}$/, 'PF Number must be exactly 22 alphanumeric characters')
-      .required('PF Number is required'),
-    //     pfnumber: Yup.string()
-    // .matches(/^[A-Z]{2}\/[A-Z]{3}\/\d{7}\/\d{3}\/\d{4}$/, 'Invalid PF Number format')
-    // .required('PF Number is required'),
+      .nullable()
+      .notRequired()
+      .test(
+        'pfnumber',
+        'PF Number must be exactly 22 alphanumeric characters',
+        (value) => !value || /^[A-Za-z0-9]{22}$/.test(value)
+      ),
+
     email: Yup.string()
       .email('Invalid email format')
       .matches(
         /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|co|in)$/,
         'Email must be valid'
       )
-      .required('Email is required'),
+      .required('Email is required'), // Email is still required
+
     esinumber: Yup.string()
-      .matches(/^\d{17}$/, 'ESI Number must be exactly 17 digits')
-      .required('ESI Number is required'),
+      .nullable()
+      .notRequired()
+      .test(
+        'esinumber',
+        'ESI Number must be exactly 17 digits',
+        (value) => !value || /^\d{17}$/.test(value)
+      ),
+
     phonenumber: Yup.string()
-      .matches(/^\d{10}$/, 'Phone Number must be valid')
-      .required('Phone Number is required'),
-
-
-
-
+      .nullable()
+      .notRequired()
+      .test(
+        'phonenumber',
+        'Phone Number must be valid',
+        (value) => !value || /^\d{10}$/.test(value)
+      ),
   });
+
+
 
   const formatDateForInput = (dateStr) => {
     if (!dateStr) return "";
@@ -262,7 +336,7 @@ const Editemployee = () => {
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
-
+    qualityassurance: Data.QualityAssurance === "Y" ? true : false,
     joindate: Data.DateOfJoin,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
@@ -488,6 +562,7 @@ const Editemployee = () => {
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
+      QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
       Sal: "",
@@ -696,11 +771,11 @@ const Editemployee = () => {
     // }
 
     if (values.Comments == "") {
-      toast.error("Please Enter Comments");
+      toast.error("Please enter the Comments");
       return;
     }
     if (values.Skills == "") {
-      toast.error("Please Enter Skills");
+      toast.error("Please enter the Skills");
       return;
     }
 
@@ -1524,12 +1599,18 @@ const Editemployee = () => {
 
   const LCsaveFn = async (values, resetForm, del) => {
     setLoading(true);
+    if (funMode === "E" && del && LeaveCondata.recordID === "") {
+      toast.error("Please select the data to delete");
+      setLoading(false);
+      return;
+    }
     let action =
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
           ? "harddelete"
           : "update";
+
     const idata = {
       RecordID: LeaveCondata.recordID,
       CompanyID,
@@ -1561,10 +1642,109 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
       resetForm()
     } else {
+      setLoading(false);
       toast.error(response.payload.Msg);
     }
   };
+  // const LCsaveFn = async (values, resetForm, types) => {
+  //   setLoading(true);
+  //   if (types == "harddelete") {
+  //     if (LeaveCondata.recordID == "") {
+  //       toast.error("Please select the data");
+  //       return;
+  //     }
+  //   }
+  //   // if (selectproLookupData.PROlookupCode == "") {
+  //   //   toast.error("Please Choose Process Lookup");
+  //   //   return;
+  //   // }
 
+  //   // if (values.Comments == "") {
+  //   //   toast.error("Please enter the Comments");
+  //   //   return;
+  //   // }
+  //   // if (values.Skills == "") {
+  //   //   toast.error("Please enter the Skills");
+  //   //   return;
+  //   // }
+
+  //   console.log(values);
+
+  //   var saveData = "";
+  //   var type = "";
+
+  //   if (types === "harddelete") {
+  //     type = "harddelete";
+  //     saveData = {
+  //       RecordID: LeaveCondata.recordID,
+  //       CompanyID,
+  //       Year: values.Year,
+  //       EmployeeID: recID,
+  //       LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+  //       LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+  //       TotalDays: Number(values.totaldays),
+  //       AvailDays: Number(values.availableleave),
+  //       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+  //       LeavePart: "N",
+  //     };
+  //     console.log(LeaveCondata.recordID, "RecordID");
+  //   } else {
+  //     setLoading(true);
+  //     if (boMode == "A") {
+  //       saveData = {
+  //         RecordID: LeaveCondata.recordID,
+  //         CompanyID,
+  //         Year: values.Year,
+  //         EmployeeID: recID,
+  //         LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+  //         LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+  //         TotalDays: Number(values.totaldays),
+  //         AvailDays: Number(values.availableleave),
+  //         EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+  //         LeavePart: "N",
+  //       };
+  //       type = "insert";
+  //     } else {
+  //       saveData = {
+  //         RecordID: LeaveCondata.recordID,
+  //         CompanyID,
+  //         Year: values.Year,
+  //         EmployeeID: recID,
+  //         LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+  //         LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+  //         TotalDays: Number(values.totaldays),
+  //         AvailDays: Number(values.availableleave),
+  //         EligibleDays: Number(values.totaldays) - Number(values.availableleave),
+  //         LeavePart: "N",
+  //       };
+  //       type = "update";
+  //     }
+  //   }
+  //   console.log("save" + JSON.stringify(saveData));
+
+  //   const response = await dispatch(
+  //     postApidata("TR249", type, saveData)
+  //   );
+  //   if (response.payload.Status == "Y") {
+  //     setLoading(false);
+  //     await dispatch(
+  //       fetchExplorelitview(
+  //         "TR249",
+  //         "Leave Configuration",
+  //         `EmployeeID='${recID}'`,
+  //         ""
+  //       )
+  //     );
+
+  //     toast.success(response.payload.Msg);
+
+  //     selectCellRowData({ rowData: {}, mode: "A", field: "" });
+  //     resetForm()
+  //   } else {
+  //     setLoading(false);
+  //     toast.error(response.payload.Msg);
+  //   }
+  // };
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
   const [levellookup, setLevelLookup] = useState({
     levelfield: "",
@@ -1783,9 +1963,9 @@ const Editemployee = () => {
       LocationName: values.location.Name || "",
       StoregatemasterID: values.gate.RecordID || 0,
       StoregatemasterName: values.gate.Name || "",
-      DefaultProject: values.project.RecordID || 0,
-      ProjectCode: values.project.Code || "",
-      ProjectName: values.project.Name || "",
+      DefaultProject: values.project?.RecordID || 0,
+      ProjectCode: values.project?.Code || "",
+      ProjectName: values.project?.Name || "",
       DefaultFunction: values.function.RecordID || 0,
       FunctionCode: values.function.Code || "",
       FunctionName: values.function.Name || "",
@@ -1896,7 +2076,7 @@ const Editemployee = () => {
     RenewalDate: "",
     personal: false,
     renewal: false,
-    Attachment:""
+    Attachment: ""
   });
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
@@ -2330,7 +2510,11 @@ const Editemployee = () => {
               // onSubmit={handleFormSubmit}
               initialValues={initialValues}
               enableReinitialize={true}
-              validationSchema={basicSchema}
+              //validationSchema={basicSchema}
+              validationSchema={validationSchema}
+              onSubmit={(values) => {
+                fnSave(values, false);
+              }}
             >
               {({
                 values,
@@ -2375,73 +2559,85 @@ const Editemployee = () => {
                     )}
 
                     <FormControl sx={{ gap: formGap }}>
-                      <Productautocomplete
-                        sx={{ marginTop: "7px" }}
-                        name="Department"
-                        label="Department"
-                        variant="outlined"
-                        id="Department"
-                        value={values.Department}
-                        onChange={(newValue) => {
-                          setFieldValue("Department", newValue);
-                          console.log(newValue, "--newValue");
-                          console.log(newValue.RecordID, "////");
-                        }}
-                        //  onChange={handleSelectionFunctionname}
-                        // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
-                      />
-                      {CompanyAutoCode =="Y"?(
+                      <FormControl>
+                        <Productautocomplete
+                          sx={{ marginTop: "7px" }}
+                          name="Department"
+                          label={
+                            <>
+                              Department<span style={{ color: "red" }}> * </span>
+                            </>
+                          }
+                          variant="outlined"
+                          id="Department"
+                          value={values.Department}
+                          onChange={(newValue) => {
+                            setFieldValue("Department", newValue);
+                            console.log(newValue, "--newValue");
+                            console.log(newValue.RecordID, "////");
+                          }}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        />
+                        {touched.Department && errors.Department && (
+                          <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                            {errors.Department}
+                          </div>
+                        )}
+                      </FormControl>
+                      {CompanyAutoCode == "Y" ? (
                         <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Code"
-                        value={values.Code}
-                        id="Code"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Code"
-                        placeholder="Auto"
-                        // error={!!touched.Code && !!errors.Code}
-                        // helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        // required
-                        // autoFocus
-                        inputProps={{ maxLength: 8 }}
-                        InputProps={{ readOnly: true }}
-                      />
-                    ):(
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label="Code"
-                        value={values.Code}
-                        id="Code"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Code"                       
-                        // error={!!touched.Code && !!errors.Code}
-                        // helperText={touched.Code && errors.Code}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        required
-                        autoFocus
-                        inputProps={{ maxLength: 8 }}                     
-                      />)}
-                      
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          label="Code"
+                          value={values.Code}
+                          id="Code"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Code"
+                          placeholder="Auto"
+                          // error={!!touched.Code && !!errors.Code}
+                          // helperText={touched.Code && errors.Code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          // required
+                          // autoFocus
+                          inputProps={{ maxLength: 8 }}
+                          InputProps={{ readOnly: true }}
+                        />
+                      ) : (
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          label="Code"
+                          value={values.Code}
+                          id="Code"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Code"
+                          // error={!!touched.Code && !!errors.Code}
+                          // helperText={touched.Code && errors.Code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          required
+                          autoFocus
+                          inputProps={{ maxLength: 8 }}
+                        />
+                      )}
+
 
                       <TextField
                         fullWidth
@@ -2462,6 +2658,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
+                        required
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -2475,6 +2672,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Password"
+                        required
                         // error={!!touched.Password && !!errors.Password}
                         // helperText={touched.Password && errors.Password}
                         sx={{
@@ -2495,6 +2693,7 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Job"
+                        // required
                         error={!!touched.Job && !!errors.Job}
                         helperText={touched.Job && errors.Job}
                         sx={{
@@ -2537,15 +2736,15 @@ const Editemployee = () => {
                         <Field
                           //  size="small"
                           type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
+                          name="qualityassurance"
+                          id="qualityassurance"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           as={Checkbox}
-                          label="Disable"
+                          label="Quality Assurance"
                         />
 
-                        <FormLabel focused={false}>Disable</FormLabel>
+                        <FormLabel focused={false}>Quality Assurance</FormLabel>
                         <Field
                           //  size="small"
                           type="checkbox"
@@ -2570,6 +2769,20 @@ const Editemployee = () => {
                         />
 
                         <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box>
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="checkbox"
+                          id="checkbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -2608,6 +2821,7 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
+                      // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
@@ -2624,6 +2838,7 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
+                      // required
                       //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
@@ -2676,30 +2891,35 @@ const Editemployee = () => {
                           },
                         }}
                       />
+
                     </FormControl>
                   </Box>
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
-                    {YearFlag == "true" ? (
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={loading}
-                        onClick={() => {
-                          fnSave(values, false);
-                        }}
-                      >
-                        Save
-                      </LoadingButton>
+                    {/* <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={loading}
+                      onClick={() => {
+                        fnSave(values, false);
+                      }}
+                    >
+                      Save
+                    </Button> */}
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={loading}
+                    >
+                      Save
+                    </Button>
+
+                    {/* {YearFlag == "true" ? (
+                     
                     ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
+                      
+                    )} */}
                     {YearFlag == "true" && mode == "E" ? (
                       <Button
                         color="error"
@@ -2942,6 +3162,7 @@ const Editemployee = () => {
 
                       label="Email Id"
                       focused
+                      required
                       error={touched.email && Boolean(errors.email)}
                       helperText={touched.email && errors.email}
                       sx={{
@@ -3826,6 +4047,14 @@ const Editemployee = () => {
                                     },
                                   }}
                                   focused
+                                  //            onInvalid={(e) => {
+                                  //   e.target.setCustomValidity(
+                                  //     "Please fill the Name"
+                                  //   );
+                                  // }}
+                                  // onInput={(e) => {
+                                  //   e.target.setCustomValidity("");
+                                  // }}
                                   multiline
                                   inputProps={{ maxLength: 90 }}
                                 />
@@ -3916,6 +4145,43 @@ const Editemployee = () => {
                               >
                                 Save
                               </LoadingButton>
+                              {YearFlag == "true" ? (
+                                <Button
+                                  color="error"
+                                  variant="contained"
+                                  disabled={boMode == "A"}
+                                  onClick={() => {
+                                    Swal.fire({
+                                      title: `Do you want Delete?`,
+                                      icon: "warning",
+                                      showCancelButton: true,
+                                      confirmButtonColor: "#3085d6",
+                                      cancelButtonColor: "#d33",
+                                      confirmButtonText: "Confirm",
+                                    }).then((result) => {
+                                      if (result.isConfirmed) {
+                                        fnProcess(
+                                          values,
+                                          resetForm,
+                                          "harddelete"
+                                        );
+                                      } else {
+                                        return;
+                                      }
+                                    });
+                                  }}
+                                >
+                                  Delete
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="error"
+                                  variant="contained"
+                                  disabled={true}
+                                >
+                                  Delete
+                                </Button>
+                              )}
                               {/* ) : ( */}
                               {/* <Button
                                   color="secondary"
@@ -3925,7 +4191,7 @@ const Editemployee = () => {
                                   Save
                                 </Button> */}
                               {/* )} */}
-                              {YearFlag == "true" ? (
+                              {/* {YearFlag == "true" ? (
                                 <Button
                                   color="error"
                                   variant="contained"
@@ -3943,7 +4209,7 @@ const Editemployee = () => {
                                 >
                                   Delete
                                 </Button>
-                              )}
+                              )} */}
                               <Button
                                 type="reset"
                                 color="warning"
@@ -4187,7 +4453,16 @@ const Editemployee = () => {
                       >
                         <Productautocomplete
                           name="function"
-                          label="function"
+                          label={
+                            <span>
+                              Function
+                              <span
+                                style={{ color: "red" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
                           variant="outlined"
                           id="function"
                           value={functionLookup}
@@ -5117,6 +5392,7 @@ const Editemployee = () => {
             <Formik
               initialValues={deploymentInitialValue}
               enableReinitialize={true}
+              validationSchema={deployvalidationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   Fndeployment(values, resetForm, false);
@@ -5247,284 +5523,234 @@ const Editemployee = () => {
                         sx={{ width: "200px", height: "120px" }}
                       />
                     </Stack>
-
-                    <FormControl
-                      sx={{
-                        //gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Productautocomplete
-                        name="Designation"
-                        label={
-                          <span>
-                            Designation
-                            <span style={{ color: "red", fontWeight: "bold" }}>
-                              *
-                            </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        id="Designation"
-                        // value={designLookup}
-                        value={values.Designation}
-                        onChange={(newValue) => {
-                          setFieldValue("Designation", newValue);
-                          console.log(newValue, "--newvalue Designation");
-                          // setdesignLookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
-                        }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      />
-                      {/* <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={designLookup.designlookupRecordid}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Designation"
-                        variant="standard"
-                        value={designLookup.designlookupCode}
-                        focused
-                        required
-                        DESIGN
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-                      {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                      {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                      {/* </Button> */}
-                      {/* <IconButton
-                        sx={{ height: 40, width: 40 }}
-                        onClick={() => handleShow("DESIGN")}
-                      >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
-                      <TextField
-                        id="outlined-basic"
-                        label=""
-                        variant="standard"
-                        value={designLookup.designlookupDesc}
+                    <Box sx={{ width: '100%' }}>
+                      <FormControl
                         fullWidth
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-                    </FormControl>
-                    <FormControl
-                      sx={{
-                        //gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      {/* <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={locationLookup.locationRecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Location"
-                        variant="standard"
-                        value={locationLookup.locationCode}
-                        focused
-                        required
-                        DESIGN
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-                      {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                      {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                      {/* </Button> */}
-                      {/* <IconButton
-                        sx={{ height: 40, width: 40 }}
-                        onClick={() => handleShow("LOCATION")}
+                        sx={{
+                          flexDirection: "column", // Stack vertically
+                          alignItems: "flex-start",
+                        }}
                       >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
-                      <TextField
-                        id="outlined-basic"
-                        label=""
-                        variant="standard"
-                        value={locationLookup.locationName}
-                        fullWidth
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-
-                      <Productautocomplete
-                        name="location"
-                        label={
-                          <span>
-                            Location
-                            <span style={{ color: "red", fontWeight: "bold" }}>
-                              *
+                        <Productautocomplete
+                          name="Designation"
+                          label={
+                            <span>
+                              Designation
+                              <span style={{ color: "red", fontWeight: "bold" }}>*</span>
                             </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        id="location"
-                        // value={locationLookup}
-                        value={values.location}
-                        onChange={(newValue) => {
-                          setFieldValue("location", newValue);
-                          // SetLocationLookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
+                          }
+                          variant="outlined"
+                          id="Designation"
+                          value={values.Designation}
+                          onChange={(newValue) => {
+                            setFieldValue("Designation", newValue);
+                          }}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        />
+                      </FormControl>
+
+                      {touched.Designation && errors.Designation && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            marginTop: "4px",
+                            marginLeft: "14px", // align with field
+                            fontSize: "10px",
+                          }}
+                        >
+                          {errors.Designation}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Box sx={{ width: '100%' }}>
+                      <FormControl
+                        sx={{
+                          //gridColumn: "span 2",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      />
-                    </FormControl>
-                    <FormControl
-                      sx={{
-                        //gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Productautocomplete
-                        name="gate"
-                        label={
-                          <span>
-                            Gate
-                            <span style={{ color: "red", fontWeight: "bold" }}>
-                              *
-                            </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        id="gate"
-                        // value={gateLookup}
-                        value={values.gate}
-                        onChange={(newValue) => {
-                          setFieldValue("gate", newValue);
-                          console.log(newValue, "--newvalue gate");
-                          console.log(newValue.RecordID, "gate RecordID");
-
-                          // SetGateLookup({
-                          //   RecordID: newValue.RecordID,
-                          //   Code: newValue.Code,
-                          //   Name: newValue.Name,
-                          // });
-                        }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
-                          }'","Any":""}}`}
-                      />
-
-                      {/* <TextField
-                        id="outlined-basic"
-                        label="ID"
-                        variant="standard"
-                        value={gateLookup.gateRecordID}
-                        focused
-                        sx={{ display: "none" }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Gate"
-                        variant="standard"
-                        value={gateLookup.gateCode}
-                        focused
-                        required
-                        DESIGN
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-
-                      {/* <Button  variant='contained'  sx={{height:'30px',width:'30px',mt:'9px'}} > */}
-                      {/* <MoreHorizIcon onClick={()=>handleShow('DE')} color='white' sx={{height:'30px',}} mt='15px' fontSize='medium' /> */}
-                      {/* </Button> */}
-
-                      {/* <IconButton
-                        sx={{ height: 40, width: 40 }}
-                        onClick={() => handleShow("GATE")}
                       >
-                        <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                      </IconButton>
-                      <TextField
-                        id="outlined-basic"
-                        label=""
-                        variant="standard"
-                        value={gateLookup.gateName}
-                        fullWidth
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-                    </FormControl>
-                    <FormControl
-                      sx={{
-                        //gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Productautocomplete
-                        id="function"
-                        name="function"
-                        label={
-                          <span>
-                            Function
-                            <span style={{ color: "red", fontWeight: "bold" }}>
-                              *
+
+
+                        <Productautocomplete
+                          name="location"
+                          label={
+                            <span>
+                              Location
+                              <span style={{ color: "red", fontWeight: "bold" }}>
+                                *
+                              </span>
                             </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        value={values.function}
-                        onChange={(newValue) => {
-                          setFieldValue("function", newValue);
-                          console.log(newValue, "--newvalue function");
-                          console.log(newValue.RecordID, "function RecordID");
+                          }
+                          variant="outlined"
+                          id="location"
+                          // value={locationLookup}
+                          value={values.location}
+                          onChange={(newValue) => {
+                            setFieldValue("location", newValue);
+                            // SetLocationLookup({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
+                          }}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        />
+                      </FormControl>
+                      {touched.location && errors.location && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            marginTop: "4px",
+                            marginLeft: "14px", // align with field
+                            fontSize: "10px",
+                          }}
+                        >
+                          {errors.location}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Box sx={{ width: '100%' }}>
+                      <FormControl
+                        sx={{
+                          //gridColumn: "span 2",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
+                      >
+                        <Productautocomplete
+                          name="gate"
+                          label={
+                            <span>
+                              Gate
+                              <span style={{ color: "red", fontWeight: "bold" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          id="gate"
+                          // value={gateLookup}
+                          value={values.gate}
+                          onChange={(newValue) => {
+                            setFieldValue("gate", newValue);
+                            console.log(newValue, "--newvalue gate");
+                            console.log(newValue.RecordID, "gate RecordID");
+
+                            // SetGateLookup({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
+                          }}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                            }'","Any":""}}`}
+                        />
+
+
+                      </FormControl>
+                      {touched.gate && errors.gate && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            marginTop: "4px",
+                            marginLeft: "14px", // align with field
+                            fontSize: "10px",
+                          }}
+                        >
+                          {errors.gate}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Box sx={{ width: '100%' }}>
+                      <FormControl
+                        sx={{
+                          //gridColumn: "span 2",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Productautocomplete
+                          id="function"
+                          name="function"
+                          label={
+                            <span>
+                              Function
+                              <span style={{ color: "red", fontWeight: "bold" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          variant="outlined"
+                          value={values.function}
+                          onChange={(newValue) => {
+                            setFieldValue("function", newValue);
+                            console.log(newValue, "--newvalue function");
+                            console.log(newValue.RecordID, "function RecordID");
+                          }}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID
  ='${CompanyID}'","Any":""}}`}
-                      />
-                    </FormControl>
-                    <FormControl
-                      sx={{
-                        //gridColumn: "span 2",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Productautocomplete
-                        id="project"
-                        name="project"
-                        label={
-                          <span>
-                            Project
-                            <span style={{ color: "red", fontWeight: "bold" }}>
-                              *
-                            </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        value={values.project}
-                        onChange={(newValue) => {
-                          setFieldValue("project", newValue);
-                          console.log(newValue, "--newvalue project");
-                          console.log(newValue.RecordID, "project RecordID");
+                        />
+                      </FormControl>
+                      {touched.function && errors.function && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            marginTop: "4px",
+                            marginLeft: "14px", // align with field
+                            fontSize: "10px",
+                          }}
+                        >
+                          {errors.function}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Box sx={{ width: '100%' }}>
+                      <FormControl
+                        sx={{
+                          //gridColumn: "span 2",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      />
-                    </FormControl>
-
-                    {/* <FormControl
+                      >
+                        <Productautocomplete
+                          id="project"
+                          name="project"
+                          label="Project"
+                          variant="outlined"
+                          value={values.project}
+                          onChange={(newValue) => {
+                            setFieldValue("project", newValue);
+                            console.log(newValue, "--newvalue project");
+                            console.log(newValue.RecordID, "project RecordID");
+                          }}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        />
+                      </FormControl>
+                      {/* {touched.project && errors.project && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            marginTop: "4px",
+                            marginLeft: "14px", // align with field
+                            fontSize: "10px",
+                          }}
+                        >
+                          {errors.project}
+                        </Typography>
+                      )} */}
+                    </Box>
+                  </Box>
+                  {/* <FormControl
                       sx={{
                         //gridColumn: "span 2",
                         display: "flex",
@@ -5572,7 +5798,7 @@ const Editemployee = () => {
                         // inputProps={{ readOnly: true }}
                       />
                     </FormControl> */}
-                  </Box>
+
                   {/* <Box display="flex" flexDirection="column" gap={2}> */}
                   {/* Row 1: Horizontal */}
                   {/* <Box display="flex" flexDirection="column" gap={2}>
@@ -5723,23 +5949,7 @@ const Editemployee = () => {
                   >
                     {/* Shift */}
                     <FormControl variant="standard" fullWidth>
-                      {/* <TextField
-    select // 👈 This is required for dropdown
-    fullWidth
-    type="text"
-    id="checkin"
-    name="checkin"
-    value={values.checkin}
-    onBlur={handleBlur}
-    onChange={handleChange}
-    label="Shift"
-    focused
-  >
-    <MenuItem value="HS">General</MenuItem>
-    <MenuItem value="DS">Days</MenuItem>
-    <MenuItem value="WS">Week</MenuItem>
-    <MenuItem value="MS">Month</MenuItem>
-  </TextField> */}
+
                       <Productautocomplete
                         id="shift"
                         name="shift"
@@ -5793,8 +6003,21 @@ const Editemployee = () => {
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
+                      {touched.shift && errors.shift && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            marginTop: "4px",
+                            marginLeft: "14px", // align with field
+                            fontSize: "10px",
+                          }}
+                        >
+                          {errors.shift}
+                        </Typography>
+                      )}
                     </FormControl>
 
                     {/* Check In Time */}
@@ -6004,15 +6227,16 @@ const Editemployee = () => {
                     padding={1}
                     gap={2}
                   >
-                    {YearFlag == "true" ? (
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        type="submit"
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </Button>
+                    {/* {YearFlag == "true" ? (
+                      
                     ) : (
                       <Button
                         color="secondary"
@@ -6021,35 +6245,8 @@ const Editemployee = () => {
                       >
                         Save
                       </Button>
-                    )}
-                    {YearFlag == "true" ? (
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => {
-                          fnSave(values, "harddelete");
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )}
-                    {/* {YearFlag == "true" ? (
-                      <Button
-                        onClick={() => mgrFunctionFn(values, resetForm, true)}
-                        color="error"
-                        variant="contained"
-                      >
-                        Delete
-                      </Button>
-                    ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
                     )} */}
+
                     <Button
                       type="reset"
                       color="warning"
@@ -6507,6 +6704,7 @@ const Editemployee = () => {
                             <Button
                               color="error"
                               variant="contained"
+                              disabled={funMode == "A"}
                               onClick={() => {
                                 Swal.fire({
                                   title: `Do you want Delete?`,
@@ -8557,6 +8755,15 @@ const Editemployee = () => {
                           min: -180,
                           max: 180,
                           style: { textAlign: "right" },
+                          onKeyDown: (e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          },
+                          onInput: (e) => {
+                            e.target.value = e.target.value.replace(/[eE+\-]/g, "");
+                          },
+
                         }}
                       />
                       {/* </FormControl> */}
@@ -8586,6 +8793,15 @@ const Editemployee = () => {
                           min: -90,
                           max: 90,
                           style: { textAlign: "right" },
+                          onKeyDown: (e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          },
+                          onInput: (e) => {
+                            e.target.value = e.target.value.replace(/[eE+\-]/g, "");
+                          },
+
                         }}
                       />
                       {/* </FormControl> */}
@@ -8613,6 +8829,15 @@ const Editemployee = () => {
                           step: "any",
                           min: 0,
                           style: { textAlign: "right" },
+                          onKeyDown: (e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          },
+                          onInput: (e) => {
+                            e.target.value = e.target.value.replace(/[eE+\-]/g, "");
+                          },
+
                         }}
                       />
                     </FormControl>
@@ -8694,8 +8919,13 @@ const Editemployee = () => {
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={LCInitialValue}
+              // validationSchema={LcvalidationSchema}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
+                if (!LeaveconLTData || !LeaveconLTData.RecordID) {
+                  toast.error("Please select the Leave Type");
+                  return;
+                }
                 setTimeout(() => {
                   LCsaveFn(values, resetForm, false);
                 }, 100);
@@ -8780,12 +9010,13 @@ const Editemployee = () => {
                         error={!!touched.Name && !!errors.Name}
                         helperText={touched.Name && errors.Name}
                         sx={{
-                          backgroundColor: "#ffffff", 
+                          backgroundColor: "#ffffff",
                           "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", 
+                            backgroundColor: "#ffffff",
                           },
                         }}
                         focused
+
                         inputProps={{ maxLength: 90 }}
                         multiline
                       />
@@ -8914,7 +9145,14 @@ const Editemployee = () => {
                         >
                           <Productautocomplete
                             name="leavetype"
-                            label="Leave Type"
+                            label={
+                              <span>
+                                Leave Type
+                                <span style={{ color: "red", fontWeight: "bold" }}>
+                                  *
+                                </span>
+                              </span>
+                            }
                             id="leavetype"
                             value={LeaveconLTData}
                             onChange={(newValue) => {
@@ -8923,10 +9161,17 @@ const Editemployee = () => {
                                 Code: newValue.Code,
                                 Name: newValue.Name,
                               });
+
                             }}
                             url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
+
                         </FormControl>
+                        {/* {touched.leavetype && errors.leavetype && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "-8px" }}>
+                              {errors.leavetype}
+                            </div>
+                          )} */}
 
                         <TextField
                           fullWidth
@@ -8941,6 +9186,7 @@ const Editemployee = () => {
                           error={!!touched.totaldays && !!errors.totaldays}
                           helperText={touched.totaldays && errors.totaldays}
                           focused
+                          required
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
@@ -9039,28 +9285,64 @@ const Editemployee = () => {
                         >
                           Save
                         </LoadingButton>
-                        <Button
-                          color="error"
-                          variant="contained"
-                          onClick={() => {
-                            Swal.fire({
-                              title: `Do you want Delete?`,
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Confirm",
-                            }).then((result) => {
-                              if (result.isConfirmed) {
-                                LCsaveFn(values, resetForm, "harddelete");
-                              } else {
-                                return;
-                              }
-                            });
-                          }}
-                        >
-                          Delete
-                        </Button>
+                        {YearFlag == "true" ? (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={funMode == "A"}
+                            onClick={() => {
+                              Swal.fire({
+                                title: `Do you want Delete?`,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  LCsaveFn(
+                                    values,
+                                    resetForm,
+                                    "harddelete"
+                                  );
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Delete
+                          </Button>
+                        )}
+                        {/* {YearFlag == "true" ? (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            onClick={() => {
+                              LCsaveFn(values, resetForm, "harddelete");
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Delete
+                          </Button>
+                        )} */}
+
                         <Button
                           type="reset"
                           color="warning"
@@ -9080,9 +9362,10 @@ const Editemployee = () => {
           </Paper>
         ) : (
           false
-        )}
-      </Box>
-    </React.Fragment>
+        )
+        }
+      </Box >
+    </React.Fragment >
   );
 };
 

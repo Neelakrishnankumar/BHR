@@ -288,7 +288,7 @@ const EditMilestones = () => {
                       type="text"
                       id="name"
                       label="Description"
-                    variant="standard"
+                      variant="standard"
                       focused
                       value={values.name}
                       onBlur={handleBlur}
@@ -296,6 +296,7 @@ const EditMilestones = () => {
                       error={!!touched.name && !!errors.name}
                       helperText={touched.name && errors.name}
                       autoFocus
+                      required
                     />
 
                     <TextField

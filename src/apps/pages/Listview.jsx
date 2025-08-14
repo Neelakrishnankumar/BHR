@@ -19,6 +19,7 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import Swal from "sweetalert2";
 import BalanceIcon from '@mui/icons-material/Balance';
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../ui-components/global/utils";
 import MatxCustomizer from "./Mailpdf";
@@ -198,7 +199,28 @@ const [productFilter,setProductFilter] = useState();
       toast.error(response.payload.message ? response.payload.message : "Error" );
     }
   }
-
+const fnLogOut = (props) => {
+      Swal.fire({
+        title: `Do you want ${props}?`,
+        // text:data.payload.Msg,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: props,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (props === "Logout") {
+            navigate("/");
+          }
+          if (props === "Close") {
+            navigate("/Apps/TR027/Employees");
+          }
+        } else {
+          return;
+        }
+      });
+    };
   function CustomToolbar() {
     return (
       <GridToolbarContainer
@@ -401,7 +423,7 @@ const [productFilter,setProductFilter] = useState();
           />
 
           <Tooltip arrow title="Logout">
-            <IconButton onClick={() => navigate("/")} color="error">
+            <IconButton onClick={() => fnLogOut("Logout")} color="error">
               <LogoutOutlinedIcon />
             </IconButton>
           </Tooltip>

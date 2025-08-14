@@ -374,7 +374,7 @@ const Editdept = () => {
                     multiline
                     onInvalid={(e) => {
                       e.target.setCustomValidity(
-                        "Please Fill The Description"
+                        "Please fill the Name"
                       );
                     }}
                     onInput={(e) => {
@@ -391,6 +391,7 @@ const Editdept = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     name="Loc"
+                    required
                     error={!!touched.Loc && !!errors.Loc}
                     helperText={touched.Loc && errors.Loc}
                     sx={{

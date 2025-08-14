@@ -439,7 +439,7 @@ function App() {
                     element={<Editinspection />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditOver Head/:id/:Mode"
+                    path="/:accessID/:screenName/EditOverhead/:id/:Mode"
                     element={<Editoverhead />}
                   />
                   <Route

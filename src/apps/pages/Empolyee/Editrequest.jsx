@@ -29,12 +29,14 @@ import {
   Grid,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import * as Yup from "yup";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CalendarToday } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import store from "../../../index";
 import { fileUpload } from "../../../store/reducers/Imguploadreducer";
 import FileUploadIconButton from "../../../ui-components/global/Fileuploadbutton";
@@ -191,6 +193,24 @@ const Editrequests = () => {
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const validationSchema = Yup.object().shape({
+    leavetype: Yup.object()
+      .nullable()
+      .required("Leavetype is required"),
+
+  });
+  const validationSchema2 = Yup.object().shape({
+
+    ProName: Yup.object()
+      .nullable()
+      .required("Project is required"),
+  });
+   const validationSchema3 = Yup.object().shape({
+
+    overhead: Yup.object()
+      .nullable()
+      .required("Overhead is required"),
+  });
   const handleButtonClick = (params) => {
     const rowData = {
       CheckInDate: params.row.CheckInDate,
@@ -382,7 +402,7 @@ const Editrequests = () => {
     Mgr: apiData.Mgr,
     Sal: apiData.Sal,
     Fax: apiData.Fax,
-    SortOrder: apiData.SortOrder ||0,
+    SortOrder: apiData.SortOrder || 0,
     checkbox: apiData.Disable,
     Password: apiData.Password,
     Department: apiData.Department,
@@ -715,7 +735,7 @@ const Editrequests = () => {
       ),
     [explorelistViewcolumn]
   );
-  
+
 
 
 
@@ -1134,7 +1154,7 @@ const Editrequests = () => {
     approvedDate: "",
     permissiondate: ""
   });
-  
+
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
@@ -1213,7 +1233,7 @@ const Editrequests = () => {
 
   const selectCellRowData = ({ rowData, mode, field }) => {
 
-    
+
 
     setFunMode(mode);
 
@@ -1576,9 +1596,9 @@ const Editrequests = () => {
         requestMail({ EmployeeID: recID, Type: "EE", RecordID: response.payload.FinanceEntryRecid })
       );
 
-        if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.FinanceEntryRecid,ManagerID:0,"EmployeeID": recID, "Type": "EE","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.FinanceEntryRecid, ManagerID: 0, "EmployeeID": recID, "Type": "EE", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -1715,9 +1735,9 @@ const Editrequests = () => {
           RecordID: response.payload.RegRecID,
         })
       );
-  if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.RegRecID,ManagerID:0,"EmployeeID": recID, "Type": "RG","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.RegRecID, ManagerID: 0, "EmployeeID": recID, "Type": "RG", "Status": "AP", Reason: "" } }))
       }
 
       // }
@@ -1846,10 +1866,10 @@ const Editrequests = () => {
         })
       );
 
-      
-      if(values.Status == "AP"){
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.OndutyRecid,ManagerID:0,"EmployeeID": recID, "Type": "OD","Status":"AP",Reason: "" } }))
+      if (values.Status == "AP") {
+
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.OndutyRecid, ManagerID: 0, "EmployeeID": recID, "Type": "OD", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2065,9 +2085,9 @@ const Editrequests = () => {
         })
       );
 
-      if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EleaveRecid,ManagerID:0,"EmployeeID": recID, "Type": "L","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EleaveRecid, ManagerID: 0, "EmployeeID": recID, "Type": "L", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2177,9 +2197,9 @@ const Editrequests = () => {
         })
       );
 
-            if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EmpOtRecid,ManagerID:0,"EmployeeID": recID, "Type": "OT","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.EmpOtRecid, ManagerID: 0, "EmployeeID": recID, "Type": "OT", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2270,9 +2290,9 @@ const Editrequests = () => {
       );
 
 
-      if(values.Status == "AP"){
+      if (values.Status == "AP") {
 
-        dispatch(leaveAppoval({ data: { "RecordID": response.payload.SalaryAdvanceRecid,ManagerID:0,"EmployeeID": recID, "Type": "SA","Status":"AP",Reason: "" } }))
+        dispatch(leaveAppoval({ data: { "RecordID": response.payload.SalaryAdvanceRecid, ManagerID: 0, "EmployeeID": recID, "Type": "SA", "Status": "AP", Reason: "" } }))
       }
 
 
@@ -2318,7 +2338,7 @@ const Editrequests = () => {
 
     // type: ADLookupData.adType,
     value: allDecData.value,
-    sortorder: allDecData.sortOrder ||0,
+    sortorder: allDecData.sortOrder || 0,
   };
 
   const AllDedFNsave = async (values, resetForm, del) => {
@@ -2346,7 +2366,7 @@ const Editrequests = () => {
         show == "1"
           ? Number(Data.Sal) + Number(values.value)
           : Number(Data.Sal) - Number(values.value),
-      SortOrder: values.sortorder ||0,
+      SortOrder: values.sortorder || 0,
       Disable: "N",
 
       parentID: recID,
@@ -2531,18 +2551,23 @@ const Editrequests = () => {
   };
   const type = show == "2" ? "L" : show == "6" ? "Over Time" : show == "8" ? "OD" : show == "7" ? "SA" : show == "11" ? "P" : show == "9" ? "E" : show == "10" ? "R" : "";
 
-  async function fileUpload(file, appId) {
+  async function fileUpload(file, appId, action, id, purpose) {
     console.log("🚀 ~ fileUpload ~ file:", file)
     const formData = new FormData();
     formData.append('file', file);
     formData.append('empId', recID);
     formData.append('appId', appId);
+    formData.append("action", action);
+    formData.append("id", id);
+    formData.append("purpose", purpose);
     //formData.append('type', "L");
     if (type) {
       formData.append('type', type);
     }
     formData.append('source', "HR");
     console.log("🚀 ~ fileUpload ~ formData:", formData)
+    console.log("Uploading with:", { file, appId, action, id, purpose, recID, type });
+
     const respose = await dispatch(attachmentPost({ data: formData }))
 
     if (respose.payload.success) {
@@ -2754,7 +2779,7 @@ const Editrequests = () => {
             </Box>
           </Box>
         </Paper>
-       
+
         {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             {/* { <Header title="Products" subtitle="" /> } */}
@@ -3615,6 +3640,7 @@ const Editrequests = () => {
             <Formik
               initialValues={leaveInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   leaveFNsave(values, resetForm, false);
@@ -3931,48 +3957,54 @@ const Editrequests = () => {
                       //disabled={mode == "E" && values.Status != "AL" && values.Status != "QR"}
                       url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
                     /> */}
-                      <Productautocomplete
-                        name="leavetype"
-                        label={
-                          <span>
-                            Leave Type
-                            <span
-                              style={{ color: "red", fontWeight: "bold" }}
-                            >
-                              *
+                      <FormControl>
+                        <Productautocomplete
+                          name="leavetype"
+                          label={
+                            <span>
+                              Leave Type
+                              <span
+                                style={{ color: "red", fontWeight: "bold" }}
+                              >
+                                *
+                              </span>
                             </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        id="leavetype"
-                        value={selectleaveLookupData}
-                        // value={values.leavetype}
-                        onChange={async (newValue) => {
-                          setFieldValue("leavetype", newValue);
-                          if (newValue?.RecordID) {
-                            await Balancedayfind(newValue.RecordID);
                           }
-                          console.log(
-                            selectleaveLookupData,
-                            "--selectleaveLookupData leavetype"
-                          );
+                          variant="outlined"
+                          id="leavetype"
+                          value={selectleaveLookupData}
+                          // value={values.leavetype}
+                          onChange={async (newValue) => {
+                            setFieldValue("leavetype", newValue);
+                            if (newValue?.RecordID) {
+                              await Balancedayfind(newValue.RecordID);
+                            }
+                            console.log(
+                              selectleaveLookupData,
+                              "--selectleaveLookupData leavetype"
+                            );
 
 
-                          console.log(
-                            newValue.RecordID,
-                            "leave RecordID"
-                          );
+                            console.log(
+                              newValue.RecordID,
+                              "leave RecordID"
+                            );
 
-                          setselectleaveLookupData({
-                            RecordID: newValue.RecordID,
-                            Code: newValue.Code,
-                            Name: newValue.Name,
+                            setselectleaveLookupData({
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
 
-                          });
-                        }}
-                        // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
-                      />
+                            });
+                          }}
+                          // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
+                        />
+                        {touched.leavetype && errors.leavetype && (
+                          <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                            {errors.leavetype}
+                          </div>
+                        )}</FormControl>
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
                           {
@@ -4127,7 +4159,27 @@ const Editrequests = () => {
                   >
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, leaveData.recordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, leaveData.recordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "");
+                        }}
+                        />
                       </Box>
                     )}
 
@@ -4215,6 +4267,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -4234,6 +4287,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.purpose}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -4246,6 +4300,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            file.filename,
+                                            leaveData.recordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -4287,6 +4356,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -4491,6 +4561,7 @@ const Editrequests = () => {
                             id="PaymentMethod"
                             name="PaymentMethod"
                             value={values.PaymentMethod}
+                            required
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={!!touched.PaymentMethod && !!errors.PaymentMethod}
@@ -4511,6 +4582,7 @@ const Editrequests = () => {
                             id="OtType"
                             name="OtType"
                             value={values.OtType}
+                            required
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={!!touched.OtType && !!errors.OtType}
@@ -4632,6 +4704,7 @@ const Editrequests = () => {
                             name="Status"
                             value={values.Status}
                             onBlur={handleBlur}
+                            required
                             onChange={handleChange}
                             error={!!touched.Status && !!errors.Status}
                             helperText={touched.Status && errors.Status}
@@ -4662,7 +4735,26 @@ const Editrequests = () => {
                   >
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, otdata.RecordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, otdata.RecordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "");
+                        }} />
                       </Box>
                     )}
 
@@ -4724,6 +4816,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -4743,6 +4836,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -4755,6 +4849,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            file.filename,
+                                            otdata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -4780,6 +4889,7 @@ const Editrequests = () => {
             <Formik
               initialValues={salAdinitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema3}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   salAdFNsave(values, resetForm, false);
@@ -4795,6 +4905,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -4963,6 +5074,7 @@ const Editrequests = () => {
                           error={!!touched.date && !!errors.date}
                           helperText={touched.date && errors.date}
                           autoFocus
+                          required
                         />
 
                         <TextField
@@ -4985,13 +5097,13 @@ const Editrequests = () => {
                         />
 
                         <FormControl sx={{ display: "flex" }}>
-                          <FormControl
+                          {/* <FormControl
                             sx={{
                               display: "flex",
                               flexDirection: "row",
                               alignItems: "center",
                             }}
-                          >
+                          > */}
                             {/* <TextField
                                 id="outlined-basic"
                                 label="ID"
@@ -5032,7 +5144,7 @@ const Editrequests = () => {
                                 <span>
                                   Purpose
                                   <span
-                                    style={{ color: "red", fontWeight: "bold" }}
+                                    style={{ color: "red" }}
                                   >
                                     *
                                   </span>
@@ -5054,8 +5166,13 @@ const Editrequests = () => {
                               }}
                               url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                             />
+                             {touched.overhead && errors.overhead && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {errors.overhead}
+                        </div>
+                      )}
                           </FormControl>
-                        </FormControl>
+                        {/* </FormControl> */}
 
                         <TextField
                           name="amount"
@@ -5077,6 +5194,7 @@ const Editrequests = () => {
                           error={!!touched.amount && !!errors.amount}
                           helperText={touched.amount && errors.amount}
                           autoFocus
+                          required
                         />
                         {/* <TextField
                             name="comments"
@@ -5175,6 +5293,7 @@ const Editrequests = () => {
                             value={values.Status}
                             onBlur={handleBlur}
                             onChange={handleChange}
+                            required
                             error={!!touched.Status && !!errors.Status}
                             helperText={touched.Status && errors.Status}
                           // sx={{
@@ -5203,8 +5322,28 @@ const Editrequests = () => {
 
                   >
                     {funMode !== "A" && (
+
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, saladdata.RecordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, saladdata.RecordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "")
+                        }} />
                       </Box>
                     )}
 
@@ -5266,6 +5405,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -5285,6 +5425,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -5297,6 +5438,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            file.filename,
+                                            saladdata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -5335,6 +5491,7 @@ const Editrequests = () => {
             <Formik
               initialValues={ondutyInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   ondutyFNsave(values, resetForm, false);
@@ -5594,46 +5751,53 @@ const Editrequests = () => {
                             helperText={touched.ProName && errors.ProName}
                             url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           /> */}
-                        <Productautocomplete
-                          name="ProName"
-                          label={
-                            <span>
-                              Project
-                              <span
-                                style={{ color: "red", fontWeight: "bold" }}
-                              >
-                                *
+                        <FormControl>
+                          <Productautocomplete
+                            name="ProName"
+                            label={
+                              <span>
+                                Project
+                                <span
+                                  style={{ color: "red" }}
+                                >
+                                  *
+                                </span>
                               </span>
-                            </span>
-                          }
-                          variant="outlined"
-                          id="ProName"
-                          value={selectODLookupData}
-                          // value={values.ProName}
-                          onChange={async (newValue) => {
-                            setFieldValue("ProName", newValue);
+                            }
+                            variant="outlined"
+                            id="ProName"
+                            value={selectODLookupData}
+                            // value={values.ProName}
+                            onChange={async (newValue) => {
+                              setFieldValue("ProName", newValue);
 
-                            console.log(
-                              selectODLookupData,
-                              "--selectODLookupData leavetype"
-                            );
+                              console.log(
+                                selectODLookupData,
+                                "--selectODLookupData leavetype"
+                              );
 
 
-                            console.log(
-                              newValue.RecordID,
-                              "pROJECT RecordID"
-                            );
+                              console.log(
+                                newValue.RecordID,
+                                "pROJECT RecordID"
+                              );
 
-                            setselectODLookupData({
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
+                              setselectODLookupData({
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
 
-                            });
-                          }}
-                          // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        />
+                              });
+                            }}
+                            // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          />
+                          {touched.ProName && errors.ProName && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                              {errors.ProName}
+                            </div>
+                          )}
+                        </FormControl>
                         {/* </Box> */}
                         <TextField
                           name="location"
@@ -5757,7 +5921,26 @@ const Editrequests = () => {
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
                         {funMode !== "A" && (
                           <Box display="flex" alignItems="center" gap={1}>
-                            <FileUploadIconButton onFileSelect={(file) => fileUpload(file, ondutydata.RecordID)} />
+                            <TextField
+                              name="purpose"
+                              type="text"
+                              id="purpose"
+                              label="Purpose"
+                              variant="standard"
+                              focused
+                              value={values.purpose}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.purpose && !!errors.purpose}
+                              helperText={touched.purpose && errors.purpose}
+                              sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                              InputLabelProps={{ shrink: true }}
+
+                            />
+                            <FileUploadIconButton onFileSelect={(file) => {
+                              fileUpload(file, ondutydata.RecordID, "upload", "", values.purpose)
+                              setFieldValue("purpose", "");
+                            }} />
                           </Box>
                         )}
 
@@ -5836,6 +6019,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -5855,6 +6039,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -5867,6 +6052,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            file.filename,
+                                            ondutydata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -5907,6 +6107,7 @@ const Editrequests = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -6067,6 +6268,7 @@ const Editrequests = () => {
                                     <TableCell width={20}><strong>S.No</strong></TableCell>
                                     <TableCell><strong>Uploaded Date</strong></TableCell>
                                     <TableCell ><strong>Filename</strong></TableCell>
+                                    <TableCell ><strong>Purpose</strong></TableCell>
                                     <TableCell ><strong>Source</strong></TableCell>
                                     <TableCell><strong>View</strong></TableCell>
 
@@ -6086,6 +6288,7 @@ const Editrequests = () => {
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{file.uploadedDate}</TableCell>
                                         <TableCell>{file.filename}</TableCell>
+                                        <TableCell>{file.id}</TableCell>
                                         <TableCell>{file.source}</TableCell>
                                         <TableCell>
                                           <Tooltip title="Open File">
@@ -6098,6 +6301,21 @@ const Editrequests = () => {
                                               size="small"
                                             >
                                               <OpenInNewIcon fontSize="small" />
+                                            </IconButton>
+                                          </Tooltip>
+                                          <Tooltip title="delete">
+                                            <IconButton
+                                              color="error"
+                                              onClick={() => fileUpload(
+                                                file.filename,
+                                                saladdata.RecordID,
+                                                "delete",
+                                                file.id,
+                                                file.purpose
+                                              )}
+                                              size="small"
+                                            >
+                                              <DeleteForeverIcon fontSize="small" />
                                             </IconButton>
                                           </Tooltip>
                                         </TableCell>
@@ -6155,6 +6373,7 @@ const Editrequests = () => {
                           error={!!touched.permissiondate && !!errors.permissiondate}
                           helperText={touched.permissiondate && errors.permissiondate}
                           sx={{ gridColumn: "span 2" }}
+                          required
                         // inputProps={{
                         //   max: new Date().toISOString().split("T")[0],
                         //   readOnly: true,
@@ -6174,6 +6393,7 @@ const Editrequests = () => {
                           onChange={handleChange}
                           label="From Time"
                           focused
+                          required
                         // inputProps={{ maxLength:20}}
                         />
                         <TextField
@@ -6189,6 +6409,7 @@ const Editrequests = () => {
                           onChange={handleChange}
                           label="To Time"
                           focused
+                          required
                         // inputProps={{ readOnly: true }}
                         />
                         <TextField
@@ -6203,7 +6424,7 @@ const Editrequests = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           sx={{ gridColumn: "span 2" }}
-                        //required
+                          required
                         />
                         <TextField
 
@@ -6321,7 +6542,28 @@ const Editrequests = () => {
                     {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, perData.recordID)} />
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <TextField
+                            name="purpose"
+                            type="text"
+                            id="purpose"
+                            label="Purpose"
+                            variant="standard"
+                            focused
+                            value={values.purpose}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.purpose && !!errors.purpose}
+                            helperText={touched.purpose && errors.purpose}
+                            sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                            InputLabelProps={{ shrink: true }}
+
+                          />
+                          <FileUploadIconButton onFileSelect={(file) => {
+                            fileUpload(file, perData.recordID, "upload", "", values.purpose)
+                            setFieldValue("purpose", "");
+                          }} />
+                        </Box>
                       </Box>
                     )}
 
@@ -6433,6 +6675,7 @@ const Editrequests = () => {
             <Formik
               initialValues={expenseinitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema3}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   expensefnSave(values, resetForm, false);
@@ -6619,6 +6862,7 @@ const Editrequests = () => {
                           error={!!touched.date && !!errors.date}
                           helperText={touched.date && errors.date}
                           autoFocus
+                          required
                         />
                         <TextField
                           name="referenceifany"
@@ -6639,7 +6883,7 @@ const Editrequests = () => {
                           autoFocus
                         />
 
-                        <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
+                        {/* <FormControl sx={{ gridColumn: "span 2", display: "flex" }}> */}
 
                           <FormControl
                             sx={{
@@ -6663,36 +6907,43 @@ const Editrequests = () => {
                                 url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
   
                               /> */}
-                            <Productautocomplete
-                              name="overhead"
-                              label={
-                                <span>
-                                  Over Head
-                                  <span
-                                    style={{ color: "red", fontWeight: "bold" }}
-                                  >
-                                    *
+                         
+                              <Productautocomplete
+                                name="overhead"
+                                label={
+                                  <span>
+                                    Over Head
+                                    <span
+                                      style={{ color: "red" }}
+                                    >
+                                      *
+                                    </span>
                                   </span>
-                                </span>
-                              }
-                              variant="outlined"
-                              id="overhead"
-                              value={expenseOHData}
-                              // value={values.overhead}
-                              onChange={(newValue) => {
+                                }
+                                variant="outlined"
+                                id="overhead"
+                                value={expenseOHData}
+                                // value={values.overhead}
+                                onChange={(newValue) => {
 
 
-                                setExpenseOHData({
-                                  RecordID: newValue.RecordID,
-                                  Code: newValue.Code,
-                                  Name: newValue.Name,
+                                  setExpenseOHData({
+                                    RecordID: newValue.RecordID,
+                                    Code: newValue.Code,
+                                    Name: newValue.Name,
 
-                                });
-                              }}
-                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
-                            />
+                                  });
+                                }}
+                                url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                              />
+                              {touched.overhead && errors.overhead && (
+                                <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                                  {errors.overhead}
+                                </div>
+                              )}
+                           
                           </FormControl>
-                        </FormControl>
+                        {/* </FormControl> */}
 
                         <TextField
                           name="amount"
@@ -6713,6 +6964,7 @@ const Editrequests = () => {
                               max: 24,
                             },
                           }}
+                          required
                           autoFocus
                         />
                         {/* <TextField
@@ -6808,6 +7060,7 @@ const Editrequests = () => {
                           onChange={handleChange}
                           required
                           focused
+                          
                           variant="standard"
                         >
                           {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
@@ -6937,7 +7190,26 @@ const Editrequests = () => {
                         </Button> */}
                         {funMode !== "A" && (
                           <Box display="flex" alignItems="center" gap={1}>
-                            <FileUploadIconButton onFileSelect={(file) => fileUpload(file, expensedata.RecordID)} />
+                            <TextField
+                              name="purpose"
+                              type="text"
+                              id="purpose"
+                              label="Purpose"
+                              variant="standard"
+                              focused
+                              value={values.purpose}
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              error={!!touched.purpose && !!errors.purpose}
+                              helperText={touched.purpose && errors.purpose}
+                              sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                              InputLabelProps={{ shrink: true }}
+
+                            />
+                            <FileUploadIconButton onFileSelect={(file) => {
+                              fileUpload(file, expensedata.RecordID, "upload", "", values.purpose)
+                              setFieldValue("purpose", "")
+                            }} />
                           </Box>
                         )}
 
@@ -7001,6 +7273,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -7020,6 +7293,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -7032,6 +7306,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            file.filename,
+                                            expensedata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>
@@ -7241,6 +7530,7 @@ const Editrequests = () => {
                         value={values.MonthDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        required
                         error={!!touched.MonthDate && !!errors.MonthDate}
                         helperText={touched.MonthDate && errors.MonthDate}
                       //sx={{ gridColumn: "span 2" }}
@@ -7257,6 +7547,7 @@ const Editrequests = () => {
                         // inputFormat="DD-MM-YYYY"
                         value={values.CheckInDate}
                         onBlur={handleBlur}
+                        required
                         //onChange={handleChange}
                         // onChange={(e) => {
                         //   setFieldValue("CheckInDate", e.target.value);
@@ -7442,6 +7733,7 @@ const Editrequests = () => {
                           value={values.Status}
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          required
                         >
                           <MenuItem value="P">Present</MenuItem>
                           <MenuItem value="A">Absent</MenuItem>
@@ -7533,7 +7825,26 @@ const Editrequests = () => {
                   >
                     {funMode !== "A" && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton onFileSelect={(file) => fileUpload(file, regdata.RecordID)} />
+                        <TextField
+                          name="purpose"
+                          type="text"
+                          id="purpose"
+                          label="Purpose"
+                          variant="standard"
+                          focused
+                          value={values.purpose}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.purpose && !!errors.purpose}
+                          helperText={touched.purpose && errors.purpose}
+                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                          InputLabelProps={{ shrink: true }}
+
+                        />
+                        <FileUploadIconButton onFileSelect={(file) => {
+                          fileUpload(file, regdata.RecordID, "upload", "", values.purpose)
+                          setFieldValue("purpose", "")
+                        }} />
                       </Box>
                     )}
 
@@ -7621,6 +7932,7 @@ const Editrequests = () => {
                                 <TableCell width={20}><strong>S.No</strong></TableCell>
                                 <TableCell><strong>Uploaded Date</strong></TableCell>
                                 <TableCell ><strong>Filename</strong></TableCell>
+                                <TableCell ><strong>Purpose</strong></TableCell>
                                 <TableCell ><strong>Source</strong></TableCell>
                                 <TableCell><strong>View</strong></TableCell>
 
@@ -7640,6 +7952,7 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
+                                    <TableCell>{file.id}</TableCell>
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
@@ -7652,6 +7965,21 @@ const Editrequests = () => {
                                           size="small"
                                         >
                                           <OpenInNewIcon fontSize="small" />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="delete">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() => fileUpload(
+                                            file.filename,
+                                            regdata.RecordID,
+                                            "delete",
+                                            file.id,
+                                            file.purpose
+                                          )}
+                                          size="small"
+                                        >
+                                          <DeleteForeverIcon fontSize="small" />
                                         </IconButton>
                                       </Tooltip>
                                     </TableCell>

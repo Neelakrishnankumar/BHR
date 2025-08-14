@@ -255,7 +255,7 @@ const Holidaylist = () => {
                     value={values.oscc}
                     onBlur={handleBlur}
                     onChange={handleChange}
-
+                    required
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white
@@ -275,7 +275,7 @@ const Holidaylist = () => {
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
-
+                    required
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white

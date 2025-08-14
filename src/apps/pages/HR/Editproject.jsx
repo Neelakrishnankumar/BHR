@@ -429,6 +429,7 @@ import {
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
+import * as Yup from "yup";
 import React, { useState, useEffect, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -467,7 +468,12 @@ const Editproject = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
   // *************** INITIALVALUE  *************** //
-
+  const validationSchema = Yup.object().shape({
+    incharge: Yup.object()
+      .nullable()
+      .required("Owner is required"),
+  });
+  
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -487,8 +493,8 @@ const Editproject = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "softdelete"
-        : "update";
+          ? "softdelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -504,7 +510,7 @@ const Editproject = () => {
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
       SortOrder: values.sortorder || 0,
-      CurrentStatus: values.CurrentStatus || "",
+      CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       Finyear,
       CompanyID,
@@ -591,7 +597,7 @@ const Editproject = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ DesignationSchema}
+              validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -633,7 +639,7 @@ const Editproject = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -665,11 +671,17 @@ const Editproject = () => {
                     onChange={handleChange}
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
+                    required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
+                  <FormControl>
                   <Productautocomplete
                     name="incharge"
-                    label="Incharge"
+                     label={
+                            <>
+                              Owner<span style={{ color: "red" }}> * </span>
+                            </>
+                          }
                     id="incharge"
                     value={values.incharge}
                     onChange={async (newValue) => {
@@ -678,6 +690,64 @@ const Editproject = () => {
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
+                   {touched.incharge && errors.incharge && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                          {errors.incharge}
+                        </div>
+                      )}
+                      </FormControl>
+                  {/* <FormControl
+                    focused
+                    variant="standard"
+                    sx={{ backgroundColor: "#f5f5f5" }}
+                  >
+                    <InputLabel id="status">Current Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="currentstatus"
+                      name="currentstatus"
+                      value={values.currentstatus}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="Current">Current</MenuItem>
+                      <MenuItem value="Completed">Completed</MenuItem>
+                      <MenuItem value="Old">Old</MenuItem>
+
+                    </Select>
+                  </FormControl> */}
+                  <FormControl
+                    focused
+                    variant="standard"
+                  // sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="CurrentStatus">Status<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
+                    <Select
+                      labelId="demo"
+                      id="CurrentStatus"
+                      name="CurrentStatus"
+                      required
+                      value={
+                        mode == "A" ? "CU" : values.CurrentStatus
+                      }
+                      // value={values.CurrentStatus}
+                      onBlur={handleBlur}
+                      onChange={(e) => {
+                        setFieldValue("CurrentStatus", e.target.value)
+                        if (e.target.value == "CU") {
+
+                          setFieldValue("disable", false)
+                        } else {
+                          setFieldValue("disable", true)
+
+                        }
+                      }}
+                    >
+                      <MenuItem value="CU">Current</MenuItem>
+                      <MenuItem value="CO">Completed</MenuItem>
+                      <MenuItem value="H">Hold</MenuItem>
+                    </Select>
+                  </FormControl>
                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
@@ -708,34 +778,7 @@ const Editproject = () => {
                       Service & Maintenance
                     </FormLabel>
                   </Box>
-                  <FormControl
-                    focused
-                    variant="standard"
-                    // sx={{ gridColumn: "span 2" }}
-                  >
-                    <InputLabel id="CurrentStatus">Status</InputLabel>
-                    <Select
-                      labelId="demo"
-                      id="CurrentStatus"
-                      name="CurrentStatus"
-                      value={values.CurrentStatus}
-                      onBlur={handleBlur}
-                      onChange={(e) =>{
-                        setFieldValue("CurrentStatus",e.target.value)
-                        if(e.target.value == "CU"){
 
-                          setFieldValue("disable",false)
-                        }else{
-                          setFieldValue("disable",true)
-
-                        }
-                      }}
-                    >
-                      <MenuItem value="CU">Current</MenuItem>
-                      <MenuItem value="CO">Completed</MenuItem>
-                      <MenuItem value="H">Hold</MenuItem>
-                    </Select>
-                  </FormControl>
                   <TextField
                     name="sortorder"
                     type="number"
@@ -761,7 +804,7 @@ const Editproject = () => {
                         .slice(0, 8);
                     }}
                   />
-                 
+
                   <Box>
                     <Field
                       //  size="small"
@@ -807,13 +850,13 @@ const Editproject = () => {
                       Delete
                     </Button>
                   ) : // <Button
-                  //   color="error"
-                  //   variant="contained"
-                  //   disabled={true}
-                  // >
-                  //   Delete
-                  // </Button>
-                  null}
+                    //   color="error"
+                    //   variant="contained"
+                    //   disabled={true}
+                    // >
+                    //   Delete
+                    // </Button>
+                    null}
                   <Button
                     color="warning"
                     variant="contained"

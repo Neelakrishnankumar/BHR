@@ -284,6 +284,7 @@ const Editdesignation = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       }
                     }}
+                    required
                     autoFocus= {CompanyAutoCode == "Y"}
                   />
                   <TextField
@@ -303,6 +304,7 @@ const Editdesignation = () => {
                         style: { textAlign: "right" },
                       },
                     }}
+                    required
                     error={!!touched.rank && !!errors.rank}
                     helperText={touched.rank && errors.rank}
 
