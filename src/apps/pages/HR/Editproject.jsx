@@ -436,7 +436,7 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
-import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
@@ -675,7 +675,7 @@ const Editproject = () => {
                     autoFocus={CompanyAutoCode == "Y"}
                   />
                   <FormControl>
-                  <Productautocomplete
+                  <CheckinAutocomplete
                     name="incharge"
                      label={
                             <>
@@ -687,14 +687,16 @@ const Editproject = () => {
                     onChange={async (newValue) => {
                       setFieldValue("incharge", newValue);
                     }}
+                     error={!!touched.incharge && !!errors.incharge}
+                      helperText={touched.incharge && errors.incharge}
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
-                   {touched.incharge && errors.incharge && (
+                   {/* {touched.incharge && errors.incharge && (
                         <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                           {errors.incharge}
                         </div>
-                      )}
+                      )} */}
                       </FormControl>
                   {/* <FormControl
                     focused
@@ -748,7 +750,7 @@ const Editproject = () => {
                       <MenuItem value="H">Hold</MenuItem>
                     </Select>
                   </FormControl>
-                  <Box>
+                  <Box >
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
@@ -759,7 +761,9 @@ const Editproject = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                     />
-                    <FormLabel focused={false} htmlFor="Routine" sx={{ ml: 1 }}>
+                    <FormLabel focused={false} 
+                    // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
+                    >
                       Routine Tasks
                     </FormLabel>
                     <Field
@@ -772,8 +776,8 @@ const Editproject = () => {
                     />
                     <FormLabel
                       focused={false}
-                      htmlFor="ServiceMaintenance"
-                      sx={{ ml: 1 }}
+                      // htmlFor="ServiceMaintenance"
+                      // sx={{ ml: 1,marginLeft:0}}
                     >
                       Service & Maintenance
                     </FormLabel>
@@ -804,8 +808,7 @@ const Editproject = () => {
                         .slice(0, 8);
                     }}
                   />
-
-                  <Box>
+                     <Box>
                     <Field
                       //  size="small"
                       type="checkbox"
@@ -819,7 +822,9 @@ const Editproject = () => {
 
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
+                 
                 </Box>
+                
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton

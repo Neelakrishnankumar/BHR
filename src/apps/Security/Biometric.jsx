@@ -19,10 +19,15 @@ import {
     InputBase,
     InputAdornment,
     Avatar,
-    Tooltip
+    Tooltip,
+     Breadcrumbs
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
+import Swal from "sweetalert2";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import ResetTvIcon from "@mui/icons-material/ResetTv";
 import store from "../..";
 import { fileUpload, imageUpload } from "../../store/reducers/Imguploadreducer";
 import Resizer from "react-image-file-resizer";
@@ -47,6 +52,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import { useProSidebar } from "react-pro-sidebar";
 
 const Biometricconfiguration = () => {
     const theme = useTheme();
@@ -58,6 +64,7 @@ const Biometricconfiguration = () => {
     var recID = params.id;
     var mode = params.Mode;
     var accessID = params.accessID;
+    const { toggleSidebar, broken, rtl } = useProSidebar();
     const Subscriptioncode = sessionStorage.getItem("SubscriptionCode");
     const YearFlag = sessionStorage.getItem("YearFlag");
     const CompanyID = sessionStorage.getItem("compID");
@@ -155,15 +162,86 @@ const Biometricconfiguration = () => {
             toast.error(response.payload.Msg);
         }
     };
+const fnLogOut = (props) => {
+    //   if(Object.keys(ref.current.touched).length === 0){
+    //     if(props === 'Logout'){
+    //       navigate("/")}
+    //       if(props === 'Close'){
+    //         navigate("/Apps/TR022/Bank Master")
+    //       }
 
+    //       return
+    //  }
+    Swal.fire({
+      title: `Do you want ${props}?`,
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
+        }
+        if (props === "Close") {
+          //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+          navigate("/Apps/HR");
+        }
+      } else {
+        return;
+      }
+    });
+  };
 
     return (
         <React.Fragment>
-            <Box m="10px">
+            {/* <Box m="10px">
                 <Typography variant="h2" fontSize="1.2rem" fontWeight="bold" marginBottom={3}>
                     Biometric Integration
-                </Typography>
-                <Paper elevation={3} sx={{ margin: "1px" }}>
+                </Typography> */}
+                <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+                              <Box display="flex" justifyContent="space-between" p={2}>
+                                <Box display="flex" borderRadius="3px" alignItems="center">
+                                  {broken && !rtl && (
+                                    <IconButton onClick={() => toggleSidebar()}>
+                                      <MenuOutlinedIcon />
+                                    </IconButton>
+                                  )}
+                                  <Breadcrumbs
+                                  maxItems={3}
+                                  aria-label="breadcrumb"
+                                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                                >
+                                  
+                                  <Typography
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    variant="h5"
+                                   
+                                  >
+                                    Biometric Integration
+                                  </Typography>
+                                 
+                                </Breadcrumbs>
+                                </Box>
+                      
+                                <Box display="flex">
+                                  <Tooltip title="Close">
+                                    <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                      <ResetTvIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip title="Logout">
+                                    <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                      <LogoutOutlinedIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Box>
+                              </Box>
+                            </Paper>
+                <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
                         initialValues={initialvalues}
                         onSubmit={(values, setSubmitting, resetForm) => {
@@ -393,7 +471,7 @@ const Biometricconfiguration = () => {
                         )}
                     </Formik>
                 </Paper>
-            </Box>
+            {/* </Box> */}
         </React.Fragment>
     );
 };

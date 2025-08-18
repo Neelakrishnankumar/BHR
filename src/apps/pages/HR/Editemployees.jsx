@@ -780,7 +780,6 @@ const Editemployee = () => {
     }
 
     console.log(values);
-
     var saveData = "";
     var type = "";
 
@@ -3977,7 +3976,7 @@ const Editemployee = () => {
                       <Formik
                         initialValues={supprocessInitialvalues}
                         enableReinitialize={iniProcess}
-                        validationSchema={basicSchema}
+                        // validationSchema={basicSchema}
                         onSubmit={async (values) => {
                           alert("submit", values); // <--- this is being triggered!
                         }}
@@ -4035,6 +4034,9 @@ const Editemployee = () => {
                                   name="Skills"
                                   label="Skills"
                                   required
+                                  onInvalid={(e) => {
+                                    e.target.setCustomValidity("Please fill the Skills");
+                                  }}
                                   onBlur={handleBlur}
                                   onChange={handleChange}
                                   error={!!touched.Skills && !!errors.Skills}
@@ -4560,12 +4562,13 @@ const Editemployee = () => {
 
                     <Button
                       onClick={() => {
-                        if (funMode !== "E") {
-                          toast.warning("Select a function to delete.");
-                          return;
-                        }
+                        // if (funMode !== "E") {
+                        //   toast.warning("Select a function to delete.");
+                        //   return;
+                        // }
                         empFunctionFn(values, resetForm, true);
                       }}
+                      disabled={funMode=="A"}
                       color="error"
                       variant="contained"
                     >
@@ -5331,6 +5334,7 @@ const Editemployee = () => {
                         onClick={() =>
                           mgrFunctionFn(values, resetForm, true, setFieldValue)
                         }
+                        disabled={funMode=="A"}
                         color="error"
                         variant="contained"
                       >
