@@ -5,6 +5,7 @@ import Login from "./apps/Security/Login";
 import { Toaster } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import SubscriptionScreen from "./apps/Security/SubscriptionRenewal";
+import UnderMaintenance from "./apps/pages/UnderMaintanance";
 
 
 const App = () => {
@@ -16,7 +17,8 @@ const App = () => {
     <React.Fragment>
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
-        <Route path="/*" element={<Login />} />
+              <Route path="/*" element={<UnderMaintenance />} />
+        {/* <Route path="/*" element={<Login />} /> */}
         <Route path="/Apps/*" element={<Apps />} />
         <Route path="/SubscriptionScreen" element={<SubscriptionScreen/>} />
       </Routes>
