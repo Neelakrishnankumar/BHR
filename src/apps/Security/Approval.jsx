@@ -20,9 +20,9 @@ import {
   InputAdornment,
   Avatar,
   Tooltip,
+  Breadcrumbs
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
 import store from "../..";
 import { fileUpload, imageUpload } from "../../store/reducers/Imguploadreducer";
 import Resizer from "react-image-file-resizer";
@@ -51,6 +51,12 @@ import {
   SettingspostData,
   setttingsApprovalsData,
 } from "../../store/reducers/Formapireducer";
+import Swal from "sweetalert2";
+import { useProSidebar } from "react-pro-sidebar";
+import ResetTvIcon from "@mui/icons-material/ResetTv";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
@@ -65,6 +71,7 @@ const Approval = () => {
   const dispatch = useDispatch();
   var recID = params.id;
   console.log(recID, "--recID");
+  const { toggleSidebar, broken, rtl } = useProSidebar();
 
   var mode = params.Mode;
   var accessID = params.accessID;
@@ -209,10 +216,41 @@ const Approval = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const fnLogOut = (props) => {
+    //   if(Object.keys(ref.current.touched).length === 0){
+    //     if(props === 'Logout'){
+    //       navigate("/")}
+    //       if(props === 'Close'){
+    //         navigate("/Apps/TR022/Bank Master")
+    //       }
 
+    //       return
+    //  }
+    Swal.fire({
+      title: `Do you want ${props}?`,
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
+        }
+        if (props === "Close") {
+          //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+          navigate("/Apps/HR");
+        }
+      } else {
+        return;
+      }
+    });
+  };
   return (
     <React.Fragment>
-      <Box m="10px">
+      {/* <Box m="10px">
         <Typography
           variant="h2"
           fontSize="1.2rem"
@@ -220,564 +258,604 @@ const Approval = () => {
           marginBottom={3}
         >
           Approval
-        </Typography>
-        <Paper elevation={3} sx={{ margin: "1px" }}>
-          <Formik
-            initialValues={initialvalues}
-            onSubmit={(values, setSubmitting, resetForm) => {
-                console.log(values,'8888888888');
-                
-              setTimeout(() => {
-                fnSave(values);
-                // resetForm(); // Reset form after submission
-              }, 100);
-            }}
-            // onSubmit={(values, setSubmitting) => {
-            //     setTimeout(() => {
-            //         fnSave(values);
-            //     }, 100);
-            // }}
-            // validationSchema={Settingsvalidation}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldTouched,
-              resetForm,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} /> */}
-                {/* <Typography variant="h5" padding={1}>Biometric Integration:</Typography> */}
+        </Typography> */}
+      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            {broken && !rtl && (
+              <IconButton onClick={() => toggleSidebar()}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            )}
+            <Breadcrumbs
+              maxItems={3}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+
+              <Typography
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                variant="h5"
+
+              >
+                Approval
+              </Typography>
+
+            </Breadcrumbs>
+          </Box>
+
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
+      <Paper elevation={3} sx={{ margin: "10px" }}>
+        <Formik
+          initialValues={initialvalues}
+          onSubmit={(values, setSubmitting, resetForm) => {
+            console.log(values, '8888888888');
+
+            setTimeout(() => {
+              fnSave(values);
+              // resetForm(); // Reset form after submission
+            }, 100);
+          }}
+          // onSubmit={(values, setSubmitting) => {
+          //     setTimeout(() => {
+          //         fnSave(values);
+          //     }, 100);
+          // }}
+          // validationSchema={Settingsvalidation}
+          enableReinitialize={true}
+        >
+          {({
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            isSubmitting,
+            values,
+            handleSubmit,
+            setFieldTouched,
+            resetForm,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} /> */}
+              {/* <Typography variant="h5" padding={1}>Biometric Integration:</Typography> */}
+
+              <Box
+                display="grid"
+                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                gap={formGap}
+                padding={1}
+                sx={{
+                  "& > div": {
+                    gridColumn: isNonMobile ? undefined : "span 4",
+                  },
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  1. Permission
+                </Typography>
 
                 <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  gap={formGap}
-                  padding={1}
                   sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    1. Permission
-                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="hrPermission"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
 
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="hrPermission"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="financePermission"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
 
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="financePermission"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="projectPermission"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
 
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="projectPermission"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="facilityPermission"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    2. Leave
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="Leavehr"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="Leavefinance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="Leaveproject"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="Leavefacility"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    3. On Duty
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="ondutyhr"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="ondutyfinance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="ondutyproject"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="ondutyfacility"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    4. Over Time
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="overtimehr"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="overtimefinance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="overtimeproject"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="overtimefacility"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    5. Regularization
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="reghr"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="regfinance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="regproject"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="regfacility"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    6. Expense
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="expensehr"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="expensefinance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="expenseproject"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="expensefacility"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
-
-                  <Typography
-                    variant="h6"
-                    sx={{ gridColumn: "span 4", fontWeight: "bold" }}
-                  >
-                    7. Salary Advance
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      //   gap: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="saladvhr"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="HR Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="saladvfinance"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Finance Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="saladvproject"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Project Manager"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Field
-                          as={Checkbox}
-                          type="checkbox"
-                          name="saladvfacility"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      }
-                      label="Facility Manager"
-                    />
-                  </Box>
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="facilityPermission"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
                 </Box>
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  2. Leave
+                </Typography>
 
                 <Box
-                  display="flex"
-                  padding={1}
-                  justifyContent="end"
-                  // mt="10px"
-                  gap="20px"
+                  sx={{
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
+                  }}
                 >
-                  <LoadingButton
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    loading={isLoading}
-                 
-                  >
-                    Save
-                  </LoadingButton>
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="Leavehr"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
 
-                  <Button
-                    color={"warning"}
-                    variant="contained"
-                    onClick={() => resetForm()}
-                    // onClick={() => {
-                    //   navigate("/Apps/TR213/LeaveType");
-                    // }}
-                  >
-                    Cancel
-                  </Button>
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="Leavefinance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="Leaveproject"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="Leavefacility"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
                 </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
-      </Box>
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  3. On Duty
+                </Typography>
+
+                <Box
+                  sx={{
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="ondutyhr"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="ondutyfinance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="ondutyproject"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="ondutyfacility"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
+                </Box>
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  4. Over Time
+                </Typography>
+
+                <Box
+                  sx={{
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="overtimehr"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="overtimefinance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="overtimeproject"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="overtimefacility"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
+                </Box>
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  5. Regularization
+                </Typography>
+
+                <Box
+                  sx={{
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="reghr"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="regfinance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="regproject"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="regfacility"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
+                </Box>
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  6. Expense
+                </Typography>
+
+                <Box
+                  sx={{
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="expensehr"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="expensefinance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="expenseproject"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="expensefacility"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
+                </Box>
+
+                <Typography
+                  variant="h6"
+                  sx={{ gridColumn: "span 4", fontWeight: "bold" }}
+                >
+                  7. Salary Advance
+                </Typography>
+
+                <Box
+                  sx={{
+                    gridColumn: "span 2",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    //   gap: 2,
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="saladvhr"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="HR Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="saladvfinance"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Finance Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="saladvproject"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Project Manager"
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Field
+                        as={Checkbox}
+                        type="checkbox"
+                        name="saladvfacility"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                    label="Facility Manager"
+                  />
+                </Box>
+              </Box>
+
+              <Box
+                display="flex"
+                padding={1}
+                justifyContent="end"
+                // mt="10px"
+                gap="20px"
+              >
+                <LoadingButton
+                  color="secondary"
+                  variant="contained"
+                  type="submit"
+                  loading={isLoading}
+
+                >
+                  Save
+                </LoadingButton>
+
+                <Button
+                  color={"warning"}
+                  variant="contained"
+                  onClick={() => resetForm()}
+                // onClick={() => {
+                //   navigate("/Apps/TR213/LeaveType");
+                // }}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </form>
+          )}
+        </Formik>
+      </Paper>
+      {/* </Box> */}
     </React.Fragment>
   );
 };

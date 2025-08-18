@@ -26,6 +26,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
+import * as Yup from "yup";
 import {
   fetchApidata,
   getFetchData,
@@ -41,7 +42,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import Popup from "../popup";
 import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/global/utils";
-import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 // import CryptoJS from "crypto-js";
 const Editcheckin = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -75,6 +76,19 @@ const Editcheckin = () => {
     borderRadius: "5px",
     backgroundColor: "#EDEDED",
   };
+
+  const validationSchema = Yup.object().shape({
+      employee: Yup.object()
+        .nullable()
+        .required("Please fill the Employee"),
+      location: Yup.object()
+        .nullable()
+        .required("Please fill the Location"),
+      gate: Yup.object()
+        .nullable()
+        .required("Please fill the Gate"),
+     
+    });
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split('T')[0];
   const InitialValue = {
@@ -324,7 +338,7 @@ const Editcheckin = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ HsnSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -359,9 +373,13 @@ const Editcheckin = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Productautocomplete
+                    <CheckinAutocomplete
                       name="employee"
-                      label="Employee"
+                      label={
+                        <span>
+                          Employee <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        </span>
+                      }
                       id="employee"
                       value={values.employee}
                       onChange={(newValue) => {
@@ -370,10 +388,13 @@ const Editcheckin = () => {
                         console.log(newValue.RecordID, "recid");
 
                       }}
-                      
+                      error={!!touched.employee && !!errors.employee}
+                      helperText={touched.employee && errors.employee}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
+                   
+                  
                   <FormControl
                     sx={{
                       
@@ -382,9 +403,13 @@ const Editcheckin = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Productautocomplete
+                    <CheckinAutocomplete
                       name="location"
-                      label="Location"
+                      label={
+                        <span>
+                          Location <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        </span>
+                      }
                       id="location"
                       value={values.location}
                       onChange={(newValue) => {
@@ -393,11 +418,19 @@ const Editcheckin = () => {
                         console.log(newValue.RecordID, "recid");
 
                       }}
-                      
+                       error={!!touched.location && !!errors.location}
+                      helperText={touched.location && errors.location}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
                     />
+                   
                   </FormControl>
-             
+                   {/* {touched.location && errors.location && (
+                      <div style={{ color: "red", fontSize: "9px", marginTop: "1px" }}>
+                        {errors.location}
+                      </div>
+                    )} */}
+                  
+            
                    <FormControl
                     sx={{
                      
@@ -406,15 +439,22 @@ const Editcheckin = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Productautocomplete
+                    <CheckinAutocomplete
                       name="gate"
-                      label="Gate"
+                       label={
+                        <span>
+                          Gate <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        </span>
+                      }
                       id="gate"
                       value={values.gate}
                       onChange={(newValue) => {
                         setFieldValue("gate", newValue)
 
                       }}
+
+                      error={!!touched.gate && !!errors.gate}
+                      helperText={touched.gate && errors.gate}
                       //  onChange={handleSelectionFunctionname}
                       // defaultValue={selectedFunctionName}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
@@ -422,6 +462,7 @@ const Editcheckin = () => {
 
                     />
                   </FormControl>
+                 
                   <TextField
                     name="date"
                     type="date"
@@ -471,6 +512,7 @@ const Editcheckin = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
+                    
                     sx={{  background: "#f5f5f5" }}
                   />
                   <TextField
