@@ -925,18 +925,18 @@ const Editemployee = () => {
   let VISIBLE_FIELDS;
 
   if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "NextRenewalRequiredDate", "Description", "Category", "action"];
+    VISIBLE_FIELDS = ["slno", "NextRenewalRequiredDate", "Description", "Category", "action"];
   } else if (show == "1") {
-    VISIBLE_FIELDS = ["SLNO", "Skills", "Comments", "action"];
+    VISIBLE_FIELDS = ["slno", "Skills", "Comments", "action"];
   } else if (show == "3") {
-    VISIBLE_FIELDS = ["SLNO", "Manager", "action"];
+    VISIBLE_FIELDS = ["slno", "Manager", "action"];
   } else if (show == "2") {
-    VISIBLE_FIELDS = ["SLNO", "Functions", "action"];
+    VISIBLE_FIELDS = ["slno", "Functions", "action"];
   } else if (show == "7") {
-    VISIBLE_FIELDS = ["SLNO", "ItemNumber", "ItemName", "action"];
+    VISIBLE_FIELDS = ["slno", "ItemNumber", "ItemName", "action"];
   } else if (show == "8") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       //"VendorCode",
       //"VendorName",
       "Vendors",
@@ -946,7 +946,7 @@ const Editemployee = () => {
     ];
   } else if (show == "11") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "VendorCode",
       "VendorName",
       "BillingUnits",
@@ -955,7 +955,7 @@ const Editemployee = () => {
     ];
   } else if (show == "10") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "LeavePart",
       "AvailDays",
       "EligibleDays",
@@ -963,7 +963,7 @@ const Editemployee = () => {
     ];
   } else {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "EmployeeCode",
       "EmployeeName",
       "DesignationCode",
@@ -972,13 +972,37 @@ const Editemployee = () => {
     ];
   }
 
-  const columns = React.useMemo(
-    () =>
-      explorelistViewcolumn.filter((column) =>
-        VISIBLE_FIELDS.includes(column.field)
-      ),
-    [explorelistViewcolumn]
-  );
+  // const columns = React.useMemo(
+  //   () =>
+  //     explorelistViewcolumn.filter((column) =>
+  //       VISIBLE_FIELDS.includes(column.field)
+  //     ),
+  //   [explorelistViewcolumn]
+  // );
+  const columns = React.useMemo(() => {
+   
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+      };
+
+     
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
 
   // **********Grid header function************
   const [rowCount, setRowCount] = useState(0);

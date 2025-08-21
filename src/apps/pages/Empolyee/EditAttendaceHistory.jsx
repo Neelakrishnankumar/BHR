@@ -127,7 +127,16 @@ const EditAttendanceHistory = () => {
   }
 
   const AttColumn = [
-    { field: "SLNO", headerName: "SL#", width: 5 },
+    // { field: "SLNO", headerName: "SL#", width: 5 },
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+    },
     { field: "Name", headerName: "Employee", width: 150 },
     { field: "Day1", headerName: "1", width: 5 },
     { field: "Day2", headerName: "2", width: 5 },
@@ -472,9 +481,9 @@ const EditAttendanceHistory = () => {
                         />
                       }
                       fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
-                       style={{ color: "#d32f2f", cursor: "pointer" }} 
+                      style={{ color: "#d32f2f", cursor: "pointer" }}
                     >
-                      
+
                       {({ loading }) =>
                         loading ? (
                           <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />

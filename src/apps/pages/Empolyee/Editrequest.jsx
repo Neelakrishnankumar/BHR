@@ -205,7 +205,7 @@ const Editrequests = () => {
     //   .nullable()
     //   .required("Project is required"),
   });
-   const validationSchema3 = Yup.object().shape({
+  const validationSchema3 = Yup.object().shape({
 
     // overhead: Yup.object()
     //   .nullable()
@@ -622,7 +622,7 @@ const Editrequests = () => {
   let VISIBLE_FIELDS;
   if (show == "2") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "LeaveTypeName",
       "LeavePart",
       "FromDate",
@@ -632,7 +632,7 @@ const Editrequests = () => {
     ];
   } else if (show == "1") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "Allowances",
       "Type",
       "value",
@@ -643,7 +643,7 @@ const Editrequests = () => {
   }
   else if (show == "8") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "FromDate",
       "ToDate",
       "LeavePart",
@@ -654,7 +654,7 @@ const Editrequests = () => {
   }
   else if (show == "9") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "Date",
       //"Name",
       "Purpose",
@@ -664,7 +664,7 @@ const Editrequests = () => {
     ];
   } else if (show == "10") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "RegularizationDate",
       "NewCheckInDate",
       "NewCheckOutDate",
@@ -674,10 +674,10 @@ const Editrequests = () => {
       "action",
     ];
   } else if (show == "6") {
-    VISIBLE_FIELDS = ["SLNO", "OtDate", "NumberOfHours", "Status", "action"];
+    VISIBLE_FIELDS = ["slno", "OtDate", "NumberOfHours", "Status", "action"];
   } else if (show == "7") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "SalaryAdvanceDate",
       //"OverHeadsCode",
       "OverHeads",
@@ -688,7 +688,7 @@ const Editrequests = () => {
   }
   else if (show == "11") {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "PermissionDate",
       //"OverHeadsCode",
       "FromTime",
@@ -700,7 +700,7 @@ const Editrequests = () => {
   }
   else {
     VISIBLE_FIELDS = [
-      "SLNO",
+      "slno",
       "Deductions",
       "Type",
       "value",
@@ -728,14 +728,37 @@ const Editrequests = () => {
     }
   };
 
-  const columns = React.useMemo(
-    () =>
-      explorelistViewcolumn.filter((column) =>
-        VISIBLE_FIELDS.includes(column.field)
-      ),
-    [explorelistViewcolumn]
-  );
+  // const columns = React.useMemo(
+  //   () =>
+  //     explorelistViewcolumn.filter((column) =>
+  //       VISIBLE_FIELDS.includes(column.field)
+  //     ),
+  //   [explorelistViewcolumn]
+  // );
+  const columns = React.useMemo(() => {
 
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+      };
+
+
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
 
 
 
@@ -1154,7 +1177,7 @@ const Editrequests = () => {
     approvedDate: "",
     permissiondate: ""
   });
-console.log(perData,"perData");
+  console.log(perData, "perData");
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
@@ -1373,7 +1396,7 @@ console.log(perData,"perData");
           leavetype: rowData.LeaveTypeID,
           EmployeeID: rowData.EmployeeID,
         });
-        console.log( rowData.LeaveTypeID,"leaveData");
+        console.log(rowData.LeaveTypeID, "leaveData");
         setPerData({
           recordID: rowData.RecordID,
           fromtime: rowData.FromTime,
@@ -1955,7 +1978,7 @@ console.log(perData,"perData");
       Status: values.Status,
       SortOrder: "1",
       Disable: "N",
-      PermissionDate:values.permissiondate,
+      PermissionDate: values.permissiondate,
       Comments: values.reason,
       Location: values.location,
       Reasons: values.reason,
@@ -2001,7 +2024,7 @@ console.log(perData,"perData");
       toast.error(response.payload.Msg);
     }
   };
-console.log( leaveData,"leaveData");
+  console.log(leaveData, "leaveData");
 
   const leaveInitialValue = {
     code: Data.Code,
@@ -3965,7 +3988,7 @@ console.log( leaveData,"leaveData");
                             <span>
                               Leave Type
                               <span
-                                style={{ color: "red", fontSize:"12" }}
+                                style={{ color: "red", fontSize: "12" }}
                               >
                                 *
                               </span>
@@ -3974,10 +3997,10 @@ console.log( leaveData,"leaveData");
                           variant="outlined"
                           id="leavetype"
                           value={selectleaveLookupData}
-                           //value={values.leavetype}
+                          //value={values.leavetype}
                           onChange={async (newValue) => {
-                             setFieldValue("leavetype", newValue);                             
-                               
+                            setFieldValue("leavetype", newValue);
+
                             if (newValue?.RecordID) {
                               await Balancedayfind(newValue.RecordID);
                             }
@@ -4007,7 +4030,7 @@ console.log( leaveData,"leaveData");
                             {errors.leavetype}
                           </div>
                         )}
-                        </FormControl>
+                      </FormControl>
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
                           {
@@ -5107,7 +5130,7 @@ console.log( leaveData,"leaveData");
                               alignItems: "center",
                             }}
                           > */}
-                            {/* <TextField
+                          {/* <TextField
                                 id="outlined-basic"
                                 label="ID"
                                 variant="standard"
@@ -5130,9 +5153,9 @@ console.log( leaveData,"leaveData");
                               >
                                 <img src="https://img.icons8.com/color/48/null/details-popup.png" />
                               </IconButton>*/}
-                            {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
+                          {/* <MoreHorizIcon onClick={()=>handleShow('CTY')} color='white' sx={{height:'30px'}} mt='15px' fontSize='medium' /> */}
 
-                            {/* <TextField
+                          {/* <TextField
                                 id="outlined-basic"
                                 label=""
                                 variant="standard"
@@ -5141,40 +5164,40 @@ console.log( leaveData,"leaveData");
                                 inputProps={{ tabIndex: "-1" }}
                                 focused
                               /> */}
-                            <Employeeautocomplete
-                              name="overhead"
-                              label={
-                                <span>
-                                  Purpose
-                                  <span
-                                    style={{ color: "red" }}
-                                  >
-                                    *
-                                  </span>
+                          <Employeeautocomplete
+                            name="overhead"
+                            label={
+                              <span>
+                                Purpose
+                                <span
+                                  style={{ color: "red" }}
+                                >
+                                  *
                                 </span>
-                              }
-                              variant="outlined"
-                              id="overhead"
-                              value={selectOHLookupData}
-                              // value={values.overhead}
-                              onChange={(newValue) => {
+                              </span>
+                            }
+                            variant="outlined"
+                            id="overhead"
+                            value={selectOHLookupData}
+                            // value={values.overhead}
+                            onChange={(newValue) => {
 
 
-                                setselectOHLookupData({
-                                  RecordID: newValue.RecordID,
-                                  Code: newValue.Code,
-                                  Name: newValue.Name,
+                              setselectOHLookupData({
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
 
-                                });
-                              }}
-                              url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
-                            />
-                             {touched.overhead && errors.overhead && (
-                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
-                          {errors.overhead}
-                        </div>
-                      )}
-                          </FormControl>
+                              });
+                            }}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                          />
+                          {touched.overhead && errors.overhead && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                              {errors.overhead}
+                            </div>
+                          )}
+                        </FormControl>
                         {/* </FormControl> */}
 
                         <TextField
@@ -6377,7 +6400,7 @@ console.log( leaveData,"leaveData");
                           helperText={touched.permissiondate && errors.permissiondate}
                           sx={{ gridColumn: "span 2" }}
                           required
-                          
+
                         // inputProps={{
                         //   max: new Date().toISOString().split("T")[0],
                         //   readOnly: true,
@@ -6889,15 +6912,15 @@ console.log( leaveData,"leaveData");
 
                         {/* <FormControl sx={{ gridColumn: "span 2", display: "flex" }}> */}
 
-                          <FormControl
-                            sx={{
-                              gridColumn: "span 2",
-                              display: "flex",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
-                          >
-                            {/* <Productautocomplete
+                        <FormControl
+                          sx={{
+                            gridColumn: "span 2",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          {/* <Productautocomplete
                                 variant="outlined"
                                 name="overhead"
                                 label="OverHead"
@@ -6911,42 +6934,42 @@ console.log( leaveData,"leaveData");
                                 url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
   
                               /> */}
-                         
-                              <Productautocomplete
-                                name="overhead"
-                                label={
-                                  <span>
-                                    Over Head
-                                    <span
-                                      style={{ color: "red" }}
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                }
-                                variant="outlined"
-                                id="overhead"
-                                value={expenseOHData}
-                                // value={values.overhead}
-                                onChange={(newValue) => {
+
+                          <Productautocomplete
+                            name="overhead"
+                            label={
+                              <span>
+                                Over Head
+                                <span
+                                  style={{ color: "red" }}
+                                >
+                                  *
+                                </span>
+                              </span>
+                            }
+                            variant="outlined"
+                            id="overhead"
+                            value={expenseOHData}
+                            // value={values.overhead}
+                            onChange={(newValue) => {
 
 
-                                  setExpenseOHData({
-                                    RecordID: newValue.RecordID,
-                                    Code: newValue.Code,
-                                    Name: newValue.Name,
+                              setExpenseOHData({
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
 
-                                  });
-                                }}
-                                url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
-                              />
-                              {touched.overhead && errors.overhead && (
-                                <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
-                                  {errors.overhead}
-                                </div>
-                              )}
-                           
-                          </FormControl>
+                              });
+                            }}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                          />
+                          {touched.overhead && errors.overhead && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                              {errors.overhead}
+                            </div>
+                          )}
+
+                        </FormControl>
                         {/* </FormControl> */}
 
                         <TextField
@@ -7064,7 +7087,7 @@ console.log( leaveData,"leaveData");
                           onChange={handleChange}
                           required
                           focused
-                          
+
                           variant="standard"
                         >
                           {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
