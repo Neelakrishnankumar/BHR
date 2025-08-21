@@ -17,8 +17,8 @@ const App = () => {
     <React.Fragment>
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
-              <Route path="/*" element={<UnderMaintenance />} />
-        {/* <Route path="/*" element={<Login />} /> */}
+              {/* <Route path="/*" element={<UnderMaintenance />} /> */}
+        <Route path="/*" element={<Login />} />
         <Route path="/Apps/*" element={<Apps />} />
         <Route path="/SubscriptionScreen" element={<SubscriptionScreen/>} />
       </Routes>
