@@ -99,7 +99,7 @@ import {
   dataGridRowHeight,
   formGap,
 } from "../../../ui-components/global/utils";
-import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Employeeautocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 import { attachmentPost } from "../../../store/reducers/LoginReducer";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import axios from "axios";
@@ -194,22 +194,22 @@ const Editrequests = () => {
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const validationSchema = Yup.object().shape({
-    leavetype: Yup.object()
-      .nullable()
-      .required("Leavetype is required"),
+    // leavetype: Yup.object()
+    //   .nullable()
+    //   .required("Leavetype is required"),
 
   });
   const validationSchema2 = Yup.object().shape({
 
-    ProName: Yup.object()
-      .nullable()
-      .required("Project is required"),
+    // ProName: Yup.object()
+    //   .nullable()
+    //   .required("Project is required"),
   });
    const validationSchema3 = Yup.object().shape({
 
-    overhead: Yup.object()
-      .nullable()
-      .required("Overhead is required"),
+    // overhead: Yup.object()
+    //   .nullable()
+    //   .required("Overhead is required"),
   });
   const handleButtonClick = (params) => {
     const rowData = {
@@ -1154,7 +1154,7 @@ const Editrequests = () => {
     approvedDate: "",
     permissiondate: ""
   });
-
+console.log(perData,"perData");
   const [allDecData, setAllDecData] = useState({
     recordID: "",
     value: "",
@@ -1373,6 +1373,7 @@ const Editrequests = () => {
           leavetype: rowData.LeaveTypeID,
           EmployeeID: rowData.EmployeeID,
         });
+        console.log( rowData.LeaveTypeID,"leaveData");
         setPerData({
           recordID: rowData.RecordID,
           fromtime: rowData.FromTime,
@@ -1913,7 +1914,7 @@ const Editrequests = () => {
   const permisinitialValue = {
     code: Data.Code,
     description: Data.Name,
-    permissiondate: perData.permissiondate,
+    permissiondate: formatDate(perData.permissiondate),
     location: perData.location,
     fromtime: perData.fromtime,
     totime: perData.totime,
@@ -1954,7 +1955,7 @@ const Editrequests = () => {
       Status: values.Status,
       SortOrder: "1",
       Disable: "N",
-      PermissionDate: values.permissiondate,
+      PermissionDate:values.permissiondate,
       Comments: values.reason,
       Location: values.location,
       Reasons: values.reason,
@@ -2000,7 +2001,7 @@ const Editrequests = () => {
       toast.error(response.payload.Msg);
     }
   };
-
+console.log( leaveData,"leaveData");
 
   const leaveInitialValue = {
     code: Data.Code,
@@ -3958,13 +3959,13 @@ const Editrequests = () => {
                       url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
                     /> */}
                       <FormControl>
-                        <Productautocomplete
+                        <Employeeautocomplete
                           name="leavetype"
                           label={
                             <span>
                               Leave Type
                               <span
-                                style={{ color: "red", fontWeight: "bold" }}
+                                style={{ color: "red", fontSize:"12" }}
                               >
                                 *
                               </span>
@@ -3973,9 +3974,10 @@ const Editrequests = () => {
                           variant="outlined"
                           id="leavetype"
                           value={selectleaveLookupData}
-                          // value={values.leavetype}
+                           //value={values.leavetype}
                           onChange={async (newValue) => {
-                            setFieldValue("leavetype", newValue);
+                             setFieldValue("leavetype", newValue);                             
+                               
                             if (newValue?.RecordID) {
                               await Balancedayfind(newValue.RecordID);
                             }
@@ -4004,7 +4006,8 @@ const Editrequests = () => {
                           <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                             {errors.leavetype}
                           </div>
-                        )}</FormControl>
+                        )}
+                        </FormControl>
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
                           {
@@ -5138,7 +5141,7 @@ const Editrequests = () => {
                                 inputProps={{ tabIndex: "-1" }}
                                 focused
                               /> */}
-                            <Productautocomplete
+                            <Employeeautocomplete
                               name="overhead"
                               label={
                                 <span>
@@ -5752,7 +5755,7 @@ const Editrequests = () => {
                             url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           /> */}
                         <FormControl>
-                          <Productautocomplete
+                          <Employeeautocomplete
                             name="ProName"
                             label={
                               <span>
@@ -6374,6 +6377,7 @@ const Editrequests = () => {
                           helperText={touched.permissiondate && errors.permissiondate}
                           sx={{ gridColumn: "span 2" }}
                           required
+                          
                         // inputProps={{
                         //   max: new Date().toISOString().split("T")[0],
                         //   readOnly: true,

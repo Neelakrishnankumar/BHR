@@ -1914,6 +1914,7 @@ const Editemployee = () => {
     biometric: deploymentData.BioMetric === "Y" ? true : false,
     mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
     managermanual: deploymentData.ManagerManual === "Y" ? true : false,
+    defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
@@ -1947,6 +1948,7 @@ const Editemployee = () => {
       Sunday: values.Sunday === true ? "Y" : "N",
       BioMetric: values.biometric === true ? "Y" : "N",
       ManagerManual: values.managermanual === true ? "Y" : "N",
+      AutoPresent:  values.defaultpresent === true ? "Y" : "N",
       CloudApplication: values.cloud === true ? "Y" : "N",
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
       // Monday: values.monday === true ? "Y" : "N",
@@ -2052,10 +2054,11 @@ const Editemployee = () => {
       ApprovelTolerance: values.ApprovelTolerance,
       AutoRejectionYesOrNo: values.AutoRejectionYesOrNo === true ? "Y" : "N",
       RejectionTolerance: values.RejectionTolerance,
-      BioMetric: "N",
-      MobileGeoFencing: "N",
-      CloudApplication: "N",
-      ManagerManual: "N"
+      BioMetric: values.biometric === true ? "Y" : "N",
+      ManagerManual: values.managermanual === true ? "Y" : "N",
+      AutoPresent:  values.defaultpresent === true ? "Y" : "N",
+      CloudApplication: values.cloud === true ? "Y" : "N",
+      MobileGeoFencing: values.mobile === true ? "Y" : "N",
     };
 
     // console.log(locationLookup.locationRecordID, "????????");
@@ -6222,6 +6225,20 @@ const Editemployee = () => {
                     />
 
                     <FormLabel focused={false}>Manager Manual</FormLabel>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="defaultpresent"
+                      id="defaultpresent"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="defaultpresent"
+                    // disabled
+                    />
+
+                    <FormLabel focused={false}>Default Present</FormLabel>
+
 
                   </Box>
                   <Box
