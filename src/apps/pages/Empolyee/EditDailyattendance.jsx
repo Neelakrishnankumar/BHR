@@ -54,7 +54,7 @@ const EditdailyAttendance = () => {
     var recID = params.id;
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const EmpName = sessionStorage.getItem("EmpName");
-const CompanyID = sessionStorage.getItem("compID");
+    const CompanyID = sessionStorage.getItem("compID");
     const AttendanceData = useSelector((state) => state.formApi.MonthlyAttendanceData);
     console.log("AttendanceData", AttendanceData);
 
@@ -98,13 +98,22 @@ const CompanyID = sessionStorage.getItem("compID");
     }
 
     const AttColumn = [
+        // {
+        //     field: "SLNO",
+        //     headerName: "SL#",
+        //     width: "50",
+        //     renderCell: (params) => (
+        //         <div style={{ textAlign: "right" }}>{params.value}</div>
+        //     ),
+        // },
         {
-            field: "SLNO",
+            field: "slno",
             headerName: "SL#",
-            width: "50",
-            renderCell: (params) => (
-                <div style={{ textAlign: "right" }}>{params.value}</div>
-            ),
+            width: 50,
+            sortable: false,
+            filterable: false,
+            valueGetter: (params) =>
+                `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
         },
         {
             field: "Name",

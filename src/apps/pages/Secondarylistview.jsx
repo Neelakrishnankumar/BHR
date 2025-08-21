@@ -65,7 +65,7 @@ const ListviewSecondary = () => {
   var CompId = sessionStorage.getItem("compID");
 
   const state = location.state || {};
-  
+
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen
   );
@@ -96,8 +96,8 @@ const ListviewSecondary = () => {
   var remarkDec = params.remarkDec;
   const { toggleSidebar, broken, rtl } = useProSidebar();
   //const rowData = location.state || {};
-  
-  
+
+
   var Description = params.Desc;
   var Number = params.Number;
   var filter;
@@ -108,7 +108,7 @@ const ListviewSecondary = () => {
     }
   }
   console.log(filter, "----filter find");
-  
+
   if (accessID == "TR011") {
     filter = invoiceFilter;
   } else if (accessID == "TR074") {
@@ -127,21 +127,21 @@ const ListviewSecondary = () => {
   else if (accessID == "TR233") {
 
     filter = `CompanyID='${CompId}' AND ProjectID='${parentID}'`;
-    console.log(filter,"--calling TR233");
-}
-else if (accessID == "TR236") {   
-  filter = `CompanyID='${CompId}' AND MilestoneID='${parentID}'`;
-  console.log(filter,"--calling TR236");
-}
-else if (accessID == "TR234") {   
-  filter = `CompanyID='${CompId}' AND OperationStageID='${parentID}'`;
-  console.log(filter,"--calling TR234");
-}
+    console.log(filter, "--calling TR233");
+  }
+  else if (accessID == "TR236") {
+    filter = `CompanyID='${CompId}' AND MilestoneID='${parentID}'`;
+    console.log(filter, "--calling TR236");
+  }
+  else if (accessID == "TR234") {
+    filter = `CompanyID='${CompId}' AND OperationStageID='${parentID}'`;
+    console.log(filter, "--calling TR234");
+  }
   else if (accessID == "TR235") {
     filter = `CompanyID='${CompId}' AND ActivitesID='${parentID}'`;
-    console.log(filter,"--calling TR235");
+    console.log(filter, "--calling TR235");
   }
-  
+
   else if (accessID == "TR063") {
     filter = `Finyear='${year}'`;
   } else if (accessID == "TR004") {
@@ -151,13 +151,12 @@ else if (accessID == "TR234") {
   } else if (accessID == "TR079") {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR097") {
-    filter = `${
-      parentID.slice(-1) == "I"
+    filter = `${parentID.slice(-1) == "I"
         ? "(DcType IN ('I','B'))"
         : parentID === "PO"
-        ? "(DcType IN ('O','P'))"
-        : "(DcType IN ('O','B'))"
-    }`;
+          ? "(DcType IN ('O','P'))"
+          : "(DcType IN ('O','B'))"
+      }`;
   } else if (accessID == "TR102") {
     filter = `InvType='${parentID}'`;
   } else if (accessID == "TR123") {
@@ -175,9 +174,8 @@ else if (accessID == "TR234") {
   } else if (accessID == "TR118") {
     filter = "";
   } else if (accessID == "TR051") {
-    filter = `parentID='${parentID}' AND ${
-      params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
-    }`;
+    filter = `parentID='${parentID}' AND ${params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
+      }`;
   } else if (accessID == "TR091") {
     filter = `parentID=${params.bomID}`;
   } else if (accessID == "TR087") {
@@ -199,11 +197,11 @@ else if (accessID == "TR234") {
     (state) => state.listviewApi.productionCardRecid
   );
 
-  const alternateColorsRecordID  = useSelector(
+  const alternateColorsRecordID = useSelector(
     (state) => state.listviewApi.colorsRecID
   );
   const childToParent = async (childdata, type) => {
-    console.log("🚀 ~ childToParent ~ childdata:",    {
+    console.log("🚀 ~ childToParent ~ childdata:", {
       FromMatrialID: childdata.parentID,
       ToMatrialID: childdata.RecordID,
       PrCardHeaderID: productionCardRecid,
@@ -213,8 +211,8 @@ else if (accessID == "TR234") {
     const response = await axios.post(
       url,
       {
-        FromMatrialID:childdata.RecordID ,
-        ToMatrialID:childdata.parentID ,
+        FromMatrialID: childdata.RecordID,
+        ToMatrialID: childdata.parentID,
         PrCardHeaderID: productionCardRecid,
       },
       {
@@ -234,7 +232,7 @@ else if (accessID == "TR234") {
       dispatch(productionlookupOpen({ materialRecID: 0, productionCardID: 0 }));
       dispatch(fetchListview(accessID, screenName, filter, "", compID));
     }
-    
+
   };
 
   function filterByID(item) {
@@ -243,11 +241,23 @@ else if (accessID == "TR234") {
     }
   }
 
+  // const columns = React.useMemo(
+  //   () => listViewcolumn.filter(filterByID),
+  //   [listViewcolumn]
+  // );
+
   const columns = React.useMemo(
-    () => listViewcolumn.filter(filterByID),
+    () => listViewcolumn.filter(filterByID) ? [{
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+    }, , ...listViewcolumn.filter(filterByID)] : [],
     [listViewcolumn]
   );
-
   var apprval = "";
   var hderName = `Production Card(${params.Number})`;
 
@@ -564,28 +574,28 @@ else if (accessID == "TR234") {
   }
 
   var openstackname = "Opening Stock";
-const fnLogOut = (props) => {
-      Swal.fire({
-        title: `Do you want ${props}?`,
-        // text:data.payload.Msg,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: props,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (props === "Logout") {
-            navigate("/");
-          }
-          if (props === "Close") {
-            navigate("/Apps/TR027/Employees");
-          }
-        } else {
-          return;
+  const fnLogOut = (props) => {
+    Swal.fire({
+      title: `Do you want ${props}?`,
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
         }
-      });
-    };
+        if (props === "Close") {
+          navigate("/Apps/TR027/Employees");
+        }
+      } else {
+        return;
+      }
+    });
+  };
   function CustomToolbar(listViewData) {
     function doesArrayContainNegative() {
       for (var arr of listViewData) {
@@ -1853,7 +1863,7 @@ const fnLogOut = (props) => {
               }}
             >
               {/* Location */}
-               {`Location(${state.Locationname})`}
+              {`Location(${state.Locationname})`}
             </Typography>
             <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
               Gate Entry
@@ -1918,214 +1928,214 @@ const fnLogOut = (props) => {
               {screenName}
             </Typography>
           </Breadcrumbs>
-        ) 
-        : 
-        accessID == "TR233" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                //navigate("/Apps/TR133/Project");
-                navigate(-1);
-              }}
-            >
-              {`Project(${state.projectName})`}
-            </Typography>
-
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ): accessID == "TR236" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR133/Project");
-              }}
-            >
-              {`Project(${state.projectName})`}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-                navigate(-1);
-              }}
-            >
-              {`Milestones(${state.MilestoneName})`}
-            </Typography>
-
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
         )
-        : accessID == "TR234" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR133/Project");
-              }}
+          :
+          accessID == "TR233" ? (
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
-              {`Project(${state.projectName})`}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-              }}
-            >
-              {`Milestones(${state.MilestoneName})`}
-              {/* Milestone */}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
-                navigate(-1);
-              }}
-            >
-              {`Stages(${state.stagesName})`}
-            </Typography>
-
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ): accessID == "TR235" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR133/Project");
-              }}
-            >
-              {`Project(${state.projectName})`}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-               
-                navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-              }}
-            >
-              {`Milestones(${state.MilestoneName})`}
-              {/* Milestone             */}
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  //navigate("/Apps/TR133/Project");
+                  navigate(-1);
+                }}
+              >
+                {`Project(${state.projectName})`}
               </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
-              }}
+
+              <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                {screenName}
+              </Typography>
+            </Breadcrumbs>
+          ) : accessID == "TR236" ? (
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
-              {`stages(${state.stagesName})`}
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR133/Project");
+                }}
+              >
+                {`Project(${state.projectName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                  navigate(-1);
+                }}
+              >
+                {`Milestones(${state.MilestoneName})`}
+              </Typography>
 
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
-                navigate(-1);
-              }}
-            >
-              {`Activities(${state.Activityname})`}
-            </Typography>
+              <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                {screenName}
+              </Typography>
+            </Breadcrumbs>
+          )
+            : accessID == "TR234" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR133/Project");
+                  }}
+                >
+                  {`Project(${state.projectName})`}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } });
+                  }}
+                >
+                  {`Milestones(${state.MilestoneName})`}
+                  {/* Milestone */}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+                    navigate(-1);
+                  }}
+                >
+                  {`Stages(${state.stagesName})`}
+                </Typography>
 
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ): accessID == "TR124" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR027/Employees",{state:state});
-              }}
-            >
-              {`Employee(${state.EmpName})`}
-            </Typography>
-           
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>
+            ) : accessID == "TR235" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR133/Project");
+                  }}
+                >
+                  {`Project(${state.projectName})`}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
 
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ): accessID == "TR123" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR027/Employees",{state:state});
-              }}
-            >
-             {/* Employee */}
-             {`Employee(${state.EmpName})`}
+                    navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } });
+                  }}
+                >
+                  {`Milestones(${state.MilestoneName})`}
+                  {/* Milestone             */}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } });
+                  }}
+                >
+                  {`stages(${state.stagesName})`}
 
-            </Typography>
-           
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
+                    navigate(-1);
+                  }}
+                >
+                  {`Activities(${state.Activityname})`}
+                </Typography>
 
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ): accessID == "TR132" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-             {/* <Typography
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>
+            ) : accessID == "TR124" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR027/Employees", { state: state });
+                  }}
+                >
+                  {`Employee(${state.EmpName})`}
+                </Typography>
+
+
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>
+            ) : accessID == "TR123" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR027/Employees", { state: state });
+                  }}
+                >
+                  {/* Employee */}
+                  {`Employee(${state.EmpName})`}
+
+                </Typography>
+
+
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>
+            ) : accessID == "TR132" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -2135,93 +2145,93 @@ const fnLogOut = (props) => {
             >
                {`Employee(${state.EmpName})`}
             </Typography> */}
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                //navigate("/Apps/TR123/Check%20In");
-                navigate(-1);
-              }}
-            >
-              {`Check In(${state.Locname})`}
-            </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    //navigate("/Apps/TR123/Check%20In");
+                    navigate(-1);
+                  }}
+                >
+                  {`Check In(${state.Locname})`}
+                </Typography>
 
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ) : accessID == "TR134" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-             <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR027/Employees");
-              }}
-            >
-               {`Employee(${state.EmpName})`}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate(`/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`,{state:{...state}});
-              }}
-            >
-              {`Check In(${state.Locname})`}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                // navigate(
-                //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
-                // );
-                navigate(-1);
-              }}
-            >
-              {/* {`DailyTask(${state.proName})`} */}
-              {`DailyTask(${state.Date})`}
-            </Typography>
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              {screenName}
-            </Typography>
-          </Breadcrumbs>
-        ) : accessID == "TR095" ? (
-          <Breadcrumbs
-            maxItems={2}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-            <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate("/Apps/TR099/Companies");
-              }}
-            >
-              Companies
-            </Typography>
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              User Groups
-            </Typography>
-          </Breadcrumbs>
-        ) : (
-          <Box sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography variant="h3" color="#0000D1">
-              {screenName}
-            </Typography>
-          </Box>
-        )}
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>
+            ) : accessID == "TR134" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR027/Employees");
+                  }}
+                >
+                  {`Employee(${state.EmpName})`}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(`/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`, { state: { ...state } });
+                  }}
+                >
+                  {`Check In(${state.Locname})`}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    // navigate(
+                    //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
+                    // );
+                    navigate(-1);
+                  }}
+                >
+                  {/* {`DailyTask(${state.proName})`} */}
+                  {`DailyTask(${state.Date})`}
+                </Typography>
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  {screenName}
+                </Typography>
+              </Breadcrumbs>
+            ) : accessID == "TR095" ? (
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR099/Companies");
+                  }}
+                >
+                  Companies
+                </Typography>
+                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+                  User Groups
+                </Typography>
+              </Breadcrumbs>
+            ) : (
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <Typography variant="h3" color="#0000D1">
+                  {screenName}
+                </Typography>
+              </Box>
+            )}
         <Box justifyContent="end" display="flex">
           {broken && !rtl && (
             <IconButton onClick={() => toggleSidebar()}>
@@ -2279,13 +2289,12 @@ const fnLogOut = (props) => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${
-                          screenName === "Remarks"
-                            ? "Delivery Chalan"
-                            : screenName
-                        }/-1/A`,  {
-                          state: {...state }
-                        }
+                        `./Edit${screenName === "Remarks"
+                          ? "Delivery Chalan"
+                          : screenName
+                        }/-1/A`, {
+                        state: { ...state }
+                      }
                       );
                     }}
                   />
@@ -2298,13 +2307,12 @@ const fnLogOut = (props) => {
                 <AddOutlinedIcon
                   onClick={() => {
                     navigate(
-                      `./Edit${
-                        screenName === "Remarks"
-                          ? "Delivery Chalan"
-                          : screenName
+                      `./Edit${screenName === "Remarks"
+                        ? "Delivery Chalan"
+                        : screenName
                       }/-1/A`, {
-                        state: {...state }
-                      }
+                      state: { ...state }
+                    }
                     );
                   }}
                 />
@@ -2334,11 +2342,11 @@ const fnLogOut = (props) => {
             slotProps={{ toolbar: { csvOptions: { allColumns: true } } }}
           />
 
-           <Tooltip arrow title="Logout">
-                     <IconButton onClick={() => fnLogOut("Logout")} color="error">
-                       <LogoutOutlinedIcon />
-                     </IconButton>
-                   </Tooltip>
+          <Tooltip arrow title="Logout">
+            <IconButton onClick={() => fnLogOut("Logout")} color="error">
+              <LogoutOutlinedIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </GridToolbarContainer>
     );
@@ -2357,7 +2365,7 @@ const fnLogOut = (props) => {
   return (
     <React.Fragment>
       <Box m="5px">
-      <Box
+        <Box
           m="5px 0 0 0"
           padding={2}
           // height="85vh"
@@ -2398,12 +2406,12 @@ const fnLogOut = (props) => {
           }}
         >
           <DataGrid
-           sx={{
-            "& .MuiDataGrid-footerContainer":{
-              height:dataGridHeaderFooterHeight,
-              minHeight:dataGridHeaderFooterHeight,
-            }
-           }}
+            sx={{
+              "& .MuiDataGrid-footerContainer": {
+                height: dataGridHeaderFooterHeight,
+                minHeight: dataGridHeaderFooterHeight,
+              }
+            }}
             key={accessID}
             rows={listViewData}
             columns={columns}
@@ -2633,7 +2641,7 @@ const fnLogOut = (props) => {
               label="Issue"
               variant="outlined"
             />
-                        <Chip
+            <Chip
               icon={<OpenInBrowserOutlinedIcon color="primary" />}
               label="Alternate Material"
               variant="outlined"
@@ -2811,73 +2819,73 @@ const fnLogOut = (props) => {
           false
         ) : accessID == "TR102" ? (
           false
-        ) 
-        :  accessID == "TR233" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-            <Chip
-              icon={<BalanceIcon color="primary" />}
-              label="Stage Weightage"
-              variant="outlined"
-            />
-             <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-             <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="List of Stages"
-              variant="outlined"
-            />
-          </Box>
-       )
-        :  accessID == "TR236" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-            <Chip
-              icon={<BalanceIcon color="primary" />}
-              label="Activity Weightage"
-              variant="outlined"
-            />
-             <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-             <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="List of Activities"
-              variant="outlined"
-            />
-          </Box>
-       )
-        :  accessID == "TR234" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-            <Chip
-              icon={<BalanceIcon color="primary" />}
-              label="Task Weightage"
-              variant="outlined"
-            />
-             <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-             <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="List of Tasks"
-              variant="outlined"
-            />
-          </Box>
-       )
-       :(
-          <Box display="flex" flexDirection="row" padding="25px">
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-          </Box>
-        )}
+        )
+          : accessID == "TR233" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+              <Chip
+                icon={<BalanceIcon color="primary" />}
+                label="Stage Weightage"
+                variant="outlined"
+              />
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<ListAltOutlinedIcon color="primary" />}
+                label="List of Stages"
+                variant="outlined"
+              />
+            </Box>
+          )
+            : accessID == "TR236" ? (
+              <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                <Chip
+                  icon={<BalanceIcon color="primary" />}
+                  label="Activity Weightage"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<ModeEditOutlinedIcon color="primary" />}
+                  label="Edit"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<ListAltOutlinedIcon color="primary" />}
+                  label="List of Activities"
+                  variant="outlined"
+                />
+              </Box>
+            )
+              : accessID == "TR234" ? (
+                <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                  <Chip
+                    icon={<BalanceIcon color="primary" />}
+                    label="Task Weightage"
+                    variant="outlined"
+                  />
+                  <Chip
+                    icon={<ModeEditOutlinedIcon color="primary" />}
+                    label="Edit"
+                    variant="outlined"
+                  />
+                  <Chip
+                    icon={<ListAltOutlinedIcon color="primary" />}
+                    label="List of Tasks"
+                    variant="outlined"
+                  />
+                </Box>
+              )
+                : (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                )}
       </Box>
       <MatxCustomizer
         open={open}
@@ -2905,7 +2913,7 @@ const fnLogOut = (props) => {
         title="Colors"
         openPopup={isproductionColorPopupOpen}
         setOpenPopup={() =>
-          dispatch(productionColorlookupOpen({ materialRecID: ""}))
+          dispatch(productionColorlookupOpen({ materialRecID: "" }))
         }
       >
         <Listviewpopup

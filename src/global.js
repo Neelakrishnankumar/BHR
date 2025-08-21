@@ -6,7 +6,7 @@ import { createSlice } from "@reduxjs/toolkit";
 var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 var baseurl = "https://dvmtapi.bexatm.com/"
 // var APIurl = "https://phpmigrationapi.bexatm.com/hr/api/"
-// var baseurl ="https://phpmigrationapi.bexatm.com/"
+// var baseurl = "https://phpmigrationapi.bexatm.com/"
 
  const initialState = {  
 //hr

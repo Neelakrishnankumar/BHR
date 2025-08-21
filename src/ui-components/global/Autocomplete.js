@@ -49,7 +49,7 @@ export const Productautocomplete = ({
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-console.log(options, "Productautocomplete auto options");
+// console.log(options, "Productautocomplete auto options");
     useEffect(() => {
       const fetchData = async () => {
         if (!url) return;
