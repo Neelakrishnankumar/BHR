@@ -86,7 +86,7 @@ import Editfixedassetcategory from "./pages/FinanceModule/Editfixedassetcategory
 import Editfixedasset from "./pages/FinanceModule/Editfixedasset";
 import EditEmpCheckin from "./pages/Empolyee/EditEmpCheckin";
 import EditEmpCheckout from "./pages/Empolyee/EditEmpCheckout";
-import Editstockcare from './pages/Inventory/Editstockcare';
+import Editstockcare from "./pages/Inventory/Editstockcare";
 import Editpriceofothercustomer from "./pages/FinanceModule/Editpriceofothercustomer";
 import EditEmpfinance from "./pages/Empolyee/EditEmpfinance";
 import Editpostshipment from "./pages/Trascation/Editpostshipment";
@@ -133,10 +133,23 @@ import Geoconfiguration from "./Security/Geoconfig";
 import Approval from "./Security/Approval";
 import EditContractsin from "./pages/HR/ContractsIN";
 import EditContractsout from "./pages/HR/ContractsOut";
-
-
-
-
+import SkillGlowList from "./pages/SkillGlow/SkillGlowList";
+import SkillSession from "./pages/SkillGlow/SkillSession";
+import SkillCategory from "./pages/SkillGlow/SkillCategory";
+import CreateSkill from "./pages/SkillGlow/CreateSkill";
+import CreateCategory from "./pages/SkillGlow/CreateCategory";
+import QuestionList from "./pages/SkillGlow/QuestionList";
+import CreateQuestion from "./pages/SkillGlow/CreateQuestion";
+import CandidateList from "./pages/SkillGlow/CandidateList";
+import CreateCandidates from "./pages/SkillGlow/CreateCandidates";
+import CreateSession from "./pages/SkillGlow/CreateSession";
+import QuestionDetails from "./pages/SkillGlow/QuestionDetails";
+import CategoryMain from "./pages/SkillGlow/CategoryMain";
+import CreateCategoryMain from "./pages/SkillGlow/CreateCategoryMain";
+import CandidateMain from "./pages/SkillGlow/CandidateMain";
+import SkillCandidate from "./pages/SkillGlow/SkillCandidate";
+import CreateSkillCandidate from "./pages/SkillGlow/CreateSkillCandidate";
+import EmployeeSchedule from "./pages/SkillGlow/EmployeeSchedule";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -152,11 +165,97 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-                  <Route path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode" element={<EditemployeePayroll />} />
-                  <Route path="/:accessID/:screenName/EditEmployee Request/:id/:Mode" element={<Editrequests />} />
-                  <Route path="/:accessID/:screenName/EditApproval/:id/:Mode" element={<Editapprovals />} />
-                  <Route path="/:accessID/:screenName/Editrunpayroll" element={<Editrunpayroll />} />
-                  <Route path="/:accessID/Regularization/:id/" element={<Regularization />} />
+                  <Route
+                    path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
+                    element={<EditemployeePayroll />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditEmployee Request/:id/:Mode"
+                    element={<Editrequests />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditApproval/:id/:Mode"
+                    element={<Editapprovals />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/Editrunpayroll"
+                    element={<Editrunpayroll />}
+                  />
+                  <Route
+                    path="/:accessID/Regularization/:id/"
+                    element={<Regularization />}
+                  />
+
+                  {/* SKILL GLOW */}
+                  <Route
+                    path="/SkillGlow/CategoryMain"
+                    element={<CategoryMain />}
+                  />
+                  <Route
+                    path="/SkillGlow/Assessment/Schedule/EmployeeSchedule"
+                    element={<EmployeeSchedule />}
+                  />
+                  <Route
+                    path="SkillGlow/CategoryMain/CreateCategoryMain"
+                    element={<CreateCategoryMain />}
+                  />
+                  <Route
+                    path="SkillGlow/CandidateMain"
+                    element={<CandidateMain />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList"
+                    element={<SkillGlowList />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/SkillGlowSession"
+                    element={<SkillSession />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/SkillCategory"
+                    element={<SkillCategory />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/CreateSkill"
+                    element={<CreateSkill />}
+                  />
+                  <Route
+                    path="/SkillGlow/Assessment/Candidates/SkillCandidate/CreateSkillCandidate"
+                    element={<CreateSkillCandidate />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/SkillCategory/CreateCategory"
+                    element={<CreateCategory />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/SkillCategory/QuestionList"
+                    element={<QuestionList />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/SkillCategory/QuestionList/CreateQuestion"
+                    element={<CreateQuestion />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/CandidateList"
+                    element={<CandidateList />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillGlowList/CandidateList/CreateCandidates"
+                    element={<CreateCandidates />}
+                  />
+                  <Route
+                    path="SkillGlow/SkillGlowList/SkillGlowSession/CreateSession"
+                    element={<CreateSession />}
+                  />
+                  <Route
+                    path="SkillGlow/SkillGlowList/SkillCategory/QuestionList/Details"
+                    element={<QuestionDetails/>}
+                  />
+                  <Route
+                    path="SkillGlow/Assessment/Candidates/SkillCandidate"
+                    element={<SkillCandidate/>}
+                  />
+                  {/* SKILL GLOW */}
                   <Route
                     path="/:accessID/:screenName/EditSalary Component/:id/:Mode"
                     element={<EditSalaryComponent />}
@@ -188,7 +287,6 @@ function App() {
                     element={<Holidaylist />}
                   />
 
-
                   <Route
                     path="/:accessID/:screenName/EditJobwork Category/:id/:Mode"
                     element={<Editjobworkcategory />}
@@ -209,7 +307,6 @@ function App() {
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/configuration" element={<Configuration />} />
-
 
                   <Route
                     path="/:screenName/imageupload/:accessID/:id"
@@ -267,7 +364,8 @@ function App() {
                   />
                   <Route
                     path="/:accessID/:screenName/EditEmpfinance entry/E/:RecordID/:Name"
-                    element={<EditEmpfinance />} />
+                    element={<EditEmpfinance />}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditUOM/:id/:Mode"
                     element={<Edituom />}
@@ -567,7 +665,10 @@ function App() {
                     path="/:accessID/:screenName/EditLocation/:id/:Mode"
                     element={<Editlocation />}
                   />
-                  <Route path="/Secondarylistview/:accessID/:screenName/:Type/stock-care-by" element={<Editstockcare />} />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:Type/stock-care-by"
+                    element={<Editstockcare />}
+                  />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:parentID/EditGate Entry/:id/:Mode"
                     element={<Editgate />}
@@ -648,7 +749,8 @@ function App() {
                   />
                   <Route
                     path="/:accessID/:screenName/EditTimeDailytask/:id"
-                    element={<EditTimeDailytask />} />
+                    element={<EditTimeDailytask />}
+                  />
 
                   {/* Sprint */}
 
@@ -660,9 +762,15 @@ function App() {
                     path="/:accessID/:screenName/EditShift/:id/:Mode"
                     element={<Editshift />}
                   />
-                  <Route path="/Edittimesheetreport" element={<Edittimesheetreport />} />
-                  <Route path="/Biometric" element={<Biometricconfiguration />} />
-                                        <Route path="/Approval" element={<Approval />} />
+                  <Route
+                    path="/Edittimesheetreport"
+                    element={<Edittimesheetreport />}
+                  />
+                  <Route
+                    path="/Biometric"
+                    element={<Biometricconfiguration />}
+                  />
+                  <Route path="/Approval" element={<Approval />} />
 
                   <Route
                     path="/:accessID/:screenName/EditContracts In/:id/:Mode"
@@ -670,7 +778,7 @@ function App() {
                   />
                   <Route
                     path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
-                    element={<EditContractsout/>}
+                    element={<EditContractsout />}
                   />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
 
