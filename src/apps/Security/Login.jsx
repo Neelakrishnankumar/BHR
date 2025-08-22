@@ -90,7 +90,7 @@ const Login = () => {
     password: "",
     company: company,
     year: year,
-    license:""
+    license: ""
   };
   const clear = async (values) => {
     setCompanycombo("");
@@ -119,9 +119,9 @@ const Login = () => {
       setLoading(false);
       return;
     }
-     const data = await dispatch(fetchApidata(values.username,values.password,values.license
+    const data = await dispatch(fetchApidata(values.username, values.password, values.license
       //values.company,values.year
-    
+
     ));
     // const idata = {
     //   username: values.username,
@@ -131,71 +131,70 @@ const Login = () => {
     // };
     // const data = await dispatch(authentication({ idata }));
     console.log("🚀 ~ file: Login.jsx:126 ~ Login ~ data:", data);
-    
+
     //  var UserName = data.payload.apiResponse.Name
-    
-      sessionStorage.setItem("loginRecid", loginrecordID);
-      if(data.payload.Status=="Y")
-      {  
-       var company = data.payload.apiResponse.Company
-       var SubscriptionCode = data.payload.SubscriptionCode
-       var year = data.payload.apiResponse.Year
-       var YearFlag = data.payload.apiResponse.YearFlag
-       var compID = data.payload.apiResponse.CompanyRecordid
-       var empID = data.payload.apiResponse.Recordid
-       var stockflag= data.payload.apiResponse.Process
-       var Cifbysea=data.payload.apiResponse.Cifbysea
-       var Cifbyair=data.payload.apiResponse.Cifbyair
-       var Fob=data.payload.apiResponse.Fob
+
+    sessionStorage.setItem("loginRecid", loginrecordID);
+    if (data.payload.Status == "Y") {
+      var company = data.payload.apiResponse.Company
+      var SubscriptionCode = data.payload.SubscriptionCode
+      var year = data.payload.apiResponse.Year
+      var YearFlag = data.payload.apiResponse.YearFlag
+      var compID = data.payload.apiResponse.CompanyRecordid
+      var empID = data.payload.apiResponse.Recordid
+      var stockflag = data.payload.apiResponse.Process
+      var Cifbysea = data.payload.apiResponse.Cifbysea
+      var Cifbyair = data.payload.apiResponse.Cifbyair
+      var Fob = data.payload.apiResponse.Fob
       //  var EmpId=data.payload.apiResponse.EmpId
-       var Overhead=data.payload.apiResponse.Overhead
-       var YearRecorid=data.payload.apiResponse.YearRecorid
-       var Groupaccess=data.payload.apiResponse.Groupaccess
-       var UserName=data.payload.apiResponse.Name
-       var loginrecordID = data.payload.apiResponse.Recordid
-      
+      var Overhead = data.payload.apiResponse.Overhead
+      var YearRecorid = data.payload.apiResponse.YearRecorid
+      var Groupaccess = data.payload.apiResponse.Groupaccess
+      var UserName = data.payload.apiResponse.Name
+      var loginrecordID = data.payload.apiResponse.Recordid
 
-       var Modules=data.payload.apiResponse.Modules
 
-       var UserName=data.payload.apiResponse.Name
-       var SubscriptionCode=data.payload.SubscriptionCode
-       var Expiryin = data.payload.Expiryin
-       var CompanyAutoCode = data.payload.CompanyAutoCode
+      var Modules = data.payload.apiResponse.Modules
+
+      var UserName = data.payload.apiResponse.Name
+      var SubscriptionCode = data.payload.SubscriptionCode
+      var Expiryin = data.payload.Expiryin
+      var CompanyAutoCode = data.payload.CompanyAutoCode
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
-    
-       
-       sessionStorage.setItem("Expiryin",Expiryin);
-       sessionStorage.setItem("SubscriptionCode",SubscriptionCode);
-       sessionStorage.setItem("UserName",UserName);
-       sessionStorage.setItem("loginrecordID",loginrecordID);
-       sessionStorage.setItem("SubscriptionCode",SubscriptionCode);      
-       sessionStorage.setItem("company", company);
-       sessionStorage.setItem("year", year);
-       sessionStorage.setItem("YearFlag", YearFlag);
-       sessionStorage.setItem("compID", compID);
-       sessionStorage.setItem("empID", empID);
-       sessionStorage.setItem("stockflag", stockflag);
-       sessionStorage.setItem("currentPage", 0);
-       sessionStorage.setItem("secondaryCurrentPage", 0);
-       sessionStorage.setItem("Cifbysea",Cifbysea)
-       sessionStorage.setItem("Cifbyair",Cifbyair)
-       sessionStorage.setItem("Fob",Fob)
+
+
+      sessionStorage.setItem("Expiryin", Expiryin);
+      sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+      sessionStorage.setItem("UserName", UserName);
+      sessionStorage.setItem("loginrecordID", loginrecordID);
+      sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+      sessionStorage.setItem("company", company);
+      sessionStorage.setItem("year", year);
+      sessionStorage.setItem("YearFlag", YearFlag);
+      sessionStorage.setItem("compID", compID);
+      sessionStorage.setItem("empID", empID);
+      sessionStorage.setItem("stockflag", stockflag);
+      sessionStorage.setItem("currentPage", 0);
+      sessionStorage.setItem("secondaryCurrentPage", 0);
+      sessionStorage.setItem("Cifbysea", Cifbysea)
+      sessionStorage.setItem("Cifbyair", Cifbyair)
+      sessionStorage.setItem("Fob", Fob)
       //  sessionStorage.setItem("EmpId",EmpId)
-       sessionStorage.setItem("CompanyAutoCode",CompanyAutoCode)
-        sessionStorage.setItem("Overhead",Overhead)
-       sessionStorage.setItem("YearRecorid",YearRecorid)
-       sessionStorage.setItem("Groupaccess",JSON.stringify(Groupaccess))
-       sessionStorage.setItem("Modules",JSON.stringify(Modules))
-       //navigate("/Apps/Chart");
-       navigate("/Apps/HR");  
+      sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
+      sessionStorage.setItem("Overhead", Overhead)
+      sessionStorage.setItem("YearRecorid", YearRecorid)
+      sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))
+      sessionStorage.setItem("Modules", JSON.stringify(Modules))
+      //navigate("/Apps/Chart");
+      navigate("/Apps/HR");
+    }
+    else {
+      if (data.payload.subscription == 0) {
+        navigate("/SubscriptionScreen", { state: { subCode: values.license } });
       }
-      else {
-        if(data.payload.subscription == 0){
-          navigate("/SubscriptionScreen",{state:{subCode:values.license}});  
-        }
-       setLoading(false);
-       toast.error(data.payload.Msg);
-     }
+      setLoading(false);
+      toast.error(data.payload.Msg);
+    }
   };
   return (
     <div className="wrapper">
@@ -227,7 +226,7 @@ const Login = () => {
               <form onSubmit={handleSubmit}>
                 <Stack
                   component="form"
-                  height={{ sm: "520px", md: "373px" }}
+                  height={{ sm: "450px", md: "343px" }}
                   width={{ sm: "291px", md: "700px" }}
                   sx={{
                     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
@@ -242,7 +241,10 @@ const Login = () => {
                 >
                   <Stack
                     sx={{
-                      width: { sm: "80%", md: "80%", lg: "80%" },
+                      width: { sm: "100%", md: "100%", lg: "100%" },
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
                       alignContent: "center",
                       justifyContent: "flexend",
                       alignItems: "center",
@@ -253,24 +255,35 @@ const Login = () => {
                       padding: 1,
                       borderRadius: "5px",
                       height: "350px",
+                      // marginBottom: "50px",
+                      marginTop: "-30px",
                       flexDirection: "column-reverse",
                     }}
+                    spacing={2}
+
                   >
                     <Typography
                       variant="h6"
-                      sx={{ marginBottom: 6, marginRight: 2 }}
+                      sx={{
+
+                        marginBottom: 1,
+                        marginRight: 6,
+                        textAlign: "center", 
+                      }}
                     >
-                      Back Office System{" "}
+                      ATM<br />
+                      Back Office System
                     </Typography>
                   </Stack>
+
 
                   <Stack
                     sx={{
                       width: { sm: "100%", md: "100%", lg: "100%" },
                     }}
-                    spacing={2}
+                    spacing={2.5}
                   >
-                    <FormControl sx={{marginTop:"30px"}}>
+                    <FormControl sx={{ marginTop: "30px" }}>
                       <TextField
                         margin="normal"
                         focused
@@ -317,21 +330,22 @@ const Login = () => {
                       />
                     </FormControl>
                     <TextField
-                        margin="normal"
-                        focused
-                        label="Subscription Code"
-                        id="license"
-                        value={values.license}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        onSubmit={handleSubmit}
-                        //  placeholder='Enter license'
-                        fullWidth
-                        required
-                        error={!!touched.license && !!errors.license}
-                        helperText={touched.license && errors.license}
-                      />
-                    <Stack direction={"row"} justifyContent="end" gap={"10px"}>
+                      margin="normal"
+                      focused
+                      label="Subscription Code"
+                      id="license"
+                      value={values.license}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      onSubmit={handleSubmit}
+                      //  placeholder='Enter license'
+                      fullWidth
+                      required
+                      error={!!touched.license && !!errors.license}
+                      helperText={touched.license && errors.license}
+                    />
+                    {/* <Box sx={{ flexGrow: 1 }} /> */}
+                    <Stack direction={"row"} justifyContent="end" gap={"10px"} sx={{ marginTop: "50px" }}>
                       <LoadingButton
                         onClick={() => {
                           fnLogin(values);
@@ -345,6 +359,7 @@ const Login = () => {
                       <Button
                         variant="contained"
                         color={"warning"}
+
                         onClick={() => {
                           {
                             clear(values);

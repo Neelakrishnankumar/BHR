@@ -41,7 +41,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import Popup from "../popup";
 import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/utils";
-import { Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 // import CryptoJS from "crypto-js";
 const Editcheckout = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -348,13 +348,13 @@ const Editcheckout = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Productautocomplete
+                      <CheckinAutocomplete
                         name="Employee"
                         label=
                        
                         {
                           <span>
-                            Employee Id
+                            Employee
                             <span style={{ color: "red", fontWeight: "bold" }}>*</span>
                           </span>
                         }
@@ -449,7 +449,8 @@ const Editcheckout = () => {
                       focused
                       inputProps={{ tabIndex: "-1" }}
                     /> */}
-                     <Productautocomplete
+                     <CheckinAutocomplete
+
                         name="Location"
                         label=
                         {
@@ -514,7 +515,8 @@ const Editcheckout = () => {
                       focused
                       inputProps={{ tabIndex: "-1" }}
                     /> */}
-<Productautocomplete
+                      <CheckinAutocomplete
+
                         name="Gate"
                         label=
                         {

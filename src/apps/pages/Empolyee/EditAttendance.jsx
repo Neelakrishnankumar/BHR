@@ -109,10 +109,19 @@ const EditAttendance = () => {
 
   };
   const AttColumn = [
-    {
-      field: "SLNO",
+    // {
+    //   field: "SLNO",
+    //   headerName: "SL#",
+    //   width:50
+    // },
+     {
+      field: "slno",
       headerName: "SL#",
-      width:50
+      width: 50,
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
     },
  {
       field: "action",

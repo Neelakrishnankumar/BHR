@@ -1002,17 +1002,26 @@ const EditTimeSheet = () => {
 
 
   const AttColumn = [
-     {
-    field: "serialNo",
-    headerName: "SL#",
-    width: 40,
-    sortable: false,
-    filterable: false,
-    disableColumnMenu: true,
-    renderCell: (params) => {
-      return params.api.getRowIndex(params.id) + 1;
+  //    {
+  //   field: "serialNo",
+  //   headerName: "SL#",
+  //   width: 40,
+  //   sortable: false,
+  //   filterable: false,
+  //   disableColumnMenu: true,
+  //   renderCell: (params) => {
+  //     return params.api.getRowIndex(params.id) + 1;
+  //   },
+  // },
+   {
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
     },
-  },
   {
       field: "RecordID",
       headerName: "RecordID",

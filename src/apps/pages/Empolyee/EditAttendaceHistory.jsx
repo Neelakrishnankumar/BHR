@@ -127,7 +127,16 @@ const EditAttendanceHistory = () => {
   }
 
   const AttColumn = [
-    { field: "SLNO", headerName: "SL#", width: 5 },
+    // { field: "SLNO", headerName: "SL#", width: 5 },
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+    },
     { field: "Name", headerName: "Employee", width: 150 },
     { field: "Day1", headerName: "1", width: 5 },
     { field: "Day2", headerName: "2", width: 5 },
@@ -160,14 +169,14 @@ const EditAttendanceHistory = () => {
     { field: "Day29", headerName: "29", width: 5 },
     { field: "Day30", headerName: "30", width: 5 },
     { field: "Day31", headerName: "31", width: 5 },
-    { field: "Present", headerName: "PRESENT" },
+    { field: "Present", headerName: "Present" },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "UNPAID_LEAVE", headerName: "UNPAID LEAVE" },
-    { field: "Absent", headerName: "ABSENT" },
+    { field: "UNPAID_LEAVE", headerName: "Unpaid Leave" },
+    { field: "Absent", headerName: "Absent" },
     // { field: "Irregular", headerName: "IRREGULAR" },
-    { field: "HOLIDAYS", headerName: "HOLIDAYS" },
-    { field: "Weekoff", headerName: "WEEKOFF" },
-    { field: "Total", headerName: "TOTAL DAYS" },
+    { field: "HOLIDAYS", headerName: "Holiday" },
+    { field: "Weekoff", headerName: "Weekoff" },
+    { field: "Total", headerName: "Total Days" },
   ];
   // const AttendanceData = [
   //   {
@@ -472,9 +481,9 @@ const EditAttendanceHistory = () => {
                         />
                       }
                       fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
-                       style={{ color: "#d32f2f", cursor: "pointer" }} 
+                      style={{ color: "#d32f2f", cursor: "pointer" }}
                     >
-                      
+
                       {({ loading }) =>
                         loading ? (
                           <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />

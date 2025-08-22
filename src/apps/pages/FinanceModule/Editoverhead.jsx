@@ -66,8 +66,14 @@ const Editoverhead = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const fnSave = async (values) => {
-    let action = mode === "A" ? "insert" : "update";
+  const fnSave = async (values,del) => {
+    // let action = mode === "A" ? "insert" : "update";
+     let action =
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+          ? "harddelete"
+          : "update";
     setLoading(true);
 
     const idata = {
@@ -87,7 +93,7 @@ const Editoverhead = () => {
       toast.success(response.payload.Msg);
       // setIni(true)
       setLoading(false);
-      navigate(`/Apps/TR085/Over Head`);
+      navigate(-1);
     } else {
       toast.error(response.payload.Msg);
       setLoading(false);
@@ -124,7 +130,7 @@ const Editoverhead = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR085/Over Head");
+          navigate(-1);
         }
       } else {
         return;
@@ -158,7 +164,7 @@ const Editoverhead = () => {
                   sx={{ cursor: "default" }}
 
                 >
-                   Over Head
+                  Overhead
                 </Typography>
 
               </Breadcrumbs>
@@ -181,8 +187,8 @@ const Editoverhead = () => {
       </Paper>
 
       {!getLoading ? (
-       
-       <Paper elevation={3} sx={{ margin: "10px" }}>
+
+        <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={initialValue}
             onSubmit={(values, { resetForm }) => {
@@ -204,18 +210,18 @@ const Editoverhead = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                 {CompanyAutoCode == "Y" ? (
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  {CompanyAutoCode == "Y" ? (
                     <TextField
                       name="code"
                       type="text"
@@ -229,15 +235,15 @@ const Editoverhead = () => {
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      InputProps={{readOnly:true}}
-                      // autoFocus
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
                     />
-                 ):( 
-                 <TextField
+                  ) : (
+                    <TextField
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"                     
+                      label="Code"
                       variant="standard"
                       focused
                       required
@@ -245,77 +251,77 @@ const Editoverhead = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}                     
+                      helperText={touched.code && errors.code}
                       autoFocus
                     />
-                    )}
-                    <TextField
-                      name="name"
-                      type="text"
-                      id="name"
-                      label="Overhead"
-                      variant="standard"
-                      focused
-                      value={values.name}
+                  )}
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Overhead"
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    autoFocus={CompanyAutoCode == "Y"}
+                    required
+                  />
+                  <FormControl
+                    focused
+                    variant="standard"
+                  //sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="frequency">Frequency<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="frequency"
+                      name="frequency"
+                      value={values.frequency}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      autoFocus={CompanyAutoCode=="Y"}
                       required
-                    />
-                    <FormControl
-                      focused
-                     variant="standard"
-                      //sx={{ gridColumn: "span 2" }}
                     >
-                      <InputLabel id="frequency">Frequency</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="frequency"
-                        name="frequency"
-                        value={values.frequency}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        required
-                      >
-                        <MenuItem>Select</MenuItem>
-                        <MenuItem value="D">Daily</MenuItem>
-                        <MenuItem value="W">Weekly</MenuItem>
-                        <MenuItem value="M">Monthly</MenuItem>
-                        <MenuItem value="Y">Yearly</MenuItem>
-                        <MenuItem value="B">By Monthly</MenuItem>
-                        <MenuItem value="S">Six Month</MenuItem>
-                        <MenuItem value="Q">Quarterly</MenuItem>
-                        <MenuItem value="F">Fortnightly</MenuItem>
-                      </Select>
-                    </FormControl>
+                      <MenuItem>Select</MenuItem>
+                      <MenuItem value="D">Daily</MenuItem>
+                      <MenuItem value="W">Weekly</MenuItem>
+                      <MenuItem value="M">Monthly</MenuItem>
+                      <MenuItem value="Y">Yearly</MenuItem>
+                      <MenuItem value="B">By Monthly</MenuItem>
+                      <MenuItem value="S">Six Month</MenuItem>
+                      <MenuItem value="Q">Quarterly</MenuItem>
+                      <MenuItem value="F">Fortnightly</MenuItem>
+                    </Select>
+                  </FormControl>
 
-                    <FormControl
-                      focused
-                     variant="standard"
-                      //sx={{ gridColumn: "span 2" }}
+                  <FormControl
+                    focused
+                    variant="standard"
+                  //sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="productCost">Type<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="productCost"
+                      name="productCost"
+                      required
+                      value={values.productCost}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
                     >
-                      <InputLabel id="productCost">Type</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="productCost"
-                        name="productCost"
-                        required
-                        value={values.productCost}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="P">Cost Of Product</MenuItem>
-                        <MenuItem value="E">Cost Of Employee</MenuItem>
-                        <MenuItem value="M">Cost Of Material</MenuItem>
-                        <MenuItem value="F">Cost Of Fixed Assets</MenuItem>
-                        <MenuItem value="S">Salary</MenuItem>
-                      </Select>
-                    </FormControl>
-                 
+                      <MenuItem value="P">Cost Of Product</MenuItem>
+                      <MenuItem value="E">Cost Of Employee</MenuItem>
+                      <MenuItem value="M">Cost Of Material</MenuItem>
+                      <MenuItem value="F">Cost Of Fixed Assets</MenuItem>
+                      <MenuItem value="S">Salary</MenuItem>
+                    </Select>
+                  </FormControl>
+
                 </Box>
-                <Box display="flex" justifyContent="end" padding={1}  gap={formGap}>
+                <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
                   <LoadingButton
                     variant="contained"
                     color="secondary"
@@ -324,11 +330,24 @@ const Editoverhead = () => {
                   >
                     SAVE
                   </LoadingButton>
+                  { mode == "E" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        fnSave(values, "harddelete");
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : (
+                    null
+                  )}
                   <Button
                     variant="contained"
                     color="warning"
                     onClick={() => {
-                      navigate("/Apps/TR085/Over Head");
+                      navigate(-1);
                     }}
                   >
                     CANCEL
