@@ -196,7 +196,7 @@ function App() {
                     element={<EmployeeSchedule />}
                   />
                   <Route
-                    path="SkillGlow/CategoryMain/CreateCategoryMain"
+                    path="/:accessID/:screenName/EditList Of Categories/:id/:Mode"
                     element={<CreateCategoryMain />}
                   />
                   <Route
@@ -215,8 +215,14 @@ function App() {
                     path="/SkillGlow/SkillGlowList/SkillCategory"
                     element={<SkillCategory />}
                   />
-                  <Route
+                  {/* <Route
                     path="/SkillGlow/SkillGlowList/CreateSkill"
+                    element={<CreateSkill />}
+                  /> */}
+
+               
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID1/EditList Of Assessment/:id/:Mode"
                     element={<CreateSkill />}
                   />
                   <Route
@@ -465,6 +471,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:PcdhRecordID/:Number/:Decs/EditIssue/:id/:MaterialDescription/:ItemType/:HeaderQty/:Mode"
                     element={<Editissue />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID1"
+                    element={<ListviewSecondary />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number"

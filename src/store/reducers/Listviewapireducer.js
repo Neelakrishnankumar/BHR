@@ -10,8 +10,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
-import BalanceIcon from '@mui/icons-material/Balance';
-
+import BalanceIcon from "@mui/icons-material/Balance";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -34,14 +34,20 @@ import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import { StockProcessApi } from "./Formapireducer";
-import OpenInBrowserOutlinedIcon from '@mui/icons-material/OpenInBrowserOutlined';
+import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
-import Person2Icon from '@mui/icons-material/Person2';
+import Person2Icon from "@mui/icons-material/Person2";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import SwipeRightIcon from "@mui/icons-material/SwipeRight";
 import UTurnLeftIcon from "@mui/icons-material/UTurnLeft";
 import UTurnRightIcon from "@mui/icons-material/UTurnRight";
+import {
+  AccessTimeOutlined,
+  Category,
+  Delete,
+  Psychology,
+} from "@mui/icons-material";
 
 import Swal from "sweetalert2";
 const initialState = {
@@ -52,16 +58,12 @@ const initialState = {
   mailOpen: false,
   mailData: {},
   mailGetData: {},
-  materialRecID:"",
-  colorsRecID:"",
-  isLookupOpen:false,
-  isLookupColorOpen:false,
-  productionCardRecid:0,
+  materialRecID: "",
+  colorsRecID: "",
+  isLookupOpen: false,
+  isLookupColorOpen: false,
+  productionCardRecid: 0,
 };
-
-
-
-
 
 const Finyear = sessionStorage.getItem("year");
 export const getMail = createAsyncThunk("mail/get", async (data) => {
@@ -110,16 +112,16 @@ export const getApiSlice = createSlice({
   name: "listviewApi",
   initialState,
   reducers: {
-    productionlookupOpen(state,action){
-      state.isLookupOpen = !state.isLookupOpen
+    productionlookupOpen(state, action) {
+      state.isLookupOpen = !state.isLookupOpen;
       //here change
       state.materialRecID = action.payload.materialRecID;
       state.productionCardRecid = action.payload.productionCardID;
     },
-    productionColorlookupOpen(state,action){
-      state.isLookupColorOpen = !state.isLookupColorOpen
-       //here change
-       state.materialRecID = action.payload.materialRecID;
+    productionColorlookupOpen(state, action) {
+      state.isLookupColorOpen = !state.isLookupColorOpen;
+      //here change
+      state.materialRecID = action.payload.materialRecID;
     },
     mailOpen(state, action) {
       state.mailOpen = !state.mailOpen;
@@ -168,7 +170,14 @@ export const getApiSlice = createSlice({
 });
 
 // Destructure and export the plain action creators
-export const { pending, errored, mailOpen, Success,productionlookupOpen,productionColorlookupOpen } = getApiSlice.actions;
+export const {
+  pending,
+  errored,
+  mailOpen,
+  Success,
+  productionlookupOpen,
+  productionColorlookupOpen,
+} = getApiSlice.actions;
 
 export default getApiSlice.reducer;
 
@@ -178,9 +187,9 @@ export default getApiSlice.reducer;
 
 // };
 
-const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
+const productionCardUPdate = (type, recID) => async (dispatch, getState) => {
   //  alert(type);
-  const compID = sessionStorage.getItem("compID");  
+  const compID = sessionStorage.getItem("compID");
   var updateName = "";
 
   if (type === "S") {
@@ -203,7 +212,7 @@ const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
     //       RecordID: recID,
     //     };
     //     console.log("🚀 ~ file: Listviewapireducer.js:113 ~ data:", data);
-      
+
     //     axios
     //       .post(url, data, {
     //         headers: {
@@ -211,7 +220,7 @@ const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
     //             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
     //         },
     //       })
-      
+
     //       .then((response) => {
     //         console.log(
     //           "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
@@ -221,7 +230,6 @@ const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
     //         if (response.data.Status == "Y") {
     //           toast.success(`${updateName}`);
 
-            
     //           dispatch( fetchListview(
     //               "TR047",
     //               "Production Card",
@@ -229,7 +237,7 @@ const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
     //               "",
     //               compID
     //             ))
-              
+
     //           // window.location.href = '/Apps/TR056/Customer%20Order'
     //         } else {
     //           toast.error(`${"Error"}`);
@@ -239,12 +247,12 @@ const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
     //         dispatch(errored);
     //         //dispatch(errored({"action":Action,"Status":apidata.Status,"apiResponse":apidata.Data,"Msg":""}))
     //       });
-        
-  //     } else {
-  //       return;
-  //     }
-  //   });
-  //  return;
+
+    //     } else {
+    //       return;
+    //     }
+    //   });
+    //  return;
   }
   if (type === "P") {
     updateName = "Production Card Paused";
@@ -293,7 +301,12 @@ const productionCardUPdate = (type, recID) => async(dispatch, getState) => {
 const fnProcess = (recID, accessid) => (dispatch, getState) => {
   var url = store.getState().globalurl.imageNameUpdateUrl;
 
-  var data = { accessid: accessid, Recordid: recID,Action:"none",ImageName :"no" };
+  var data = {
+    accessid: accessid,
+    Recordid: recID,
+    Action: "none",
+    ImageName: "no",
+  };
   console.log(
     "🚀 ~ file: Listviewapireducer.js:228 ~ fnProcess ~ data:",
     JSON.stringify(data)
@@ -325,7 +338,7 @@ const indentOrderSave =
   (type, recID, SupplierID, parentID) => (dispatch, getState) => {
     var url = store.getState().globalurl.indentUrl;
     const Finyear = sessionStorage.getItem("year");
-    const CompanyID = sessionStorage.getItem("compID");  
+    const CompanyID = sessionStorage.getItem("compID");
     const yearID = sessionStorage.getItem("YearRecorid");
 
     var data = {
@@ -335,13 +348,12 @@ const indentOrderSave =
       SupplierID,
       Finyear,
       CompanyID,
-      yearID
+      yearID,
     };
 
     console.log("INDENTSTRUCT" + JSON.stringify(data));
     // dispatch(pending());
 
-    
     axios
       .post(url, data, {
         headers: {
@@ -459,17 +471,19 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
 };
 export const fetchListview =
   (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
-    // const navigate = useNavigate();;
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
-    // alert(compID);
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
-    // alert("Inside listview--",sessionStorage.getItem("UserName"));
     var LoggedInUserName = sessionStorage.getItem("UserName");
-    // alert("LoggedInUserName",LoggedInUserName);
-    console.log(filter,"kkkffff");
-    if (filter != "" && AccessID !== "TR115" && AccessID !== "TR118"  && AccessID !== "TR155"  && AccessID !== "TR152" && AccessID !== "TR148" ) {
+    if (
+      filter != "" &&
+      AccessID !== "TR115" &&
+      AccessID !== "TR118" &&
+      AccessID !== "TR155" &&
+      AccessID !== "TR152" &&
+      AccessID !== "TR148"
+    ) {
       if (
         AccessID == "TR011" ||
         AccessID == "TR008" ||
@@ -485,7 +499,7 @@ export const fetchListview =
         AccessID == "TR079" ||
         AccessID == "TR080" ||
         AccessID == "TR032" ||
-       AccessID == "TR128" ||
+        AccessID == "TR128" ||
         AccessID == "TR087"
       ) {
         if (AccessID == "TR080") {
@@ -500,13 +514,10 @@ export const fetchListview =
             year +
             "'";
         }
-        if (AccessID != "TR080" ) {
+        if (AccessID != "TR080") {
           filter = "parentID= " + filter + "'";
           // console.log("---3---",filter);
         }
-             
-
-        
       }
       if (
         AccessID != "TR051" &&
@@ -534,19 +545,17 @@ export const fetchListview =
         AccessID != "TR002" &&
         AccessID != "TR087" &&
         AccessID != "TR123" &&
-        AccessID !=  "TR124" &&
-        AccessID !=  "TR010" &&
-        AccessID !=  "TR091" &&
-        AccessID !=  "TR140" &&
+        AccessID != "TR124" &&
+        AccessID != "TR010" &&
+        AccessID != "TR091" &&
+        AccessID != "TR140" &&
         AccessID != "TR233" &&
         AccessID != "TR236" &&
         AccessID != "TR234" &&
         AccessID != "TR235" &&
-        // AccessID != "TR273" &&
-        
+        AccessID != "TR280" &&
         AccessID != "TR262" &&
-         AccessID != "TR022" 
-
+        AccessID != "TR022"
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -563,22 +572,17 @@ export const fetchListview =
         AccessID == "TR105" ||
         AccessID == "TR002" ||
         AccessID == "TR086" ||
-        AccessID == "TR091" 
-       
-      
-        
+        AccessID == "TR091"
       ) {
         // filter = filter;
         filter = `CompanyID=${CompId}`;
       }
-     if(AccessID === "TR262"){
-      filter = "ProjectID=" + `'${filter}'`;
-     
-     }
-      
-
-    }
-    else{
+      if (AccessID === "TR262") {
+        filter = "ProjectID=" + `'${filter}'`;
+      }
+    } else if (AccessID == "TR280") {
+      filter = filter;
+    } else {
       filter = `CompanyID=${CompId}`;
     }
     var idata = {
@@ -586,7 +590,14 @@ export const fetchListview =
         // "ScreenName": screenName,
         AccessID: AccessID,
         ScreenName: screenName,
-        Filter: AccessID == "TR128" ? `parentID=${CompId}`: AccessID == "TR273" ? "Type = 'CI'":AccessID == "TR274" ? "Type = 'CO'":filter,
+        Filter:
+          AccessID == "TR128"
+            ? `parentID=${CompId}`
+            : AccessID == "TR273"
+            ? "Type = 'CI'"
+            : AccessID == "TR274"
+            ? "Type = 'CO'"
+            : filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,
@@ -645,7 +656,7 @@ export const fetchListview =
                       </Tooltip>
                     </Link>
                     <Link
-                       to={`/Apps/TR146/Production Card/EditInspection Form/${params.row.RecordID}`}
+                      to={`/Apps/TR146/Production Card/EditInspection Form/${params.row.RecordID}`}
                     >
                       <Tooltip title="Inspection Form">
                         <IconButton color="info">
@@ -654,7 +665,7 @@ export const fetchListview =
                       </Tooltip>
                     </Link>
                     {params.row.Startdate != "" ? (
-                    <Tooltip title="Print">
+                      <Tooltip title="Print">
                         <IconButton
                           component="a"
                           href={`${
@@ -668,7 +679,7 @@ export const fetchListview =
                           <PrintOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                       ) : null}
+                    ) : null}
                     {params.row.Process != "Y" && params.row.Completeddate ? (
                       <Link>
                         <IconButton
@@ -682,23 +693,19 @@ export const fetchListview =
                     ) : null}
 
                     {params.row.Startdate == "" ? (
-               <Link>
+                      <Link>
                         <Tooltip title={params.row.Startdate}>
                           <IconButton
                             color="success"
-                            onClick={
-                         
-                                    productionCardUPdate(
-                                      "S",
-                                      params.row.RecordID
-                                    )
-                             
-                             }
+                            onClick={productionCardUPdate(
+                              "S",
+                              params.row.RecordID
+                            )}
                           >
                             <PlayCircleOutlineOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                        </Link>
+                      </Link>
                     ) : params.row.Startdate != "" &&
                       params.row.Completeddate == "" ? (
                       <Box>
@@ -770,22 +777,24 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    
-                      <Tooltip title="Production Requirement">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }ProductionRequirement.php?Token=${params.row.Hashtoken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          sx={{color:"#4615b2"}}
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    
+
+                    <Tooltip title="Production Requirement">
+                      <IconButton
+                        component="a"
+                        href={`${
+                          store.getState().globalurl.pdfurl
+                        }ProductionRequirement.php?Token=${
+                          params.row.Hashtoken
+                        }`}
+                        target="_blank"
+                        rel="noreferrer"
+                        sx={{ color: "#4615b2" }}
+                        size="small"
+                      >
+                        <PrintOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+
                     {params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
@@ -858,7 +867,7 @@ export const fetchListview =
                 );
               },
             };
-          }  else if (AccessID == "TR146" ) {
+          } else if (AccessID == "TR146") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -873,22 +882,16 @@ export const fetchListview =
                 return (
                   <Box>
                     <Link
-                        to={`./EditJobWork Category/${params.row.RecordID}/E`}
-                      >
-                        <Tooltip title="Edit">
-                          <IconButton color="info" size="small">
-                            <ModeEditOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    <Link
-                      to={`./EditJobwork/${params.row.RecordID}/E`}
+                      to={`./EditJobWork Category/${params.row.RecordID}/E`}
                     >
-                      <Tooltip
-                        title={
-                         "List of Job Work"
-                        }
-                      >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                    <Link to={`./EditJobwork/${params.row.RecordID}/E`}>
+                      <Tooltip title={"List of Job Work"}>
                         <IconButton color="info" size="small">
                           <ListAltOutlinedIcon />
                         </IconButton>
@@ -898,7 +901,134 @@ export const fetchListview =
                 );
               },
             };
-          }else if (AccessID == "TR076") {
+          } else if (AccessID == "TR286") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                    <Link to={`/Apps/SkillGlow/CandidateMain`}>
+                      <IconButton color="primary" size="small">
+                        <Tooltip title="Assessment Category">
+                          <CategoryOutlinedIcon />
+                        </Tooltip>
+                      </IconButton>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          } else if (AccessID == "TR278") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                    <Link
+                      // to={`/Apps/SkillGlow/SkillGlowList`}
+                      to={`/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`}
+                    >
+                      <IconButton color="primary" size="small">
+                        <Tooltip title="Assessment">
+                          <Psychology />
+                        </Tooltip>
+                      </IconButton>
+                    </Link>
+                    <Link
+                      to={`./EditList Of Categories/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                    <Link
+                      to={`./EditList Of Categories/${params.row.RecordID}/D`}
+                    >
+                      <Tooltip title="Delete">
+                        <IconButton color="error" size="small">
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          } else if (AccessID == "TR280") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                    <Link
+                      // to={`/Apps/SkillGlow/SkillGlowList`}
+                      to={`/Apps/SkillGlow/SkillGlowList/SkillGlowSession`}
+                    >
+                      <IconButton color="primary" size="small">
+                        <Tooltip title="Session">
+                          <AccessTimeOutlined />
+                        </Tooltip>
+                      </IconButton>
+                    </Link>
+                    <Link
+                      // to={`/Apps/SkillGlow/SkillGlowList`}
+                      to={`/Apps/SkillGlow/SkillGlowList/SkillCategory`}
+                    >
+                      <IconButton color="primary" size="small">
+                        <Tooltip title="Question Groups">
+                          <Category />
+                        </Tooltip>
+                      </IconButton>
+                    </Link>
+                    <Link
+                      to={`./EditList Of Assessment/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                    <Link
+                      to={`./EditList Of Assessment/${params.row.RecordID}/D`}
+                    >
+                      <Tooltip title="Delete">
+                        <IconButton color="error" size="small">
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          } else if (AccessID == "TR076") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -982,11 +1112,7 @@ export const fetchListview =
                 );
               },
             };
-          } else if (
-            AccessID == "TR063"
-
-            // AccessID == "TR060"
-          ) {
+          } else if (AccessID == "TR063") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1053,10 +1179,9 @@ export const fetchListview =
                       </Link>
                     ) : null}
 
-                    {params.row.Code == "PL"  ? (
+                    {params.row.Code == "PL" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR211/Local Invoice/${params.row.Code}`}
-
                       >
                         <Tooltip title="List Of Invoice">
                           <IconButton color="info" size="small">
@@ -1066,7 +1191,7 @@ export const fetchListview =
                       </Link>
                     ) : null}
 
-                    { params.row.Code == "LL" ? (
+                    {params.row.Code == "LL" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR084/Local Invoice/${params.row.Code}/${params.row.Type}`}
                       >
@@ -1077,11 +1202,6 @@ export const fetchListview =
                         </Tooltip>
                       </Link>
                     ) : null}
-
-
-                    
-
-                    
 
                     {/* ( <Link to={`/Apps/Secondarylistview/TR083/Local Invoce/${params.row.Type}/IN`}>
                       <Tooltip title="Edit">
@@ -1356,7 +1476,9 @@ export const fetchListview =
                                 row: params.row,
                                 link: `${
                                   store.getState().globalurl.pdfurl
-                                }productpacking.php?Token=${params.row.Hashtoken}`,
+                                }productpacking.php?Token=${
+                                  params.row.Hashtoken
+                                }`,
                               })
                             );
                             dispatch(
@@ -1569,8 +1691,7 @@ export const fetchListview =
                 );
               },
             };
-          }
-           else if (
+          } else if (
             AccessID == "TR101"
 
             // AccessID == "TR060"
@@ -1629,20 +1750,20 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                      <Link
-                        to={`/Apps/Secondarylistview/${params.row.ChildID}/Costing/${params.row.ProductRecordID}/${params.row.ProductDescription}/${params.row.CustomerRecordID}`}
-                      >
-                        <Tooltip title="List Of BOM">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                    <Link
+                      to={`/Apps/Secondarylistview/${params.row.ChildID}/Costing/${params.row.ProductRecordID}/${params.row.ProductDescription}/${params.row.CustomerRecordID}`}
+                    >
+                      <Tooltip title="List Of BOM">
+                        <IconButton color="info" size="small">
+                          <ListAltOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
                   </Box>
                 );
               },
             };
-          }else if (
+          } else if (
             AccessID == "TR141"
 
             // AccessID == "TR060"
@@ -1659,15 +1780,15 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                      <Link
-                        to={`./costing-product/${params.row.ReferenceNo}/${params.row.RecordID}/TR091`}
-                      >
-                        <Tooltip title="List Of Costing">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                    <Link
+                      to={`./costing-product/${params.row.ReferenceNo}/${params.row.RecordID}/TR091`}
+                    >
+                      <Tooltip title="List Of Costing">
+                        <IconButton color="info" size="small">
+                          <ListAltOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
                   </Box>
                 );
               },
@@ -1703,9 +1824,7 @@ export const fetchListview =
                 );
               },
             };
-          } else if (
-            AccessID == "TR104"
-          ) {
+          } else if (AccessID == "TR104") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1731,10 +1850,11 @@ export const fetchListview =
                 );
               },
             };
-          }
-          
-          else if (
-            AccessID == "TR236" || AccessID == "TR234" || AccessID == "TR235"|| AccessID=="TR233"
+          } else if (
+            AccessID == "TR236" ||
+            AccessID == "TR234" ||
+            AccessID == "TR235" ||
+            AccessID == "TR233"
           ) {
             obj = {
               field: "action",
@@ -1748,12 +1868,17 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Box>
-                    { AccessID == "TR236" &&<Link
+                    {AccessID == "TR236" && (
+                      <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={{
-                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,
-                          MilestoneName:params.row.MilestoneName,
-                          Activityname:params.row.ActivitesName,TaskName:params.row.Name,projectName:params.row.ProjectName,stagesName:params.row.OperationStageName
+                          MilestoneID: params.row.RecordID,
+                          projectID: params.row.ProjectID,
+                          MilestoneName: params.row.MilestoneName,
+                          Activityname: params.row.ActivitesName,
+                          TaskName: params.row.Name,
+                          projectName: params.row.ProjectName,
+                          stagesName: params.row.OperationStageName,
                         }}
                       >
                         <Tooltip title="Edit">
@@ -1761,13 +1886,19 @@ export const fetchListview =
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>}
-                      {AccessID == "TR236" ? (
+                      </Link>
+                    )}
+                    {AccessID == "TR236" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR234/Activities/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.MilestoneID,
-                          MilestoneName:params.row.MilestoneName,
-                          stagesName:params.row.Name,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,projectName:params.row.ProjectName}}
+                        state={{
+                          MilestoneID: params.row.MilestoneID,
+                          MilestoneName: params.row.MilestoneName,
+                          stagesName: params.row.Name,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          projectName: params.row.ProjectName,
+                        }}
                       >
                         <Tooltip title="Activities">
                           <IconButton color="info" size="small">
@@ -1778,12 +1909,19 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                     {AccessID == "TR236" ? (
+                    {AccessID == "TR236" ? (
                       <Link
-                      to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,
-                        MilestoneName:params.row.MilestoneName,
-                        stagesName:params.row.Name,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,projectName:params.row.ProjectName}}
+                        to={`/Apps/TR233/weightage/Editweightage/ACT/${params.row.RecordID}/E`}
+                        state={{
+                          code: params.row.Code,
+                          Desc: params.row.Name,
+                          MilestoneID: params.row.RecordID,
+                          MilestoneName: params.row.MilestoneName,
+                          stagesName: params.row.Name,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          projectName: params.row.ProjectName,
+                        }}
                       >
                         <Tooltip title="Activity Weightage">
                           <IconButton color="info" size="small">
@@ -1794,12 +1932,17 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                     { AccessID == "TR233" &&<Link
+                    {AccessID == "TR233" && (
+                      <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={{
-                          MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,
+                          MilestoneID: params.row.RecordID,
+                          projectID: params.row.ProjectID,
                           //MilestoneName:params.row.MilestoneName,
-                          Activityname:params.row.ActivitesName,TaskName:params.row.Name,projectName:params.row.ProjectName,stagesName:params.row.OperationStageName
+                          Activityname: params.row.ActivitesName,
+                          TaskName: params.row.Name,
+                          projectName: params.row.ProjectName,
+                          stagesName: params.row.OperationStageName,
                         }}
                       >
                         <Tooltip title="Edit">
@@ -1807,11 +1950,18 @@ export const fetchListview =
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>}
+                      </Link>
+                    )}
                     {AccessID == "TR233" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR236/Stages/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,MilestoneName:params.row.Name,MilestoneName:params.row.Name,projectName:params.row.ProjectName}}
+                        state={{
+                          MilestoneID: params.row.RecordID,
+                          projectID: params.row.ProjectID,
+                          MilestoneName: params.row.Name,
+                          MilestoneName: params.row.Name,
+                          projectName: params.row.ProjectName,
+                        }}
                       >
                         <Tooltip title="Stages">
                           <IconButton color="info" size="small">
@@ -1825,8 +1975,16 @@ export const fetchListview =
                     {AccessID == "TR233" ? (
                       <Link
                         to={`/Apps/TR233/weightage/Editweightage/OPS/${params.row.RecordID}/E`}
-                        state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,MilestoneName:params.row.Name,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,projectName:params.row.ProjectName}}
-                     >
+                        state={{
+                          code: params.row.Code,
+                          Desc: params.row.Name,
+                          MilestoneID: params.row.RecordID,
+                          MilestoneName: params.row.Name,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          projectName: params.row.ProjectName,
+                        }}
+                      >
                         <Tooltip title="Stage Weightage">
                           <IconButton color="info" size="small">
                             <BalanceIcon />
@@ -1836,12 +1994,17 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    { AccessID == "TR234" &&<Link
+                    {AccessID == "TR234" && (
+                      <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={{
-                          MilestoneID:params.row.RecordID,Activityname:params.row.Name,
-                        MilestoneName:params.row.MilestoneName,
-                          projectID:params.row.ProjectID,stagesName:params.row.OperationStageName,projectName:params.row.ProjectName,OperationStageID:params.row.OperationStageID
+                          MilestoneID: params.row.RecordID,
+                          Activityname: params.row.Name,
+                          MilestoneName: params.row.MilestoneName,
+                          projectID: params.row.ProjectID,
+                          stagesName: params.row.OperationStageName,
+                          projectName: params.row.ProjectName,
+                          OperationStageID: params.row.OperationStageID,
                         }}
                       >
                         <Tooltip title="Edit">
@@ -1849,14 +2012,20 @@ export const fetchListview =
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>}
+                      </Link>
+                    )}
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.MilestoneID,Activityname:params.row.Name,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,
-                          MilestoneName:params.row.MilestoneName,
-                          stagesName:params.row.OperationStageName,projectName:params.row.ProjectName}}
-                        
+                        state={{
+                          MilestoneID: params.row.MilestoneID,
+                          Activityname: params.row.Name,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          MilestoneName: params.row.MilestoneName,
+                          stagesName: params.row.OperationStageName,
+                          projectName: params.row.ProjectName,
+                        }}
                       >
                         <Tooltip title="Task">
                           <IconButton color="info" size="small">
@@ -1865,15 +2034,23 @@ export const fetchListview =
                         </Tooltip>
                       </Link>
                     ) : (
-                      false           
+                      false
                     )}
-                   
+
                     {AccessID == "TR234" ? (
                       <Link
-                      to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,
-                        MilestoneName:params.row.MilestoneName,
-                        stagesName:params.row.OperationStageName,projectName:params.row.ProjectName,Activityname:params.row.Name}}
+                        to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
+                        state={{
+                          code: params.row.Code,
+                          Desc: params.row.Name,
+                          MilestoneID: params.row.MilestoneID,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          MilestoneName: params.row.MilestoneName,
+                          stagesName: params.row.OperationStageName,
+                          projectName: params.row.ProjectName,
+                          Activityname: params.row.Name,
+                        }}
                       >
                         <Tooltip title="Task Weightage">
                           <IconButton color="info" size="small">
@@ -1884,10 +2061,18 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                     { AccessID == "TR235" &&<Link
+                    {AccessID == "TR235" && (
+                      <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={{
-                          TaskName:params.row.Name,MilestoneID:params.row.RecordID,MilestoneName:params.row.MilestoneName,Activityname:params.row.ActivitesName,projectID:params.row.ProjectID,projectName:params.row.ProjectName,OperationStageID:params.row.OperationStageID,stagesName:params.row.OperationStageName
+                          TaskName: params.row.Name,
+                          MilestoneID: params.row.RecordID,
+                          MilestoneName: params.row.MilestoneName,
+                          Activityname: params.row.ActivitesName,
+                          projectID: params.row.ProjectID,
+                          projectName: params.row.ProjectName,
+                          OperationStageID: params.row.OperationStageID,
+                          stagesName: params.row.OperationStageName,
                         }}
                         //state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
@@ -1896,12 +2081,13 @@ export const fetchListview =
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-                      </Link>}
+                      </Link>
+                    )}
                   </Box>
                 );
               },
             };
-          }  else if (AccessID == "TR080") {
+          } else if (AccessID == "TR080") {
             listviewData.Data.columns.push(obj);
             dispatch(
               Success({
@@ -1947,67 +2133,67 @@ export const fetchListview =
                     AccessID !== "TR052" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                       
                         state={
                           AccessID === "TR027"
                             ? {
-                                
-                                EmpName:params.row.Name
+                                EmpName: params.row.Name,
                               }
-                            :
-                            AccessID === "TR128"
+                            : AccessID === "TR128"
                             ? {
                                 LocationName: params.row.Name,
                                 CompanyName: params.row.CompanyName,
-                              } :
-                              AccessID === "TR127"
+                              }
+                            : AccessID === "TR127"
                             ? {
                                 GateName: params.row.Name,
                                 LocationName: params.row.LocationName,
                                 CompanyName: params.row.CompanyName,
                               }
-                            :
-                            AccessID === "TR257"
+                            : AccessID === "TR257"
                             ? {
-                                
-                                EmpName:params.row.Name
+                                EmpName: params.row.Name,
                               }
-                              :AccessID === "TR132"
+                            : AccessID === "TR132"
                             ? {
-
-                              proName:params.row.ProjectName,Date:params.row.Date,EmpName:params.row.EmployeeName,Locname:params.row.LocationName
+                                proName: params.row.ProjectName,
+                                Date: params.row.Date,
+                                EmpName: params.row.EmployeeName,
+                                Locname: params.row.LocationName,
                               }
-                              : AccessID === "TR123"
-                              ? {
-  
-                                EmpName:params.row.Name
-                                }
-                             
-                              : AccessID === "TR134"
+                            : AccessID === "TR123"
                             ? {
-
-                              proName:params.row.ProjectName,EmpName:params.row.EmployeeName,Date:params.row.Date,Locname:params.row.LocationName,EmployeeID:params.row.EmployeesID,checkinID:params.row.CheckinID
+                                EmpName: params.row.Name,
                               }
-                              : AccessID === "TR124"
-                              ? {
-                                EmpName:params.row.EmployeeName,checkinID:params.row.CheckinID
-                                }
-                            // : AccessID === "TR127"
-                            // ? {
-                            //     GateName: params.row.Name,
-                            //     LocationName: params.row.LocationName,
-                            //     CompanyName: params.row.CompanyName,
-                            //   }
-                            // : AccessID === "TR129"
-                            // ? {
-                            //     bin: params.row.Name,
-                            //     LocationName: params.row.LocationName,
-                            //     CompanyName: params.row.CompanyName,
-                            //   }
-                            : {
-                              CustomerID: params.row.CustomerRecordID,
-                              ProductID: params.row.ProductRecordID,
-                              BomID: params.row.BomRecordID,
+                            : AccessID === "TR134"
+                            ? {
+                                proName: params.row.ProjectName,
+                                EmpName: params.row.EmployeeName,
+                                Date: params.row.Date,
+                                Locname: params.row.LocationName,
+                                EmployeeID: params.row.EmployeesID,
+                                checkinID: params.row.CheckinID,
+                              }
+                            : AccessID === "TR124"
+                            ? {
+                                EmpName: params.row.EmployeeName,
+                                checkinID: params.row.CheckinID,
+                              }
+                            : // : AccessID === "TR127"
+                              // ? {
+                              //     GateName: params.row.Name,
+                              //     LocationName: params.row.LocationName,
+                              //     CompanyName: params.row.CompanyName,
+                              //   }
+                              // : AccessID === "TR129"
+                              // ? {
+                              //     bin: params.row.Name,
+                              //     LocationName: params.row.LocationName,
+                              //     CompanyName: params.row.CompanyName,
+                              //   }
+                              {
+                                CustomerID: params.row.CustomerRecordID,
+                                ProductID: params.row.ProductRecordID,
+                                BomID: params.row.BomRecordID,
                               }
                         }
                       >
@@ -2033,7 +2219,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                     {/* {AccessID == "TR027" ? (
+                    {/* {AccessID == "TR027" ? (
                       <Link
                       to={`/Apps/TR027/${screenName}/Edit${screenName}/${params.row.RecordID}/E`}
                       state={{EmpName:params.row.Name}}
@@ -2091,7 +2277,9 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                 {params.row.Process != "Y" && params.row.parentID == "MO"  && AccessID == "TR052" ? (
+                    {params.row.Process != "Y" &&
+                    params.row.parentID == "MO" &&
+                    AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -2102,7 +2290,9 @@ export const fetchListview =
                         </IconButton>
                       </Link>
                     ) : null}
-                     {params.row.Process != "Y" && params.row.parentID == "LO"  && AccessID == "TR052" ? (
+                    {params.row.Process != "Y" &&
+                    params.row.parentID == "LO" &&
+                    AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -2113,7 +2303,9 @@ export const fetchListview =
                         </IconButton>
                       </Link>
                     ) : null}
-                    {params.row.Process != "Y" && params.row.parentID == "PO"  && AccessID == "TR052" ? (
+                    {params.row.Process != "Y" &&
+                    params.row.parentID == "PO" &&
+                    AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -2196,7 +2388,14 @@ export const fetchListview =
                     {AccessID == "TR234" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR235/Task/${params.row.RecordID}`}
-                        state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,stagesName:params.row.OperationStageName,MilestoneName:params.row.MilestoneName,Activityname:params.row.Name}}
+                        state={{
+                          MilestoneID: params.row.MilestoneID,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          stagesName: params.row.OperationStageName,
+                          MilestoneName: params.row.MilestoneName,
+                          Activityname: params.row.Name,
+                        }}
                       >
                         <Tooltip title="Task">
                           <IconButton color="info" size="small">
@@ -2205,13 +2404,22 @@ export const fetchListview =
                         </Tooltip>
                       </Link>
                     ) : (
-                      false           
+                      false
                     )}
-                   
+
                     {AccessID == "TR234" ? (
                       <Link
-                      to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
-                      state={{code:params.row.Code,Desc:params.row.Name,MilestoneID:params.row.RecordID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID,stagesName:params.row.OperationStageName,MilestoneName:params.row.MilestoneName,Activityname:params.row.Name}}
+                        to={`/Apps/TR233/weightage/Editweightage/TK/${params.row.RecordID}/E`}
+                        state={{
+                          code: params.row.Code,
+                          Desc: params.row.Name,
+                          MilestoneID: params.row.RecordID,
+                          projectID: params.row.ProjectID,
+                          OperationStageID: params.row.OperationStageID,
+                          stagesName: params.row.OperationStageName,
+                          MilestoneName: params.row.MilestoneName,
+                          Activityname: params.row.Name,
+                        }}
                       >
                         <Tooltip title="Task Weightage">
                           <IconButton color="info" size="small">
@@ -2222,7 +2430,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-{/*                    
+                    {/*                    
                     {AccessID == "TR133" ? (
                       <Link
                         to={`/Apps/Secondarylistview/TR233/Milestones/${params.row.RecordID}`}
@@ -2272,7 +2480,7 @@ export const fetchListview =
                       false
                     )} */}
 
-                      {AccessID == "TR136" ? (
+                    {AccessID == "TR136" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}/${params.row.RecordID}`}
                       >
@@ -2282,11 +2490,10 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      
                     ) : (
                       false
                     )}
-                     {AccessID == "TR135" ? (
+                    {AccessID == "TR135" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.Type}`}
                       >
@@ -2296,11 +2503,10 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      
                     ) : (
                       false
                     )}
-                     {AccessID == "TR137" ? (
+                    {AccessID == "TR137" ? (
                       <Link
                         to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
                       >
@@ -2310,7 +2516,6 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      
                     ) : (
                       false
                     )}
@@ -2318,8 +2523,8 @@ export const fetchListview =
                       <Box>
                         <Link
                           to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
-                        state={{Locationname:params.row.Name}}
-                       >
+                          state={{ Locationname: params.row.Name }}
+                        >
                           <Tooltip title="Gate">
                             <IconButton color="info" size="small">
                               <ListAltOutlinedIcon />
@@ -2409,39 +2614,37 @@ export const fetchListview =
                     )}
                     {AccessID == "TR109" && params.row.Process == "Y" ? (
                       <Box>
-                      <Tooltip title="Print">
-                        <IconButton
-                          component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }Leatherpackingreport.php?Token=${
-                            params.row.Hashtoken
-                          }`}
-                          target="_blank"
-                          rel="noreferrer"
-                          color="info"
-                          size="small"
-                        >
-                          <PrintOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                       <Tooltip title="Print">
-                       <IconButton
-                         component="a"
-                         href={`${
-                           store.getState().globalurl.pdfurl
-                         }LEATHERPACKING.php?Token=${
-                           params.row.Hashtoken
-                         }`}
-                         target="_blank"
-                         rel="noreferrer"
-                         color="info"
-                         size="small"
-                       >
-                         <PrintOutlinedIcon />
-                       </IconButton>
-                     </Tooltip>
-                     </Box>
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }Leatherpackingreport.php?Token=${
+                              params.row.Hashtoken
+                            }`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Print">
+                          <IconButton
+                            component="a"
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     ) : (
                       false
                     )}
@@ -2560,7 +2763,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                     {AccessID == "TR050" && params.row.Process == "Y" ? (
+                    {AccessID == "TR050" && params.row.Process == "Y" ? (
                       <Tooltip title="Internal Order">
                         <IconButton
                           component="a"
@@ -2717,36 +2920,36 @@ export const fetchListview =
                       false
                     )}
                     {AccessID == "TR155" ? (
-                         <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
+                      <Tooltip title="Print">
+                        <IconButton
+                          component="a"
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          color="info"
+                          size="small"
+                        >
+                          <PrintOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
                     ) : null}
-                      {AccessID == "TR152" ? (
-                         <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }purchaseorder.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
+                    {AccessID == "TR152" ? (
+                      <Tooltip title="Print">
+                        <IconButton
+                          component="a"
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }purchaseorder.php?Token=${params.row.Hashtoken}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          color="info"
+                          size="small"
+                        >
+                          <PrintOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
                     params.row.parentID == "CC" &&
@@ -2836,44 +3039,63 @@ export const fetchListview =
                       </Tooltip>
                     ) : null}
 
-
-
                     {AccessID == "TR048" ? (
                       <Box>
-                      <Link
-                        to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
-                      >
-                        <Tooltip title="Issue">
-                          <IconButton color="info" size="small">
-                            <SummarizeOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                       {/* <Link
+                        <Link
+                          to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
+                        >
+                          <Tooltip title="Issue">
+                            <IconButton color="info" size="small">
+                              <SummarizeOutlinedIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                        {/* <Link
                        to={`./EditIssue/${params.row.RecordID}/${params.row.MaterialDescription}/${params.row.ItemType}/${params.row.HeaderQty}/E`}
                      > */}
-                       <Tooltip title="Alter Material">
-                        {/* //here change */}
-                       <IconButton onClick={()=>dispatch(productionlookupOpen({materialRecID:params.row.MtlRecordID,productionCardID:params.row.PcdhRecordID}))} color="info" size="small">
-                           <OpenInBrowserOutlinedIcon />
-                         </IconButton>
-                       </Tooltip>
-                       {params.row.Colourflag == "Y" ?  (
-                       <Tooltip title="Alter Color">
-                        {/* //here change */}
-                       <IconButton onClick={()=>dispatch(productionColorlookupOpen({materialRecID:params.row.MtlRecordID}))} color="info" size="small">
-                           <OpenInBrowserOutlinedIcon  color="warning"/>
-                         </IconButton>
-                       </Tooltip>
-                       ) : (
-                        false
-                       )}
-                     {/* </Link> */}
-                     </Box>
+                        <Tooltip title="Alter Material">
+                          {/* //here change */}
+                          <IconButton
+                            onClick={() =>
+                              dispatch(
+                                productionlookupOpen({
+                                  materialRecID: params.row.MtlRecordID,
+                                  productionCardID: params.row.PcdhRecordID,
+                                })
+                              )
+                            }
+                            color="info"
+                            size="small"
+                          >
+                            <OpenInBrowserOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        {params.row.Colourflag == "Y" ? (
+                          <Tooltip title="Alter Color">
+                            {/* //here change */}
+                            <IconButton
+                              onClick={() =>
+                                dispatch(
+                                  productionColorlookupOpen({
+                                    materialRecID: params.row.MtlRecordID,
+                                  })
+                                )
+                              }
+                              color="info"
+                              size="small"
+                            >
+                              <OpenInBrowserOutlinedIcon color="warning" />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          false
+                        )}
+                        {/* </Link> */}
+                      </Box>
                     ) : (
                       false
                     )}
-                    
+
                     {/* {AccessID == "TR048" ?
         
                     
@@ -2910,8 +3132,7 @@ export const fetchListview =
                             "insert",
                             indentRecID,
                             params.row.SupplierID,
-                            params.row.parentID,
-                            
+                            params.row.parentID
                           )}
                         >
                           <ListAltOutlinedIcon />
@@ -3011,7 +3232,7 @@ export const fetchListview =
                     ) : (
                       false
                     )}
-                    
+
                     {AccessID == "TR010" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E/${0}`}
@@ -3062,422 +3283,133 @@ export const fetchListview =
                    </Tooltip>
                  </Link>
                 :false} */}
-                {params.row.InvType == "SI" && AccessID == "TR011" &&  params.row.Print == "Y"   ? (<Tooltip title={ params.row.Process == "Y" ? 'INVOICE' : 'DARFT INVOICE'}>
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }sampleinvoice.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>) : false }
-
-                          {params.row.InvType == "FI" && AccessID == "TR011" &&  params.row.parentID == "P" &&  params.row.Print == "Y"   ? (
-                            <Tooltip title={ params.row.Process == "Y" ? 'INVOICE' : 'DARFT INVOICE'}>
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }finalreport.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : false } 
-
-                       {params.row.InvType == "FI" && AccessID == "TR011" &&  params.row.parentID == "L" &&  params.row.Print == "Y"    ? (
-                          <Tooltip title={ params.row.Process == "Y" ? 'INVOICE' : 'DARFT INVOICE'}>
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }leatherinvoice.php?Token=${
-                              params.row.Hashtoken
-                            }`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                        ) : false } 
-                         {params.row.InvType == "PI" && AccessID == "TR011" &&  params.row.parentID == "P" &&  params.row.Print == "Y"   ? (
-                          <>
-                        <Tooltip title={ params.row.Process == "Y" ? 'INVOICE' : 'DARFT INVOICE'}>
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }report.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Leather Consumption">
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }leatherconsumption.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        
-                        </>
-                        ) : false } 
-
-                    {/* {AccessID == "TR011" ? (
-                      params.row.Process == "Y" ? (
-                        params.row.InvType == "SI" ? (
-                          <Tooltip title="Print">
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }sampleinvoice.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : params.row.InvType == "FI" &&
-                          params.row.parentID == "P" ? (
-                          <Tooltip title="Print">
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }finalreport.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : params.row.parentID == "L" &&
-                          params.row.InvType == "FI" &&
-                          params.row.Process == "Y" ? (
-                          <Tooltip title="Print">
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }leatherinvoice.php?Token=${
-                                params.row.Hashtoken
-                              }`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : (<>
-                        <Tooltip title="Print">
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }report.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Leather Consumption">
-                            <IconButton
-                              component="a"
-                              href={`${
-                                store.getState().globalurl.pdfurl
-                              }leatherconsumption.php?Token=${params.row.Hashtoken}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              color="info"
-                              size="small"
-                            >
-                              <PrintOutlinedIcon />
-                            </IconButton>
-                          </Tooltip>
-                        
-                        </>
-                          
-                        )
-                      ) : (
-                        false
-                      )
-                    ) : (
-                      false
-                    )} */}
-
-                    {AccessID == "TR011" &&
-                    params.row.InvType == "PI" &&
-                    params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
+                    {params.row.InvType == "SI" &&
+                    AccessID == "TR011" &&
+                    params.row.Print == "Y" ? (
+                      <Tooltip
+                        title={
+                          params.row.Process == "Y"
+                            ? "INVOICE"
+                            : "DARFT INVOICE"
+                        }
+                      >
                         <IconButton
+                          component="a"
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }sampleinvoice.php?Token=${params.row.Hashtoken}`}
+                          target="_blank"
+                          rel="noreferrer"
                           color="info"
                           size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }report.php?Token=${params.row.Hashtoken}
-                              }`,
-                              })
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_001",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              })
-                            );
-                          }}
                         >
-                          <EmailIcon />
+                          <PrintOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    ) : null}
-                    {AccessID == "TR011" &&
-                    params.row.InvType == "SI" &&
-                    params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }sampleinvoice.php?Token=${params.row.Hashtoken}
-                              }`,
-                              })
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_003",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              })
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-                    {AccessID == "TR011" &&
-                    params.row.parentID == "P" &&
-                    params.row.InvType == "FI" &&
-                    params.row.Process == "Y" ? (
-                      <Box>
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }report.php?Token=${params.row.Hashtoken}
-                              }`,
-                              })
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_002",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              })
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                       <Link
-                       to={`./Editpostshipment/${params.row.RecordID}/E`}
-                     >
-                       <Tooltip title="Post Shipment">
-                         <IconButton color="primary">
-                           <ListAltOutlinedIcon />
-                         </IconButton>
-                       </Tooltip>
-                     </Link>
-                     </Box>
-                    ) : null}
-                    {AccessID == "TR011" &&
-                    params.row.parentID == "L" &&
-                    params.row.InvType == "FI" &&
-                    params.row.Process == "Y" ? (
-                      <Tooltip title="Email">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }leatherinvoice.php?Token=${
-                                  params.row.Hashtoken
-                                }
-                              }`,
-                              })
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_012",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              })
-                            );
-                          }}
-                        >
-                          <EmailIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : null}
-
-                    {AccessID == "TR084" ? (
-                      params.row.Process == "Y" &&
-                      params.row.parentID == "PL" ? (
-                        <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }domesticinvoice.php?Token=${params.row.Hashtoken}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                            download={true}
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : params.row.Process == "Y" &&
-                        params.row.parentID == "LL" ? (
-                        <Tooltip title="Print">
-                          <IconButton
-                            component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }leatherdomesticinvoice.php?Token=${
-                              params.row.Hashtoken
-                            }`}
-                            target="_blank"
-                            rel="noreferrer"
-                            color="info"
-                            size="small"
-                          >
-                            <PrintOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        false
-                      )
                     ) : (
                       false
                     )}
-                    {AccessID == "TR084" &&
-                    params.row.Process == "Y" &&
-                    params.row.parentID == "PL" ? (
-                      <Tooltip title="Email">
+
+                    {params.row.InvType == "FI" &&
+                    AccessID == "TR011" &&
+                    params.row.parentID == "P" &&
+                    params.row.Print == "Y" ? (
+                      <Tooltip
+                        title={
+                          params.row.Process == "Y"
+                            ? "INVOICE"
+                            : "DARFT INVOICE"
+                        }
+                      >
                         <IconButton
+                          component="a"
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }finalreport.php?Token=${params.row.Hashtoken}`}
+                          target="_blank"
+                          rel="noreferrer"
                           color="info"
                           size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }domesticinvoice.php?Token=${
-                                  params.row.Hashtoken
-                                }`,
-                              })
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_004",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              })
-                            );
-                          }}
                         >
-                          <EmailIcon />
+                          <PrintOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    ) : null}
-                    {AccessID == "TR084" &&
-                    params.row.Process == "Y" &&
-                    params.row.parentID == "LL" ? (
-                      <Tooltip title="Email">
+                    ) : (
+                      false
+                    )}
+
+                    {params.row.InvType == "FI" &&
+                    AccessID == "TR011" &&
+                    params.row.parentID == "L" &&
+                    params.row.Print == "Y" ? (
+                      <Tooltip
+                        title={
+                          params.row.Process == "Y"
+                            ? "INVOICE"
+                            : "DARFT INVOICE"
+                        }
+                      >
                         <IconButton
+                          component="a"
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }leatherinvoice.php?Token=${params.row.Hashtoken}`}
+                          target="_blank"
+                          rel="noreferrer"
                           color="info"
                           size="small"
-                          onClick={() => {
-                            dispatch(
-                              mailOpen({
-                                row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }leatherdomesticinvoice.php?Token=${
-                                  params.row.Hashtoken
-                                }`,
-                              })
-                            );
-                            dispatch(
-                              getMail({
-                                Templateid: "ET_004",
-                                RecordID: params.row.RecordID,
-                                UserName: "Trinity",
-                              })
-                            );
-                          }}
                         >
-                          <EmailIcon />
+                          <PrintOutlinedIcon />
                         </IconButton>
                       </Tooltip>
-                    ) : null}
+                    ) : (
+                      false
+                    )}
+                    {params.row.InvType == "PI" &&
+                    AccessID == "TR011" &&
+                    params.row.parentID == "P" &&
+                    params.row.Print == "Y" ? (
+                      <>
+                        <Tooltip
+                          title={
+                            params.row.Process == "Y"
+                              ? "INVOICE"
+                              : "DARFT INVOICE"
+                          }
+                        >
+                          <IconButton
+                            component="a"
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }report.php?Token=${params.row.Hashtoken}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Leather Consumption">
+                          <IconButton
+                            component="a"
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }leatherconsumption.php?Token=${
+                              params.row.Hashtoken
+                            }`}
+                            target="_blank"
+                            rel="noreferrer"
+                            color="info"
+                            size="small"
+                          >
+                            <PrintOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    ) : (
+                      false
+                    )}
 
                     {params.row.ImgApp == "Y" ? (
                       AccessID == "TR002" ? (
@@ -3512,103 +3444,18 @@ export const fetchListview =
                         </Link>
                       ) : AccessID == "TR027" ? (
                         <Box>
-
-{/* {accessID === "TR245" && params.row.ELeave == "Y" ? (
-          <Tooltip title="Contracts In">
-            <IconButton
-              // color= {params.row.LeaveStatus == "Y" ? "warning" :"info"}
-                color= "info"
-              size="small"
-              onClick={() =>
-                navigate(
-                  `/Apps/Secondarylistview/TR248/leave-approval/${params.row.RecordID}`,
-                  {
-                    state: {
-                      EmpLeaveOTOnduty: params.row.Name
-                    }
-                  }
-                )
-              }
-            >
-           <RedoIcon />
-           
-            </IconButton>
-          </Tooltip>
-          
-        // ) : (
-        //   <div></div>
-        // )}
-      ) : null}
-
-        {accessID === "TR245" && params.row.ELeave == "Y" ? (
-          <Tooltip title="Contracts Out">
-            <IconButton
-              // color= {params.row.LeaveStatus == "Y" ? "warning" :"info"}
-              color= "info"
-              size="small"
-              onClick={() =>
-                navigate(
-                  `/Apps/Secondarylistview/TR248/leave-approval/${params.row.RecordID}`,
-                  {
-                    state: {
-                      EmpLeaveOTOnduty: params.row.Name
-                    }
-                  }
-                )
-              }
-            >
-              <UndoIcon />
-           
-            </IconButton>
-          </Tooltip>
-          
-        // ) : (
-        //   <div></div>
-        // )}
-      ) : null} */}
-                        <Link
-                          to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                          state={{EmpName:params.row.Name}}
-                        >
-                          <Tooltip title="Image upload">
-                            <IconButton color="info" size="small">
-                              <AddPhotoAlternateIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                        {/* <Link
-                        to={`/Apps/Secondarylistview/TR123/Check In/${params.row.RecordID}`}
-                        state={{EmpName:params.row.Name,Locname:params.row.LocationName}}
-                      >
-                        <Tooltip title="Check In">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                        
-                      <Link
-                        to={`/Apps/Secondarylistview/TR124/Check Out/${params.row.RecordID}`}
-                        state={{EmpName:params.row.Name}}
-                      >
-                        <Tooltip title="Check Out">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link> */}
-                      {/* <Link
-                        to={`/Apps/TR027/Employees/EditEmpfinance entry/E/${params.row.RecordID}/${params.row.Name}`}
-                      >
-                        <Tooltip title="Finance Entry">
-                          <IconButton color="info" size="small">
-                            <ListAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link> */}
-                      </Box>
-                     
-                    )  : AccessID == "TR003" ? (
+                          <Link
+                            to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
+                            state={{ EmpName: params.row.Name }}
+                          >
+                            <Tooltip title="Image upload">
+                              <IconButton color="info" size="small">
+                                <AddPhotoAlternateIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        </Box>
+                      ) : AccessID == "TR003" ? (
                         <Link
                           to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
                         >
@@ -3649,71 +3496,6 @@ export const fetchListview =
               },
             };
           }
-          if (AccessID == "TR047") {
-            const obj = {
-              field: "Status",
-              headerName: "",
-              headerAlign: "center",
-              sortable: false,
-              filterable: false,
-              disableColumnMenu: true,
-              minWidth: 100,
-              maxWidth: 100,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Stack direction="row">
-                    {params.row.Startdate == "" ? (
-                      <Link>
-                        <Tooltip title="Not yet Started">
-                          <IconButton color="success">
-                            <PlayCircleOutlineOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    ) : params.row.Startdate != "" &&
-                      params.row.Completeddate == "" ? (
-                      <Box>
-                        {params.row.Pausedate == "" ? (
-                          <Link>
-                            <Tooltip
-                              title={params.row.Pausedate || "Inprogress"}
-                            >
-                              <IconButton color="primary">
-                                <NotStartedOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                        ) : params.row.ContinueDate == "" ? (
-                          <Link>
-                            <Tooltip title="Inprogress">
-                              <IconButton color="primary">
-                                <NotStartedOutlinedIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
-                        ) : (
-                          false
-                        )}
-                        <Link>
-                          
-                        </Link>
-                      </Box>
-                    ) : (
-                      <Link>
-                        <Tooltip title="Completed">
-                          <IconButton color="success">
-                            <TaskAltOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                    )}
-                  </Stack>
-                );
-              },
-            };
-            listviewData.Data.columns.splice(2, 0, obj);
-          }
 
           if (AccessID == "TR027") {
             const obj = {
@@ -3729,35 +3511,32 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Stack direction="row">
-                      <Link>
+                    <Link>
                       {params.row.EmpType === "Contracts In" && (
-  <Tooltip title="Contracts In">
-    <IconButton color="info">
-      <RedoIcon />
-    </IconButton>
-  </Tooltip>
-)}
+                        <Tooltip title="Contracts In">
+                          <IconButton color="info">
+                            <RedoIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Link>
 
-                      </Link>
-                 
-                      <Link>
+                    <Link>
                       {params.row.EmpType === "Contracts Out" && (
                         <Tooltip title="Contracts Out">
                           <IconButton color="info">
                             <UndoIcon />
                           </IconButton>
                         </Tooltip>
-                        )}
-                      </Link>
-                      
-              
+                      )}
+                    </Link>
                   </Stack>
                 );
               },
             };
             listviewData.Data.columns.splice(2, 0, obj);
           }
-           if (AccessID == "TR027") {
+          if (AccessID == "TR027") {
             const obj = {
               field: "emp",
               headerName: " ",
@@ -3771,15 +3550,13 @@ export const fetchListview =
               renderCell: (params) => {
                 return (
                   <Stack direction="row">
-                   
-                      <Link>
-                        <Tooltip title="Employee">
-                          <IconButton color="info">
-                            <Person2Icon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-              
+                    <Link>
+                      <Tooltip title="Employee">
+                        <IconButton color="info">
+                          <Person2Icon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
                   </Stack>
                 );
               },

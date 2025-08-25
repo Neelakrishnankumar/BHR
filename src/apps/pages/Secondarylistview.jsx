@@ -52,6 +52,8 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import axios from "axios";
 import toast from "react-hot-toast";
 import store from "../..";
+import { Delete, Psychology, Category} from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../ui-components/global/utils";
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -98,6 +100,14 @@ const ListviewSecondary = () => {
   //const rowData = location.state || {};
 
 
+    // skillglow
+
+  let parentID1 = params.parentID1;
+
+
+
+
+
   var Description = params.Desc;
   var Number = params.Number;
   var filter;
@@ -107,8 +117,6 @@ const ListviewSecondary = () => {
       screenName = "Assorted";
     }
   }
-  console.log(filter, "----filter find");
-
   if (accessID == "TR011") {
     filter = invoiceFilter;
   } else if (accessID == "TR074") {
@@ -127,19 +135,15 @@ const ListviewSecondary = () => {
   else if (accessID == "TR233") {
 
     filter = `CompanyID='${CompId}' AND ProjectID='${parentID}'`;
-    console.log(filter, "--calling TR233");
   }
   else if (accessID == "TR236") {
     filter = `CompanyID='${CompId}' AND MilestoneID='${parentID}'`;
-    console.log(filter, "--calling TR236");
   }
   else if (accessID == "TR234") {
     filter = `CompanyID='${CompId}' AND OperationStageID='${parentID}'`;
-    console.log(filter, "--calling TR234");
   }
   else if (accessID == "TR235") {
     filter = `CompanyID='${CompId}' AND ActivitesID='${parentID}'`;
-    console.log(filter, "--calling TR235");
   }
 
   else if (accessID == "TR063") {
@@ -180,7 +184,9 @@ const ListviewSecondary = () => {
     filter = `parentID=${params.bomID}`;
   } else if (accessID == "TR087") {
     filter = `${parentID}' AND CompID = '${compID}`;
-  } else {
+  } else if (accessID == "TR280") {
+    filter = `SkillcategoriesID='${parentID1}' AND CompanyID = '${compID}'`;
+  }else {
     filter = parentID;
   }
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -677,7 +683,38 @@ const ListviewSecondary = () => {
               {/* <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  onClick={() => {navigate(to)}}>{screen}</Typography> */}
             </Breadcrumbs>
           </Box>
-        ) : accessID == "TR073" ? (
+        ) : accessID == "TR280" ? (
+            <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR278/List%20Of%20Categories");
+                }}
+              >
+                List of Category
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                // onClick={() => {
+                //   navigate(
+                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+                //   );
+                // }}
+              >
+                List of Assessment
+              </Typography>
+            </Breadcrumbs>
+            </Box>
+          ): accessID == "TR073" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
@@ -2479,7 +2516,30 @@ const ListviewSecondary = () => {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) : accessID == "TR032" ? (
+        ) : accessID == "TR280" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                     <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Delete color="error" />}
+                      label="Delete"
+                      variant="outlined"
+                    />
+                  </Box>
+                ): accessID == "TR032" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}

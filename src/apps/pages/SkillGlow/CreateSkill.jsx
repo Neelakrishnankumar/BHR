@@ -20,11 +20,11 @@ import {
 } from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import dayjs from "dayjs";
@@ -39,28 +39,11 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useProSidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { formGap } from "../../../ui-components/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { LoadingButton } from "@mui/lab";
+import toast from "react-hot-toast";
 
-const StyledTextarea = styled(TextareaAutosize)(({ theme, error }) => ({
-  width: "500px",
-  padding: "8px",
-  border: "1px solid #ccc",
-  borderRadius: "4px",
-  outline: "none",
-  transition: "border-color 0.3s ease",
-  "&:focus": {
-    // borderColor: theme.palette.primary.main,
-    // boxShadow: `0 0 5px ${theme.palette.primary.main}`,
-    borderColor: error ? "red" : theme.palette.primary.main,
-    boxShadow: error ? "0 0 5px red" : `0 0 5px ${theme.palette.primary.main}`,
-  },
-  [theme.breakpoints.down("sm")]: {
-    width: "350px", // ✅ smaller width on small screens
-  },
-}));
-
-const StyledTypography = styled(Typography)(() => ({
-  //fontSize: "20px",
-}));
 const CreateSkill = () => {
   const navigate = useNavigate();
   const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -70,8 +53,57 @@ const CreateSkill = () => {
   };
 
   const { state } = useLocation();
-  const mode = state?.mode || "create";
-  const skillData = state?.skillData || {};
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const recID = params.id;
+  const accessID = params.accessID;
+  const screenName = params.screenName;
+  const mode = params.Mode;
+  const CatId = params.parentID1;
+
+  const CompanyID = sessionStorage.getItem("compID");
+
+  const Data = useSelector((state) => state.formApi.Data);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const isLoading = useSelector((state) => state.formApi.postLoading);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, []);
+
+  const AssessementSaveFn = async (values) => {
+    let action =
+      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+
+    var isCheck = "N";
+    if (values.disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      CompanyID: CompanyID,
+      SkillcategoriesID: CatId,
+      Code: values.Code,
+      Name: values.Name,
+      SortOrder: values.SortOrder,
+      Disable: isCheck,
+      Answertype: values.Answertype,
+      Date: values.Date,
+      Minimumscore: values.Minimumscore,
+      Noofquestion: values.Noofquestion,
+      Duration: values.Duration,
+      Permittedtimes: values.Permittedtimes,
+    };
+
+    const response = await dispatch(postData({ accessID, action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
+  };
   //   FOR DROPDWON
   const [age, setAge] = useState("");
   const handleChange = (event) => {
@@ -112,57 +144,37 @@ const CreateSkill = () => {
       }
     });
   };
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      onClick={handleClick}
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      List Of Skills
-    </Link>,
-    <Link
-      underline="none"
-      key="2"
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      Create Skill
-    </Link>,
-  ];
-
   const initialValues = {
-    code: skillData.code || "",
-    name: skillData.name || "",
-    QType: skillData.QType || "",
-    expiryDate: skillData.expiryDate ? dayjs(skillData.expiryDate) : null,
-    Duration: skillData.Duration || "",
-    NoOfAttempts: skillData.NoOfAttempts || "",
-    NoOfQuestions: skillData.NoOfQuestions || "",
-    cutOff: skillData.cutOff || "",
-    sortOrder: skillData.sortOrder || "",
-    disable: skillData.disable || false,
+    Code: Data.Code || "",
+    Name: Data.Name || "",
+    Answertype: Data.Answertype || "",
+    Date: Data.Date || "",
+    Duration: Data.Duration || "",
+    MinimumScore: Data.MinimumScore || "",
+    //NoOfAttempts: Data.NoOfAttempts || "",
+    Noofquestion: Data.Noofquestion || "",
+    Minimumscore: Data.Minimumscore || "",
+    Permittedtimes: Data.Permittedtimes || "",
+    //cutOff: Data.cutOff || "",
+    SortOrder: Data.SortOrder || "",
+    Disable: Data.disable || false,
   };
 
   const validationSchema = Yup.object({
-    code: Yup.string().required("Please Enter Code Here"),
-    name: Yup.string().required("Please Enter Name Here"),
-    QType: Yup.string().required("Choose at least one Q.Type"),
+    Code: Yup.string().required("Please Enter Code Here"),
+    Name: Yup.string().required("Please Enter Name Here"),
+    Answertype: Yup.string().required("Choose at least one Answertype"),
     Duration: Yup.string().required("Choose Duation"),
-    NoOfAttempts: Yup.number().required("Choose a number"),
-    NoOfQuestions: Yup.number().required("Choose a number"),
-    expiryDate: Yup.date().nullable().required("Please enter expiry date"),
-    cutOff: Yup.number()
-      .min(0, "No negative numbers")
-      .nullable()
-      .required("Please choose Cut Off Cut (In Minutes)"),
-    sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    disable: Yup.boolean(),
+    Permittedtimes: Yup.number().required("Choose a number"),
+    Minimumscore: Yup.number().required("Choose a Score"),
+    Noofquestion: Yup.number().required("Choose a number"),
+    Date: Yup.date().nullable().required("Please enter Date"),
+    // cutOff: Yup.number()
+    //   .min(0, "No negative numbers")
+    //   .nullable()
+    //   .required("Please choose Cut Off Cut (In Minutes)"),
+    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+    Disable: Yup.boolean(),
   });
 
   return (
@@ -189,24 +201,24 @@ const CreateSkill = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-                  onClick={() => navigate("/Apps/SkillGlow/CategoryMain")}
+                  onClick={() => navigate("/Apps/TR278/List%20Of%20Categories")}
                 >
-                  List Of Category (CAT01)
+                  List Of Category
                 </Typography>
                 <Typography
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-                  onClick={() => navigate("/Apps/SkillGlow/SkillGlowList")}
+                  onClick={() => navigate(-1)}
                 >
-                  List Of Assessment (XXX)
+                  List Of Assessment
                 </Typography>
                 <Typography
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  New
+                  {mode == "A" ? "New" : mode=="D" ? "Delete" : Data.Name}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -226,311 +238,284 @@ const CreateSkill = () => {
           </Box>
         </Box>
       </Paper>
-
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => {
-            const stored = JSON.parse(localStorage.getItem("skills") || "[]");
-            if (mode === "create") {
-              const newSkill = {
-                id: stored.length ? stored[stored.length - 1].id + 1 : 1,
-                Skill: values.skills,
-                QType: values.QType,
-                expiryDate: values.expiryDate
-                  ? dayjs(values.expiryDate).toISOString()
-                  : null,
-                sortOrder: values.sortOrder,
-                disable: values.disable,
-              };
-              localStorage.setItem(
-                "skills",
-                JSON.stringify([...stored, newSkill])
-              );
-              console.log(newSkill);
-            } else {
-              const updated = stored.map((s) =>
-                s.id === skillData.id
-                  ? {
-                      ...s,
-                      Skill: values.skills,
-                      QType: values.QType,
-                      expiryDate: values.expiryDate
-                        ? dayjs(values.expiryDate).toISOString()
-                        : null,
-                      sortOrder: values.sortOrder,
-                      disable: values.disable,
-                    }
-                  : s
-              );
-              localStorage.setItem("skills", JSON.stringify(updated));
-              console.log(updated);
-            }
-            navigate("/Apps/SkillGlow/SkillGlowList");
-          }}
-          validationSchema={validationSchema}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            setFieldValue,
-            handleSubmit,
-            setFieldTouched,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <Box
-                display="grid"
-                gap={formGap}
-                padding={1}
-                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                sx={{
-                  "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 2",
-                  },
-                }}
-              >
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="text"
-                  label="Code"
-                  //placeholder="Enter Your Skills Here......"
-                  value={values.code}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="code"
-                  name="code"
-                  focused
-                  error={!!touched.code && !!errors.code}
-                  helperText={touched.code && errors.code}
+      {!getLoading ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={(values, { resetForm }) => {
+              setTimeout(() => {
+                AssessementSaveFn(values, resetForm);
+              }, 100);
+            }}
+            enableReinitialize={true}
+            validationSchema={validationSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+              handleSubmit,
+              setFieldTouched,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                   sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
                     },
                   }}
-                />
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="text"
-                  label="Name"
-                  //placeholder="Enter Your Skills Here......"
-                  value={values.name}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="name"
-                  name="name"
-                  focused
-                  error={!!touched.name && !!errors.name}
-                  helperText={touched.name && errors.name}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                />
- <FormControl
-                  focused
-                  variant="standard"
-                  sx={{ background: "#ffffff" }}
-                  // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                 >
-                  <InputLabel id="QType">Answer Type</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-filled-label"
-                    id="QType"
-                    name="QType"
-                    required
-                    value={values.QType}
+                  {/* {JSON.stringify(errors)} */}
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="text"
+                    label="Code"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.Code}
                     onBlur={handleBlur}
                     onChange={handleChange}
+                    id="Code"
+                    name="Code"
+                    focused
+                    error={!!touched.Code && !!errors.Code}
+                    helperText={touched.Code && errors.Code}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="text"
+                    label="Name"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.Name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="Name"
+                    name="Name"
+                    focused
+                    error={!!touched.Name && !!errors.Name}
+                    helperText={touched.Name && errors.Name}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+                  <FormControl
+                    focused
+                    variant="standard"
+                    sx={{ background: "#ffffff" }}
+                    // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                   >
-                    <MenuItem value={10}>1 of 4</MenuItem>
-                    <MenuItem value={20}>Any Of 4</MenuItem>
-                    <MenuItem value={30}>Text</MenuItem>
-                    <MenuItem value={40}>Number</MenuItem>
-                    <MenuItem value={50}>10 Rates</MenuItem>
-                    <MenuItem value={60}>5 Rates</MenuItem>
-                    <MenuItem value={70}>True or false</MenuItem>
-                    <MenuItem value={80}>Yes or No</MenuItem>
-                  </Select>
-                </FormControl>
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="number"
-                  label="No. Of Questions"
-                  //placeholder="Enter Your NoOfQuestions Here......"
-                  value={values.NoOfQuestions}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="NoOfQuestions"
-                  name="NoOfQuestions"
-                  focused
-                  error={!!touched.NoOfQuestions && !!errors.NoOfQuestions}
-                  helperText={touched.NoOfQuestions && errors.NoOfQuestions}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                />
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="number"
-                  label="Duration"
-                  //placeholder="Enter Your Skills Here......"
-                  value={values.Duration}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="Duration"
-                  name="Duration"
-                  focused
-                  error={!!touched.Duration && !!errors.Duration}
-                  helperText={touched.Duration && errors.Duration}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                />
-               
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="number"
-                  label="No. Of Attempts Permitted"
-                  //placeholder="Enter Your Skills Here......"
-                  value={values.NoOfAttempts}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="NoOfAttempts"
-                  name="NoOfAttempts"
-                  focused
-                  error={!!touched.NoOfAttempts && !!errors.NoOfAttempts}
-                  helperText={touched.NoOfAttempts && errors.NoOfAttempts}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                />
-
-                {/* CUT OFF */}
-
-                {/* <TextField
-                  name="cutOff"
-                  id="cutOff"
-                  focused
-                  variant="standard"
-                  label="Cut Off (In Minutes)"
-                  type="number"
-                  value={values.cutOff}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={!!touched.cutOff && !!errors.cutOff}
-                  helperText={touched.cutOff && errors.cutOff}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                /> */}
-                {/* <TextField
-                  name="expiryDate"
-                  type="date"
-                  id="expiryDate"
-                  label="Expiry Date"
-                  variant="standard"
-                  focused
-                  inputFormat="YYYY-MM-DD"
-                  value={values.expiryDate}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  error={!!touched.expiryDate && !!errors.expiryDate}
-                  helperText={touched.expiryDate && errors.expiryDate}
-                  sx={{ background: "" }}
-                  // required
-                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                /> */}
-
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  type="number"
-                  label="Sort Order"
-                  value={values.sortOrder}
-                  id="sortOrder"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="sortOrder"
-                  error={!!touched.sortOrder && !!errors.sortOrder}
-                  helperText={touched.sortOrder && errors.sortOrder}
-                  sx={{ background: "" }}
-                  focused
-                  onWheel={(e) => e.target.blur()}
-                  onInput={(e) => {
-                    e.target.value = Math.max(0, parseInt(e.target.value))
-                      .toString()
-                      .slice(0, 8);
-                  }}
-                  InputProps={{
-                    inputProps: {
-                      style: { textAlign: "right" },
-                    },
-                  }}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="disable"
-                      checked={values.disable}
+                    <InputLabel id="Answertype">Answer Type</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="Answertype"
+                      name="Answertype"
+                      required
+                      value={values.Answertype}
+                      onBlur={handleBlur}
                       onChange={handleChange}
-                    />
-                  }
-                  label="Disable"
-                   sx={{
+                    >
+                      <MenuItem value={'1/4'}>1 of 4</MenuItem>
+                      <MenuItem value={'Any/4'}>Any Of 4</MenuItem>
+                      <MenuItem value={'Text'}>Text</MenuItem>
+                      <MenuItem value={'Number'}>Number</MenuItem>
+                      <MenuItem value={'10Rates'}>10 Rates</MenuItem>
+                      <MenuItem value={'5Rates'}>5 Rates</MenuItem>
+                      <MenuItem value={'T/F'}>True or false</MenuItem>
+                      <MenuItem value={'Y/N'}>Yes or No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    label="No. Of Questions"
+                    //placeholder="Enter Your NoOfQuestions Here......"
+                    value={values.Noofquestion}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="Noofquestion"
+                    name="Noofquestion"
+                    focused
+                    error={!!touched.Noofquestion && !!errors.Noofquestion}
+                    helperText={touched.Noofquestion && errors.Noofquestion}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    label="Duration (In Days)"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.Duration}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="Duration"
+                    name="Duration"
+                    focused
+                    error={!!touched.Duration && !!errors.Duration}
+                    helperText={touched.Duration && errors.Duration}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="text"
+                    label="Mininum Score"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.Minimumscore}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="Minimumscore"
+                    name="Minimumscore"
+                    focused
+                    error={!!touched.Minimumscore && !!errors.Minimumscore}
+                    helperText={touched.Minimumscore && errors.Minimumscore}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+                  <TextField
+                    name="Date"
+                    type="date"
+                    id="Date"
+                    label="Date"
+                    variant="standard"
+                    focused
+                    inputFormat="YYYY-MM-DD"
+                    value={values.Date}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.Date && !!errors.Date}
+                    helperText={touched.Date && errors.Date}
+                    sx={{ background: "" }}
+                    // required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  />
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    label="No. Of Attempts Permitted"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.Permittedtimes}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="Permittedtimes"
+                    name="Permittedtimes"
+                    focused
+                    error={!!touched.Permittedtimes && !!errors.Permittedtimes}
+                    helperText={touched.Permittedtimes && errors.Permittedtimes}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    label="Sort Order"
+                    value={values.SortOrder}
+                    id="SortOrder"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="SortOrder"
+                    error={!!touched.SortOrder && !!errors.SortOrder}
+                    helperText={touched.SortOrder && errors.SortOrder}
+                    sx={{ background: "" }}
+                    focused
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="disable"
+                        checked={values.Disable}
+                        onChange={handleChange}
+                      />
+                    }
+                    label="Disable"
+                    sx={{
                       marginTop: "20px",
                       "@media (max-width:500px)": {
                         marginTop: 0,
                       },
                     }}
-                />
-              </Box>
-              <Box display="flex" justifyContent="flex-end" padding={1} gap={2}>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  type="submit"
-                  //  loading={loading}
-                  //  onClick={() => {
-                  //    fnSave(values, false);
-                  //  }}
+                  />
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  padding={1}
+                  gap={2}
                 >
-                  Save
-                </Button>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={() => navigate("/Apps/SkillGlow/SkillGlowList")}
-                >
-                  Cancel
-                </Button>
-              </Box>
-            </form>
-          )}
-        </Formik>
-      </Paper>
+                  <LoadingButton
+                    color={mode == "D" ? "error" : "secondary"}
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
+                     {mode == "D" ? "Delete" : "Save"} 
+                  </LoadingButton>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={() => navigate(-1)}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
     </React.Fragment>
   );
 };

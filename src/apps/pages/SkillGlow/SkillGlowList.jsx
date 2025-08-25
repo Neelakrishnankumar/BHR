@@ -68,7 +68,7 @@ const SkillGlowList = () => {
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
   const compID = sessionStorage.getItem("compID");
   const columns = [
-    { field: "id", headerName: "S.no", width: 90, align: "right" },
+    { field: "id", headerName: "SL#", width: 90, align: "right" },
     {
       field: "Skill",
       headerName: "Assessment",
@@ -360,11 +360,11 @@ const SkillGlowList = () => {
             label="Question Groups"
             variant="outlined"
           />
-          <Chip
+          {/* <Chip
             icon={<BadgeIcon color="primary" />}
             label="Candidates"
             variant="outlined"
-          />
+          /> */}
 
           <Chip
             icon={<ModeEditOutlinedIcon color="primary" />}

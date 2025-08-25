@@ -58,7 +58,7 @@ const CategoryMain = () => {
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
   const compID = sessionStorage.getItem("compID");
   const columns = [
-    { field: "id", headerName: "S.no", width: 90, align: "right" },
+    { field: "id", headerName: "SL#", width: 90, align: "right" },
     {
       field: "code",
       headerName: "Code",

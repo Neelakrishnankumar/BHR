@@ -91,7 +91,7 @@ const CandidateList = () => {
     //{ field: "id", headerName: "Id", width: 90 },
     {
       field: "sno",
-      headerName: "S.No",
+      headerName: "SL#",
       width: 90,
       align: "right",
     },

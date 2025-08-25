@@ -17,14 +17,15 @@ import {
   FormControlLabel,
   Grid,
   Paper,
+  LinearProgress,
 } from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import dayjs from "dayjs";
@@ -39,61 +40,62 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useProSidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { formGap } from "../../../ui-components/utils";
+import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { LoadingButton } from "@mui/lab";
 
-const StyledTextarea = styled(TextareaAutosize)(({ theme, error }) => ({
-  width: "500px",
-  padding: "8px",
-  border: "1px solid #ccc",
-  borderRadius: "4px",
-  outline: "none",
-  transition: "border-color 0.3s ease",
-  "&:focus": {
-    // borderColor: theme.palette.primary.main,
-    // boxShadow: `0 0 5px ${theme.palette.primary.main}`,
-    borderColor: error ? "red" : theme.palette.primary.main,
-    boxShadow: error ? "0 0 5px red" : `0 0 5px ${theme.palette.primary.main}`,
-  },
-  [theme.breakpoints.down("sm")]: {
-    width: "350px", // ✅ smaller width on small screens
-  },
-}));
-
-const StyledTypography = styled(Typography)(() => ({
-  //fontSize: "20px",
-}));
 const CreateCategoryMain = () => {
   const navigate = useNavigate();
   const { toggleSidebar, broken, rtl } = useProSidebar();
-
-  const handleClick = () => {
-    navigate("/Apps/SkillGlow/SkillGlowList");
-  };
-
+  const params = useParams();
   const { state } = useLocation();
-  const mode = state?.mode || "create";
-  const categoryData = state?.categoryData || {};
-  //   FOR DROPDWON
-  const [age, setAge] = useState("");
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  //   FOR DATEPICKER
-  const [value, setValue] = useState(null);
-  const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
+  const recID = params.id;
+  const accessID = params.accessID;
+  const screenName = params.screenName;
+  const mode = params.Mode;
 
-    //       return
-    //  }
+  const CompanyID = sessionStorage.getItem("compID");
+
+  const Data = useSelector((state) => state.formApi.Data);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const isLoading = useSelector((state) => state.formApi.postLoading);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, []);
+
+  const CategorySaveFn = async (values) => {
+    let action = mode === "A" ? "insert" : mode === "D" ? "harddelete": "update";
+
+    var isCheck = "N";
+    if (values.disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      CompanyID: CompanyID,
+      Code: values.code,
+      Name: values.name,
+      SortOrder: values.sortOrder,
+      Disable: isCheck,
+    };
+
+    const response = await dispatch(postData({ accessID, action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
+  };
+
+  const fnLogOut = (props) => {
     Swal.fire({
       title: `Do you want ${props}?`,
-      // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -105,7 +107,7 @@ const CreateCategoryMain = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(-1);
         }
       } else {
         return;
@@ -113,14 +115,11 @@ const CreateCategoryMain = () => {
     });
   };
 
-  // 🔹 Define your static JSON list here
-
-
   const initialValues = {
-    name: categoryData.Skill || "",
-    code: categoryData.Skill || "",
-    sortOrder: categoryData.sortOrder || "",
-    disable: categoryData.disable || false,
+    name: Data.Name,
+    code: Data.Code,
+    sortOrder: Data.SortOrder,
+    disable: Data.SortOrder == "Y" ? true : false,
   };
 
   const validationSchema = Yup.object({
@@ -132,6 +131,7 @@ const CreateCategoryMain = () => {
 
   return (
     <React.Fragment>
+      {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -154,7 +154,7 @@ const CreateCategoryMain = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-                  onClick={() => navigate("/Apps/SkillGlow/CategoryMain")}
+                  onClick={() => navigate(-1)}
                 >
                   List Of Category
                 </Typography>
@@ -163,7 +163,11 @@ const CreateCategoryMain = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  New
+                  {mode == "A"
+                    ? "New"
+                    : mode == "D"
+                    ? "Delete"
+                    : "Edit"}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -184,184 +188,156 @@ const CreateCategoryMain = () => {
         </Box>
       </Paper>
 
-      <Paper elevation={3} sx={{ margin: "10px" }}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => {
-            const stored = JSON.parse(
-              localStorage.getItem("categoryData") || "[]"
-            );
-            if (mode === "create") {
-              const newCategory = {
-                id: stored.length ? stored[stored.length - 1].id + 1 : 1,
-                name: values.name,
-                code: values.code,
-                sortOrder: values.sortOrder,
-                disable: values.disable,
-              };
-              localStorage.setItem(
-                "categoryData",
-                JSON.stringify([...stored, newCategory])
-              );
-              console.log(newCategory);
-            } else {
-              const updated = stored.map((s) =>
-                s.id === categoryData.id
-                  ? {
-                      ...s,
-                      name: values.name,
-                      code: values.code,
-                      sortOrder: values.sortOrder,
-                      disable: values.disable,
+      {!getLoading ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={(values, { resetForm }) => {
+              setTimeout(() => {
+                CategorySaveFn(values, resetForm);
+              }, 100);
+            }}
+            enableReinitialize={true}
+            validationSchema={validationSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+              handleSubmit,
+              setFieldTouched,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="text"
+                    label="Code"
+                    //placeholder="Category Code"
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="code"
+                    name="code"
+                    focused
+                    error={!!touched.code && !!errors.code}
+                    helperText={touched.code && errors.code}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="text"
+                    label="Name"
+                    //placeholder="Category Name"
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="name"
+                    name="name"
+                    focused
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    label="Sort Order"
+                    value={values.sortOrder}
+                    id="sortOrder"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    name="sortOrder"
+                    error={!!touched.sortOrder && !!errors.sortOrder}
+                    helperText={touched.sortOrder && errors.sortOrder}
+                    sx={{ background: "" }}
+                    focused
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="disable"
+                        checked={values.disable}
+                        onChange={handleChange}
+                      />
                     }
-                  : s
-              );
-              localStorage.setItem("categoryData", JSON.stringify(updated));
-              console.log(updated);
-            }
-            navigate("/Apps/SkillGlow/CategoryMain");
-          }}
-          validationSchema={validationSchema}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            setFieldValue,
-            handleSubmit,
-            setFieldTouched,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <Box
-                display="grid"
-                gap={formGap}
-                padding={1}
-                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                sx={{
-                  "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 2",
-                  },
-                }}
-              >
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="text"
-                  label="Code"
-                  //placeholder="Category Code"
-                  value={values.code}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="code"
-                  name="code"
-                  focused
-                  error={!!touched.code && !!errors.code}
-                  helperText={touched.code && errors.code}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                />
-                <TextField
-                  // fullWidth
-                  variant="standard"
-                  type="text"
-                  label="Name"
-                  //placeholder="Category Name"
-                  value={values.name}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  id="name"
-                  name="name"
-                  focused
-                  error={!!touched.name && !!errors.name}
-                  helperText={touched.name && errors.name}
-                  sx={{
-                    // backgroundColor: "#ffffff", // Set the background to white
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                    },
-                  }}
-                />
-
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  type="number"
-                  label="Sort Order"
-                  value={values.sortOrder}
-                  id="sortOrder"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="sortOrder"
-                  error={!!touched.sortOrder && !!errors.sortOrder}
-                  helperText={touched.sortOrder && errors.sortOrder}
-                  sx={{ background: "" }}
-                  focused
-                  onWheel={(e) => e.target.blur()}
-                  onInput={(e) => {
-                    e.target.value = Math.max(0, parseInt(e.target.value))
-                      .toString()
-                      .slice(0, 8);
-                  }}
-                  InputProps={{
-                    inputProps: {
-                      style: { textAlign: "right" },
-                    },
-                  }}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="disable"
-                      checked={values.disable}
-                      onChange={handleChange}
-                    />
-                  }
-                  label="Disable"
-                  sx={{
-                    marginTop: "20px",
-                    "@media (max-width:500px)": {
-                      marginTop: 0,
-                    },
-                  }}
-                />
-
-               
-              </Box>
-               <Box
+                    label="Disable"
+                    sx={{
+                      marginTop: "20px",
+                      "@media (max-width:500px)": {
+                        marginTop: 0,
+                      },
+                    }}
+                  />
+                </Box>
+                <Box
                   display="flex"
                   justifyContent="flex-end"
                   padding={1}
                   gap={2}
                 >
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    //  loading={loading}
-                    //  onClick={() => {
-                    //    fnSave(values, false);
-                    //  }}
-                  >
-                    Save
-                  </Button>
+                
+                    <LoadingButton
+                      color={mode == "D" ?"error":"secondary"}
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                     {mode == "D" ? "Delete" : "Save"} 
+                    </LoadingButton>
                   <Button
                     variant="contained"
                     color="warning"
-                    onClick={() => navigate("/Apps/SkillGlow/CategoryMain")}
+                    onClick={() => navigate(-1)}
                   >
                     Cancel
                   </Button>
                 </Box>
-            </form>
-          )}
-        </Formik>
-      </Paper>
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
     </React.Fragment>
   );
 };

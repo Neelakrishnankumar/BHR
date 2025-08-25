@@ -135,6 +135,7 @@ import { menuHeight } from "./utils";
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import BadgeIcon from "@mui/icons-material/Badge";
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 
 const child = {
   data: [
@@ -586,11 +587,12 @@ const child = {
       ),
       children: [
         {
-          name: "Questionaire",
+          name: "Prepare",
           id: 5848,
-          url: "/Apps/SkillGlow/CategoryMain",
+          // url: "/Apps/SkillGlow/CategoryMain",
+          url: "/Apps/TR278/List Of Categories",
           icon: (
-            <Tooltip title="Questionaire">
+            <Tooltip title="Prepare">
               <CategoryOutlinedIcon color="info" />
             </Tooltip>
           ),
@@ -605,10 +607,29 @@ const child = {
         {
           name: "Schedule",
           id: 5849,
-          url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+          url: "/Apps/TR286/List of Employees",
+          // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
           icon: (
             <Tooltip title="Schedule">
               <BadgeIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR122",
+        },
+        {
+          name: "Insight",
+          id: 5849,
+          url: "/Apps/TR286/List of Employees",
+          // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+          icon: (
+            <Tooltip title="Insight">
+              <DashboardOutlinedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,

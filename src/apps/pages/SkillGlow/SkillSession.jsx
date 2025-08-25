@@ -71,9 +71,15 @@ const SkillSession = () => {
     //{ field: "id", headerName: "Id", width: 90 },
     {
       field: "sno",
-      headerName: "S.No",
+      headerName: "SL#",
       width: 90,
       align: "right",
+    },
+    {
+      field: "code",
+      headerName: "Code",
+      width: 150,
+      //align: "right",
     },
     {
       field: "description",
@@ -108,14 +114,15 @@ const SkillSession = () => {
     },
   ];
   const rows = [
-    { id: 1, sno: 1, description: "React Document", document: "React.docx" },
+    { id: 1, code:"SES01", sno: 1, description: "React Document", document: "React.docx" },
     {
       id: 2,
       sno: 2,
+      code:"SES02",
       description: "React native Document",
       document: "Reactnative.docx",
     },
-    { id: 3, sno: 3, description: ".Net", document: "Microsoft.docx" },
+    { id: 3, sno: 3, code:"SES03",description: ".Net", document: "Microsoft.docx" },
   ];
   const handleDownload = (row) => {
     alert(`Downloading file: ${row.document}`);
