@@ -36,6 +36,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { HsnSchema } from "../../Security/validation";
 import { DesignationSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
+import * as Yup from "yup"
 // import CryptoJS from "crypto-js";
 const Editdesignation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -57,6 +58,33 @@ const Editdesignation = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const location = useLocation();
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          name: Yup.string().required(data.Designation.name),
+          rank: Yup.string().required(data.Designation.rank),
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Designation.code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -191,7 +219,7 @@ const Editdesignation = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={DesignationSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -246,10 +274,14 @@ const Editdesignation = () => {
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       variant="standard"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -269,7 +301,11 @@ const Editdesignation = () => {
                     name="name"
                     type="text"
                     id="name"
-                    label="Name"
+                    label={
+                      <>
+                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
@@ -284,27 +320,31 @@ const Editdesignation = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       }
                     }}
-                    required
-                    autoFocus= {CompanyAutoCode == "Y"}
+                    // required
+                    autoFocus={CompanyAutoCode == "Y"}
                   />
                   <TextField
                     name="rank"
                     type="number"
                     id="rank"
-                    label="Rank"
+                     label={
+                        <>
+                        Rank<span style={{color:"red",fontSize:"20px"}}>*</span>
+                        </>
+                      }
                     variant="standard"
                     focused
                     value={values.rank}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    sx={{ background: "" }}
+                   
                     onWheel={(e) => e.target.blur()}
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
                       },
                     }}
-                    required
+                    // required
                     error={!!touched.rank && !!errors.rank}
                     helperText={touched.rank && errors.rank}
 

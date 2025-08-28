@@ -1,0 +1,142 @@
+{
+    "Designation": {
+        "code": "Please fill the Code",
+        "name": "Please fill the Description",
+        "rank": "Please fill the Rank"
+    },
+    "Department": {
+        "Code": "Please fill the Code",
+        "Name": "Please fill the Description",
+        "Loc": "Please fill the Location"
+    },
+    "Project": {
+        "Code": "Please fill the Code",
+        "name": "Please fill the Description",
+        "incharge": "Please fill the Owner",
+        "CurrentStatus": "Please fill the status"
+    },
+    "Function": {
+        "code": "Please fill the Code",
+        "name": "Please fill the Description",
+        "categories": "Please fill the Categories"
+    },
+    "Shift": {
+        "code": "Please fill the Code",
+        "name": "Please fill the Description",
+        "starttime": "Please fill the Shift Start Time",
+        "endtime": "Please fill the Shift End Time"
+    },
+    "Leavetype": {
+        "code": "Please fill the Code",
+        "name": "Please fill the Description",
+        "leavetypecategories": "Please fill the Categories"
+    },
+    "Overhead": {
+        "code": "Please fill the Code",
+        "name": "Please fill the Overhead",
+        "frequency": "Please fill the Frequency",
+        "productCost": "Please fill the Type"
+    },
+    "Holidaylist": {
+        "Date": "Please fill the Holiday Date",
+        "name": "Please fill the Description",
+        "oscc": "Please fill the Occasion"
+    },
+    "Party": {
+        "code": "Please fill the Code",
+        "name": "Please fill the Name",
+        "mobilenumber": "Please fill the Contact Mobile Number",
+        "Pancardnumber": "Invalid Pan Card Number",
+        "gstnumber": "Invalid GST Number"
+    },
+    "BankDetails": {
+        "bankname": "Please fill the Bank Name",
+        "branchname": "Please fill the Branch Name",
+        "Accounttype": "Please fill the Account Type",
+        "ifsc": "Please fill the IFSC Code",
+        "bankloc": "Please fill the Bank Location",
+        "accountnumber": "Please fill the Account Number",
+        "accountholdname": "Please fill the Account Holder Name",
+        "bankaddress": "Please fill the Bank Address"
+    },
+    "Contactdetails": {
+        "emailid1": "Please fill the Email ID",
+        "name1": "Please fill the Name",
+        "mobileno1": "Please fill the Mobile Number"
+    },
+    "Employee": {
+        "Code": "Please fill the Code",
+        "Name": "Please fill the Name",
+        "Password": "Please fill the Password",
+        "Department": "Please fill the Department",
+        "employeetype": "Please fill the Employee Type"
+    },
+    "Employeecontact": {
+        "email": "Please fill the Email Id",
+        "phonenumber": "Phone Number must be exactly 10 digits",
+        "aadharcardnumber": "Aadhar Card Number must be exactly 12 alphanumeric characters",
+        "pfnumber": "PF Number must be exactly 22 alphanumeric characters",
+        "esinumber": "ESI Number must be exactly 17 digits"
+    },
+    "Skills": {
+        "Skills": "Please fill the Skills",
+        "Comments": "Please fill the Comments"
+    },
+    "EmpFunction": {
+        "function": "Please fill the Function"
+    },
+    "Documents": {
+        "category": "Please fill the Category"
+    },
+    "Deployment": {
+        "location": "Please fill the Location",
+        "function": "Please fill the Function",
+        "gate": "Please fill the Gate",
+        "Designation": "Please fill the Designation",
+        "shift": "Please fill the Shift"
+    },
+    "CheckIn": {
+        "location": "Please fill the Location",
+        "gate": "Please fill the Gate",
+        "employee": "Please fill the Employee"
+    },
+    "CheckOut": {
+        "Location": "Please fill the Location",
+        "Gate": "Please fill the Gate",
+        "Employee": "Please fill the Employee"
+    },
+    "Employeerequest": {
+        "Code": "Please fill the Code",
+        "employeetype": "Please fill the Employee Type"
+    },
+    "Itemcustody": {
+        "ItemNumber": "Please fill the Item No",
+        "ItemName": "Please fill the Item Name",
+        "AssestID": "Please fill the Assest ID",
+        "PurchaseReference": "Please fill the Reference",
+        "ItemValue": "Please fill the Item Value"
+    },
+    "Permission": {
+        "permissiondate": "Please fill the Permission Date",
+        "location": "Please fill the Location",
+        "fromtime": "Please fill the From Time",
+        "totime": "Please fill the To Time",
+        "managerComments": "Please fill the Manager Comments",
+        "Status": "Please fill the Status"
+    },
+    "Overtime": {
+        "Date": "Please fill the Date",
+        "NumberOfHours": "Please fill the Number of Hours",
+        "comments": "Please fill the Comments",
+        "managerComments": "Please fill the Manager Comments",
+        "Status": "Please fill the Status"
+    },
+    "Leaveconfiguration": {
+        "totaldays": "Please fill the Eligible Days",
+        "leavetype": "Please fill the Leave Type"
+    },
+    "Manager": {
+        "Level": "Please fill the Level",
+        "manager": "Please fill the Manager"
+    }
+}

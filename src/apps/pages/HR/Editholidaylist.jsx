@@ -29,6 +29,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { tokens } from "../../../Theme";
 import { formGap } from "../../../ui-components/global/utils";
+import * as Yup from "yup";
 
 const Holidaylist = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -54,14 +55,36 @@ const Holidaylist = () => {
   const recID = params.id;
   const mode = params.Mode;
   const accessID = params.accessID;
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+
+          Date: Yup.string().required(data.Holidaylist.Date),
+          oscc: Yup.string().required(data.Holidaylist.oscc),
+          name: Yup.string().required(data.Holidaylist.name),
+
+        });
+
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   useEffect(() => {
     // Fetch data only when the recID or mode changes
     if (recID && mode === "E") {
       dispatch(getFetchData({ accessID, get: "get", recID }));
     }
-    else{
-    dispatch(getFetchData({ accessID, get: "get", recID }));
+    else {
+      dispatch(getFetchData({ accessID, get: "get", recID }));
 
     }
   }, [location.key, recID, mode]);
@@ -166,7 +189,7 @@ const Holidaylist = () => {
                   sx={{ cursor: "default" }}
 
                 >
-                   Holiday List
+                  Holiday List
                 </Typography>
 
               </Breadcrumbs>
@@ -197,7 +220,7 @@ const Holidaylist = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //validationSchema={FunctionSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -228,14 +251,19 @@ const Holidaylist = () => {
                     name="Date"
                     type="date"
                     id="Date"
-                    label="Holiday Date"
-                  variant="standard"
+                    label={
+                      <>
+                        Holiday Date<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    variant="standard"
                     focused
-                    required
+                    // required
                     value={values.Date}
                     onBlur={handleBlur}
                     onChange={handleChange}
-
+                    error={!!touched.Date && !!errors.Date}
+                    helperText={touched.Date && errors.Date}
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white
@@ -249,13 +277,19 @@ const Holidaylist = () => {
                     name="oscc"
                     type="text"
                     id="oscc"
-                    label="Occasion"
-                  variant="standard"
+                    label={
+                      <>
+                        Occasion<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    variant="standard"
                     focused
                     value={values.oscc}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    required
+                    // required
+                    error={!!touched.oscc && !!errors.oscc}
+                    helperText={touched.oscc && errors.oscc}
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white
@@ -269,13 +303,19 @@ const Holidaylist = () => {
                     name="name"
                     type="text"
                     id="name"
-                    label="Description"
-                  variant="standard"
+                    label={
+                      <>
+                        Description<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    variant="standard"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    required
+                    // required
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
                     sx={{
 
                       backgroundColor: "#ffffff", // Set the background to white
@@ -290,7 +330,7 @@ const Holidaylist = () => {
                     type="number"
                     id="Sortorder"
                     label="Sort Order"
-                  variant="standard"
+                    variant="standard"
                     focused
                     value={values.Sortorder}
                     onBlur={handleBlur}
@@ -341,7 +381,7 @@ const Holidaylist = () => {
                     >
                       Save
                     </Button>
-                  )}   {YearFlag == "true" && mode=="E" ? (
+                  )}   {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"

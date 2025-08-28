@@ -65,8 +65,29 @@ const Editcheckin = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
-  const state=location.state || {};
-  console.log(state,"checkin");
+  const state = location.state || {};
+  console.log(state, "checkin");
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          location: Yup.object().required(data.CheckIn.location).nullable(),
+          gate: Yup.object().required(data.CheckIn.gate).nullable(),
+         employee: Yup.object().nullable().required(data.CheckIn.employee),
+        });
+
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -77,18 +98,18 @@ const Editcheckin = () => {
     backgroundColor: "#EDEDED",
   };
 
-  const validationSchema = Yup.object().shape({
-      employee: Yup.object()
-        .nullable()
-        .required("Please fill the Employee"),
-      location: Yup.object()
-        .nullable()
-        .required("Please fill the Location"),
-      gate: Yup.object()
-        .nullable()
-        .required("Please fill the Gate"),
-     
-    });
+  // const validationSchema = Yup.object().shape({
+  //   employee: Yup.object()
+  //     .nullable()
+  //     .required("Please fill the Employee"),
+  //   location: Yup.object()
+  //     .nullable()
+  //     .required("Please fill the Location"),
+  //   gate: Yup.object()
+  //     .nullable()
+  //     .required("Please fill the Gate"),
+
+  // });
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split('T')[0];
   const InitialValue = {
@@ -97,13 +118,13 @@ const Editcheckin = () => {
     comment: data.CheckInComment,
     checkintime: data.CheckInTime,
     disable: data.WorkAtHome === "Y" ? false : true,
-     location: data.LocationRecID
+    location: data.LocationRecID
       ? { RecordID: data.LocationRecID, Name: data.LocationName }
       : null,
     gate: data.GateRecID
       ? { RecordID: data.GateRecID, Name: data.GateName }
       : null,
-       employee: data.EmployeeID
+    employee: data.EmployeeID
       ? { RecordID: data.EmployeeID, Name: data.EmployeeName }
       : null,
   };
@@ -127,8 +148,8 @@ const Editcheckin = () => {
       CheckInDate: values.date,
       CheckInComment: values.comment,
       //EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
-      EmployeeID:values.employee.RecordID || 0,
-      EmployeeName:values.employee.Name || "",
+      EmployeeID: values.employee.RecordID || 0,
+      EmployeeName: values.employee.Name || "",
       WorkAtHome: isCheck,
       // LocationRecID: locationLookup.locationRecordID,
       // GateRecID: gateLookup.gateRecordID,
@@ -289,29 +310,29 @@ const Editcheckin = () => {
               </IconButton>
             )}
             <Breadcrumbs
-            maxItems={3}
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-          >
-             <Typography
-              variant="h5"
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-              onClick={() => {
-                navigate(-1);
-              }}
+              maxItems={3}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
-             {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}
-            </Typography>
-            <Typography
-              color="#0000D1"
-              sx={{ cursor: "default" }}
-             
-            >
-              Check In
-            </Typography>
-           
-          </Breadcrumbs>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                {mode === "E" ? `Employee(${state.EmpName})` : "Employee(New)"}
+              </Typography>
+              <Typography
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+
+              >
+                Check In
+              </Typography>
+
+            </Breadcrumbs>
           </Box>
 
           <Box display="flex">
@@ -364,10 +385,10 @@ const Editcheckin = () => {
                     },
                   }}
                 >
-            
+
                   <FormControl
                     sx={{
-                     
+
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -393,11 +414,11 @@ const Editcheckin = () => {
                       url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"Location","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                     />
                   </FormControl>
-                   
-                  
+
+
                   <FormControl
                     sx={{
-                      
+
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -418,22 +439,22 @@ const Editcheckin = () => {
                         console.log(newValue.RecordID, "recid");
 
                       }}
-                       error={!!touched.location && !!errors.location}
+                      error={!!touched.location && !!errors.location}
                       helperText={touched.location && errors.location}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID=${CompanyID}","Any":""}}`}
                     />
-                   
+
                   </FormControl>
-                   {/* {touched.location && errors.location && (
+                  {/* {touched.location && errors.location && (
                       <div style={{ color: "red", fontSize: "9px", marginTop: "1px" }}>
                         {errors.location}
                       </div>
                     )} */}
-                  
-            
-                   <FormControl
+
+
+                  <FormControl
                     sx={{
-                     
+
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -441,7 +462,7 @@ const Editcheckin = () => {
                   >
                     <CheckinAutocomplete
                       name="gate"
-                       label={
+                      label={
                         <span>
                           Gate <span style={{ color: 'red', fontSize: '20px' }}>*</span>
                         </span>
@@ -458,11 +479,11 @@ const Editcheckin = () => {
                       //  onChange={handleSelectionFunctionname}
                       // defaultValue={selectedFunctionName}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate}","Any":""}}`}
-                      //url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate} AND CompanyID=${CompId}","Any":""}}`}
+                    //url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID=${locgate} AND CompanyID=${CompId}","Any":""}}`}
 
                     />
                   </FormControl>
-                 
+
                   <TextField
                     name="date"
                     type="date"
@@ -476,14 +497,14 @@ const Editcheckin = () => {
                     onChange={handleChange}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
-                    sx={{background: "#f5f5f5" }}
-                    // inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    sx={{ background: "#f5f5f5" }}
+                  // inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
 
                   <FormControl
                     focused
                     variant="standard"
-                   
+
                   >
                     <InputLabel id="status">Type</InputLabel>
                     <Select
@@ -512,8 +533,8 @@ const Editcheckin = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-                    
-                    sx={{  background: "#f5f5f5" }}
+
+                    sx={{ background: "#f5f5f5" }}
                   />
                   <TextField
                     name="comment"
@@ -528,7 +549,7 @@ const Editcheckin = () => {
                     error={!!touched.comment && !!errors.comment}
                     helperText={touched.comment && errors.comment}
                     sx={{
-                     
+
                       backgroundColor: "#f5f5f5", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -566,7 +587,7 @@ const Editcheckin = () => {
                     >
                       Save
                     </Button>
-                  )} {YearFlag == "true"&& mode=="E" ? (
+                  )} {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"

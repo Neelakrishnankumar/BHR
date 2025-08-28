@@ -129,6 +129,7 @@ const Editrequests = () => {
   const UserName = sessionStorage.getItem("UserName");
   const UserRecordid = sessionStorage.getItem("loginrecordID");
   const location = useLocation();
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const state = location.state || {};
   const Finyear = sessionStorage.getItem("YearRecorid");
   const handleMenu = (event) => {
@@ -193,24 +194,66 @@ const Editrequests = () => {
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
-  const validationSchema = Yup.object().shape({
-    // leavetype: Yup.object()
-    //   .nullable()
-    //   .required("Leavetype is required"),
+  // const validationSchema = Yup.object().shape({
+  //   // leavetype: Yup.object()
+  //   //   .nullable()
+  //   //   .required("Leavetype is required"),
 
-  });
-  const validationSchema2 = Yup.object().shape({
+  // });
+  // const validationSchema2 = Yup.object().shape({
 
-    // ProName: Yup.object()
-    //   .nullable()
-    //   .required("Project is required"),
-  });
-  const validationSchema3 = Yup.object().shape({
+  //   // ProName: Yup.object()
+  //   //   .nullable()
+  //   //   .required("Project is required"),
+  // });
+  // const validationSchema3 = Yup.object().shape({
 
-    // overhead: Yup.object()
-    //   .nullable()
-    //   .required("Overhead is required"),
-  });
+  //   // overhead: Yup.object()
+  //   //   .nullable()
+  //   //   .required("Overhead is required"),
+  // });
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+  const [validationSchema1, setValidationSchema1] = useState(null);
+
+
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        //Permission
+        const schema = Yup.object().shape({
+          permissiondate: Yup.string().required(data.Permission.permissiondate),
+          location: Yup.string().required(data.Permission.location),
+          fromtime: Yup.string().required(data.Permission.fromtime),
+          reason: Yup.string().required(data.Permission.reason),
+          managerComments: Yup.string().required(data.Permission.managerComments),
+          totime: Yup.string().required(data.Permission.totime),
+          Status: Yup.string().required(data.Permission.Status),
+        })
+        setValidationSchema(schema);
+        //Overtime
+        const schema1 = Yup.object().shape({
+          Date: Yup.string().required(data.Overtime.Date),
+          NumberOfHours: Yup.string().required(data.Overtime.NumberOfHours),
+          comments: Yup.string().required(data.Overtime.comments),
+          managerComments: Yup.string().required(data.Overtime.managerComments),
+          Status: Yup.string().required(data.Overtime.Status),
+        })
+        setValidationSchema1(schema1);
+
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
+
+
+
   const handleButtonClick = (params) => {
     const rowData = {
       CheckInDate: params.row.CheckInDate,
@@ -406,19 +449,21 @@ const Editrequests = () => {
     checkbox: apiData.Disable,
     Password: apiData.Password,
     Department: apiData.Department,
+    qualityassurance: Data.QualityAssurance === "Y" ? true : false,
+
     // ScrumMaster: apiData.ScrumMaster,
   };
-  const fnSave = async (values) => {
+  const fnSave = async (values, del) => {
     setLoading(true);
     setIni(false);
-    if (values.Code == "") {
-      toast.error("Please Enter Code");
-      return;
-    }
-    if (values.Name == "") {
-      toast.error("Please Enter Description");
-      return;
-    }
+    // if (values.Code == "") {
+    //   toast.error("Please Enter Code");
+    //   return;
+    // }
+    // if (values.Name == "") {
+    //   toast.error("Please Enter Description");
+    //   return;
+    // }
     var isCheck = "N";
     if (values.checkbox == true) {
       isCheck = "Y";
@@ -457,7 +502,9 @@ const Editrequests = () => {
       // SubscriptionCode: apiData.SubscriptionCode,
       ScrumMaster: apiData.ScrumMaster,
       CompanyID: apiData.CompanyID,
-      SubscriptionCode
+      SubscriptionCode,
+      QualityAssurance: values.qualityassurance === true ? "Y" : "N",
+
     };
     var type = "";
 
@@ -468,14 +515,33 @@ const Editrequests = () => {
     }
 
     const data = await dispatch(postApidatawol(accessID, type, saveData));
+    // if (data.payload.Status == "Y") {
+    //   toast.success(data.payload.Msg);
+    //   setLoading(false);
+    //   navigate(
+    //     `/Apps/TR257/Employee Request/EditEmployee Request/${data.payload.apiResponse}/E`
+    //   );
+    // } else {
+    //   toast.error(data.payload.Msg);
+    //   setLoading(false);
+    // }
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
+      dispatch(fetchApidata(accessID, "get", recID));
+
       setLoading(false);
-      navigate(
-        `/Apps/TR257/Employee Request/EditEmployee Request/${data.payload.apiResponse}/E`
-      );
+      if (del) {
+        navigate(`/Apps/TR257/Employee%20Request`);
+      } else {
+        navigate(
+          `/Apps/TR257/Employee Request/EditEmployee Request/${data.payload.apiResponse}/E`,
+          { state: { ...state } }
+        );
+      }
     } else {
       toast.error(data.payload.Msg);
+      console.log(data.payload.Msg, "--error");
+
       setLoading(false);
     }
   };
@@ -2812,7 +2878,7 @@ const Editrequests = () => {
               // onSubmit={handleFormSubmit}
               initialValues={initialValues}
               enableReinitialize={true}
-              validationSchema={basicSchema}
+            // validationSchema={validationSchema}
             >
               {({
                 values,
@@ -2883,8 +2949,8 @@ const Editrequests = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Code"
-                        // error={!!touched.Code && !!errors.Code}
-                        // helperText={touched.Code && errors.Code}
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
                         sx={{
                           backgroundColor: "#ffffff", // Set the background to white
                           "& .MuiFilledInput-root": {
@@ -2892,7 +2958,7 @@ const Editrequests = () => {
                           },
                         }}
                         focused
-                        required
+                        // required
                         autoFocus
                         inputProps={{ maxLength: 8 }}
                       />
@@ -2965,14 +3031,16 @@ const Editrequests = () => {
                         select
                         fullWidth
                         variant="standard"
-                        label={<span>Employee Type</span>}
+                        label="Employee Type"
                         value={values.employeetype}
                         id="employeetype"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="employeetype"
-                        required
+                        // required
                         focused
+                        error={!!touched.employeetype && !!errors.employeetype}
+                        helperText={touched.employeetype && errors.employeetype}
                         sx={{
                           gridColumn: "span 2",
                           // backgroundColor: "#ffffff",
@@ -2987,7 +3055,7 @@ const Editrequests = () => {
                         <MenuItem value="CO">Contracts Out</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
-                      <Box>
+                      {/* <Box>
                         <Field
                           //  size="small"
                           type="checkbox"
@@ -3024,6 +3092,58 @@ const Editrequests = () => {
                         />
 
                         <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box> */}
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="qualityassurance"
+                          id="qualityassurance"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Quality Assurance"
+                        />
+
+                        <FormLabel focused={false}>Quality Assurance</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="scrummaster"
+                          id="scrummaster"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Scrum Master"
+                        />
+
+                        <FormLabel focused={false}>Scrum Master</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="prjmanager"
+                          id="prjmanager"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Project Manager"
+                        />
+
+                        <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box>
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="checkbox"
+                          id="checkbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -3664,7 +3784,7 @@ const Editrequests = () => {
             <Formik
               initialValues={leaveInitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema}
+              // validationSchema={validationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   leaveFNsave(values, resetForm, false);
@@ -4367,6 +4487,7 @@ const Editrequests = () => {
             <Formik
               initialValues={otInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema1}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   otFNsave(values, resetForm, false);
@@ -4541,14 +4662,19 @@ const Editrequests = () => {
                           name="Date"
                           type="date"
                           id="Date"
-                          label=" Date"
+                          label={
+                            <>
+                              Date<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           inputFormat="YYYY-MM-DD"
                           variant="standard"
                           focused
                           value={values.Date}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          required
+                          error={!!touched.Date && !!errors.Date}
+                          helperText={touched.Date && errors.Date}                        // required
 
                         //sx={{ gridColumn: "span 2" }}
                         />
@@ -4557,14 +4683,20 @@ const Editrequests = () => {
                           name="NumberOfHours"
                           type="number"
                           id="NumberOfHours"
-                          label="No. of Hours"
+                          label={
+                            <>
+                              No of Hours<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           value={values.NumberOfHours}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           onWheel={(e) => e.target.blur()}
-                          required
+                          error={!!touched.NumberOfHours && !!errors.NumberOfHours}
+                          helperText={touched.NumberOfHours && errors.NumberOfHours}
+                          // required
                           //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                           InputProps={{
                             inputProps: {
@@ -4573,30 +4705,34 @@ const Editrequests = () => {
                               max: 24,
                             },
                           }}
+
                         />
 
 
-                        <FormControl
+                        {/* <FormControl
                           focused
                           variant="standard"
                         //sx={{ gridColumn: "span 2" }}
                         >
-                          <InputLabel id="PaymentMethod">Payment Method</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-filled-label"
-                            id="PaymentMethod"
-                            name="PaymentMethod"
-                            value={values.PaymentMethod}
-                            required
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={!!touched.PaymentMethod && !!errors.PaymentMethod}
-                            helperText={touched.PaymentMethod && errors.PaymentMethod}
-                          >
-                            <MenuItem value="CR">Cash Reimbursement</MenuItem>
-                            <MenuItem value="CH">Compensatory Half</MenuItem>
-                          </Select>
-                        </FormControl>
+                          <InputLabel id="PaymentMethod">Payment Method</InputLabel> */}
+                        <TextField
+                          id="PaymentMethod"
+                          name="PaymentMethod"
+                          value={values.PaymentMethod}
+                          // required
+                          focused
+                          variant="standard"
+                          label="Payment Method"
+                          select
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.PaymentMethod && !!errors.PaymentMethod}
+                          helperText={touched.PaymentMethod && errors.PaymentMethod}
+                        >
+                          <MenuItem value="CR">Cash Reimbursement</MenuItem>
+                          <MenuItem value="CH">Compensatory Half</MenuItem>
+                        </TextField>
+                        {/* </FormControl> */}
                         <FormControl
                           focused
                           variant="standard"
@@ -4608,7 +4744,7 @@ const Editrequests = () => {
                             id="OtType"
                             name="OtType"
                             value={values.OtType}
-                            required
+                            // required
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={!!touched.OtType && !!errors.OtType}
@@ -4655,13 +4791,17 @@ const Editrequests = () => {
                           name="comments"
                           type="comments"
                           id="comments"
-                          label="Comments"
+                          label={
+                            <>
+                              Comments<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           multiline
                           rows={6}
                           variant="outlined"
                           fullWidth
                           focused
-                          required
+                          // required
                           value={values.comments}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -4674,8 +4814,12 @@ const Editrequests = () => {
                           fullWidth
                           variant="outlined"
                           type="text"
-                          label="Manager Comments"
-                          required
+                          label={
+                            <>
+                              Manager Comments<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          // required
                           multiline
                           rows={6}
                           value={values.managerComments}
@@ -4683,6 +4827,8 @@ const Editrequests = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           name="managerComments"
+                          error={!!touched.managerComments && !!errors.managerComments}
+                          helperText={touched.managerComments && errors.managerComments}
                           sx={{
                             gridColumn: "span 2",
                           }}
@@ -4718,36 +4864,42 @@ const Editrequests = () => {
                           onChange={handleChange}
                         //required
                         />
-                        <FormControl
+                        {/* <FormControl
                           focused
                           variant="standard"
                         //sx={{ gridColumn: "span 2" }}
                         >
-                          <InputLabel id="Status">Status</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-filled-label"
-                            id="Status"
-                            name="Status"
-                            value={values.Status}
-                            onBlur={handleBlur}
-                            required
-                            onChange={handleChange}
-                            error={!!touched.Status && !!errors.Status}
-                            helperText={touched.Status && errors.Status}
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiFilledInput-root": {
-                          //     backgroundColor: "#ffffff",
-                          //   }
-                          // }}
-                          >
-                            <MenuItem value="AL">Applied</MenuItem>
-                            <MenuItem value="AP">Approved</MenuItem>
-                            <MenuItem value="RJ">Rejected</MenuItem>
-                            <MenuItem value="QR">Query</MenuItem>
-                          </Select>
-                        </FormControl>
+                          <InputLabel id="Status">Status</InputLabel> */}
+                        <TextField
+                          id="Status"
+                          name="Status"
+                          label={
+                            <>
+                              Status<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          value={values.Status}
+                          onBlur={handleBlur}
+                          // required
+                          focused
+                          variant="standard"
+                          onChange={handleChange}
+                          error={!!touched.Status && !!errors.Status}
+                          helperText={touched.Status && errors.Status}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "#ffffff",
+                        //   }
+                        // }}
+                        >
+                          <MenuItem value="AL">Applied</MenuItem>
+                          <MenuItem value="AP">Approved</MenuItem>
+                          <MenuItem value="RJ">Rejected</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
+                        </TextField>
+                        {/* </FormControl> */}
                       </FormControl>
                     </FormControl>
                   </Box>
@@ -4915,7 +5067,7 @@ const Editrequests = () => {
             <Formik
               initialValues={salAdinitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema3}
+              // validationSchema={validationSchema3}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   salAdFNsave(values, resetForm, false);
@@ -5517,7 +5669,7 @@ const Editrequests = () => {
             <Formik
               initialValues={ondutyInitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema2}
+              // validationSchema={validationSchema2}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   ondutyFNsave(values, resetForm, false);
@@ -6118,6 +6270,7 @@ const Editrequests = () => {
             <Formik
               initialValues={permisinitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   PerFNsave(values, resetForm, false);
@@ -6389,7 +6542,11 @@ const Editrequests = () => {
                           name="permissiondate"
                           type="date"
                           id="permissiondate"
-                          label="Permission Date"
+                          label={
+                            <>
+                              Permission Date<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           inputFormat="YYYY-MM-DD"
@@ -6399,7 +6556,7 @@ const Editrequests = () => {
                           error={!!touched.permissiondate && !!errors.permissiondate}
                           helperText={touched.permissiondate && errors.permissiondate}
                           sx={{ gridColumn: "span 2" }}
-                          required
+                        // required
 
                         // inputProps={{
                         //   max: new Date().toISOString().split("T")[0],
@@ -6418,9 +6575,15 @@ const Editrequests = () => {
                           value={values.fromtime}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="From Time"
+                          error={!!touched.fromtime && !!errors.fromtime}
+                          helperText={touched.fromtime && errors.fromtime}
+                          label={
+                            <>
+                              From Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           focused
-                          required
+                        // required
                         // inputProps={{ maxLength:20}}
                         />
                         <TextField
@@ -6434,9 +6597,15 @@ const Editrequests = () => {
                           value={values.totime}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="To Time"
+                          error={!!touched.totime && !!errors.totime}
+                          helperText={touched.totime && errors.totime}
+                          label={
+                            <>
+                              To Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           focused
-                          required
+                        // required
                         // inputProps={{ readOnly: true }}
                         />
                         <TextField
@@ -6444,14 +6613,20 @@ const Editrequests = () => {
                           name="location"
                           type="text"
                           id="location"
-                          label="Location"
+                          label={
+                            <>
+                              Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           variant="standard"
                           focused
+                          error={!!touched.location && !!errors.location}
+                          helperText={touched.location && errors.location}
                           value={values.location}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           sx={{ gridColumn: "span 2" }}
-                          required
+                        // required
                         />
                         <TextField
 
@@ -6460,8 +6635,12 @@ const Editrequests = () => {
                           fullWidth
                           variant="outlined"
                           type="text"
-                          label="Reason"
-                          required
+                          label={
+                            <>
+                              Reason<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          // required
                           multiline
                           rows={6}
                           value={values.reason}
@@ -6485,14 +6664,20 @@ const Editrequests = () => {
                           fullWidth
                           variant="outlined"
                           type="text"
-                          label="Manager Comments"
-                          required
+                          label={
+                            <>
+                              Manager Comments<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          // required
                           multiline
                           rows={6}
                           value={values.managerComments}
                           id="managerComments"
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          error={!!touched.managerComments && !!errors.managerComments}
+                          helperText={touched.managerComments && errors.managerComments}
                           name="managerComments"
                           sx={{
                             gridColumn: "span 2",
@@ -6534,13 +6719,19 @@ const Editrequests = () => {
 
                         <TextField
                           select
-                          label="Status"
+                          label={
+                            <>
+                              Status<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           id="Status"
                           name="Status"
                           value={values.Status}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          required
+                          error={!!touched.Status && !!errors.Status}
+                          helperText={touched.Status && errors.Status}
+                          // required
                           focused
                           variant="standard"
                         >
@@ -6702,7 +6893,7 @@ const Editrequests = () => {
             <Formik
               initialValues={expenseinitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema3}
+              // validationSchema={validationSchema3}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   expensefnSave(values, resetForm, false);
