@@ -131,6 +131,13 @@
         "managerComments": "Please fill the Manager Comments",
         "Status": "Please fill the Status"
     },
+    "Regularization": {
+        "CheckInDate": "Please fill the Check In Date",
+        "appliedStatus": "Please fill the Applied Status",
+        "remarks": "Please fill the Remarks",
+        "managerComments": "Please fill the Manager Comments"
+        
+    },
     "Leaveconfiguration": {
         "totaldays": "Please fill the Eligible Days",
         "leavetype": "Please fill the Leave Type"

@@ -215,6 +215,7 @@ const Editrequests = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema1, setValidationSchema1] = useState(null);
+  const [validationSchema2, setValidationSchema2] = useState(null);
 
 
 
@@ -246,6 +247,15 @@ const Editrequests = () => {
           Status: Yup.string().required(data.Overtime.Status),
         })
         setValidationSchema1(schema1);
+
+        //Regularization
+        const schema2 = Yup.object().shape({
+          CheckInDate: Yup.string().required(data.Regularization.CheckInDate),
+          appliedStatus: Yup.string().required(data.Regularization.appliedStatus),
+          remarks: Yup.string().required(data.Regularization.remarks),
+          managerComments: Yup.string().required(data.Regularization.managerComments),
+        })
+        setValidationSchema2(schema2);
 
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -7563,6 +7573,7 @@ const Editrequests = () => {
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={RegInitialValue}
+              validationSchema={validationSchema2}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => RegFNsave(values, resetForm, false)}
             >
@@ -7748,7 +7759,7 @@ const Editrequests = () => {
                         value={values.MonthDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        required
+                        // required
                         error={!!touched.MonthDate && !!errors.MonthDate}
                         helperText={touched.MonthDate && errors.MonthDate}
                       //sx={{ gridColumn: "span 2" }}
@@ -7758,54 +7769,23 @@ const Editrequests = () => {
                         name="CheckInDate"
                         type="date"
                         id="CheckInDate"
-                        label="Check In Date"
+                        label={
+                          <span>
+                            Check In Date
+                            <span
+                              style={{ color: "red", fontSize: "20px" }}
+                            >
+                              *
+                            </span>
+                          </span>
+                        }
                         variant="standard"
                         focused
                         inputFormat="YYYY-MM-DD"
                         // inputFormat="DD-MM-YYYY"
                         value={values.CheckInDate}
                         onBlur={handleBlur}
-                        required
-                        //onChange={handleChange}
-                        // onChange={(e) => {
-                        //   setFieldValue("CheckInDate", e.target.value);
-                        //   setCheckdate(e.target.value);
-                        //   if (e.target.value) {
-                        //     dispatch(
-                        //       RegGetData({
-                        //         data: {
-                        //           EmployeeID: recID,
-                        //           CheckInDate: e.target.value,
-                        //         },
-                        //       })
-                        //     );
-                        //   }
-                        // }}
-                        // onChange={(e) => {
-                        //   const selectedDate = e.target.value;
-                        //   if (selectedDate) {
-                        //     dispatch(
-                        //       RegGetData({
-                        //         data: {
-                        //           EmployeeID: recID,
-                        //           CheckInDate: selectedDate,
-                        //         },
-                        //       })
-                        //     ).then((response) => {
-                        //       const msg = response.payload.Msg;
-                        //       if (msg) {
-                        //         setResponseMsg(msg);
-                        //       } else {
-                        //         setResponseMsg("");
-                        //       }
-                        //     });
-                        //   }
-                        //   setCheckIN(selectedDate);
-                        //   setFieldValue("CheckInDate", selectedDate);
-                        // }}
 
-
-                        //check
                         onChange={(e) => {
 
                           setFieldValue("CheckInDate", e.target.value);
@@ -7894,8 +7874,17 @@ const Editrequests = () => {
                         fullWidth
                         variant="outlined"
                         type="text"
-                        label="Manager Comments"
-                        required
+                        label={
+                          <span>
+                            Manager Comments
+                            <span
+                              style={{ color: "red", fontSize: "20px" }}
+                            >
+                              *
+                            </span>
+                          </span>
+                        }
+                        // required
                         multiline
                         rows={6}
                         value={values.managerComments}
@@ -7907,6 +7896,9 @@ const Editrequests = () => {
                           gridColumn: "span 2",
                         }}
                         focused
+                        error={!!touched.managerComments && !!errors.managerComments}
+                        helperText={touched.managerComments && errors.managerComments}
+
                       />
                       <TextField
                         fullWidth
@@ -7938,40 +7930,54 @@ const Editrequests = () => {
                         onChange={handleChange}
                       //required
                       />
-                      <FormControl
+                      {/* <FormControl
                         focused
                         variant="standard"
                       //sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
                       >
-                        <InputLabel id="Status">Status</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="Status"
-                          name="Status"
-                          value={values.Status}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          required
-                        >
-                          <MenuItem value="P">Present</MenuItem>
-                          <MenuItem value="A">Absent</MenuItem>
-                          <MenuItem value="W">WeekOff</MenuItem>
-                          <MenuItem value="I">Irregular</MenuItem>
-                          <MenuItem value="L">Leave</MenuItem>
-                        </Select>
-                      </FormControl>
+                        <InputLabel id="Status">Status</InputLabel> */}
+                      <TextField
+                        label="Status"
+                        id="Status"
+                        name="Status"
+                        value={values.Status}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        variant="standard"
+                        // required
+                        select
+                      >
+                        <MenuItem value="P">Present</MenuItem>
+                        <MenuItem value="A">Absent</MenuItem>
+                        <MenuItem value="W">WeekOff</MenuItem>
+                        <MenuItem value="I">Irregular</MenuItem>
+                        <MenuItem value="L">Leave</MenuItem>
+                      </TextField>
+                      {/* </FormControl> */}
 
                       <TextField
                         select
-                        label="Applied Status"
+                        label={
+                            <span>
+                              Applied Status
+                              <span
+                                style={{ color: "red", fontSize: "20px" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
                         id="appliedStatus"
                         name="appliedStatus"
                         value={values.appliedStatus}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        required
+                        // required
                         focused
                         variant="standard"
+                        error={!!touched.appliedStatus && !!errors.appliedStatus}
+                        helperText={touched.appliedStatus && errors.appliedStatus}
                       >
                         {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
                             <MenuItem disabled={mode != "M"} value="AP">
@@ -7989,7 +7995,16 @@ const Editrequests = () => {
                         fullWidth
                         variant="standard"
                         type="text"
-                        label="Remarks"
+                        label={
+                            <span>
+                              Remarks
+                              <span
+                                style={{ color: "red", fontSize: "20px" }}
+                              >
+                                *
+                              </span>
+                            </span>
+                          }
                         value={values.remarks}
                         id="remarks"
                         onBlur={handleBlur}
@@ -7998,7 +8013,7 @@ const Editrequests = () => {
                         error={!!touched.remarks && !!errors.remarks}
                         helperText={touched.remarks && errors.remarks}
                         focused
-                        required
+                        // required
                         inputProps={{ maxLength: 90 }}
 
                       />
