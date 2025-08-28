@@ -33,7 +33,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { tokens } from "../../../Theme";
 import { formGap } from "../../../ui-components/global/utils";
-
+import * as Yup from "yup";
 const Editshift = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
@@ -58,7 +58,33 @@ const Editshift = () => {
     const recID = params.id;
     const mode = params.Mode;
     const accessID = params.accessID;
+    const [errorMsgData, setErrorMsgData] = useState(null);
+    const [validationSchema, setValidationSchema] = useState(null);
 
+    useEffect(() => {
+        fetch(process.env.PUBLIC_URL + "/validationcms.json")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+                return res.json();
+            })
+            .then((data) => {
+                setErrorMsgData(data);
+
+                let schemaFields = {
+                    name: Yup.string().required(data.Shift.name),
+                    starttime: Yup.string().required(data.Shift.starttime),
+                    endtime: Yup.string().required(data.Shift.endtime),
+                };
+
+                if (CompanyAutoCode === "N") {
+                    schemaFields.code = Yup.string().required(data.Shift.code);
+                }
+
+                const schema = Yup.object().shape(schemaFields);
+                setValidationSchema(schema);
+            })
+            .catch((err) => console.error("Error loading validationcms.json:", err));
+    }, [CompanyAutoCode]);
     useEffect(() => {
         // Fetch data only when the recID or mode changes
         if (recID && mode === "E") {
@@ -219,7 +245,7 @@ const Editshift = () => {
                                 Fnsave(values);
                             }, 100);
                         }}
-                        //validationSchema={FunctionSchema}
+                        validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
                         {({
@@ -274,11 +300,14 @@ const Editshift = () => {
                                             name="code"
                                             type="text"
                                             id="code"
-                                            label="Code"
-
+                                            label={
+                                                <>
+                                                    Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                </>
+                                            }
                                             variant="standard"
                                             focused
-                                            required
+                                            // required
                                             value={values.code}
                                             onBlur={handleBlur}
                                             onChange={handleChange}
@@ -299,7 +328,11 @@ const Editshift = () => {
                                         name="name"
                                         type="text"
                                         id="name"
-                                        label="Description"
+                                        label={
+                                            <>
+                                                Description<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                            </>
+                                        }
                                         variant="standard"
                                         focused
                                         value={values.name}
@@ -314,7 +347,7 @@ const Editshift = () => {
                                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                                             }
                                         }}
-                                        required
+                                        // required
                                         autoFocus={CompanyAutoCode == "Y"}
                                     />
 
@@ -338,9 +371,15 @@ const Editshift = () => {
                                             value={values.starttime}
                                             onBlur={handleBlur}
                                             onChange={handleChange}
-                                            label="Shift Start Time"
+                                            error={!!touched.starttime && !!errors.starttime}
+                                            helperText={touched.starttime && errors.starttime}
+                                            label={
+                                                <>
+                                                    Shift Start Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                </>
+                                            }
                                             focused
-                                            required
+                                        // required
                                         // inputProps={{ maxLength:20}}
                                         />
                                     </FormControl>
@@ -363,9 +402,15 @@ const Editshift = () => {
                                             value={values.endtime}
                                             onBlur={handleBlur}
                                             onChange={handleChange}
-                                            label="Shift End Time"
+                                            error={!!touched.endtime && !!errors.endtime}
+                                            helperText={touched.endtime && errors.endtime}
+                                            label={
+                                                <>
+                                                    Shift End Time<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                                </>
+                                            }
                                             focused
-                                            required
+                                        // required
                                         // inputProps={{ readOnly: true }}
                                         />
                                     </FormControl>

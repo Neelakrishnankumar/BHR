@@ -36,6 +36,9 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { OverheadSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/utils";
+import * as Yup from "yup";
+
+
 const Editoverhead = () => {
   const dispatch = useDispatch();
   const params = useParams();
@@ -47,16 +50,45 @@ const Editoverhead = () => {
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const [loading, setLoading] = useState(false);
+    const Finyear = sessionStorage.getItem("YearRecorid");
+  const CompanyID = sessionStorage.getItem("compID");
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   // console.log("🚀 ~ file: Editoverhead.jsx:20 ~ Editoverhead ~ data:", data);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          name: Yup.string().required(data.Overhead.name),
+          productCost: Yup.string().required(data.Overhead.productCost),
+          frequency: Yup.string().required(data.Overhead.frequency),
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Overhead.code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+  
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
   // const YearRecorid = sessionStorage.getItem("YearRecorid");
   // const CompanyID = sessionStorage.getItem("compID");
-  const Finyear = sessionStorage.getItem("YearRecorid");
-  const CompanyID = sessionStorage.getItem("compID");
-  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+
   const initialValue = {
     code: data.Code,
     name: data.Name,
@@ -66,9 +98,9 @@ const Editoverhead = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const fnSave = async (values,del) => {
+  const fnSave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
-     let action =
+    let action =
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
@@ -196,7 +228,7 @@ const Editoverhead = () => {
                 fnSave(values);
               }, 100);
             }}
-            validationSchema={OverheadSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -243,10 +275,14 @@ const Editoverhead = () => {
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       variant="standard"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -259,7 +295,11 @@ const Editoverhead = () => {
                     name="name"
                     type="text"
                     id="name"
-                    label="Overhead"
+                    label={
+                        <>
+                          Overhead<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                     variant="standard"
                     focused
                     value={values.name}
@@ -268,57 +308,74 @@ const Editoverhead = () => {
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     autoFocus={CompanyAutoCode == "Y"}
-                    required
+                    // required
                   />
-                  <FormControl
+                  {/* <FormControl
                     focused
                     variant="standard"
                   //sx={{ gridColumn: "span 2" }}
+                  > */}
+                  {/* <InputLabel id="frequency">Frequency<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
+                  <TextField
+                    label={
+                      <>
+                        Frequency<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    id="frequency"
+                    name="frequency"
+                    focused
+                    variant="standard"
+                    value={values.frequency}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.frequency && !!errors.frequency}
+                    helperText={touched.frequency && errors.frequency}
+                  // required
                   >
-                    <InputLabel id="frequency">Frequency<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="frequency"
-                      name="frequency"
-                      value={values.frequency}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      required
-                    >
-                      <MenuItem>Select</MenuItem>
-                      <MenuItem value="D">Daily</MenuItem>
-                      <MenuItem value="W">Weekly</MenuItem>
-                      <MenuItem value="M">Monthly</MenuItem>
-                      <MenuItem value="Y">Yearly</MenuItem>
-                      <MenuItem value="B">By Monthly</MenuItem>
-                      <MenuItem value="S">Six Month</MenuItem>
-                      <MenuItem value="Q">Quarterly</MenuItem>
-                      <MenuItem value="F">Fortnightly</MenuItem>
-                    </Select>
-                  </FormControl>
 
-                  <FormControl
+                    <MenuItem value="D">Daily</MenuItem>
+                    <MenuItem value="W">Weekly</MenuItem>
+                    <MenuItem value="M">Monthly</MenuItem>
+                    <MenuItem value="Y">Yearly</MenuItem>
+                    <MenuItem value="B">By Monthly</MenuItem>
+                    <MenuItem value="S">Six Month</MenuItem>
+                    <MenuItem value="Q">Quarterly</MenuItem>
+                    <MenuItem value="F">Fortnightly</MenuItem>
+                  </TextField>
+                  {/* </FormControl> */}
+
+                  {/* <FormControl
                     focused
                     variant="standard"
                   //sx={{ gridColumn: "span 2" }}
                   >
-                    <InputLabel id="productCost">Type<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="productCost"
-                      name="productCost"
-                      required
-                      value={values.productCost}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                    >
-                      <MenuItem value="P">Cost Of Product</MenuItem>
-                      <MenuItem value="E">Cost Of Employee</MenuItem>
-                      <MenuItem value="M">Cost Of Material</MenuItem>
-                      <MenuItem value="F">Cost Of Fixed Assets</MenuItem>
-                      <MenuItem value="S">Salary</MenuItem>
-                    </Select>
-                  </FormControl>
+                    <InputLabel id="productCost">Type<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel> */}
+                  <TextField
+                    label={
+                      <>
+                        Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    id="productCost"
+                    name="productCost"
+                    // required
+                    value={values.productCost}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.productCost && !!errors.productCost}
+                    helperText={touched.productCost && errors.productCost}
+                    focused
+                    select
+                    variant="standard"
+                  >
+                    <MenuItem value="P">Cost Of Product</MenuItem>
+                    <MenuItem value="E">Cost Of Employee</MenuItem>
+                    <MenuItem value="M">Cost Of Material</MenuItem>
+                    <MenuItem value="F">Cost Of Fixed Assets</MenuItem>
+                    <MenuItem value="S">Salary</MenuItem>
+                  </TextField>
+                  {/* </FormControl> */}
 
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
@@ -330,7 +387,7 @@ const Editoverhead = () => {
                   >
                     SAVE
                   </LoadingButton>
-                  { mode == "E" ? (
+                  {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"

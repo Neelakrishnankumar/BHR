@@ -56,6 +56,7 @@ import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapire
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { FunctionSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
+import * as Yup from "yup";
 // import {  HsnSchema } from "../../Security/validation";
 // import CryptoJS from "crypto-js";
 const LeaveType = () => {
@@ -80,6 +81,33 @@ const LeaveType = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const [pageSize, setPageSize] = React.useState(10);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          name: Yup.string().required(data.Leavetype.name),
+          leavetypecategories: Yup.string().required(data.Leavetype.leavetypecategories),
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Leavetype.code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -404,7 +432,7 @@ const LeaveType = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={FunctionSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -458,10 +486,14 @@ const LeaveType = () => {
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       variant="standard"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -482,13 +514,17 @@ const LeaveType = () => {
                     name="name"
                     type="text"
                     id="name"
-                    label="Name"
+                    label={
+                      <>
+                        Description<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    required
+                    // required
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     sx={{
@@ -501,32 +537,41 @@ const LeaveType = () => {
                     autoFocus={CompanyAutoCode == "Y"}
                   />
 
-                  <FormControl
+                  {/* <FormControl
                     focused
                     variant="standard"
                     sx={{ backgroundColor: "#f5f5f5" }}
                   >
-                    <InputLabel id="status">Categories<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="leavetypecategories"
-                      name="leavetypecategories"
-                      required
-                      value={values.leavetypecategories}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                    >
+                    <InputLabel id="status">Categories<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel> */}
+                  <TextField
+                    label={
+                      <>
+                        Categories<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    id="leavetypecategories"
+                    name="leavetypecategories"
+                    // required
+                    value={values.leavetypecategories}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.leavetypecategories && !!errors.leavetypecategories}
+                    helperText={touched.leavetypecategories && errors.leavetypecategories}
+                    select
+                    focused
+                    variant="standard"
+                  >
 
-                      <MenuItem value="M">Medical</MenuItem>
-                      <MenuItem value="G">General</MenuItem>
-                      <MenuItem value="O">Others</MenuItem>
-                      {/* <MenuItem value="S">Sick</MenuItem>
+                    <MenuItem value="M">Medical</MenuItem>
+                    <MenuItem value="G">General</MenuItem>
+                    <MenuItem value="O">Others</MenuItem>
+                    {/* <MenuItem value="S">Sick</MenuItem>
                         <MenuItem value="M">Medical</MenuItem>
                         <MenuItem value="A">Approvel</MenuItem>
                         <MenuItem value="C">Casual</MenuItem> */}
 
-                    </Select>
-                  </FormControl>
+                  </TextField>
+                  {/* </FormControl> */}
 
                   <TextField
                     name="sortorder"
@@ -632,7 +677,7 @@ const LeaveType = () => {
                 FnEmployeesave(values, resetForm, false);
               }, 100);
             }}
-            //  validationSchema={ HsnSchema}
+            // validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -673,7 +718,7 @@ const LeaveType = () => {
                     label="Code"
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}

@@ -78,6 +78,137 @@ const Editvendor = () => {
   console.log(gstImage, "gstImage");
   console.log(gstImage.name, "gstImage");
   const [show, setScreen] = React.useState("0");
+  const recID = params.id;
+  const mode = params.Mode;
+  const accessID = params.accessID;
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+  const [validationSchema2, setValidationSchema2] = useState(null);
+  const [validationSchema3, setValidationSchema3] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          name: Yup.string().required(data.Party.name),
+
+          mobilenumber: Yup.string()
+            .required(data.Party.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Party.code);
+        }
+
+        schemaFields.Pancardnumber = Yup.string()
+          .nullable()
+          .notRequired()
+          .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, data.Party.Pancardnumber)
+          .transform((value) => (value === "" ? null : value));
+
+        schemaFields.gstnumber = Yup.string()
+          .nullable()
+          .notRequired()
+          .matches(
+            /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+            data.Party.gstnumber
+          )
+          .transform((value) => (value === "" ? null : value));
+
+        const schema = Yup.object().shape(schemaFields);
+        const schema2 = Yup.object().shape({
+          bankname: Yup.string().required(data.BankDetails.bankname),
+          branchname: Yup.string().required(data.BankDetails.branchname),
+          Accounttype: Yup.string().required(data.BankDetails.Accounttype),
+          ifsc: Yup.string().required(data.BankDetails.ifsc)
+            .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code"),
+          accountnumber: Yup.string()
+            .required(data.BankDetails.accountnumber)
+            .matches(/^\d{9,18}$/, "Invalid Account Number"),
+          bankloc: Yup.string().required(data.BankDetails.bankloc),
+          accountholdname: Yup.string().required(data.BankDetails.accountholdname),
+          bankaddress: Yup.string().required(data.BankDetails.bankaddress),
+
+        });
+        const schema3 = Yup.object().shape({
+          name1: Yup.string().required(data.Contactdetails.name1),
+          emailid1: Yup.string()
+            .email('Invalid Email ID')
+            .required(data.Contactdetails.emailid1),
+          mobileno1: Yup.string()
+            .matches(/^[0-9]{10}$/, 'Invalid Mobile Number')
+            .required(data.Contactdetails.mobileno1),
+        })
+
+        setValidationSchema(schema);
+        setValidationSchema2(schema2);
+        setValidationSchema3(schema3);
+
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
+  useEffect(() => {
+    if (recID && mode === "E") {
+      dispatch(getFetchData({ accessID, get: "get", recID }));
+    }
+    else {
+      dispatch(getFetchData({ accessID, get: "", recID }));
+    }
+  }, [location.key, recID, mode]);
+
+  if (!data && getLoading) {
+    return <LinearProgress />;
+  }
+
+  // const validationSchema = Yup.object({
+  //   Pancardnumber: Yup.string()
+  //     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Card Number"),
+  //   gstnumber: Yup.string()
+  //     .matches(
+  //       /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+  //       "Invalid GST Number"
+  //     )
+
+  // });
+  //const BankvalidationSchema = Yup.object({
+  //   bankname: Yup.string().required('Bank Name is required'),
+  //   branchname: Yup.string().required('Branch Name is required'),
+  //   Accounttype: Yup.string().required('Account Type is required'),
+  //   ifsc: Yup.string()
+  //     .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code')
+  //     .required('IFSC Code is required'),
+  //   bankloc: Yup.string().required('Bank Location is required'),
+  //   accountholdname: Yup.string().required('Account Holder Name is required'),
+  //   accountnumber: Yup.string()
+  //     .matches(/^\d+$/, "Account number must be digits only")
+  //     .min(9, "Account number must be at least 9 digits")
+  //     .max(18, "Account number can't exceed 18 digits")
+  //     .required("Account number is required"),
+  //   bankaddress: Yup.string().required('Bank Address is required'),
+  // });
+  const contactvalidationSchema = Yup.object().shape({
+    name1: Yup.string().required('Name is required'),
+    emailid1: Yup.string()
+      .email('Invalid email format')
+      .required('Email ID is required'),
+    mobileno1: Yup.string()
+      .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
+      .required('Mobile No is required'),
+    // name2: Yup.string().required('Name is required'),
+    // emailid2: Yup.string()
+    //   .email('Invalid email format')
+    //   .required('Email ID is required'),
+    // mobileno2: Yup.string()
+    //   .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
+    //   .required('Mobile No is required'),
+  });
 
   const getFilepanChange = async (e) => {
     let files = e.target.files;
@@ -180,135 +311,10 @@ const Editvendor = () => {
       dispatch(PartyBankget({ VendorID: recID }));
 
     }
-    // if (event.target.value == "3") {
-    //   dispatch(
-    //     fetchExplorelitview("TR126", "Manager", `parentID=${recID}`, "")
-    //   );
-    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-    // if (event.target.value == "4") {
-    //   dispatch(getDeployment({ HeaderID: recID }));
-    //   // selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-    // if (event.target.value == "5") {
-    //   dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
-    // }
-    // if (event.target.value == "6") {
-    //   dispatch(
-    //     fetchExplorelitview("TR210", "Attachment", `EmployeeID=${recID}`, "")
-    //   );
-    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-    // if (event.target.value == "7") {
-    //   dispatch(
-    //     fetchExplorelitview("TR212", "itemcustody", `EmployeeID=${recID}`, "")
-    //   );
-    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-    // //Contractor
-    // if (event.target.value == "8") {
-    //   dispatch(
-    //     fetchExplorelitview(
-    //       "TR244",
-    //       "Contracts In",
-    //       `EmployeeID='${recID}' AND Vendors='Y'`,
-    //       ""
-    //     )
-    //   );
 
-    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-    // if (event.target.value == "11") {
-    //   dispatch(
-    //     fetchExplorelitview(
-    //       "TR244",
-    //       "Contracts Out",
-    //       `EmployeeID='${recID}' AND Customer='Y'`,
-    //       ""
-    //     )
-    //   );
-
-    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-    // if (event.target.value == "9") {
-    //   dispatch(geolocationData({ empID: recID }));
-    //   // selectCellRowData({ rowData: {}, mode: "A", field: "" });
-    // }
-
-    // if (event.target.value == "10") {
-    //   dispatch(
-    //     fetchExplorelitview(
-    //       "TR249",
-    //       "Leave Configuration",
-    //       `EmployeeID='${recID}'`,
-    //       ""
-    //     )
-    //   );
-    //   // dispatch(fetchApidata(accessID, "get", recID));
-    //   selectcelldata("", "A", "");
-    // }
   };
   // Page params
-  const recID = params.id;
-  const mode = params.Mode;
-  const accessID = params.accessID;
 
-  useEffect(() => {
-    if (recID && mode === "E") {
-      dispatch(getFetchData({ accessID, get: "get", recID }));
-    }
-    else {
-      dispatch(getFetchData({ accessID, get: "", recID }));
-    }
-  }, [location.key, recID, mode]);
-
-  if (!data && getLoading) {
-    return <LinearProgress />;
-  }
-
-  const validationSchema = Yup.object({
-    Pancardnumber: Yup.string()
-      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Card Number"),
-      // .required("PAN card number is required"),
-    gstnumber: Yup.string()
-      .matches(
-        /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
-        "Invalid GST Number"
-      )
-      // .required("GST number is required"),
-  });
-  const BankvalidationSchema = Yup.object({
-    bankname: Yup.string().required('Bank Name is required'),
-    branchname: Yup.string().required('Branch Name is required'),
-    Accounttype: Yup.string().required('Account Type is required'),
-    ifsc: Yup.string()
-      .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code')
-      .required('IFSC Code is required'),
-    bankloc: Yup.string().required('Bank Location is required'),
-    accountholdname: Yup.string().required('Account Holder Name is required'),
-     accountnumber: Yup.string()
-    .matches(/^\d+$/, "Account number must be digits only")
-    .min(9, "Account number must be at least 9 digits")
-    .max(18, "Account number can't exceed 18 digits")
-    .required("Account number is required"),
-    bankaddress: Yup.string().required('Bank Address is required'),
-  });
-  const contactvalidationSchema = Yup.object().shape({
-    name1: Yup.string().required('Name is required'),
-    emailid1: Yup.string()
-      .email('Invalid email format')
-      .required('Email ID is required'),
-    mobileno1: Yup.string()
-      .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
-      .required('Mobile No is required'),
-    // name2: Yup.string().required('Name is required'),
-    // emailid2: Yup.string()
-    //   .email('Invalid email format')
-    //   .required('Email ID is required'),
-    // mobileno2: Yup.string()
-    //   .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
-    //   .required('Mobile No is required'),
-  });
   const InitialValue = {
     code: data.Code || "",
     name: data.Name || "",
@@ -666,10 +672,14 @@ const Editvendor = () => {
                     name="code"
                     type="text"
                     id="code"
-                    label="Code"
+                    label={
+                      <>
+                        Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.code}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -687,7 +697,11 @@ const Editvendor = () => {
                     name="name"
                     type="text"
                     id="name"
-                    label="Name"
+                    label={
+                      <>
+                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
@@ -701,7 +715,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    required
+                    // required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
                   <TextField
@@ -761,19 +775,23 @@ const Editvendor = () => {
                     name="mobilenumber"
                     type="tel"
                     id="mobilenumber"
-                    label="Contact Mobile Number"
+                    label={
+                      <>
+                        Contact Mobile Number<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.mobilenumber}
                     onBlur={handleBlur}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      // Only allow numbers and max 10 digits
-                      if (/^\d{0,10}$/.test(value)) {
-                        handleChange(e);
-                      }
-                    }}
+                    // onChange={(e) => {
+                    //   const value = e.target.value;
+                    //   // Only allow numbers and max 10 digits
+                    //   if (/^\d{0,10}$/.test(value)) {
+                    //     handleChange(e);
+                    //   }
+                    // }}
                     error={!!touched.mobilenumber && !!errors.mobilenumber}
                     helperText={touched.mobilenumber && errors.mobilenumber}
                     inputProps={{ maxLength: 10 }}
@@ -1009,7 +1027,7 @@ const Editvendor = () => {
                 contactsave(values);
               }, 100);
             }}
-            validationSchema={contactvalidationSchema}
+            validationSchema={validationSchema3}
             enableReinitialize={true}
           >
             {({
@@ -1108,11 +1126,15 @@ const Editvendor = () => {
                   {/* <Typography>Contact Person 2</Typography> */}
                   <TextField
                     name="name1"
-                    label="Name"
+                    label={
+                      <>
+                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name1}
-                    required
+                    // required
                     onBlur={handleBlur}
                     onChange={handleChange}
                     // onChange={(e) => {
@@ -1164,9 +1186,13 @@ const Editvendor = () => {
                     name="emailid1"
                     type="tel"
                     id="emailid1"
-                    label="Email ID"
+                    label={
+                      <>
+                        Email ID<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
-                    required
+                    // required
                     focused
                     value={values.emailid1}
                     onBlur={handleBlur}
@@ -1212,13 +1238,19 @@ const Editvendor = () => {
                     name="mobileno1"
                     type="tel"
                     id="mobileno1"
-                    label="Mobile No"
+                    label={
+                      <>
+                        Mobile No<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.mobileno1}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    required
+                    error={!!touched.mobileno1 && !!errors.mobileno1}
+                    helperText={touched.mobileno1 && errors.mobileno1}
+                    // required
                     inputProps={{ maxLength: 10 }}
                     sx={{
                       backgroundColor: "#ffffff", // Set the background to white
@@ -1314,7 +1346,7 @@ const Editvendor = () => {
                 Banksave(values);
               }, 100);
             }}
-            validationSchema={BankvalidationSchema}
+            validationSchema={validationSchema2}
             enableReinitialize={true}
           >
             {({
@@ -1344,10 +1376,14 @@ const Editvendor = () => {
                     name="bankname"
                     type="text"
                     id="bankname"
-                    label="Bank Name"
+                    label={
+                      <>
+                        Bank Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.bankname}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1365,10 +1401,14 @@ const Editvendor = () => {
                     name="Accounttype"
                     type="text"
                     id="Accounttype"
-                    label="Account Type"
+                    label={
+                      <>
+                        Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.Accounttype}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1384,10 +1424,14 @@ const Editvendor = () => {
                   />
                   <TextField
                     name="branchname"
-                    label="Branch Name"
+                    label={
+                      <>
+                        Branch Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.branchname}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1411,10 +1455,14 @@ const Editvendor = () => {
                   />
                   <TextField
                     name="ifsc"
-                    label="IFSC Code"
+                    label={
+                      <>
+                        IFSC Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.ifsc}
                     onBlur={handleBlur}
                     //  onChange={handleChange}
@@ -1441,31 +1489,18 @@ const Editvendor = () => {
                     name="accountholdname"
                     type="text"
                     id="accountholdname"
-                    label="Account Holder Name"
+                    label={
+                      <>
+                        Account Holder Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.accountholdname}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    // onChange={(e) => {
-                    //   const value = e.target.value;
-                    //   // Only allow numbers and max 10 digits
-                    //   if (/^\d{0,10}$/.test(value)) {
-                    //     handleChange(e);
-                    //   }
-                    // }}
-                    //  onChange={(e) => {
-                    //   const input = e.target.value.toUpperCase();
-                    //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
-                    //     handleChange({
-                    //       target: {
-                    //         name: "branchname",
-                    //         value: input,
-                    //       },
-                    //     });
-                    //   }
-                    // }}
+
                     error={!!touched.accountholdname && !!errors.accountholdname}
                     helperText={touched.accountholdname && errors.accountholdname}
                     // inputProps={{ maxLength: 10 }}
@@ -1482,10 +1517,14 @@ const Editvendor = () => {
                     name="bankloc"
                     type="text"
                     id="bankloc"
-                    label="Bank Location"
+                    label={
+                      <>
+                        Bank Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.bankloc}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1496,6 +1535,8 @@ const Editvendor = () => {
                       },
                     }}
                     autoFocus
+                    error={!!touched.bankloc && !!errors.bankloc}
+                    helperText={touched.bankloc && errors.bankloc}
                   />
                   {/* <TextField
                     name="accountnumber"
@@ -1520,10 +1561,14 @@ const Editvendor = () => {
                     name="accountnumber"
                     type="text" // use "text" instead of "number" to preserve leading 0s and better control
                     id="accountnumber"
-                    label="Account Number"
+                    label={
+                      <>
+                        Account Number<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.accountnumber}
                     onBlur={handleBlur}
                     onChange={(e) => {
@@ -1549,10 +1594,14 @@ const Editvendor = () => {
                     name="bankaddress"
                     type="text"
                     id="bankaddress"
-                    label="Bank Address"
+                    label={
+                      <>
+                        Bank Address<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.bankaddress}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -1562,6 +1611,8 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    error={!!touched.bankaddress && !!errors.bankaddress}
+                    helperText={touched.bankaddress && errors.bankaddress}
                     autoFocus
                   />
                 </Box>

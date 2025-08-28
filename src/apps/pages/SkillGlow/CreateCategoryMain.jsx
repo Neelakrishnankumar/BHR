@@ -119,7 +119,7 @@ const CreateCategoryMain = () => {
     name: Data.Name,
     code: Data.Code,
     sortOrder: Data.SortOrder,
-    disable: Data.SortOrder == "Y" ? true : false,
+    disable: Data.Disable == "Y" ? true : false,
   };
 
   const validationSchema = Yup.object({
