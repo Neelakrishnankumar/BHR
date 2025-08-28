@@ -52,15 +52,21 @@ const CreateSkill = () => {
     navigate("/Apps/SkillGlow/SkillGlowList");
   };
 
-  const { state } = useLocation();
+  const location = useLocation();
   const dispatch = useDispatch();
   const params = useParams();
+
+  const state = location.state || {}
+console.log(state,'--------------');
+
 
   const recID = params.id;
   const accessID = params.accessID;
   const screenName = params.screenName;
   const mode = params.Mode;
   const CatId = params.parentID1;
+
+
 
   const CompanyID = sessionStorage.getItem("compID");
 
@@ -157,7 +163,7 @@ const CreateSkill = () => {
     Permittedtimes: Data.Permittedtimes || "",
     //cutOff: Data.cutOff || "",
     SortOrder: Data.SortOrder || "",
-    Disable: Data.disable || false,
+    Disable: Data.Disable == "Y" ? true : false,
   };
 
   const validationSchema = Yup.object({
@@ -203,7 +209,7 @@ const CreateSkill = () => {
                   sx={{ cursor: "default" }}
                   onClick={() => navigate("/Apps/TR278/List%20Of%20Categories")}
                 >
-                  List Of Category
+                  List Of Category ({state.BreadCrumb1})
                 </Typography>
                 <Typography
                   variant="h5"
@@ -319,6 +325,7 @@ const CreateSkill = () => {
                     focused
                     variant="standard"
                     sx={{ background: "#ffffff" }}
+                    error={!!touched.Answertype && !!errors.Answertype}
                     // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                   >
                     <InputLabel id="Answertype">Answer Type</InputLabel>
@@ -330,6 +337,7 @@ const CreateSkill = () => {
                       value={values.Answertype}
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      
                     >
                       <MenuItem value={'1/4'}>1 of 4</MenuItem>
                       <MenuItem value={'Any/4'}>Any Of 4</MenuItem>
