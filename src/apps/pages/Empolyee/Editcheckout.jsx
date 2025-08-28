@@ -43,6 +43,7 @@ import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/utils";
 import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 // import CryptoJS from "crypto-js";
+import * as Yup from "yup";
 const Editcheckout = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   console.log("Editcheckout hi");
@@ -71,7 +72,27 @@ const Editcheckout = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          Location: Yup.object().required(data.CheckOut.Location).nullable(),
+          Gate: Yup.object().required(data.CheckOut.Gate).nullable(),
+          Employee: Yup.object().nullable().required(data.CheckOut.Employee),
+        });
+
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -315,7 +336,7 @@ const Editcheckout = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ HsnSchema}
+            validationSchema={ validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -355,7 +376,7 @@ const Editcheckout = () => {
                         {
                           <span>
                             Employee
-                            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                            <span style={{ color: "red", fontSize:"20px" }}>*</span>
                           </span>
                         }
                         variant="outlined"
@@ -367,6 +388,8 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Employee");
                           console.log(newValue.RecordID, "Employee RecordID");
                         }}
+                         error={!!touched.Employee && !!errors.Employee}
+                      helperText={touched.Employee && errors.Employee}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       {/* <TextField
@@ -456,7 +479,7 @@ const Editcheckout = () => {
                         {
                           <span>
                            Location 
-                           <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                           <span style={{ color: "red", fontSize:"20px" }}>*</span>
                            </span>
                         }
                         variant="outlined"
@@ -468,6 +491,8 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Location");
                           console.log(newValue.RecordID, "Location RecordID");
                         }}
+                         error={!!touched.Location && !!errors.Location}
+                      helperText={touched.Location && errors.Location}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                   </FormControl>
@@ -522,7 +547,7 @@ const Editcheckout = () => {
                         {
                           <span>
                            Gate 
-                           <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+                           <span style={{ color: "red", fontSize:"20px" }}>*</span>
                            </span>
                         }
                         variant="outlined"
@@ -534,6 +559,8 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Gate");
                           console.log(newValue.RecordID, "Gate RecordID");
                         }}
+                         error={!!touched.Gate && !!errors.Gate}
+                      helperText={touched.Gate && errors.Gate}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
                       />
 

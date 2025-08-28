@@ -54,8 +54,10 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { FunctionSchema } from "../../Security/validation";
+// import { FunctionSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
+import * as Yup from "yup";
+
 
 // import {  HsnSchema } from "../../Security/validation";
 // import CryptoJS from "crypto-js";
@@ -81,6 +83,33 @@ const Editfunction = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const [pageSize, setPageSize] = React.useState(10);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          name: Yup.string().required(data.Function.name),
+          categories: Yup.string().required(data.Function.categories),
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Function.code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -407,7 +436,7 @@ const Editfunction = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={FunctionSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -462,10 +491,14 @@ const Editfunction = () => {
                       name="code"
                       type="text"
                       id="code"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       variant="standard"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -477,18 +510,22 @@ const Editfunction = () => {
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         }
-                      }}                     
-                     autoFocus
+                      }}
+                      autoFocus
                     />
                   )}
                   <TextField
                     name="name"
                     type="text"
                     id="name"
-                    label="Name"
+                    label={
+                      <>
+                        Description<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
-                    required
+                    // required
                     value={values.name}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -504,29 +541,39 @@ const Editfunction = () => {
                     autoFocus={CompanyAutoCode == "Y"}
                   />
 
-                  <FormControl
+                  {/* <FormControl
                     focused
                     variant="standard"
                     sx={{ background: "#ffffff" }}
                   // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                   >
-                    <InputLabel id="status">Categories<span style={{ color: 'red',fontSize:'20px' }}>*</span></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="categories"
-                      name="categories"
-                      required
-                      value={values.categories}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                    >
-                      <MenuItem value="TS">Technology Stack</MenuItem>
-                      <MenuItem value="BV">Business Vertical</MenuItem>
+                    <InputLabel id="status">Categories<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
+                  <TextField
+                    labelId="demo-simple-select-filled-label"
+                    id="categories"
+                    name="categories"
+                    // required
+                    label={
+                      <>
+                        Categories<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    value={values.categories}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.categories && !!errors.categories}
+                    helperText={touched.categories && errors.categories}
+                    select
+                    focused
+                    variant="standard"
+                  >
+                    <MenuItem value="TS">Technology Stack</MenuItem>
+                    <MenuItem value="BV">Business Vertical</MenuItem>
 
 
-                    </Select>
+                  </TextField>
 
-                  </FormControl>
+                  {/* </FormControl> */}
 
                   <TextField
                     name="sortorder"

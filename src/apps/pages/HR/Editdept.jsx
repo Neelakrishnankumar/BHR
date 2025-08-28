@@ -49,6 +49,8 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
+import * as Yup from "yup";
+
 // ***********************************************
 //  Developer:Gowsalya
 // Purpose:To Create Department
@@ -69,7 +71,7 @@ const Editdept = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
-  console.log(CompanyAutoCode,"CompanyAutoCode");
+  console.log(CompanyAutoCode, "CompanyAutoCode");
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
@@ -83,6 +85,33 @@ const Editdept = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          Name: Yup.string().required(data.Department.Name),
+          Loc: Yup.string().required(data.Department.Loc),
+
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.Code = Yup.string().required(data.Designation.Code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -254,7 +283,7 @@ const Editdept = () => {
                 fnSave(values);
               }, 100);
             }}
-            validationSchema={deptSchema}
+            validationSchema={validationSchema}
           >
             {({
               errors,
@@ -313,13 +342,17 @@ const Editdept = () => {
                         e.target.setCustomValidity("");
                       }}
                     />
-                   ) : (              
-                    
+                  ) : (
+
                     <TextField
                       fullWidth
                       variant="standard"
                       type="text"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.Code}
@@ -327,7 +360,7 @@ const Editdept = () => {
                       name="Code"
                       error={!!touched.Code && !!errors.Code}
                       helperText={touched.Code && errors.Code}
-                      required
+                      // required
                       focused
                       autoFocus
                       sx={{
@@ -344,7 +377,7 @@ const Editdept = () => {
                       onInput={(e) => {
                         e.target.setCustomValidity("");
                       }}
-                    /> 
+                    />
                   )}
 
 
@@ -352,7 +385,11 @@ const Editdept = () => {
                     fullWidth
                     variant="standard"
                     type="text"
-                    label="Name"
+                    label={
+                      <>
+                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     value={values.Name}
                     id="Name"
                     onBlur={handleBlur}
@@ -369,7 +406,7 @@ const Editdept = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       }
                     }}
-                    required
+                    // required
                     inputProps={{ maxLength: 90 }}
                     multiline
                     onInvalid={(e) => {
@@ -385,13 +422,17 @@ const Editdept = () => {
                     fullWidth
                     variant="standard"
                     type="text"
-                    label="Location"
+                    label={
+                      <>
+                        Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     value={values.Loc}
                     id="Loc"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     name="Loc"
-                    required
+                    // required
                     error={!!touched.Loc && !!errors.Loc}
                     helperText={touched.Loc && errors.Loc}
                     sx={{
