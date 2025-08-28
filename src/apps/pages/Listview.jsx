@@ -61,6 +61,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import EmailIcon from "@mui/icons-material/Email";
 import { searchData } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import { Delete, Psychology, Category} from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+
+
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -70,8 +75,12 @@ const Listview = () => {
   const YearFlag = sessionStorage.getItem("YearFlag");
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
   const location = useLocation();
+  console.log(location,'location -----------------');
+  
   const dispatch = useDispatch();
   const params = useParams();
+  console.log(params,"-------------");
+  
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const [pageSize, setPageSize] = React.useState(15);
@@ -328,6 +337,8 @@ const fnLogOut = (props) => {
             false
           ) : accessID == "TR059" ? (
             false
+          ): accessID == "TR286" ? (
+            false
           ) : accessID == "TR072" ? (
             false
           ) : accessID == "TR058" ? (
@@ -581,7 +592,33 @@ const fnLogOut = (props) => {
               variant="outlined"
             />
           </Box>
-        ) : accessID == "TR058" ? (
+        ) : accessID == "TR286" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<CategoryOutlinedIcon color="primary" />}
+              label="Assessment Category"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR278" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<Psychology color="primary" />}
+              label="Assessment"
+              variant="outlined"
+            />
+             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}

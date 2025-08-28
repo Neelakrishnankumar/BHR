@@ -266,8 +266,8 @@ const Login = () => {
                       variant="h6"
                       sx={{
 
-                        marginBottom: 4,
-                        marginRight: 2,
+                        marginBottom: 1,
+                        marginRight: 6,
                         textAlign: "center", 
                       }}
                     >
@@ -281,7 +281,7 @@ const Login = () => {
                     sx={{
                       width: { sm: "100%", md: "100%", lg: "100%" },
                     }}
-                    spacing={2}
+                    spacing={2.5}
                   >
                     <FormControl sx={{ marginTop: "30px" }}>
                       <TextField
@@ -344,7 +344,7 @@ const Login = () => {
                       error={!!touched.license && !!errors.license}
                       helperText={touched.license && errors.license}
                     />
-                    <Box sx={{ flexGrow: 1 }} />
+                    {/* <Box sx={{ flexGrow: 1 }} /> */}
                     <Stack direction={"row"} justifyContent="end" gap={"10px"} sx={{ marginTop: "50px" }}>
                       <LoadingButton
                         onClick={() => {
