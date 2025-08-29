@@ -216,8 +216,11 @@ const Editrequests = () => {
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema1, setValidationSchema1] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
-
-
+  const [validationSchema3, setValidationSchema3] = useState(null);
+  const [validationSchema4, setValidationSchema4] = useState(null);
+  const [validationSchema5, setValidationSchema5] = useState(null);
+  const [validationSchema6, setValidationSchema6] = useState(null);
+  const [validationSchema7, setValidationSchema7] = useState(null);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -256,7 +259,62 @@ const Editrequests = () => {
           managerComments: Yup.string().required(data.Regularization.managerComments),
         })
         setValidationSchema2(schema2);
+        const schema3 = Yup.object().shape({
+          Name: Yup.string().required(data.Employee.Name),
+          Department: Yup.object()
+            .nullable()
+            .required(data.Employee.Department),
+          employeetype: Yup.string().required(data.Employee.employeetype),
+          Password: Yup.string().required(data.Employee.Password),
+        });
 
+        setValidationSchema3(schema3);
+        const schema4 = Yup.object().shape({
+          LeavePart: Yup.string().required(data.Leave.LeavePart),
+          leavetype: Yup.object()
+            .nullable()
+            .required(data.Leave.leavetype),
+          FromDate: Yup.string().required(data.Leave.FromDate),
+          ToDate: Yup.string().required(data.Leave.ToDate),
+          comment: Yup.string().required(data.Leave.comment),
+          managerComments: Yup.string().required(data.Leave.managerComments),
+          Status: Yup.string().required(data.Leave.Status),
+        });
+        setValidationSchema4(schema4);
+        const schema5 = Yup.object().shape({
+          LeavePart: Yup.string().required(data.Onduty.LeavePart),
+          ProName: Yup.object()
+            .nullable()
+            .required(data.Onduty.ProName),
+          FromDate: Yup.string().required(data.Onduty.FromDate),
+          ToDate: Yup.string().required(data.Onduty.ToDate),
+          comment: Yup.string().required(data.Onduty.comment),
+          managerComments: Yup.string().required(data.Onduty.managerComments),
+          Status: Yup.string().required(data.Onduty.Status),
+        });
+        setValidationSchema5(schema5);
+        const schema6 = Yup.object().shape({
+          date: Yup.string().required(data.Salaryadvance.date),
+          overhead: Yup.object()
+            .nullable()
+            .required(data.Salaryadvance.overhead),
+          amount: Yup.string().required(data.Salaryadvance.amount),
+          comments: Yup.string().required(data.Salaryadvance.comments),
+          managerComments: Yup.string().required(data.Salaryadvance.managerComments),
+          Status: Yup.string().required(data.Salaryadvance.Status),
+        });
+        setValidationSchema6(schema6);
+        const schema7 = Yup.object().shape({
+          date: Yup.string().required(data.Expense.date),
+          overhead: Yup.object()
+            .nullable()
+            .required(data.Expense.overhead),
+          amount: Yup.string().required(data.Expense.amount),
+          comments: Yup.string().required(data.Expense.comments),
+          managerComments: Yup.string().required(data.Expense.managerComments),
+          Status: Yup.string().required(data.Expense.Status),
+        });
+        setValidationSchema7(schema7);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -1330,9 +1388,7 @@ const Editrequests = () => {
     appliedStatus: "",
   });
 
-  const selectCellRowData = ({ rowData, mode, field }) => {
-
-
+  const selectCellRowData = ({ rowData, setFieldValue, mode, field }) => {
 
     setFunMode(mode);
 
@@ -1498,13 +1554,14 @@ const Editrequests = () => {
           approvedDate: rowData.ApprovedDate,
           ReimbursementOption: rowData.ReimbursementOption
         });
+       
         setOndutydata({
           RecordID: rowData.RecordID,
           LeavePart: rowData.LeavePart,
           FromDate: rowData.FromDate,
           ToDate: rowData.ToDate,
           AppliedDate: rowData.AppliedDate,
-          ProName: rowData.ProjectID,
+          // ProName: rowData.ProjectID,
           location: rowData.Location,
           Status: rowData.Status,
           comment: rowData.Comments,
@@ -1521,32 +1578,48 @@ const Editrequests = () => {
           // letlookupRecordid: rowData.LeaveTypeID,
           // letlookupDesc: rowData.LeaveTypeName,
         });
-        setselectleaveLookupData({
+        // setselectleaveLookupData({
+        //   RecordID: rowData.LeaveTypeID,
+        //   Code: rowData.LeaveTypeCode,
+        //   Name: rowData.LeaveTypeName,
+
+        // });
+        setFieldValue("leavetype", {
           RecordID: rowData.LeaveTypeID,
           Code: rowData.LeaveTypeCode,
           Name: rowData.LeaveTypeName,
-          // OHlookupRecordid: rowData.OverHeadsID,
-          // OHlookupCode: rowData.OverHeadsCode,
-          // OHlookupDesc: rowData.OverHeadsName,
         });
-        setselectODLookupData({
+        setFieldValue("ProName", {
           RecordID: rowData.ProjectID,
           Code: rowData.ProjectCode,
           Name: rowData.ProjectName,
         });
-        setselectOHLookupData({
+        setFieldValue("overhead", {
           RecordID: rowData.OverHeadsID,
           Code: rowData.OverHeadsCode,
-          Name: rowData.OverHeadsName,
-          // OHlookupRecordid: rowData.OverHeadsID,
-          // OHlookupCode: rowData.OverHeadsCode,
-          // OHlookupDesc: rowData.OverHeadsName,
-        });
-        setExpenseOHData({
+          Name: rowData.OverHeadsName
+        })
+        setFieldValue("overhead", {
           RecordID: rowData.OverheadRecordID,
-          //Code: rowData.OverHeadsCode,
           Name: rowData.Name,
-        });
+        })
+        // setselectODLookupData({
+        //   RecordID: rowData.ProjectID,
+        //   Code: rowData.ProjectCode,
+        //   Name: rowData.ProjectName,
+        // });
+        // setselectOHLookupData({
+        //   RecordID: rowData.OverHeadsID,
+        //   Code: rowData.OverHeadsCode,
+        //   Name: rowData.OverHeadsName,
+
+        // });
+
+        // setExpenseOHData({
+        //   RecordID: rowData.OverheadRecordID,
+        //   //Code: rowData.OverHeadsCode,
+        //   Name: rowData.Name,
+        // });
         setSaladdata({
           RecordID: rowData.RecordID,
           SalaryAdvanceDate: rowData.SalaryAdvanceDate,
@@ -1620,7 +1693,7 @@ const Editrequests = () => {
     amount: expensedata.amount,
     comments: expensedata.comments,
     managerComments: expensedata.managerComments,
-
+    overhead: null,
     approvedDate: mode != "A" ? currentDate : expensedata.approvedDate,
     Eapprovedby: UserName,
     OHRecordID: expensedata.OverHeadsID,
@@ -1662,9 +1735,11 @@ const Editrequests = () => {
       Amount: values.amount,
       Comments: values.comments,
       //OverheadRecordID: values.overhead.RecordID || 0,
-      OverheadsRecordID: expenseOHData ? expenseOHData.RecordID : 0,
-      OverHeadsCode: expenseOHData ? expenseOHData.Code : "",
-      OverHeadsName: expenseOHData ? expenseOHData.Name : "",
+      // OverheadsRecordID: expenseOHData ? expenseOHData.RecordID : 0,
+      // OverHeadsCode: expenseOHData ? expenseOHData.Code : "",
+      // OverHeadsName: expenseOHData ? expenseOHData.Name : "",
+      OverheadsRecordID: values?.overhead?.RecordID,
+      OverHeadsName: values?.overhead?.Name,
       Attachment: ImageName ? ImageName : Data.Attachment || "",
       AppliedDate: currentDate,
       FinanceCategoryType: "E",
@@ -1858,12 +1933,13 @@ const Editrequests = () => {
   const ondutyInitialValue = {
     code: Data.Code,
     description: Data.Name,
+    ProName: null,
     FromDate: formatDate(ondutydata.FromDate),
     ToDate: formatDate(ondutydata.ToDate),
     approvedby: UserName,
     approvedDate: mode != "A" ? currentDate : leaveData.approvedDate,
     location: ondutydata.location,
-    ProName: ondutydata.ProName,
+    // ProName: ondutydata.ProName,
     managerComments: ondutydata.managerComments,
     comment: ondutydata.comment,
     LeavePart:
@@ -1905,9 +1981,11 @@ const Editrequests = () => {
       ToDate: values.ToDate,
       LeavePart: values.LeavePart,
       Comments: values.comment,
-      ProjectID: selectODLookupData ? selectODLookupData.RecordID : 0,
-      ProjectCode: selectODLookupData ? selectODLookupData.Code : "",
-      ProjectName: selectODLookupData ? selectODLookupData.Name : "",
+      // ProjectID: selectODLookupData ? selectODLookupData.RecordID : 0,
+      // ProjectCode: selectODLookupData ? selectODLookupData.Code : "",
+      // ProjectName: selectODLookupData ? selectODLookupData.Name : "",
+      ProjectID: values?.ProName?.RecordID,
+      ProjectName: values?.ProName.Name || "",
       Status: values.Status,
       ManagerComments: values.managerComments,
       Reason: "",
@@ -2114,7 +2192,8 @@ const Editrequests = () => {
     ToDate: formatDate(leaveData.toDate),
     //leavetype:leaveData.leavetype,
     //leavetype:leaveData.leavetype && mode != "A" ? { RecordID: leaveData.leavetype, Name: leaveData.leavetype } : null,
-    leavetype: leaveData.leavetype,
+    // leavetype: leaveData.leavetype,
+    leavetype: null,
     LeavePart:
       leaveData.LeavePart === "First half"
         ? "FH"
@@ -2157,10 +2236,12 @@ const Editrequests = () => {
       Status: values.Status,
       SortOrder: "1",
       Disable: "N",
-      //LeaveTypeID:values.leavetype.RecordID,
-      LeaveTypeID: selectleaveLookupData ? selectleaveLookupData.RecordID : 0,
-      LeaveTypeCode: selectleaveLookupData ? selectleaveLookupData.Code : "",
-      LeaveTypeName: selectleaveLookupData ? selectleaveLookupData.Name : "",
+      LeaveTypeID: values?.leavetype?.RecordID,
+      LeaveTypeName: values?.leavetype?.Name || "",
+      // LeaveTypeID: selectleaveLookupData ? selectleaveLookupData.RecordID : 0,
+      // LeaveTypeCode: selectleaveLookupData ? selectleaveLookupData.Code : "",
+      // LeaveTypeName: selectleaveLookupData ? selectleaveLookupData.Name : "",
+
       //LeaveTypeID: selectLETLookupData ? selectLETLookupData.RecordID : 0,
       Comments: values.comment,
       ManagerComments: values.managerComments,
@@ -2329,6 +2410,7 @@ const Editrequests = () => {
     amount: saladdata.Amount,
     comments: saladdata.Comments,
     approvedby: UserName,
+    overhead: null,
     managerComments: leaveData.managerComments,
     approvedDate: mode != "A" ? currentDate : saladdata.approvedDate,
     Status:
@@ -2355,9 +2437,13 @@ const Editrequests = () => {
       //RecordID: Data.recID,
       SalaryAdvanceDate: values.date,
       ReferranceIfAny: values.referenceifany,
-      OverHeadsID: selectOHLookupData ? selectOHLookupData.RecordID : 0,
-      OverHeadsCode: selectOHLookupData ? selectOHLookupData.Code : "",
-      OverHeadsName: selectOHLookupData ? selectOHLookupData.Name : "",
+      // OverHeadsID: selectOHLookupData ? selectOHLookupData.RecordID : 0,
+      // OverHeadsCode: selectOHLookupData ? selectOHLookupData.Code : "",
+      // OverHeadsName: selectOHLookupData ? selectOHLookupData.Name : "",
+
+      OverHeadsID: values?.overhead?.RecordID,
+      OverHeadsName: values?.overhead?.Name || "",
+
       // OverHeadsID: selectOHLookupData.OHlookupRecordid,
       // OverHeadsCode: selectOHLookupData.OHlookupCode,
       // OverHeadsName: selectOHLookupData.OHlookupDesc,
@@ -2880,9 +2966,8 @@ const Editrequests = () => {
           </Box>
         </Paper>
 
-        {show == "0" ? (
+        {/* {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-            {/* { <Header title="Products" subtitle="" /> } */}
 
             <Formik
               // onSubmit={handleFormSubmit}
@@ -3063,46 +3148,8 @@ const Editrequests = () => {
                         <MenuItem value="PM">Permanent</MenuItem>
                         <MenuItem value="CI">Contracts In</MenuItem>
                         <MenuItem value="CO">Contracts Out</MenuItem>
-                        {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
-                      {/* <Box>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Disable"
-                        />
-
-                        <FormLabel focused={false}>Disable</FormLabel>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="scrummaster"
-                          id="scrummaster"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Scrum Master"
-                        />
-
-                        <FormLabel focused={false}>Scrum Master</FormLabel>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="prjmanager"
-                          id="prjmanager"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Project Manager"
-                        />
-
-                        <FormLabel focused={false}>Project Manager</FormLabel>
-                      </Box> */}
+                     
                       <Box>
                         <Field
                           //  size="small"
@@ -3393,8 +3440,552 @@ const Editrequests = () => {
           </Paper>
         ) : (
           false
-        )}
+        )} */}
+        {show == "0" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            {/* { <Header title="Products" subtitle="" /> } */}
 
+            <Formik
+              // onSubmit={handleFormSubmit}
+              initialValues={initialValues}
+              enableReinitialize={true}
+              //validationSchema={basicSchema}
+              validationSchema={validationSchema3}
+              onSubmit={(values) => {
+                fnSave(values, false);
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                setFieldValue,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    {!isNonMobile && (
+                      <Stack
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "150px" }}
+                        />
+                      </Stack>
+                    )}
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <FormControl>
+                        <CheckinAutocomplete
+                          sx={{ marginTop: "7px" }}
+                          name="Department"
+                          label={
+                            <>
+                              Department<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                            </>
+                          }
+                          variant="outlined"
+                          id="Department"
+                          value={values.Department}
+                          onChange={(newValue) => {
+                            setFieldValue("Department", newValue);
+                            console.log(newValue, "--newValue");
+                            console.log(newValue.RecordID, "////");
+                          }}
+                          error={!!touched.Department && !!errors.Department}
+                          helperText={touched.Department && errors.Department}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        />
+                        {/* {touched.Department && errors.Department && (
+                          <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                            {errors.Department}
+                          </div>
+                        )} */}
+                      </FormControl>
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          label="Code"
+                          value={values.Code}
+                          id="Code"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Code"
+                          placeholder="Auto"
+                          // error={!!touched.Code && !!errors.Code}
+                          // helperText={touched.Code && errors.Code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          // required
+                          // autoFocus
+                          inputProps={{ maxLength: 8 }}
+                          InputProps={{ readOnly: true }}
+                        />
+                      ) : (
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          value={values.Code}
+                          id="Code"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Code"
+                          error={!!touched.Code && !!errors.Code}
+                          helperText={touched.Code && errors.Code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          focused
+                          // required
+                          autoFocus
+                          inputProps={{ maxLength: 8 }}
+                        />
+                      )}
+
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label={
+                          <>
+                            Name
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        value={values.Name}
+                        id="Name"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Name"
+                        error={!!touched.Name && !!errors.Name}
+                        helperText={touched.Name && errors.Name}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        // required
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="Password"
+                        label={
+                          <>
+                            Password
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        value={values.Password}
+                        id="Password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Password"
+                        // required
+                        error={!!touched.Password && !!errors.Password}
+                        helperText={touched.Password && errors.Password}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Job"
+                        value={values.Job}
+                        id="Job"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Job"
+                        // required
+                        error={!!touched.Job && !!errors.Job}
+                        helperText={touched.Job && errors.Job}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                      />
+
+                      <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={
+                          <>
+                            Employee Type
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </>
+                        }
+                        value={values.employeetype}
+                        id="employeetype"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="employeetype"
+                        error={!!touched.employeetype && !!errors.employeetype}
+                        helperText={touched.employeetype && errors.employeetype}
+                        // required
+                        focused
+                        sx={{
+                          gridColumn: "span 2",
+                          // backgroundColor: "#ffffff",
+                          // "& .MuiInputBase-root": {
+                          //   backgroundColor: "",
+                          // },
+                        }}
+                      >
+                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PM">Permanent</MenuItem>
+                        <MenuItem value="CI">Contracts In</MenuItem>
+                        <MenuItem value="CO">Contracts Out</MenuItem>
+                        {/* <MenuItem value="CT">Contractor</MenuItem> */}
+                      </TextField>
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="qualityassurance"
+                          id="qualityassurance"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Quality Assurance"
+                        />
+
+                        <FormLabel focused={false}>Quality Assurance</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="scrummaster"
+                          id="scrummaster"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Scrum Master"
+                        />
+
+                        <FormLabel focused={false}>Scrum Master</FormLabel>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="prjmanager"
+                          id="prjmanager"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Project Manager"
+                        />
+
+                        <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box>
+                      <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="checkbox"
+                          id="checkbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
+                      </Box>
+                    </FormControl>
+
+                    <FormControl sx={{ gap: formGap }}>
+                      {isNonMobile && (
+                        <Stack
+                          sx={{
+                            //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                            alignContent: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "relative",
+                            right: "0px",
+                          }}
+                        >
+                          <Avatar
+                            variant="rounded"
+                            src={userimg}
+                            sx={{ width: "200px", height: "155px" }}
+                          />
+                        </Stack>
+                      )}
+
+                      <TextField
+                        name="joindate"
+                        type="date"
+                        id="joindate"
+                        label="Date of Joining"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.joindate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.joindate && !!errors.joindate}
+                        helperText={touched.joindate && errors.joindate}
+                        sx={{ background: "" }}
+                      // required
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        name="confirmdate"
+                        type="date"
+                        id="confirmdate"
+                        label="Date of Confirmation"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.confirmdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.confirmdate && !!errors.confirmdate}
+                        helperText={touched.confirmdate && errors.confirmdate}
+                        sx={{ background: "" }}
+                      // required
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label="Comments"
+                        value={values.Comm}
+                        id="Comm"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="Comm"
+                        error={!!touched.Comm && !!errors.Comm}
+                        helperText={touched.Comm && errors.Comm}
+                        // sx={{
+
+                        //   backgroundColor: "#ffffff", // Set the background to white
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "", // Ensure the filled variant also has a white background
+                        //   }
+                        // }}
+                        focused
+                        inputProps={{ maxLength: 90 }}
+                        multiline
+                      // rows={2}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        label="Sort Order"
+                        value={values.SortOrder}
+                        id="SortOrder"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="SortOrder"
+                        error={!!touched.SortOrder && !!errors.SortOrder}
+                        helperText={touched.SortOrder && errors.SortOrder}
+                        sx={{ background: "" }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        onInput={(e) => {
+                          e.target.value = Math.max(0, parseInt(e.target.value))
+                            .toString()
+                            .slice(0, 8);
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+
+                    </FormControl>
+                  </Box>
+                  <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                    {/* <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={loading}
+                      onClick={() => {
+                        fnSave(values, false);
+                      }}
+                    >
+                      Save
+                    </Button> */}
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={loading}
+                    >
+                      Save
+                    </Button>
+
+                    {/* {YearFlag == "true" ? (
+                     
+                    ) : (
+                      
+                    )} */}
+                    {YearFlag == "true" && mode == "E" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Swal.fire({
+                            title: `Do you want Delete?`,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              fnSave(values, true);
+                            } else {
+                              return;
+                            }
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      // <Button
+                      //   color="error"
+                      //   variant="contained"
+                      //   disabled={true}
+                      // //  color="error"
+                      // >
+                      //   Delete
+                      // </Button>
+                      null
+                    )}
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        navigate(`/Apps/TR027/Employees`);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  <Popup
+                    title="Department"
+                    openPopup={openDEPopup}
+                    setOpenPopup={setOpenDEPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2010"
+                      screenName="Department"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Location"
+                    openPopup={openLOCATIONPopup}
+                    setOpenPopup={setOpenLOCATIONPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2051"
+                      screenName="Location"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Gate"
+                    openPopup={openGATEPopup}
+                    setOpenPopup={setOpenGATEPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2050"
+                      screenName="Gate"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                    // filterValue={locationLookup.locationRecordID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Designation"
+                    openPopup={opendesignPopup}
+                    setOpenPopup={setOpendesignPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2047"
+                      screenName="Designation"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
 
 
         {show == "5" ? (
@@ -3794,7 +4385,7 @@ const Editrequests = () => {
             <Formik
               initialValues={leaveInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema4}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   leaveFNsave(values, resetForm, false);
@@ -3946,6 +4537,7 @@ const Editrequests = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -4112,13 +4704,14 @@ const Editrequests = () => {
                       url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
                     /> */}
                       <FormControl>
-                        <Employeeautocomplete
+                        <CheckinAutocomplete
+
                           name="leavetype"
                           label={
                             <span>
                               Leave Type
                               <span
-                                style={{ color: "red", fontSize: "12" }}
+                                style={{ color: "red", fontSize: "20px" }}
                               >
                                 *
                               </span>
@@ -4126,10 +4719,14 @@ const Editrequests = () => {
                           }
                           variant="outlined"
                           id="leavetype"
-                          value={selectleaveLookupData}
-                          //value={values.leavetype}
+                          // value={selectleaveLookupData}
+                          value={values.leavetype}
                           onChange={async (newValue) => {
-                            setFieldValue("leavetype", newValue);
+                            setFieldValue("leavetype", {
+                              RecordID: newValue.RecordID,
+                              Code: newValue.Code,
+                              Name: newValue.Name,
+                            });
 
                             if (newValue?.RecordID) {
                               await Balancedayfind(newValue.RecordID);
@@ -4145,74 +4742,96 @@ const Editrequests = () => {
                               "leave RecordID"
                             );
 
-                            setselectleaveLookupData({
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
+                            // setselectleaveLookupData({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
 
-                            });
+                            // });
                           }}
+                          error={!!touched.leavetype && !!errors.leavetype}
+                          helperText={touched.leavetype && errors.leavetype}
+
                           // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
                           url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
                         />
-                        {touched.leavetype && errors.leavetype && (
+                        {/* {touched.leavetype && errors.leavetype && (
                           <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                             {errors.leavetype}
                           </div>
-                        )}
+                        )} */}
                       </FormControl>
-                      <FormControl focused variant="standard">
+                      {/* <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
                           {
                             <span>
                               Leave Part <span style={{ color: "red" }}>*</span>
                             </span>
                           }
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          // label="LeaveCategory"
-                          value={values.LeavePart}
-                          id="LeavePart"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="LeavePart"
-                          required
-                          focused
-                        >
-                          <MenuItem value="FH">First Half</MenuItem>
-                          <MenuItem value="SH">Second Half</MenuItem>
-                          <MenuItem value="N">Full Day</MenuItem>
-                        </Select>
-                      </FormControl>
+                        </InputLabel> */}
+                      <TextField
+                        labelId="demo-simple-TextField-filled-label"
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        label={
+                          <span>
+                            Leave Part <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </span>
+                        }
+                        value={values.LeavePart}
+                        id="LeavePart"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="LeavePart"
+                        // required
+                        select
+                        error={!!touched.LeavePart && !!errors.LeavePart}
+                        helperText={touched.LeavePart && errors.LeavePart}
+                        focused
+                      >
+                        <MenuItem value="FH">First Half</MenuItem>
+                        <MenuItem value="SH">Second Half</MenuItem>
+                        <MenuItem value="N">Full Day</MenuItem>
+                      </TextField>
+                      {/* </FormControl> */}
                       <TextField
                         name="FromDate"
                         type="date"
                         id="FromDate"
-                        label="From Date"
+                        label={
+                          <span>
+                            From Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </span>
+                        }
                         inputFormat="YYYY-MM-DD"
                         variant="standard"
                         focused
                         value={values.FromDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        required
+                        // required
+                        error={!!touched.FromDate && !!errors.FromDate}
+                        helperText={touched.FromDate && errors.FromDate}
                       />
                       <TextField
                         name="ToDate"
                         type="date"
                         id="ToDate"
-                        label="To Date"
+                        label={
+                          <span>
+                            To Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </span>
+                        }
                         inputFormat="YYYY-MM-DD"
                         variant="standard"
                         focused
                         value={values.ToDate}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        required
+                        // required
+                        error={!!touched.ToDate && !!errors.ToDate}
+                        helperText={touched.ToDate && errors.ToDate}
                       />
                       <TextField
                         // disabled={mode == "E" && values.Status != "AL"}
@@ -4220,13 +4839,17 @@ const Editrequests = () => {
                         name="comment"
                         type="comment"
                         id="comment"
-                        label="Comments"
+                        label={
+                          <span>
+                            Comments <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </span>
+                        }
                         multiline
                         rows={6}
                         variant="outlined"
                         fullWidth
                         focused
-                        required
+                        // required
                         value={values.comment}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -4239,14 +4862,20 @@ const Editrequests = () => {
                         fullWidth
                         variant="outlined"
                         type="text"
-                        label="Manager Comments"
-                        required
+                        label={
+                          <span>
+                            Manager Comments <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          </span>
+                        }
+                        // required
                         multiline
                         rows={6}
                         value={values.managerComments}
                         id="managerComments"
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        error={!!touched.managerComments && !!errors.managerComments}
+                        helperText={touched.managerComments && errors.managerComments}
                         name="managerComments"
                         sx={{
                           gridColumn: "span 2",
@@ -4286,24 +4915,32 @@ const Editrequests = () => {
                       //required
                       />
 
-                      <FormControl focused variant="standard" required>
-                        <InputLabel id="Status">Status</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="Status"
-                          name="Status"
-                          value={values.Status}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                      {/* <FormControl focused variant="standard" required>
+                        <InputLabel id="Status">Status</InputLabel> */}
+                      <TextField
+                        label={
+                          <>
+                            Status<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                          </>
+                        }
+                        id="Status"
+                        name="Status"
+                        value={values.Status}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Status && !!errors.Status}
+                        helperText={touched.Status && errors.Status}
+                        focused
+                        variant="standard"
+                        select
+                      >
+                        <MenuItem value="AL">Applied</MenuItem>
+                        <MenuItem value="RJ">Rejected</MenuItem>
+                        <MenuItem value="AP">Approved</MenuItem>
+                        <MenuItem value="QR">Query</MenuItem>
 
-                        >
-                          <MenuItem value="AL">Applied</MenuItem>
-                          <MenuItem value="RJ">Rejected</MenuItem>
-                          <MenuItem value="AP">Approved</MenuItem>
-                          <MenuItem value="QR">Query</MenuItem>
-
-                        </Select>
-                      </FormControl>
+                      </TextField>
+                      {/* </FormControl> */}
 
                     </FormControl>
                   </Box>
@@ -5077,7 +5714,7 @@ const Editrequests = () => {
             <Formik
               initialValues={salAdinitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema3}
+              validationSchema={validationSchema6}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   salAdFNsave(values, resetForm, false);
@@ -5217,6 +5854,7 @@ const Editrequests = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -5252,7 +5890,13 @@ const Editrequests = () => {
                           name="date"
                           type="date"
                           id="date"
-                          label="Date"
+                          label={
+                            <>
+                              Date
+                              <span style={{ color: "red", fontSize: "20px" }}>*
+                              </span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           value={values.date}
@@ -5262,7 +5906,7 @@ const Editrequests = () => {
                           error={!!touched.date && !!errors.date}
                           helperText={touched.date && errors.date}
                           autoFocus
-                          required
+                        // required
                         />
 
                         <TextField
@@ -5326,13 +5970,13 @@ const Editrequests = () => {
                                 inputProps={{ tabIndex: "-1" }}
                                 focused
                               /> */}
-                          <Employeeautocomplete
+                          <CheckinAutocomplete
                             name="overhead"
                             label={
                               <span>
                                 Purpose
                                 <span
-                                  style={{ color: "red" }}
+                                  style={{ color: "red", fontSize: "20px" }}
                                 >
                                   *
                                 </span>
@@ -5340,25 +5984,30 @@ const Editrequests = () => {
                             }
                             variant="outlined"
                             id="overhead"
-                            value={selectOHLookupData}
-                            // value={values.overhead}
+                            // value={selectOHLookupData}
+                            value={values.overhead}
                             onChange={(newValue) => {
-
-
-                              setselectOHLookupData({
+                              setFieldValue("overhead", {
                                 RecordID: newValue.RecordID,
                                 Code: newValue.Code,
                                 Name: newValue.Name,
+                              })
+                              // setselectOHLookupData({
+                              //     RecordID: newValue.RecordID,
+                              //     Code: newValue.Code,
+                              //     Name: newValue.Name,
 
-                              });
+                              //   });
                             }}
+                            error={!!touched.overhead && !!errors.overhead}
+                            helperText={touched.overhead && errors.overhead}
                             url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                           />
-                          {touched.overhead && errors.overhead && (
+                          {/* {touched.overhead && errors.overhead && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                               {errors.overhead}
                             </div>
-                          )}
+                          )} */}
                         </FormControl>
                         {/* </FormControl> */}
 
@@ -5366,7 +6015,13 @@ const Editrequests = () => {
                           name="amount"
                           type="text"
                           id="amount"
-                          label="Amount"
+                          label={
+                            <>
+                              Amount
+                              <span style={{ color: "red", fontSize: "20px" }}>*
+                              </span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           value={values.amount}
@@ -5382,7 +6037,7 @@ const Editrequests = () => {
                           error={!!touched.amount && !!errors.amount}
                           helperText={touched.amount && errors.amount}
                           autoFocus
-                          required
+                        // required
                         />
                         {/* <TextField
                             name="comments"
@@ -5405,13 +6060,19 @@ const Editrequests = () => {
                           name="comments"
                           type="comments"
                           id="comments"
-                          label="Comments"
+                          label={
+                            <>
+                              Comments
+                              <span style={{ color: "red", fontSize: "20px" }}>*
+                              </span>
+                            </>
+                          }
                           multiline
                           rows={6}
                           variant="outlined"
                           fullWidth
                           focused
-                          required
+                          // required
                           value={values.comments}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -5424,8 +6085,14 @@ const Editrequests = () => {
                           fullWidth
                           variant="outlined"
                           type="text"
-                          label="Manager Comments"
-                          required
+                          label={
+                            <>
+                              Manager Comments
+                              <span style={{ color: "red", fontSize: "20px" }}>*
+                              </span>
+                            </>
+                          }
+                          // required
                           multiline
                           rows={6}
                           value={values.managerComments}
@@ -5437,6 +6104,8 @@ const Editrequests = () => {
                             gridColumn: "span 2",
                           }}
                           focused
+                          error={!!touched.managerComments && !!errors.managerComments}
+                          helperText={touched.managerComments && errors.managerComments}
                         />
                         <TextField
                           fullWidth
@@ -5468,36 +6137,45 @@ const Editrequests = () => {
                           onChange={handleChange}
                         //required
                         />
-                        <FormControl
+                        {/* <FormControl
                           focused
                           variant="standard"
                         //sx={{ gridColumn: "span 2" }}
                         >
-                          <InputLabel id="Status">Status</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-filled-label"
-                            id="Status"
-                            name="Status"
-                            value={values.Status}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            required
-                            error={!!touched.Status && !!errors.Status}
-                            helperText={touched.Status && errors.Status}
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiFilledInput-root": {
-                          //     backgroundColor: "#ffffff",
-                          //   }
-                          // }}
-                          >
-                            <MenuItem value="AL">Applied</MenuItem>
-                            <MenuItem value="AP">Approved</MenuItem>
-                            <MenuItem value="RJ">Rejected</MenuItem>
-                            <MenuItem value="QR">Query</MenuItem>
-                          </Select>
-                        </FormControl>
+                          <InputLabel id="Status">Status</InputLabel> */}
+                        <TextField
+                          label={
+                            <>
+                              Status
+                              <span style={{ color: "red", fontSize: "20px" }}>*
+                              </span>
+                            </>
+                          }
+                          id="Status"
+                          name="Status"
+                          value={values.Status}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          // required
+                          select
+                          variant="standard"
+                          focused
+                          error={!!touched.Status && !!errors.Status}
+                          helperText={touched.Status && errors.Status}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiFilledInput-root": {
+                        //     backgroundColor: "#ffffff",
+                        //   }
+                        // }}
+                        >
+                          <MenuItem value="AL">Applied</MenuItem>
+                          <MenuItem value="AP">Approved</MenuItem>
+                          <MenuItem value="RJ">Rejected</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
+                        </TextField>
+                        {/* </FormControl> */}
 
                       </FormControl>
                     </FormControl>
@@ -5679,7 +6357,7 @@ const Editrequests = () => {
             <Formik
               initialValues={ondutyInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema2}
+              validationSchema={validationSchema5}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   ondutyFNsave(values, resetForm, false);
@@ -5819,6 +6497,7 @@ const Editrequests = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -5852,15 +6531,19 @@ const Editrequests = () => {
                       // disabled={mode == "E" && values.Status != "AL"}
                       >
 
-                        <InputLabel variant="standard" id="LeavePart">
+                        {/* <InputLabel variant="standard" id="LeavePart">
                           {
                             <span>
                               Reason <span style={{ color: "red" }}>*</span>
                             </span>
                           }
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
+                        </InputLabel> */}
+                        <TextField
+                          label={
+                            <span>
+                              Reason <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </span>
+                          }
                           fullWidth
                           variant="standard"
                           type="text"
@@ -5869,29 +6552,36 @@ const Editrequests = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           name="LeavePart"
-                          required
+                          error={!!touched.LeavePart && !!errors.LeavePart}
+                          helperText={touched.LeavePart && errors.LeavePart}
+                          // required
+                          select
                           focused
                         >
                           <MenuItem value="FH">First Half</MenuItem>
                           <MenuItem value="SH">Second Half</MenuItem>
                           <MenuItem value="N">Full Day</MenuItem>
-                        </Select>
+                        </TextField>
 
                         <TextField
                           //  disabled={mode == "E" && values.Status != "AL"}
-
                           name="FromDate"
                           type="date"
                           id="FromDate"
-                          label="From Date"
+                          label={
+                            <>
+                              From Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           //inputFormat="YYYY-MM-DD"
-
                           variant="standard"
                           focused
                           value={values.FromDate}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          required
+                          // required
+                          error={!!touched.FromDate && !!errors.FromDate}
+                          helperText={touched.FromDate && errors.FromDate}
                           sx={{ gridColumn: "span 2" }}
                         />
                         <TextField
@@ -5900,14 +6590,20 @@ const Editrequests = () => {
                           name="ToDate"
                           type="date"
                           id="ToDate"
-                          label="To Date"
+                          label={
+                            <>
+                              To Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           //inputFormat="YYYY-MM-DD"
                           variant="standard"
                           focused
                           value={values.ToDate}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          required
+                          // required
+                          error={!!touched.ToDate && !!errors.ToDate}
+                          helperText={touched.ToDate && errors.ToDate}
                           sx={{ gridColumn: "span 2" }}
                           inputProps={{
                             min:
@@ -5940,13 +6636,13 @@ const Editrequests = () => {
                             url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           /> */}
                         <FormControl>
-                          <Employeeautocomplete
+                          <CheckinAutocomplete
                             name="ProName"
                             label={
                               <span>
                                 Project
                                 <span
-                                  style={{ color: "red" }}
+                                  style={{ color: "red", fontSize: "20px" }}
                                 >
                                   *
                                 </span>
@@ -5954,37 +6650,35 @@ const Editrequests = () => {
                             }
                             variant="outlined"
                             id="ProName"
-                            value={selectODLookupData}
-                            // value={values.ProName}
-                            onChange={async (newValue) => {
-                              setFieldValue("ProName", newValue);
-
-                              console.log(
-                                selectODLookupData,
-                                "--selectODLookupData leavetype"
-                              );
-
-
-                              console.log(
-                                newValue.RecordID,
-                                "pROJECT RecordID"
-                              );
-
-                              setselectODLookupData({
-                                RecordID: newValue.RecordID,
-                                Code: newValue.Code,
-                                Name: newValue.Name,
-
-                              });
+                            // value={selectODLookupData}
+                            value={values.ProName}
+                            onChange={(newValue) => {
+                              
+                                setFieldValue("ProName", {
+                                  RecordID: newValue.RecordID,
+                                  Code: newValue.Code,
+                                  Name: newValue.Name,
+                                });
+                                console.log(newValue.RecordID, "PROJECT RecordID");
+                            
                             }}
+
+                            // setselectODLookupData({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+
+                            // });
+                            error={!!touched.ProName && !!errors.ProName}
+                            helperText={touched.ProName && errors.ProName}
                             // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
                             url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
                           />
-                          {touched.ProName && errors.ProName && (
+                          {/* {touched.ProName && errors.ProName && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                               {errors.ProName}
                             </div>
-                          )}
+                          )} */}
                         </FormControl>
                         {/* </Box> */}
                         <TextField
@@ -6009,13 +6703,18 @@ const Editrequests = () => {
                           name="comment"
                           type="comment"
                           id="comment"
-                          label="Comments"
+                          label={
+                            <>
+                              Comments
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           multiline
                           rows={6}
                           variant="outlined"
                           fullWidth
                           focused
-                          required
+                          // required
                           value={values.comment}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -6028,8 +6727,13 @@ const Editrequests = () => {
                           fullWidth
                           variant="outlined"
                           type="text"
-                          label="Manager Comments"
-                          required
+                          label={
+                            <>
+                              Manager Comments
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          // required
                           multiline
                           rows={6}
                           value={values.managerComments}
@@ -6041,6 +6745,8 @@ const Editrequests = () => {
                             gridColumn: "span 2",
                           }}
                           focused
+                          error={!!touched.managerComments && !!errors.managerComments}
+                          helperText={touched.managerComments && errors.managerComments}
                         />
                         {/* )} */}
                         <TextField
@@ -6077,14 +6783,21 @@ const Editrequests = () => {
 
                         <TextField
                           select
-                          label="Status"
+                          label={
+                            <>
+                              Status
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
                           id="Status"
                           name="Status"
                           value={values.Status}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          required
+                          // required
                           focused
+                          error={!!touched.Status && !!errors.Status}
+                          helperText={touched.Status && errors.Status}
                           variant="standard"
                         >
                           <MenuItem value="AL">Applied</MenuItem>
@@ -6903,7 +7616,7 @@ const Editrequests = () => {
             <Formik
               initialValues={expenseinitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema3}
+              validationSchema={validationSchema7}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   expensefnSave(values, resetForm, false);
@@ -7043,6 +7756,7 @@ const Editrequests = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -7080,7 +7794,7 @@ const Editrequests = () => {
                           name="date"
                           type="date"
                           id="date"
-                          label="Date"
+                          label={<>Date<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                           variant="standard"
                           focused
                           value={values.date}
@@ -7090,7 +7804,7 @@ const Editrequests = () => {
                           error={!!touched.date && !!errors.date}
                           helperText={touched.date && errors.date}
                           autoFocus
-                          required
+                        // required
                         />
                         <TextField
                           name="referenceifany"
@@ -7136,13 +7850,13 @@ const Editrequests = () => {
   
                               /> */}
 
-                          <Productautocomplete
+                          <CheckinAutocomplete
                             name="overhead"
                             label={
                               <span>
                                 Over Head
                                 <span
-                                  style={{ color: "red" }}
+                                  style={{ color: "red", fontSize: "20px" }}
                                 >
                                   *
                                 </span>
@@ -7150,25 +7864,30 @@ const Editrequests = () => {
                             }
                             variant="outlined"
                             id="overhead"
-                            value={expenseOHData}
-                            // value={values.overhead}
+                            // value={expenseOHData}
+                            value={values.overhead}
                             onChange={(newValue) => {
-
-
-                              setExpenseOHData({
+                              setFieldValue("overhead", {
                                 RecordID: newValue.RecordID,
                                 Code: newValue.Code,
                                 Name: newValue.Name,
+                              })
+                              // setExpenseOHData({
+                              //   RecordID: newValue.RecordID,
+                              //   Code: newValue.Code,
+                              //   Name: newValue.Name,
 
-                              });
+                              // });
                             }}
+                            error={!!touched.overhead && !!errors.overhead}
+                            helperText={touched.overhead && errors.overhead}
                             url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
                           />
-                          {touched.overhead && errors.overhead && (
+                          {/* {touched.overhead && errors.overhead && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                               {errors.overhead}
                             </div>
-                          )}
+                          )} */}
 
                         </FormControl>
                         {/* </FormControl> */}
@@ -7177,7 +7896,16 @@ const Editrequests = () => {
                           name="amount"
                           type="text"
                           id="amount"
-                          label="Amount"
+                          label={
+                            <>
+                              Amount
+                              <span
+                                style={{ color: "red", fontSize: "20px" }}
+                              >
+                                *
+                              </span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           value={values.amount}
@@ -7192,7 +7920,7 @@ const Editrequests = () => {
                               max: 24,
                             },
                           }}
-                          required
+                          // required
                           autoFocus
                         />
                         {/* <TextField
@@ -7215,13 +7943,13 @@ const Editrequests = () => {
                           name="comments"
                           type="comments"
                           id="comments"
-                          label="Comments"
+                          label={<>Comments<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                           multiline
                           rows={6}
                           variant="outlined"
                           fullWidth
                           focused
-                          required
+                          // required
                           value={values.comments}
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -7234,14 +7962,16 @@ const Editrequests = () => {
                           fullWidth
                           variant="outlined"
                           type="text"
-                          label="Manager Comments"
-                          required
+                          label={<>Manager Comments<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
+                          // required
                           multiline
                           rows={6}
                           value={values.managerComments}
                           id="managerComments"
                           onBlur={handleBlur}
                           onChange={handleChange}
+                          error={!!touched.managerComments && !!errors.managerComments}
+                          helperText={touched.managerComments && errors.managerComments}
                           name="managerComments"
                           sx={{
                             gridColumn: "span 2",
@@ -7280,15 +8010,16 @@ const Editrequests = () => {
                         />
                         <TextField
                           select
-                          label="Status"
+                          label={<>Status<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                           id="Status"
                           name="Status"
                           value={values.Status}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          required
+                          // required
+                          error={!!touched.Status && !!errors.Status}
+                          helperText={touched.Status && errors.Status}
                           focused
-
                           variant="standard"
                         >
                           {/* {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
@@ -7959,15 +8690,15 @@ const Editrequests = () => {
                       <TextField
                         select
                         label={
-                            <span>
-                              Applied Status
-                              <span
-                                style={{ color: "red", fontSize: "20px" }}
-                              >
-                                *
-                              </span>
+                          <span>
+                            Applied Status
+                            <span
+                              style={{ color: "red", fontSize: "20px" }}
+                            >
+                              *
                             </span>
-                          }
+                          </span>
+                        }
                         id="appliedStatus"
                         name="appliedStatus"
                         value={values.appliedStatus}
@@ -7996,15 +8727,15 @@ const Editrequests = () => {
                         variant="standard"
                         type="text"
                         label={
-                            <span>
-                              Remarks
-                              <span
-                                style={{ color: "red", fontSize: "20px" }}
-                              >
-                                *
-                              </span>
+                          <span>
+                            Remarks
+                            <span
+                              style={{ color: "red", fontSize: "20px" }}
+                            >
+                              *
                             </span>
-                          }
+                          </span>
+                        }
                         value={values.remarks}
                         id="remarks"
                         onBlur={handleBlur}

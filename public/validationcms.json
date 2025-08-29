@@ -13,7 +13,7 @@
         "Code": "Please fill the Code",
         "name": "Please fill the Description",
         "incharge": "Please fill the Owner",
-        "CurrentStatus": "Please fill the status"
+        "CurrentStatus": "Please fill the Status"
     },
     "Function": {
         "code": "Please fill the Code",
@@ -95,6 +95,13 @@
         "Designation": "Please fill the Designation",
         "shift": "Please fill the Shift"
     },
+    "ContractsIN": {
+        "vendor": "Please fill the Vendor",
+        "customer": "Please fill the Customer",
+        "BillingUnits": "Please fill the Billing Units",
+        "UnitRate": "Please fill the Unit Rate",
+        "Hsn": "Please fill the HSN Code"
+    },
     "CheckIn": {
         "location": "Please fill the Location",
         "gate": "Please fill the Gate",
@@ -124,6 +131,24 @@
         "managerComments": "Please fill the Manager Comments",
         "Status": "Please fill the Status"
     },
+    "Leave": {
+        "LeavePart": "Please fill the Leave Part",
+        "leavetype": "Please fill the Leave Type",
+        "FromDate": "Please fill the From Date",
+        "ToDate": "Please fill the To Date",
+        "managerComments": "Please fill the Manager Comments",
+        "Status": "Please fill the Status",
+        "comment": "Please fill the Comments"
+    },
+    "Onduty": {
+        "LeavePart": "Please fill the Reason",
+        "ProName": "Please fill the Project",
+        "FromDate": "Please fill the From Date",
+        "ToDate": "Please fill the To Date",
+        "managerComments": "Please fill the Manager Comments",
+        "Status": "Please fill the Status",
+        "comment": "Please fill the Comments"
+    },
     "Overtime": {
         "Date": "Please fill the Date",
         "NumberOfHours": "Please fill the Number of Hours",
@@ -136,7 +161,22 @@
         "appliedStatus": "Please fill the Applied Status",
         "remarks": "Please fill the Remarks",
         "managerComments": "Please fill the Manager Comments"
-        
+    },
+    "Expense": {
+        "date": "Please fill the Date",
+        "overhead": "Please fill the Overhead",
+        "amount": "Please fill the Amount",
+        "managerComments": "Please fill the Manager Comments",
+        "Status": "Please fill the Status",
+        "comments": "Please fill the Comments"
+    },
+    "Salaryadvance": {
+        "date": "Please fill the Date",
+        "overhead": "Please fill the Purpose",
+        "amount": "Please fill the Amount",
+        "managerComments": "Please fill the Manager Comments",
+        "Status": "Please fill the Status",
+        "comments": "Please fill the Comments"
     },
     "Leaveconfiguration": {
         "totaldays": "Please fill the Eligible Days",

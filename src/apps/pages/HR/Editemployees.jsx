@@ -160,6 +160,8 @@ const Editemployee = () => {
   const [validationSchema6, setValidationSchema6] = useState(null);
   const [validationSchema7, setValidationSchema7] = useState(null);
   const [validationSchema8, setValidationSchema8] = useState(null);
+  const [validationSchema9, setValidationSchema9] = useState(null);
+  const [validationSchema10, setValidationSchema10] = useState(null);
 
 
 
@@ -247,7 +249,7 @@ const Editemployee = () => {
         setValidationSchema3(schema3);
         //Function
         const schema4 = Yup.object().shape({
-          function: Yup.object().required(data.EmpFunction.function).nullable(),
+          functionLookup: Yup.object().required(data.EmpFunction.function).nullable(),
 
         });
 
@@ -287,6 +289,22 @@ const Editemployee = () => {
         });
 
         setValidationSchema8(schema8);
+        const schema9 = Yup.object().shape({
+          vendor: Yup.object().required(data.ContractsIN.vendor).nullable(),
+          BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
+          UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
+          Hsn: Yup.string().required(data.ContractsIN.Hsn),
+
+        });
+        setValidationSchema9(schema9);
+        const schema10 = Yup.object().shape({
+          customer: Yup.object().required(data.ContractsIN.customer).nullable(),
+          BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
+          UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
+          Hsn: Yup.string().required(data.ContractsIN.Hsn),
+
+        });
+        setValidationSchema10(schema10);
 
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -1227,6 +1245,7 @@ const Editemployee = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+    functionLookup: null
   };
   const [funMode, setFunMode] = useState("A");
   const [funEmpRecID, setFunEmpRecID] = useState("");
@@ -1266,7 +1285,7 @@ const Editemployee = () => {
     Year: "",
   });
 
-  const selectCellRowData = ({ rowData, mode, field }) => {
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
     setFunMode(mode);
     setLaoMode(mode);
 
@@ -1322,32 +1341,42 @@ const Editemployee = () => {
     } else {
       console.log(rowData, "--rowData");
       if (field == "action") {
+
+
         console.log(LeaveCondata, "--LeaveCondata");
-
-
         setFunEmpRecID(rowData.RecordID);
-        SetFunctionLookup({
+        // SetFunctionLookup({
+        // RecordID: rowData.FunctionsID,
+        // Code: rowData.FunctionCode,
+        // Name: rowData.FunctionName,
+        // });
+
+        setFieldValue("functionLookup", {
           RecordID: rowData.FunctionsID,
           Code: rowData.FunctionCode,
           Name: rowData.FunctionName,
+        });
+        setFieldValue("vendor", {
+          RecordID: rowData.Vendor,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+        });
+        setFieldValue("customer", {
+          RecordID: rowData.Vendor,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+        });
+        // SetVendorlookup({
+        //   RecordID: rowData.Vendor,
+        //   Code: rowData.VendorCode,
+        //   Name: rowData.VendorName,
 
-          // funRecordID: rowData.FunctionsID,
-          // funCode: rowData.FunctionCode,
-          // funName: rowData.FunctionName,
-        });
-        SetVendorlookup({
-          RecordID: rowData.Vendor,
-          Code: rowData.VendorCode,
-          Name: rowData.VendorName,
-          // venRecordID: rowData.Vendor,
-          // venCode: rowData.VendorCode,
-          // venName: rowData.VendorName,
-        });
-        SetCustomerlookup({
-          RecordID: rowData.Vendor,
-          Code: rowData.VendorCode,
-          Name: rowData.VendorName,
-        });
+        // });
+        // SetCustomerlookup({
+        //   RecordID: rowData.Vendor,
+        //   Code: rowData.VendorCode,
+        //   Name: rowData.VendorName,
+        // });
 
         SetEmpLoaData({
           description: rowData.Description,
@@ -1390,11 +1419,16 @@ const Editemployee = () => {
           tds: rowData.Tds,
         });
         console.log(contractorData, contractorData);
-        setselectLeaveconLTData({
+        // setselectLeaveconLTData({
+        //   RecordID: rowData.LeaveTypeID,
+        //   Code: "",
+        //   Name: rowData.LeavePart,
+        // });
+        setFieldValue("leavetype", {
           RecordID: rowData.LeaveTypeID,
           Code: "",
           Name: rowData.LeavePart,
-        });
+        })
 
         setLeaveCondata({
           recordID: rowData.RecordID,
@@ -1410,11 +1444,12 @@ const Editemployee = () => {
             : null,
           Year: rowData.Year,
         });
+
       }
     }
   };
 
-  const selectCellRowDataMGR = ({ rowData, mode, field }) => {
+  const selectCellRowDataMGR = ({ rowData, mode, field, setFieldValue }) => {
     console.log(
       "🚀 ~ file: Editmanager.jsx:178 ~ selectCellRowDataMGR ~ rowData:",
       rowData
@@ -1438,8 +1473,14 @@ const Editemployee = () => {
     } else {
       console.log(rowData, "--rowData");
       if (field == "action") {
-        SetDesignationLookup({
-          RecordID: rowData.EmployeeID,
+        // SetDesignationLookup({
+        //   RecordID: rowData.EmployeeID,
+        //   DesignationID: rowData.DesignationID,
+        //   Code: rowData.EmployeeCode,
+        //   Name: rowData.EmployeeName,
+        // });
+        setFieldValue("manager", {
+        RecordID: rowData.EmployeeID,
           DesignationID: rowData.DesignationID,
           Code: rowData.EmployeeCode,
           Name: rowData.EmployeeName,
@@ -1468,14 +1509,15 @@ const Editemployee = () => {
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
-      FunctionsID: functionLookup ? functionLookup.RecordID : 0,
-      FunctionName: functionLookup ? functionLookup.Name : "",
+      // FunctionsID: functionLookup ? functionLookup.RecordID : 0,
+      // FunctionName: functionLookup ? functionLookup.Name : "",
       // FunctionsID: values.function.Code || "",
-      // FunctionName: values.function.Name || "",
-      // FunctionsID: functionLookup.funRecordID,
+      FunctionName: values?.functionLookup?.Name || "",
+      FunctionsID: values?.functionLookup?.RecordID,
       CompanyID,
     };
 
+    return
     const response = await dispatch(
       explorePostData({ accessID: "TR125", action, idata })
     );
@@ -1555,6 +1597,8 @@ const Editemployee = () => {
     FromPeriod: contractorData.fromperiod,
     ToPeriod: contractorData.toperiod,
     // BillingUnits: contractorData.units,
+    vendor:null,
+    customer:null,
     BillingUnits:
       contractorData.units === "Hours"
         ? "HS"
@@ -1590,26 +1634,38 @@ const Editemployee = () => {
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
-      Vendor:
-        show == "8"
-          ? vendorlookup
-            ? vendorlookup.RecordID
-            : 0
-          : show == "11"
-            ? customerlookup
-              ? customerlookup.RecordID
-              : 0
-            : 0,
-      VendorName:
-        show == "8"
-          ? vendorlookup
-            ? vendorlookup.Name
-            : 0
-          : show == "11"
-            ? customerlookup
-              ? customerlookup.Name
-              : 0
-            : 0,
+      // Vendor:
+      //   show == "8"
+      //     ? vendorlookup
+      //       ? vendorlookup.RecordID
+      //       : 0
+      //     : show == "11"
+      //       ? customerlookup
+      //         ? customerlookup.RecordID
+      //         : 0
+      //       : 0,
+      // VendorName:
+      //   show == "8"
+      //     ? vendorlookup
+      //       ? vendorlookup.Name
+      //       : 0
+      //     : show == "11"
+      //       ? customerlookup
+      //         ? customerlookup.Name
+      //         : 0
+      //       : 0,
+      Vendor: show === "8"
+        ? values?.vendor?.RecordID || 0
+        : show === "11"
+          ? values?.customer?.RecordID || 0
+          : 0,
+
+      VendorName: show === "8"
+        ? values?.vendor?.Name || 0
+        : show === "11"
+          ? values?.customer?.Name || 0
+          : 0,
+
       Hsn: values.Hsn,
       Gst: values.Gst,
       Sgst: values.Sgst,
@@ -1740,8 +1796,10 @@ const Editemployee = () => {
       CompanyID,
       Year: values.Year,
       EmployeeID: recID,
-      LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
-      LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+      // LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
+      // LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
+      LeaveTypeID: values?.leavetype?.RecordID,
+      LeaveTypeName: values?.leavetype?.Name || "",
       TotalDays: Number(values.totaldays),
       AvailDays: Number(values.availableleave),
       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
@@ -1880,7 +1938,7 @@ const Editemployee = () => {
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
-
+    manager: null,
     Horizontal: Data.Horizontal === "Y" ? true : false,
     Vertical: Data.Vertical === "Y" ? true : false,
     HorizontalMimNo: Data.HorizontalMimNo,
@@ -1893,6 +1951,7 @@ const Editemployee = () => {
     RejectionTolerance: Data.RejectionTolerance,
 
     Level: levellookup.levelfield,
+    // manager: null,
     //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
@@ -1931,8 +1990,10 @@ const Editemployee = () => {
       RecordID: funMgrRecID,
       EmployeeID: recID,
       DesignationID: designationLookup.DesignationID || 0,
-      ManagerID: designationLookup.RecordID || 0,
-      ManagerName: designationLookup.Name || "",
+      // ManagerID: designationLookup.RecordID || 0,
+      // ManagerName: designationLookup.Name || "",
+      ManagerID: values?.manager?.RecordID,
+      ManagerName: values?.manager?.Name,
       CompanyID,
       Level: values.Level,
       HrManager: values.hrmanager == true ? "Y" : "N",
@@ -4411,7 +4472,7 @@ const Editemployee = () => {
             <Formik
               initialValues={functionInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema4}
+              validationSchema={validationSchema4}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   empFunctionFn(values, resetForm, false);
@@ -4432,7 +4493,7 @@ const Editemployee = () => {
                 <form
                   onSubmit={handleSubmit}
                   onReset={() => {
-                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    selectCellRowData({ rowData: {}, mode: "A", field: "", setFieldValue });
                     resetForm();
                   }}
                 >
@@ -4473,26 +4534,11 @@ const Editemployee = () => {
                         inputProps={{ readOnly: true }}
                       />
                     </FormControl>
-                    {/* <Stack
-                      sx={{
-                        //gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <img
-                        src={values.imageurl}
-                        style={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack> */}
+
 
                     <Stack
                       sx={{
-                        //    width: {sm:'100%',md:'100%',lg:'100%'},
-                        //gridColumn: "span 2",
+
                         alignContent: "center",
                         justifyContent: "center",
                         alignItems: "center",
@@ -4568,6 +4614,7 @@ const Editemployee = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -4602,7 +4649,7 @@ const Editemployee = () => {
                         }}
                       >
                         <CheckinAutocomplete
-                          name="function"
+                          name="functionLookup"
                           label={
                             <span>
                               Function
@@ -4614,72 +4661,27 @@ const Editemployee = () => {
                             </span>
                           }
                           variant="outlined"
-                          id="function"
-                          value={functionLookup}
-                          // value={values.function}
+                          id="functionLookup"
+                          // value={functionLookup}
+                          value={values.functionLookup}
                           onChange={(newValue) => {
-                            setFieldValue("functionLookup", newValue);
-                            console.log(newValue, "--newvalue function");
-
-                            console.log(newValue.RecordID, "function RecordID");
-
-                            SetFunctionLookup({
+                            setFieldValue("functionLookup", {
                               RecordID: newValue.RecordID,
                               Code: newValue.Code,
                               Name: newValue.Name,
                             });
+                            // SetFunctionLookup({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
                           }}
                           error={!!touched.functionLookup && !!errors.functionLookup}
                           helperText={touched.functionLookup && errors.functionLookup}
-                          //  onChange={handleSelectionFunctionname}
-                          // defaultValue={selectedFunctionName}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                         />
-                        {/* <CheckinAutocomplete
-                          id="function"
-                          name="function"
-                          label={
-                            <span>
-                              Function
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </span>
-                          }
-                          variant="outlined"
-                          value={values.function}
-                          onChange={(newValue) => {
-                            setFieldValue("function", newValue);
-                            console.log(newValue, "--newvalue function");
-                            console.log(newValue.RecordID, "function RecordID");
-                          }}
-                          error={!!touched.function && !!errors.function}
-                          helperText={touched.function && errors.function}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2048","ScreenName":"Function","Filter":"CompanyID ='${CompanyID}'","Any":""}}`}
-                        /> */}
-                        {/* <TextField
-                          id="function"
-                          label="Function"
-                          variant="standard"
-                          focused
-                          required
-                          inputProps={{ tabIndex: "-1" }}
-                          value={functionLookup.funCode}
-                        />
-                        <IconButton
-                          onClick={() => handleShow("FUN")}
-                          sx={{ height: 40, width: 40 }}
-                        >
-                          <img src="https://img.icons8.com/color/48/null/details-popup.png" />
-                        </IconButton>
-                        <TextField
-                          id="dies"
-                          variant="standard"
-                          fullWidth
-                          inputProps={{ tabIndex: "-1" }}
-                          focused
-                          value={functionLookup.funName}
-                        /> */}
+
+
                       </Box>
                     </FormControl>
                   </Box>
@@ -5136,7 +5138,7 @@ const Editemployee = () => {
             <Formik
               initialValues={managerInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema8}
+              validationSchema={validationSchema8}
               onSubmit={(values, { resetForm, setFieldValue }) => {
                 setTimeout(() => {
                   mgrFunctionFn(values, resetForm, false, setFieldValue);
@@ -5363,29 +5365,36 @@ const Editemployee = () => {
                         /> */}
 
 
-                        <ProductautocompleteLevel
+                        <CheckinAutocomplete
                           name="manager"
                           label={<span>Manager<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
                           variant="outlined"
                           id="manager"
-                          value={designationLookup}
+                          // value={designationLookup}
+                          value={values.manager}
                           onChange={(newValue) => {
-                            SetDesignationLookup({
+                            setFieldValue("manager", {
                               DesignationID: newValue.DesignationID,
                               RecordID: newValue.RecordID,
                               Code: newValue.Code,
                               Name: newValue.Name,
-                            });
+                            })
+                            // SetDesignationLookup({
+                            //   DesignationID: newValue.DesignationID,
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+                            // });
                           }}
                           url={`${baseApiUrl}ManagerLevelController.php`}
                           payload={{
                             EmployeeID: recID,
                             Level: values.Level || 1,
                             CompanyID: CompanyID
-                            
+
                           }}
-                          error={!!touched.designationLookup && !!errors.designationLookup}
-                          helperText={touched.designationLookup && errors.designationLookup}
+                          error={!!touched.manager && !!errors.manager}
+                          helperText={touched.manager && errors.manager}
                         />
                       </Box>
 
@@ -7114,6 +7123,7 @@ const Editemployee = () => {
             <Formik
               initialValues={ContractInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema9}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   contractSavefn(values, resetForm, false);
@@ -7272,6 +7282,7 @@ const Editemployee = () => {
                               rowData: params.row,
                               mode: "E",
                               field: params.field,
+                              setFieldValue
                             });
                           }}
                           rowsPerPageOptions={[5, 10, 20]}
@@ -7330,25 +7341,31 @@ const Editemployee = () => {
                         />
                       </Box> */}
 
-                      <Productautocomplete
+                      <CheckinAutocomplete
                         name="vendor"
-                        label="vendor"
+                        label={<>Vendor<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                         variant="outlined"
                         id="vendor"
-                        value={vendorlookup}
-                        // value={values.vendor}
+                        // value={vendorlookup}
+                        value={values.vendor}
                         onChange={(newValue) => {
-                          // setFieldValue("vendor", newValue);
-                          console.log(newValue, "--newvalue vendor");
-
-                          console.log(newValue.RecordID, "vendor RecordID");
-
-                          SetVendorlookup({
+                          setFieldValue("vendor", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
                             Name: newValue.Name,
                           });
+                          console.log(newValue, "--newvalue vendor");
+
+                          console.log(newValue.RecordID, "vendor RecordID");
+
+                          // SetVendorlookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
                         }}
+                        error={!!touched.vendor && !!errors.vendor}
+                        helperText={touched.vendor && errors.vendor}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
@@ -7386,13 +7403,15 @@ const Editemployee = () => {
                         select
                         fullWidth
                         variant="standard"
-                        label={<span>Billing Units</span>}
+                        label={<span>Billing Units<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
                         value={values.BillingUnits}
                         id="BillingUnits"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="BillingUnits"
-                        required
+                        error={!!touched.BillingUnits && !!errors.BillingUnits}
+                        helperText={touched.BillingUnits && errors.BillingUnits}
+                        // required
                         focused
                       // sx={{
                       //   gridColumn: "span 2",
@@ -7414,8 +7433,9 @@ const Editemployee = () => {
                         value={values.UnitRate}
                         id="UnitRate"
                         name="UnitRate"
-                        label="Unit Rate"
-                        required
+                        label={<span>Unit Rate<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
+
+                        // required
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={!!touched.UnitRate && !!errors.UnitRate}
@@ -7444,10 +7464,10 @@ const Editemployee = () => {
                         name="Hsn"
                         type="text"
                         id="Hsn"
-                        label="HSN Code"
+                        label={<span>HSN Code<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
                         variant="standard"
                         focused
-                        required
+                        // required
                         value={values.Hsn}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -7837,6 +7857,7 @@ const Editemployee = () => {
             <Formik
               initialValues={ContractInitialValue}
               enableReinitialize={true}
+              validationSchema={validationSchema10}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   contractSavefn(values, resetForm, false);
@@ -7995,6 +8016,7 @@ const Editemployee = () => {
                               rowData: params.row,
                               mode: "E",
                               field: params.field,
+                              setFieldValue
                             });
                           }}
                           rowsPerPageOptions={[5, 10, 20]}
@@ -8053,25 +8075,31 @@ const Editemployee = () => {
                         />
                       </Box> */}
 
-                      <Productautocomplete
+                      <CheckinAutocomplete
                         name="customer"
-                        label="Customer"
+                        label={<>Customer<span style={{ color: "red", fontSize: "20px" }}>*</span></>}
                         variant="outlined"
                         id="customer"
-                        value={customerlookup}
-                        // value={values.customer}
+                        // value={customerlookup}
+                        value={values.customer}
                         onChange={(newValue) => {
-                          // setFieldValue("customer", newValue);
-                          console.log(newValue, "--newvalue customer");
-
-                          console.log(newValue.RecordID, "customer RecordID");
-
-                          SetCustomerlookup({
+                          setFieldValue("customer", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
                             Name: newValue.Name,
                           });
+                          console.log(newValue, "--newvalue customer");
+
+                          console.log(newValue.RecordID, "customer RecordID");
+
+                          // SetCustomerlookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
                         }}
+                        error={!!touched.customer && !!errors.customer}
+                        helperText={touched.customer && errors.customer}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
@@ -8109,14 +8137,16 @@ const Editemployee = () => {
                         select
                         fullWidth
                         variant="standard"
-                        label={<span>Billing Units</span>}
+                        label={<span>Billing Units<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
                         value={values.BillingUnits}
                         id="BillingUnits"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="BillingUnits"
-                        required
+                        // required
                         focused
+                        error={!!touched.BillingUnits && !!errors.BillingUnits}
+                        helperText={touched.BillingUnits && errors.BillingUnits}
                       // sx={{
                       //   gridColumn: "span 2",
                       //   backgroundColor: "#ffffff",
@@ -8137,8 +8167,8 @@ const Editemployee = () => {
                         value={values.UnitRate}
                         id="UnitRate"
                         name="UnitRate"
-                        label="Unit Rate"
-                        required
+                        label={<span>Unit Rate<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
+                        // required
                         onBlur={handleBlur}
                         onChange={handleChange}
                         error={!!touched.UnitRate && !!errors.UnitRate}
@@ -8166,10 +8196,10 @@ const Editemployee = () => {
                         name="Hsn"
                         type="text"
                         id="Hsn"
-                        label="HSN Code"
+                        label={<span>HSN Code<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
                         variant="standard"
                         focused
-                        required
+                        // required
                         value={values.Hsn}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -8885,6 +8915,7 @@ const Editemployee = () => {
                 handleChange,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -9029,6 +9060,7 @@ const Editemployee = () => {
                               rowData: params.row,
                               mode: "E",
                               field: params.field,
+                              setFieldValue
                             });
                           }}
                           components={{
@@ -9089,7 +9121,7 @@ const Editemployee = () => {
                           variant="filled"
                           sx={{ gridColumn: "span 2" }}
                         >
-                          <Productautocomplete
+                          <CheckinAutocomplete
                             name="leavetype"
                             label={
                               <span>
@@ -9100,17 +9132,24 @@ const Editemployee = () => {
                               </span>
                             }
                             id="leavetype"
-                            value={LeaveconLTData}
+                            // value={LeaveconLTData}
+                            value={values.leavetype}
                             onChange={(newValue) => {
-                              setselectLeaveconLTData({
+                              setFieldValue("leavetype", {
                                 RecordID: newValue.RecordID,
                                 Code: newValue.Code,
                                 Name: newValue.Name,
-                              });
+                              })
+                              // setselectLeaveconLTData({
+                              //   RecordID: newValue.RecordID,
+                              //   Code: newValue.Code,
+                              //   Name: newValue.Name,
+                              // });
 
                             }}
-                            error={!!touched.LeaveconLTData && !!errors.LeaveconLTData}
-                            helperText={touched.LeaveconLTData && errors.LeaveconLTData}
+                            error={!!touched.leavetype && !!errors.leavetype}
+                            helperText={touched.leavetype && errors.leavetype}
+
                             url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}'","Any":""}}`}
                           />
 
