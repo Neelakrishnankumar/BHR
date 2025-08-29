@@ -143,12 +143,12 @@ const EditAttendance = () => {
     },
     {
       field: "EmplyeeCheckInDateTime",
-      headerName: "Emplyee CheckIn Date Time",
+      headerName: "Employee Check In Date Time",
       flex: 1,
     },
     {
       field: "EmplyeeCheckOutDateTime",
-      headerName: "Emplyee CheckOut Date Time",
+      headerName: "Employee Check Out Date Time",
       flex: 1,
     },
     {
@@ -160,6 +160,12 @@ const EditAttendance = () => {
       field: "Status",
       headerName: "Status",
       flex: 1,
+    },
+        {
+      field: "Commend",
+      headerName: "Comments",
+      width: 150,
+      headerAlign: "center"
     },
   ];
 
