@@ -771,7 +771,7 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID1}`,{state:{...state}}
+                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID3}/${params.parentID2}`,{state:{...state}}
                  );
                 }}
               >

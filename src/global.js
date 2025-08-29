@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-var APIurl = "https://hr.beyondexs.com/api/"
-var baseurl = "https://hr.beyondexs.com/"
+// var APIurl = "https://hr.beyondexs.com/api/"
+// var baseurl = "https://hr.beyondexs.com/"
 
-// var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
-// var baseurl = "https://dvmtapi.bexatm.com/"
+var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
+var baseurl = "https://dvmtapi.bexatm.com/"
 // var APIurl = "https://phpmigrationapi.bexatm.com/hr/api/"
 // var baseurl = "https://phpmigrationapi.bexatm.com/"
 
@@ -23,6 +23,7 @@ imageUrl:baseurl + 'uploads/images/',
 imageNameUpdateUrl:APIurl + 'CMController.php',
 //attachmentUrl:baseurl + 'uploads/images/',
 attachmentUrl:baseurl + 'uploads/images/',
+attachmentSkilUrl:baseurl + 'uploads/attachments/',
 fileUploadUrl:baseurl + 'fileupload.php',
 pcdurl:APIurl + 'PCDController.php',
 pdfurl:baseurl + 'tcpdf/',

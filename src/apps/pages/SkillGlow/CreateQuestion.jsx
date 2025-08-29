@@ -64,10 +64,8 @@ const CreateQuestion = () => {
 
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
-  console.log(state, "-------state.....");
 
   const answerType = state.AnswerType;
-  console.log(answerType, "-------AnswerType.....");
 
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -257,9 +255,10 @@ const CreateQuestion = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                   onClick={() => {
+
+                onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID1}`,{state:{...state}}
+                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID3}/${params.parentID2}`,{state:{...state}}
                  );
                 }}
                   >
