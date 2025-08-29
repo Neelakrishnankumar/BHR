@@ -3640,7 +3640,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             size="small"
             onClick={() =>
               navigate(
-                `/Apps/Secondarylistview/skillglow/TR279/List Of Session/${params.row.SkillcategoriesID}/${params.row.AssessmentID}/${params.row.RecordID}`,
+                `/Apps/Secondarylistview/skillglow/TR279/List Of Session/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
                 {
                   state: {...state,BreadCrumb2:params.row.Code},
                 }

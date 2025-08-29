@@ -43,7 +43,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
-
+import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import store from "../../..";
 const CreateSession = () => {
   const navigate = useNavigate();
 
@@ -91,7 +93,7 @@ const CreateSession = () => {
       ContentType: values.ContentType,
       SortOrder: values.SortOrder,
       Disable: isCheck,
-      AttachmentName: values.AttachmentName,
+      Attachment: values.AttachmentName,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -102,28 +104,16 @@ const CreateSession = () => {
       toast.error(response.payload.Msg ? response.payload.Msg : "Error");
     }
   };
-  //   FOR DROPDWON
-  const [age, setAge] = useState("");
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
-  //   FOR DATEPICKER
-  const [value, setValue] = useState(null);
+
+
+
+
+
 
   const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
-
-    //       return
-    //  }
     Swal.fire({
       title: `Do you want ${props}?`,
-      // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -334,7 +324,7 @@ const CreateSession = () => {
                     variant="standard"
                     type="text"
                     name="Name"
-                    label="Description"
+                    label="Name"
                     id="Name"
                     //placeholder="Enter Your Description here......"
                     value={values.Name}
@@ -426,7 +416,7 @@ const CreateSession = () => {
                         name="Disable"
                         checked={values.Disable}
                         onChange={handleChange}
-                        disabled={mode === "V"} 
+                        disabled={mode === "V"}
 
                         //inputProps={{ readOnly: mode == "V" }}
                       />
@@ -448,29 +438,57 @@ const CreateSession = () => {
                   padding={1}
                   gap={2}
                 >
-                  {values.ContentType !== "link" && (
-                    <Button
-                      variant="standard"
-                      component="label"
-                      sx={{ color: "rgb(25, 118, 210)" }}
-                      disabled={mode == "V" ? true : false}
-                      //inputProps={{ readOnly: mode == "V" }}
-                    >
+                  {values.ContentType != "Link" && (
+                    <React.Fragment>
                       <Tooltip title="Upload a file">
-                        <CloudUpload />
-                      </Tooltip>
+                      <IconButton
+                        disabled={mode === "V"}
+                        size="small"
+                        color="primary"
+                        aria-label="upload picture"
+                        component="label"
+                      >
+                        <input
+                          hidden
+                          accept="all/*"
+                          type="file"
+                          onChange={(event) => {
+                            const formData = new FormData();
+                            formData.append("file", event.target.files[0]);
+                            formData.append("type", "attachments");
 
-                      <input
-                        type="file"
-                        name="AttachmentName"
-                        style={{ display: "none" }}
-                        onChange={(event) => {
-                          const file = event.currentTarget.files[0];
-                          setFieldValue("file", file);
+                            dispatch(
+                              fnFileUpload(formData, recID, "TR031")
+                            ).then((res) => {
+                              setFieldValue(
+                                "AttachmentName",
+                                res.payload.apiResponse
+                              );
+                            });
+                          }}
+                        />
+                        <CloudUpload fontSize="medium" />
+                      </IconButton>
+                      </Tooltip>
+                      <Button
+                        // disabled={mode === "V"}
+                        variant="contained"
+                        component={"a"}
+                        onClick={() => {
+                          var filePath =
+                            store.getState().globalurl.attachmentSkilUrl +
+                            values.AttachmentName;
+
+                          if (values.AttachmentName) {
+                            window.open(filePath, "_blank");
+                          } else {
+                            toast.error("Please Upload File");
+                          }
                         }}
-                        onBlur={handleBlur}
-                      />
-                    </Button>
+                      >
+                        View
+                      </Button>
+                    </React.Fragment>
                   )}
 
                   <LoadingButton
