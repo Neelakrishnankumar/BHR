@@ -18,11 +18,11 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack, CloudUpload } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import dayjs from "dayjs";
@@ -39,10 +39,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { formGap } from "../../../ui-components/utils";
-
-const StyledTypography = styled(Typography)(() => ({
-  fontSize: "20px",
-}));
+import { useDispatch, useSelector } from "react-redux";
+import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import toast from "react-hot-toast";
+import { LoadingButton } from "@mui/lab";
+import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import store from "../../..";
 const CreateSession = () => {
   const navigate = useNavigate();
 
@@ -52,63 +55,65 @@ const CreateSession = () => {
   const handleClick2 = () => {
     navigate("/Apps/SkillGlow/SkillGlowList/SkillGlowSession");
   };
+  const dispatch = useDispatch();
+  const params = useParams();
 
-  //   FOR DROPDWON
-  const [age, setAge] = useState("");
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const recID = params.id;
+  const accessID = params.accessID;
+  const screenName = params.screenName;
+  const mode = params.Mode;
+  const Assessmentid = params.parentID1;
+  const CategoryId = params.parentID2;
+
+  const CompanyID = sessionStorage.getItem("compID");
+  const location = useLocation();
+  const state = location.state || {};
+
+  const Data = useSelector((state) => state.formApi.Data);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const isLoading = useSelector((state) => state.formApi.postLoading);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, []);
+
+  const SessionSaveFn = async (values) => {
+    let action =
+      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      AssessmentID: Assessmentid,
+      Code: values.Code,
+      Name: values.Name,
+      ContentType: values.ContentType,
+      SortOrder: values.SortOrder,
+      Disable: isCheck,
+      Attachment: values.AttachmentName,
+    };
+
+    const response = await dispatch(postData({ accessID, action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
   };
 
-  //   FOR DATEPICKER
-  const [value, setValue] = useState(null);
 
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      onClick={handleClick}
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      List Of Skills
-    </Link>,
-    <Link
-      underline="hover"
-      key="1"
-      onClick={handleClick2}
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      List Of Session
-    </Link>,
-    <Link
-      underline="none"
-      key="2"
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      Create Session
-    </Link>,
-  ];
+
+
+
+
+
   const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
-
-    //       return
-    //  }
     Swal.fire({
       title: `Do you want ${props}?`,
-      // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -132,21 +137,21 @@ const CreateSession = () => {
 
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const initialValues = {
-    code: "",
-    desc: "",
-    docType: "",
-    docUpload: "",
-    sortOrder: "",
-    disable: false,
+    Code: Data.Code || "",
+    Name: Data.Name || "",
+    ContentType: Data.ContentType || "",
+    AttachmentName: Data.AttachmentName || "",
+    SortOrder: Data.SortOrder || "",
+    Disable: Data.Disable == "Y" ? true : false,
   };
 
   const validationSchema = Yup.object({
-    code: Yup.string().required("Please Enter Code Here"),
-    desc: Yup.string().required("Please Enter Description Here"),
-    docType: Yup.string().required("Choose at least one Document Type"),
-    docUpload: Yup.string().required("Choose at least one Document Type"),
-    sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    disable: Yup.boolean(),
+    Code: Yup.string().required("Please Enter Code Here"),
+    Name: Yup.string().required("Please Enter Description Here"),
+    ContentType: Yup.string().required("Choose at least one Document Type"),
+    //AttachmentName: Yup.string().required("Choose at least one Document"),
+    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+    Disable: Yup.boolean(),
   });
   return (
     <>
@@ -203,25 +208,32 @@ const CreateSession = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/SkillGlow/CategoryMain")}
+                    onClick={() =>
+                      navigate(`/Apps/TR278/List%20Of%20Categories`)
+                    }
                   >
-            List Of Category (CAT01)
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/SkillGlow/SkillGlowList")}
-                  >
-            List Of Assessment (Quality Assurance)
+                    List Of Category ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() =>
-                      navigate("/Apps/SkillGlow/SkillGlowList/SkillGlowSession")
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.parentID2}`,
+                        {
+                          state: { ...state },
+                        }
+                      )
                     }
+                  >
+                    List Of Assessment ({state.BreadCrumb2})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(-1)}
                   >
                     List Of Session
                   </Typography>
@@ -230,7 +242,7 @@ const CreateSession = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    Create Session
+                    {mode == "A" ? "New" : mode == "V" ? "View" : Data.Name}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -254,9 +266,13 @@ const CreateSession = () => {
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={initialValues}
-            onSubmit={(values) => {
-              console.log(values);
+            onSubmit={(values, { resetForm }) => {
+              setTimeout(() => {
+                SessionSaveFn(values, resetForm);
+              }, 100);
+              console.log(values, "----Session.");
             }}
+            enableReinitialize={true}
             validationSchema={validationSchema}
           >
             {({
@@ -282,20 +298,21 @@ const CreateSession = () => {
                   }}
                 >
                   {/* TEXTFIELD */}
-
                   <TextField
                     variant="standard"
                     type="text"
-                    name="code"
+                    name="Code"
                     label="Code"
-                    id="code"
+                    id="Code"
                     //placeholder="Enter Your code here......"
-                    value={values.code}
+                    value={values.Code}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     focused
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
+                    error={!!touched.Code && !!errors.Code}
+                    helperText={touched.Code && errors.Code}
+                    //disabled={mode === "V"}
+                    inputProps={{ readOnly: mode == "V" }}
                     sx={{
                       // backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
@@ -306,22 +323,24 @@ const CreateSession = () => {
                   <TextField
                     variant="standard"
                     type="text"
-                    name="desc"
-                    label="Description"
-                    id="desc"
+                    name="Name"
+                    label="Name"
+                    id="Name"
                     //placeholder="Enter Your Description here......"
-                    value={values.desc}
+                    value={values.Name}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     focused
-                    error={!!touched.desc && !!errors.desc}
-                    helperText={touched.desc && errors.desc}
+                    error={!!touched.Name && !!errors.Name}
+                    helperText={touched.Name && errors.Name}
+                    //disabled={mode === "V"}
                     sx={{
                       // backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    inputProps={{ readOnly: mode == "V" }}
                   />
 
                   {/* DROPDOWN */}
@@ -331,20 +350,19 @@ const CreateSession = () => {
                     variant="standard"
                     sx={{ background: "#ffffff" }}
                   >
-                    <InputLabel id="docType">
-                     Document Type
-                    </InputLabel>
+                    <InputLabel id="ContentType">Document Type</InputLabel>
                     <Select
                       labelId="question-type-label"
                       // value={values.QType}
                       // onChange={handleChange}
                       label="Please Select Document Type"
-                      name="docType"
-                      id="docType"
+                      name="ContentType"
+                      id="ContentType"
                       required
-                      value={values.docType}
+                      value={values.ContentType}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      inputProps={{ readOnly: mode == "V" }}
                       // MenuProps={{
                       //   PaperProps: {
                       //     sx: {
@@ -353,9 +371,9 @@ const CreateSession = () => {
                       //   },
                       // }}
                     >
-                      <MenuItem value="pdf">Pdf</MenuItem>
-                      <MenuItem value="ppt">Ppt</MenuItem>
-                      <MenuItem value="link">Link</MenuItem>
+                      <MenuItem value="Pdf">Pdf</MenuItem>
+                      <MenuItem value="Ppt">Ppt</MenuItem>
+                      <MenuItem value="Link">Link</MenuItem>
                       {/* ✅ unique value */}
                     </Select>
                   </FormControl>
@@ -364,15 +382,16 @@ const CreateSession = () => {
 
                   <TextField
                     variant="standard"
-                    name="sortOrder"
-                    id="sortOrder"
+                    name="SortOrder"
+                    id="SortOrder"
                     type="number"
                     label="Sort Order"
-                    value={values.sortOrder}
+                    value={values.SortOrder}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={!!touched.sortOrder && !!errors.sortOrder}
-                    helperText={touched.sortOrder && errors.sortOrder}
+                    error={!!touched.SortOrder && !!errors.SortOrder}
+                    helperText={touched.SortOrder && errors.SortOrder}
+                    //disabled={mode === "V"}
                     sx={{ background: "" }}
                     focused
                     onWheel={(e) => e.target.blur()}
@@ -384,6 +403,7 @@ const CreateSession = () => {
                     InputProps={{
                       inputProps: {
                         style: { textAlign: "right" },
+                        readOnly: mode == "V",
                       },
                     }}
                   />
@@ -393,9 +413,12 @@ const CreateSession = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        name="disable"
-                        checked={values.disable}
+                        name="Disable"
+                        checked={values.Disable}
                         onChange={handleChange}
+                        disabled={mode === "V"}
+
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                     }
                     label="Disable"
@@ -405,6 +428,7 @@ const CreateSession = () => {
                     //     marginTop: 0,
                     //   },
                     // }}
+                    inputProps={{ readOnly: mode == "V" }}
                   />
                 </Box>
                 {/* BUTTONS */}
@@ -414,35 +438,72 @@ const CreateSession = () => {
                   padding={1}
                   gap={2}
                 >
-                  {values.docType !== "link" && (
-                    <Button variant="standard" component="label" sx={{color:"rgb(25, 118, 210)"}}>
-                      
+                  {values.ContentType != "Link" && (
+                    <React.Fragment>
                       <Tooltip title="Upload a file">
-                      <CloudUpload />
-                      </Tooltip>
+                      <IconButton
+                        disabled={mode === "V"}
+                        size="small"
+                        color="primary"
+                        aria-label="upload picture"
+                        component="label"
+                      >
+                        <input
+                          hidden
+                          accept="all/*"
+                          type="file"
+                          onChange={(event) => {
+                            const formData = new FormData();
+                            formData.append("file", event.target.files[0]);
+                            formData.append("type", "attachments");
 
-                      <input
-                        type="file"
-                        name="docUpload"
-                        style={{ display: "none" }}
-                        onChange={(event) => {
-                          const file = event.currentTarget.files[0];
-                          setFieldValue("file", file);
+                            dispatch(
+                              fnFileUpload(formData, recID, "TR031")
+                            ).then((res) => {
+                              setFieldValue(
+                                "AttachmentName",
+                                res.payload.apiResponse
+                              );
+                            });
+                          }}
+                        />
+                        <CloudUpload fontSize="medium" />
+                      </IconButton>
+                      </Tooltip>
+                      <Button
+                        // disabled={mode === "V"}
+                        variant="contained"
+                        component={"a"}
+                        onClick={() => {
+                          var filePath =
+                            store.getState().globalurl.attachmentSkilUrl +
+                            values.AttachmentName;
+
+                          if (values.AttachmentName) {
+                            window.open(filePath, "_blank");
+                          } else {
+                            toast.error("Please Upload File");
+                          }
                         }}
-                        onBlur={handleBlur}
-                      />
-                    </Button>
+                      >
+                        View
+                      </Button>
+                    </React.Fragment>
                   )}
 
-                  <Button type="submit" variant="contained" color="secondary">
+                  <LoadingButton
+                    color={mode == "V" ? "error" : "secondary"}
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                    disabled={mode == "V" ? true : false}
+                  >
                     Save
-                  </Button>
+                  </LoadingButton>
                   <Button
                     variant="contained"
                     color="warning"
-                    onClick={() =>
-                      navigate("/Apps/SkillGlow/SkillGlowList/SkillGlowSession")
-                    }
+                    onClick={() => navigate(-1)}
                   >
                     Cancel
                   </Button>

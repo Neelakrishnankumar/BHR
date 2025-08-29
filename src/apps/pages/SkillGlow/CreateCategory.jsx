@@ -17,11 +17,11 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import dayjs from "dayjs";
@@ -38,28 +38,11 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { formGap } from "../../../ui-components/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { LoadingButton } from "@mui/lab";
+import toast from "react-hot-toast";
 
-const StyledTextarea = styled(TextareaAutosize)(({ theme, error }) => ({
-  width: "500px",
-  padding: "8px",
-  border: "1px solid #ccc",
-  borderRadius: "4px",
-  outline: "none",
-  transition: "border-color 0.3s ease",
-  "&:focus": {
-    // borderColor: theme.palette.primary.main,
-    // boxShadow: `0 0 5px ${theme.palette.primary.main}`,
-    borderColor: error ? "red" : theme.palette.primary.main,
-    boxShadow: error ? "0 0 5px red" : `0 0 5px ${theme.palette.primary.main}`,
-  },
-  [theme.breakpoints.down("sm")]: {
-    width: "350px", // ✅ smaller width on small screens
-  },
-}));
-
-const StyledTypography = styled(Typography)(() => ({
-  fontSize: "20px",
-}));
 const CreateCategory = () => {
   const navigate = useNavigate();
 
@@ -68,6 +51,55 @@ const CreateCategory = () => {
   };
   const handleClick2 = () => {
     navigate("/Apps/SkillGlow/SkillGlowList/SkillCategory");
+  };
+
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const recID = params.id;
+  const accessID = params.accessID;
+  const screenName = params.screenName;
+  const mode = params.Mode;
+  const Assessmentid = params.parentID1;
+  const CategoryId = params.parentID2;
+
+  const CompanyID = sessionStorage.getItem("compID");
+  const location = useLocation();
+  const state = location.state || {};
+
+  const Data = useSelector((state) => state.formApi.Data);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const isLoading = useSelector((state) => state.formApi.postLoading);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, []);
+
+  const QuestionGrpSaveFn = async (values) => {
+    let action =
+      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      AssessmentRecordID: Assessmentid,
+      Code: values.Code,
+      Name: values.Name,
+      Answertype: values.AnswerType,
+      SortOrder: values.SortOrder,
+      Disable: isCheck,
+    };
+
+    const response = await dispatch(postData({ accessID, action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
   };
 
   //   FOR DROPDWON
@@ -113,56 +145,20 @@ const CreateCategory = () => {
   //   FOR DATEPICKER
   const [value, setValue] = useState(null);
 
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      onClick={handleClick}
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      List Of Skills
-    </Link>,
-    <Link
-      underline="hover"
-      key="1"
-      onClick={handleClick2}
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      List Of Question Group
-    </Link>,
-    <Link
-      underline="none"
-      key="2"
-      sx={{
-        fontSize: "20px",
-        color: "primary",
-      }}
-    >
-      Create Category
-    </Link>,
-  ];
-
   const initialValues = {
-    code: "",
-    name: "",
-    AType: "",
-
-    sortOrder: "",
-    disable: false,
+    Code: Data.Code || "",
+    Name: Data.Name || "",
+    AnswerType: Data.AnswerType || "",
+    SortOrder: Data.SortOrder || "",
+    Disable: Data.Disable == "Y" ? true : false,
   };
 
   const validationSchema = Yup.object({
-    code: Yup.string().required("Please Enter Code Here"),
-    name: Yup.string().required("Please Enter Name Here"),
-    AType: Yup.string().required("Choose at least one A.Type"),
-    sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    disable: Yup.boolean(),
+    Code: Yup.string().required("Please Enter Code Here"),
+    Name: Yup.string().required("Please Enter Name Here"),
+    AnswerType: Yup.string().required("Choose at least one A.Type"),
+    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+    Disable: Yup.boolean(),
   });
   return (
     <>
@@ -190,34 +186,41 @@ const CreateCategory = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/SkillGlow/CategoryMain")}
+                    onClick={() =>
+                      navigate(`/Apps/TR278/List%20Of%20Categories`)
+                    }
                   >
-                    List Of Category (CAT01)
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/SkillGlow/SkillGlowList")}
-                  >
-                    List Of Assessment (Quality Assurance)
+                    List Of Category ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() =>
-                      navigate("/Apps/SkillGlow/SkillGlowList/SkillCategory")
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.parentID2}`,
+                        {
+                          state: { ...state },
+                        }
+                      )
                     }
                   >
-                    List Of Question Groups (XXX)
+                    List Of Assessment ({state.BreadCrumb2})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(-1)}
+                  >
+                    List Of Question Group
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    Create Question Group
+                    {mode == "A" ? "New" : mode == "D" ? "Delete" : Data.Name}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -237,178 +240,194 @@ const CreateCategory = () => {
             </Box>
           </Box>
         </Paper>
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
-            validationSchema={validationSchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleSubmit,
-              setFieldTouched,
-            }) => (
-              <Form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {/* TEXTFIELD */}
-                  <TextField
-                    variant="standard"
-                    name="code"
-                    id="code"
-                    //placeholder="Code"
-                    label="Code"
-                    type="text"
-                    focused
-                    value={values.code}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
+
+        {!getLoading ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  QuestionGrpSaveFn(values, resetForm);
+                }, 100);
+              }}
+              enableReinitialize={true}
+              validationSchema={validationSchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                handleSubmit,
+                setFieldTouched,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
-                  />
-
-                  {/* TEXTFIELD */}
-                  <TextField
-                    variant="standard"
-                    type="text"
-                    label="Name"
-                    name="name"
-                    id="name"
-                    //placeholder="Name"
-                    value={values.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    focused
-                    error={!!touched.name && !!errors.name}
-                    helperText={touched.name && errors.name}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  />
-                  {/* DROPDOWN */}
-
-                  <FormControl
-                    focused
-                    variant="standard"
-                    sx={{ background: "#ffffff" }}
                   >
-                    <InputLabel id="AType">Answer Type</InputLabel>
-                    <Select
-                      labelId="question-type-label"
-                      // value={values.QType}
-                      // onChange={handleChange}
-                      label="Question Type"
-                      name="AType"
-                      id="AType"
-                      value={values.AType}
+                    {/* TEXTFIELD */}
+                    <TextField
+                      variant="standard"
+                      name="Code"
+                      id="Code"
+                      //placeholder="Code"
+                      label="Code"
+                      type="text"
+                      focused
+                      value={values.Code}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                    />
+
+                    {/* TEXTFIELD */}
+                    <TextField
+                      variant="standard"
+                      type="text"
+                      label="Name"
+                      name="Name"
+                      id="Name"
+                      //placeholder="Name"
+                      value={values.Name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      focused
+                      error={!!touched.Name && !!errors.Name}
+                      helperText={touched.Name && errors.Name}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                    />
+                    {/* DROPDOWN */}
+
+                    <FormControl
+                      focused
+                      variant="standard"
+                      sx={{ background: "#ffffff" }}
+                      error={!!touched.AnswerType && !!errors.AnswerType}   
+
                     >
-                      <MenuItem value={10}>1 of 4</MenuItem>
-                      <MenuItem value={20}>Any Of 4</MenuItem>
-                      <MenuItem value={30}>Text</MenuItem>
-                      <MenuItem value={40}>Number</MenuItem>
-                      <MenuItem value={50}>10 Rates</MenuItem>
-                      <MenuItem value={60}>5 Rates</MenuItem>
-                      <MenuItem value={70}>True or false</MenuItem>
-                      <MenuItem value={80}>Yes or No</MenuItem>
-                    </Select>
-                  </FormControl>
-                  {/* SORT ORDER */}
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    label="Sort Order"
-                    value={values.sortOrder}
-                    id="sortOrder"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    name="sortOrder"
-                    error={!!touched.sortOrder && !!errors.sortOrder}
-                    helperText={touched.sortOrder && errors.sortOrder}
-                    sx={{ background: "" }}
-                    focused
-                    onWheel={(e) => e.target.blur()}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
-                  {/* CHECKBOX */}
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="disable"
-                        checked={values.disable}
+                      <InputLabel id="AnswerType">Answer Type</InputLabel>
+                      <Select
+                        labelId="question-type-label"
+                        // value={values.QType}
+                        // onChange={handleChange}
+                        label="Question Type"
+                        name="AnswerType"
+                        id="AnswerType"
+                        value={values.AnswerType}
                         onChange={handleChange}
-                      />
-                    }
-                    label="Disable"
-                  />
-                </Box>
-                {/* BUTTONS */}
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  gap={2}
-                >
-                  <Button type="submit" variant="contained" color="secondary">
-                    Save
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() =>
-                      navigate("/Apps/SkillGlow/SkillGlowList/SkillCategory")
-                    }
+                        onBlur={handleBlur}
+                        required
+                        //error={!!touched.AnswerType && !!errors.AnswerType}
+                        //helperText={touched.AnswerType && errors.AnswerType}
+                        // MenuProps={{
+                        //   PaperProps: {
+                        //     sx: {
+                        //       mt: 1, // Add space so the top border doesn’t get cut
+                        //     },
+                        //   },
+                        // }}
+                      >
+                        <MenuItem value={"1/4"}>1 of 4</MenuItem>
+                        <MenuItem value={"Any/4"}>Any Of 4</MenuItem>
+                        <MenuItem value={"Text"}>Text</MenuItem>
+                        <MenuItem value={"Number"}>Number</MenuItem>
+                        <MenuItem value={"10Rates"}>10 Rates</MenuItem>
+                        <MenuItem value={"5Rates"}>5 Rates</MenuItem>
+                        <MenuItem value={"T/F"}>True or false</MenuItem>
+                        <MenuItem value={"Y/N"}>Yes or No</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* SORT ORDER */}
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      label="Sort Order"
+                      value={values.SortOrder}
+                      id="SortOrder"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      name="SortOrder"
+                      error={!!touched.SortOrder && !!errors.SortOrder}
+                      helperText={touched.SortOrder && errors.SortOrder}
+                      sx={{ background: "" }}
+                      focused
+                      onWheel={(e) => e.target.blur()}
+                      onInput={(e) => {
+                        e.target.value = Math.max(0, parseInt(e.target.value))
+                          .toString()
+                          .slice(0, 8);
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
+                    />
+                    {/* CHECKBOX */}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="Disable"
+                          checked={values.Disable}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Disable"
+                    />
+                  </Box>
+                  {/* BUTTONS */}
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap={2}
                   >
-                    Cancel
-                  </Button>
-                </Box>
-              </Form>
-            )}
-          </Formik>
-        </Paper>
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      color={mode == "D" ? "error" : "secondary"}
+                      loading={isLoading}
+                    >
+                      {mode == "D" ? "Delete" : "Save"}
+                    </LoadingButton>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={() => navigate(-1)}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
       </React.Fragment>
     </>
   );
