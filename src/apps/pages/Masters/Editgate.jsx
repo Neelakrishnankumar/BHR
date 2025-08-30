@@ -38,6 +38,7 @@ import { GateSchema } from "../../Security/validation";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { formGap } from "../../../ui-components/utils";
 // import CryptoJS from "crypto-js";
+import * as Yup from "yup";
 const Editgate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -49,6 +50,8 @@ const Editgate = () => {
   var parentID = params.filtertype;
   const data = useSelector((state) => state.formApi.Data);
   console.log(data);
+  
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -62,6 +65,29 @@ const Editgate = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const rowData = location.state || {};
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {};
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Geogate.code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID: recid }));
   }, [location.key]);
@@ -72,11 +98,11 @@ const Editgate = () => {
     name: data.Name,
     comment: data.Comments,
     sortorder: data.SortOrder,
-    readercode:data.ReaderCode,
-    readername:data.ReaderName,
+    readercode: data.ReaderCode,
+    readername: data.ReaderName,
     disable: data.Disable === "Y" ? true : false,
-    latitude:data.Latitude,
-    longitude:data.Longitude
+    latitude: data.Latitude,
+    longitude: data.Longitude
   };
 
   const Fnsave = async (values) => {
@@ -95,9 +121,9 @@ const Editgate = () => {
       Disable: isCheck,
       LocRecordID: parentID,
       ReaderCode: values.readercode,
-      ReaderName:values.readername,
-      Latitude:values.latitude,
-      Longitude:values.longitude
+      ReaderName: values.readername,
+      Latitude: values.latitude,
+      Longitude: values.longitude
       // Finyear,
       // CompanyID,
     };
@@ -171,7 +197,7 @@ const Editgate = () => {
               >
                {`Company(${rowData.CompanyName})`}
               </Typography> */}
-              <Typography
+              {/* <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
@@ -182,7 +208,7 @@ const Editgate = () => {
                 }}
               >
                 {`Location(${rowData.LocationName})`}
-              </Typography>
+              </Typography> */}
               <Typography
                 variant="h5"
                 color="#0000D1"
@@ -225,7 +251,7 @@ const Editgate = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={GateSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -253,154 +279,193 @@ const Editgate = () => {
                     fullWidth
                     sx={{ gridColumn: "span 2", gap: formGap }}
                   > */}
+                  {CompanyAutoCode == "Y" ? (
                     <TextField
                       name="code"
                       type="text"
                       id="code"
                       label="Code"
                       variant="standard"
+                      placeholder="Auto"
                       focused
-                      required
+                      // required
                       value={values.code}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
-                      sx={{ gridColumn: "span 2" }}
-                      autoFocus
-                    />
-                    <TextField
-                      name="name"
-                      type="text"
-                      id="name"
-                      label="Name"
-                      variant="standard"
-                      focused
-                      value={values.name}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
-                      sx={{ gridColumn: "span 2" }}
-                      autoFocus
-                    />
-                    <TextField
-                      name="readercode"
-                      type="text"
-                      id="readercode"
-                      label="Reader Code"
-                      variant="standard"
-                      focused
-                      value={values.readercode}
-                      onChange={handleChange}
-                      autoFocus
-                      sx={{ gridColumn: "span 2" }}
-                    />
-                    <TextField
-                      name="readername"
-                      type="text"
-                      id="readername"
-                      label="Reader Name"
-                      variant="standard"
-                      focused
-                      value={values.readername}
-                      onChange={handleChange}
-                      autoFocus
-                      sx={{ gridColumn: "span 2" }}
-                    />
-                    <TextField
-                      name="latitude"
-                      type="number"
-                      id="latitude"
-                      label="Latitude"
-                      variant="standard"
-                      focused
-                      value={values.latitude}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.latitude && !!errors.latitude}
-                      helperText={touched.latitude && errors.latitude}
-                      sx={{ gridColumn: "span 2" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         },
+                        gridColumn: "span 2"
                       }}
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
+                    />
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        },
+                        gridColumn: "span 2"
+                      }}
+                      autoFocus
+
+                    />
+                  )}
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label="Name"
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{ gridColumn: "span 2" }}
+                    // autoFocus
+                    autoFocus={CompanyAutoCode == "Y"}
+                  />
+                  <TextField
+                    name="readercode"
+                    type="text"
+                    id="readercode"
+                    label="Reader Code"
+                    variant="standard"
+                    focused
+                    value={values.readercode}
+                    onChange={handleChange}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+                  <TextField
+                    name="readername"
+                    type="text"
+                    id="readername"
+                    label="Reader Name"
+                    variant="standard"
+                    focused
+                    value={values.readername}
+                    onChange={handleChange}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+                  <TextField
+                    name="latitude"
+                    type="number"
+                    id="latitude"
+                    label="Latitude"
+                    variant="standard"
+                    focused
+                    value={values.latitude}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.latitude && !!errors.latitude}
+                    helperText={touched.latitude && errors.latitude}
+                    sx={{ gridColumn: "span 2" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                  />
+
+                  <TextField
+                    name="longitude"
+                    type="number"
+                    id="longitude"
+                    label="Longitude"
+                    variant="standard"
+                    focused
+                    value={values.longitude}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.longitude && !!errors.longitude}
+                    helperText={touched.longitude && errors.longitude}
+                    sx={{ gridColumn: "span 2" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                  />
+                  <TextField
+                    name="comment"
+                    type="text"
+                    id="comment"
+                    label="Comment"
+                    variant="standard"
+                    focused
+                    value={values.comment}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.comment && !!errors.comment}
+                    helperText={touched.comment && errors.comment}
+                    sx={{ gridColumn: "span 2" }}
+                    
+                  />
+
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    focused
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ gridColumn: "span 2" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
                     />
 
-                    <TextField
-                      name="longitude"
-                      type="number"
-                      id="longitude"
-                      label="Longitude"
-                      variant="standard"
-                      focused
-                      value={values.longitude}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.longitude && !!errors.longitude}
-                      helperText={touched.longitude && errors.longitude}
-                      sx={{ gridColumn: "span 2" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                    />
-                    <TextField
-                      name="comment"
-                      type="text"
-                      id="comment"
-                      label="Comment"
-                      variant="standard"
-                      focused
-                      value={values.comment}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.comment && !!errors.comment}
-                      helperText={touched.comment && errors.comment}
-                      sx={{ gridColumn: "span 2" }}
-                      autoFocus
-                    />
-
-                    <TextField
-                      name="sortorder"
-                      type="number"
-                      id="sortorder"
-                      label="Sort Order"
-                      variant="standard"
-                      focused
-                      value={values.sortorder}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.sortorder && !!errors.sortorder}
-                      helperText={touched.sortorder && errors.sortorder}
-                      sx={{ gridColumn: "span 2" }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
-                    />
-                    <Box>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="disable"
-                        id="disable"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
-                      />
-
-                      <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
                   {/* </FormControl> */}
                 </Box>
                 <Box

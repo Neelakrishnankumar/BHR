@@ -41,6 +41,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { formGap } from "../../../ui-components/utils";
 import { SingleFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
 import store from "../../..";
+import * as Yup from "yup";
 // import CryptoJS from "crypto-js";
 const Editlocation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -63,8 +64,32 @@ const Editlocation = () => {
   // const CompanyID = sessionStorage.getItem("compID");
   //console.log(CompanyID,"comppppid");
 
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+    const [errorMsgData, setErrorMsgData] = useState(null);
+    const [validationSchema, setValidationSchema] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {};
+
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.GeoLoc.code);
+        }
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -218,8 +243,8 @@ const Editlocation = () => {
               >
                 {mode === "E" ? `Location(${rowData.LocationName})` : "Location(New)"}
 
-                 {/* {`Location(${rowData.LocationName})`} */}
-                 
+                {/* {`Location(${rowData.LocationName})`} */}
+
               </Typography>
 
               {/* <Typography variant="h3">Location</Typography> */}
@@ -248,7 +273,7 @@ const Editlocation = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={LocationSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -273,7 +298,7 @@ const Editlocation = () => {
                     },
                   }}
                 >
-                  <TextField
+                  {/* <TextField
                     name="code"
                     type="text"
                     id="code"
@@ -288,7 +313,63 @@ const Editlocation = () => {
                     helperText={touched.code && errors.code}
                     sx={{ gridColumn: "span 2" }}
                     autoFocus
-                  />
+                  /> */}
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      placeholder="Auto"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        },
+                         gridColumn: "span 2"
+                      }}
+                      InputProps={{ readOnly: true }}
+                    // autoFocus
+                    />
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                        },
+                        gridColumn: "span 2"
+                      }}
+                      autoFocus
+                      
+                    />
+                  )}
                   <TextField
                     name="name"
                     type="text"
@@ -302,6 +383,7 @@ const Editlocation = () => {
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     sx={{ gridColumn: "span 2" }}
+                    autoFocus={CompanyAutoCode == "Y"}
                   />
                   <TextField
                     name="address"
