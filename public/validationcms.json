@@ -5,9 +5,15 @@
         "rank": "Please Enter the Rank"
     },
     "Department": {
-        "Code": "Please Enter the Code",
-        "Name": "Please Enter the Description",
-        "Loc": "Please Enter the Location"
+        "Code": "Please fill the Code",
+        "Name": "Please fill the Description",
+        "Loc": "Please fill the Location"
+    },
+    "GeoLoc": {
+        "code": "Please fill the Code"
+    },
+    "Geogate": {
+        "code": "Please fill the Code"
     },
     "Project": {
         "Code": "Please Enter the Code",
@@ -185,5 +191,15 @@
     "Manager": {
         "Level": "Please Enter the Level",
         "manager": "Please Enter the Manager"
+    },
+    "SkillGlowCategory":{
+        "Code":"Please fill the Code",
+        "Name":"Please fill the Name"
+    },
+    "SkillGlowSession":{
+        "Code":"Please fill the Code",
+        "Name":"Please fill the Name"
     }
+
+
 }
