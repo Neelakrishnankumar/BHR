@@ -17,11 +17,11 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import dayjs from "dayjs";
@@ -38,15 +38,72 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { formGap } from "../../../ui-components/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import toast from "react-hot-toast";
+import { SingleFormikSkillAutocomplete } from "./SkillGlowAutocomplete";
 
 const CreateCandidates = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleClick = () => {
-    navigate("/Apps/SkillGlow/SkillGlowList");
-  };
-  const handleClick2 = () => {
-    navigate("/Apps/SkillGlow/SkillGlowList/CandidateList");
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const recID = params.id;
+  const accessID = params.accessID;
+  const screenName = params.screenName;
+  const mode = params.Mode;
+  const Assessmentid = params.parentID2;
+  const QuestionID = params.parentID1;
+
+  const CompanyID = sessionStorage.getItem("compID");
+  const state = location.state || {};
+
+  const answerType = state.AnswerType;
+
+  const Data = useSelector((state) => state.formApi.Data);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const isLoading = useSelector((state) => state.formApi.postLoading);
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  useEffect(() => {
+    dispatch(getFetchData({ accessID, get: "get", recID }));
+  }, []);
+
+  const ScheduleSaveFn = async (values) => {
+    let action =
+      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      AssessmentID: values?.assessment?.RecordID || 0,
+      EmployeeID: QuestionID,
+      Date: values.Date,
+      Targeteddate: values.Targeteddate,
+      Sessionstartdate: values.Sessionstartdate,
+      Firstattdate: values.Firstattdate,
+      Firstattscore: values.Firstattscore,
+      Firstattduration: values.Firstattduration,
+      Lastattdate: values.Lastattdate,
+      Lastattscore: values.Lastattscore,
+      Lastattduration: values.Lastattduration,
+      Status: values.Status,
+      Sortorder: values.Sortorder,
+      Disable: isCheck,
+    };
+
+    const response = await dispatch(postData({ accessID, action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
   };
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
@@ -93,6 +150,7 @@ const CreateCandidates = () => {
   const [value, setValue] = useState(null);
 
   const initialValues = {
+    assessment: null,
     candidate: "",
     targetScore: "0",
     targetAttempt: "0",
@@ -171,7 +229,9 @@ const CreateCandidates = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")}
+                    onClick={() =>
+                      navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")
+                    }
                   >
                     List Of Schedule
                   </Typography>
@@ -231,137 +291,27 @@ const CreateCandidates = () => {
                     },
                   }}
                 >
-                  {/* DROPDOWN */}
-
-                  {/* <FormControl
-                    focused
-                    variant="standard"
-                    sx={{ background: "#ffffff" }}
-                  >
-                    <InputLabel id="candidate">Select Candidate</InputLabel>
-                    <Select
-                      labelId="question-type-label"
-                      // value={values.QType}
-                      // onChange={handleChange}
-                      label="Select Candidate"
-                      name="candidate"
-                      id="candidate"
-                      required
-                      value={values.candidate}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
-                    >
-                      <MenuItem value={10}>Neela Krishnan</MenuItem>
-                      <MenuItem value={20}>Mani</MenuItem>
-                      <MenuItem value={30}>Sudha</MenuItem>
-                    </Select>
-                  </FormControl> */}
-                  <FormControl
-                    focused
-                    variant="standard"
-                    sx={{ background: "#ffffff" }}
-                  >
-                    <InputLabel id="candidate">Select Assessment</InputLabel>
-                    <Select
-                      labelId="question-type-label"
-                      // value={values.QType}
-                      // onChange={handleChange}
-                      label="Select Candidate"
-                      name="candidate"
-                      id="candidate"
-                      required
-                      value={values.candidate}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
-                    >
-                      <MenuItem value={10}>Quality Assurance</MenuItem>
-                      <MenuItem value={20}>React JS</MenuItem>
-                      <MenuItem value={30}>React Native</MenuItem>
-                      <MenuItem value={40}>Basic Office Skills</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  {/* TARGET ATTEMPT */}
-
-                  {/* <TextField
-                    variant="standard"
-                    focused
-                    type="number"
-                    name="targetAttempt"
-                    label="No.Of Attempts"
-                    id="targetAttempt"
-                    value={values.targetAttempt}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={!!touched.targetAttempt && !!errors.targetAttempt}
-                    helperText={touched.targetAttempt && errors.targetAttempt}
-                    disabled
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
+                  <SingleFormikSkillAutocomplete
+                    name="assessment"
+                    label={
+                      <span>
+                        Assessment{" "}
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </span>
+                    }
+                    id="assessment"
+                    value={values.assessment}
+                    onChange={(newValue) => {
+                      console.log(newValue,'---------------');
+                      
+                      setFieldValue("assessment", newValue);
                     }}
-                  /> */}
-
-                  {/* TARGET SCORE */}
-                  {/* <TextField
-                    name="targetScore"
-                    id="targetScore"
-                    focused
-                    variant="standard"
-                    label="Score"
-                    type="number"
-                    value={values.targetScore}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={!!touched.targetScore && !!errors.targetScore}
-                    helperText={touched.targetScore && errors.targetScore}
-                    disabled
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  /> */}
-
-                  {/* CUT OFF */}
-                  {/* 
-                  <TextField
-                    name="cutOff"
-                    id="cutOff"
-                    focused
-                    variant="standard"
-                    label="Cut Off (In Minutes)"
-                    type="number"
-                    value={values.cutOff}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={!!touched.cutOff && !!errors.cutOff}
-                    helperText={touched.cutOff && errors.cutOff}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  /> */}
-
+                    error={!!touched.assessment && !!errors.assessment}
+                    helperText={touched.assessment && errors.assessment}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
+                  />
                   {/* DATE PICKER */}
                   <TextField
                     name="expiryDate"

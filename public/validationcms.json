@@ -185,5 +185,10 @@
     "Manager": {
         "Level": "Please fill the Level",
         "manager": "Please fill the Manager"
+    },
+    "SkillGlowCategory":{
+        "Code":"Please fill the Code",
+        "Name":"Please fill the Name"
     }
+
 }
