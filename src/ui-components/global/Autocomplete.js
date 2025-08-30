@@ -253,6 +253,7 @@ console.log(options, "auto options");
       limitTags={1}
       options={options}
       loading={loading}
+      
       value={value}
       isOptionEqualToValue={(option, value) => option.Name === value.Name}
       onChange={(event, newValue) => onChange(newValue)}
@@ -261,8 +262,9 @@ console.log(options, "auto options");
         <TextField
           {...params}
           label={props.label || "Select Options"}
-          error={!!error}
-          helperText={error}
+           {...props}
+           variant="standard"
+           focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (

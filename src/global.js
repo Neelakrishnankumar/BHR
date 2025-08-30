@@ -8,8 +8,7 @@ var baseurl = "https://dvmtapi.bexatm.com/"
 // var APIurl = "https://phpmigrationapi.bexatm.com/hr/api/"
 // var baseurl = "https://phpmigrationapi.bexatm.com/"
 
- const initialState = {  
-//hr
+const initialState = {  
 baseApiUrl: APIurl,
 listViewurl: APIurl + 'wslistview_mysql.php',
 loginUrl:APIurl + 'LController.php',
@@ -109,7 +108,7 @@ geolocationupdateUrl:APIurl + "EmpGeoLocationUpdate.php",
 LeaveTypeurl: APIurl +"APIController.php",
 subsNewUrl: APIurl +"SubscriptionPostController.php",
 
-  };
+};
 
 export const getUrlSlice = createSlice({
   name: "globalurl",
