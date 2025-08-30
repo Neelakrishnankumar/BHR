@@ -224,8 +224,7 @@ const CreateQuestion = () => {
                 display={isNonMobile ? "flex" : "none"}
                 borderRadius="3px"
                 alignItems="center"
-              > 
-            
+              >
                 <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"
@@ -235,7 +234,9 @@ const CreateQuestion = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR278/List%20Of%20Categories")}
+                    onClick={() =>
+                      navigate("/Apps/TR278/List%20Of%20Categories")
+                    }
                   >
                     List Of Category ({state.BreadCrumb1})
                   </Typography>
@@ -244,10 +245,11 @@ const CreateQuestion = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID3}`,{state:{...state}}
-                 );
-                }}
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID3}`,
+                        { state: { ...state } }
+                      );
+                    }}
                   >
                     List Of Assessment ({state.BreadCrumb2})
                   </Typography>
@@ -255,12 +257,12 @@ const CreateQuestion = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-
-                onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID3}/${params.parentID2}`,{state:{...state}}
-                 );
-                }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID3}/${params.parentID2}`,
+                        { state: { ...state } }
+                      );
+                    }}
                   >
                     List Of Question Groups ({state.BreadCrumb3})
                   </Typography>
@@ -268,11 +270,9 @@ const CreateQuestion = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() =>
-                      navigate(-1)
-                    }
+                    onClick={() => navigate(-1)}
                   >
-                    List Of Questions 
+                    List Of Questions
                   </Typography>
                   <Typography
                     variant="h5"
@@ -498,9 +498,7 @@ const CreateQuestion = () => {
                           gap: "10px",
                         }}
                       >
-                        <Box sx={{ width: "40px", textAlign: "left" }}>
-                          S.no
-                        </Box>
+                        <Box sx={{ width: "40px", textAlign: "left" }}>SL#</Box>
                         <Box sx={{ flex: 1 }}>Option</Box>
                         <Box sx={{ width: "155px" }}>Marks</Box>
                       </Box>
@@ -576,10 +574,9 @@ const CreateQuestion = () => {
                                 touched[`Rate${idx + 1}`] &&
                                 errors[`Rate${idx + 1}`]
                               }
-                              sx={{
-                                // backgroundColor: "#ffffff", // Set the background to white
-                                "& .MuiFilledInput-root": {
-                                  backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
                                 },
                               }}
                             />
@@ -644,6 +641,11 @@ const CreateQuestion = () => {
                                 touched[`Rate${i + 1}`] &&
                                 errors[`Rate${i + 1}`]
                               }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
                             />
                           </Box>
                         </Box>
@@ -705,6 +707,11 @@ const CreateQuestion = () => {
                                 touched[`Rate${i + 1}`] &&
                                 errors[`Rate${i + 1}`]
                               }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
                             />
                           </Box>
                         </Box>
@@ -732,130 +739,7 @@ const CreateQuestion = () => {
                           </Box>
                           <Box sx={{ flex: 1 }}>
                             <TextField
-                               fullWidth
-                              name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
-                              variant="standard"
-                              value={values[`Option${i + 1}`]}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={
-                                touched[`Option${i + 1}`] &&
-                                Boolean(errors[`Option${i + 1}`])
-                              }
-                              helperText={
-                                touched[`Option${i + 1}`] &&
-                                errors[`Option${i + 1}`]
-                              }
-                            />
-                          </Box>
-                          <Box sx={{ width: "155px" }}>
-                            <TextField
-                               fullWidth
-                              name={`Rate${i + 1}`}
-                              label="Marks"
-                              variant="standard"
-                              value={values[`Rate${i + 1}`]}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={
-                                touched[`Rate${i + 1}`] &&
-                                Boolean(errors[`Rate${i + 1}`])
-                              }
-                              helperText={
-                                touched[`Rate${i + 1}`] &&
-                                errors[`Rate${i + 1}`]
-                              }
-                            />
-                          </Box>
-                        </Box>
-                      ))}
-
-                    {answerType === "T/F" &&
-                      Array.from({ length: 2 }).map((_, i) => (
-                        <Box
-                          key={i}
-                          sx={{
-                            display: "flex",
-                            mb: 1,
-                            gap: 2,
-                            alignItems: "center",
-                          }}
-                        >
-                          {/* <Box sx={{ flex: 1 }}>
-                                  <FormControlLabel
-                                    value={label}
-                                    control={<Radio />}
-                                    label={label}
-                                  />
-                                </Box> */}
-                          <Box sx={{ width: "40px", textAlign: "center" }}>
-                            <Typography variant="body1">{i + 1}</Typography>
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <TextField
-                               fullWidth
-                              name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
-                              variant="standard"
-                              value={values[`Option${i + 1}`]}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={
-                                touched[`Option${i + 1}`] &&
-                                Boolean(errors[`Option${i + 1}`])
-                              }
-                              helperText={
-                                touched[`Option${i + 1}`] &&
-                                errors[`Option${i + 1}`]
-                              }
-                            />
-                          </Box>
-                          <Box sx={{ width: "155px" }}>
-                            <TextField
-                               fullWidth
-                              name={`Rate${i + 1}`}
-                              label="Marks"
-                              variant="standard"
-                              value={values[`Rate${i + 1}`]}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={
-                                touched[`Rate${i + 1}`] &&
-                                Boolean(errors[`Rate${i + 1}`])
-                              }
-                              helperText={
-                                touched[`Rate${i + 1}`] &&
-                                errors[`Rate${i + 1}`]
-                              }
-                            />
-                          </Box>
-                        </Box>
-                      ))}
-                    {answerType === "Y/N" &&
-                      Array.from({ length: 2 }).map((_, i) => (
-                        <Box
-                          key={i}
-                          sx={{
-                            display: "flex",
-                            mb: 1,
-                            gap: 2,
-                            alignItems: "center",
-                          }}
-                        >
-                          {/* <Box sx={{ flex: 1 }}>
-                                  <FormControlLabel
-                                    value={label}
-                                    control={<Radio />}
-                                    label={label}
-                                  />
-                                </Box> */}
-                          <Box sx={{ width: "40px", textAlign: "center" }}>
-                            <Typography variant="body1">{i + 1}</Typography>
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <TextField
-                               fullWidth
+                              fullWidth
                               name={`Option${i + 1}`}
                               label={`Option ${i + 1}`}
                               variant="standard"
@@ -889,6 +773,144 @@ const CreateQuestion = () => {
                                 touched[`Rate${i + 1}`] &&
                                 errors[`Rate${i + 1}`]
                               }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
+                            />
+                          </Box>
+                        </Box>
+                      ))}
+
+                    {answerType === "T/F" &&
+                      Array.from({ length: 2 }).map((_, i) => (
+                        <Box
+                          key={i}
+                          sx={{
+                            display: "flex",
+                            mb: 1,
+                            gap: 2,
+                            alignItems: "center",
+                          }}
+                        >
+                          {/* <Box sx={{ flex: 1 }}>
+                                  <FormControlLabel
+                                    value={label}
+                                    control={<Radio />}
+                                    label={label}
+                                  />
+                                </Box> */}
+                          <Box sx={{ width: "40px", textAlign: "center" }}>
+                            <Typography variant="body1">{i + 1}</Typography>
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            <TextField
+                              fullWidth
+                              name={`Option${i + 1}`}
+                              label={`Option ${i + 1}`}
+                              variant="standard"
+                              value={values[`Option${i + 1}`]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={
+                                touched[`Option${i + 1}`] &&
+                                Boolean(errors[`Option${i + 1}`])
+                              }
+                              helperText={
+                                touched[`Option${i + 1}`] &&
+                                errors[`Option${i + 1}`]
+                              }
+                            />
+                          </Box>
+                          <Box sx={{ width: "155px" }}>
+                            <TextField
+                              fullWidth
+                              name={`Rate${i + 1}`}
+                              label="Marks"
+                              variant="standard"
+                              value={values[`Rate${i + 1}`]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={
+                                touched[`Rate${i + 1}`] &&
+                                Boolean(errors[`Rate${i + 1}`])
+                              }
+                              helperText={
+                                touched[`Rate${i + 1}`] &&
+                                errors[`Rate${i + 1}`]
+                              }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
+                            />
+                          </Box>
+                        </Box>
+                      ))}
+                    {answerType === "Y/N" &&
+                      Array.from({ length: 2 }).map((_, i) => (
+                        <Box
+                          key={i}
+                          sx={{
+                            display: "flex",
+                            mb: 1,
+                            gap: 2,
+                            alignItems: "center",
+                          }}
+                        >
+                          {/* <Box sx={{ flex: 1 }}>
+                                  <FormControlLabel
+                                    value={label}
+                                    control={<Radio />}
+                                    label={label}
+                                  />
+                                </Box> */}
+                          <Box sx={{ width: "40px", textAlign: "center" }}>
+                            <Typography variant="body1">{i + 1}</Typography>
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            <TextField
+                              fullWidth
+                              name={`Option${i + 1}`}
+                              label={`Option ${i + 1}`}
+                              variant="standard"
+                              value={values[`Option${i + 1}`]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={
+                                touched[`Option${i + 1}`] &&
+                                Boolean(errors[`Option${i + 1}`])
+                              }
+                              helperText={
+                                touched[`Option${i + 1}`] &&
+                                errors[`Option${i + 1}`]
+                              }
+                            />
+                          </Box>
+                          <Box sx={{ width: "155px" }}>
+                            <TextField
+                              fullWidth
+                              name={`Rate${i + 1}`}
+                              label="Marks"
+                              variant="standard"
+                              value={values[`Rate${i + 1}`]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={
+                                touched[`Rate${i + 1}`] &&
+                                Boolean(errors[`Rate${i + 1}`])
+                              }
+                              helperText={
+                                touched[`Rate${i + 1}`] &&
+                                errors[`Rate${i + 1}`]
+                              }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
                             />
                           </Box>
                         </Box>
@@ -928,20 +950,33 @@ const CreateQuestion = () => {
                         {/* Expected Answer field */}
                         <Box sx={{ flex: 1 }}>
                           <TextField
-                            variant="outlined"
-                            size="small"
-                            placeholder="Enter Expected Answer"
                             fullWidth
+                            name="Option1"
+                            label="Option"
+                            variant="standard"
+                            value={values.Option1}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.Option1 && Boolean(errors.Option1)}
+                            helperText={touched.Option1 && errors.Option1}
                           />
                         </Box>
 
                         {/* Marks field */}
                         <Box sx={{ width: "155px" }}>
                           <TextField
-                            variant="outlined"
-                            size="small"
-                            placeholder="Enter Marks"
                             fullWidth
+                            name="Rate1"
+                            label="Rate"
+                            variant="standard"
+                            value={values.Rate1}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.Rate1 && Boolean(errors.Rate1)}
+                            helperText={touched.Rate1 && errors.Rate1}
+                            sx={{
+                              "& .MuiInputBase-input": { textAlign: "right" },
+                            }}
                           />
                         </Box>
                       </Box>

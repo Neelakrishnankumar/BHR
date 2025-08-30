@@ -623,12 +623,12 @@ const child = {
           UGA_ACCESSIDS: "TR122",
         },
         {
-          name: "Insight",
+          name: "Insights",
           id: 5849,
           url: "/Apps/TR286/List of Employees",
           // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
           icon: (
-            <Tooltip title="Insight">
+            <Tooltip title="Insights">
               <DashboardOutlinedIcon color="info" />
             </Tooltip>
           ),
