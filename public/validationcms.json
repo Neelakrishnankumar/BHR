@@ -195,6 +195,11 @@
     "SkillGlowCategory":{
         "Code":"Please fill the Code",
         "Name":"Please fill the Name"
+    },
+    "SkillGlowSession":{
+        "Code":"Please fill the Code",
+        "Name":"Please fill the Name"
     }
+
 
 }

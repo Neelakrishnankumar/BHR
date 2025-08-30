@@ -58,6 +58,28 @@ const CreateCategoryMain = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
 
+  //VALIDATION
+  const [errorMsgData, setErrorMsgData] = useState(null);
+
+  const [validationSchema, setValidationSchema] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        //Permission
+        const schema = Yup.object().shape({
+          code: Yup.string().required(data.SkillGlowCategory.Code),
+          name: Yup.string().required(data.SkillGlowCategory.Name),
+        });
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
+
   const CompanyID = sessionStorage.getItem("compID");
 
   const Data = useSelector((state) => state.formApi.Data);
@@ -68,7 +90,8 @@ const CreateCategoryMain = () => {
   }, []);
 
   const CategorySaveFn = async (values) => {
-    let action = mode === "A" ? "insert" : mode === "D" ? "harddelete": "update";
+    let action =
+      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
 
     var isCheck = "N";
     if (values.disable == true) {
@@ -122,12 +145,12 @@ const CreateCategoryMain = () => {
     disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Please Enter Name Here"),
-    code: Yup.string().required("Choose A Code"),
-    sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   name: Yup.string().required("Please Enter Name Here"),
+  //   code: Yup.string().required("Choose A Code"),
+  //   sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   disable: Yup.boolean(),
+  // });
 
   return (
     <React.Fragment>
@@ -163,11 +186,7 @@ const CreateCategoryMain = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  {mode == "A"
-                    ? "New"
-                    : mode == "D"
-                    ? "Delete"
-                    : "Edit"}
+                  {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -226,7 +245,15 @@ const CreateCategoryMain = () => {
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Code"
+                    //label="Code"
+                    label={
+                      <span>
+                        Code{" "}
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </span>
+                    }
                     //placeholder="Category Code"
                     value={values.code}
                     onBlur={handleBlur}
@@ -247,7 +274,15 @@ const CreateCategoryMain = () => {
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Name"
+                    //label="Name"
+                    label={
+                      <span>
+                        Name{" "}
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </span>
+                    }
                     //placeholder="Category Name"
                     value={values.name}
                     onBlur={handleBlur}
@@ -314,15 +349,14 @@ const CreateCategoryMain = () => {
                   padding={1}
                   gap={2}
                 >
-                
-                    <LoadingButton
-                      color={mode == "D" ?"error":"secondary"}
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                     {mode == "D" ? "Delete" : "Save"} 
-                    </LoadingButton>
+                  <LoadingButton
+                    color={mode == "D" ? "error" : "secondary"}
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
+                    {mode == "D" ? "Delete" : "Save"}
+                  </LoadingButton>
                   <Button
                     variant="contained"
                     color="warning"

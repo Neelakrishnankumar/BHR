@@ -262,7 +262,7 @@ const CreateSession = () => {
             </Box>
           </Box>
         </Paper>
-
+ {!getLoading ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={initialValues}
@@ -511,7 +511,9 @@ const CreateSession = () => {
               </Form>
             )}
           </Formik>
-        </Paper>
+        </Paper> ) : (
+          false)}
+        
       </React.Fragment>
     </>
   );

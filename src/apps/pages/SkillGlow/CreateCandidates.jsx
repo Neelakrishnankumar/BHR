@@ -42,6 +42,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import { SingleFormikSkillAutocomplete } from "./SkillGlowAutocomplete";
+import { LoadingButton } from "@mui/lab";
 
 const CreateCandidates = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const CreateCandidates = () => {
   const accessID = params.accessID;
   const screenName = params.screenName;
   const mode = params.Mode;
-  const Assessmentid = params.parentID2;
+  const EmpId = params.parentID2;
   const QuestionID = params.parentID1;
 
   const CompanyID = sessionStorage.getItem("compID");
@@ -65,7 +66,7 @@ const CreateCandidates = () => {
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
-    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -82,7 +83,7 @@ const CreateCandidates = () => {
     const idata = {
       RecordID: recID,
       AssessmentID: values?.assessment?.RecordID || 0,
-      EmployeeID: QuestionID,
+      EmployeeID: EmpId,
       Date: values.Date,
       Targeteddate: values.Targeteddate,
       Sessionstartdate: values.Sessionstartdate,
@@ -151,31 +152,16 @@ const CreateCandidates = () => {
 
   const initialValues = {
     assessment: null,
-    candidate: "",
-    targetScore: "0",
-    targetAttempt: "0",
-    //cutOff: "",
-    expiryDate: null,
-    sortOrder: "",
-    disable: false,
+    Date: Data.Date || new Date().toISOString().split("T")[0],
+    Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date ,
+    Sortorder: Data.Sortorder || "",
+    Disable: Data.Disable == "Y" ? true : false,
   };
 
   const validationSchema = Yup.object({
-    candidate: Yup.string().required("Please Enter Candidate Here"),
-    expiryDate: Yup.string().required("Choose a date"),
+    //assessment: Yup.string().required("Please Enter Candidate Here"),
+    //Date: Yup.string().required("Choose a date"),
     sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    targetScore: Yup.number()
-      .min(0, "No negative numbers")
-      .nullable()
-      .required("Please choose a Score"),
-    targetAttempt: Yup.number()
-      .min(0, "No negative numbers")
-      .nullable()
-      .required("Please choose No.Of Attempts"),
-    // cutOff: Yup.number()
-    //   .min(0, "No negative numbers")
-    //   .nullable()
-    //   .required("Please choose Cut Off Cut (In Minutes)"),
     disable: Yup.boolean(),
   });
   return (
@@ -261,154 +247,175 @@ const CreateCandidates = () => {
             </Box>
           </Box>
         </Paper>
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={(values) => {
-              console.log(values);
+
+        {!getLoading ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={(values, { resetForm }) => {
+              setTimeout(() => {
+                ScheduleSaveFn(values, resetForm);
+              }, 100);
+              console.log(values, "----Session.");
             }}
-            validationSchema={validationSchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleSubmit,
-              setFieldTouched,
-            }) => (
-              <Form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  <SingleFormikSkillAutocomplete
-                    name="assessment"
-                    label={
-                      <span>
-                        Assessment{" "}
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </span>
-                    }
-                    id="assessment"
-                    value={values.assessment}
-                    onChange={(newValue) => {
-                      console.log(newValue,'---------------');
-                      
-                      setFieldValue("assessment", newValue);
-                    }}
-                    error={!!touched.assessment && !!errors.assessment}
-                    helperText={touched.assessment && errors.assessment}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
-                  />
-                  {/* DATE PICKER */}
-                  <TextField
-                    name="expiryDate"
-                    type="date"
-                    id="expiryDate"
-                    label="Date"
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    //value={values.expiryDate}
-                    // value={
-                    //   new Date(Date.now() + 2 * 86400000)
-                    //     .toISOString()
-                    //     .split("T")[0]
-                    // } // current date + 1 day
-                    // InputProps={{
-                    //   readOnly: true,
-                    // }}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.expiryDate && !!errors.expiryDate}
-                    helperText={touched.expiryDate && errors.expiryDate}
-                    sx={{ background: "" }}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                  />
+            enableReinitialize={true}
+              validationSchema={validationSchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                handleSubmit,
+                setFieldTouched,
+              }) => (
 
-                  {/* SORT ORDER */}
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    label="Sort Order"
-                    value={values.sortOrder}
-                    id="sortOrder"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    name="sortOrder"
-                    error={!!touched.sortOrder && !!errors.sortOrder}
-                    helperText={touched.sortOrder && errors.sortOrder}
-                    sx={{ background: "" }}
-                    focused
-                    onWheel={(e) => e.target.blur()}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
+                <Form onSubmit={handleSubmit}>
+                                  {JSON.stringify(errors)}
 
-                  {/* CHECKBOX */}
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="disable"
-                        checked={values.disable}
-                        onChange={handleChange}
-                      />
-                    }
-                    label="Disable"
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     sx={{
-                      marginTop: "20px",
-                      "@media (max-width:500px)": {
-                        marginTop: 0,
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
-                  />
-                </Box>
-                {/* BUTTONS */}
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  gap={2}
-                >
-                  <Button type="submit" variant="contained" color="secondary">
-                    Save
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() =>
-                      navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")
-                    }
                   >
-                    Cancel
-                  </Button>
-                </Box>
-              </Form>
-            )}
-          </Formik>
-        </Paper>
+                    <SingleFormikSkillAutocomplete
+                      name="assessment"
+                      label={
+                        <span>
+                          Assessment{" "}
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </span>
+                      }
+                      id="assessment"
+                      value={values.assessment}
+                      onChange={(newValue) => {
+                        console.log(newValue, "---------------");
+
+                        setFieldValue("assessment", newValue);
+                      }}
+                      error={!!touched.assessment && !!errors.assessment}
+                      helperText={touched.assessment && errors.assessment}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
+                    />
+                    {/* DATE PICKER */}
+                    {/* <TextField
+                      name="Date"
+                      type="date"
+                      id="Date"
+                      label="Date"
+                      variant="standard"
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.expiryDate && !!errors.expiryDate}
+                      helperText={touched.expiryDate && errors.expiryDate}
+                      sx={{ background: "" }}
+                    /> */}
+                    <TextField
+                      name="Date"
+                      type="text"
+                      id="Date"
+                      label="Date"
+                      variant="standard"
+                      focused
+                      value={values.Date} 
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.Date && !!errors.Date}
+                      helperText={touched.Date && errors.Date}
+                      sx={{ background: "" }}
+                      inputProps={{ readOnly : true}}
+                    />
+
+                    {/* SORT ORDER */}
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      label="Sort Order"
+                      value={values.Sortorder}
+                      id="Sortorder"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      name="Sortorder"
+                      error={!!touched.Sortorder && !!errors.Sortorder}
+                      helperText={touched.Sortorder && errors.Sortorder}
+                      sx={{ background: "" }}
+                      focused
+                      onWheel={(e) => e.target.blur()}
+                      onInput={(e) => {
+                        e.target.value = Math.max(0, parseInt(e.target.value))
+                          .toString()
+                          .slice(0, 8);
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
+                    />
+
+                    {/* CHECKBOX */}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="Disable"
+                          checked={values.Disable}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Disable"
+                      sx={{
+                        marginTop: "20px",
+                        "@media (max-width:500px)": {
+                          marginTop: 0,
+                        },
+                      }}
+                    />
+                  </Box>
+                  {/* BUTTONS */}
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap={2}
+                  >
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      color={mode == "D" ? "error" : "secondary"}
+                      loading={isLoading}
+                    >
+                      {mode == "D" ? "Delete" : "Save"}
+                    </LoadingButton>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={() =>
+                        navigate(-1)
+                      }
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </Form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
       </React.Fragment>
     </>
   );
