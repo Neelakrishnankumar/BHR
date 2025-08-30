@@ -9,6 +9,12 @@
         "Name": "Please fill the Description",
         "Loc": "Please fill the Location"
     },
+    "GeoLoc": {
+        "code": "Please fill the Code"
+    },
+    "Geogate": {
+        "code": "Please fill the Code"
+    },
     "Project": {
         "Code": "Please fill the Code",
         "name": "Please fill the Description",
