@@ -83,6 +83,7 @@ const CreateCandidates = () => {
     const idata = {
       RecordID: recID,
       AssessmentID: values?.assessment?.RecordID || 0,
+      AssessmentName: values?.assessment?.Name || "",
       EmployeeID: EmpId,
       Date: values.Date,
       Targeteddate: values.Targeteddate,
@@ -151,8 +152,8 @@ const CreateCandidates = () => {
   const [value, setValue] = useState(null);
 
   const initialValues = {
-    assessment: null,
-    Date: Data.Date || new Date().toISOString().split("T")[0],
+    assessment: Data.AssessmentID ? {RecordID: Data.AssessmentID,Name: Data.AssessmentName} :null,
+    // Date: Data.Date || new Date().toISOString().split("T")[0],
     Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date ,
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
@@ -273,8 +274,6 @@ const CreateCandidates = () => {
               }) => (
 
                 <Form onSubmit={handleSubmit}>
-                                  {JSON.stringify(errors)}
-
                   <Box
                     display="grid"
                     gap={formGap}
@@ -299,32 +298,15 @@ const CreateCandidates = () => {
                       id="assessment"
                       value={values.assessment}
                       onChange={(newValue) => {
-                        console.log(newValue, "---------------");
-
                         setFieldValue("assessment", newValue);
                       }}
                       error={!!touched.assessment && !!errors.assessment}
                       helperText={touched.assessment && errors.assessment}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
                     />
-                    {/* DATE PICKER */}
-                    {/* <TextField
-                      name="Date"
-                      type="date"
-                      id="Date"
-                      label="Date"
-                      variant="standard"
-                      focused
-                      inputFormat="YYYY-MM-DD"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.expiryDate && !!errors.expiryDate}
-                      helperText={touched.expiryDate && errors.expiryDate}
-                      sx={{ background: "" }}
-                    /> */}
                     <TextField
                       name="Date"
-                      type="text"
+                      type="date"
                       id="Date"
                       label="Date"
                       variant="standard"

@@ -1343,7 +1343,6 @@ const Editemployee = () => {
       if (field == "action") {
 
 
-        console.log(LeaveCondata, "--LeaveCondata");
         setFunEmpRecID(rowData.RecordID);
         // SetFunctionLookup({
         // RecordID: rowData.FunctionsID,
@@ -1418,17 +1417,16 @@ const Editemployee = () => {
           igst: rowData.Igst,
           tds: rowData.Tds,
         });
-        console.log(contractorData, contractorData);
-        // setselectLeaveconLTData({
-        //   RecordID: rowData.LeaveTypeID,
-        //   Code: "",
-        //   Name: rowData.LeavePart,
-        // });
-        setFieldValue("leavetype", {
+        setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
           Code: "",
           Name: rowData.LeavePart,
-        })
+        });
+        // setFieldValue("leavetype", {
+        //   RecordID: rowData.LeaveTypeID,
+        //   Code: "",
+        //   Name: rowData.LeavePart,
+        // })
 
         setLeaveCondata({
           recordID: rowData.RecordID,
@@ -1450,10 +1448,7 @@ const Editemployee = () => {
   };
 
   const selectCellRowDataMGR = ({ rowData, mode, field, setFieldValue }) => {
-    console.log(
-      "🚀 ~ file: Editmanager.jsx:178 ~ selectCellRowDataMGR ~ rowData:",
-      rowData
-    );
+
 
     setFunMode(mode);
     setLaoMode(mode);
@@ -1471,20 +1466,19 @@ const Editemployee = () => {
       })
 
     } else {
-      console.log(rowData, "--rowData");
       if (field == "action") {
-        // SetDesignationLookup({
+        SetDesignationLookup({
+          RecordID: rowData.EmployeeID,
+          DesignationID: rowData.DesignationID,
+          Code: rowData.EmployeeCode,
+          Name: rowData.EmployeeName,
+        });
+        // setFieldValue("manager", {
         //   RecordID: rowData.EmployeeID,
         //   DesignationID: rowData.DesignationID,
         //   Code: rowData.EmployeeCode,
         //   Name: rowData.EmployeeName,
         // });
-        setFieldValue("manager", {
-        RecordID: rowData.EmployeeID,
-          DesignationID: rowData.DesignationID,
-          Code: rowData.EmployeeCode,
-          Name: rowData.EmployeeName,
-        });
         setLevelLookup({
           levelfield: rowData.Level,
           hrmanager: rowData.HrManager == "Y" ? true : false,
@@ -1493,7 +1487,6 @@ const Editemployee = () => {
           facilitymanager: rowData.FacilityManager == "Y" ? true : false,
         });
         setFunMgrRecID(rowData.RecordID);
-        console.log(LeaveCondata, "--LeaveCondata");
       }
     }
   };
@@ -1759,6 +1752,7 @@ const Editemployee = () => {
   const LCInitialValue = {
     Code: Data.Code,
     Name: Data.Name,
+    leavetype: LeaveconLTData ? LeaveconLTData : null,
     LeaveTypeID: LeaveCondata.LeaveTypeID,
     LeavePart: "N",
     totaldays: LeaveCondata.totaldays,
@@ -1828,105 +1822,6 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
-  // const LCsaveFn = async (values, resetForm, types) => {
-  //   setLoading(true);
-  //   if (types == "harddelete") {
-  //     if (LeaveCondata.recordID == "") {
-  //       toast.error("Please select the data");
-  //       return;
-  //     }
-  //   }
-  //   // if (selectproLookupData.PROlookupCode == "") {
-  //   //   toast.error("Please Choose Process Lookup");
-  //   //   return;
-  //   // }
-
-  //   // if (values.Comments == "") {
-  //   //   toast.error("Please enter the Comments");
-  //   //   return;
-  //   // }
-  //   // if (values.Skills == "") {
-  //   //   toast.error("Please enter the Skills");
-  //   //   return;
-  //   // }
-
-  //   console.log(values);
-
-  //   var saveData = "";
-  //   var type = "";
-
-  //   if (types === "harddelete") {
-  //     type = "harddelete";
-  //     saveData = {
-  //       RecordID: LeaveCondata.recordID,
-  //       CompanyID,
-  //       Year: values.Year,
-  //       EmployeeID: recID,
-  //       LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
-  //       LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
-  //       TotalDays: Number(values.totaldays),
-  //       AvailDays: Number(values.availableleave),
-  //       EligibleDays: Number(values.totaldays) - Number(values.availableleave),
-  //       LeavePart: "N",
-  //     };
-  //     console.log(LeaveCondata.recordID, "RecordID");
-  //   } else {
-  //     setLoading(true);
-  //     if (boMode == "A") {
-  //       saveData = {
-  //         RecordID: LeaveCondata.recordID,
-  //         CompanyID,
-  //         Year: values.Year,
-  //         EmployeeID: recID,
-  //         LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
-  //         LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
-  //         TotalDays: Number(values.totaldays),
-  //         AvailDays: Number(values.availableleave),
-  //         EligibleDays: Number(values.totaldays) - Number(values.availableleave),
-  //         LeavePart: "N",
-  //       };
-  //       type = "insert";
-  //     } else {
-  //       saveData = {
-  //         RecordID: LeaveCondata.recordID,
-  //         CompanyID,
-  //         Year: values.Year,
-  //         EmployeeID: recID,
-  //         LeaveTypeID: LeaveconLTData ? LeaveconLTData.RecordID : 0,
-  //         LeaveTypeName: LeaveconLTData ? LeaveconLTData.Name : "",
-  //         TotalDays: Number(values.totaldays),
-  //         AvailDays: Number(values.availableleave),
-  //         EligibleDays: Number(values.totaldays) - Number(values.availableleave),
-  //         LeavePart: "N",
-  //       };
-  //       type = "update";
-  //     }
-  //   }
-  //   console.log("save" + JSON.stringify(saveData));
-
-  //   const response = await dispatch(
-  //     postApidata("TR249", type, saveData)
-  //   );
-  //   if (response.payload.Status == "Y") {
-  //     setLoading(false);
-  //     await dispatch(
-  //       fetchExplorelitview(
-  //         "TR249",
-  //         "Leave Configuration",
-  //         `EmployeeID='${recID}'`,
-  //         ""
-  //       )
-  //     );
-
-  //     toast.success(response.payload.Msg);
-
-  //     selectCellRowData({ rowData: {}, mode: "A", field: "" });
-  //     resetForm()
-  //   } else {
-  //     setLoading(false);
-  //     toast.error(response.payload.Msg);
-  //   }
-  // };
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
   const [levellookup, setLevelLookup] = useState({
     levelfield: "",
@@ -1938,21 +1833,16 @@ const Editemployee = () => {
   const managerInitialValue = {
     code: Data.Code,
     description: Data.Name,
-    manager: null,
+    manager: designationLookup ? designationLookup : null,
     Horizontal: Data.Horizontal === "Y" ? true : false,
     Vertical: Data.Vertical === "Y" ? true : false,
     HorizontalMimNo: Data.HorizontalMimNo,
-
     VerticalMimNo: Data.VerticalMimNo,
-
     AutoApprovalYesOrNo: Data.AutoApprovalYesOrNo === "Y" ? true : false,
     ApprovelTolerance: Data.ApprovelTolerance,
     AutoRejectionYesOrNo: Data.AutoRejectionYesOrNo === "Y" ? true : false,
     RejectionTolerance: Data.RejectionTolerance,
-
     Level: levellookup.levelfield,
-    // manager: null,
-    //level get
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
@@ -1960,26 +1850,10 @@ const Editemployee = () => {
     financemanager: levellookup.financemanager,
     projectmanager: levellookup.projectmanager,
     facilitymanager: levellookup.facilitymanager,
-    //   hrmanager: Data.HrManager === "Y",
-    // financemanager: Data.FinanceManager === "Y",
-    // projectmanager: Data.ProjectManager === "Y",
-    // facilitymanager: Data.FacilityManager === "Y",
-    //  hrmanager: checkboxvalues.hrmanager === "Y" ? true : false,
-    //   financemanager: checkboxvalues.financemanager === "Y" ? true : false,
-
-    //   projectmanager: checkboxvalues.projectmanager === "Y" ? true : false,
-
-    //   facilitymanager: checkboxvalues.facilitymanager === "Y" ? true : false,
   };
-  console.log(Data.VerticalMimNo, "VerticalMimNo");
   const [funMgrRecID, setFunMgrRecID] = useState("");
 
   const mgrFunctionFn = async (values, resetForm, del, setFieldValue) => {
-
-    // if (!designationLookup || !designationLookup.DesignationID) {
-    //   toast.error("Please select a Manager.");
-    //   return;
-    // }
     let action =
       funMode === "A" && !del
         ? "insert"
@@ -1989,7 +1863,7 @@ const Editemployee = () => {
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
-      DesignationID: designationLookup.DesignationID || 0,
+      DesignationID: values.manager.DesignationID || 0,
       // ManagerID: designationLookup.RecordID || 0,
       // ManagerName: designationLookup.Name || "",
       ManagerID: values?.manager?.RecordID,
@@ -2115,7 +1989,6 @@ const Editemployee = () => {
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
-  console.log(deploymentInitialValue);
   const Fndeployment = async (values, resetForm, del) => {
     console.log(values, "--values");
 
@@ -2247,7 +2120,6 @@ const Editemployee = () => {
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
     };
 
-    // console.log(locationLookup.locationRecordID, "????????");
     const response = await dispatch(postDeployment({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
@@ -2374,20 +2246,13 @@ const Editemployee = () => {
   };
   const getFileChange = async (event) => {
     setImgName(event.target.files[0]);
-
-    console.log(event.target.files[0]);
-
     const formData = new FormData();
     formData.append("file", event.target.files[0]);
     formData.append("type", "attachments");
 
     const fileData = await dispatch(imageUpload({ formData }));
     setImgName(fileData.payload.name);
-    console.log(">>>", fileData.payload);
-    console.log(
-      "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-      fileData
-    );
+
     if (fileData.payload.Status == "Y") {
       // console.log("I am here");
       toast.success(fileData.payload.Msg);
@@ -2418,73 +2283,6 @@ const Editemployee = () => {
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>
-        {/* <Box
-            display="flex"
-            // backgroundColor={colors.primary[400]}
-            borderRadius="3px"
-            alignItems={"center"}
-          >
-             {broken && !rtl && (
-          <IconButton
-            
-            onClick={() => toggleSidebar()}
-          >
-            <MenuOutlinedIcon />
-          </IconButton>
-        )}
-         <Box display={isNonMobile ? 'flex' : 'none'} borderRadius="3px" alignItems="center">
-        <Breadcrumbs maxItems={3} aria-label="breadcrumb" separator={<NavigateNextIcon sx={{color:'#0000D1'}}/>}>
-        <Typography variant="h5" color="#0000D1" sx={{cursor:'default'}} onClick={()=> {setScreen(0)}}>Employee</Typography>
-{show == "5" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Contact</Typography>):false}
-{show == "1" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Skills</Typography>):false}
-{show == "2" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Functions</Typography>):false}
-{show == "3" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Managers</Typography>):false}
-{show == "4" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Deployment</Typography>):false}
-{show == "6" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >List of Documents</Typography>):false} 
- {show == "7" ? (<Typography variant="h5" color="#0000D1" sx={{cursor:'default'}}  >Item Custody</Typography>):false}
-
-        </Breadcrumbs>
-        </Box>
-           
-
-          <Box display="flex">
-            {mode !== "A" ? (
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">Explore</InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  value={show}
-                  label="Explore"
-                  onChange={screenChange}
-                >
-                  <MenuItem value={0}>Employee</MenuItem>
-                  <MenuItem value={5}>Contact</MenuItem>
-                  <MenuItem value={1}>Skills</MenuItem>
-                  <MenuItem value={2}>Functions</MenuItem>
-                  <MenuItem value={3}>Managers</MenuItem>
-                  <MenuItem value={4}>Deployment</MenuItem>
-                   <MenuItem value={6}>List of Documents</MenuItem> 
-                  <MenuItem value={7}>Item Custody</MenuItem>
-
-                </Select>
-              </FormControl>
-            ) : (
-              false
-            )}
-
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton onClick={() => fnLogOut("Logout")} color="error">
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box> */}
         <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
           <Box
             display="flex"
@@ -4754,387 +4552,6 @@ const Editemployee = () => {
 
         {show == "3" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-
-            {/* <Formik
-              initialValues={managerInitialValue}
-              enableReinitialize={true}
-              onSubmit={(values, { resetForm, setFieldValue }) => {
-                setTimeout(() => {
-                  mgrFunctionFn(values, resetForm, false, setFieldValue);
-                }, 100);
-              }}
-            >
-              {({
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                isSubmitting,
-                values,
-                handleSubmit,
-                resetForm,
-                setFieldValue,
-              }) => (
-                <form
-                  //onSubmit={handleSubmit}
-
-                  onReset={() => {
-                    selectCellRowDataMGR({
-                      rowData: {},
-                      mode: "A",
-                      field: "",
-                      setFieldValue,
-                    });
-                    resetForm();
-                  }}
-                >
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="code"
-                        name="code"
-                        value={values.code}
-                        label="Code"
-                        focused
-                        inputProps={{ readOnly: true }}
-
-                      />
-
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="description"
-                        name="description"
-                        value={values.description}
-                        label="Description"
-                        focused
-                        inputProps={{ readOnly: true }}
-                      />
-                    </FormControl>
-                   
-
-                    <Stack
-                      sx={{
-                        //    width: {sm:'100%',md:'100%',lg:'100%'},
-                        //gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <Avatar
-                        variant="rounded"
-                        src={userimg}
-                        sx={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack>
-
-                   
-                    <Box
-                      m="5px 0 0 0"
-                      //height={dataGridHeight}
-                      height="50vh"
-                      sx={{
-                        "& .MuiDataGrid-root": {
-                          border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                        "& .odd-row": {
-                          backgroundColor: "",
-                          color: "", // Color for odd rows
-                        },
-                        "& .even-row": {
-                          backgroundColor: "#D3D3D3",
-                          color: "", // Color for even rows
-                        },
-                      }}
-                    >
-                      <DataGrid
-                        sx={{
-                          "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
-                          },
-                        }}
-                        rows={explorelistViewData}
-                        columns={columns}
-                        disableSelectionOnClick
-                        getRowId={(row) => row.RecordID}
-                        rowHeight={dataGridRowHeight}
-                        headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
-                        }
-                        onCellClick={(params) => {
-                          selectCellRowDataMGR({
-                            rowData: params.row,
-                            mode: "E",
-                            field: params.field,
-                            setFieldValue,
-                          });
-                        }}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                        components={{
-                          Toolbar: Employee,
-                        }}
-                        onStateChange={(stateParams) =>
-                          setRowCount(stateParams.pagination.rowCount)
-                        }
-                        loading={exploreLoading}
-                        getRowClassName={(params) =>
-                          params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                        }
-                        componentsProps={{
-                          toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
-                          },
-                        }}
-                      />
-                    </Box>
-
-                    <FormControl sx={{ gap: formGap, marginTop: "30px" }}>
-
-
-                      <TextField
-                        select
-                        fullWidth
-                        type="text"
-                        variant="standard"
-                        label={<span>Level</span>}
-                        value={values.Level}
-                        id="Level"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="Level"
-                        required
-                        focused
-                      >
-                        {Data.VerticalMimNo >= 1 && <MenuItem value="1">Level 1</MenuItem>}
-                        {Data.VerticalMimNo >= 2 && <MenuItem value="2">Level 2</MenuItem>}
-                        {Data.VerticalMimNo >= 3 && <MenuItem value="3">Level 3</MenuItem>}
-                      </TextField>
-
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                       
-
-
-                        <ProductautocompleteLevel
-                          name="manager"
-                          label="Manager"
-                          variant="outlined"
-                          id="manager"
-                          value={designationLookup}
-                          onChange={(newValue) => {
-                            SetDesignationLookup({
-                              DesignationID: newValue.DesignationID,
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
-                            });
-                          }}
-                          url={`${baseApiUrl}ManagerLevelController.php`}
-                          payload={{
-                            EmployeeID: recID,
-                            Level: values.Level || 1,
-                            CompanyID: CompanyID
-                            // You can make this dynamic if needed
-                          }}
-                          required
-                        />
-                      </Box>
-
-                     
-                      <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <FormControlLabel
-                          control={
-                            <Field
-                              as={Checkbox}
-                              type="checkbox"
-                              name="hrmanager"
-                              checked={values.hrmanager}
-                              id="hrmanager"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          }
-                          label="HR Manager"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Field
-                              as={Checkbox}
-                              type="checkbox"
-                              name="financemanager"
-                              id="financemanager"
-                              checked={values.financemanager}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          }
-                          label="Finance Manager"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Field
-                              as={Checkbox}
-                              type="checkbox"
-                              name="projectmanager"
-                              id="projectmanager"
-                              checked={values.projectmanager}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          }
-                          label="Project Manager"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Field
-                              as={Checkbox}
-                              type="checkbox"
-                              name="facilitymanager"
-                              id="facilitymanager"
-                              checked={values.facilitymanager}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          }
-                          label="Facility Manager"
-                        />
-                      </Box>
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    style={{ marginTop: "-32px" }}
-                    padding={1}
-                    gap={2}
-                  >
-                    {YearFlag == "true" ? (
-                      <LoadingButton
-                        color="secondary"
-                        variant="contained"
-                        // type="submit"
-                        onClick={mgrFunctionFn}
-                        loading={isLoading}
-                      >
-                        Save
-                      </LoadingButton>
-                    ) : (
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        disabled={true}
-                      >
-                        Save
-                      </Button>
-                    )}
-                    {YearFlag == "true" ? (
-                      <Button
-                        onClick={() =>
-                          mgrFunctionFn(values, resetForm, true, setFieldValue)
-                        }
-                        color="error"
-                        variant="contained"
-                      >
-                        Delete
-                      </Button>
-                    ) : (
-                      <Button color="error" variant="contained" disabled={true}>
-                        Delete
-                      </Button>
-                    )}
-                    <Button
-                      type="reset"
-                      color="warning"
-                      variant="contained"
-                      onClick={() => {
-                        setScreen(0);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                  <Popup
-                    title="Functions"
-                    openPopup={openFunPopup}
-                    setOpenPopup={setOpenFunPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2048"
-                      screenName="Functions"
-                      childToParent={childToParent}
-                      filterName={"CompanyID"}
-                      filterValue={CompanyID}
-                    />
-                  </Popup>
-                  <Popup
-                    title="Designations"
-                    openPopup={openDesPopup}
-                    setOpenPopup={setOpenDesPopup}
-                  >
-                    <Listviewpopup
-                      accessID="2049"
-                      screenName="Designations"
-                      childToParent={childToParent}
-                      // filterName={"ERank"}
-                      // filterValue={Data.Rank}
-                      filterName={"parentID"}
-                      filterValue={`${CompanyID}' AND EmployeeID='${recID}`}
-                    />
-                  </Popup>
-                </form>
-              )}
-            </Formik> */}
             <Formik
               initialValues={managerInitialValue}
               enableReinitialize={true}
@@ -5365,7 +4782,7 @@ const Editemployee = () => {
                         /> */}
 
 
-                        <CheckinAutocomplete
+                        <ProductautocompleteLevel
                           name="manager"
                           label={<span>Manager<span style={{ color: "red", fontSize: "20px" }}>*</span></span>}
                           variant="outlined"
@@ -9140,12 +8557,7 @@ const Editemployee = () => {
                                 Code: newValue.Code,
                                 Name: newValue.Name,
                               })
-                              // setselectLeaveconLTData({
-                              //   RecordID: newValue.RecordID,
-                              //   Code: newValue.Code,
-                              //   Name: newValue.Name,
-                              // });
-
+                         
                             }}
                             error={!!touched.leavetype && !!errors.leavetype}
                             helperText={touched.leavetype && errors.leavetype}
