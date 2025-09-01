@@ -3627,7 +3627,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         )}
 
         {/* VIEW */}
-        {accessID == "TR279" && accessID !=="TR283" && (
+        {accessID == "TR279"  && (
           <IconButton
             color="primary"
             size="small"
