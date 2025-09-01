@@ -279,7 +279,7 @@ const CreateQuestion = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    Create Question
+                    {mode =="A" ? "New" : "Edit"}
                   </Typography>
                 </Breadcrumbs>
               </Box>

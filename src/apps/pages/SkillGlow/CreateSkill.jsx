@@ -169,7 +169,7 @@ console.log(state,'--------------');
   const validationSchema = Yup.object({
     Code: Yup.string().required("Please Enter Code Here"),
     Name: Yup.string().required("Please Enter Name Here"),
-    Answertype: Yup.string().required("Choose at least one Answertype"),
+    //Answertype: Yup.string().required("Choose at least one Answertype"),
     Duration: Yup.string().required("Choose Duation"),
     Permittedtimes: Yup.number().required("Choose a number"),
     Minimumscore: Yup.number().required("Choose a Score"),
@@ -321,7 +321,7 @@ console.log(state,'--------------');
                       },
                     }}
                   />
-                  <FormControl
+                  {/* <FormControl
                     focused
                     variant="standard"
                     sx={{ background: "#ffffff" }}
@@ -348,7 +348,7 @@ console.log(state,'--------------');
                       <MenuItem value={'T/F'}>True or false</MenuItem>
                       <MenuItem value={'Y/N'}>Yes or No</MenuItem>
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                   <TextField
                     // fullWidth
                     variant="standard"
@@ -487,12 +487,12 @@ console.log(state,'--------------');
                       />
                     }
                     label="Disable"
-                    sx={{
-                      marginTop: "20px",
-                      "@media (max-width:500px)": {
-                        marginTop: 0,
-                      },
-                    }}
+                    // sx={{
+                    //   marginTop: "20px",
+                    //   "@media (max-width:500px)": {
+                    //     marginTop: 0,
+                    //   },
+                    // }}
                   />
                 </Box>
                 <Box

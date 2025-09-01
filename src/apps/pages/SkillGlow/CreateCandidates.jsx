@@ -41,7 +41,7 @@ import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
-import { SingleFormikSkillAutocomplete } from "./SkillGlowAutocomplete";
+import { SingleFormikSkillAutocomplete, SingleFormikSkillAutocompletePayload } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
 
 const CreateCandidates = () => {
@@ -67,6 +67,7 @@ const CreateCandidates = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const AssessmentAutoUrl = useSelector((state) => state.globalurl.AssessmentAutoUrl);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -83,18 +84,18 @@ const CreateCandidates = () => {
     const idata = {
       RecordID: recID,
       AssessmentID: values?.assessment?.RecordID || 0,
-      AssessmentName: values?.assessment?.Name || "",
+      //AssessmentName: values?.assessment?.Name || "",
       EmployeeID: EmpId,
       Date: values.Date,
-      Targeteddate: values.Targeteddate,
-      Sessionstartdate: values.Sessionstartdate,
-      Firstattdate: values.Firstattdate,
-      Firstattscore: values.Firstattscore,
-      Firstattduration: values.Firstattduration,
-      Lastattdate: values.Lastattdate,
-      Lastattscore: values.Lastattscore,
-      Lastattduration: values.Lastattduration,
-      Status: values.Status,
+      // Targeteddate: values.Targeteddate,
+      // Sessionstartdate: values.Sessionstartdate,
+      // Firstattdate: values.Firstattdate,
+      // Firstattscore: values.Firstattscore,
+      // Firstattduration: values.Firstattduration,
+      // Lastattdate: values.Lastattdate,
+      // Lastattscore: values.Lastattscore,
+      // Lastattduration: values.Lastattduration,
+      // Status: values.Status,
       Sortorder: values.Sortorder,
       Disable: isCheck,
     };
@@ -108,18 +109,8 @@ const CreateCandidates = () => {
     }
   };
   const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
-
-    //       return
-    //  }
     Swal.fire({
       title: `Do you want ${props}?`,
-      // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -142,19 +133,16 @@ const CreateCandidates = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  //   FOR DROPDWON
-  const [age, setAge] = useState("");
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   //   FOR DATEPICKER
   const [value, setValue] = useState(null);
 
   const initialValues = {
-    assessment: Data.AssessmentID ? {RecordID: Data.AssessmentID,Name: Data.AssessmentName} :null,
+    assessment: Data.AssessmentID
+      ? { RecordID: Data.AssessmentID, Name: Data.AssessmentName }
+      : null,
     // Date: Data.Date || new Date().toISOString().split("T")[0],
-    Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date ,
+    Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date,
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
   };
@@ -197,28 +185,29 @@ const CreateCandidates = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() =>
+                      navigate("/Apps/TR286/List%20of%20Employees")
+                    }
+                  >
+                    List Of Employees ({state.BreadCrumb1})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
                       navigate(
-                        "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule"
-                      )
-                    }
+                        `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID2}`,
+                        { state: { ...state } }
+                      );
+                    }}
                   >
-                    List Of Employees (EMP01)
+                    List Of Assessment Categories ({state.BreadCrumb2})
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/SkillGlow/CandidateMain")}
-                  >
-                    List Of Assessment Categories (CAT01)
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default" }}
-                    onClick={() =>
-                      navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")
-                    }
+                    onClick={() => navigate(-1)}
                   >
                     List Of Schedule
                   </Typography>
@@ -226,9 +215,8 @@ const CreateCandidates = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    //onClick={() => navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")}
                   >
-                    New
+                    {mode == "A" ? "New" : mode == "D" ? "Delete" : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -254,12 +242,11 @@ const CreateCandidates = () => {
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                ScheduleSaveFn(values, resetForm);
-              }, 100);
-              console.log(values, "----Session.");
-            }}
-            enableReinitialize={true}
+                setTimeout(() => {
+                  ScheduleSaveFn(values, resetForm);
+                }, 100);
+              }}
+              enableReinitialize={true}
               validationSchema={validationSchema}
             >
               {({
@@ -272,7 +259,6 @@ const CreateCandidates = () => {
                 handleSubmit,
                 setFieldTouched,
               }) => (
-
                 <Form onSubmit={handleSubmit}>
                   <Box
                     display="grid"
@@ -285,7 +271,7 @@ const CreateCandidates = () => {
                       },
                     }}
                   >
-                    <SingleFormikSkillAutocomplete
+                    <SingleFormikSkillAutocompletePayload
                       name="assessment"
                       label={
                         <span>
@@ -302,7 +288,11 @@ const CreateCandidates = () => {
                       }}
                       error={!!touched.assessment && !!errors.assessment}
                       helperText={touched.assessment && errors.assessment}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
+                      // url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
+                      url={AssessmentAutoUrl}
+                      payload={{"SkillCategorieID":params.parentID1,"EmployeeID":EmpId}}
+                      //inputProps={{ disabled: mode == "V" }}
+
                     />
                     <TextField
                       name="Date"
@@ -311,13 +301,13 @@ const CreateCandidates = () => {
                       label="Date"
                       variant="standard"
                       focused
-                      value={values.Date} 
+                      value={values.Date}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.Date && !!errors.Date}
                       helperText={touched.Date && errors.Date}
                       sx={{ background: "" }}
-                      inputProps={{ readOnly : true}}
+                      inputProps={{ readOnly: true }}
                     />
 
                     {/* SORT ORDER */}
@@ -344,6 +334,7 @@ const CreateCandidates = () => {
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
+                          readOnly: mode == "V",
                         },
                       }}
                     />
@@ -364,6 +355,7 @@ const CreateCandidates = () => {
                           marginTop: 0,
                         },
                       }}
+                      inputProps={{ readOnly: mode == "V" }}
                     />
                   </Box>
                   {/* BUTTONS */}
@@ -378,15 +370,14 @@ const CreateCandidates = () => {
                       variant="contained"
                       color={mode == "D" ? "error" : "secondary"}
                       loading={isLoading}
+                      disabled={mode == "V" ? true : false}
                     >
                       {mode == "D" ? "Delete" : "Save"}
                     </LoadingButton>
                     <Button
                       variant="contained"
                       color="warning"
-                      onClick={() =>
-                        navigate(-1)
-                      }
+                      onClick={() => navigate(-1)}
                     >
                       Cancel
                     </Button>

@@ -924,12 +924,12 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
-                    { state: { ...state } }
-                  );
-                }}
+                // onClick={() => {
+                //   navigate(
+                //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+                //     { state: { ...state } }
+                //   );
+                // }}
               >
                 List of Schedule
               </Typography>

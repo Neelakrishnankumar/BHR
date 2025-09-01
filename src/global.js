@@ -107,6 +107,7 @@ geolocationgetUrl:APIurl + "EmpGeoLocationGet.php",
 geolocationupdateUrl:APIurl + "EmpGeoLocationUpdate.php",
 LeaveTypeurl: APIurl +"APIController.php",
 subsNewUrl: APIurl +"SubscriptionPostController.php",
+AssessmentAutoUrl: APIurl + "ScheduleAssessmentLookup.php",
 
 };
 
