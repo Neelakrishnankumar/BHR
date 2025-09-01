@@ -207,21 +207,21 @@
 //         return (
 //           <div>
 //             <p>{description} || {comments}</p>
-            
+
 //           </div>
 //         );
 //       }
-     
+
 //     },
-   
+
 //     {
 //       field: 'ProjectCode',
 //       headerName: 'ProjectCode',
 //       width: 130,
 //       hide:true
 //     },
-    
-    
+
+
 //     {
 //       field: 'FunctionCode',
 //       headerName: 'FunctionCode',
@@ -361,7 +361,7 @@
 //     },
 
 //   ];
-  
+
 
 //   const safeAttendanceData = Array.isArray(AttendanceData)
 //   ? AttendanceData
@@ -396,7 +396,7 @@
 //   };
 
 //   console.log(getData,'---------------------GETDATA');
-  
+
 //   const explorelistViewData = useSelector(
 //     (state) => state.exploreApi.explorerowData
 //   );
@@ -446,7 +446,7 @@
 //     if (newValue) {
 //       setempData(newValue);
 //       console.log(newValue.RecordID, "--selectedproductid");
-    
+
 //     } else {
 //       setempData(null);
 //     }
@@ -454,7 +454,7 @@
 //   };
 //   const [open, setOpen] = React.useState(false);
 //   const handlePdfClick = () => {
-  
+
 //   };
 //   const handleDialogOpen = (row) => {
 //     setSelectedRow(row);
@@ -467,12 +467,12 @@
 //     setSelectedRow(null);
 //   };
 // const [reason,setReason]=useState("")
- 
+
 //   return (
 //     <React.Fragment>
 //       {/* {getLoading && <LinearProgress />} */}
 //             <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-      
+
 //       <Box display="flex" justifyContent="space-between" p={2}>
 //         <Box display="flex" borderRadius="3px" alignItems="center">
 //           {broken && !rtl && (
@@ -504,9 +504,9 @@
 //         </Box>
 //       </Box>
 //       </Paper>
-    
+
 //                 <Paper elevation={3} sx={{ margin: "10px" }}>
-        
+
 //         {/* <Box m="10px"> */}
 //           <Formik
 //             initialValues={AttInitialvalues}
@@ -579,7 +579,7 @@
 //                                       <MenuItem value={"11"}>November</MenuItem>
 //                                       <MenuItem value={"12"}>December</MenuItem>
 //                                     </TextField>
-                                  
+
 //                                     <TextField
 //                                       fullWidth
 //                                       variant="standard"
@@ -609,7 +609,7 @@
 //                                                            onChange={handleSelectionEmployeeChange}
 //                                                            // url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2101","ScreenName":"EMPLOYEETEAMS","Filter":"parentID=${EmpId}","Any":"","CompId":${companyID}}}`}
 //                                                            url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
-                                   
+
 //                                                         />
 //                                       {/* <FormControlLabel
 //                                                 control={
@@ -625,7 +625,7 @@
 //                                               /> */}
 //                                   </Stack>
 //                                   <Stack direction="row" spacing={2} display="flex" padding={1} justifyContent="end">
-                                      
+
 //                                   <Button type="submit" variant="contained" color="secondary" >
 //                                     APPLY
 //                                   </Button>
@@ -666,7 +666,7 @@
 //     }
 //   </PDFDownloadLink>
 // )}
- 
+
 //                                   {/* {isManager === "1" && AttendanceData?.length > 0 && (
 //                   <PDFDownloadLink
 //                     document={
@@ -691,14 +691,14 @@
 //                   >
 //                     {({ loading }) =>
 //                       loading ? "Preparing document..." : "Download Attendance PDF"
-                  
+
 //                     }
 //                   </PDFDownloadLink>
 //                 )} */}
-                                  
+
 //                                   </Stack>
 //                                 </Box>
-                
+
 
 //                 <Box sx={{ gridColumn: "span 4" }}>
 //                   <Box
@@ -746,7 +746,7 @@
 //                                   minHeight:dataGridHeaderFooterHeight,
 //                                 }
 //                                }}
-                              
+
 
 //                                 rowHeight={dataGridRowHeight}
 //                                           headerHeight={dataGridHeaderFooterHeight}
@@ -817,9 +817,9 @@
 //           </Button>
 //         </DialogActions>
 //       </Dialog>
-    
+
 //         </Paper>  
-   
+
 //     </React.Fragment>
 //   );
 // };
@@ -926,10 +926,10 @@ const EditTimeSheet = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewColumn = useSelector((state) => state.listviewApi.columnData);
-    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   useEffect(() => {
     dispatch(resetTrackingData());
-  },[])
+  }, [])
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
   const projectName = useSelector((state) => state.formApi.projectName);
@@ -941,14 +941,26 @@ const EditTimeSheet = () => {
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
   const EMPID = sessionStorage.getItem("EmpId");
-   const CompanyID = sessionStorage.getItem("compID");
+  const CompanyID = sessionStorage.getItem("compID");
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
   const [selectedRow, setSelectedRow] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   const handleUnlock = async () => {
     const idata = {
       action: "update",
@@ -1002,18 +1014,18 @@ const EditTimeSheet = () => {
 
 
   const AttColumn = [
-  //    {
-  //   field: "serialNo",
-  //   headerName: "SL#",
-  //   width: 40,
-  //   sortable: false,
-  //   filterable: false,
-  //   disableColumnMenu: true,
-  //   renderCell: (params) => {
-  //     return params.api.getRowIndex(params.id) + 1;
-  //   },
-  // },
-   {
+    //    {
+    //   field: "serialNo",
+    //   headerName: "SL#",
+    //   width: 40,
+    //   sortable: false,
+    //   filterable: false,
+    //   disableColumnMenu: true,
+    //   renderCell: (params) => {
+    //     return params.api.getRowIndex(params.id) + 1;
+    //   },
+    // },
+    {
       field: "slno",
       headerName: "SL#",
       width: 50,
@@ -1022,7 +1034,7 @@ const EditTimeSheet = () => {
       valueGetter: (params) =>
         `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
     },
-  {
+    {
       field: "RecordID",
       headerName: "RecordID",
       width: 80,
@@ -1034,7 +1046,7 @@ const EditTimeSheet = () => {
       width: 130,
       hide: true,
     },
-     {
+    {
       field: "Date",
       headerName: "Date",
       width: 80,
@@ -1245,7 +1257,7 @@ const EditTimeSheet = () => {
     ? AttColumn.filter((col) => col.field !== "actions")
     : AttColumn;
 
- 
+
   const VISIBLE_FIELDS = [
     "SLNO",
     "OtDate",
@@ -1258,15 +1270,15 @@ const EditTimeSheet = () => {
     () =>
       explorelistViewColumn
         ? explorelistViewColumn.filter((column) =>
-            VISIBLE_FIELDS.includes(column.field)
-          )
+          VISIBLE_FIELDS.includes(column.field)
+        )
         : [],
     [explorelistViewColumn]
   );
 
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -1484,9 +1496,9 @@ const EditTimeSheet = () => {
                     size="small"
                     onClick={() => handleClick(values)}
                   >
-                More
+                    More
                   </Button>
-                
+
                   {/* <PictureAsPdfIcon
   onClick={() => handleClick(values)}
   sx={{ fontSize: 24, opacity: 0.5 }}
@@ -1507,9 +1519,8 @@ const EditTimeSheet = () => {
                           }}
                         />
                       }
-                      fileName={`Attendance_Report_${
-                        empData?.Name || EMPNAME
-                      }.pdf`}
+                      fileName={`Attendance_Report_${empData?.Name || EMPNAME
+                        }.pdf`}
                       style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
                     >
                       {({ loading }) =>
@@ -1522,8 +1533,8 @@ const EditTimeSheet = () => {
                         )
                       }
                     </PDFDownloadLink>
-                 )} 
-                {/* <PDFDownloadLink
+                  )}
+                  {/* <PDFDownloadLink
                       document={
                         <InvoicePDF
                         />
@@ -1599,7 +1610,7 @@ const EditTimeSheet = () => {
                     getRowId={(row) => row.RecordID}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onCellClick={(params) => {}}
+                    onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{

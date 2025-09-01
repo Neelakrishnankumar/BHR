@@ -57,8 +57,9 @@ const CreateSkill = () => {
   const params = useParams();
 
   const state = location.state || {}
-console.log(state,'--------------');
+  console.log(state, '--------------');
 
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
 
   const recID = params.id;
   const accessID = params.accessID;
@@ -76,7 +77,18 @@ console.log(state,'--------------');
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
-
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   const AssessementSaveFn = async (values) => {
     let action =
       mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
@@ -130,7 +142,7 @@ console.log(state,'--------------');
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -224,7 +236,7 @@ console.log(state,'--------------');
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  {mode == "A" ? "New" : mode=="D" ? "Delete" : Data.Name}
+                  {mode == "A" ? "New" : mode == "D" ? "Delete" : Data.Name}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -326,7 +338,7 @@ console.log(state,'--------------');
                     variant="standard"
                     sx={{ background: "#ffffff" }}
                     error={!!touched.Answertype && !!errors.Answertype}
-                    // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
+                  // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                   >
                     <InputLabel id="Answertype">Answer Type</InputLabel>
                     <Select
@@ -337,7 +349,7 @@ console.log(state,'--------------');
                       value={values.Answertype}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      
+
                     >
                       <MenuItem value={'1/4'}>1 of 4</MenuItem>
                       <MenuItem value={'Any/4'}>Any Of 4</MenuItem>
@@ -426,8 +438,8 @@ console.log(state,'--------------');
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
                     sx={{ background: "" }}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  // required
+                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     // fullWidth
@@ -507,7 +519,7 @@ console.log(state,'--------------');
                     type="submit"
                     loading={isLoading}
                   >
-                     {mode == "D" ? "Delete" : "Save"} 
+                    {mode == "D" ? "Delete" : "Save"}
                   </LoadingButton>
                   <Button
                     variant="contained"

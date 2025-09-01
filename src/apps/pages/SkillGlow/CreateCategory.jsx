@@ -62,7 +62,7 @@ const CreateCategory = () => {
   const mode = params.Mode;
   const Assessmentid = params.parentID1;
   const CategoryId = params.parentID2;
-
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
   const state = location.state || {};
@@ -70,6 +70,18 @@ const CreateCategory = () => {
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -118,7 +130,7 @@ const CreateCategory = () => {
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -324,7 +336,7 @@ const CreateCategory = () => {
                       focused
                       variant="standard"
                       sx={{ background: "#ffffff" }}
-                      error={!!touched.AnswerType && !!errors.AnswerType}   
+                      error={!!touched.AnswerType && !!errors.AnswerType}
 
                     >
                       <InputLabel id="AnswerType">Answer Type</InputLabel>
@@ -339,15 +351,15 @@ const CreateCategory = () => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         required
-                        //error={!!touched.AnswerType && !!errors.AnswerType}
-                        //helperText={touched.AnswerType && errors.AnswerType}
-                        // MenuProps={{
-                        //   PaperProps: {
-                        //     sx: {
-                        //       mt: 1, // Add space so the top border doesn’t get cut
-                        //     },
-                        //   },
-                        // }}
+                      //error={!!touched.AnswerType && !!errors.AnswerType}
+                      //helperText={touched.AnswerType && errors.AnswerType}
+                      // MenuProps={{
+                      //   PaperProps: {
+                      //     sx: {
+                      //       mt: 1, // Add space so the top border doesn’t get cut
+                      //     },
+                      //   },
+                      // }}
                       >
                         <MenuItem value={"1/4"}>1 of 4</MenuItem>
                         <MenuItem value={"Any/4"}>Any Of 4</MenuItem>

@@ -199,7 +199,11 @@
     "SkillGlowSession":{
         "Code":"Please fill the Code",
         "Name":"Please fill the Name"
+    },
+ "Warningmsg": {
+        "Logout": "Do you really want to Log Out?",
+        "Close": "Do you want to Close?",
+        "Delete": "Do you want to Delete?"
     }
-
 
 }

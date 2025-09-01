@@ -20,7 +20,7 @@ import {
     InputAdornment,
     Avatar,
     Tooltip,
-     Breadcrumbs
+    Breadcrumbs
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -79,7 +79,19 @@ const Biometricconfiguration = () => {
     const [Input, setInput] = useState("");
     const [pulling, setpulling] = useState("");
     const [time, settime] = useState("");
+    const [errorMsgData, setErrorMsgData] = useState(null);
 
+    useEffect(() => {
+        fetch(process.env.PUBLIC_URL + "/validationcms.json")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+                return res.json();
+            })
+            .then((data) => {
+                setErrorMsgData(data);
+            })
+            .catch((err) => console.error("Error loading validationcms.json:", err));
+    }, []);
     useEffect(() => {
         if (data) {
             setAppname(data.ApplicationName);
@@ -162,38 +174,38 @@ const Biometricconfiguration = () => {
             toast.error(response.payload.Msg);
         }
     };
-const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
+    const fnLogOut = (props) => {
+        //   if(Object.keys(ref.current.touched).length === 0){
+        //     if(props === 'Logout'){
+        //       navigate("/")}
+        //       if(props === 'Close'){
+        //         navigate("/Apps/TR022/Bank Master")
+        //       }
 
-    //       return
-    //  }
-    Swal.fire({
-      title: `Do you want ${props}?`,
-      // text:data.payload.Msg,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: props,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (props === "Logout") {
-          navigate("/");
-        }
-        if (props === "Close") {
-          //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-          navigate("/Apps/HR");
-        }
-      } else {
-        return;
-      }
-    });
-  };
+        //       return
+        //  }
+        Swal.fire({
+            title: errorMsgData.Warningmsg[props],
+            // text:data.payload.Msg,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: props,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (props === "Logout") {
+                    navigate("/");
+                }
+                if (props === "Close") {
+                    //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+                    navigate("/Apps/HR");
+                }
+            } else {
+                return;
+            }
+        });
+    };
 
     return (
         <React.Fragment>
@@ -201,91 +213,91 @@ const fnLogOut = (props) => {
                 <Typography variant="h2" fontSize="1.2rem" fontWeight="bold" marginBottom={3}>
                     Biometric Integration
                 </Typography> */}
-                <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-                              <Box display="flex" justifyContent="space-between" p={2}>
-                                <Box display="flex" borderRadius="3px" alignItems="center">
-                                  {broken && !rtl && (
-                                    <IconButton onClick={() => toggleSidebar()}>
-                                      <MenuOutlinedIcon />
-                                    </IconButton>
-                                  )}
-                                  <Breadcrumbs
-                                  maxItems={3}
-                                  aria-label="breadcrumb"
-                                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                                >
-                                  
-                                  <Typography
-                                    color="#0000D1"
-                                    sx={{ cursor: "default" }}
-                                    variant="h5"
-                                   
-                                  >
-                                    Biometric Integration
-                                  </Typography>
-                                 
-                                </Breadcrumbs>
-                                </Box>
-                      
-                                <Box display="flex">
-                                  <Tooltip title="Close">
-                                    <IconButton onClick={() => fnLogOut("Close")} color="error">
-                                      <ResetTvIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip title="Logout">
-                                    <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                                      <LogoutOutlinedIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Box>
-                              </Box>
-                            </Paper>
-                <Paper elevation={3} sx={{ margin: "10px" }}>
-                    <Formik
-                        initialValues={initialvalues}
-                        onSubmit={(values, setSubmitting, resetForm) => {
-                            setTimeout(() => {
-                                fnSave(values);
-                                resetForm(); // Reset form after submission
-                            }, 100);
-                        }}
-                        // onSubmit={(values, setSubmitting) => {
-                        //     setTimeout(() => {
-                        //         fnSave(values);
-                        //     }, 100);
-                        // }}
-                        validationSchema={Settingsvalidation}
-                        enableReinitialize={true}
-                    >
-                        {({
-                            errors,
-                            touched,
-                            handleBlur,
-                            handleChange,
-                            isSubmitting,
-                            values,
-                            handleSubmit,
-                            setFieldTouched,
-                            resetForm
-                        }) => (
-                            <form onSubmit={handleSubmit}>
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+                <Box display="flex" justifyContent="space-between" p={2}>
+                    <Box display="flex" borderRadius="3px" alignItems="center">
+                        {broken && !rtl && (
+                            <IconButton onClick={() => toggleSidebar()}>
+                                <MenuOutlinedIcon />
+                            </IconButton>
+                        )}
+                        <Breadcrumbs
+                            maxItems={3}
+                            aria-label="breadcrumb"
+                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                        >
 
-                                {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} /> */}
-                                {/* <Typography variant="h5" padding={1}>Biometric Integration:</Typography> */}
+                            <Typography
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                variant="h5"
 
-                                <Box
-                                    display="grid"
-                                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                                    gap={formGap}
-                                    padding={1}
-                                    sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 4",
-                                        },
-                                    }}
-                                >
-                                    {/* <TextField
+                            >
+                                Biometric Integration
+                            </Typography>
+
+                        </Breadcrumbs>
+                    </Box>
+
+                    <Box display="flex">
+                        <Tooltip title="Close">
+                            <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                <ResetTvIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Logout">
+                            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                <LogoutOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
+            </Paper>
+            <Paper elevation={3} sx={{ margin: "10px" }}>
+                <Formik
+                    initialValues={initialvalues}
+                    onSubmit={(values, setSubmitting, resetForm) => {
+                        setTimeout(() => {
+                            fnSave(values);
+                            resetForm(); // Reset form after submission
+                        }, 100);
+                    }}
+                    // onSubmit={(values, setSubmitting) => {
+                    //     setTimeout(() => {
+                    //         fnSave(values);
+                    //     }, 100);
+                    // }}
+                    validationSchema={Settingsvalidation}
+                    enableReinitialize={true}
+                >
+                    {({
+                        errors,
+                        touched,
+                        handleBlur,
+                        handleChange,
+                        isSubmitting,
+                        values,
+                        handleSubmit,
+                        setFieldTouched,
+                        resetForm
+                    }) => (
+                        <form onSubmit={handleSubmit}>
+
+                            {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} /> */}
+                            {/* <Typography variant="h5" padding={1}>Biometric Integration:</Typography> */}
+
+                            <Box
+                                display="grid"
+                                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                                gap={formGap}
+                                padding={1}
+                                sx={{
+                                    "& > div": {
+                                        gridColumn: isNonMobile ? undefined : "span 4",
+                                    },
+                                }}
+                            >
+                                {/* <TextField
                                         name="appname"
                                         type="text"
                                         id="appname"
@@ -299,78 +311,78 @@ const fnLogOut = (props) => {
                                         helperText={touched.appname && errors.appname}
                                         sx={{ gridColumn: "span 2" }}
                                     /> */}
-                                    <TextField
-                                        name="appname"
-                                        type="text"
-                                        id="appname"
-                                        label="Application Name"
-                                        variant="standard"
-                                        focused
-                                        value={Appname}
-                                        onChange={(e) => setAppname(e.target.value)}
-                                        autoFocus
-                                        sx={{ gridColumn: "span 2" }}
-                                    />
+                                <TextField
+                                    name="appname"
+                                    type="text"
+                                    id="appname"
+                                    label="Application Name"
+                                    variant="standard"
+                                    focused
+                                    value={Appname}
+                                    onChange={(e) => setAppname(e.target.value)}
+                                    autoFocus
+                                    sx={{ gridColumn: "span 2" }}
+                                />
 
-                                    <TextField
-                                        name="authorization"
-                                        type="text"
-                                        id="authorization"
-                                        label="Authorization"
-                                        variant="standard"
-                                        focused
-                                        value={author}
-                                        onBlur={handleBlur}
-                                        onChange={(e) => setauthor(e.target.value)}
-                                        error={!!touched.authorization && !!errors.authorization}
-                                        helperText={touched.authorization && errors.authorization}
-                                        sx={{ gridColumn: "span 2" }}
-                                    />
+                                <TextField
+                                    name="authorization"
+                                    type="text"
+                                    id="authorization"
+                                    label="Authorization"
+                                    variant="standard"
+                                    focused
+                                    value={author}
+                                    onBlur={handleBlur}
+                                    onChange={(e) => setauthor(e.target.value)}
+                                    error={!!touched.authorization && !!errors.authorization}
+                                    helperText={touched.authorization && errors.authorization}
+                                    sx={{ gridColumn: "span 2" }}
+                                />
 
-                                    <TextField
-                                        name="apikey"
-                                        type="text"
-                                        id="apikey"
-                                        label="API Key"
-                                        variant="standard"
-                                        focused
-                                        value={Apikey}
-                                        onBlur={handleBlur}
-                                        onChange={(e) => setApikey(e.target.value)}
-                                        error={!!touched.apikey && !!errors.apikey}
-                                        helperText={touched.apikey && errors.apikey}
-                                        sx={{ gridColumn: "span 2" }}
-                                    />
+                                <TextField
+                                    name="apikey"
+                                    type="text"
+                                    id="apikey"
+                                    label="API Key"
+                                    variant="standard"
+                                    focused
+                                    value={Apikey}
+                                    onBlur={handleBlur}
+                                    onChange={(e) => setApikey(e.target.value)}
+                                    error={!!touched.apikey && !!errors.apikey}
+                                    helperText={touched.apikey && errors.apikey}
+                                    sx={{ gridColumn: "span 2" }}
+                                />
 
-                                    <TextField
-                                        name="url"
-                                        type="text"
-                                        id="url"
-                                        label="URL"
-                                        variant="standard"
-                                        focused
-                                        value={Url}
-                                        onBlur={handleBlur}
-                                        onChange={(e) => setUrl(e.target.value)}
-                                        error={!!touched.url && !!errors.url}
-                                        helperText={touched.url && errors.url}
-                                        sx={{ gridColumn: "span 2" }}
-                                    />
+                                <TextField
+                                    name="url"
+                                    type="text"
+                                    id="url"
+                                    label="URL"
+                                    variant="standard"
+                                    focused
+                                    value={Url}
+                                    onBlur={handleBlur}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    error={!!touched.url && !!errors.url}
+                                    helperText={touched.url && errors.url}
+                                    sx={{ gridColumn: "span 2" }}
+                                />
 
-                                    <TextField
-                                        name="input"
-                                        type="text"
-                                        id="input"
-                                        label="Input"
-                                        variant="outlined"
-                                        focused
-                                        rows={3}
-                                        multiline
-                                        value={Input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        sx={{ gridColumn: "span 2" }}
-                                    />
-                                    {/* <TextField
+                                <TextField
+                                    name="input"
+                                    type="text"
+                                    id="input"
+                                    label="Input"
+                                    variant="outlined"
+                                    focused
+                                    rows={3}
+                                    multiline
+                                    value={Input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    sx={{ gridColumn: "span 2" }}
+                                />
+                                {/* <TextField
                                         name="input"
                                         type="text"
                                         id="input"
@@ -389,88 +401,88 @@ const fnLogOut = (props) => {
                                         sx={{ gridColumn: "span 2" }}
                                     /> */}
 
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            gap: 2,
-                                            gridColumn: "span 2",
-                                            mt: 2, // margin top for spacing
-                                        }}
-                                    >
-                                        {/* Pulling Cycle Select */}
-                                        <FormControl fullWidth focused>
-                                            <InputLabel id="pulling">Pulling Cycle</InputLabel>
-                                            <Select
-                                                labelId="pulling"
-                                                id="pulling"
-                                                name="pulling"
-                                                value={pulling}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => setpulling(e.target.value)}
-                                                label="Pulling Cycle"
-                                            >
-                                                <MenuItem value="D">Daily</MenuItem>
-                                                <MenuItem value="H">Hourly</MenuItem>
-                                            </Select>
-                                        </FormControl>
-
-                                        {/* Time Input Field - Only when pulling is "D" */}
-                                        {pulling === "D" && (
-                                            <TextField
-                                                name="time"
-                                                type="time"
-                                                id="time"
-                                                label="Time"
-                                                variant="standard"
-                                                value={time}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => settime(e.target.value)}
-                                                focused
-                                                fullWidth
-                                            />
-                                        )}
-                                    </Box>
-
-                                </Box>
-
                                 <Box
-                                    display="flex"
-                                    padding={1}
-                                    justifyContent="end"
-                                    mt="20px"
-                                    gap="20px"
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: 2,
+                                        gridColumn: "span 2",
+                                        mt: 2, // margin top for spacing
+                                    }}
                                 >
+                                    {/* Pulling Cycle Select */}
+                                    <FormControl fullWidth focused>
+                                        <InputLabel id="pulling">Pulling Cycle</InputLabel>
+                                        <Select
+                                            labelId="pulling"
+                                            id="pulling"
+                                            name="pulling"
+                                            value={pulling}
+                                            onBlur={handleBlur}
+                                            onChange={(e) => setpulling(e.target.value)}
+                                            label="Pulling Cycle"
+                                        >
+                                            <MenuItem value="D">Daily</MenuItem>
+                                            <MenuItem value="H">Hourly</MenuItem>
+                                        </Select>
+                                    </FormControl>
 
-                                    <LoadingButton
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        loading={isLoading}
-                                        onClick={fnSave}
-                                    >
-                                        Save
-                                    </LoadingButton>
-
-
-
-                                    <Button
-                                        color={"warning"}
-                                        variant="contained"
-                                        onClick={() => resetForm()}
-                                    // onClick={() => {
-                                    //   navigate("/Apps/TR213/LeaveType");
-                                    // }}
-                                    >
-                                        Cancel
-                                    </Button>
+                                    {/* Time Input Field - Only when pulling is "D" */}
+                                    {pulling === "D" && (
+                                        <TextField
+                                            name="time"
+                                            type="time"
+                                            id="time"
+                                            label="Time"
+                                            variant="standard"
+                                            value={time}
+                                            onBlur={handleBlur}
+                                            onChange={(e) => settime(e.target.value)}
+                                            focused
+                                            fullWidth
+                                        />
+                                    )}
                                 </Box>
 
-                            </form>
-                        )}
-                    </Formik>
-                </Paper>
+                            </Box>
+
+                            <Box
+                                display="flex"
+                                padding={1}
+                                justifyContent="end"
+                                mt="20px"
+                                gap="20px"
+                            >
+
+                                <LoadingButton
+                                    color="secondary"
+                                    variant="contained"
+                                    type="submit"
+                                    loading={isLoading}
+                                    onClick={fnSave}
+                                >
+                                    Save
+                                </LoadingButton>
+
+
+
+                                <Button
+                                    color={"warning"}
+                                    variant="contained"
+                                    onClick={() => resetForm()}
+                                // onClick={() => {
+                                //   navigate("/Apps/TR213/LeaveType");
+                                // }}
+                                >
+                                    Cancel
+                                </Button>
+                            </Box>
+
+                        </form>
+                    )}
+                </Formik>
+            </Paper>
             {/* </Box> */}
         </React.Fragment>
     );

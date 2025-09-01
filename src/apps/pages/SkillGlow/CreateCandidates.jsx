@@ -62,11 +62,23 @@ const CreateCandidates = () => {
   const state = location.state || {};
 
   const answerType = state.AnswerType;
-
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -118,7 +130,7 @@ const CreateCandidates = () => {
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -152,9 +164,9 @@ const CreateCandidates = () => {
   const [value, setValue] = useState(null);
 
   const initialValues = {
-    assessment: Data.AssessmentID ? {RecordID: Data.AssessmentID,Name: Data.AssessmentName} :null,
+    assessment: Data.AssessmentID ? { RecordID: Data.AssessmentID, Name: Data.AssessmentName } : null,
     // Date: Data.Date || new Date().toISOString().split("T")[0],
-    Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date ,
+    Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date,
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
   };
@@ -226,7 +238,7 @@ const CreateCandidates = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    //onClick={() => navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")}
+                  //onClick={() => navigate("/Apps/SkillGlow/SkillGlowList/CandidateList")}
                   >
                     New
                   </Typography>
@@ -254,12 +266,12 @@ const CreateCandidates = () => {
             <Formik
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                ScheduleSaveFn(values, resetForm);
-              }, 100);
-              console.log(values, "----Session.");
-            }}
-            enableReinitialize={true}
+                setTimeout(() => {
+                  ScheduleSaveFn(values, resetForm);
+                }, 100);
+                console.log(values, "----Session.");
+              }}
+              enableReinitialize={true}
               validationSchema={validationSchema}
             >
               {({
@@ -311,13 +323,13 @@ const CreateCandidates = () => {
                       label="Date"
                       variant="standard"
                       focused
-                      value={values.Date} 
+                      value={values.Date}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={!!touched.Date && !!errors.Date}
                       helperText={touched.Date && errors.Date}
                       sx={{ background: "" }}
-                      inputProps={{ readOnly : true}}
+                      inputProps={{ readOnly: true }}
                     />
 
                     {/* SORT ORDER */}

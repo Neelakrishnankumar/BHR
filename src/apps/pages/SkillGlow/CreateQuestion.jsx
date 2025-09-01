@@ -61,7 +61,7 @@ const CreateQuestion = () => {
   const mode = params.Mode;
   const Assessmentid = params.parentID2;
   const QuestionID = params.parentID1;
-
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
 
@@ -70,6 +70,18 @@ const CreateQuestion = () => {
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -140,7 +152,7 @@ const CreateQuestion = () => {
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,

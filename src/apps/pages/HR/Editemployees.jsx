@@ -458,7 +458,7 @@ const Editemployee = () => {
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
     SortOrder: Data.SortOrder || 0,
-    delete: Data.DeleteFlag === "Y"? true : false,
+    delete: Data.DeleteFlag === "Y" ? true : false,
     Mgr: Data.Mgr,
     Sal: Data.Sal,
     Fax: Data.Fax,
@@ -2167,7 +2167,7 @@ const Editemployee = () => {
                   : "",
     RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
-    
+
   };
   const FnAttachment = async (values, resetForm, del) => {
     let action =
@@ -2262,7 +2262,7 @@ const Editemployee = () => {
   };
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -2950,7 +2950,7 @@ const Editemployee = () => {
                         variant="contained"
                         onClick={() => {
                           Swal.fire({
-                            title: `Do you want Delete?`,
+                            title: errorMsgData.Warningmsg.Delete,
                             icon: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#3085d6",
@@ -3321,8 +3321,25 @@ const Editemployee = () => {
                       <Button
                         color="error"
                         variant="contained"
+                        // onClick={() => {
+                        //   fnSave(values, "harddelete");
+                        // }}
                         onClick={() => {
-                          fnSave(values, "harddelete");
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Delete,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              fnSave(values, "harddelete");
+                              // navigate(-1);
+                            } else {
+                              return;
+                            }
+                          });
                         }}
                       >
                         Delete
@@ -3707,8 +3724,25 @@ const Editemployee = () => {
                       <Button
                         color="error"
                         variant="contained"
+                        // onClick={() => {
+                        //   fnSave(values, "harddelete");
+                        // }}
                         onClick={() => {
-                          fnSave(values, "harddelete");
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Delete,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              fnSave(values, "harddelete");
+                              // navigate(-1);
+                            } else {
+                              return;
+                            }
+                          });
                         }}
                       >
                         Delete
@@ -4185,7 +4219,7 @@ const Editemployee = () => {
                                 disabled={boMode == "A"}
                                 onClick={() => {
                                   Swal.fire({
-                                    title: `Do you want Delete?`,
+                                    title: errorMsgData.Warningmsg.Delete,
                                     icon: "warning",
                                     showCancelButton: true,
                                     confirmButtonColor: "#3085d6",
@@ -4517,12 +4551,29 @@ const Editemployee = () => {
 
 
                     <Button
+                      // onClick={() => {
+                      //   // if (funMode !== "E") {
+                      //   //   toast.warning("Select a function to delete.");
+                      //   //   return;
+                      //   // }
+                      //   empFunctionFn(values, resetForm, true);
+                      // }}
                       onClick={() => {
-                        // if (funMode !== "E") {
-                        //   toast.warning("Select a function to delete.");
-                        //   return;
-                        // }
-                        empFunctionFn(values, resetForm, true);
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            empFunctionFn(values, resetForm, "harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
                       }}
                       disabled={funMode == "A"}
                       color="error"
@@ -4917,9 +4968,26 @@ const Editemployee = () => {
                     )}
                     {YearFlag == "true" ? (
                       <Button
-                        onClick={() =>
-                          mgrFunctionFn(values, resetForm, true, setFieldValue)
-                        }
+                        // onClick={() =>
+                        //   mgrFunctionFn(values, resetForm, true, setFieldValue)
+                        // }
+                        onClick={() => {
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Delete,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              mgrFunctionFn(values,resetForm, "harddelete");
+                              // navigate(-1);
+                            } else {
+                              return;
+                            }
+                          });
+                        }}
                         disabled={funMode == "A"}
                         color="error"
                         variant="contained"
@@ -6087,7 +6155,7 @@ const Editemployee = () => {
                               disabled={funMode == "A"}
                               onClick={() => {
                                 Swal.fire({
-                                  title: `Do you want Delete?`,
+                                  title: errorMsgData.Warningmsg.Delete,
                                   icon: "warning",
                                   showCancelButton: true,
                                   confirmButtonColor: "#3085d6",
@@ -6481,7 +6549,7 @@ const Editemployee = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -7228,7 +7296,7 @@ const Editemployee = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -7959,7 +8027,7 @@ const Editemployee = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -8571,7 +8639,7 @@ const Editemployee = () => {
                                 Code: newValue.Code,
                                 Name: newValue.Name,
                               })
-                         
+
                             }}
                             error={!!touched.leavetype && !!errors.leavetype}
                             helperText={touched.leavetype && errors.leavetype}
@@ -8712,7 +8780,7 @@ const Editemployee = () => {
                             disabled={funMode == "A"}
                             onClick={() => {
                               Swal.fire({
-                                title: `Do you want Delete?`,
+                                title: errorMsgData.Warningmsg.Delete,
                                 icon: "warning",
                                 showCancelButton: true,
                                 confirmButtonColor: "#3085d6",

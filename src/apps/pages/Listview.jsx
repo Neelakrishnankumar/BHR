@@ -64,7 +64,7 @@ import toast from "react-hot-toast";
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import { Delete, Psychology, Category} from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-
+import { useEffect } from "react";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -109,6 +109,19 @@ const Listview = () => {
   const [uploadFile, setUploadFile] = useState();
   const compID = sessionStorage.getItem("compID");
   const YearRecorid = sessionStorage.getItem("YearRecorid");
+  const [errorMsgData, setErrorMsgData] = useState(null);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   // console.log(
   //   "🚀 ~ file: Listview.jsx:58 ~ Listview ~ listViewcolumn",
   //   listViewcolumn
@@ -222,7 +235,7 @@ const [productFilter,setProductFilter] = useState();
   }
 const fnLogOut = (props) => {
       Swal.fire({
-        title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
         // text:data.payload.Msg,
         icon: "warning",
         showCancelButton: true,

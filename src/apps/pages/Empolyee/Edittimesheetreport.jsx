@@ -128,6 +128,20 @@ const Edittimesheetreport = () => {
     useEffect(() => {
         dispatch(resetTrackingData());
     }, [])
+    const [errorMsgData, setErrorMsgData] = useState(null);
+    
+        useEffect(() => {
+            fetch(process.env.PUBLIC_URL + "/validationcms.json")
+                .then((res) => {
+                    if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+                    return res.json();
+                })
+                .then((data) => {
+                    setErrorMsgData(data);
+                })
+                .catch((err) => console.error("Error loading validationcms.json:", err));
+        }, []);
+
     const handleUnlock = async () => {
         const idata = {
             action: "update",
@@ -427,7 +441,7 @@ const Edittimesheetreport = () => {
 
     const fnLogOut = (props) => {
         Swal.fire({
-            title: `Do you want ${props}?`,
+            title: errorMsgData.Warningmsg[props],
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
