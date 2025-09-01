@@ -100,6 +100,7 @@ const Holidaylist = () => {
     Date: data?.HolidayDate || "",
     Sortorder: data?.SortOrder || "",
     disable: data?.Disable === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y" ? true : false
   };
 
   const Fnsave = async (values, del) => {
@@ -121,6 +122,7 @@ const Holidaylist = () => {
       HolidayDate: values.Date,
       SortOrder: values.Sortorder || 0,
       Disable: isCheck,
+      DeleteFlag: values.delete == true ? "Y" : "N",
       Finyear,
       CompanyID,
     };
@@ -350,6 +352,18 @@ const Holidaylist = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       type="checkbox"
                       name="disable"

@@ -14,6 +14,7 @@ import {
   Paper,
   Breadcrumbs,
   Tooltip,
+  Checkbox
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -50,7 +51,7 @@ const Editoverhead = () => {
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const [loading, setLoading] = useState(false);
-    const Finyear = sessionStorage.getItem("YearRecorid");
+  const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -82,7 +83,7 @@ const Editoverhead = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
-  
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -94,6 +95,9 @@ const Editoverhead = () => {
     name: data.Name,
     frequency: data.Frequency,
     productCost: data.Productcost,
+    disable: data.Disable === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y" ? true : false
+
   };
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -116,6 +120,9 @@ const Editoverhead = () => {
       Productcost: values.productCost,
       Finyear,
       CompanyID,
+      Disable: values.disable == true ? "Y" : "N",
+      DeleteFlag: values.delete == true ? "Y" : "N",
+
     };
 
     // console.log("🚀 ~ file: Editoverhead.jsx:57 ~ fnSave ~ saveData:", saveData)
@@ -296,10 +303,10 @@ const Editoverhead = () => {
                     type="text"
                     id="name"
                     label={
-                        <>
-                          Overhead<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
+                      <>
+                        Overhead<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
@@ -308,7 +315,7 @@ const Editoverhead = () => {
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     autoFocus={CompanyAutoCode == "Y"}
-                    // required
+                  // required
                   />
                   {/* <FormControl
                     focused
@@ -376,6 +383,33 @@ const Editoverhead = () => {
                     <MenuItem value="S">Salary</MenuItem>
                   </TextField>
                   {/* </FormControl> */}
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
 
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>

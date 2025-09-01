@@ -121,6 +121,7 @@ const LeaveType = () => {
     leavetypecategories: data.LeaveTypeCategories,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y" ? true : false
   };
 
   const Fnsave = async (values, del) => {
@@ -143,6 +144,7 @@ const LeaveType = () => {
       SortOrder: values.sortorder || 0,
       Disable: isCheck,
       // Finyear,
+      DeleteFlag: values.delete == true ? "Y" : "N",
       CompanyID,
     };
 
@@ -599,6 +601,18 @@ const LeaveType = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       type="checkbox"
                       name="disable"

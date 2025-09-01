@@ -69,7 +69,7 @@ const Editdesignation = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
-
+        console.log(data,"errormsgdta");
         let schemaFields = {
           name: Yup.string().required(data.Designation.name),
           rank: Yup.string().required(data.Designation.rank),
@@ -96,6 +96,7 @@ const Editdesignation = () => {
     rank: data.DesignationRank,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y"? true : false
   };
 
   const Fnsave = async (values, del) => {
@@ -118,6 +119,7 @@ const Editdesignation = () => {
       DesignationRank: values.rank,
       SortOrder: values.sortorder || 0,
       Disable: isCheck,
+      DeleteFlag: values.delete == true ? "Y" : "N",
       Finyear,
       CompanyID,
     };
@@ -375,6 +377,18 @@ const Editdesignation = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
                       type="checkbox"

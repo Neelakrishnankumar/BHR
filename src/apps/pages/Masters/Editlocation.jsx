@@ -67,8 +67,8 @@ const Editlocation = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
-    const [errorMsgData, setErrorMsgData] = useState(null);
-    const [validationSchema, setValidationSchema] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -108,6 +108,7 @@ const Editlocation = () => {
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
     // contactperson: data.ContactPerson ? {RecordID:data.ContactPerson,Code:data.ContactPersonCode,Name:data.ContactPersonName} : null
+    delete: data.DeleteFlag === "Y" ? true : false
 
   };
 
@@ -122,6 +123,7 @@ const Editlocation = () => {
       Number: values.locationnumber,
       SortOrder: values.sortorder || 0,
       Disable: values.disable == true ? "Y" : "N",
+      DeleteFlag: values.delete == true ? "Y" : "N",
       CompanyRecordID,
       // ContactPerson: values.contactperson ? values.contactperson.RecordID : 0,
       // ContactPersonCode: values.contactperson ? values.contactperson.Code : '' ,
@@ -335,7 +337,7 @@ const Editlocation = () => {
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         },
-                         gridColumn: "span 2"
+                        gridColumn: "span 2"
                       }}
                       InputProps={{ readOnly: true }}
                     // autoFocus
@@ -359,7 +361,7 @@ const Editlocation = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-                        
+
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
@@ -367,7 +369,7 @@ const Editlocation = () => {
                         gridColumn: "span 2"
                       }}
                       autoFocus
-                      
+
                     />
                   )}
                   <TextField
@@ -476,6 +478,18 @@ const Editlocation = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
                       type="checkbox"

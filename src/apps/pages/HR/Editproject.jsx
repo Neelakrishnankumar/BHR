@@ -114,6 +114,8 @@ const Editproject = () => {
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
     CurrentStatus: data.CurrentStatus,
+    delete: data.DeleteFlag === "Y" ? true : false
+
   };
 
   const Fnsave = async (values, del) => {
@@ -141,6 +143,7 @@ const Editproject = () => {
       SortOrder: values.sortorder || 0,
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
+      DeleteFlag: values.delete == true ? "Y" : "N",
       Finyear,
       CompanyID,
     };
@@ -311,30 +314,30 @@ const Editproject = () => {
                     // required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
-                 
-                    <CheckinAutocomplete
-                      name="incharge"
-                      label={
-                        <>
-                          Owner<span style={{ color: "red",fontSize:"20px" }}> * </span>
-                        </>
-                      }
-                      id="incharge"
-                      value={values.incharge}
-                      onChange={async (newValue) => {
-                        setFieldValue("incharge", newValue);
-                      }}
-                      error={!!touched.incharge && !!errors.incharge}
-                      helperText={touched.incharge && errors.incharge}
-                      // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    />
-                    {/* {touched.incharge && errors.incharge && (
+
+                  <CheckinAutocomplete
+                    name="incharge"
+                    label={
+                      <>
+                        Owner<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                      </>
+                    }
+                    id="incharge"
+                    value={values.incharge}
+                    onChange={async (newValue) => {
+                      setFieldValue("incharge", newValue);
+                    }}
+                    error={!!touched.incharge && !!errors.incharge}
+                    helperText={touched.incharge && errors.incharge}
+                    // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                  />
+                  {/* {touched.incharge && errors.incharge && (
                         <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                           {errors.incharge}
                         </div>
                       )} */}
-                 
+
                   {/* <FormControl
                     focused
                     variant="standard"
@@ -367,10 +370,10 @@ const Editproject = () => {
                     name="CurrentStatus"
                     type="text"
                     label={
-                        <>
-                          Status<span style={{ color: "red",fontSize:"20px" }}> * </span>
-                        </>
-                      }
+                      <>
+                        Status<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                      </>
+                    }
                     // required
                     focused
                     select
@@ -457,6 +460,18 @@ const Editproject = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
                       type="checkbox"

@@ -458,7 +458,7 @@ const Editemployee = () => {
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
     SortOrder: Data.SortOrder || 0,
-
+    delete: Data.DeleteFlag === "Y"? true : false,
     Mgr: Data.Mgr,
     Sal: Data.Sal,
     Fax: Data.Fax,
@@ -688,6 +688,7 @@ const Editemployee = () => {
       DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
+      DeleteFlag: values.delete == true ? "Y" : "N",
       // DesignID: 0,
       // LocationRecID: 0,
       // GateRecID: 0,
@@ -1590,8 +1591,8 @@ const Editemployee = () => {
     FromPeriod: contractorData.fromperiod,
     ToPeriod: contractorData.toperiod,
     // BillingUnits: contractorData.units,
-    vendor:null,
-    customer:null,
+    vendor: null,
+    customer: null,
     BillingUnits:
       contractorData.units === "Hours"
         ? "HS"
@@ -2166,6 +2167,7 @@ const Editemployee = () => {
                   : "",
     RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
+    
   };
   const FnAttachment = async (values, resetForm, del) => {
     let action =
@@ -2781,6 +2783,18 @@ const Editemployee = () => {
                         <FormLabel focused={false}>Project Manager</FormLabel>
                       </Box>
                       <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="delete"
+                          id="delete"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Delete"
+                        />
+
+                        <FormLabel focused={false}>Delete</FormLabel>
                         <Field
                           //  size="small"
                           type="checkbox"
