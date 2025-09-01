@@ -188,7 +188,7 @@ function App() {
 
                   {/* SKILL GLOW */}
                  
-                  {/* QUESTION */}
+                  {/* SCHEDULE */}
                    <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
