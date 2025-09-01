@@ -124,6 +124,7 @@ const Editfunction = () => {
     categories: data.Categories,
     code: data.Code || "",
     disable: data.Disable === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y" ? true : false
   };
   console.log(data.Code, "======");
   const Fnsave = async (values, del) => {
@@ -147,6 +148,8 @@ const Editfunction = () => {
       Disable: isCheck,
       Finyear,
       CompanyID,
+      DeleteFlag: values.delete == true ? "Y" : "N",
+
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -601,6 +604,18 @@ const Editfunction = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       type="checkbox"
                       name="disable"

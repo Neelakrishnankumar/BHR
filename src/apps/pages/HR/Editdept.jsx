@@ -132,6 +132,7 @@ const Editdept = () => {
     Loc: apiData.Loc,
     SortOrder: apiData.SortOrder || 0,
     checkbox: Data.Disable === "Y" ? true : false,
+    delete: Data.DeleteFlag === "Y"? true : false
   };
   // **********Save Function*****************
   const fnSave = async (values, del) => {
@@ -168,6 +169,7 @@ const Editdept = () => {
       Loc: values.Loc,
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
+      DeleteFlag: values.delete == true ? "Y" : "N",
       Finyear,
       CompanyID,
     };
@@ -472,6 +474,18 @@ const Editdept = () => {
                   />
                   <FormControl>
                     <Box>
+                       <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="delete"
+                                            id="delete"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Delete"
+                                          />
+                      
+                                          <FormLabel focused={false}>Delete</FormLabel>
                       <Field
                         //  size="small"
                         type="checkbox"

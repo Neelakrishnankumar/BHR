@@ -50,7 +50,7 @@ const Editgate = () => {
   var parentID = params.filtertype;
   const data = useSelector((state) => state.formApi.Data);
   console.log(data);
-  
+
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);
@@ -101,6 +101,7 @@ const Editgate = () => {
     readercode: data.ReaderCode,
     readername: data.ReaderName,
     disable: data.Disable === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y" ? true : false,
     latitude: data.Latitude,
     longitude: data.Longitude
   };
@@ -119,6 +120,7 @@ const Editgate = () => {
       Comments: values.comment,
       SortOrder: values.sortorder || 0,
       Disable: isCheck,
+      DeleteFlag: values.delete == true ? "Y" : "N",
       LocRecordID: parentID,
       ReaderCode: values.readercode,
       ReaderName: values.readername,
@@ -425,7 +427,7 @@ const Editgate = () => {
                     error={!!touched.comment && !!errors.comment}
                     helperText={touched.comment && errors.comment}
                     sx={{ gridColumn: "span 2" }}
-                    
+
                   />
 
                   <TextField
@@ -453,6 +455,18 @@ const Editgate = () => {
                     }}
                   />
                   <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
                       type="checkbox"

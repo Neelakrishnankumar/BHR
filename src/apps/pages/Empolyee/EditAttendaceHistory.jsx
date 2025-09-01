@@ -171,10 +171,10 @@ const EditAttendanceHistory = () => {
     { field: "Day31", headerName: "31", width: 5 },
     { field: "Present", headerName: "Present" },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "UNPAID_LEAVE", headerName: "Unpaid Leave" },
+    { field: "Unpaidleave", headerName: "Unpaid Leave" },
     { field: "Absent", headerName: "Absent" },
     // { field: "Irregular", headerName: "IRREGULAR" },
-    { field: "HOLIDAYS", headerName: "Holiday" },
+    { field: "Holidays", headerName: "Holiday" },
     { field: "Weekoff", headerName: "Weekoff" },
     { field: "Total", headerName: "Total Days" },
   ];

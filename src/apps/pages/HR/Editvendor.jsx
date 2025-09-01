@@ -328,6 +328,8 @@ const Editvendor = () => {
     emailid: data.EmailID || "",
     vendor: data.VendorCheckbox === "Y" ? true : false,
     customer: data.CustomerCheckbox === "Y" ? true : false,
+    delete: data.DeleteFlag === "Y" ? true : false,
+    disable: data.Disable === "Y" ? true : false
   };
   console.log(data.PanImg, "dooo");
   const Fnsave = async (values, del) => {
@@ -361,6 +363,8 @@ const Editvendor = () => {
       CompanyID,
       VendorCheckbox: values.vendor === true ? "Y" : "N",
       CustomerCheckbox: values.customer === true ? "Y" : "N",
+      DeleteFlag: values.delete == true ? "Y" : "N",
+      Disable: values.disable == true ? "Y" : "N",
     };
 
     try {
@@ -892,6 +896,33 @@ const Editvendor = () => {
                       label="Customer"
                     />
                     <FormLabel focused={false}>Customer</FormLabel>
+
+                  </Box>
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
                 </Box>
 
@@ -1279,6 +1310,7 @@ const Editvendor = () => {
                     }}
                     autoFocus
                   />
+
                 </Box>
                 <Box
                   display="flex"

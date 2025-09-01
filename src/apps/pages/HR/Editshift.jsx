@@ -116,6 +116,7 @@ const Editshift = () => {
         friday: data.Friday === "Y" ? true : false,
         saturday: data.Saturday === "Y" ? true : false,
         sunday: data.Sunday === "Y" ? true : false,
+        delete: data.DeleteFlag === "Y" ? true : false
     };
 
     const Fnsave = async (values, del) => {
@@ -146,6 +147,7 @@ const Editshift = () => {
             Saturday: values.saturday === true ? "Y" : "N",
             Sunday: values.sunday === true ? "Y" : "N",
             Disable: isCheck,
+            DeleteFlag: values.delete == true ? "Y" : "N",
             //Finyear,
             CompanyID,
         };
@@ -571,6 +573,18 @@ const Editshift = () => {
                                         }}
                                     />
                                     <Box>
+                                        <Field
+                                            //  size="small"
+                                            type="checkbox"
+                                            name="delete"
+                                            id="delete"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            as={Checkbox}
+                                            label="Delete"
+                                        />
+
+                                        <FormLabel focused={false}>Delete</FormLabel>
                                         <Field
                                             //  size="small"
                                             type="checkbox"
