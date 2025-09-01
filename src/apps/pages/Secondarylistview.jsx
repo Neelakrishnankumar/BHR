@@ -204,7 +204,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
     filter = `${parentID}' AND CompID = '${compID}`;
   } else if (accessID == "TR280") {
     filter = `SkillcategoriesID='${parentID1}' AND CompanyID = '${compID}'`;
-  } else if (accessID == "TR279" || accessID == "281") {
+  } else if (accessID == "TR279" || accessID == "TR281") {
     filter = `AssessmentID ='${parentID1}'`;
   } else if (accessID == "TR282") {
     filter = `QuestionGroupID ='${parentID1}' AND CompanyID = '${compID}'`;
@@ -936,12 +936,12 @@ const [errorMsgData, setErrorMsgData] = useState(null);
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
-                    { state: { ...state } }
-                  );
-                }}
+                // onClick={() => {
+                //   navigate(
+                //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+                //     { state: { ...state } }
+                //   );
+                // }}
               >
                 List of Schedule
               </Typography>

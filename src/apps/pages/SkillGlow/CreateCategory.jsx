@@ -60,6 +60,8 @@ const CreateCategory = () => {
   const accessID = params.accessID;
   const screenName = params.screenName;
   const mode = params.Mode;
+  console.log(params,'-------------');
+  
   const Assessmentid = params.parentID1;
   const CategoryId = params.parentID2;
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");

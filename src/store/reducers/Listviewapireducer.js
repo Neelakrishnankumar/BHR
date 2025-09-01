@@ -486,6 +486,11 @@ export const fetchListview =
       AccessID !== "TR118" &&
       AccessID !== "TR155" &&
       AccessID !== "TR152" &&
+      AccessID !== "TR280" &&
+      AccessID !== "TR279" &&
+      AccessID !== "TR281" &&
+      AccessID !== "TR282" &&
+      AccessID !== "TR283" &&
       AccessID !== "TR148"
     ) {
       if (
@@ -3580,21 +3585,24 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
         {/* EDIT ICON */}
-        {accessID !== "TR279" && accessID !== "TR288" && accessID !== "TR286" && accessID !== "TR283" && (
-          <Tooltip title="Edit">
-            <IconButton
-              color="info"
-              size="small"
-              onClick={() =>
-                navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
-                  state: { ...state },
-                })
-              }
-            >
-              <ModeEditOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        {accessID !== "TR279" &&
+          accessID !== "TR288" &&
+          accessID !== "TR286" &&
+          accessID !== "TR283" && (
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: { ...state },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         {/* {accessID === "TR282" && (<Tooltip title="Edit">
           <IconButton
             color="info"
@@ -3609,25 +3617,8 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           </IconButton>
         </Tooltip>)} */}
 
-        {/* DELETE */}
-        {accessID != "TR279" && accessID !== "TR288" && accessID !== "TR286" && (
-          <Tooltip title="Delete">
-            <IconButton
-              color="error"
-              size="small"
-              onClick={() =>
-                navigate(`./Edit${screenName}/${params.row.RecordID}/D`, {
-                  state: { ...state },
-                })
-              }
-            >
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        )}
-
-        {/* VIEW */}
-        {accessID == "TR279"  && (
+        {/* VIEW FOR SCHEDULE*/}
+        {accessID == "TR283" && (
           <IconButton
             color="primary"
             size="small"
@@ -3642,6 +3633,42 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             </Tooltip>
           </IconButton>
         )}
+        {/* DELETE */}
+        {accessID != "TR279" &&
+          accessID !== "TR288" &&
+          accessID !== "TR286" && (
+            <Tooltip title="Delete">
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/D`, {
+                    state: { ...state },
+                  })
+                }
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          )}
+
+        {/* VIEW */}
+        {accessID == "TR279" && (
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() =>
+              navigate(`./Edit${screenName}/${params.row.RecordID}/V`, {
+                state: { ...state },
+              })
+            }
+          >
+            <Tooltip title="View">
+              <Visibility />
+            </Tooltip>
+          </IconButton>
+        )}
+
         {/* ASSESSMENT CATEGORY */}
         {accessID == "TR286" && (
           <IconButton
@@ -3653,7 +3680,6 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
                 {
                   state: {
                     BreadCrumb1: params.row.Code,
-          
                   },
                 }
               )
@@ -3671,7 +3697,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             size="small"
             onClick={() =>
               navigate(`./TR283/${params.row.RecordID}`, {
-                state:{...state,BreadCrumb2:params.row.code}
+                state: { ...state, BreadCrumb2: params.row.Code },
               })
             }
           >
