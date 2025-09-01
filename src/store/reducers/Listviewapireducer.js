@@ -53,6 +53,7 @@ import QuizIcon from "@mui/icons-material/Quiz";
 
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -560,6 +561,7 @@ export const fetchListview =
         AccessID != "TR279" &&
         AccessID != "TR281" &&
         AccessID != "TR282" &&
+        AccessID != "TR283" &&
         AccessID != "TR262" &&
         AccessID != "TR022"
       ) {
@@ -586,7 +588,13 @@ export const fetchListview =
       if (AccessID === "TR262") {
         filter = "ProjectID=" + `'${filter}'`;
       }
-    } else if (AccessID == "TR280" || AccessID == "TR279" || AccessID == "TR281" || AccessID == "TR282") {
+    } else if (
+      AccessID == "TR280" ||
+      AccessID == "TR279" ||
+      AccessID == "TR281" ||
+      AccessID == "TR282" ||
+      AccessID == "TR283"
+    ) {
       filter = filter;
     } else {
       filter = `CompanyID=${CompId}`;
@@ -625,7 +633,6 @@ export const fetchListview =
         },
       })
       .then((response) => {
-        console.log("without authorization---" + JSON.stringify(response));
         var listviewData = response.data;
         if (listviewData.Status == "Y") {
           var obj = {};
@@ -907,37 +914,55 @@ export const fetchListview =
                 );
               },
             };
-          } else if (AccessID == "TR286") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 250,
-              sortable: false,
-              filterable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link to={`/Apps/SkillGlow/CandidateMain`}>
-                      <IconButton color="primary" size="small">
-                        <Tooltip title="Assessment Category">
-                          <CategoryOutlinedIcon />
-                        </Tooltip>
-                      </IconButton>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          } else if (
+          }
+
+          // else if (AccessID == "TR286") {
+          //   obj = {
+          //     field: "action",
+          //     headerName: "Action",
+          //     minWidth: 250,
+          //     sortable: false,
+          //     filterable: false,
+          //     headerAlign: "center",
+          //     align: "center",
+          //     disableColumnMenu: true,
+          //     disableExport: true,
+          //     renderCell: (params) => {
+          //       return (
+          //         <Box>
+          //           <IconButton
+          //             color="primary"
+          //             size="small"
+          //             onClick={() =>
+          //               navigate(
+          //                 `/Apps/Secondarylistview/skillglow/:accessID/:screenName`,
+          //                 {
+          //                   state: {
+          //                     BreadCrumb1: params.row.Code,
+          //                     EmpID: params.row.RecordID,
+          //                   },
+          //                 }
+          //               )
+          //             }
+          //           >
+          //             <Tooltip title="Assessment Category">
+          //               <CategoryOutlinedIcon />
+          //             </Tooltip>
+          //           </IconButton>
+          //         </Box>
+          //       );
+          //     },
+          //   };
+          // }
+          else if (
             AccessID == "TR278" ||
             AccessID == "TR280" ||
             AccessID == "TR279" ||
             AccessID == "TR281" ||
-            AccessID == "TR282"
+            AccessID == "TR282" ||
+            AccessID == "TR288" ||
+            AccessID == "TR286" ||
+            AccessID == "TR283"
           ) {
             obj = {
               field: "action",
@@ -3554,21 +3579,22 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-
         {/* EDIT ICON */}
-        {accessID !== "TR279" && (<Tooltip title="Edit">
-          <IconButton
-            color="info"
-            size="small"
-            onClick={() =>
-              navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
-                state: { ...state },
-              })
-            }
-          >
-            <ModeEditOutlinedIcon />
-          </IconButton>
-        </Tooltip>)}
+        {accessID !== "TR279" && accessID !== "TR288" && accessID !== "TR286" && accessID !== "TR283" && (
+          <Tooltip title="Edit">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  state: { ...state },
+                })
+              }
+            >
+              <ModeEditOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         {/* {accessID === "TR282" && (<Tooltip title="Edit">
           <IconButton
             color="info"
@@ -3584,22 +3610,24 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         </Tooltip>)} */}
 
         {/* DELETE */}
-        {accessID != "TR279" && (<Tooltip title="Delete">
-          <IconButton
-            color="error"
-            size="small"
-            onClick={() =>
-              navigate(`./Edit${screenName}/${params.row.RecordID}/D`, {
-                state: { ...state },
-              })
-            }
-          >
-            <Delete />
-          </IconButton>
-        </Tooltip>)}
-        
+        {accessID != "TR279" && accessID !== "TR288" && accessID !== "TR286" && (
+          <Tooltip title="Delete">
+            <IconButton
+              color="error"
+              size="small"
+              onClick={() =>
+                navigate(`./Edit${screenName}/${params.row.RecordID}/D`, {
+                  state: { ...state },
+                })
+              }
+            >
+              <Delete />
+            </IconButton>
+          </Tooltip>
+        )}
+
         {/* VIEW */}
-        {accessID == "TR279" && (
+        {accessID == "TR279"  && (
           <IconButton
             color="primary"
             size="small"
@@ -3614,6 +3642,44 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             </Tooltip>
           </IconButton>
         )}
+        {/* ASSESSMENT CATEGORY */}
+        {accessID == "TR286" && (
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() =>
+              navigate(
+                `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
+                {
+                  state: {
+                    BreadCrumb1: params.row.Code,
+          
+                  },
+                }
+              )
+            }
+          >
+            <Tooltip title="Assessment Category">
+              <CategoryOutlinedIcon />
+            </Tooltip>
+          </IconButton>
+        )}
+        {/* ASSESSMENT CATEGORY */}
+        {accessID == "TR288" && (
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() =>
+              navigate(`./TR283/${params.row.RecordID}`, {
+                state:{...state,BreadCrumb2:params.row.code}
+              })
+            }
+          >
+            <Tooltip title="Schedule">
+              <Psychology />
+            </Tooltip>
+          </IconButton>
+        )}
 
         {accessID == "TR278" && (
           <IconButton
@@ -3623,7 +3689,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               navigate(
                 `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`,
                 {
-                  state: {BreadCrumb1:params.row.Code},
+                  state: { BreadCrumb1: params.row.Code },
                 }
               )
             }
@@ -3642,7 +3708,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               navigate(
                 `/Apps/Secondarylistview/skillglow/TR279/List Of Session/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
                 {
-                  state: {...state,BreadCrumb2:params.row.Code},
+                  state: { ...state, BreadCrumb2: params.row.Code },
                 }
               )
             }
@@ -3657,11 +3723,11 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           <IconButton
             color="primary"
             size="small"
-             onClick={() =>
+            onClick={() =>
               navigate(
                 `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
                 {
-                  state: {...state,BreadCrumb2:params.row.Code},
+                  state: { ...state, BreadCrumb2: params.row.Code },
                 }
               )
             }
@@ -3677,20 +3743,20 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             color="primary"
             size="small"
             onClick={() =>
-              navigate(
-                `./TR282/${params.row.RecordID}`,
-                {
-                  state: {...state,BreadCrumb3:params.row.Code, AnswerType:params.row.AnswerType},
-                }
-              )
+              navigate(`./TR282/${params.row.RecordID}`, {
+                state: {
+                  ...state,
+                  BreadCrumb3: params.row.Code,
+                  AnswerType: params.row.AnswerType,
+                },
+              })
             }
-            
           >
             <Tooltip title="Question">
-              <QuizIcon/>
+              <QuizIcon />
             </Tooltip>
           </IconButton>
-        ) }
+        )}
       </div>
     </Fragment>
   );

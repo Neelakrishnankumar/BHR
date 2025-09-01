@@ -18,7 +18,7 @@ import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import BalanceIcon from '@mui/icons-material/Balance';
+import BalanceIcon from "@mui/icons-material/Balance";
 import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import {
@@ -52,11 +52,15 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import axios from "axios";
 import toast from "react-hot-toast";
 import store from "../..";
-import { Delete, Psychology, Category, Visibility} from "@mui/icons-material";
+import { Delete, Psychology, Category, Visibility } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../ui-components/global/utils";
+import {
+  dataGridHeaderFooterHeight,
+  dataGridHeight,
+  dataGridRowHeight,
+} from "../../ui-components/global/utils";
 import QuizIcon from "@mui/icons-material/Quiz";
-
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -70,10 +74,10 @@ const ListviewSecondary = () => {
   var CompId = sessionStorage.getItem("compID");
 
   const state = location.state || {};
-  let BreadCrumb1 =  state.BreadCrumb1 || ""
-  let BreadCrumb2 =  state.BreadCrumb2 || ""
-  let BreadCrumb3 =  state.BreadCrumb3 || ""
-  let Answertype =  state.AnswerType || ""
+  let BreadCrumb1 = state.BreadCrumb1 || "";
+  let BreadCrumb2 = state.BreadCrumb2 || "";
+  let BreadCrumb3 = state.BreadCrumb3 || "";
+  let Answertype = state.AnswerType || "";
 
   const isproductionPopupOpen = useSelector(
     (state) => state.listviewApi.isLookupOpen
@@ -106,16 +110,14 @@ const ListviewSecondary = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   //const rowData = location.state || {};
 
-
-    // skillglow
+  // skillglow
 
   let parentID1 = params.parentID1;
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
 
-
-
-
+  
+  
 
   var Description = params.Desc;
   var Number = params.Number;
@@ -140,22 +142,15 @@ const ListviewSecondary = () => {
     filter = `${parentID}' AND Finyear='${year}' AND RemarkRecordID='${parentRecID}' AND CompID = '${compID}`;
   } else if (accessID == "TR151") {
     filter = "";
-  }
-  else if (accessID == "TR233") {
-
+  } else if (accessID == "TR233") {
     filter = `CompanyID='${CompId}' AND ProjectID='${parentID}'`;
-  }
-  else if (accessID == "TR236") {
+  } else if (accessID == "TR236") {
     filter = `CompanyID='${CompId}' AND MilestoneID='${parentID}'`;
-  }
-  else if (accessID == "TR234") {
+  } else if (accessID == "TR234") {
     filter = `CompanyID='${CompId}' AND OperationStageID='${parentID}'`;
-  }
-  else if (accessID == "TR235") {
+  } else if (accessID == "TR235") {
     filter = `CompanyID='${CompId}' AND ActivitesID='${parentID}'`;
-  }
-
-  else if (accessID == "TR063") {
+  } else if (accessID == "TR063") {
     filter = `Finyear='${year}'`;
   } else if (accessID == "TR004") {
     filter = `parentID='${parentID}' AND STKType='${Number}'AND (Finyear='${year}' OR Finyear IS NULL)`;
@@ -164,12 +159,13 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR079") {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR097") {
-    filter = `${parentID.slice(-1) == "I"
+    filter = `${
+      parentID.slice(-1) == "I"
         ? "(DcType IN ('I','B'))"
         : parentID === "PO"
-          ? "(DcType IN ('O','P'))"
-          : "(DcType IN ('O','B'))"
-      }`;
+        ? "(DcType IN ('O','P'))"
+        : "(DcType IN ('O','B'))"
+    }`;
   } else if (accessID == "TR102") {
     filter = `InvType='${parentID}'`;
   } else if (accessID == "TR123") {
@@ -187,21 +183,24 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR118") {
     filter = "";
   } else if (accessID == "TR051") {
-    filter = `parentID='${parentID}' AND ${params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
-      }`;
+    filter = `parentID='${parentID}' AND ${
+      params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
+    }`;
   } else if (accessID == "TR091") {
     filter = `parentID=${params.bomID}`;
   } else if (accessID == "TR087") {
     filter = `${parentID}' AND CompID = '${compID}`;
   } else if (accessID == "TR280") {
     filter = `SkillcategoriesID='${parentID1}' AND CompanyID = '${compID}'`;
-  }
-  else if (accessID == "TR279" || accessID == "281") {
+  } else if (accessID == "TR279" || accessID == "281") {
     filter = `AssessmentID ='${parentID1}'`;
-  }else if (accessID == "TR282") {
+  } else if (accessID == "TR282") {
     filter = `QuestionGroupID ='${parentID1}' AND CompanyID = '${compID}'`;
-  }
-  else {
+  } else if (accessID == "TR288") {
+    filter = "";
+  } else if (accessID == "TR283") {
+    filter = `EmployeeID ='${parentID2}'`;
+  } else {
     filter = parentID;
   }
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -226,7 +225,7 @@ const ListviewSecondary = () => {
       FromMatrialID: childdata.parentID,
       ToMatrialID: childdata.RecordID,
       PrCardHeaderID: productionCardRecid,
-    })
+    });
     var url = store.getState().globalurl.alterNateMaterial;
 
     const response = await axios.post(
@@ -253,7 +252,6 @@ const ListviewSecondary = () => {
       dispatch(productionlookupOpen({ materialRecID: 0, productionCardID: 0 }));
       dispatch(fetchListview(accessID, screenName, filter, "", compID));
     }
-
   };
 
   function filterByID(item) {
@@ -268,15 +266,22 @@ const ListviewSecondary = () => {
   // );
 
   const columns = React.useMemo(
-    () => listViewcolumn.filter(filterByID) ? [{
-      field: "slno",
-      headerName: "SL#",
-      width: 50,
-      sortable: false,
-      filterable: false,
-      valueGetter: (params) =>
-        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
-    }, , ...listViewcolumn.filter(filterByID)] : [],
+    () =>
+      listViewcolumn.filter(filterByID)
+        ? [
+            {
+              field: "slno",
+              headerName: "SL#",
+              width: 50,
+              sortable: false,
+              filterable: false,
+              valueGetter: (params) =>
+                `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+            },
+            ,
+            ...listViewcolumn.filter(filterByID),
+          ]
+        : [],
     [listViewcolumn]
   );
   var apprval = "";
@@ -699,7 +704,7 @@ const ListviewSecondary = () => {
             </Breadcrumbs>
           </Box>
         ) : accessID == "TR281" ? (
-            <Box display="flex" borderRadius="3px" alignItems="center">
+          <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
@@ -721,7 +726,8 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,{state:{...state}}
+                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+                    { state: { ...state } }
                   );
                 }}
               >
@@ -735,9 +741,9 @@ const ListviewSecondary = () => {
                 List of Question Groups
               </Typography>
             </Breadcrumbs>
-            </Box>
-          ) : accessID == "TR282" ? (
-            <Box display="flex" borderRadius="3px" alignItems="center">
+          </Box>
+        ) : accessID == "TR282" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
@@ -759,8 +765,9 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID3}`,{state:{...state}}
-                 );
+                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID3}`,
+                    { state: { ...state } }
+                  );
                 }}
               >
                 List of Assessment ({BreadCrumb2})
@@ -771,8 +778,9 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID3}/${params.parentID2}`,{state:{...state}}
-                 );
+                    `/Apps/Secondarylistview/skillglow/TR281/List%20Of%20Question%20Groups/${params.parentID3}/${params.parentID2}`,
+                    { state: { ...state } }
+                  );
                 }}
               >
                 List of Question Groups ({BreadCrumb3})
@@ -785,9 +793,9 @@ const ListviewSecondary = () => {
                 List of Question
               </Typography>
             </Breadcrumbs>
-            </Box>
-          ): accessID == "TR280" ? (
-            <Box display="flex" borderRadius="3px" alignItems="center">
+          </Box>
+        ) : accessID == "TR280" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
@@ -816,10 +824,9 @@ const ListviewSecondary = () => {
                 List of Assessment
               </Typography>
             </Breadcrumbs>
-            </Box>
-          )
-          : accessID == "TR279" ? (
-            <Box display="flex" borderRadius="3px" alignItems="center">
+          </Box>
+        ) : accessID == "TR279" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
@@ -841,7 +848,8 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,{state:{...state}}
+                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+                    { state: { ...state } }
                   );
                 }}
               >
@@ -855,8 +863,79 @@ const ListviewSecondary = () => {
                 List of Session
               </Typography>
             </Breadcrumbs>
-            </Box>
-          ): accessID == "TR073" ? (
+          </Box>
+        ) : accessID == "TR288" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR286/List%20of%20Employees");
+                }}
+              >
+                List of Employees ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }} 
+              >
+                List of Assessment Category
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR283" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR286/List%20of%20Employees");
+                }}
+              >
+                List of Employees ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID2}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Assessment Category ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Schedule
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ): accessID == "TR073" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
@@ -2036,9 +2115,7 @@ const ListviewSecondary = () => {
               color="#0000D1"
               sx={{ cursor: "default" }}
               onClick={() => {
-                navigate(
-                  `/Apps/TR128/Location`
-                );
+                navigate(`/Apps/TR128/Location`);
               }}
             >
               {/* Location */}
@@ -2107,214 +2184,215 @@ const ListviewSecondary = () => {
               {screenName}
             </Typography>
           </Breadcrumbs>
-        )
-          :
-          accessID == "TR233" ? (
-            <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+        ) : accessID == "TR233" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate("/Apps/TR133/Project");
+                navigate(-1);
+              }}
             >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  //navigate("/Apps/TR133/Project");
-                  navigate(-1);
-                }}
-              >
-                {`Project(${state.projectName})`}
-              </Typography>
+              {`Project(${state.projectName})`}
+            </Typography>
 
-              <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                {screenName}
-              </Typography>
-            </Breadcrumbs>
-          ) : accessID == "TR236" ? (
-            <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR236" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
             >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate("/Apps/TR133/Project");
-                }}
-              >
-                {`Project(${state.projectName})`}
-              </Typography>
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
-                  navigate(-1);
-                }}
-              >
-                {`Milestones(${state.MilestoneName})`}
-              </Typography>
+              {`Project(${state.projectName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,{state:{...state}});
+                navigate(-1);
+              }}
+            >
+              {`Milestones(${state.MilestoneName})`}
+            </Typography>
 
-              <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                {screenName}
-              </Typography>
-            </Breadcrumbs>
-          )
-            : accessID == "TR234" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR133/Project");
-                  }}
-                >
-                  {`Project(${state.projectName})`}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } });
-                  }}
-                >
-                  {`Milestones(${state.MilestoneName})`}
-                  {/* Milestone */}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
-                    navigate(-1);
-                  }}
-                >
-                  {`Stages(${state.stagesName})`}
-                </Typography>
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR234" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
+            >
+              {`Project(${state.projectName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(
+                  `/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,
+                  { state: { ...state } }
+                );
+              }}
+            >
+              {`Milestones(${state.MilestoneName})`}
+              {/* Milestone */}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,{state:{...state}});
+                navigate(-1);
+              }}
+            >
+              {`Stages(${state.stagesName})`}
+            </Typography>
 
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  {screenName}
-                </Typography>
-              </Breadcrumbs>
-            ) : accessID == "TR235" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR133/Project");
-                  }}
-                >
-                  {`Project(${state.projectName})`}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR235" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR133/Project");
+              }}
+            >
+              {`Project(${state.projectName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(
+                  `/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`,
+                  { state: { ...state } }
+                );
+              }}
+            >
+              {`Milestones(${state.MilestoneName})`}
+              {/* Milestone             */}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(
+                  `/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`,
+                  { state: { ...state } }
+                );
+              }}
+            >
+              {`stages(${state.stagesName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
+                navigate(-1);
+              }}
+            >
+              {`Activities(${state.Activityname})`}
+            </Typography>
 
-                    navigate(`/Apps/Secondarylistview/TR233/Milestones/${state.projectID}`, { state: { ...state } });
-                  }}
-                >
-                  {`Milestones(${state.MilestoneName})`}
-                  {/* Milestone             */}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(`/Apps/Secondarylistview/TR236/Stages/${state.MilestoneID}`, { state: { ...state } });
-                  }}
-                >
-                  {`stages(${state.stagesName})`}
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR124" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employees", { state: state });
+              }}
+            >
+              {`Employee(${state.EmpName})`}
+            </Typography>
 
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    //navigate(`/Apps/Secondarylistview/TR234/Activities/${state.OperationStageID}`,{state:{...state}});
-                    navigate(-1);
-                  }}
-                >
-                  {`Activities(${state.Activityname})`}
-                </Typography>
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR123" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employees", { state: state });
+              }}
+            >
+              {/* Employee */}
+              {`Employee(${state.EmpName})`}
+            </Typography>
 
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  {screenName}
-                </Typography>
-              </Breadcrumbs>
-            ) : accessID == "TR124" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR027/Employees", { state: state });
-                  }}
-                >
-                  {`Employee(${state.EmpName})`}
-                </Typography>
-
-
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  {screenName}
-                </Typography>
-              </Breadcrumbs>
-            ) : accessID == "TR123" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR027/Employees", { state: state });
-                  }}
-                >
-                  {/* Employee */}
-                  {`Employee(${state.EmpName})`}
-
-                </Typography>
-
-
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  {screenName}
-                </Typography>
-              </Breadcrumbs>
-            ) : accessID == "TR132" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                {/* <Typography
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR132" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            {/* <Typography
               variant="h5"
               color="#0000D1"
               sx={{ cursor: "default" }}
@@ -2324,93 +2402,96 @@ const ListviewSecondary = () => {
             >
                {`Employee(${state.EmpName})`}
             </Typography> */}
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    //navigate("/Apps/TR123/Check%20In");
-                    navigate(-1);
-                  }}
-                >
-                  {`Check In(${state.Locname})`}
-                </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                //navigate("/Apps/TR123/Check%20In");
+                navigate(-1);
+              }}
+            >
+              {`Check In(${state.Locname})`}
+            </Typography>
 
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  {screenName}
-                </Typography>
-              </Breadcrumbs>
-            ) : accessID == "TR134" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR027/Employees");
-                  }}
-                >
-                  {`Employee(${state.EmpName})`}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate(`/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`, { state: { ...state } });
-                  }}
-                >
-                  {`Check In(${state.Locname})`}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    // navigate(
-                    //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
-                    // );
-                    navigate(-1);
-                  }}
-                >
-                  {/* {`DailyTask(${state.proName})`} */}
-                  {`DailyTask(${state.Date})`}
-                </Typography>
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  {screenName}
-                </Typography>
-              </Breadcrumbs>
-            ) : accessID == "TR095" ? (
-              <Breadcrumbs
-                maxItems={2}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    navigate("/Apps/TR099/Companies");
-                  }}
-                >
-                  Companies
-                </Typography>
-                <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-                  User Groups
-                </Typography>
-              </Breadcrumbs>
-            ) : (
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Typography variant="h3" color="#0000D1">
-                  {screenName}
-                </Typography>
-              </Box>
-            )}
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR134" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR027/Employees");
+              }}
+            >
+              {`Employee(${state.EmpName})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate(
+                  `/Apps/Secondarylistview/TR123/Check%20In/${state.checkinID}`,
+                  { state: { ...state } }
+                );
+              }}
+            >
+              {`Check In(${state.Locname})`}
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                // navigate(
+                //   `/Apps/Secondarylistview/TR132/DailyTask/${params.Number}`
+                // );
+                navigate(-1);
+              }}
+            >
+              {/* {`DailyTask(${state.proName})`} */}
+              {`DailyTask(${state.Date})`}
+            </Typography>
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              {screenName}
+            </Typography>
+          </Breadcrumbs>
+        ) : accessID == "TR095" ? (
+          <Breadcrumbs
+            maxItems={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+          >
+            <Typography
+              variant="h5"
+              color="#0000D1"
+              sx={{ cursor: "default" }}
+              onClick={() => {
+                navigate("/Apps/TR099/Companies");
+              }}
+            >
+              Companies
+            </Typography>
+            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
+              User Groups
+            </Typography>
+          </Breadcrumbs>
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography variant="h3" color="#0000D1">
+              {screenName}
+            </Typography>
+          </Box>
+        )}
         <Box justifyContent="end" display="flex">
           {broken && !rtl && (
             <IconButton onClick={() => toggleSidebar()}>
@@ -2452,6 +2533,8 @@ const ListviewSecondary = () => {
             false
           ) : accessID == "TR115" ? (
             false
+          ) : accessID == "TR288" ? (
+            false
           ) : accessID == "TR003" ? (
             <Box>
               <Tooltip arrow title="Stock Order">
@@ -2468,12 +2551,14 @@ const ListviewSecondary = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName === "Remarks"
-                          ? "Delivery Chalan"
-                          : screenName
-                        }/-1/A`, {
-                        state: { ...state }
-                      }
+                        `./Edit${
+                          screenName === "Remarks"
+                            ? "Delivery Chalan"
+                            : screenName
+                        }/-1/A`,
+                        {
+                          state: { ...state },
+                        }
                       );
                     }}
                   />
@@ -2486,12 +2571,14 @@ const ListviewSecondary = () => {
                 <AddOutlinedIcon
                   onClick={() => {
                     navigate(
-                      `./Edit${screenName === "Remarks"
-                        ? "Delivery Chalan"
-                        : screenName
-                      }/-1/A`, {
-                      state: { ...state }
-                    }
+                      `./Edit${
+                        screenName === "Remarks"
+                          ? "Delivery Chalan"
+                          : screenName
+                      }/-1/A`,
+                      {
+                        state: { ...state },
+                      }
                     );
                   }}
                 />
@@ -2539,7 +2626,6 @@ const ListviewSecondary = () => {
     setPage(pageno);
     sessionStorage.setItem("secondaryCurrentPage", pageno);
   };
-
 
   return (
     <React.Fragment>
@@ -2589,7 +2675,7 @@ const ListviewSecondary = () => {
               "& .MuiDataGrid-footerContainer": {
                 height: dataGridHeaderFooterHeight,
                 minHeight: dataGridHeaderFooterHeight,
-              }
+              },
             }}
             key={accessID}
             rows={listViewData}
@@ -2622,8 +2708,8 @@ const ListviewSecondary = () => {
             // }
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0
-                ? 'odd-row'
-                : 'even-row'
+                ? "odd-row"
+                : "even-row"
             }
           />
         </Box>
@@ -2659,70 +2745,90 @@ const ListviewSecondary = () => {
             />
           </Box>
         ) : accessID == "TR280" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<AccessTimeIcon color="primary" />}
-                      label="Session"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Category color="primary" />}
-                      label="Question Group"
-                      variant="outlined"
-                    />
-                     <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Delete color="error" />}
-                      label="Delete"
-                      variant="outlined"
-                    />
-                  </Box>
-                ) : accessID == "TR281" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<QuizIcon color="primary" />}
-                      label="Question"
-                      variant="outlined"
-                    />
-      
-                     <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Delete color="error" />}
-                      label="Delete"
-                      variant="outlined"
-                    />
-                  </Box>
-                ): accessID == "TR282" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                     <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<Delete color="error" />}
-                      label="Delete"
-                      variant="outlined"
-                    />
-                  </Box>
-                ):accessID == "TR279" ? (
-                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                    <Chip
-                      icon={<Visibility color="primary" />}
-                      label="View"
-                      variant="outlined"
-                    />
-                    
-                  </Box>
-                ): accessID == "TR032" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<AccessTimeIcon color="primary" />}
+              label="Session"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Category color="primary" />}
+              label="Question Group"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR288" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<Psychology color="primary" />}
+              label="Schedule"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR283" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+           <Chip
+              icon={<Visibility color="primary" />}
+              label="View"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR281" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<QuizIcon color="primary" />}
+              label="Question"
+              variant="outlined"
+            />
+
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR282" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR279" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<Visibility color="primary" />}
+              label="View"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR032" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -3062,73 +3168,69 @@ const ListviewSecondary = () => {
           false
         ) : accessID == "TR102" ? (
           false
-        )
-          : accessID == "TR233" ? (
-            <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-              <Chip
-                icon={<BalanceIcon color="primary" />}
-                label="Stage Weightage"
-                variant="outlined"
-              />
-              <Chip
-                icon={<ModeEditOutlinedIcon color="primary" />}
-                label="Edit"
-                variant="outlined"
-              />
-              <Chip
-                icon={<ListAltOutlinedIcon color="primary" />}
-                label="List of Stages"
-                variant="outlined"
-              />
-            </Box>
-          )
-            : accessID == "TR236" ? (
-              <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                <Chip
-                  icon={<BalanceIcon color="primary" />}
-                  label="Activity Weightage"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<ModeEditOutlinedIcon color="primary" />}
-                  label="Edit"
-                  variant="outlined"
-                />
-                <Chip
-                  icon={<ListAltOutlinedIcon color="primary" />}
-                  label="List of Activities"
-                  variant="outlined"
-                />
-              </Box>
-            )
-              : accessID == "TR234" ? (
-                <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                  <Chip
-                    icon={<BalanceIcon color="primary" />}
-                    label="Task Weightage"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Tasks"
-                    variant="outlined"
-                  />
-                </Box>
-              )
-                : (
-                  <Box display="flex" flexDirection="row" padding="25px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                  </Box>
-                )}
+        ) : accessID == "TR233" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Stage Weightage"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Stages"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR236" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Activity Weightage"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Activities"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR234" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            <Chip
+              icon={<BalanceIcon color="primary" />}
+              label="Task Weightage"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="List of Tasks"
+              variant="outlined"
+            />
+          </Box>
+        ) : (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+          </Box>
+        )}
       </Box>
       <MatxCustomizer
         open={open}

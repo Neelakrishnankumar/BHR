@@ -187,6 +187,47 @@ function App() {
                   />
 
                   {/* SKILL GLOW */}
+                 
+                  {/* SCHEDULE */}
+                   <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+
+                     <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
+                    element={<CreateCandidates />}
+                  />
+                
+                  {/* Session */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Session/:id/:Mode"
+                    element={<CreateSession />}
+                  />
+                  {/* QUESTION GROUP */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                   <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Question Groups/:id/:Mode"
+                    element={<CreateCategory />}
+                  />
+
+                  {/* QUESTION */}
+                   <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Question Groups/:id/:Mode"
+                    element={<CreateQuestion />}
+                  />
+
                   <Route
                     path="/SkillGlow/CategoryMain"
                     element={<CategoryMain />}
@@ -244,10 +285,7 @@ function App() {
                     path="/SkillGlow/SkillGlowList/CandidateList"
                     element={<CandidateList />}
                   />
-                  <Route
-                    path="/SkillGlow/SkillGlowList/CandidateList/CreateCandidates"
-                    element={<CreateCandidates />}
-                  />
+               
                   {/* <Route
                     path="SkillGlow/SkillGlowList/SkillGlowSession/CreateSession"
                     element={<CreateSession />}
@@ -477,34 +515,7 @@ function App() {
                     element={<ListviewSecondary />}
                   />
 
-                  {/* Session */}
-                  <Route
-                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
-                    element={<ListviewSecondary />}
-                  />
-                  <Route
-                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Session/:id/:Mode"
-                    element={<CreateSession />}
-                  />
-                  {/* QUESTION GROUP */}
-                  <Route
-                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
-                    element={<ListviewSecondary />}
-                  />
-                   <Route
-                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Question Groups/:id/:Mode"
-                    element={<CreateCategory />}
-                  />
 
-                  {/* QUESTION */}
-                   <Route
-                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
-                    element={<ListviewSecondary />}
-                  />
-                  <Route
-                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Question Groups/:id/:Mode"
-                    element={<CreateQuestion />}
-                  />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number"
                     element={<ListviewSecondary />}
