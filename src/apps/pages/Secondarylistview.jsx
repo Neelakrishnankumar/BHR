@@ -192,7 +192,7 @@ const ListviewSecondary = () => {
     filter = `${parentID}' AND CompID = '${compID}`;
   } else if (accessID == "TR280") {
     filter = `SkillcategoriesID='${parentID1}' AND CompanyID = '${compID}'`;
-  } else if (accessID == "TR279" || accessID == "281") {
+  } else if (accessID == "TR279" || accessID == "TR281") {
     filter = `AssessmentID ='${parentID1}'`;
   } else if (accessID == "TR282") {
     filter = `QuestionGroupID ='${parentID1}' AND CompanyID = '${compID}'`;

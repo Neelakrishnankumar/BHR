@@ -486,6 +486,11 @@ export const fetchListview =
       AccessID !== "TR118" &&
       AccessID !== "TR155" &&
       AccessID !== "TR152" &&
+      AccessID !== "TR280" &&
+      AccessID !== "TR279" &&
+      AccessID !== "TR281" &&
+      AccessID !== "TR282" &&
+      AccessID !== "TR283" &&
       AccessID !== "TR148"
     ) {
       if (
