@@ -69,7 +69,7 @@ const Editdesignation = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
-        console.log(data,"errormsgdta");
+        console.log(data, "errormsgdta");
         let schemaFields = {
           name: Yup.string().required(data.Designation.name),
           rank: Yup.string().required(data.Designation.rank),
@@ -96,7 +96,7 @@ const Editdesignation = () => {
     rank: data.DesignationRank,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
-    delete: data.DeleteFlag === "Y"? true : false
+    delete: data.DeleteFlag === "Y" ? true : false
   };
 
   const Fnsave = async (values, del) => {
@@ -143,7 +143,7 @@ const Editdesignation = () => {
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -329,17 +329,17 @@ const Editdesignation = () => {
                     name="rank"
                     type="number"
                     id="rank"
-                     label={
-                        <>
-                        Rank<span style={{color:"red",fontSize:"20px"}}>*</span>
-                        </>
-                      }
+                    label={
+                      <>
+                        Rank<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.rank}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                   
+
                     onWheel={(e) => e.target.blur()}
                     InputProps={{
                       inputProps: {
@@ -447,7 +447,21 @@ const Editdesignation = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values, "harddelete");
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            Fnsave(values,"harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
                       }}
                     >
                       Delete

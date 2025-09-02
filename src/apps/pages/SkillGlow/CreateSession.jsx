@@ -68,10 +68,32 @@ const CreateSession = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
   const state = location.state || {};
-
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          Code: Yup.string().required(data.ListofSession.Code),
+          Name: Yup.string().required(data.ListofSession.Name),
+          ContentType: Yup.string().required(data.ListofSession.ContentType),
+          // //AttachmentName: Yup.string().required("Choose at least one Document"),
+          // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // Disable: Yup.boolean(),
+        })
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -105,15 +127,9 @@ const CreateSession = () => {
     }
   };
 
-
-
-
-
-
-
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -145,14 +161,14 @@ const CreateSession = () => {
     Disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Name: Yup.string().required("Please Enter Description Here"),
-    ContentType: Yup.string().required("Choose at least one Document Type"),
-    //AttachmentName: Yup.string().required("Choose at least one Document"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Name: Yup.string().required("Please Enter Description Here"),
+  //   ContentType: Yup.string().required("Choose at least one Document Type"),
+  //   //AttachmentName: Yup.string().required("Choose at least one Document"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
   return (
     <>
       <React.Fragment
@@ -262,258 +278,273 @@ const CreateSession = () => {
             </Box>
           </Box>
         </Paper>
- {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                SessionSaveFn(values, resetForm);
-              }, 100);
-              console.log(values, "----Session.");
-            }}
-            enableReinitialize={true}
-            validationSchema={validationSchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleSubmit,
-              setFieldTouched,
-            }) => (
-              <Form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {/* TEXTFIELD */}
-                  <TextField
-                    variant="standard"
-                    type="text"
-                    name="Code"
-                    label="Code"
-                    id="Code"
-                    //placeholder="Enter Your code here......"
-                    value={values.Code}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    focused
-                    error={!!touched.Code && !!errors.Code}
-                    helperText={touched.Code && errors.Code}
-                    //disabled={mode === "V"}
-                    inputProps={{ readOnly: mode == "V" }}
+        {!getLoading ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  SessionSaveFn(values, resetForm);
+                }, 100);
+                console.log(values, "----Session.");
+              }}
+              enableReinitialize={true}
+              validationSchema={validationSchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                handleSubmit,
+                setFieldTouched,
+              }) => (
+                <Form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
-                  />
-                  <TextField
-                    variant="standard"
-                    type="text"
-                    name="Name"
-                    label="Name"
-                    id="Name"
-                    //placeholder="Enter Your Description here......"
-                    value={values.Name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    focused
-                    error={!!touched.Name && !!errors.Name}
-                    helperText={touched.Name && errors.Name}
-                    //disabled={mode === "V"}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    inputProps={{ readOnly: mode == "V" }}
-                  />
-
-                  {/* DROPDOWN */}
-
-                  <FormControl
-                    focused
-                    variant="standard"
-                    sx={{ background: "#ffffff" }}
                   >
-                    <InputLabel id="ContentType">Document Type</InputLabel>
-                    <Select
-                      labelId="question-type-label"
-                      // value={values.QType}
-                      // onChange={handleChange}
-                      label="Please Select Document Type"
+                    {/* TEXTFIELD */}
+                    <TextField
+                      variant="standard"
+                      type="text"
+                      name="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      id="Code"
+                      //placeholder="Enter Your code here......"
+                      value={values.Code}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      focused
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      //disabled={mode === "V"}
+                      inputProps={{ readOnly: mode == "V" }}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                    />
+                    <TextField
+                      variant="standard"
+                      type="text"
+                      name="Name"
+                      label={
+                        <>
+                          Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      id="Name"
+                      //placeholder="Enter Your Description here......"
+                      value={values.Name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      focused
+                      error={!!touched.Name && !!errors.Name}
+                      helperText={touched.Name && errors.Name}
+                      //disabled={mode === "V"}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      inputProps={{ readOnly: mode == "V" }}
+                    />
+
+                    {/* DROPDOWN */}
+
+                    {/* <FormControl
+                      focused
+                      variant="standard"
+                      sx={{ background: "#ffffff" }}
+                    >
+                      <InputLabel id="ContentType">Document Type</InputLabel> */}
+                    <TextField
+                      // label="Please Select Document Type"
+                      label={
+                        <>
+                          Document Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       name="ContentType"
                       id="ContentType"
-                      required
+                      // required
+                      focused
+                      variant="standard"
                       value={values.ContentType}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       inputProps={{ readOnly: mode == "V" }}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
+                      select
+                      error={!!touched.ContentType && !!errors.ContentType}
+                      helperText={touched.ContentType && errors.ContentType}
+                    // MenuProps={{
+                    //   PaperProps: {
+                    //     sx: {
+                    //       mt: 1, // Add space so the top border doesn’t get cut
+                    //     },
+                    //   },
+                    // }}
                     >
                       <MenuItem value="Pdf">Pdf</MenuItem>
                       <MenuItem value="Ppt">Ppt</MenuItem>
                       <MenuItem value="Link">Link</MenuItem>
                       {/* ✅ unique value */}
-                    </Select>
-                  </FormControl>
+                    </TextField>
+                    {/* </FormControl> */}
 
-                  {/* SORT ORDER */}
+                    {/* SORT ORDER */}
 
-                  <TextField
-                    variant="standard"
-                    name="SortOrder"
-                    id="SortOrder"
-                    type="number"
-                    label="Sort Order"
-                    value={values.SortOrder}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={!!touched.SortOrder && !!errors.SortOrder}
-                    helperText={touched.SortOrder && errors.SortOrder}
-                    //disabled={mode === "V"}
-                    sx={{ background: "" }}
-                    focused
-                    onWheel={(e) => e.target.blur()}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                        readOnly: mode == "V",
-                      },
-                    }}
-                  />
+                    <TextField
+                      variant="standard"
+                      name="SortOrder"
+                      id="SortOrder"
+                      type="number"
+                      label="Sort Order"
+                      value={values.SortOrder}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.SortOrder && !!errors.SortOrder}
+                      helperText={touched.SortOrder && errors.SortOrder}
+                      //disabled={mode === "V"}
+                      sx={{ background: "" }}
+                      focused
+                      onWheel={(e) => e.target.blur()}
+                      onInput={(e) => {
+                        e.target.value = Math.max(0, parseInt(e.target.value))
+                          .toString()
+                          .slice(0, 8);
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                          readOnly: mode == "V",
+                        },
+                      }}
+                    />
 
-                  {/* CHECKBOX */}
+                    {/* CHECKBOX */}
 
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="Disable"
-                        checked={values.Disable}
-                        onChange={handleChange}
-                        disabled={mode === "V"}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="Disable"
+                          checked={values.Disable}
+                          onChange={handleChange}
+                          disabled={mode === "V"}
 
                         //inputProps={{ readOnly: mode == "V" }}
-                      />
-                    }
-                    label="Disable"
-                    // sx={{
-                    //   marginTop: "20px",
-                    //   "@media (max-width:500px)": {
-                    //     marginTop: 0,
-                    //   },
-                    // }}
-                    inputProps={{ readOnly: mode == "V" }}
-                  />
-                </Box>
-                {/* BUTTONS */}
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  gap={2}
-                >
-                  {values.ContentType != "Link" && (
-                    <React.Fragment>
-                      <Tooltip title="Upload a file">
-                      <IconButton
-                        disabled={mode === "V"}
-                        size="small"
-                        color="primary"
-                        aria-label="upload picture"
-                        component="label"
-                      >
-                        <input
-                          hidden
-                          accept="all/*"
-                          type="file"
-                          onChange={(event) => {
-                            const formData = new FormData();
-                            formData.append("file", event.target.files[0]);
-                            formData.append("type", "attachments");
-
-                            dispatch(
-                              fnFileUpload(formData, recID, "TR031")
-                            ).then((res) => {
-                              setFieldValue(
-                                "AttachmentName",
-                                res.payload.apiResponse
-                              );
-                            });
-                          }}
                         />
-                        <CloudUpload fontSize="medium" />
-                      </IconButton>
-                      </Tooltip>
-                      <Button
-                        // disabled={mode === "V"}
-                        variant="contained"
-                        component={"a"}
-                        onClick={() => {
-                          var filePath =
-                            store.getState().globalurl.attachmentSkilUrl +
-                            values.AttachmentName;
-
-                          if (values.AttachmentName) {
-                            window.open(filePath, "_blank");
-                          } else {
-                            toast.error("Please Upload File");
-                          }
-                        }}
-                      >
-                        View
-                      </Button>
-                    </React.Fragment>
-                  )}
-
-                  <LoadingButton
-                    color={mode == "V" ? "error" : "secondary"}
-                    variant="contained"
-                    type="submit"
-                    loading={isLoading}
-                    disabled={mode == "V" ? true : false}
+                      }
+                      label="Disable"
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      inputProps={{ readOnly: mode == "V" }}
+                    />
+                  </Box>
+                  {/* BUTTONS */}
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap={2}
                   >
-                    Save
-                  </LoadingButton>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => navigate(-1)}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </Form>
-            )}
-          </Formik>
-        </Paper> ) : (
+                    {values.ContentType != "Link" && (
+                      <React.Fragment>
+                        <Tooltip title="Upload a file">
+                          <IconButton
+                            disabled={mode === "V"}
+                            size="small"
+                            color="primary"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={(event) => {
+                                const formData = new FormData();
+                                formData.append("file", event.target.files[0]);
+                                formData.append("type", "attachments");
+
+                                dispatch(
+                                  fnFileUpload(formData, recID, "TR031")
+                                ).then((res) => {
+                                  setFieldValue(
+                                    "AttachmentName",
+                                    res.payload.apiResponse
+                                  );
+                                });
+                              }}
+                            />
+                            <CloudUpload fontSize="medium" />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          // disabled={mode === "V"}
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            var filePath =
+                              store.getState().globalurl.attachmentSkilUrl +
+                              values.AttachmentName;
+
+                            if (values.AttachmentName) {
+                              window.open(filePath, "_blank");
+                            } else {
+                              toast.error("Please Upload File");
+                            }
+                          }}
+                        >
+                          View
+                        </Button>
+                      </React.Fragment>
+                    )}
+
+                    <LoadingButton
+                      color={mode == "V" ? "error" : "secondary"}
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                      disabled={mode == "V" ? true : false}
+                    >
+                      Save
+                    </LoadingButton>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={() => navigate(-1)}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </Form>
+              )}
+            </Formik>
+          </Paper>) : (
           false)}
-        
+
       </React.Fragment>
     </>
   );

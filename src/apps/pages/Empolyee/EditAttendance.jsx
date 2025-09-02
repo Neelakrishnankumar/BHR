@@ -10,7 +10,7 @@ import {
   Stack,
   useTheme,
   MenuItem,
-  Checkbox, 
+  Checkbox,
   FormControlLabel,
   Chip
 } from "@mui/material";
@@ -45,7 +45,7 @@ import AttendancePDF from "../pdf/AttendancePdf";
 import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-
+import { useEffect } from "react";
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -73,7 +73,19 @@ const EditAttendance = () => {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   function AttendanceTool() {
     return (
       <GridToolbarContainer
@@ -98,8 +110,8 @@ const EditAttendance = () => {
       </GridToolbarContainer>
     );
   }
- const [proData, setproData] = useState(null);
-  
+  const [proData, setproData] = useState(null);
+
   const handleSelectionProjectChange = (newValue) => {
     if (newValue) {
       setproData(newValue);
@@ -114,7 +126,7 @@ const EditAttendance = () => {
     //   headerName: "SL#",
     //   width:50
     // },
-     {
+    {
       field: "slno",
       headerName: "SL#",
       width: 50,
@@ -123,7 +135,7 @@ const EditAttendance = () => {
       valueGetter: (params) =>
         `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
     },
- {
+    {
       field: "action",
       headerName: "Action",
       width: 60,
@@ -161,7 +173,7 @@ const EditAttendance = () => {
       headerName: "Status",
       flex: 1,
     },
-        {
+    {
       field: "Commend",
       headerName: "Comments",
       width: 150,
@@ -200,7 +212,7 @@ const EditAttendance = () => {
 
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -228,24 +240,24 @@ const EditAttendance = () => {
   };
 
   let employeeFilter = `CompanyID='${companyID}'`;
-if (proData) {
-  employeeFilter += ` AND ProjectID='${proData.RecordID}' GROUP BY RecordID`;
-}
-if (!proData) {
-  employeeFilter = `CompanyID='${companyID}' GROUP BY RecordID`;
-}
-
-const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
-  Query: {
-    AccessID: proData ? "2024" : "2117" , // or "2101" if you're using EMPLOYEETEAMS
-    ScreenName: "Employee",
-    Filter: employeeFilter,
-    Any: "",
-    CompId: ""
+  if (proData) {
+    employeeFilter += ` AND ProjectID='${proData.RecordID}' GROUP BY RecordID`;
   }
-}))}`;
+  if (!proData) {
+    employeeFilter = `CompanyID='${companyID}' GROUP BY RecordID`;
+  }
 
-console.log(proData, "--find proData");
+  const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+    Query: {
+      AccessID: proData ? "2024" : "2117", // or "2101" if you're using EMPLOYEETEAMS
+      ScreenName: "Employee",
+      Filter: employeeFilter,
+      Any: "",
+      CompId: ""
+    }
+  }))}`;
+
+  console.log(proData, "--find proData");
 
 
   const [useCurrentEmp, setUseCurrentEmp] = useState(false);
@@ -367,7 +379,7 @@ console.log(proData, "--find proData");
                       width: 200,
                     }}
                   />
-                   {/* <Employeeautocomplete
+                  {/* <Employeeautocomplete
                      sx={{ width: 400 }}
                     name="ProName"
                     label="Project"
@@ -393,34 +405,34 @@ console.log(proData, "--find proData");
                      /> */}
 
 
-                     <Employeeautocomplete
-  sx={{ width: 400 }}
-  name="ProName"
-  label="Project"
-  id="ProName"
-  value={proData}
-  onChange={handleSelectionProjectChange}
-  error={!!touched.ProName && !!errors.ProName}
-  helperText={touched.ProName && errors.ProName}
-  url={`${listViewurl}?data=${encodeURIComponent(JSON.stringify({
-    Query: {
-      AccessID: "2054",
-      ScreenName: "Project",
-      Filter: `parentID=${companyID}`,
-      Any: ""
-    }
-  }))}`}
-/>
+                  <Employeeautocomplete
+                    sx={{ width: 400 }}
+                    name="ProName"
+                    label="Project"
+                    id="ProName"
+                    value={proData}
+                    onChange={handleSelectionProjectChange}
+                    error={!!touched.ProName && !!errors.ProName}
+                    helperText={touched.ProName && errors.ProName}
+                    url={`${listViewurl}?data=${encodeURIComponent(JSON.stringify({
+                      Query: {
+                        AccessID: "2054",
+                        ScreenName: "Project",
+                        Filter: `parentID=${companyID}`,
+                        Any: ""
+                      }
+                    }))}`}
+                  />
 
-<Employeeautocomplete
-  sx={{ width: 400 }}
-  name="Employee"
-  label="Employee"
-  id="Employee"
-  value={empData}
-  onChange={handleSelectionEmployeeChange}
-  url={employeeUrl}
-/>
+                  <Employeeautocomplete
+                    sx={{ width: 400 }}
+                    name="Employee"
+                    label="Employee"
+                    id="Employee"
+                    value={empData}
+                    onChange={handleSelectionEmployeeChange}
+                    url={employeeUrl}
+                  />
 
                   {/* {isManager === "1" ? (
                     <>
@@ -457,7 +469,7 @@ console.log(proData, "--find proData");
                       }}
                     />
                   )} */}
-                    {/* <FormControlLabel
+                  {/* <FormControlLabel
           control={
             <Checkbox
               checked={useCurrentEmp}
@@ -494,10 +506,9 @@ console.log(proData, "--find proData");
                           }}
                         />
                       }
-                      fileName={`Attendance_Report_${
-                        empData?.Name || "Employee"
-                      }.pdf`}
-                     style={{ color: "#d32f2f", cursor: "pointer" }} 
+                      fileName={`Attendance_Report_${empData?.Name || "Employee"
+                        }.pdf`}
+                      style={{ color: "#d32f2f", cursor: "pointer" }}
                     >
 
                       {({ loading }) =>
@@ -550,7 +561,7 @@ console.log(proData, "--find proData");
                       backgroundColor: "#d0edec",
                       color: "", // Color for even rows
                     },
-                     "& .weekoff-row": {
+                    "& .weekoff-row": {
                       backgroundColor: "#f2acb7", // light red
                       color: "#b71c1c",            // dark red text
                     },
@@ -575,7 +586,7 @@ console.log(proData, "--find proData");
                     getRowId={(row) => row.SLNO}
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onCellClick={(params) => {}}
+                    onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
@@ -604,26 +615,26 @@ console.log(proData, "--find proData");
                     }}
                   />
                 </Box>
-                 <Box display="flex" flexDirection="row" padding="15px" gap={formGap}>
-          <Chip
-            icon={<AlarmOffIcon color="primary" />}
-            label="WeekOff"
-            variant="outlined"
-            sx={{
-              backgroundColor: "#f2acb7",
-              borderColor: "#ef5350",
-            }}
-          />
-          <Chip
-            icon={<DeckIcon color="primary" />}
-            label="Holiday"
-            variant="outlined"
-            sx={{
-              backgroundColor: "#c9f5cc",
-              borderColor: "#66bb6a",
-            }}
-          />
-        </Box>
+                <Box display="flex" flexDirection="row" padding="15px" gap={formGap}>
+                  <Chip
+                    icon={<AlarmOffIcon color="primary" />}
+                    label="WeekOff"
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f2acb7",
+                      borderColor: "#ef5350",
+                    }}
+                  />
+                  <Chip
+                    icon={<DeckIcon color="primary" />}
+                    label="Holiday"
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#c9f5cc",
+                      borderColor: "#66bb6a",
+                    }}
+                  />
+                </Box>
               </Box>
             </form>
           )}

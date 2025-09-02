@@ -145,7 +145,7 @@ const Holidaylist = () => {
 
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -400,7 +400,21 @@ const Holidaylist = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values, "harddelete");
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            Fnsave(values, "harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
                       }}
                     >
                       Delete

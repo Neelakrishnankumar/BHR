@@ -60,11 +60,11 @@ const CreateCategory = () => {
   const accessID = params.accessID;
   const screenName = params.screenName;
   const mode = params.Mode;
-  console.log(params,'-------------');
-  
+  console.log(params, '-------------');
+
   const Assessmentid = params.parentID1;
   const CategoryId = params.parentID2;
-
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const CompanyID = sessionStorage.getItem("compID");
   const location = useLocation();
   const state = location.state || {};
@@ -72,6 +72,27 @@ const CreateCategory = () => {
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          Code: Yup.string().required(data.ListofQuestiongroup.Code),
+          Name: Yup.string().required(data.ListofQuestiongroup.Name),
+          AnswerType: Yup.string().required(data.ListofQuestiongroup.AnswerType),
+          // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // Disable: Yup.boolean(),
+        })
+        setValidationSchema(schema)
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -120,7 +141,7 @@ const CreateCategory = () => {
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -155,13 +176,13 @@ const CreateCategory = () => {
     Disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Name: Yup.string().required("Please Enter Name Here"),
-    AnswerType: Yup.string().required("Choose at least one A.Type"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Name: Yup.string().required("Please Enter Name Here"),
+  //   AnswerType: Yup.string().required("Choose at least one A.Type"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
   return (
     <>
       <React.Fragment>
@@ -283,7 +304,11 @@ const CreateCategory = () => {
                       name="Code"
                       id="Code"
                       //placeholder="Code"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       type="text"
                       focused
                       value={values.Code}
@@ -303,7 +328,11 @@ const CreateCategory = () => {
                     <TextField
                       variant="standard"
                       type="text"
-                      label="Name"
+                      label={
+                        <>
+                          Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       name="Name"
                       id="Name"
                       //placeholder="Name"
@@ -322,45 +351,51 @@ const CreateCategory = () => {
                     />
                     {/* DROPDOWN */}
 
-                    <FormControl
+                    {/* <FormControl
                       focused
                       variant="standard"
                       sx={{ background: "#ffffff" }}
-                      error={!!touched.AnswerType && !!errors.AnswerType}   
+                      error={!!touched.AnswerType && !!errors.AnswerType}
 
                     >
-                      <InputLabel id="AnswerType">Answer Type</InputLabel>
-                      <Select
-                        labelId="question-type-label"
-                        // value={values.QType}
-                        // onChange={handleChange}
-                        label="Question Type"
-                        name="AnswerType"
-                        id="AnswerType"
-                        value={values.AnswerType}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        required
-                        //error={!!touched.AnswerType && !!errors.AnswerType}
-                        //helperText={touched.AnswerType && errors.AnswerType}
-                        // MenuProps={{
-                        //   PaperProps: {
-                        //     sx: {
-                        //       mt: 1, // Add space so the top border doesn’t get cut
-                        //     },
-                        //   },
-                        // }}
-                      >
-                        <MenuItem value={"1/4"}>1 of 4</MenuItem>
-                        <MenuItem value={"Any/4"}>Any Of 4</MenuItem>
-                        <MenuItem value={"Text"}>Text</MenuItem>
-                        <MenuItem value={"Number"}>Number</MenuItem>
-                        <MenuItem value={"10Rates"}>10 Rates</MenuItem>
-                        <MenuItem value={"5Rates"}>5 Rates</MenuItem>
-                        <MenuItem value={"T/F"}>True or false</MenuItem>
-                        <MenuItem value={"Y/N"}>Yes or No</MenuItem>
-                      </Select>
-                    </FormControl>
+                      <InputLabel id="AnswerType">Answer Type</InputLabel> */}
+                    <TextField
+                      focused
+                      variant="standard"
+                      label={
+                        <>
+                          Answer Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      name="AnswerType"
+                      id="AnswerType"
+                      value={values.AnswerType}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      select
+                      error={!!touched.AnswerType && !!errors.AnswerType}
+                      helperText={touched.AnswerType && errors.AnswerType}
+                    // required
+                    //error={!!touched.AnswerType && !!errors.AnswerType}
+                    //helperText={touched.AnswerType && errors.AnswerType}
+                    // MenuProps={{
+                    //   PaperProps: {
+                    //     sx: {
+                    //       mt: 1, // Add space so the top border doesn’t get cut
+                    //     },
+                    //   },
+                    // }}
+                    >
+                      <MenuItem value={"1/4"}>1 of 4</MenuItem>
+                      <MenuItem value={"Any/4"}>Any Of 4</MenuItem>
+                      <MenuItem value={"Text"}>Text</MenuItem>
+                      <MenuItem value={"Number"}>Number</MenuItem>
+                      <MenuItem value={"10Rates"}>10 Rates</MenuItem>
+                      <MenuItem value={"5Rates"}>5 Rates</MenuItem>
+                      <MenuItem value={"T/F"}>True or false</MenuItem>
+                      <MenuItem value={"Y/N"}>Yes or No</MenuItem>
+                    </TextField>
+                    {/* </FormControl> */}
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth

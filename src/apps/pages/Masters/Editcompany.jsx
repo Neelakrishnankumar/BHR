@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import {
   Typography,
@@ -52,7 +52,19 @@ const Editcompany = () => {
   let mode = params.Mode;
   let accessID = params.accessID;
 
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   useEffect(() => {
     dispatch(screenRightsData(accessID));
 
@@ -83,9 +95,9 @@ const Editcompany = () => {
     gst: Data.Gst,
     Lut: Data.Lut,
     sortOrder: Data.SortOrder,
-    disable: Data.Disable  === "Y" ? true : false ,
-    stockClose: Data.Process === "Y" ? true : false ,
-    useregular:Data.Regularslno === "Y" ? true : false ,
+    disable: Data.Disable === "Y" ? true : false,
+    stockClose: Data.Process === "Y" ? true : false,
+    useregular: Data.Regularslno === "Y" ? true : false,
   };
   /*************************LOOKUP DATA*********************/
   const [openCNpopup, setOpenCNpopup] = useState(false);
@@ -144,7 +156,7 @@ const Editcompany = () => {
       Lut: values.Lut,
       SortOrder: values.sortOrder,
       YearID: Year,
-      Disable:values.disable === true ? "Y" : "N",
+      Disable: values.disable === true ? "Y" : "N",
       Process: values.stockClose === true ? "Y" : "N",
       Regularslno: values.useregular === true ? "Y" : "N",
       Finyear,
@@ -153,7 +165,7 @@ const Editcompany = () => {
     let action = mode === "A" ? "insert" : "update";
     const data = await dispatch(postData({ accessID, action, idata }));
     if (data.payload.Status == "Y") {
-      sessionStorage.setItem("stockflag",  values.stockClose === true ? "Y" : "N");
+      sessionStorage.setItem("stockflag", values.stockClose === true ? "Y" : "N");
       toast.success(data.payload.Msg);
       navigate(`/Apps/TR014/Company`);
     } else {
@@ -164,7 +176,7 @@ const Editcompany = () => {
   const fnLogOut = (props) => {
 
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -182,7 +194,7 @@ const Editcompany = () => {
         return;
       }
     });
-    
+
   };
   return (
     <Box>
@@ -295,7 +307,7 @@ const Editcompany = () => {
                       sx={{ gridColumn: "span 2" }}
                       focused
                       required
-                      inputProps={{ maxLength: 50,}}
+                      inputProps={{ maxLength: 50, }}
                     />
 
                     <TextField
@@ -318,7 +330,7 @@ const Editcompany = () => {
                       onInput={(e) => {
                         e.target.setCustomValidity("");
                       }}
-                      inputProps={{ maxLength: 500,  }}
+                      inputProps={{ maxLength: 500, }}
                       multiline
                     />
                     <TextField
@@ -389,7 +401,7 @@ const Editcompany = () => {
 
                         e.target.setCustomValidity("");
                       }}
-                     
+
                     />
 
                     <TextField
@@ -409,7 +421,7 @@ const Editcompany = () => {
                       focused
                       error={!!touched.phone && !!errors.phone}
                       helperText={touched.phone && errors.phone}
-                    // inputProps={{maxLength: 10}}
+                      // inputProps={{maxLength: 10}}
                       onInput={(e) => {
                         // e.target.value = Math.max(0, parseInt(e.target.value))
                         //   .toString()
@@ -423,7 +435,7 @@ const Editcompany = () => {
                       variant="filled"
                       type="text"
                       label="LUT"
-                     
+
                       value={values.Lut}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -431,7 +443,7 @@ const Editcompany = () => {
                       // error={!!touched.gst && !!errors.gst}
                       // helperText={touched.gst && errors.gst}
                       focused
-                     
+
                     />
                   </FormControl>
                   <FormControl sx={{ gridColumn: "span 2", gap: "40px" }}>
@@ -448,7 +460,7 @@ const Editcompany = () => {
                       helperText={touched.web && errors.web}
                       sx={{ gridColumn: "span 2" }}
                       focused
-                      
+
                     />
 
                     <TextField
@@ -505,7 +517,7 @@ const Editcompany = () => {
                       error={!!touched.rbiCode && !!errors.rbiCode}
                       helperText={touched.rbiCode && errors.rbiCode}
                       focused
-                      inputProps={{ maxLength: 5,}}
+                      inputProps={{ maxLength: 5, }}
                     />
                     <TextField
                       fullWidth
@@ -526,9 +538,9 @@ const Editcompany = () => {
                       error={!!touched.gst && !!errors.gst}
                       helperText={touched.gst && errors.gst}
                       focused
-                      inputProps={{ maxLength: 15,  }}
+                      inputProps={{ maxLength: 15, }}
                     />
- 
+
                     <TextField
                       fullWidth
                       variant="filled"
@@ -545,9 +557,9 @@ const Editcompany = () => {
                         background: "#fff6c3",
                         input: { textAlign: "right" },
                       }}
-                     
+
                       focused
-                      onWheel={(e) => e.target.blur()} 
+                      onWheel={(e) => e.target.blur()}
                       onInput={(e) => {
                         e.target.value = Math.max(0, parseInt(e.target.value))
                           .toString()
@@ -600,7 +612,7 @@ const Editcompany = () => {
                       variant="contained"
                       type="submit"
                       loading={isLoading}
-                    
+
                     >
                       Save
                     </LoadingButton>

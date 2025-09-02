@@ -113,25 +113,25 @@ const Editcheckout = () => {
     checkouttime: data.CheckOutTime,
     Employee: data.EmployeeID
       ? {
-          RecordID: data.EmployeeID,
-          Code: data.EmployeeCode,
-          Name: data.EmployeeName,
-        }
+        RecordID: data.EmployeeID,
+        Code: data.EmployeeCode,
+        Name: data.EmployeeName,
+      }
       : null,
-      Location: data.LocationRecID
+    Location: data.LocationRecID
       ? {
-          RecordID: data.LocationRecID,
-          Code: data.LocationCode,
-          Name: data.LocationName,
-        }
-      : null, 
-      Gate: data.GateRecID
+        RecordID: data.LocationRecID,
+        Code: data.LocationCode,
+        Name: data.LocationName,
+      }
+      : null,
+    Gate: data.GateRecID
       ? {
-          RecordID: data.GateRecID,
-          Code: data.GateCode,
-          Name: data.GateName,
-        }
-      : null, 
+        RecordID: data.GateRecID,
+        Code: data.GateCode,
+        Name: data.GateName,
+      }
+      : null,
   };
 
   const Fnsave = async (values, del) => {
@@ -140,8 +140,8 @@ const Editcheckout = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -152,9 +152,9 @@ const Editcheckout = () => {
       CheckOutDate: values.date,
       CheckOutComment: values.comment,
       EmployeeID: values.Employee.RecordID || 0,
-      EmployeeName:values.Employee.Name || "",
+      EmployeeName: values.Employee.Name || "",
       // EmployeeID: selectEMPLOYEELookupData.EMPLOYEElookupRecordid,
-      LocationRecID:  values.Location.RecordID || 0,
+      LocationRecID: values.Location.RecordID || 0,
       LocationName: values.Location.Name || "",
       GateName: values.Gate.Name || 0,
       // LocationRecID: locationLookup.locationRecordID,
@@ -257,7 +257,7 @@ const Editcheckout = () => {
   };
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -336,7 +336,7 @@ const Editcheckout = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={ validationSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -372,11 +372,11 @@ const Editcheckout = () => {
                       <CheckinAutocomplete
                         name="Employee"
                         label=
-                       
+
                         {
                           <span>
                             Employee
-                            <span style={{ color: "red", fontSize:"20px" }}>*</span>
+                            <span style={{ color: "red", fontSize: "20px" }}>*</span>
                           </span>
                         }
                         variant="outlined"
@@ -388,8 +388,8 @@ const Editcheckout = () => {
                           console.log(newValue, "--newvalue Employee");
                           console.log(newValue.RecordID, "Employee RecordID");
                         }}
-                         error={!!touched.Employee && !!errors.Employee}
-                      helperText={touched.Employee && errors.Employee}
+                        error={!!touched.Employee && !!errors.Employee}
+                        helperText={touched.Employee && errors.Employee}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       {/* <TextField
@@ -472,29 +472,29 @@ const Editcheckout = () => {
                       focused
                       inputProps={{ tabIndex: "-1" }}
                     /> */}
-                     <CheckinAutocomplete
+                    <CheckinAutocomplete
 
-                        name="Location"
-                        label=
-                        {
-                          <span>
-                           Location 
-                           <span style={{ color: "red", fontSize:"20px" }}>*</span>
-                           </span>
-                        }
-                        variant="outlined"
-                        id="Location"
-                        // value={selectLocationLookupData}
-                        value={values.Location}
-                        onChange={(newValue) => {
-                          setFieldValue("Location", newValue);
-                          console.log(newValue, "--newvalue Location");
-                          console.log(newValue.RecordID, "Location RecordID");
-                        }}
-                         error={!!touched.Location && !!errors.Location}
+                      name="Location"
+                      label=
+                      {
+                        <span>
+                          Location
+                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </span>
+                      }
+                      variant="outlined"
+                      id="Location"
+                      // value={selectLocationLookupData}
+                      value={values.Location}
+                      onChange={(newValue) => {
+                        setFieldValue("Location", newValue);
+                        console.log(newValue, "--newvalue Location");
+                        console.log(newValue.RecordID, "Location RecordID");
+                      }}
+                      error={!!touched.Location && !!errors.Location}
                       helperText={touched.Location && errors.Location}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      />
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2051","ScreenName":"Location","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                    />
                   </FormControl>
                   <FormControl
                     sx={{
@@ -540,29 +540,29 @@ const Editcheckout = () => {
                       focused
                       inputProps={{ tabIndex: "-1" }}
                     /> */}
-                      <CheckinAutocomplete
+                    <CheckinAutocomplete
 
-                        name="Gate"
-                        label=
-                        {
-                          <span>
-                           Gate 
-                           <span style={{ color: "red", fontSize:"20px" }}>*</span>
-                           </span>
-                        }
-                        variant="outlined"
-                        id="Gate"
-                        // value={selectGateLookupData}
-                        value={values.Gate}
-                        onChange={(newValue) => {
-                          setFieldValue("Gate", newValue);
-                          console.log(newValue, "--newvalue Gate");
-                          console.log(newValue.RecordID, "Gate RecordID");
-                        }}
-                         error={!!touched.Gate && !!errors.Gate}
+                      name="Gate"
+                      label=
+                      {
+                        <span>
+                          Gate
+                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </span>
+                      }
+                      variant="outlined"
+                      id="Gate"
+                      // value={selectGateLookupData}
+                      value={values.Gate}
+                      onChange={(newValue) => {
+                        setFieldValue("Gate", newValue);
+                        console.log(newValue, "--newvalue Gate");
+                        console.log(newValue.RecordID, "Gate RecordID");
+                      }}
+                      error={!!touched.Gate && !!errors.Gate}
                       helperText={touched.Gate && errors.Gate}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
-                      />
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.Location ? values.Location.RecordID : 0}'","Any":""}}`}
+                    />
 
 
                   </FormControl>
@@ -667,7 +667,21 @@ const Editcheckout = () => {
                       color="error"
                       variant="contained"
                       onClick={() => {
-                        Fnsave(values, "harddelete");
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            Fnsave(values, "harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
                       }}
                     >
                       Delete

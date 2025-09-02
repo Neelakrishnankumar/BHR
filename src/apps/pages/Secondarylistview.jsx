@@ -61,7 +61,7 @@ import {
 } from "../../ui-components/global/utils";
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-
+import { useEffect,useState } from "react";
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -111,7 +111,19 @@ const ListviewSecondary = () => {
   //const rowData = location.state || {};
 
   // skillglow
+const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   let parentID1 = params.parentID1;
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
@@ -606,7 +618,7 @@ const ListviewSecondary = () => {
   var openstackname = "Opening Stock";
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,

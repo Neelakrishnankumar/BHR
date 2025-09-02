@@ -57,26 +57,48 @@ const CreateSkill = () => {
   const params = useParams();
 
   const state = location.state || {}
-console.log(state,'--------------');
+  console.log(state, '--------------');
 
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
 
   const recID = params.id;
   const accessID = params.accessID;
   const screenName = params.screenName;
   const mode = params.Mode;
   const CatId = params.parentID1;
-
-
-
   const CompanyID = sessionStorage.getItem("compID");
-
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema =  Yup.object().shape({
+          Code: Yup.string().required(data.ListofAssessment.Code),
+          Name: Yup.string().required(data.ListofAssessment.Name),
+          Duration: Yup.string().required(data.ListofAssessment.Duration),
+          Permittedtimes: Yup.number().required(data.ListofAssessment.Permittedtimes),
+          Minimumscore: Yup.number().required(data.ListofAssessment.Minimumscore),
+          Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
+          Date: Yup.date().nullable().required(data.ListofAssessment.Date),
 
+          // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // Disable: Yup.boolean(),
+        })
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode]);
   const AssessementSaveFn = async (values) => {
     let action =
       mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
@@ -130,7 +152,7 @@ console.log(state,'--------------');
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -166,22 +188,22 @@ console.log(state,'--------------');
     Disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Name: Yup.string().required("Please Enter Name Here"),
-    //Answertype: Yup.string().required("Choose at least one Answertype"),
-    Duration: Yup.string().required("Choose Duation"),
-    Permittedtimes: Yup.number().required("Choose a number"),
-    Minimumscore: Yup.number().required("Choose a Score"),
-    Noofquestion: Yup.number().required("Choose a number"),
-    Date: Yup.date().nullable().required("Please enter Date"),
-    // cutOff: Yup.number()
-    //   .min(0, "No negative numbers")
-    //   .nullable()
-    //   .required("Please choose Cut Off Cut (In Minutes)"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Name: Yup.string().required("Please Enter Name Here"),
+  //   //Answertype: Yup.string().required("Choose at least one Answertype"),
+  //   Duration: Yup.string().required("Choose Duation"),
+  //   Permittedtimes: Yup.number().required("Choose a number"),
+  //   Minimumscore: Yup.number().required("Choose a Score"),
+  //   Noofquestion: Yup.number().required("Choose a number"),
+  //   Date: Yup.date().nullable().required("Please enter Date"),
+  //   // cutOff: Yup.number()
+  //   //   .min(0, "No negative numbers")
+  //   //   .nullable()
+  //   //   .required("Please choose Cut Off Cut (In Minutes)"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
 
   return (
     <React.Fragment>
@@ -224,7 +246,7 @@ console.log(state,'--------------');
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  {mode == "A" ? "New" : mode=="D" ? "Delete" : Data.Name}
+                  {mode == "A" ? "New" : mode == "D" ? "Delete" : Data.Name}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -283,7 +305,9 @@ console.log(state,'--------------');
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Code"
+                    label={
+                      <>Code<span style={{ color: "red", fontSize: "20px" }}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Code}
                     onBlur={handleBlur}
@@ -304,7 +328,9 @@ console.log(state,'--------------');
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Name"
+                    label={
+                      <>Name<span style={{ color: "red", fontSize: "20px" }}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Name}
                     onBlur={handleBlur}
@@ -326,7 +352,7 @@ console.log(state,'--------------');
                     variant="standard"
                     sx={{ background: "#ffffff" }}
                     error={!!touched.Answertype && !!errors.Answertype}
-                    // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
+                  // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
                   >
                     <InputLabel id="Answertype">Answer Type</InputLabel>
                     <Select
@@ -337,7 +363,7 @@ console.log(state,'--------------');
                       value={values.Answertype}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      
+
                     >
                       <MenuItem value={'1/4'}>1 of 4</MenuItem>
                       <MenuItem value={'Any/4'}>Any Of 4</MenuItem>
@@ -353,7 +379,10 @@ console.log(state,'--------------');
                     // fullWidth
                     variant="standard"
                     type="number"
-                    label="No. Of Questions"
+                    // label="No. Of Questions"
+                    label={
+                      <>No. Of Questions<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your NoOfQuestions Here......"
                     value={values.Noofquestion}
                     onBlur={handleBlur}
@@ -369,12 +398,20 @@ console.log(state,'--------------');
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     // fullWidth
                     variant="standard"
                     type="number"
-                    label="Duration (In Days)"
+                    // label="Duration (In Days)"
+                    label={
+                      <>Duration (In Days)<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Duration}
                     onBlur={handleBlur}
@@ -387,15 +424,23 @@ console.log(state,'--------------');
                     sx={{
                       // backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
+                        backgroundColor: "#f5f5f5 "
+                                          },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Mininum Score"
+                    // label="Mininum Score"
+                    label={
+                      <>Mininum Score<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Minimumscore}
                     onBlur={handleBlur}
@@ -411,12 +456,19 @@ console.log(state,'--------------');
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     name="Date"
                     type="date"
                     id="Date"
-                    label="Date"
+                    label={
+                      <>Date<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
@@ -426,14 +478,17 @@ console.log(state,'--------------');
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
                     sx={{ background: "" }}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  // required
+                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     // fullWidth
                     variant="standard"
                     type="number"
-                    label="No. Of Attempts Permitted"
+                    // label="No. Of Attempts Permitted"
+                    label={
+                      <>No. Of Attempts Permitted<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Permittedtimes}
                     onBlur={handleBlur}
@@ -449,6 +504,11 @@ console.log(state,'--------------');
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
 
 
@@ -487,12 +547,12 @@ console.log(state,'--------------');
                       />
                     }
                     label="Disable"
-                    // sx={{
-                    //   marginTop: "20px",
-                    //   "@media (max-width:500px)": {
-                    //     marginTop: 0,
-                    //   },
-                    // }}
+                  // sx={{
+                  //   marginTop: "20px",
+                  //   "@media (max-width:500px)": {
+                  //     marginTop: 0,
+                  //   },
+                  // }}
                   />
                 </Box>
                 <Box
@@ -507,7 +567,7 @@ console.log(state,'--------------');
                     type="submit"
                     loading={isLoading}
                   >
-                     {mode == "D" ? "Delete" : "Save"} 
+                    {mode == "D" ? "Delete" : "Save"}
                   </LoadingButton>
                   <Button
                     variant="contained"

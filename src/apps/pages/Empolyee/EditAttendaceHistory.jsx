@@ -100,7 +100,19 @@ const EditAttendanceHistory = () => {
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
 
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   function AttendanceTool() {
     return (
       <GridToolbarContainer
@@ -291,7 +303,7 @@ const EditAttendanceHistory = () => {
 
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

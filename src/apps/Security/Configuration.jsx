@@ -77,7 +77,19 @@ const Configuration = () => {
     const [gst, setGst] = useState("");
     const [autocode, setAutocode] = useState(data?.CM_AUTOCODE === "Y");
     const { toggleSidebar, broken, rtl } = useProSidebar();
-
+    const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+    const [errorMsgData, setErrorMsgData] = useState(null);
+    useEffect(() => {
+        fetch(process.env.PUBLIC_URL + "/validationcms.json")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+                return res.json();
+            })
+            .then((data) => {
+                setErrorMsgData(data);
+            })
+            .catch((err) => console.error("Error loading validationcms.json:", err));
+    }, [CompanyAutoCode]);
 
     // const handleCheckboxChange = (event) => {
     //     setAutocode(event.target.checked ? "Y" : "N");
@@ -101,7 +113,7 @@ const Configuration = () => {
         const checked = e.target.checked;
         setAutocode(checked);
         sessionStorage.setItem("CompanyAutoCode", checked ? "Y" : "N");
-        console.log(checked,"CompanyAutoCode")
+        console.log(checked, "CompanyAutoCode")
     };
 
     // useEffect(() => {
@@ -231,38 +243,38 @@ const Configuration = () => {
         }
     };
 
-const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
+    const fnLogOut = (props) => {
+        //   if(Object.keys(ref.current.touched).length === 0){
+        //     if(props === 'Logout'){
+        //       navigate("/")}
+        //       if(props === 'Close'){
+        //         navigate("/Apps/TR022/Bank Master")
+        //       }
 
-    //       return
-    //  }
-    Swal.fire({
-      title: `Do you want ${props}?`,
-      // text:data.payload.Msg,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: props,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (props === "Logout") {
-          navigate("/");
-        }
-        if (props === "Close") {
-          //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
-          navigate("/Apps/HR");
-        }
-      } else {
-        return;
-      }
-    });
-  };
+        //       return
+        //  }
+        Swal.fire({
+            title: errorMsgData.Warningmsg[props],
+            // text:data.payload.Msg,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: props,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (props === "Logout") {
+                    navigate("/");
+                }
+                if (props === "Close") {
+                    //navigate(`/Apps/Secondarylistview/TR123/Check%20In/${params.parentID}`)
+                    navigate("/Apps/HR");
+                }
+            } else {
+                return;
+            }
+        });
+    };
 
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const style = {
@@ -344,266 +356,266 @@ const fnLogOut = (props) => {
                 <Typography variant="h2" fontSize="1.2rem" fontWeight="bold" marginBottom={3}>
                     Company Configuration
                 </Typography> */}
-                <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-                              <Box display="flex" justifyContent="space-between" p={2}>
-                                <Box display="flex" borderRadius="3px" alignItems="center">
-                                  {broken && !rtl && (
-                                    <IconButton onClick={() => toggleSidebar()}>
-                                      <MenuOutlinedIcon />
-                                    </IconButton>
-                                  )}
-                                  <Breadcrumbs
-                                  maxItems={3}
-                                  aria-label="breadcrumb"
-                                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+                <Box display="flex" justifyContent="space-between" p={2}>
+                    <Box display="flex" borderRadius="3px" alignItems="center">
+                        {broken && !rtl && (
+                            <IconButton onClick={() => toggleSidebar()}>
+                                <MenuOutlinedIcon />
+                            </IconButton>
+                        )}
+                        <Breadcrumbs
+                            maxItems={3}
+                            aria-label="breadcrumb"
+                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                        >
+
+                            <Typography
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                variant="h5"
+
+                            >
+                                Company Configuration
+                            </Typography>
+
+                        </Breadcrumbs>
+                    </Box>
+
+                    <Box display="flex">
+                        <Tooltip title="Close">
+                            <IconButton onClick={() => fnLogOut("Close")} color="error">
+                                <ResetTvIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Logout">
+                            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                                <LogoutOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
+            </Paper>
+            <Paper elevation={3} sx={{ margin: "10px" }}>
+                <Formik
+                    initialValues={initialvalues}
+                    // onSubmit={(values, setSubmitting, resetForm) => {
+                    //     setTimeout(() => {
+                    //         fnSave(values);
+                    //         resetForm(); // Reset form after submission
+                    //     }, 100);
+                    // }}
+                    // onSubmit={(values, setSubmitting) => {
+                    //     setTimeout(() => {
+                    //         fnSave(values);
+                    //     }, 100);
+                    // }}
+                    validationSchema={Settingsvalidation}
+                    enableReinitialize={true}
+                >
+                    {({
+                        errors,
+                        touched,
+                        handleBlur,
+                        handleChange,
+                        isSubmitting,
+                        values,
+                        handleSubmit,
+                        setFieldTouched,
+                        resetForm
+                    }) => (
+                        <form onSubmit={handleSubmit}>
+
+                            <Typography variant="h5" padding={1}>Subscriptions:</Typography>
+
+                            <Box
+                                display="grid"
+                                gridTemplateColumns="repeat(4, minMax(0, 1fr))"
+                                gap={formGap}
+                                padding={1}
+                                sx={{
+                                    "& > div": {
+                                        gridColumn: isNonMobile ? undefined : "span 4", // Adjust for mobile view
+                                    },
+                                }}
+                            >
+                                <FormControl
+                                    fullWidth
+                                    sx={{ gridColumn: "span 2", gap: formGap }}
                                 >
-                                  
-                                  <Typography
-                                    color="#0000D1"
-                                    sx={{ cursor: "default" }}
-                                    variant="h5"
-                                   
-                                  >
-                                    Company Configuration
-                                  </Typography>
-                                 
-                                </Breadcrumbs>
-                                </Box>
-                      
-                                <Box display="flex">
-                                  <Tooltip title="Close">
-                                    <IconButton onClick={() => fnLogOut("Close")} color="error">
-                                      <ResetTvIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip title="Logout">
-                                    <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                                      <LogoutOutlinedIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Box>
-                              </Box>
-                            </Paper>
-                <Paper elevation={3} sx={{ margin: "10px" }}>
-                    <Formik
-                        initialValues={initialvalues}
-                        // onSubmit={(values, setSubmitting, resetForm) => {
-                        //     setTimeout(() => {
-                        //         fnSave(values);
-                        //         resetForm(); // Reset form after submission
-                        //     }, 100);
-                        // }}
-                        // onSubmit={(values, setSubmitting) => {
-                        //     setTimeout(() => {
-                        //         fnSave(values);
-                        //     }, 100);
-                        // }}
-                        validationSchema={Settingsvalidation}
-                        enableReinitialize={true}
-                    >
-                        {({
-                            errors,
-                            touched,
-                            handleBlur,
-                            handleChange,
-                            isSubmitting,
-                            values,
-                            handleSubmit,
-                            setFieldTouched,
-                            resetForm
-                        }) => (
-                            <form onSubmit={handleSubmit}>
+                                    <TextField
+                                        name="subscriptionStartDate"
+                                        type="date"
+                                        id="subscriptionStartDate"
+                                        label="Subscription Start Date"
+                                        variant="standard"
+                                        focused
+                                        // onChange={(e) => handleChangesub(e, Setsubfromdate)}
+                                        // value={subfromdate}
 
-                                <Typography variant="h5" padding={1}>Subscriptions:</Typography>
+                                        value={values.subscriptionStartDate}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={!!touched.subscriptionPeriod && !!errors.subscriptionPeriod}
+                                        // helperText={touched.subscriptionPeriod && errors.subscriptionPeriod}
+                                        autoFocus
+                                        inputProps={{ readOnly: true }}
+                                    />
 
-                                <Box
-                                    display="grid"
-                                    gridTemplateColumns="repeat(4, minMax(0, 1fr))"
-                                    gap={formGap}
-                                    padding={1}
-                                    sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 4", // Adjust for mobile view
-                                        },
-                                    }}
+                                    <TextField
+                                        name="subscriptionperiod"
+                                        type="number"
+                                        id="subscriptionperiod"
+                                        label="Subscription Period (in months)"
+                                        variant="standard"
+                                        focused
+                                        // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
+                                        // value={subperiod}
+
+                                        value={values.subscriptionperiod}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={!!touched.subscriptionperiod && !!errors.subscriptionperiod}
+                                        // helperText={touched.subscriptionperiod && errors.subscriptionperiod}
+                                        autoFocus
+                                        sx={{
+                                            gridColumn: "span 2",
+                                            background: "",
+                                            input: { textAlign: "right" },
+
+                                        }}
+                                        inputProps={{ readOnly: true }}
+                                    />
+                                    <TextField
+                                        name="retainDate"
+                                        type="date"
+                                        id="retainDate"
+                                        label="Retain Date"
+                                        variant="standard"
+                                        focused
+                                        value={values.retainDate}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={!!touched.retainDate && !!errors.retainDate}
+                                        // helperText={touched.retainDate && errors.retainDate}
+                                        autoFocus
+                                        inputProps={{ readOnly: true }}
+                                    />
+                                    <TextField
+                                        name="noofusers"
+                                        type="number"
+                                        id="noofusers"
+                                        label="No of Users"
+                                        variant="standard"
+                                        focused
+                                        // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
+                                        // value={subperiod}
+
+                                        value={values.noofusers}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={!!touched.noofusers && !!errors.noofusers}
+                                        // helperText={touched.noofusers && errors.noofusers}
+                                        autoFocus
+                                        sx={{
+                                            gridColumn: "span 2",
+                                            background: "",
+                                            input: { textAlign: "right" },
+
+                                        }}
+
+                                    />
+
+                                </FormControl>
+                                <FormControl
+                                    fullWidth
+                                    sx={{ gridColumn: "span 2", gap: formGap }}
                                 >
-                                    <FormControl
-                                        fullWidth
-                                        sx={{ gridColumn: "span 2", gap: formGap }}
-                                    >
-                                        <TextField
-                                            name="subscriptionStartDate"
-                                            type="date"
-                                            id="subscriptionStartDate"
-                                            label="Subscription Start Date"
-                                            variant="standard"
-                                            focused
-                                            // onChange={(e) => handleChangesub(e, Setsubfromdate)}
-                                            // value={subfromdate}
+                                    <TextField
+                                        name="subscriptionEndDate"
+                                        type="date"
+                                        id="subscriptionEndDate"
+                                        label="Subscription End Date"
+                                        variant="standard"
+                                        focused
+                                        // onChange={(e) => handleChangesub(e, SetsubEnddate)}
+                                        // value={subEnddate}
 
-                                            value={values.subscriptionStartDate}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={!!touched.subscriptionPeriod && !!errors.subscriptionPeriod}
-                                            // helperText={touched.subscriptionPeriod && errors.subscriptionPeriod}
-                                            autoFocus
-                                            inputProps={{ readOnly: true }}
-                                        />
+                                        value={values.subscriptionEndDate}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={!!touched.subscriptionEndDate && !!errors.subscriptionEndDate}
+                                        // helperText={touched.subscriptionEndDate && errors.subscriptionEndDate}
+                                        autoFocus
+                                        inputProps={{ readOnly: true }}
+                                    />
 
-                                        <TextField
-                                            name="subscriptionperiod"
-                                            type="number"
-                                            id="subscriptionperiod"
-                                            label="Subscription Period (in months)"
-                                            variant="standard"
-                                            focused
-                                            // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
-                                            // value={subperiod}
+                                    <TextField
+                                        name="notificationDate"
+                                        type="date"
+                                        id="notificationDate"
+                                        label="Notification Date"
+                                        variant="standard"
+                                        focused
+                                        value={values.notificationDate}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={
+                                        //   !!touched.notificationDate && !!errors.notificationDate
+                                        // }
+                                        // helperText={
+                                        //   touched.notificationDate && errors.notificationDate
+                                        // }
+                                        autoFocus
+                                        inputProps={{ readOnly: true }}
+                                    />
+                                    <TextField
+                                        name="noofemployee"
+                                        type="number"
+                                        id="noofemployee"
+                                        label="No of Employee"
+                                        variant="standard"
+                                        focused
+                                        // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
+                                        // value={subperiod}
 
-                                            value={values.subscriptionperiod}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={!!touched.subscriptionperiod && !!errors.subscriptionperiod}
-                                            // helperText={touched.subscriptionperiod && errors.subscriptionperiod}
-                                            autoFocus
-                                            sx={{
-                                                gridColumn: "span 2",
-                                                background: "",
-                                                input: { textAlign: "right" },
+                                        value={values.noofemployee}
+                                        // onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        // error={!!touched.noofemployee && !!errors.noofemployee}
+                                        // helperText={touched.noofemployee && errors.noofemployee}
+                                        autoFocus
+                                        sx={{
+                                            gridColumn: "span 2",
+                                            background: "",
+                                            input: { textAlign: "right" },
 
-                                            }}
-                                            inputProps={{ readOnly: true }}
-                                        />
-                                        <TextField
-                                            name="retainDate"
-                                            type="date"
-                                            id="retainDate"
-                                            label="Retain Date"
-                                            variant="standard"
-                                            focused
-                                            value={values.retainDate}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={!!touched.retainDate && !!errors.retainDate}
-                                            // helperText={touched.retainDate && errors.retainDate}
-                                            autoFocus
-                                            inputProps={{ readOnly: true }}
-                                        />
-                                        <TextField
-                                            name="noofusers"
-                                            type="number"
-                                            id="noofusers"
-                                            label="No of Users"
-                                            variant="standard"
-                                            focused
-                                            // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
-                                            // value={subperiod}
+                                        }}
 
-                                            value={values.noofusers}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={!!touched.noofusers && !!errors.noofusers}
-                                            // helperText={touched.noofusers && errors.noofusers}
-                                            autoFocus
-                                            sx={{
-                                                gridColumn: "span 2",
-                                                background: "",
-                                                input: { textAlign: "right" },
-
-                                            }}
-
-                                        />
-
-                                    </FormControl>
-                                    <FormControl
-                                        fullWidth
-                                        sx={{ gridColumn: "span 2", gap: formGap }}
-                                    >
-                                        <TextField
-                                            name="subscriptionEndDate"
-                                            type="date"
-                                            id="subscriptionEndDate"
-                                            label="Subscription End Date"
-                                            variant="standard"
-                                            focused
-                                            // onChange={(e) => handleChangesub(e, SetsubEnddate)}
-                                            // value={subEnddate}
-
-                                            value={values.subscriptionEndDate}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={!!touched.subscriptionEndDate && !!errors.subscriptionEndDate}
-                                            // helperText={touched.subscriptionEndDate && errors.subscriptionEndDate}
-                                            autoFocus
-                                            inputProps={{ readOnly: true }}
-                                        />
-
-                                        <TextField
-                                            name="notificationDate"
-                                            type="date"
-                                            id="notificationDate"
-                                            label="Notification Date"
-                                            variant="standard"
-                                            focused
-                                            value={values.notificationDate}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={
-                                            //   !!touched.notificationDate && !!errors.notificationDate
-                                            // }
-                                            // helperText={
-                                            //   touched.notificationDate && errors.notificationDate
-                                            // }
-                                            autoFocus
-                                            inputProps={{ readOnly: true }}
-                                        />
-                                        <TextField
-                                            name="noofemployee"
-                                            type="number"
-                                            id="noofemployee"
-                                            label="No of Employee"
-                                            variant="standard"
-                                            focused
-                                            // onChange={(e) => SubPeriodOnchange(e, Setsubperiod)}
-                                            // value={subperiod}
-
-                                            value={values.noofemployee}
-                                            // onBlur={handleBlur}
-                                            // onChange={handleChange}
-                                            // error={!!touched.noofemployee && !!errors.noofemployee}
-                                            // helperText={touched.noofemployee && errors.noofemployee}
-                                            autoFocus
-                                            sx={{
-                                                gridColumn: "span 2",
-                                                background: "",
-                                                input: { textAlign: "right" },
-
-                                            }}
-
-                                        />
+                                    />
 
 
 
-                                    </FormControl>
-                                </Box>
+                                </FormControl>
+                            </Box>
 
 
-                                <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                                <Typography variant="h5" padding={1}>Company Details:</Typography>
+                            <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                            <Typography variant="h5" padding={1}>Company Details:</Typography>
 
-                                <Box
-                                    display="grid"
-                                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                                    gap={formGap}
-                                    padding={1}
-                                    sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 4",
-                                        },
-                                    }}
-                                >
-                                    <FormControl fullWidth sx={{ gridColumn: "span 2", gap: formGap }}>
-                                        {/* <TextField
+                            <Box
+                                display="grid"
+                                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                                gap={formGap}
+                                padding={1}
+                                sx={{
+                                    "& > div": {
+                                        gridColumn: isNonMobile ? undefined : "span 4",
+                                    },
+                                }}
+                            >
+                                <FormControl fullWidth sx={{ gridColumn: "span 2", gap: formGap }}>
+                                    {/* <TextField
                                             name="address"
                                             type="text"
                                             id="address"
@@ -619,22 +631,22 @@ const fnLogOut = (props) => {
                                             helperText={touched.address && errors.address}
                                             autoFocus
                                         /> */}
-                                        <TextField
-                                            name="address"
-                                            type="text"
-                                            id="address"
-                                            label="Office Address"
-                                            variant="standard"
-                                            multiline
-                                            rows={3}
-                                            focused
-                                            value={offaddress}
-                                            onChange={(e) => setOffaddress(e.target.value)}
-                                            autoFocus
-                                        />
+                                    <TextField
+                                        name="address"
+                                        type="text"
+                                        id="address"
+                                        label="Office Address"
+                                        variant="standard"
+                                        multiline
+                                        rows={3}
+                                        focused
+                                        value={offaddress}
+                                        onChange={(e) => setOffaddress(e.target.value)}
+                                        autoFocus
+                                    />
 
 
-                                        {/* <TextField
+                                    {/* <TextField
                                             name="gstnumber"
                                             label="GST Number"
                                             variant="standard"
@@ -656,24 +668,24 @@ const fnLogOut = (props) => {
                                             helperText={touched.gstnumber && errors.gstnumber}
                                             sx={{ backgroundColor: "#ffffff" }}
                                         /> */}
-                                        <TextField
-                                            name="gstnumber"
-                                            label="GST Number"
-                                            variant="standard"
-                                            focused
-                                            value={gst}
-                                            onChange={(e) => {
-                                                const input = e.target.value.toUpperCase();
-                                                if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                                                    setGst(input);
-                                                }
-                                            }}
-                                            sx={{ backgroundColor: "#ffffff" }}
-                                        />
+                                    <TextField
+                                        name="gstnumber"
+                                        label="GST Number"
+                                        variant="standard"
+                                        focused
+                                        value={gst}
+                                        onChange={(e) => {
+                                            const input = e.target.value.toUpperCase();
+                                            if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                                                setGst(input);
+                                            }
+                                        }}
+                                        sx={{ backgroundColor: "#ffffff" }}
+                                    />
 
-                                    </FormControl>
-                                    <Box>
-                                        {/* <Checkbox
+                                </FormControl>
+                                <Box>
+                                    {/* <Checkbox
                                             checked={autocode}
                                             onChange={(e) => setAutocode(e.target.checked)}
                                             id="checkbox"
@@ -682,98 +694,98 @@ const fnLogOut = (props) => {
                                         <FormLabel htmlFor="checkbox" focused={false}>
                                             Autocode
                                         </FormLabel> */}
-                                        <Checkbox
-                                            checked={autocode}
-                                            onChange={handleAutocodeChange}
-                                            id="checkbox"
-                                            name="checkbox"
-                                        />
-                                        <FormLabel htmlFor="checkbox" focused={false}>
-                                            Autocode
-                                        </FormLabel>
+                                    <Checkbox
+                                        checked={autocode}
+                                        onChange={handleAutocodeChange}
+                                        id="checkbox"
+                                        name="checkbox"
+                                    />
+                                    <FormLabel htmlFor="checkbox" focused={false}>
+                                        Autocode
+                                    </FormLabel>
 
-                                    </Box>
                                 </Box>
+                            </Box>
 
-                                <Box
-                                    display="flex"
-                                    padding={1}
-                                    justifyContent="end"
-                                    mt="20px"
-                                    gap="20px"
-                                >
-                                    {/* <Box display="flex" alignItems="center" gap={formGap}> */}
-                                    <Tooltip title="Upload Logo">
-                                        <IconButton
-                                            size="small"
-                                            color="warning"
-                                            aria-label="upload picture"
-                                            component="label"
-                                        >
-                                            <input
-                                                hidden
-                                                accept="all/*"
-                                                type="file"
-                                                onChange={getFilepanChange}
-                                            />
-                                            <PictureAsPdfOutlinedIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Button
+                            <Box
+                                display="flex"
+                                padding={1}
+                                justifyContent="end"
+                                mt="20px"
+                                gap="20px"
+                            >
+                                {/* <Box display="flex" alignItems="center" gap={formGap}> */}
+                                <Tooltip title="Upload Logo">
+                                    <IconButton
                                         size="small"
-                                        variant="contained"
-                                        component={"a"}
-                                        onClick={() => {
-                                            data.logoimage || logoimage
-                                                ? window.open(
+                                        color="warning"
+                                        aria-label="upload picture"
+                                        component="label"
+                                    >
+                                        <input
+                                            hidden
+                                            accept="all/*"
+                                            type="file"
+                                            onChange={getFilepanChange}
+                                        />
+                                        <PictureAsPdfOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    component={"a"}
+                                    onClick={() => {
+                                        data.logoimage || logoimage
+                                            ? window.open(
+                                                logoimage
+                                                    ? store.getState().globalurl.attachmentUrl +
                                                     logoimage
-                                                        ? store.getState().globalurl.attachmentUrl +
-                                                        logoimage
-                                                        : store.getState().globalurl.attachmentUrl +
-                                                        data.logoimage,
-                                                    "_blank"
-                                                )
-                                                : toast.error("Please Upload File");
-                                        }}
-                                    >
-                                        View Logo
-                                    </Button>
-                                    <Tooltip title="Upload GST">
-                                        <IconButton
-                                            size="small"
-                                            color="warning"
-                                            aria-label="upload picture"
-                                            component="label"
-                                        >
-                                            <input
-                                                hidden
-                                                accept="all/*"
-                                                type="file"
-                                                onChange={getFilegstChange}
-                                            />
-                                            <PictureAsPdfOutlinedIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Button
+                                                    : store.getState().globalurl.attachmentUrl +
+                                                    data.logoimage,
+                                                "_blank"
+                                            )
+                                            : toast.error("Please Upload File");
+                                    }}
+                                >
+                                    View Logo
+                                </Button>
+                                <Tooltip title="Upload GST">
+                                    <IconButton
                                         size="small"
-                                        variant="contained"
-                                        component={"a"}
-                                        onClick={() => {
-                                            data.GstImg || gstImage
-                                                ? window.open(
-                                                    gstImage
-                                                        ? store.getState().globalurl.attachmentUrl +
-                                                        gstImage
-                                                        : store.getState().globalurl.attachmentUrl +
-                                                        data.GstImg,
-                                                    "_blank"
-                                                )
-                                                : toast.error("Please Upload File");
-                                        }}
+                                        color="warning"
+                                        aria-label="upload picture"
+                                        component="label"
                                     >
-                                        View GST
-                                    </Button>
-                                    {/* <IconButton
+                                        <input
+                                            hidden
+                                            accept="all/*"
+                                            type="file"
+                                            onChange={getFilegstChange}
+                                        />
+                                        <PictureAsPdfOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    component={"a"}
+                                    onClick={() => {
+                                        data.GstImg || gstImage
+                                            ? window.open(
+                                                gstImage
+                                                    ? store.getState().globalurl.attachmentUrl +
+                                                    gstImage
+                                                    : store.getState().globalurl.attachmentUrl +
+                                                    data.GstImg,
+                                                "_blank"
+                                            )
+                                            : toast.error("Please Upload File");
+                                    }}
+                                >
+                                    View GST
+                                </Button>
+                                {/* <IconButton
                       size="large"
                       color="warning"
                       aria-label="upload picture"
@@ -806,34 +818,34 @@ const fnLogOut = (props) => {
                       View
                     </Button> */}
 
-                                    <LoadingButton
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        loading={isLoading}
-                                        onClick={fnSave}
-                                    >
-                                        Save
-                                    </LoadingButton>
+                                <LoadingButton
+                                    color="secondary"
+                                    variant="contained"
+                                    type="submit"
+                                    loading={isLoading}
+                                    onClick={fnSave}
+                                >
+                                    Save
+                                </LoadingButton>
 
 
 
-                                    <Button
-                                        color={"warning"}
-                                        variant="contained"
-                                        onClick={() => resetForm()}
-                                    // onClick={() => {
-                                    //   navigate("/Apps/TR213/LeaveType");
-                                    // }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </Box>
+                                <Button
+                                    color={"warning"}
+                                    variant="contained"
+                                    onClick={() => resetForm()}
+                                // onClick={() => {
+                                //   navigate("/Apps/TR213/LeaveType");
+                                // }}
+                                >
+                                    Cancel
+                                </Button>
+                            </Box>
 
-                            </form>
-                        )}
-                    </Formik>
-                </Paper>
+                        </form>
+                    )}
+                </Formik>
+            </Paper>
             {/* </Box> */}
         </React.Fragment>
     );

@@ -89,7 +89,19 @@ const Approval = () => {
   const [Input, setInput] = useState("");
   const [pulling, setpulling] = useState("");
   const [time, settime] = useState("");
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   useEffect(() => {
     if (data) {
       setAppname(data.ApplicationName);
@@ -227,7 +239,7 @@ const Approval = () => {
     //       return
     //  }
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,

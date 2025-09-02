@@ -192,14 +192,40 @@
         "Level": "Please Enter the Level",
         "manager": "Please Enter the Manager"
     },
-    "SkillGlowCategory":{
-        "Code":"Please fill the Code",
-        "Name":"Please fill the Name"
+    "SkillGlowCategory": {
+        "Code": "Please Enter the Code",
+        "Name": "Please Enter the Name"
     },
-    "SkillGlowSession":{
-        "Code":"Please fill the Code",
-        "Name":"Please fill the Name"
+    "SkillGlowSession": {
+        "Code": "Please Enter the Code",
+        "Name": "Please Enter the Name"
+    },
+    "ListofAssessment": {
+        "Code": "Please Enter the Code",
+        "Name": "Please Enter the Name",
+        "Duration": "Please Enter the Duration (In Days)",
+        "Permittedtimes": "Please Enter the No. Of Attempts Permitted",
+        "Minimumscore": "Please Enter the Mininum Score",
+        "Noofquestion": "Please Enter the No. Of Questions",
+        "Date": "Please Enter the Date"
+    },
+     "ListofSession": {
+        "Code": "Please Enter the Code",
+        "Name": "Please Enter the Name",
+        "ContentType": "Please Enter the Document Type"       
+    },
+     "ListofQuestiongroup": {
+        "Code": "Please Enter the Code",
+        "Name": "Please Enter the Name",
+        "AnswerType": "Please Enter the Answer Type"       
+    },
+     "ListofAssessCat": {
+        "assessment": "Please Enter the Assessment",
+        "Date": "Please Enter the Date"
+    },
+    "Warningmsg": {
+        "Logout": "Do you really want to Log Out?",
+        "Close": "Do you want to Close?",
+        "Delete": "Do you want to Delete?"
     }
-
-
 }

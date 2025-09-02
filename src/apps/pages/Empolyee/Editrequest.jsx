@@ -1864,7 +1864,8 @@ const Editrequests = () => {
           : "update";
 
     const idata = {
-      RecordID: recID,
+      // RecordID: recID,
+      RecordID: RegData.RecordID,
       RegularizationDate: values.MonthDate,
       CheckInDate: funMode === "A" ? RegData.CheckInDate : formatDate(regdata.CheckInDate),
       CheckOutDate: funMode === "A" ? RegData.CheckOutDate : formatDate(regdata.CheckOutDate),
@@ -2698,7 +2699,7 @@ const Editrequests = () => {
   };
   const fnLogOut = (props) => {
     Swal.fire({
-      title: `Do you want ${props}?`,
+      title: errorMsgData.Warningmsg[props],
       // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
@@ -3392,7 +3393,7 @@ const Editrequests = () => {
                         variant="contained"
                         onClick={() => {
                           Swal.fire({
-                            title: `Do you want Delete?`,
+                            title: errorMsgData.Warningmsg.Delete,
                             icon: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#3085d6",
@@ -3829,7 +3830,7 @@ const Editrequests = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -4488,7 +4489,7 @@ const Editrequests = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -5019,6 +5020,7 @@ const Editrequests = () => {
                           focused
                           variant="standard"
                           onChange={handleChange}
+                          select
                           error={!!touched.Status && !!errors.Status}
                           helperText={touched.Status && errors.Status}
                         // sx={{
@@ -5086,7 +5088,7 @@ const Editrequests = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -5716,7 +5718,7 @@ const Editrequests = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -6348,7 +6350,7 @@ const Editrequests = () => {
                           variant="contained"
                           onClick={() => {
                             Swal.fire({
-                              title: `Do you want Delete?`,
+                              title: errorMsgData.Warningmsg.Delete,
                               icon: "warning",
                               showCancelButton: true,
                               confirmButtonColor: "#3085d6",
@@ -7023,7 +7025,7 @@ const Editrequests = () => {
                       variant="contained"
                       onClick={() => {
                         Swal.fire({
-                          title: `Do you want Delete?`,
+                          title: errorMsgData.Warningmsg.Delete,
                           icon: "warning",
                           showCancelButton: true,
                           confirmButtonColor: "#3085d6",
@@ -7048,7 +7050,7 @@ const Editrequests = () => {
                                         variant="contained"
                                         onClick={() => {
                                           Swal.fire({
-                                            title: `Do you want Delete?`,
+                                            title: errorMsgData.Warningmsg.Delete,
                                             icon: "warning",
                                             showCancelButton: true,
                                             confirmButtonColor: "#3085d6",
@@ -7571,7 +7573,7 @@ const Editrequests = () => {
                   variant="contained"
                   onClick={() => {
                     Swal.fire({
-                      title: `Do you want Delete?`,
+                      title: errorMsgData.Warningmsg.Delete,
                       icon: "warning",
                       showCancelButton: true,
                       confirmButtonColor: "#3085d6",
@@ -7675,7 +7677,7 @@ const Editrequests = () => {
                           variant="contained"
                           onClick={() => {
                             Swal.fire({
-                              title: `Do you want Delete?`,
+                              title: errorMsgData.Warningmsg.Delete,
                               icon: "warning",
                               showCancelButton: true,
                               confirmButtonColor: "#3085d6",
@@ -8324,7 +8326,7 @@ const Editrequests = () => {
                         variant="contained"
                         onClick={() => {
                           Swal.fire({
-                            title: `Do you want Delete?`,
+                            title: errorMsgData.Warningmsg.Delete,
                             icon: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#3085d6",
