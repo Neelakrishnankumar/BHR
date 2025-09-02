@@ -602,11 +602,7 @@ const fnLogOut = (props) => {
           </Box>
         ): accessID == "TR278" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            <Chip
-              icon={<Psychology color="primary" />}
-              label="Assessment"
-              variant="outlined"
-            />
+            
              <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -615,6 +611,11 @@ const fnLogOut = (props) => {
             <Chip
               icon={<Delete color="error" />}
               label="Delete"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Psychology color="primary" />}
+              label="Assessment"
               variant="outlined"
             />
           </Box>

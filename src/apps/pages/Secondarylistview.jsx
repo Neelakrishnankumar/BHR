@@ -200,7 +200,11 @@ const ListviewSecondary = () => {
     filter = "";
   } else if (accessID == "TR283") {
     filter = `EmployeeID ='${parentID2}'`;
-  } else {
+  } 
+  // else if (accessID == "TR283") {
+  //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
+  // } 
+  else {
     filter = parentID;
   }
   const listViewData = useSelector((state) => state.listviewApi.rowData);
@@ -2746,16 +2750,7 @@ const ListviewSecondary = () => {
           </Box>
         ) : accessID == "TR280" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            <Chip
-              icon={<AccessTimeIcon color="primary" />}
-              label="Session"
-              variant="outlined"
-            />
-            <Chip
-              icon={<Category color="primary" />}
-              label="Question Group"
-              variant="outlined"
-            />
+            
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -2764,6 +2759,17 @@ const ListviewSecondary = () => {
             <Chip
               icon={<Delete color="error" />}
               label="Delete"
+              variant="outlined"
+            />
+            
+            <Chip
+              icon={<Category color="primary" />}
+              label="Question Group"
+              variant="outlined"
+            />
+            <Chip
+              icon={<AccessTimeIcon color="primary" />}
+              label="Session"
               variant="outlined"
             />
           </Box>
@@ -2790,11 +2796,7 @@ const ListviewSecondary = () => {
           </Box>
         ): accessID == "TR281" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            <Chip
-              icon={<QuizIcon color="primary" />}
-              label="Question"
-              variant="outlined"
-            />
+           
 
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -2804,6 +2806,11 @@ const ListviewSecondary = () => {
             <Chip
               icon={<Delete color="error" />}
               label="Delete"
+              variant="outlined"
+            />
+             <Chip
+              icon={<QuizIcon color="primary" />}
+              label="Question"
               variant="outlined"
             />
           </Box>
