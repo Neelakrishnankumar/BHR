@@ -69,6 +69,7 @@ const CreateCandidates = () => {
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const AssessmentAutoUrl = useSelector((state) => state.globalurl.AssessmentAutoUrl);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -77,6 +78,13 @@ const CreateCandidates = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          assessment: Yup.object().required(data.ListofAssessCat.assessment).nullable(),
+          Date: Yup.string().required(data.ListofAssessCat.Date),
+          // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // disable: Yup.boolean(),
+        })
+        setValidationSchema(schema)
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -160,12 +168,12 @@ const CreateCandidates = () => {
     Disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    //assessment: Yup.string().required("Please Enter Candidate Here"),
-    //Date: Yup.string().required("Choose a date"),
-    sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   //assessment: Yup.string().required("Please Enter Candidate Here"),
+  //   //Date: Yup.string().required("Choose a date"),
+  //   sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   disable: Yup.boolean(),
+  // });
   return (
     <>
       <React.Fragment
@@ -303,15 +311,19 @@ const CreateCandidates = () => {
                       helperText={touched.assessment && errors.assessment}
                       // url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
                       url={AssessmentAutoUrl}
-                      payload={{"SkillCategorieID":params.parentID1,"EmployeeID":EmpId}}
-                      //inputProps={{ disabled: mode == "V" }}
+                      payload={{ "SkillCategorieID": params.parentID1, "EmployeeID": EmpId }}
+                    //inputProps={{ disabled: mode == "V" }}
 
                     />
                     <TextField
                       name="Date"
                       type="date"
                       id="Date"
-                      label="Date"
+                      label={
+                        <>
+                          Date<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.Date}

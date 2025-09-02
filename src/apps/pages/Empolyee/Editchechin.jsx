@@ -158,6 +158,7 @@ const Editcheckin = () => {
       GateName: values.gate.Name || 0,
       GateRecID: values.gate.RecordID || 0,
       CheckInTime: values.checkintime,
+      Source: "Cloud",
       Finyear,
       CompanyID,
     };

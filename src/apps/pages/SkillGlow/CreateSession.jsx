@@ -73,6 +73,7 @@ const CreateSession = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -81,6 +82,15 @@ const CreateSession = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          Code: Yup.string().required(data.ListofSession.Code),
+          Name: Yup.string().required(data.ListofSession.Name),
+          ContentType: Yup.string().required(data.ListofSession.ContentType),
+          // //AttachmentName: Yup.string().required("Choose at least one Document"),
+          // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // Disable: Yup.boolean(),
+        })
+        setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -117,12 +127,6 @@ const CreateSession = () => {
     }
   };
 
-
-
-
-
-
-
   const fnLogOut = (props) => {
     Swal.fire({
       title: errorMsgData.Warningmsg[props],
@@ -157,14 +161,14 @@ const CreateSession = () => {
     Disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Name: Yup.string().required("Please Enter Description Here"),
-    ContentType: Yup.string().required("Choose at least one Document Type"),
-    //AttachmentName: Yup.string().required("Choose at least one Document"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Name: Yup.string().required("Please Enter Description Here"),
+  //   ContentType: Yup.string().required("Choose at least one Document Type"),
+  //   //AttachmentName: Yup.string().required("Choose at least one Document"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
   return (
     <>
       <React.Fragment
@@ -314,7 +318,11 @@ const CreateSession = () => {
                       variant="standard"
                       type="text"
                       name="Code"
-                      label="Code"
+                      label={
+                        <>
+                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       id="Code"
                       //placeholder="Enter Your code here......"
                       value={values.Code}
@@ -336,7 +344,11 @@ const CreateSession = () => {
                       variant="standard"
                       type="text"
                       name="Name"
-                      label="Name"
+                      label={
+                        <>
+                          Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
                       id="Name"
                       //placeholder="Enter Your Description here......"
                       value={values.Name}
@@ -357,38 +369,45 @@ const CreateSession = () => {
 
                     {/* DROPDOWN */}
 
-                    <FormControl
+                    {/* <FormControl
                       focused
                       variant="standard"
                       sx={{ background: "#ffffff" }}
                     >
-                      <InputLabel id="ContentType">Document Type</InputLabel>
-                      <Select
-                        labelId="question-type-label"
-                        // value={values.QType}
-                        // onChange={handleChange}
-                        label="Please Select Document Type"
-                        name="ContentType"
-                        id="ContentType"
-                        required
-                        value={values.ContentType}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        inputProps={{ readOnly: mode == "V" }}
-                      // MenuProps={{
-                      //   PaperProps: {
-                      //     sx: {
-                      //       mt: 1, // Add space so the top border doesn’t get cut
-                      //     },
-                      //   },
-                      // }}
-                      >
-                        <MenuItem value="Pdf">Pdf</MenuItem>
-                        <MenuItem value="Ppt">Ppt</MenuItem>
-                        <MenuItem value="Link">Link</MenuItem>
-                        {/* ✅ unique value */}
-                      </Select>
-                    </FormControl>
+                      <InputLabel id="ContentType">Document Type</InputLabel> */}
+                    <TextField
+                      // label="Please Select Document Type"
+                      label={
+                        <>
+                          Document Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      name="ContentType"
+                      id="ContentType"
+                      // required
+                      focused
+                      variant="standard"
+                      value={values.ContentType}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      inputProps={{ readOnly: mode == "V" }}
+                      select
+                      error={!!touched.ContentType && !!errors.ContentType}
+                      helperText={touched.ContentType && errors.ContentType}
+                    // MenuProps={{
+                    //   PaperProps: {
+                    //     sx: {
+                    //       mt: 1, // Add space so the top border doesn’t get cut
+                    //     },
+                    //   },
+                    // }}
+                    >
+                      <MenuItem value="Pdf">Pdf</MenuItem>
+                      <MenuItem value="Ppt">Ppt</MenuItem>
+                      <MenuItem value="Link">Link</MenuItem>
+                      {/* ✅ unique value */}
+                    </TextField>
+                    {/* </FormControl> */}
 
                     {/* SORT ORDER */}
 

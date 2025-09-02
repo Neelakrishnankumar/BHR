@@ -66,11 +66,7 @@ const CreateSkill = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
   const CatId = params.parentID1;
-
-
-
   const CompanyID = sessionStorage.getItem("compID");
-
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -78,6 +74,7 @@ const CreateSkill = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -86,6 +83,19 @@ const CreateSkill = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
+        const schema =  Yup.object().shape({
+          Code: Yup.string().required(data.ListofAssessment.Code),
+          Name: Yup.string().required(data.ListofAssessment.Name),
+          Duration: Yup.string().required(data.ListofAssessment.Duration),
+          Permittedtimes: Yup.number().required(data.ListofAssessment.Permittedtimes),
+          Minimumscore: Yup.number().required(data.ListofAssessment.Minimumscore),
+          Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
+          Date: Yup.date().nullable().required(data.ListofAssessment.Date),
+
+          // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // Disable: Yup.boolean(),
+        })
+        setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -178,22 +188,22 @@ const CreateSkill = () => {
     Disable: Data.Disable == "Y" ? true : false,
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Name: Yup.string().required("Please Enter Name Here"),
-    //Answertype: Yup.string().required("Choose at least one Answertype"),
-    Duration: Yup.string().required("Choose Duation"),
-    Permittedtimes: Yup.number().required("Choose a number"),
-    Minimumscore: Yup.number().required("Choose a Score"),
-    Noofquestion: Yup.number().required("Choose a number"),
-    Date: Yup.date().nullable().required("Please enter Date"),
-    // cutOff: Yup.number()
-    //   .min(0, "No negative numbers")
-    //   .nullable()
-    //   .required("Please choose Cut Off Cut (In Minutes)"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Name: Yup.string().required("Please Enter Name Here"),
+  //   //Answertype: Yup.string().required("Choose at least one Answertype"),
+  //   Duration: Yup.string().required("Choose Duation"),
+  //   Permittedtimes: Yup.number().required("Choose a number"),
+  //   Minimumscore: Yup.number().required("Choose a Score"),
+  //   Noofquestion: Yup.number().required("Choose a number"),
+  //   Date: Yup.date().nullable().required("Please enter Date"),
+  //   // cutOff: Yup.number()
+  //   //   .min(0, "No negative numbers")
+  //   //   .nullable()
+  //   //   .required("Please choose Cut Off Cut (In Minutes)"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
 
   return (
     <React.Fragment>
@@ -295,7 +305,9 @@ const CreateSkill = () => {
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Code"
+                    label={
+                      <>Code<span style={{ color: "red", fontSize: "20px" }}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Code}
                     onBlur={handleBlur}
@@ -316,7 +328,9 @@ const CreateSkill = () => {
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Name"
+                    label={
+                      <>Name<span style={{ color: "red", fontSize: "20px" }}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Name}
                     onBlur={handleBlur}
@@ -365,7 +379,10 @@ const CreateSkill = () => {
                     // fullWidth
                     variant="standard"
                     type="number"
-                    label="No. Of Questions"
+                    // label="No. Of Questions"
+                    label={
+                      <>No. Of Questions<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your NoOfQuestions Here......"
                     value={values.Noofquestion}
                     onBlur={handleBlur}
@@ -381,12 +398,20 @@ const CreateSkill = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     // fullWidth
                     variant="standard"
                     type="number"
-                    label="Duration (In Days)"
+                    // label="Duration (In Days)"
+                    label={
+                      <>Duration (In Days)<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Duration}
                     onBlur={handleBlur}
@@ -399,15 +424,23 @@ const CreateSkill = () => {
                     sx={{
                       // backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
+                        backgroundColor: "#f5f5f5 "
+                                          },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     // fullWidth
                     variant="standard"
                     type="text"
-                    label="Mininum Score"
+                    // label="Mininum Score"
+                    label={
+                      <>Mininum Score<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Minimumscore}
                     onBlur={handleBlur}
@@ -423,12 +456,19 @@ const CreateSkill = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     name="Date"
                     type="date"
                     id="Date"
-                    label="Date"
+                    label={
+                      <>Date<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     variant="standard"
                     focused
                     inputFormat="YYYY-MM-DD"
@@ -445,7 +485,10 @@ const CreateSkill = () => {
                     // fullWidth
                     variant="standard"
                     type="number"
-                    label="No. Of Attempts Permitted"
+                    // label="No. Of Attempts Permitted"
+                    label={
+                      <>No. Of Attempts Permitted<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Permittedtimes}
                     onBlur={handleBlur}
@@ -461,6 +504,11 @@ const CreateSkill = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
 
 
@@ -499,12 +547,12 @@ const CreateSkill = () => {
                       />
                     }
                     label="Disable"
-                    // sx={{
-                    //   marginTop: "20px",
-                    //   "@media (max-width:500px)": {
-                    //     marginTop: 0,
-                    //   },
-                    // }}
+                  // sx={{
+                  //   marginTop: "20px",
+                  //   "@media (max-width:500px)": {
+                  //     marginTop: 0,
+                  //   },
+                  // }}
                   />
                 </Box>
                 <Box
