@@ -1511,7 +1511,7 @@ const Editemployee = () => {
       CompanyID,
     };
 
-    return
+    
     const response = await dispatch(
       explorePostData({ accessID: "TR125", action, idata })
     );
@@ -4320,10 +4320,12 @@ const Editemployee = () => {
               enableReinitialize={true}
               validationSchema={validationSchema4}
               onSubmit={(values, { resetForm }) => {
+                console.log("Submitting values:", values);
                 setTimeout(() => {
                   empFunctionFn(values, resetForm, false);
                 }, 100);
               }}
+
             >
               {({
                 errors,
@@ -4521,6 +4523,7 @@ const Editemployee = () => {
                             //   Code: newValue.Code,
                             //   Name: newValue.Name,
                             // });
+                           
                           }}
                           error={!!touched.functionLookup && !!errors.functionLookup}
                           helperText={touched.functionLookup && errors.functionLookup}
@@ -4981,7 +4984,7 @@ const Editemployee = () => {
                             confirmButtonText: "Confirm",
                           }).then((result) => {
                             if (result.isConfirmed) {
-                              mgrFunctionFn(values,resetForm, "harddelete");
+                              mgrFunctionFn(values, resetForm, "harddelete");
                               // navigate(-1);
                             } else {
                               return;
