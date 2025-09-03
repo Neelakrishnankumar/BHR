@@ -3584,6 +3584,8 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+
+        
         {/* EDIT ICON */}
         {accessID !== "TR279" &&
           accessID !== "TR288" &&
@@ -3651,7 +3653,24 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               </IconButton>
             </Tooltip>
           )}
-
+ {accessID == "TR278" && (
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() =>
+              navigate(
+                `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`,
+                {
+                  state: { BreadCrumb1: params.row.Name },
+                }
+              )
+            }
+          >
+            <Tooltip title="Assessment">
+              <Psychology />
+            </Tooltip>
+          </IconButton>
+        )}
         {/* VIEW */}
         {accessID == "TR279" && (
           <IconButton
@@ -3679,7 +3698,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
                 `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
                 {
                   state: {
-                    BreadCrumb1: params.row.Code,
+                    BreadCrumb1: params.row.Name,
                   },
                 }
               )
@@ -3697,7 +3716,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             size="small"
             onClick={() =>
               navigate(`./TR283/${params.row.RecordID}`, {
-                state: { ...state, BreadCrumb2: params.row.Code },
+                state: { ...state, BreadCrumb2: params.row.Name },
               })
             }
           >
@@ -3707,25 +3726,25 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           </IconButton>
         )}
 
-        {accessID == "TR278" && (
+       
+ {accessID == "TR280" && (
           <IconButton
             color="primary"
             size="small"
             onClick={() =>
               navigate(
-                `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`,
+                `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
                 {
-                  state: { BreadCrumb1: params.row.Code },
+                  state: { ...state, BreadCrumb2: params.row.Name },
                 }
               )
             }
           >
-            <Tooltip title="Assessment">
-              <Psychology />
+            <Tooltip title="Question Groups">
+              <Category />
             </Tooltip>
           </IconButton>
         )}
-
         {accessID == "TR280" && (
           <IconButton
             color="primary"
@@ -3734,7 +3753,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               navigate(
                 `/Apps/Secondarylistview/skillglow/TR279/List Of Session/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
                 {
-                  state: { ...state, BreadCrumb2: params.row.Code },
+                  state: { ...state, BreadCrumb2: params.row.Name },
                 }
               )
             }
@@ -3745,24 +3764,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           </IconButton>
         )}
 
-        {accessID == "TR280" && (
-          <IconButton
-            color="primary"
-            size="small"
-            onClick={() =>
-              navigate(
-                `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
-                {
-                  state: { ...state, BreadCrumb2: params.row.Code },
-                }
-              )
-            }
-          >
-            <Tooltip title="Question Groups">
-              <Category />
-            </Tooltip>
-          </IconButton>
-        )}
+       
 
         {accessID == "TR281" && (
           <IconButton
@@ -3772,7 +3774,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               navigate(`./TR282/${params.row.RecordID}`, {
                 state: {
                   ...state,
-                  BreadCrumb3: params.row.Code,
+                  BreadCrumb3: params.row.Name,
                   AnswerType: params.row.AnswerType,
                 },
               })
