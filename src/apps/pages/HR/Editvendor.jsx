@@ -775,9 +775,9 @@ const Editvendor = () => {
                     }}
                   // autoFocus
                   />
-                  <TextField
+                  {/* <TextField
                     name="mobilenumber"
-                    type="tel"
+                    type="number"
                     id="mobilenumber"
                     label={
                       <>
@@ -806,6 +806,31 @@ const Editvendor = () => {
                       },
                     }}
                   // autoFocus
+                  /> */}
+                  <TextField
+                    name="mobilenumber"
+                    id="mobilenumber"
+                    label={
+                      <>
+                        Contact Mobile Number
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    variant="standard"
+                    focused
+                    value={values.mobilenumber}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Only allow numbers and max 10 digits
+                      if (/^\d{0,10}$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    error={!!touched.mobilenumber && !!errors.mobilenumber}
+                    helperText={touched.mobilenumber && errors.mobilenumber}
+                    inputProps={{ maxLength: 10}}
+                    sx={{ backgroundColor: "#ffffff" }}
                   />
 
                   <TextField
