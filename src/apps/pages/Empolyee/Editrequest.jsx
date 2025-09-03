@@ -1865,7 +1865,7 @@ const Editrequests = () => {
 
     const idata = {
       // RecordID: recID,
-      RecordID: RegData.RecordID,
+      RecordID: regdata.RecordID || "",
       RegularizationDate: values.MonthDate,
       CheckInDate: funMode === "A" ? RegData.CheckInDate : formatDate(regdata.CheckInDate),
       CheckOutDate: funMode === "A" ? RegData.CheckOutDate : formatDate(regdata.CheckOutDate),
@@ -3425,7 +3425,7 @@ const Editrequests = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate(`/Apps/TR027/Employees`);
+                        navigate(`/Apps/TR257/Employees`);
                       }}
                     >
                       Cancel

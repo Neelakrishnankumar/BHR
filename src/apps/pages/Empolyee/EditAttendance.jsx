@@ -57,7 +57,7 @@ const EditAttendance = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const EmpName = sessionStorage.getItem("EmpName");
   const EmpId = sessionStorage.getItem("EmpId");
-  const companyID = sessionStorage.getItem("compID");
+  const CompanyID = sessionStorage.getItem("compID");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
@@ -198,7 +198,8 @@ const EditAttendance = () => {
       Year: values.year,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
       // ProjectID: proData.RecordID 
-      ProjectID: proData && proData.RecordID ? proData.RecordID : 0
+      ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
+      CompanyID
 
     };
     console.log(data, "=====DATA");
@@ -239,12 +240,12 @@ const EditAttendance = () => {
     setUseCurrentEmp(false)
   };
 
-  let employeeFilter = `CompanyID='${companyID}'`;
+  let employeeFilter = `CompanyID='${CompanyID}'`;
   if (proData) {
     employeeFilter += ` AND ProjectID='${proData.RecordID}' GROUP BY RecordID`;
   }
   if (!proData) {
-    employeeFilter = `CompanyID='${companyID}' GROUP BY RecordID`;
+    employeeFilter = `CompanyID='${CompanyID}' GROUP BY RecordID`;
   }
 
   const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
@@ -418,7 +419,7 @@ const EditAttendance = () => {
                       Query: {
                         AccessID: "2054",
                         ScreenName: "Project",
-                        Filter: `parentID=${companyID}`,
+                        Filter: `parentID=${CompanyID}`,
                         Any: ""
                       }
                     }))}`}
