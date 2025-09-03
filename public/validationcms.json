@@ -192,9 +192,9 @@
         "Level": "Please Enter the Level",
         "manager": "Please Enter the Manager"
     },
-    "SkillGlowCategory": {
-        "Code": "Please Enter the Code",
-        "Name": "Please Enter the Name"
+    "SkillGlowCategory":{
+        "Code":"Please Enter the Code",
+        "Name":"Please Enter the Name"
     },
     "SkillGlowSession": {
         "Code": "Please Enter the Code",
