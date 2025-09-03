@@ -829,7 +829,7 @@ const Editvendor = () => {
                     }}
                     error={!!touched.mobilenumber && !!errors.mobilenumber}
                     helperText={touched.mobilenumber && errors.mobilenumber}
-                    inputProps={{ maxLength: 10, inputMode: "numeric" }} // numeric keyboard on mobile
+                    inputProps={{ maxLength: 10}}
                     sx={{ backgroundColor: "#ffffff" }}
                   />
 
