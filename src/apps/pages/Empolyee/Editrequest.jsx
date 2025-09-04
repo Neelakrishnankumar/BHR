@@ -3425,7 +3425,7 @@ const Editrequests = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate(`/Apps/TR257/Employees`);
+                        navigate(-1);
                       }}
                     >
                       Cancel

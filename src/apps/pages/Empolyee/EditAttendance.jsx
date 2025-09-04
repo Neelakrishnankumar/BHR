@@ -199,7 +199,7 @@ const EditAttendance = () => {
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
       // ProjectID: proData.RecordID 
       ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
-      CompanyID
+      // CompanyID
 
     };
     console.log(data, "=====DATA");

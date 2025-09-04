@@ -1511,7 +1511,7 @@ const Editemployee = () => {
       CompanyID,
     };
 
-    
+
     const response = await dispatch(
       explorePostData({ accessID: "TR125", action, idata })
     );
@@ -1976,6 +1976,8 @@ const Editemployee = () => {
     mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
     managermanual: deploymentData.ManagerManual === "Y" ? true : false,
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
+    costofemployee: deploymentData.CostOfEmployee,
+    costofcompany: deploymentData.CostOfCompany,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
@@ -2011,6 +2013,8 @@ const Editemployee = () => {
       AutoPresent: values.defaultpresent === true ? "Y" : "N",
       CloudApplication: values.cloud === true ? "Y" : "N",
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
+      CostOfEmployee: values.costofemployee,
+      CostOfCompany: values.costofcompany,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -2078,6 +2082,8 @@ const Editemployee = () => {
       Friday: deploymentData.FridayShift === "Y" ? true : false,
       Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
+      CostOfEmployee: values.costofemployee,
+      CostOfCompany: values.costofcompany,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -2097,7 +2103,6 @@ const Editemployee = () => {
       ShiftID: deploymentData.ShiftID || 0,
       ShiftCode: deploymentData.ShiftCode || "",
       ShiftName: deploymentData.ShiftName || "",
-
       // Horizontal: values.horizontal === true ? "Y" : "N",
       // Vertical: values.vertical === true ? "Y" : "N",
       // HorizontalMimNo: values.Horizontalmin || 0,
@@ -4523,7 +4528,7 @@ const Editemployee = () => {
                             //   Code: newValue.Code,
                             //   Name: newValue.Name,
                             // });
-                           
+
                           }}
                           error={!!touched.functionLookup && !!errors.functionLookup}
                           helperText={touched.functionLookup && errors.functionLookup}
@@ -5374,11 +5379,11 @@ const Editemployee = () => {
 
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                  <Typography variant="h5">Shift Details</Typography>
+                  <Typography variant="h5" padding={1}>Shift Details</Typography>
                   <Stack
                     direction="column"
                     spacing={2}
-                    sx={{ width: 500, mt: 2, padding: formGap }}
+                    sx={{ width: 500,padding: formGap }}
                   >
 
                     {/* Shift */}
@@ -5652,6 +5657,73 @@ const Editemployee = () => {
 
 
                   </Box>
+                  {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5" padding={1}>Costing</Typography>
+                  <Box
+                   display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}>
+
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="costofemployee"
+                      name="costofemployee"
+                      value={values.costofemployee}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Cost of Employee"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      focused
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="costofcompany"
+                      name="costofcompany"
+                      value={values.costofcompany}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Cost of Company"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff",
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff",
+                        },
+                      }}
+                      focused
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />
+                  </Box> */}
                   <Box
                     display="flex"
                     justifyContent="end"
