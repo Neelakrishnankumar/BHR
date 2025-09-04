@@ -1796,7 +1796,7 @@ const Editrequests = () => {
     EmplyeeCheckOutDateTime: funMode === "A" ? RegData.CheckOutTime : regdata.EmplyeeCheckOutDateTime,
     Status: funMode === "A" ? RegData.Status
       : regdata.Status == "Present"
-        ? "P"
+        ? "R"
         : regdata.Status == "Absent"
           ? "A"
           : regdata.Status == "WeekOff"
@@ -1871,7 +1871,8 @@ const Editrequests = () => {
       CheckOutDate: funMode === "A" ? RegData.CheckOutDate : formatDate(regdata.CheckOutDate),
       CheckInTime: funMode === "A" ? RegData.CheckInTime : regdata.EmplyeeCheckInDateTime,
       CheckOutTime: funMode === "A" ? RegData.CheckOutTime : regdata.EmplyeeCheckOutDateTime,
-      Status: funMode === "A" ? RegData.Status : regdata.Status,
+      // RegularStatus: funMode === "A" ? RegData.Status : regdata.Status,
+      RegularStatus: values.Status,
       AppliedStatus: values.appliedStatus,
       Remarks: values.remarks,
       Source: "Web Application",
@@ -1879,7 +1880,7 @@ const Editrequests = () => {
       NewCheckOutDate: values.CheckOutDate,
       NewCheckInTime: values.EmplyeeCheckInDateTime,
       NewCheckOutTime: values.EmplyeeCheckOutDateTime,
-      NewStatus: values.Status,
+      // NewStatus: values.Status,
       Reason: "",
       ApprovedDate: values.approvedDate,
       ApprovedBy: UserRecordid,
@@ -8169,7 +8170,7 @@ const Editrequests = () => {
                         // required
                         select
                       >
-                        <MenuItem value="P">Present</MenuItem>
+                        <MenuItem value="R">Present</MenuItem>
                         <MenuItem value="A">Absent</MenuItem>
                         <MenuItem value="W">WeekOff</MenuItem>
                         <MenuItem value="I">Irregular</MenuItem>
