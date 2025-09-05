@@ -89,7 +89,7 @@ const CreateSkill = () => {
           Duration: Yup.string().required(data.ListofAssessment.Duration),
           Permittedtimes: Yup.number().required(data.ListofAssessment.Permittedtimes),
           Minimumscore: Yup.number().required(data.ListofAssessment.Minimumscore),
-          Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
+          //Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
           Date: Yup.date().nullable().required(data.ListofAssessment.Date),
 
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
@@ -119,7 +119,7 @@ const CreateSkill = () => {
       Answertype: values.Answertype,
       Date: values.Date,
       Minimumscore: values.Minimumscore,
-      Noofquestion: values.Noofquestion,
+      Noofquestion: "0",
       Duration: values.Duration,
       Permittedtimes: values.Permittedtimes,
     };
@@ -180,7 +180,7 @@ const CreateSkill = () => {
     Duration: Data.Duration || "",
     MinimumScore: Data.MinimumScore || "",
     //NoOfAttempts: Data.NoOfAttempts || "",
-    Noofquestion: Data.Noofquestion || "",
+    //Noofquestion: Data.Noofquestion || "",
     Minimumscore: Data.Minimumscore || "",
     Permittedtimes: Data.Permittedtimes || "",
     //cutOff: Data.cutOff || "",
@@ -375,7 +375,7 @@ const CreateSkill = () => {
                       <MenuItem value={'Y/N'}>Yes or No</MenuItem>
                     </Select>
                   </FormControl> */}
-                  <TextField
+                  {/* <TextField
                     // fullWidth
                     variant="standard"
                     type="number"
@@ -403,7 +403,7 @@ const CreateSkill = () => {
                     //     style: { textAlign: "right" },
                     //   },
                     // }}
-                  />
+                  /> */}
                   <TextField
                     // fullWidth
                     variant="standard"

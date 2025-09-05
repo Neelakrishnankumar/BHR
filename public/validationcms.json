@@ -206,13 +206,13 @@
         "Duration": "Please Enter the Duration (In Days)",
         "Permittedtimes": "Please Enter the No. Of Attempts Permitted",
         "Minimumscore": "Please Enter the Mininum Score",
-        "Noofquestion": "Please Enter the No. Of Questions",
         "Date": "Please Enter the Date"
     },
      "ListofSession": {
         "Code": "Please Enter the Code",
         "Name": "Please Enter the Name",
-        "ContentType": "Please Enter the Document Type"       
+        "ContentType": "Please Enter the Document Type",       
+        "AttachmentName": "Choose atleast one Document Type"       
     },
      "ListofQuestiongroup": {
         "Code": "Please Enter the Code",

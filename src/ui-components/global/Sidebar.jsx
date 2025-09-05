@@ -575,74 +575,74 @@ const child = {
     //   UGA_ACCESSIDS: "TR122",
     // },
 
-    // {
-    //   name: "Assessment",
-    //   id: 4578,
-    //   MenuID: "ST1600",
-    //   Tooltipname: "Assessment",
-    //   icon: (
-    //     <Tooltip title="Assessment">
-    //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-    //     </Tooltip>
-    //   ),
-    //   children: [
-    //     {
-    //       name: "Prepare",
-    //       id: 5848,
-    //       // url: "/Apps/SkillGlow/CategoryMain",
-    //       url: "/Apps/TR278/List Of Categories",
-    //       icon: (
-    //         <Tooltip title="Prepare">
-    //           <CategoryOutlinedIcon color="info" />
-    //         </Tooltip>
-    //       ),
-    //       UGA_ADD: true,
-    //       UGA_DEL: true,
-    //       UGA_MOD: true,
-    //       UGA_PRINT: true,
-    //       UGA_PROCESS: true,
-    //       UGA_VIEW: true,
-    //       UGA_ACCESSIDS: "TR122",
-    //     },
-    //     {
-    //       name: "Schedule",
-    //       id: 5849,
-    //       url: "/Apps/TR286/List of Employees",
-    //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
-    //       icon: (
-    //         <Tooltip title="Schedule">
-    //           <BadgeIcon color="info" />
-    //         </Tooltip>
-    //       ),
-    //       UGA_ADD: true,
-    //       UGA_DEL: true,
-    //       UGA_MOD: true,
-    //       UGA_PRINT: true,
-    //       UGA_PROCESS: true,
-    //       UGA_VIEW: true,
-    //       UGA_ACCESSIDS: "TR122",
-    //     },
-    //     {
-    //       name: "Insights",
-    //       id: 5849,
-    //       url: "/Apps/TR286/List of Employees",
-    //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
-    //       icon: (
-    //         <Tooltip title="Insights">
-    //           <DashboardOutlinedIcon color="info" />
-    //         </Tooltip>
-    //       ),
-    //       UGA_ADD: true,
-    //       UGA_DEL: true,
-    //       UGA_MOD: true,
-    //       UGA_PRINT: true,
-    //       UGA_PROCESS: true,
-    //       UGA_VIEW: true,
-    //       UGA_ACCESSIDS: "TR122",
-    //     },
+    {
+      name: "Assessment",
+      id: 4578,
+      MenuID: "ST1600",
+      Tooltipname: "Assessment",
+      icon: (
+        <Tooltip title="Assessment">
+          <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+        {
+          name: "Prepare",
+          id: 5848,
+          // url: "/Apps/SkillGlow/CategoryMain",
+          url: "/Apps/TR278/List Of Categories",
+          icon: (
+            <Tooltip title="Prepare">
+              <CategoryOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR122",
+        },
+        {
+          name: "Schedule",
+          id: 5849,
+          url: "/Apps/TR286/List of Employees",
+          // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+          icon: (
+            <Tooltip title="Schedule">
+              <BadgeIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR122",
+        },
+        {
+          name: "Insights",
+          id: 5849,
+          url: "/Apps/TR286/List of Employees",
+          // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+          icon: (
+            <Tooltip title="Insights">
+              <DashboardOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR122",
+        },
         
-    //   ],
-    // },
+      ],
+    },
     {
       name: "Settings",
       id: 95689,
