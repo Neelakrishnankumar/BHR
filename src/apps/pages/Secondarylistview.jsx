@@ -52,7 +52,7 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import axios from "axios";
 import toast from "react-hot-toast";
 import store from "../..";
-import { Delete, Psychology, Category, Visibility } from "@mui/icons-material";
+import { Delete, Psychology, Category, Visibility, Download } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {
   dataGridHeaderFooterHeight,
@@ -62,6 +62,9 @@ import {
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { useEffect,useState } from "react";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -2842,8 +2845,13 @@ const [errorMsgData, setErrorMsgData] = useState(null);
         ) : accessID == "TR279" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
             <Chip
-              icon={<Visibility color="primary" />}
-              label="View"
+              icon={<Download color="primary" />}
+              label="Download"
+              variant="outlined"
+            />
+            <Chip
+              icon={<OpenInNewIcon color="primary" />}
+              label="Open Link"
               variant="outlined"
             />
           </Box>

@@ -84,12 +84,25 @@ const CreateSession = () => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
           Code: Yup.string().required(data.ListofSession.Code),
-          Name: Yup.string().required(data.ListofSession.Name),
+          //Name: Yup.string().required(data.ListofSession.Name),
+          Name: Yup.string().when("ContentType", {
+            is: "Link",
+            then: (schema) =>
+              schema
+                .required(data.ListofSession.Name) // still use message
+                .url("Please enter a valid URL"), // 👈 custom URL validation
+            otherwise: (schema) => schema.required(data.ListofSession.Name),
+          }),
           ContentType: Yup.string().required(data.ListofSession.ContentType),
-          // //AttachmentName: Yup.string().required("Choose at least one Document"),
+          AttachmentName: Yup.string().when("ContentType", {
+            is: (val) => val === "Pdf" || val === "Ppt",
+            then: (schema) =>
+              schema.required(data.ListofSession.AttachmentName),
+            otherwise: (schema) => schema.nullable(),
+          }), 
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
-        })
+        });
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -320,7 +333,10 @@ const CreateSession = () => {
                       name="Code"
                       label={
                         <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       id="Code"
@@ -346,7 +362,10 @@ const CreateSession = () => {
                       name="Name"
                       label={
                         <>
-                          Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Name
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       id="Name"
@@ -379,7 +398,10 @@ const CreateSession = () => {
                       // label="Please Select Document Type"
                       label={
                         <>
-                          Document Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Document Type
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       name="ContentType"
@@ -394,13 +416,13 @@ const CreateSession = () => {
                       select
                       error={!!touched.ContentType && !!errors.ContentType}
                       helperText={touched.ContentType && errors.ContentType}
-                    // MenuProps={{
-                    //   PaperProps: {
-                    //     sx: {
-                    //       mt: 1, // Add space so the top border doesn’t get cut
-                    //     },
-                    //   },
-                    // }}
+                      // MenuProps={{
+                      //   PaperProps: {
+                      //     sx: {
+                      //       mt: 1, // Add space so the top border doesn’t get cut
+                      //     },
+                      //   },
+                      // }}
                     >
                       <MenuItem value="Pdf">Pdf</MenuItem>
                       <MenuItem value="Ppt">Ppt</MenuItem>
@@ -449,7 +471,7 @@ const CreateSession = () => {
                           onChange={handleChange}
                           disabled={mode === "V"}
 
-                        //inputProps={{ readOnly: mode == "V" }}
+                          //inputProps={{ readOnly: mode == "V" }}
                         />
                       }
                       label="Disable"
@@ -501,6 +523,24 @@ const CreateSession = () => {
                             <CloudUpload fontSize="medium" />
                           </IconButton>
                         </Tooltip>
+                         {(values.ContentType === "Pdf" ||
+                        values.ContentType === "Ppt") && (
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      )}
+                      {/* Show Yup validation error here */}
+                      {touched.AttachmentName && errors.AttachmentName && (
+                        <div
+                          style={{
+                            color: "red",
+                            fontSize: "0.8rem",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {errors.AttachmentName}
+                        </div>
+                      )}
                         <Button
                           // disabled={mode === "V"}
                           variant="contained"
@@ -542,9 +582,10 @@ const CreateSession = () => {
                 </Form>
               )}
             </Formik>
-          </Paper>) : (
-          false)}
-
+          </Paper>
+        ) : (
+          false
+        )}
       </React.Fragment>
     </>
   );

@@ -46,6 +46,7 @@ import {
   AccessTimeOutlined,
   Category,
   Delete,
+  Download,
   Psychology,
 } from "@mui/icons-material";
 import { Visibility } from "@mui/icons-material";
@@ -53,6 +54,8 @@ import QuizIcon from "@mui/icons-material/Quiz";
 
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+
 
 const initialState = {
   rowData: [],
@@ -3584,8 +3587,6 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-
-        
         {/* EDIT ICON */}
         {accessID !== "TR279" &&
           accessID !== "TR288" &&
@@ -3653,7 +3654,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               </IconButton>
             </Tooltip>
           )}
- {accessID == "TR278" && (
+        {accessID == "TR278" && (
           <IconButton
             color="primary"
             size="small"
@@ -3673,19 +3674,66 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         )}
         {/* VIEW */}
         {accessID == "TR279" && (
-          <IconButton
-            color="primary"
-            size="small"
-            onClick={() =>
-              navigate(`./Edit${screenName}/${params.row.RecordID}/V`, {
-                state: { ...state },
-              })
+          // <IconButton
+          //   color="primary"
+          //   size="small"
+          //   onClick={() =>
+          //     navigate(`./Edit${screenName}/${params.row.RecordID}/V`, {
+          //       state: { ...state },
+          //     })
+          //   }
+          // >
+          //   <Tooltip title="View">
+          //     <Visibility />
+          //   </Tooltip>
+          // </IconButton>
+
+          <Tooltip
+            title={
+              ["Pdf", "Ppt"].includes(params.row.ContentType) ? "Download" : "Open Link"
             }
           >
-            <Tooltip title="View">
-              <Visibility />
-            </Tooltip>
-          </IconButton>
+            <IconButton
+              color="info"
+              size="small"
+              onClick={async () => {
+                if (["Pdf", "Ppt"].includes(params.row.ContentType)) {
+                  const url = `https://dvmtapi.bexatm.com/uploads/attachments/${params.row.AttachmentName}`;
+
+                  try {
+                    const response = await fetch(url);
+                    const blob = await response.blob();
+
+                    // Create temporary URL
+                    const blobUrl = window.URL.createObjectURL(blob);
+
+                    // Create link and click
+                    const link = document.createElement("a");
+                    link.href = blobUrl;
+                    link.download = params.row.AttachmentName; // filename
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Cleanup
+                    link.remove();
+                    window.URL.revokeObjectURL(blobUrl);
+                  } catch (err) {
+                    console.error("Download failed", err);
+                  }
+                } else {
+                  // handle other action
+
+                  window.open(params.row.Name, "_blank", "noopener,noreferrer");
+                }
+              }}
+            >
+              {["Pdf", "Ppt"].includes(params.row.ContentType) ? (
+                <Download />
+              ) : (
+                <OpenInNewIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         )}
 
         {/* ASSESSMENT CATEGORY */}
@@ -3726,8 +3774,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           </IconButton>
         )}
 
-       
- {accessID == "TR280" && (
+        {accessID == "TR280" && (
           <IconButton
             color="primary"
             size="small"
@@ -3763,8 +3810,6 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             </Tooltip>
           </IconButton>
         )}
-
-       
 
         {accessID == "TR281" && (
           <IconButton
