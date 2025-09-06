@@ -94,6 +94,7 @@ const Editdesignation = () => {
     code: data.Code,
     name: data.Description,
     rank: data.DesignationRank,
+    hoursrate:data.HoursRate,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false
@@ -118,6 +119,7 @@ const Editdesignation = () => {
       Description: values.name,
       DesignationRank: values.rank,
       SortOrder: values.sortorder || 0,
+      HoursRate: values.hoursrate,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
       Finyear,
@@ -349,6 +351,33 @@ const Editdesignation = () => {
                     // required
                     error={!!touched.rank && !!errors.rank}
                     helperText={touched.rank && errors.rank}
+
+                  />
+                  <TextField
+                    name="hoursrate"
+                    type="number"
+                    id="hoursrate"
+                    label="Hours Rate"
+                    // label={
+                    //   <>
+                    //     Hours Rate<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                    //   </>
+                    // }
+                    variant="standard"
+                    focused
+                    value={values.hoursrate}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+
+                    onWheel={(e) => e.target.blur()}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    // required
+                    error={!!touched.hoursrate && !!errors.hoursrate}
+                    helperText={touched.hoursrate && errors.hoursrate}
 
                   />
                   <TextField

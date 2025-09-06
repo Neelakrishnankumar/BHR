@@ -5657,7 +5657,7 @@ const Editemployee = () => {
 
 
                   </Box>
-                  {/* <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>Costing</Typography>
                   <Box
                    display="grid"
@@ -5723,7 +5723,7 @@ const Editemployee = () => {
                         },
                       }}
                     />
-                  </Box> */}
+                  </Box>
                   <Box
                     display="flex"
                     justifyContent="end"
