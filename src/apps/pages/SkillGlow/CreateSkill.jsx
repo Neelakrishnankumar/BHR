@@ -119,7 +119,7 @@ const CreateSkill = () => {
       Answertype: values.Answertype,
       Date: values.Date,
       Minimumscore: values.Minimumscore,
-      Noofquestion: "0",
+      //Noofquestion: "0",
       Duration: values.Duration,
       Permittedtimes: values.Permittedtimes,
     };

@@ -86,6 +86,7 @@ const CreateCategory = () => {
           Code: Yup.string().required(data.ListofQuestiongroup.Code),
           Name: Yup.string().required(data.ListofQuestiongroup.Name),
           AnswerType: Yup.string().required(data.ListofQuestiongroup.AnswerType),
+          NoOfQuestions: Yup.string().required(data.ListofQuestiongroup.NoOfQuestions),
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
         })
@@ -111,6 +112,7 @@ const CreateCategory = () => {
       AssessmentRecordID: Assessmentid,
       Code: values.Code,
       Name: values.Name,
+      NoOfQuestions: values.NoOfQuestions,
       Answertype: values.AnswerType,
       SortOrder: values.SortOrder,
       Disable: isCheck,
@@ -171,6 +173,7 @@ const CreateCategory = () => {
   const initialValues = {
     Code: Data.Code || "",
     Name: Data.Name || "",
+    NoOfQuestions: Data.NoOfQuestions || "",
     AnswerType: Data.AnswerType || "",
     SortOrder: Data.SortOrder || "",
     Disable: Data.Disable == "Y" ? true : false,
@@ -349,6 +352,36 @@ const CreateCategory = () => {
                         },
                       }}
                     />
+
+                      <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    // label="No. Of Questions"
+                    label={
+                      <>No. Of Questions<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                    }
+                    //placeholder="Enter Your NoOfQuestions Here......"
+                    value={values.NoOfQuestions}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="NoOfQuestions"
+                    name="NoOfQuestions"
+                    focused
+                    error={!!touched.NoOfQuestions && !!errors.NoOfQuestions}
+                    helperText={touched.NoOfQuestions && errors.NoOfQuestions}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
+                  />
                     {/* DROPDOWN */}
 
                     {/* <FormControl

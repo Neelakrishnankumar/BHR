@@ -217,7 +217,8 @@
      "ListofQuestiongroup": {
         "Code": "Please Enter the Code",
         "Name": "Please Enter the Name",
-        "AnswerType": "Please Enter the Answer Type"       
+        "AnswerType": "Please Enter the Answer Type",       
+        "NoOfQuestions": "Please Enter the No.Of Questions"      
     },
      "ListofAssessCat": {
         "assessment": "Please Enter the Assessment",
