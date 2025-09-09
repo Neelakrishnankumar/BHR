@@ -20,7 +20,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { Field, Formik } from "formik";
-import { CheckBox } from "@mui/icons-material";
+import { CheckBox, Schedule } from "@mui/icons-material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
@@ -114,7 +114,10 @@ const Editproject = () => {
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
     CurrentStatus: data.CurrentStatus,
-    delete: data.DeleteFlag === "Y" ? true : false
+    delete: data.DeleteFlag === "Y" ? true : false,
+    budget:data.Budget,
+    scheduled:data.ScheduledCost || 0,
+    actual: data.ActualCost || 0
 
   };
 
@@ -144,6 +147,9 @@ const Editproject = () => {
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
+      ActualCost:values.actual || 0,
+      Budget:values.budget,
+      ScheduledCost: values.scheduled || 0,
       Finyear,
       CompanyID,
     };
@@ -400,6 +406,104 @@ const Editproject = () => {
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
+                </Box>
+                <Typography variant="h5" padding={1}>Costing:</Typography>
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}>
+                  
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    id="budget"
+                    name="budget"
+                    value={values.budget}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Budget"
+                    sx={{
+                      gridColumn: "span 1",
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    focused
+                    InputProps={{
+                      
+                      inputProps: {
+                        style: {
+                          textAlign: "right",
+                        },
+                      },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    id="scheduled"
+                    name="scheduled"
+                    value={values.scheduled}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Scheduled Cost"
+                    sx={{
+                      gridColumn: "span 1",
+                      backgroundColor: "#ffffff",
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff",
+                      },
+                    }}
+                    focused
+                    InputProps={{
+                      readOnly: true,
+                      inputProps: {
+                        style: {
+                          textAlign: "right",
+                        },
+                      },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    id="actual"
+                    name="actual"
+                    value={values.actual}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Actual Cost"
+                    sx={{
+                      gridColumn: "span 1",
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    focused
+                    InputProps={{
+                      readOnly: true,
+                      inputProps: {
+                        style: {
+                          textAlign: "right",
+
+                        },
+                      },
+                    }}
+                  />
+
                   {/* </FormControl> */}
                   <Box >
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>

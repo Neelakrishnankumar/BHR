@@ -1976,8 +1976,10 @@ const Editemployee = () => {
     mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
     managermanual: deploymentData.ManagerManual === "Y" ? true : false,
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
-    costofemployee: deploymentData.CostOfEmployee,
+    costofemployee: deploymentData.CostOfBudget,
     costofcompany: deploymentData.CostOfCompany,
+    costofbudgethour: deploymentData.CostOfBudgetHours,
+    costofcompanyhour: deploymentData.CostOfCompanyHours,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
@@ -2013,8 +2015,10 @@ const Editemployee = () => {
       AutoPresent: values.defaultpresent === true ? "Y" : "N",
       CloudApplication: values.cloud === true ? "Y" : "N",
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
-      CostOfEmployee: values.costofemployee,
+      CostOfBudget: values.costofemployee,
       CostOfCompany: values.costofcompany,
+      CostOfCompanyHours : values.costofcompanyhour,
+      CostOfBudgetHours: values.costofbudgethour,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -2082,8 +2086,10 @@ const Editemployee = () => {
       Friday: deploymentData.FridayShift === "Y" ? true : false,
       Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
-      CostOfEmployee: values.costofemployee,
+      CostOfBudget: values.costofemployee,
       CostOfCompany: values.costofcompany,
+      CostOfCompanyHours : values.costofcompanyhour,
+      CostOfBudgetHours: values.costofbudgethour,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -5680,7 +5686,7 @@ const Editemployee = () => {
                       value={values.costofemployee}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label="Cost of Employee"
+                      label="Cost of Budget"
                       sx={{
                         gridColumn: "span 1",
                         backgroundColor: "#ffffff", // Set the background to white
@@ -5716,6 +5722,61 @@ const Editemployee = () => {
                       }}
                       focused
                       InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />
+                     <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="costofbudgethour"
+                      name="costofbudgethour"
+                      value={values.costofbudgethour}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Cost of Budget(Hours)"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      focused
+                      InputProps={{
+                        readOnly:true,
+                        inputProps: {                          
+                          style: {
+                            textAlign: "right",
+                            
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="costofcompanyhour"
+                      name="costofcompanyhour"
+                      value={values.costofcompanyhour}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Cost of Company(Hours)"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff",
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff",
+                        },
+                      }}
+                      focused
+                      InputProps={{
+                        readOnly:true,
                         inputProps: {
                           style: {
                             textAlign: "right",
