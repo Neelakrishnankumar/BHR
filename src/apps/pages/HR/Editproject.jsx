@@ -406,6 +406,91 @@ const Editproject = () => {
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
+                  <Box >
+                    {/* <Box display="flex" flexDirection="row" gap={formGap}>
+                    <Box display="flex" alignItems="center"> */}
+                    <Field
+                      type="checkbox"
+                      name="Routine"
+                      id="Routine"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel focused={false}
+                    // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
+                    >
+                      Routine Tasks
+                    </FormLabel>
+                    <Field
+                      type="checkbox"
+                      name="ServiceMaintenance"
+                      id="ServiceMaintenance"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel
+                      focused={false}
+                    // htmlFor="ServiceMaintenance"
+                    // sx={{ ml: 1,marginLeft:0}}
+                    >
+                      Service & Maintenance
+                    </FormLabel>
+                  </Box>
+
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    focused
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ background: "" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
+                  </Box>
+
                 </Box>
                 <Typography variant="h5" padding={1}>Costing:</Typography>
                 <Box
@@ -505,91 +590,7 @@ const Editproject = () => {
                   />
 
                   {/* </FormControl> */}
-                  <Box >
-                    {/* <Box display="flex" flexDirection="row" gap={formGap}>
-                    <Box display="flex" alignItems="center"> */}
-                    <Field
-                      type="checkbox"
-                      name="Routine"
-                      id="Routine"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                    />
-                    <FormLabel focused={false}
-                    // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
-                    >
-                      Routine Tasks
-                    </FormLabel>
-                    <Field
-                      type="checkbox"
-                      name="ServiceMaintenance"
-                      id="ServiceMaintenance"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                    />
-                    <FormLabel
-                      focused={false}
-                    // htmlFor="ServiceMaintenance"
-                    // sx={{ ml: 1,marginLeft:0}}
-                    >
-                      Service & Maintenance
-                    </FormLabel>
-                  </Box>
-
-                  <TextField
-                    name="sortorder"
-                    type="number"
-                    id="sortorder"
-                    label="Sort Order"
-                    variant="standard"
-                    focused
-                    value={values.sortorder}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.sortorder && !!errors.sortorder}
-                    helperText={touched.sortorder && errors.sortorder}
-                    sx={{ background: "" }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                    onWheel={(e) => e.target.blur()}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                  />
-                  <Box>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="delete"
-                      id="delete"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Delete"
-                    />
-
-                    <FormLabel focused={false}>Delete</FormLabel>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="disable"
-                      id="disable"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Disable"
-                    />
-
-                    <FormLabel focused={false}>Disable</FormLabel>
-                  </Box>
-
+                  
                 </Box>
 
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">

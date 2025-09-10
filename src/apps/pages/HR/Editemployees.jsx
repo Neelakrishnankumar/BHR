@@ -2017,7 +2017,7 @@ const Editemployee = () => {
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
       CostOfBudget: values.costofemployee,
       CostOfCompany: values.costofcompany,
-      CostOfCompanyHours : values.costofcompanyhour,
+      CostOfCompanyHours: values.costofcompanyhour,
       CostOfBudgetHours: values.costofbudgethour,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
@@ -2088,7 +2088,7 @@ const Editemployee = () => {
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
       CostOfBudget: values.costofemployee,
       CostOfCompany: values.costofcompany,
-      CostOfCompanyHours : values.costofcompanyhour,
+      CostOfCompanyHours: values.costofcompanyhour,
       CostOfBudgetHours: values.costofbudgethour,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
@@ -5389,7 +5389,7 @@ const Editemployee = () => {
                   <Stack
                     direction="column"
                     spacing={2}
-                    sx={{ width: 500,padding: formGap }}
+                    sx={{ width: 500, padding: formGap }}
                   >
 
                     {/* Shift */}
@@ -5666,7 +5666,7 @@ const Editemployee = () => {
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>Costing</Typography>
                   <Box
-                   display="grid"
+                    display="grid"
                     gap={formGap}
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -5676,33 +5676,6 @@ const Editemployee = () => {
                         gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}>
-
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="number"
-                      id="costofemployee"
-                      name="costofemployee"
-                      value={values.costofemployee}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      label="Cost of Budget"
-                      sx={{
-                        gridColumn: "span 1",
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      focused
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: "right",
-                          },
-                        },
-                      }}
-                    />
                     <TextField
                       fullWidth
                       variant="standard"
@@ -5712,7 +5685,7 @@ const Editemployee = () => {
                       value={values.costofcompany}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label="Cost of Company"
+                      label="Cost to Company"
                       sx={{
                         gridColumn: "span 1",
                         backgroundColor: "#ffffff",
@@ -5729,16 +5702,16 @@ const Editemployee = () => {
                         },
                       }}
                     />
-                     <TextField
+                    <TextField
                       fullWidth
                       variant="standard"
                       type="number"
-                      id="costofbudgethour"
-                      name="costofbudgethour"
-                      value={values.costofbudgethour}
+                      id="costofemployee"
+                      name="costofemployee"
+                      value={values.costofemployee}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label="Cost of Budget(Hours)"
+                      label="Cost to Budget"
                       sx={{
                         gridColumn: "span 1",
                         backgroundColor: "#ffffff", // Set the background to white
@@ -5748,11 +5721,9 @@ const Editemployee = () => {
                       }}
                       focused
                       InputProps={{
-                        readOnly:true,
-                        inputProps: {                          
+                        inputProps: {
                           style: {
                             textAlign: "right",
-                            
                           },
                         },
                       }}
@@ -5766,7 +5737,7 @@ const Editemployee = () => {
                       value={values.costofcompanyhour}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      label="Cost of Company(Hours)"
+                      label="Cost to Company(Hours)"
                       sx={{
                         gridColumn: "span 1",
                         backgroundColor: "#ffffff",
@@ -5776,7 +5747,7 @@ const Editemployee = () => {
                       }}
                       focused
                       InputProps={{
-                        readOnly:true,
+                        readOnly: true,
                         inputProps: {
                           style: {
                             textAlign: "right",
@@ -5784,6 +5755,35 @@ const Editemployee = () => {
                         },
                       }}
                     />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="costofbudgethour"
+                      name="costofbudgethour"
+                      value={values.costofbudgethour}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Cost to Budget(Hours)"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      focused
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+
+                          },
+                        },
+                      }}
+                    />
+
                   </Box>
                   <Box
                     display="flex"
