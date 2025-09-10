@@ -117,7 +117,8 @@ const Editproject = () => {
     delete: data.DeleteFlag === "Y" ? true : false,
     budget:data.Budget,
     scheduled:data.ScheduledCost || 0,
-    actual: data.ActualCost || 0
+    actual: data.ActualCost || 0,
+    OtherExpenses: data.OtherExpenses || 0
 
   };
 
@@ -570,6 +571,34 @@ const Editproject = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     label="Actual Cost"
+                    sx={{
+                      gridColumn: "span 1",
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    focused
+                    InputProps={{
+                      readOnly: true,
+                      inputProps: {
+                        style: {
+                          textAlign: "right",
+
+                        },
+                      },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    id="OtherExpenses"
+                    name="OtherExpenses"
+                    value={values.OtherExpenses}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Other Expenses"
                     sx={{
                       gridColumn: "span 1",
                       backgroundColor: "#ffffff", // Set the background to white
