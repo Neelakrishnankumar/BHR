@@ -557,23 +557,7 @@ const child = {
       ],
     },
 
-    // {
-    //   name: "Assessment",
-    //   id: 4578,
-    //   url: "/Apps/SkillGlow/CategoryMain",
-    //   icon: (
-    //     <Tooltip title="Assessment">
-    //       <PersonIcon color="info" />
-    //     </Tooltip>
-    //   ),
-    //   UGA_ADD: true,
-    //   UGA_DEL: true,
-    //   UGA_MOD: true,
-    //   UGA_PRINT: true,
-    //   UGA_PROCESS: true,
-    //   UGA_VIEW: true,
-    //   UGA_ACCESSIDS: "TR122",
-    // },
+   
 
     {
       name: "Assessment",
