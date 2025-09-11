@@ -3698,7 +3698,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               size="small"
               onClick={async () => {
                 if (["Pdf", "Ppt"].includes(params.row.ContentType)) {
-                  const url = `https://dvmtapi.bexatm.com/uploads/attachments/${params.row.AttachmentName}`;
+                  const url = `${store.getState().globalurl.baseUrl}uploads/attachments/${params.row.AttachmentName}`;
 
                   try {
                     const response = await fetch(url);

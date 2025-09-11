@@ -13,6 +13,7 @@ var baseurl = "https://bosuat.beyondexs.com/"
  const initialState = {  
 //hr
 baseApiUrl: APIurl,
+baseUrl: baseurl,
 listViewurl: APIurl + 'wslistview_mysql.php',
 loginUrl:APIurl + 'LController.php',
 authUrl:APIurl + 'auth.php',
