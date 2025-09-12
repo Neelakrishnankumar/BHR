@@ -103,7 +103,7 @@ const CreateCategoryMain = () => {
       CompanyID: CompanyID,
       Code: values.code,
       Name: values.name,
-      SortOrder: values.sortOrder,
+      SortOrder: values.sortOrder || "0",
       Disable: isCheck,
     };
 
@@ -310,8 +310,9 @@ const CreateCategoryMain = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     name="sortOrder"
-                    error={!!touched.sortOrder && !!errors.sortOrder}
-                    helperText={touched.sortOrder && errors.sortOrder}
+                    // error={!!touched.sortOrder && !!errors.sortOrder}
+                    // helperText={touched.sortOrder && errors.sortOrder}
+                    
                     sx={{ background: "" }}
                     focused
                     onWheel={(e) => e.target.blur()}

@@ -116,7 +116,7 @@ const CreateCandidates = () => {
       // Lastattscore: values.Lastattscore,
       // Lastattduration: values.Lastattduration,
       // Status: values.Status,
-      Sortorder: values.Sortorder,
+      Sortorder: values.Sortorder || "0",
       Disable: isCheck,
     };
 
@@ -346,8 +346,10 @@ const CreateCandidates = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       name="Sortorder"
-                      error={!!touched.Sortorder && !!errors.Sortorder}
-                      helperText={touched.Sortorder && errors.Sortorder}
+                      // error={!!touched.Sortorder && !!errors.Sortorder}
+                      // helperText={touched.Sortorder && errors.Sortorder}
+                      
+                      
                       sx={{ background: "" }}
                       focused
                       onWheel={(e) => e.target.blur()}

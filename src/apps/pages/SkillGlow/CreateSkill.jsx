@@ -114,7 +114,7 @@ const CreateSkill = () => {
       SkillcategoriesID: CatId,
       Code: values.Code,
       Name: values.Name,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || "0",
       Disable: isCheck,
       Answertype: values.Answertype,
       Date: values.Date,
@@ -522,8 +522,8 @@ const CreateSkill = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     name="SortOrder"
-                    error={!!touched.SortOrder && !!errors.SortOrder}
-                    helperText={touched.SortOrder && errors.SortOrder}
+                    // error={!!touched.SortOrder && !!errors.SortOrder}
+                    // helperText={touched.SortOrder && errors.SortOrder}
                     sx={{ background: "" }}
                     focused
                     onWheel={(e) => e.target.blur()}

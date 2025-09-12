@@ -102,7 +102,7 @@ const CreateQuestion = () => {
       Code: values.Code,
       Question: values.Question,
       AnserType: values.AnserType,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || "0",
       Disable: isCheck,
       Option1: values.Option1,
       Rate1: values.Rate1,
@@ -435,8 +435,8 @@ const CreateQuestion = () => {
                       value={values.SortOrder}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={!!touched.SortOrder && !!errors.SortOrder}
-                      helperText={touched.SortOrder && errors.SortOrder}
+                      // error={!!touched.SortOrder && !!errors.SortOrder}
+                      // helperText={touched.SortOrder && errors.SortOrder}
                       sx={{ background: "" }}
                       focused
                       onWheel={(e) => e.target.blur()}
