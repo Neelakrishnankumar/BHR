@@ -3820,7 +3820,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
                 state: {
                   ...state,
                   BreadCrumb3: params.row.Name,
-                  AnswerType: params.row.AnswerType,
+                  AnswerType: params.row.HiddenAnswerType,
                 },
               })
             }

@@ -475,7 +475,8 @@ const CreateQuestion = () => {
                             Question Details
                           </Typography> */}
                     <Typography variant="h3" gutterBottom>
-                      Expected Answer For ({answerType})
+                      Expected Answer 
+                      {/* For ({answerType}) */}
                     </Typography>
                     {/* <Typography variant="h6" gutterBottom>
                     Question Type<b> - {questionType}</b>
@@ -507,7 +508,7 @@ const CreateQuestion = () => {
                           display: "flex",
                           my: 2,
                           fontWeight: "bold",
-                          gap: "10px",
+                          gap: "14px",
                         }}
                       >
                         <Box sx={{ width: "40px", textAlign: "left" }}>SL#</Box>
@@ -524,7 +525,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -604,7 +606,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -670,7 +673,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -736,7 +740,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -803,7 +808,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -869,7 +875,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>

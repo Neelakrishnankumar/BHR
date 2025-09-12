@@ -376,11 +376,11 @@ const CreateCategory = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // InputProps={{
-                    //   inputProps: {
-                    //     style: { textAlign: "right" },
-                    //   },
-                    // }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
                     {/* DROPDOWN */}
 
@@ -419,8 +419,8 @@ const CreateCategory = () => {
                     //   },
                     // }}
                     >
-                      <MenuItem value={"1/4"}>1 of 4</MenuItem>
-                      <MenuItem value={"Any/4"}>Any Of 4</MenuItem>
+                      <MenuItem value={"1/4"}>One Of Four</MenuItem>
+                      <MenuItem value={"Any/4"}>Any Of Four</MenuItem>
                       <MenuItem value={"Text"}>Text</MenuItem>
                       <MenuItem value={"Number"}>Number</MenuItem>
                       <MenuItem value={"10Rates"}>10 Rates</MenuItem>
