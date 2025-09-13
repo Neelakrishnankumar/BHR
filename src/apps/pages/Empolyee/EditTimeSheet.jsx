@@ -1096,111 +1096,111 @@ const EditTimeSheet = () => {
       headerName: "Status",
       width: 120,
     },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 120,
-      sortable: false,
-      renderCell: (params) => {
-        const isCompleted = params.row.Status === "Completed";
-        const isApproved = params.row.Status === "AP";
-        const isRejected = params.row.Status === "RJ";
-        if (!isCompleted) return null;
+    // {
+    //   field: "actions",
+    //   headerName: "Actions",
+    //   width: 120,
+    //   sortable: false,
+    //   renderCell: (params) => {
+    //     const isCompleted = params.row.Status === "Completed";
+    //     const isApproved = params.row.Status === "AP";
+    //     const isRejected = params.row.Status === "RJ";
+    //     if (!isCompleted) return null;
 
-        if (isApproved || isRejected) {
-          return (
-            <Tooltip title="Approved - Locked">
-              <IconButton onClick={() => handleDialogOpen(params.row)}>
-                <LockOpenIcon color="success" fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          );
-        }
+    //     if (isApproved || isRejected) {
+    //       return (
+    //         <Tooltip title="Approved - Locked">
+    //           <IconButton onClick={() => handleDialogOpen(params.row)}>
+    //             <LockOpenIcon color="success" fontSize="small" />
+    //           </IconButton>
+    //         </Tooltip>
+    //       );
+    //     }
 
-        return (
-          <>
-            <Tooltip title="Edit">
-              <IconButton
-                onClick={() => {
-                  navigate(
-                    `/Apps/TR132/TimeSheet/EditTimeDailytask/${params.row.RecordID}`,
-                    { state: { data: getData } }
-                  );
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
+    //     return (
+    //       <>
+    //         <Tooltip title="Edit">
+    //           <IconButton
+    //             onClick={() => {
+    //               navigate(
+    //                 `/Apps/TR132/TimeSheet/EditTimeDailytask/${params.row.RecordID}`,
+    //                 { state: { data: getData } }
+    //               );
+    //             }}
+    //           >
+    //             <EditIcon fontSize="small" />
+    //           </IconButton>
+    //         </Tooltip>
 
-            <Tooltip title="Approve">
-              <IconButton
-                onClick={async () => {
-                  const idata = {
-                    action: "update",
-                    DailyTaskRecordID: params.row.RecordID,
-                    ApprovedBy: EMPID,
-                    Status: "AP",
-                    DateTime: formattedDate,
-                    Remarks: "aaa",
-                  };
+    //         <Tooltip title="Approve">
+    //           <IconButton
+    //             onClick={async () => {
+    //               const idata = {
+    //                 action: "update",
+    //                 DailyTaskRecordID: params.row.RecordID,
+    //                 ApprovedBy: EMPID,
+    //                 Status: "AP",
+    //                 DateTime: formattedDate,
+    //                 Remarks: "aaa",
+    //               };
 
-                  try {
-                    const response = await dispatch(
-                      timeSheetPostData({ idata })
-                    );
+    //               try {
+    //                 const response = await dispatch(
+    //                   timeSheetPostData({ idata })
+    //                 );
 
-                    if (response.payload.Status === "Y") {
-                      toast.success(response.payload.Msg);
-                      dispatch(timeSheet({ data: getData }));
-                    } else {
-                      toast.error(response.payload.Msg);
-                    }
-                  } catch (error) {
-                    console.error("Error during timesheet post:", error);
-                    toast.error("Something went wrong!");
-                  }
-                }}
-              >
-                <DoneIcon fontSize="small" color="success" />
-              </IconButton>
-            </Tooltip>
+    //                 if (response.payload.Status === "Y") {
+    //                   toast.success(response.payload.Msg);
+    //                   dispatch(timeSheet({ data: getData }));
+    //                 } else {
+    //                   toast.error(response.payload.Msg);
+    //                 }
+    //               } catch (error) {
+    //                 console.error("Error during timesheet post:", error);
+    //                 toast.error("Something went wrong!");
+    //               }
+    //             }}
+    //           >
+    //             <DoneIcon fontSize="small" color="success" />
+    //           </IconButton>
+    //         </Tooltip>
 
-            <Tooltip title="Reject">
-              <IconButton
-                onClick={async () => {
-                  const idata = {
-                    action: "update",
-                    DailyTaskRecordID: params.row.RecordID,
-                    ApprovedBy: EMPID,
-                    Status: "RJ",
-                    DateTime: formattedDate,
-                    Remarks: "aaa",
-                  };
+    //         <Tooltip title="Reject">
+    //           <IconButton
+    //             onClick={async () => {
+    //               const idata = {
+    //                 action: "update",
+    //                 DailyTaskRecordID: params.row.RecordID,
+    //                 ApprovedBy: EMPID,
+    //                 Status: "RJ",
+    //                 DateTime: formattedDate,
+    //                 Remarks: "aaa",
+    //               };
 
-                  try {
-                    const response = await dispatch(
-                      timeSheetPostData({ idata })
-                    );
+    //               try {
+    //                 const response = await dispatch(
+    //                   timeSheetPostData({ idata })
+    //                 );
 
-                    if (response.payload.Status === "Y") {
-                      toast.success(response.payload.Msg);
-                      dispatch(timeSheet({ data: getData }));
-                    } else {
-                      toast.error(response.payload.Msg);
-                    }
-                  } catch (error) {
-                    console.error("Error during timesheet post:", error);
-                    toast.error("Something went wrong!");
-                  }
-                }}
-              >
-                <CloseIcon fontSize="small" color="error" />
-              </IconButton>
-            </Tooltip>
-          </>
-        );
-      },
-    },
+    //                 if (response.payload.Status === "Y") {
+    //                   toast.success(response.payload.Msg);
+    //                   dispatch(timeSheet({ data: getData }));
+    //                 } else {
+    //                   toast.error(response.payload.Msg);
+    //                 }
+    //               } catch (error) {
+    //                 console.error("Error during timesheet post:", error);
+    //                 toast.error("Something went wrong!");
+    //               }
+    //             }}
+    //           >
+    //             <CloseIcon fontSize="small" color="error" />
+    //           </IconButton>
+    //         </Tooltip>
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 
   const safeAttendanceData = Array.isArray(AttendanceData)

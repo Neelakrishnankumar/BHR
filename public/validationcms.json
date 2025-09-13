@@ -171,6 +171,7 @@
     "Expense": {
         "date": "Please Enter the Date",
         "overhead": "Please Enter the Overhead",
+        "ProName": "Please Enter the Project",
         "amount": "Please Enter the Amount",
         "managerComments": "Please Enter the Manager Comments",
         "Status": "Please Enter the Status",
@@ -192,9 +193,9 @@
         "Level": "Please Enter the Level",
         "manager": "Please Enter the Manager"
     },
-    "SkillGlowCategory":{
-        "Code":"Please Enter the Code",
-        "Name":"Please Enter the Name"
+    "SkillGlowCategory": {
+        "Code": "Please Enter the Code",
+        "Name": "Please Enter the Name"
     },
     "SkillGlowSession": {
         "Code": "Please Enter the Code",
@@ -208,19 +209,19 @@
         "Minimumscore": "Please Enter the Mininum Score",
         "Date": "Please Enter the Date"
     },
-     "ListofSession": {
+    "ListofSession": {
         "Code": "Please Enter the Code",
         "Name": "Please Enter the Name",
-        "ContentType": "Please Enter the Document Type",       
-        "AttachmentName": "Choose atleast one Document Type"       
+        "ContentType": "Please Enter the Document Type",
+        "AttachmentName": "Choose atleast one Document Type"
     },
-     "ListofQuestiongroup": {
+    "ListofQuestiongroup": {
         "Code": "Please Enter the Code",
         "Name": "Please Enter the Name",
-        "AnswerType": "Please Enter the Answer Type",       
-        "NoOfQuestions": "Please Enter the No.Of Questions"      
+        "AnswerType": "Please Enter the Answer Type",
+        "NoOfQuestions": "Please Enter the No.Of Questions"
     },
-     "ListofAssessCat": {
+    "ListofAssessCat": {
         "assessment": "Please Enter the Assessment",
         "Date": "Please Enter the Date"
     },
@@ -228,5 +229,14 @@
         "Logout": "Do you really want to Log Out?",
         "Close": "Do you want to Close?",
         "Delete": "Do you want to Delete?"
+    },
+    "Questions": {
+        "Option1": "Option 1 is required",
+        "Option2": "Option 2 is required",
+        "Option3": "Option 3 is required",
+        "Option4": "Option 4 is required",
+        "Marks": "Marks are required",
+        "number": "Marks must be a number",
+        "option" : "Option is required"
     }
 }

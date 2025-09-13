@@ -66,11 +66,13 @@ const CreateQuestion = () => {
   const state = location.state || {};
 
   const answerType = state.AnswerType;
-
+  console.log(answerType, "answertype");
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -79,9 +81,41 @@ const CreateQuestion = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
+
+        let schema = {};
+
+        const markValidation = Yup.number()
+          .typeError(data?.Questions?.number)
+          .required(data?.Questions?.Marks);
+
+        if (answerType === "T/F") {
+          ["True", "False"].forEach((label, i) => {
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
+
+        if (answerType === "1/4" || answerType === "Any/4") {
+          Array.from({ length: 4 }).forEach((_, i) => {
+            const optionKey = `Option${i + 1}`;
+            schema[optionKey] = Yup.string().required(data?.Questions?.[optionKey]
+            );
+
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
+        if (answerType === "Text") {
+          schema.Option1 = Yup.string()
+            .required(data?.Questions?.option); 
+          schema.Rate1 = Yup.number()
+            .typeError(data?.Questions?.number)
+            .required(data?.Questions?.Marks);
+        }
+
+        setValidationSchema(Yup.object().shape(schema));
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode]);
+  }, [CompanyAutoCode, answerType]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -213,13 +247,13 @@ const CreateQuestion = () => {
     Rate10: Data.Rate10 || "",
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Question: Yup.string().required("Please Enter Question Here"),
-    //AnserType: Yup.string().required("Choose at least one AnswerType"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Question: Yup.string().required("Please Enter Question Here"),
+  //   //AnserType: Yup.string().required("Choose at least one AnswerType"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
   return (
     <>
       <React.Fragment>
@@ -1039,7 +1073,7 @@ const CreateQuestion = () => {
                           </Box>
                         </Box>
                       ))}
-                
+
 
                     {(answerType === "Text" || answerType === "Number") && (
                       <Box
