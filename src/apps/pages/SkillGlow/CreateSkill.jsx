@@ -114,7 +114,7 @@ const CreateSkill = () => {
       SkillcategoriesID: CatId,
       Code: values.Code,
       Name: values.Name,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || "0",
       Disable: isCheck,
       Answertype: values.Answertype,
       Date: values.Date,
@@ -427,11 +427,11 @@ const CreateSkill = () => {
                         backgroundColor: "#f5f5f5 "
                                           },
                     }}
-                    // InputProps={{
-                    //   inputProps: {
-                    //     style: { textAlign: "right" },
-                    //   },
-                    // }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
                   <TextField
                     // fullWidth
@@ -439,7 +439,7 @@ const CreateSkill = () => {
                     type="text"
                     // label="Mininum Score"
                     label={
-                      <>Mininum Score<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                      <>Minimum Score<span style={{color:"red",fontSize:"20px"}}>*</span></>
                     }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Minimumscore}
@@ -456,11 +456,11 @@ const CreateSkill = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // InputProps={{
-                    //   inputProps: {
-                    //     style: { textAlign: "right" },
-                    //   },
-                    // }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
                   <TextField
                     name="Date"
@@ -504,11 +504,11 @@ const CreateSkill = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // InputProps={{
-                    //   inputProps: {
-                    //     style: { textAlign: "right" },
-                    //   },
-                    // }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
 
 
@@ -522,8 +522,8 @@ const CreateSkill = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     name="SortOrder"
-                    error={!!touched.SortOrder && !!errors.SortOrder}
-                    helperText={touched.SortOrder && errors.SortOrder}
+                    // error={!!touched.SortOrder && !!errors.SortOrder}
+                    // helperText={touched.SortOrder && errors.SortOrder}
                     sx={{ background: "" }}
                     focused
                     onWheel={(e) => e.target.blur()}

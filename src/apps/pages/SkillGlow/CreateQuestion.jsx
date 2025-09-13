@@ -66,11 +66,13 @@ const CreateQuestion = () => {
   const state = location.state || {};
 
   const answerType = state.AnswerType;
-
+  console.log(answerType, "answertype");
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const [validationSchema, setValidationSchema] = useState(null);
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -79,9 +81,41 @@ const CreateQuestion = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
+
+        let schema = {};
+
+        const markValidation = Yup.number()
+          .typeError(data?.Questions?.number)
+          .required(data?.Questions?.Marks);
+
+        if (answerType === "T/F") {
+          ["True", "False"].forEach((label, i) => {
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
+
+        if (answerType === "1/4" || answerType === "Any/4") {
+          Array.from({ length: 4 }).forEach((_, i) => {
+            const optionKey = `Option${i + 1}`;
+            schema[optionKey] = Yup.string().required(data?.Questions?.[optionKey]
+            );
+
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
+        if (answerType === "Text") {
+          schema.Option1 = Yup.string()
+            .required(data?.Questions?.option); 
+          schema.Rate1 = Yup.number()
+            .typeError(data?.Questions?.number)
+            .required(data?.Questions?.Marks);
+        }
+
+        setValidationSchema(Yup.object().shape(schema));
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode]);
+  }, [CompanyAutoCode, answerType]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -102,7 +136,7 @@ const CreateQuestion = () => {
       Code: values.Code,
       Question: values.Question,
       AnserType: values.AnserType,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || "0",
       Disable: isCheck,
       Option1: values.Option1,
       Rate1: values.Rate1,
@@ -213,13 +247,13 @@ const CreateQuestion = () => {
     Rate10: Data.Rate10 || "",
   };
 
-  const validationSchema = Yup.object({
-    Code: Yup.string().required("Please Enter Code Here"),
-    Question: Yup.string().required("Please Enter Question Here"),
-    //AnserType: Yup.string().required("Choose at least one AnswerType"),
-    SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-    Disable: Yup.boolean(),
-  });
+  // const validationSchema = Yup.object({
+  //   Code: Yup.string().required("Please Enter Code Here"),
+  //   Question: Yup.string().required("Please Enter Question Here"),
+  //   //AnserType: Yup.string().required("Choose at least one AnswerType"),
+  //   SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+  //   Disable: Yup.boolean(),
+  // });
   return (
     <>
       <React.Fragment>
@@ -291,7 +325,7 @@ const CreateQuestion = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    {mode =="A" ? "New" : "Edit"}
+                    {mode == "A" ? "New" : "Edit"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -435,8 +469,8 @@ const CreateQuestion = () => {
                       value={values.SortOrder}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={!!touched.SortOrder && !!errors.SortOrder}
-                      helperText={touched.SortOrder && errors.SortOrder}
+                      // error={!!touched.SortOrder && !!errors.SortOrder}
+                      // helperText={touched.SortOrder && errors.SortOrder}
                       sx={{ background: "" }}
                       focused
                       onWheel={(e) => e.target.blur()}
@@ -475,7 +509,8 @@ const CreateQuestion = () => {
                             Question Details
                           </Typography> */}
                     <Typography variant="h3" gutterBottom>
-                      Expected Answer For ({answerType})
+                      Expected Answer
+                      {/* For ({answerType}) */}
                     </Typography>
                     {/* <Typography variant="h6" gutterBottom>
                     Question Type<b> - {questionType}</b>
@@ -507,7 +542,7 @@ const CreateQuestion = () => {
                           display: "flex",
                           my: 2,
                           fontWeight: "bold",
-                          gap: "10px",
+                          gap: "14px",
                         }}
                       >
                         <Box sx={{ width: "40px", textAlign: "left" }}>SL#</Box>
@@ -524,7 +559,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -604,7 +640,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -670,7 +707,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -736,7 +774,8 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
                           {/* <Box sx={{ flex: 1 }}>
@@ -795,7 +834,7 @@ const CreateQuestion = () => {
                         </Box>
                       ))}
 
-                    {answerType === "T/F" &&
+                    {/* {answerType === "T/F" &&
                       Array.from({ length: 2 }).map((_, i) => (
                         <Box
                           key={i}
@@ -803,16 +842,11 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
-                          {/* <Box sx={{ flex: 1 }}>
-                                  <FormControlLabel
-                                    value={label}
-                                    control={<Radio />}
-                                    label={label}
-                                  />
-                                </Box> */}
+                         
                           <Box sx={{ width: "40px", textAlign: "center" }}>
                             <Typography variant="body1">{i + 1}</Typography>
                           </Box>
@@ -860,8 +894,8 @@ const CreateQuestion = () => {
                             />
                           </Box>
                         </Box>
-                      ))}
-                    {answerType === "Y/N" &&
+                      ))} */}
+                    {/* {answerType === "Y/N" &&
                       Array.from({ length: 2 }).map((_, i) => (
                         <Box
                           key={i}
@@ -869,16 +903,11 @@ const CreateQuestion = () => {
                             display: "flex",
                             mb: 1,
                             gap: 2,
-                            alignItems: "center",
+                            //alignItems: "center",
+                            alignItems: "end",
                           }}
                         >
-                          {/* <Box sx={{ flex: 1 }}>
-                                  <FormControlLabel
-                                    value={label}
-                                    control={<Radio />}
-                                    label={label}
-                                  />
-                                </Box> */}
+                         
                           <Box sx={{ width: "40px", textAlign: "center" }}>
                             <Typography variant="body1">{i + 1}</Typography>
                           </Box>
@@ -899,6 +928,123 @@ const CreateQuestion = () => {
                                 touched[`Option${i + 1}`] &&
                                 errors[`Option${i + 1}`]
                               }
+                            />
+                          </Box>
+                          <Box sx={{ width: "155px" }}>
+                            <TextField
+                              fullWidth
+                              name={`Rate${i + 1}`}
+                              label="Marks"
+                              variant="standard"
+                              value={values[`Rate${i + 1}`]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={
+                                touched[`Rate${i + 1}`] &&
+                                Boolean(errors[`Rate${i + 1}`])
+                              }
+                              helperText={
+                                touched[`Rate${i + 1}`] &&
+                                errors[`Rate${i + 1}`]
+                              }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
+                            />
+                          </Box>
+                        </Box>
+                      ))} */}
+
+                    {answerType === "T/F" &&
+                      ["True", "False"].map((label, i) => (
+                        <Box
+                          key={i}
+                          sx={{
+                            display: "flex",
+                            mb: 1,
+                            gap: 2,
+                            alignItems: "end",
+                          }}
+                        >
+                          <Box sx={{ width: "40px", textAlign: "center" }}>
+                            <Typography variant="body1">{i + 1}</Typography>
+                          </Box>
+
+                          {/* Fixed Option TextField */}
+                          <Box sx={{ flex: 1 }}>
+                            <TextField
+                              fullWidth
+                              name={`Option${i + 1}`}
+                              label={`Option ${i + 1}`}
+                              variant="standard"
+                              value={label} // always True / False
+                              InputProps={{
+                                readOnly: true, // user can’t change
+                              }}
+                            />
+                          </Box>
+
+                          {/* Marks Field */}
+                          <Box sx={{ width: "155px" }}>
+                            <TextField
+                              fullWidth
+                              name={`Rate${i + 1}`}
+                              label="Marks"
+                              variant="standard"
+                              value={values[`Rate${i + 1}`]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={
+                                touched[`Rate${i + 1}`] &&
+                                Boolean(errors[`Rate${i + 1}`])
+                              }
+                              helperText={
+                                touched[`Rate${i + 1}`] &&
+                                errors[`Rate${i + 1}`]
+                              }
+                              InputProps={{
+                                inputProps: {
+                                  style: { textAlign: "right" },
+                                },
+                              }}
+                            />
+                          </Box>
+                        </Box>
+                      ))}
+                    {answerType === "Y/N" &&
+                      ["Yes", "No"].map((label, i) => (
+                        <Box
+                          key={i}
+                          sx={{
+                            display: "flex",
+                            mb: 1,
+                            gap: 2,
+                            //alignItems: "center",
+                            alignItems: "end",
+                          }}
+                        >
+                          {/* <Box sx={{ flex: 1 }}>
+                                  <FormControlLabel
+                                    value={label}
+                                    control={<Radio />}
+                                    label={label}
+                                  />
+                                </Box> */}
+                          <Box sx={{ width: "40px", textAlign: "center" }}>
+                            <Typography variant="body1">{i + 1}</Typography>
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            <TextField
+                              fullWidth
+                              name={`Option${i + 1}`}
+                              label={`Option ${i + 1}`}
+                              variant="standard"
+                              value={label} // always Yes / NO
+                              InputProps={{
+                                readOnly: true, // user can’t change
+                              }}
                             />
                           </Box>
                           <Box sx={{ width: "155px" }}>
@@ -928,27 +1074,6 @@ const CreateQuestion = () => {
                         </Box>
                       ))}
 
-                    {/* {questionType === "Rating" && (
-                      <Box sx={{ display: "flex", mb: 1 }}>
-                       
-                        <Box sx={{ flex: 1 }}>
-                          <TextField
-                            variant="outlined"
-                            size="small"
-                            placeholder="Enter Rating"
-                            fullWidth
-                          />
-                        </Box>
-                        <Box sx={{ flex: 1 }}>
-                          <TextField
-                            variant="outlined"
-                            size="small"
-                            placeholder="Enter mark"
-                            fullWidth
-                          />
-                        </Box>
-                      </Box>
-                    )} */}
 
                     {(answerType === "Text" || answerType === "Number") && (
                       <Box

@@ -114,7 +114,7 @@ const CreateCategory = () => {
       Name: values.Name,
       NoOfQuestions: values.NoOfQuestions,
       Answertype: values.AnswerType,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || "0",
       Disable: isCheck,
     };
 
@@ -376,11 +376,11 @@ const CreateCategory = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // InputProps={{
-                    //   inputProps: {
-                    //     style: { textAlign: "right" },
-                    //   },
-                    // }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
                     {/* DROPDOWN */}
 
@@ -419,13 +419,13 @@ const CreateCategory = () => {
                     //   },
                     // }}
                     >
-                      <MenuItem value={"1/4"}>1 of 4</MenuItem>
-                      <MenuItem value={"Any/4"}>Any Of 4</MenuItem>
+                      <MenuItem value={"1/4"}>One Of Four</MenuItem>
+                      <MenuItem value={"Any/4"}>Any Of Four</MenuItem>
                       <MenuItem value={"Text"}>Text</MenuItem>
                       <MenuItem value={"Number"}>Number</MenuItem>
                       <MenuItem value={"10Rates"}>10 Rates</MenuItem>
                       <MenuItem value={"5Rates"}>5 Rates</MenuItem>
-                      <MenuItem value={"T/F"}>True or false</MenuItem>
+                      <MenuItem value={"T/F"}>True or False</MenuItem>
                       <MenuItem value={"Y/N"}>Yes or No</MenuItem>
                     </TextField>
                     {/* </FormControl> */}
@@ -440,8 +440,10 @@ const CreateCategory = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       name="SortOrder"
-                      error={!!touched.SortOrder && !!errors.SortOrder}
-                      helperText={touched.SortOrder && errors.SortOrder}
+                      // error={!!touched.SortOrder && !!errors.SortOrder}
+                      // helperText={touched.SortOrder && errors.SortOrder}
+                      
+                      
                       sx={{ background: "" }}
                       focused
                       onWheel={(e) => e.target.blur()}
