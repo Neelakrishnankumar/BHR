@@ -126,7 +126,7 @@ const CreateSession = () => {
       Code: values.Code,
       Name: values.Name,
       ContentType: values.ContentType,
-      SortOrder: values.SortOrder,
+      SortOrder: values.SortOrder || "0",
       Disable: isCheck,
       Attachment: values.AttachmentName,
     };
@@ -442,8 +442,8 @@ const CreateSession = () => {
                       value={values.SortOrder}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={!!touched.SortOrder && !!errors.SortOrder}
-                      helperText={touched.SortOrder && errors.SortOrder}
+                      // error={!!touched.SortOrder && !!errors.SortOrder}
+                      // helperText={touched.SortOrder && errors.SortOrder}
                       //disabled={mode === "V"}
                       sx={{ background: "" }}
                       focused
