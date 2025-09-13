@@ -171,6 +171,7 @@
     "Expense": {
         "date": "Please Enter the Date",
         "overhead": "Please Enter the Overhead",
+        "ProName": "Please Enter the Project",
         "amount": "Please Enter the Amount",
         "managerComments": "Please Enter the Manager Comments",
         "Status": "Please Enter the Status",

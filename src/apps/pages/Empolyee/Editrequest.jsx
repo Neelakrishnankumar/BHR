@@ -309,6 +309,9 @@ const Editrequests = () => {
           overhead: Yup.object()
             .nullable()
             .required(data.Expense.overhead),
+          ProName: Yup.object()
+            .nullable()
+            .required(data.Expense.ProName),
           amount: Yup.string().required(data.Expense.amount),
           comments: Yup.string().required(data.Expense.comments),
           managerComments: Yup.string().required(data.Expense.managerComments),
@@ -390,6 +393,7 @@ const Editrequests = () => {
   const [selectOHLookupData, setselectOHLookupData] = React.useState(null);
   const [selectleaveLookupData, setselectleaveLookupData] = React.useState(null);
   const [selectODLookupData, setselectODLookupData] = React.useState(null);
+  const [selectProLookupData, setselectProLookupData] = React.useState(null);
   const [expenseOHData, setExpenseOHData] = React.useState(null);
   //   {
   //   OHlookupRecordid: "",
@@ -1400,6 +1404,7 @@ const Editrequests = () => {
       setselectOHLookupData(null);
       setselectleaveLookupData(null);
       setselectODLookupData(null);
+      setselectProLookupData(null);
       setExpenseOHData(null);
       setLeaveData({
         recordID: "",
@@ -1539,7 +1544,7 @@ const Editrequests = () => {
           approvedDate: rowData.ApprovedDate,
           ReimbursementOption: rowData.ReimbursementOption
         });
-       
+
         setOndutydata({
           RecordID: rowData.RecordID,
           LeavePart: rowData.LeavePart,
@@ -1589,6 +1594,11 @@ const Editrequests = () => {
         //   Name: rowData.Name,
         // })
         setselectODLookupData({
+          RecordID: rowData.ProjectID,
+          Code: rowData.ProjectCode,
+          Name: rowData.ProjectName,
+        });
+        setselectProLookupData({
           RecordID: rowData.ProjectID,
           Code: rowData.ProjectCode,
           Name: rowData.ProjectName,
@@ -1680,6 +1690,7 @@ const Editrequests = () => {
     comments: expensedata.comments,
     managerComments: expensedata.managerComments,
     overhead: expenseOHData ? expenseOHData : null,
+    ProName: selectProLookupData ? selectProLookupData : null,
     approvedDate: mode != "A" ? currentDate : expensedata.approvedDate,
     Eapprovedby: UserName,
     OHRecordID: expensedata.OverHeadsID,
@@ -1695,7 +1706,7 @@ const Editrequests = () => {
               ? "QR"
               : "",
   };
-  
+
   const getExpenseFileChange = async (event) => {
     setImgName(event.target.files[0]);
 
@@ -1734,10 +1745,12 @@ const Editrequests = () => {
       ManagerComments: values.managerComments,
       ApprovedDate: values.approvedDate,
       Status: values.Status,
+      ProjectID: values?.ProName?.RecordID,
+      ProjectName: values?.ProName.Name || "",
       Reason: "",
       Source: "HR",
-      "EmployeeID":recID,
-      "CompanyID":companyID
+      "EmployeeID": recID,
+      "CompanyID": companyID
       // Finyear,
       // compID,
     };
@@ -1923,7 +1936,7 @@ const Editrequests = () => {
   const ondutyInitialValue = {
     code: Data.Code,
     description: Data.Name,
-    ProName: selectODLookupData ? selectODLookupData :null,
+    ProName: selectODLookupData ? selectODLookupData : null,
     FromDate: formatDate(ondutydata.FromDate),
     ToDate: formatDate(ondutydata.ToDate),
     approvedby: UserName,
@@ -2395,7 +2408,7 @@ const Editrequests = () => {
     amount: saladdata.Amount,
     comments: saladdata.Comments,
     approvedby: UserName,
-    overhead:selectOHLookupData ? selectOHLookupData : null,
+    overhead: selectOHLookupData ? selectOHLookupData : null,
     managerComments: leaveData.managerComments,
     approvedDate: mode != "A" ? currentDate : saladdata.approvedDate,
     Status:
@@ -4236,7 +4249,7 @@ const Editrequests = () => {
                             if (newValue?.RecordID) {
                               await Balancedayfind(newValue.RecordID);
                             }
-          
+
 
                           }}
                           error={!!touched.leavetype && !!errors.leavetype}
@@ -6144,14 +6157,14 @@ const Editrequests = () => {
                             // value={selectODLookupData}
                             value={values.ProName}
                             onChange={(newValue) => {
-                              
-                                setFieldValue("ProName", {
-                                  RecordID: newValue.RecordID,
-                                  Code: newValue.Code,
-                                  Name: newValue.Name,
-                                });
-                                console.log(newValue.RecordID, "PROJECT RecordID");
-                            
+
+                              setFieldValue("ProName", {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              });
+                              console.log(newValue.RecordID, "PROJECT RecordID");
+
                             }}
 
                             // setselectODLookupData({
@@ -7317,7 +7330,51 @@ const Editrequests = () => {
                         />
 
                         {/* <FormControl sx={{ gridColumn: "span 2", display: "flex" }}> */}
+                        <FormControl>
+                          <CheckinAutocomplete
+                            name="ProName"
+                            label={
+                              <span>
+                                Project
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </span>
+                            }
+                            variant="outlined"
+                            id="ProName"
+                            // value={selectODLookupData}
+                            value={values.ProName}
+                            onChange={(newValue) => {
 
+                              setFieldValue("ProName", {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              });
+                              console.log(newValue.RecordID, "PROJECT RecordID");
+
+                            }}
+
+                            // setselectODLookupData({
+                            //   RecordID: newValue.RecordID,
+                            //   Code: newValue.Code,
+                            //   Name: newValue.Name,
+
+                            // });
+                            error={!!touched.ProName && !!errors.ProName}
+                            helperText={touched.ProName && errors.ProName}
+                            // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
+                          />
+                          {/* {touched.ProName && errors.ProName && (
+                            <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+                              {errors.ProName}
+                            </div>
+                          )} */}
+                        </FormControl>
                         <FormControl
                           sx={{
                             gridColumn: "span 2",
