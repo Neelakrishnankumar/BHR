@@ -84,6 +84,10 @@ const CreateQuestion = () => {
 
         let schema = {};
 
+        schema.Code = Yup.string().required("Please Enter the Code");
+
+        schema.Question = Yup.string().required("Please Enter the Question");
+
         const markValidation = Yup.number()
           .typeError(data?.Questions?.number)
           .required(data?.Questions?.Marks);
@@ -93,22 +97,53 @@ const CreateQuestion = () => {
             schema[`Rate${i + 1}`] = markValidation;
           });
         }
+        if (answerType === "Y/N") {
+          ["Yes", "No"].forEach((label, i) => {
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
 
         if (answerType === "1/4" || answerType === "Any/4") {
           Array.from({ length: 4 }).forEach((_, i) => {
             const optionKey = `Option${i + 1}`;
-            schema[optionKey] = Yup.string().required(data?.Questions?.[optionKey]
+            schema[optionKey] = Yup.string().required(
+              data?.Questions?.[optionKey]
             );
 
             schema[`Rate${i + 1}`] = markValidation;
           });
         }
+
+        if (answerType === "5Rates") {
+          Array.from({ length: 5 }).forEach((_, i) => {
+            schema[`Option${i + 1}`] = Yup.string().required(
+              data?.Questions?.option
+            );
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
+
+        if (answerType === "10Rates") {
+          Array.from({ length: 10 }).forEach((_, i) => {
+            schema[`Option${i + 1}`] = Yup.string().required(
+              data?.Questions?.option
+            );
+            schema[`Rate${i + 1}`] = markValidation;
+          });
+        }
+
         if (answerType === "Text") {
-          schema.Option1 = Yup.string()
-            .required(data?.Questions?.option); 
+          schema.Option1 = Yup.string().required(data?.Questions?.option);
           schema.Rate1 = Yup.number()
             .typeError(data?.Questions?.number)
             .required(data?.Questions?.Marks);
+        }
+        if (answerType === "Number") {
+          //schema.Option1 = Yup.number().required(data?.Questions?.option);
+          schema.Option1 = Yup.number()
+            .typeError(data?.Questions?.numbertype) // <- friendly error instead of NaN
+            .required(data?.Questions?.option);
+          schema.Rate1 = markValidation;
         }
 
         setValidationSchema(Yup.object().shape(schema));
@@ -169,12 +204,6 @@ const CreateQuestion = () => {
     }
   };
 
-  const handleClick = () => {
-    navigate("/Apps/SkillGlow/SkillGlowList");
-  };
-  const handleClick2 = () => {
-    navigate("/Apps/SkillGlow/SkillGlowList/SkillCategory");
-  };
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
     //     if(props === 'Logout'){
@@ -1074,7 +1103,6 @@ const CreateQuestion = () => {
                         </Box>
                       ))}
 
-
                     {(answerType === "Text" || answerType === "Number") && (
                       <Box
                         sx={{
@@ -1104,7 +1132,7 @@ const CreateQuestion = () => {
                           <TextField
                             fullWidth
                             name="Rate1"
-                            label="Rate"
+                            label="Marks"
                             variant="standard"
                             value={values.Rate1}
                             onChange={handleChange}
