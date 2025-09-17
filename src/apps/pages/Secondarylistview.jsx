@@ -98,7 +98,7 @@ const ListviewSecondary = () => {
   var accessID = params.secondaryAccessID
     ? params.secondaryAccessID
     : params.accessID;
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(20);
   const [collapse, setcollapse] = React.useState(false);
   const [page, setPage] = React.useState(secondaryCurrentPage);
   var parentID = params.filtertype;

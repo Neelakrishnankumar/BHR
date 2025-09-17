@@ -83,7 +83,7 @@ const Listview = () => {
   
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  const [pageSize, setPageSize] = React.useState(15);
+  const [pageSize, setPageSize] = React.useState(20);
   const [page, setPage] = React.useState(currentPage || 0);
   const [collapse, setcollapse] = React.useState(false);
   var invoice;
