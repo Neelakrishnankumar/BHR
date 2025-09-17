@@ -387,7 +387,7 @@ const Editlocation = () => {
                     sx={{ gridColumn: "span 2" }}
                     autoFocus={CompanyAutoCode == "Y"}
                   />
-                  <TextField
+                  {/* <TextField
                     name="address"
                     type="text"
                     id="address"
@@ -452,7 +452,7 @@ const Editlocation = () => {
                     error={!!touched.contactmail && !!errors.contactmail}
                     helperText={touched.contactmail && errors.contactmail}
                     sx={{ gridColumn: "span 2" }}
-                  />
+                  /> */}
                   <TextField
                     name="sortorder"
                     type="number"
