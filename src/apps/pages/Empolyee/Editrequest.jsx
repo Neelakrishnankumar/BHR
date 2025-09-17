@@ -2162,7 +2162,7 @@ const Editrequests = () => {
       dispatch(
         requestMail({
           EmployeeID: recID,
-          Type: "L",
+          Type: "P",
           RecordID: response.payload.EleaveRecid,
         })
       );
