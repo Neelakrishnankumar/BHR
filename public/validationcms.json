@@ -235,8 +235,15 @@
         "Option2": "Option 2 is required",
         "Option3": "Option 3 is required",
         "Option4": "Option 4 is required",
+        "Option5": "Option 5 is required",
+        "Option6": "Option 6 is required",
+        "Option7": "Option 7 is required",
+        "Option8": "Option 8 is required",
+        "Option9": "Option 9 is required",
+        "Option10": "Option 10 is required",
         "Marks": "Marks are required",
         "number": "Marks must be a number",
+        "numbertype": "Option must be a number",
         "option" : "Option is required"
     }
 }
