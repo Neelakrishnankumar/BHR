@@ -150,6 +150,7 @@ import CandidateMain from "./pages/SkillGlow/CandidateMain";
 import SkillCandidate from "./pages/SkillGlow/SkillCandidate";
 import CreateSkillCandidate from "./pages/SkillGlow/CreateSkillCandidate";
 import EmployeeSchedule from "./pages/SkillGlow/EmployeeSchedule";
+import SkillInsights from "./pages/SkillGlow/Insights";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -247,6 +248,10 @@ function App() {
                   <Route
                     path="/SkillGlow/SkillGlowList"
                     element={<SkillGlowList />}
+                  />
+                  <Route
+                    path="/SkillGlow/SkillInsights"
+                    element={<SkillInsights />}
                   />
                   <Route
                     path="/SkillGlow/SkillGlowList/SkillGlowSession"
