@@ -2074,6 +2074,7 @@ const Editemployee = () => {
     const response = await dispatch(postDeployment({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
+      dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
     } else {
       toast.error(response.payload.Msg);
@@ -2146,7 +2147,9 @@ const Editemployee = () => {
     const response = await dispatch(postDeployment({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
+      dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
+
     } else {
       toast.error(response.payload.Msg);
     }
