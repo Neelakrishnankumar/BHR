@@ -2075,6 +2075,7 @@ const Editemployee = () => {
     // return;
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
+       dispatch(getDeployment({ HeaderID: recID }));
     } else {
       toast.error(response.payload.Msg);
     }
