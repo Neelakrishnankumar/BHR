@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Card, CardContent, Typography, Box, Stack, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, Typography, Box, Stack, Grid, LinearProgress } from "@mui/material";
 import { FaHourglassHalf, FaSyncAlt, FaCheckCircle } from "react-icons/fa";
 // import {
 //   dataGridHeight,
@@ -16,6 +16,12 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "@emotion/react";
 import { tokens } from "../../../Theme";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import {
+  getInsights1,
+  getInsights2,
+} from "../../../store/reducers/Formapireducer";
 
 const SkillInsights = () => {
   //FOR DATA TABLE
@@ -23,6 +29,33 @@ const SkillInsights = () => {
   const colors = tokens(theme.palette.mode);
   const [pageSize, setPageSize] = useState(10);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [rowCount, setRowCount] = useState(0);
+
+  const dispatch = useDispatch();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    dispatch(getInsights1()); // no arguments needed
+  },[dispatch]);
+
+  // ✅ rename selector variable
+  const insightsData = useSelector(
+    (state) => state.formApi.skillInsights1getdata
+  );
+  const loading = useSelector((state) => state.formApi.skillInsights1loading);
+  const error=useSelector((state) => state.formApi.error);
+
+  
+  console.log("🚀 ~ SkillInsights ~ loading:", loading)
+  console.log("🚀 ~ SkillInsights ~ getInsights1:", insightsData);
+
+
+  const insightsData2 = useSelector(
+    (state) => state.formApi.skillInsights2getdata
+  );
+  console.log("🚀 ~ SkillInsights ~ insightsData2:", insightsData2);
+  const loading2 = useSelector((state) => state.formApi.skillInsights2loading);
 
   const columns = [
     {
@@ -31,261 +64,157 @@ const SkillInsights = () => {
       flex: 0.5,
       align: "right",
       headerAlign: "center",
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
     },
     {
-      field: "assessment",
+      field: "Assessment",
       headerName: "Assessment",
       flex: 1,
       align: "left",
       headerAlign: "center",
     },
     {
-      field: "scheduled",
+      field: "Scheduled",
       headerName: "Scheduled",
       flex: 1,
       align: "right",
       headerAlign: "center",
     },
     {
-      field: "passed",
+      field: "Passed",
       headerName: "Passed",
       flex: 1,
       align: "right",
       headerAlign: "center",
     },
     {
-      field: "yetToAssign",
-      headerName: "Yet to Assign",
+      field: "Failed",
+      headerName: "Failed",
+      flex: 1,
+      align: "right",
+      headerAlign: "center",
+    },
+    // {
+    //   field: "yetToAssign",
+    //   headerName: "Yet to Assign",
+    //   flex: 1,
+    //   align: "right",
+    //   headerAlign: "center",
+    // },
+    {
+      field: "NotAttended",
+      headerName: "Not Attended",
       flex: 1,
       align: "right",
       headerAlign: "center",
     },
   ];
 
-  const rows = [
+ 
+  const detailColumns = [
     {
-      id: 1,
-      assessment: "Web Development",
-      scheduled: 17,
-      passed: 12,
-      yetToAssign: 5,
+      field: "SLNO",
+      headerName: "SL#",
+      width: 50,
+      align: "right",
+      headerAlign: "center",
+      sortable: false,
+      filterable: false,
+    },
+     
+    {
+      field: "EmpName",
+      headerName: "Employee Name",
+      width: 200,
+      align: "left",
+      headerAlign: "center",
     },
     {
-      id: 2,
-      assessment: "Appraisal",
-      scheduled: 18,
-      passed: 8,
-      yetToAssign: 10,
+      field: "Date",
+      headerName: "Scheduled Date",
+      width: 100,
+      align: "center",
+      headerAlign: "center",
     },
     {
-      id: 3,
-      assessment: "Quality Assurance",
-      scheduled: 18,
-      passed: 15,
-      yetToAssign: 3,
+      field: "NoofAttemp",
+      headerName: "No. of Attempts",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
     },
     {
-      id: 4,
-      assessment: "Knowledge Based",
-      scheduled: 22,
-      passed: 20,
-      yetToAssign: 2,
+      field: "CurrentAttempt",
+      headerName: "Current Attempt",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
+    },
+    {
+      field: "Firstattdate",
+      headerName: "First Att Date",
+      width: 100,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "Firstattscore",
+      headerName: "First Att Score",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
+    },
+    {
+      field: "Lastattdate",
+      headerName: "Last Att Date",
+      width: 100,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "Lastattscore",
+      headerName: "Last Att Score",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
     },
   ];
 
-  // const detailColumns = [
-  //   {
-  //     field: "id",
-  //     headerName: "SL#",
-  //     flex: 0.5,
-  //     align: "right",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "employee",
-  //     headerName: "Employee Name",
-  //     flex: 1,
-  //     align: "left",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "scheduled",
-  //     headerName: "Scheduled Date",
-  //     flex: 1,
-  //     align: "center",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "noOfAtt",
-  //     headerName: "No.Of Attempts",
-  //     flex: 1,
-  //     align: "right",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "currentAttempt",
-  //     headerName: "Current Attempt",
-  //     flex: 1,
-  //     align: "right",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "firstAttempt",
-  //     headerName: "First Att Date",
-  //     flex: 1,
-  //     align: "center",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "firstAttemptScore",
-  //     headerName: "First Att Score",
-  //     flex: 1,
-  //     align: "right",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "lastAttempt",
-  //     headerName: "Last Att Date",
-  //     flex: 1,
-  //     align: "center",
-  //     headerAlign: "center",
-  //   },
-  //   {
-  //     field: "lastAttemptScore",
-  //     headerName: "Last Att Score",
-  //     flex: 1,
-  //     align: "right",
-  //     headerAlign: "center",
-  //   },
-  // ];
-  
-  const detailColumns = [
-  { field: "id", headerName: "SL#", width: 50, align: "right", headerAlign: "center" },
-  { field: "employee", headerName: "Employee Name", width: 200, align: "left", headerAlign: "center" },
-  { field: "scheduled", headerName: "Scheduled Date", width: 100, align: "center", headerAlign: "center" },
-  { field: "noOfAtt", headerName: "No. of Attempts", width: 100, align: "right", headerAlign: "center" },
-  { field: "currentAttempt", headerName: "Current Attempt", width: 100, align: "right", headerAlign: "center" },
-  { field: "firstAttempt", headerName: "First Att Date", width: 100, align: "center", headerAlign: "center" },
-  { field: "firstAttemptScore", headerName: "First Att Score", width: 100, align: "right", headerAlign: "center" },
-  { field: "lastAttempt", headerName: "Last Att Date", width: 100, align: "center", headerAlign: "center" },
-  { field: "lastAttemptScore", headerName: "Last Att Score", width: 100, align: "right", headerAlign: "center" },
-];
 
-  
-  const detailData = {
-    1: [
-      {
-        id: 1,
-        employee: "Neelakrishnan",
-        scheduled: "02-09-2025",
-        noOfAtt: "5",
-        currentAttempt: "3",
-        firstAttempt: "02-09-2025",
-        firstAttemptScore: "100",
-        lastAttempt: "03-09-2025",
-        lastAttemptScore: "100",
-      },
-      {
-        id: 2,
-        employee: "Surya",
-        scheduled: "04-09-2025",
-        noOfAtt: "5",
-        currentAttempt: "3",
-        firstAttempt: "05-09-2025",
-        firstAttemptScore: "0",
-        lastAttempt: "07-09-2025",
-        lastAttemptScore: "80",
-      },
-    ],
-    2: [
-      {
-        id: 1,
-        employee: "Sudha",
-        scheduled: "01-09-2025",
-        noOfAtt: "3",
-        currentAttempt: "3",
-        firstAttempt: "01-09-2025",
-        firstAttemptScore: "66",
-        lastAttempt: "04-09-2025",
-        lastAttemptScore: "66",
-      },
-      {
-        id: 2,
-        employee: "Kabilan",
-        scheduled: "03-09-2025",
-        noOfAtt: "2",
-        currentAttempt: "2",
-        firstAttempt: "03-09-2025",
-        firstAttemptScore: "75",
-        lastAttempt: "05-09-2025",
-        lastAttemptScore: "75",
-      },
-    ],
-    3: [
-      {
-        id: 1,
-        employee: "Keerthana",
-        scheduled: "07-09-2025",
-        noOfAtt: "4",
-        currentAttempt: "4",
-        firstAttempt: "08-09-2025",
-        firstAttemptScore: "100",
-        lastAttempt: "09-09-2025",
-        lastAttemptScore: "100",
-      },
-    ],
-    4: [
-      {
-        id: 1,
-        employee: "Yogesh",
-        scheduled: "05-09-2025",
-        noOfAtt: "1",
-        currentAttempt: "1",
-        firstAttempt: "09-09-2025",
-        firstAttemptScore: "50",
-        lastAttempt: "10-09-2025",
-        lastAttemptScore: "50",
-      },
-      {
-        id: 2,
-        employee: "Hari",
-        scheduled: "08-09-2025",
-        noOfAtt: "2",
-        currentAttempt: "2",
-        firstAttempt: "08-09-2025",
-        firstAttemptScore: "0",
-        lastAttempt: "09-09-2025",
-        lastAttemptScore: "60",
-      },
-    ],
-  };
 
   const cards = [
     {
       title: "Total Assessment",
-      count: 32,
+      count: insightsData?.TotalNoOfAssessment || 0,
       //color: "linear-gradient(to right, #ec4899, #ef4444)", // pink-red
       color: "linear-gradient(135deg, #f7971e, #ffd200)", // pink-red
       icon: <FaHourglassHalf size={32} />,
     },
     {
       title: "Assigned Assessment",
-      count: 12,
+      count: insightsData?.AssignedAssessment || 0,
       //color: "linear-gradient(to right, #3b82f6, #1e40af)", // blue
       color: "linear-gradient(135deg, #17ead9, #6078ea)", // blue
       icon: <FaCheckCircle size={32} />,
     },
     {
       title: "Yet to assign",
-      count: 20,
+      count: insightsData?.YetToAssessment || 0,
       //color: "linear-gradient(to right, #22c55e, #15803d)", // green
       color: "linear-gradient(135deg, #42e695, #3bb2b8)", // green
       icon: <FaSyncAlt size={32} />,
     },
   ];
+const handleID=(id)=>{
 
+  dispatch(getInsights2(id));
+}
   return (
     <React.Fragment>
+       {(loading && loading2) ? <LinearProgress /> : false}
       <Typography
         variant="h5"
         fontWeight="bold"
@@ -349,6 +278,7 @@ const SkillInsights = () => {
           padding: "0px 10px",
         }}
       >
+    
         <Grid item sx={{ width: "50%" }}>
           <Typography variant="h4">List Of Assessment</Typography>
           <Card sx={{ borderRadius: 2, boxShadow: 2, height: "100%" }}>
@@ -400,38 +330,27 @@ const SkillInsights = () => {
                 }}
                 rowHeight={dataGridRowHeight}
                 headerHeight={dataGridHeaderFooterHeight}
-                // rows={
-                //   dashBoardAttenGetData.projectTaskData.leaveDetailsData
-                //     .tableData
-                // }
-                rows={rows}
+                rows={
+                  insightsData?.ASSESSMENTLIST?.map((row, index) => ({
+                    id: row.RecordID,
+                    ...row,
+                  })) || []
+                }
                 columns={columns}
-                // onRowClick={(params) => {
-                //   setSelectedProject(params.row);
-                //   dispatch(
-                //     EmployeeEffort({
-                //       data: {
-                //         EmployeeID: empID,
-                //         ProjectID: params.row.P_RECID,
-                //       },
-                //     })
-                //   );
-                // }}
-                onRowClick={(params) => setSelectedAssessment(params.row.id)} // 👈 capture assessment
+               
+                onRowClick={(params)=>handleID(params.row.RecordID)}
+                getRowId={(row) => row.RecordID} // 👈 ensures uniqueness
                 disableSelectionOnClick
-                //getRowId={(row) => row.SLNO}
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 onCellClick={(params) => {}}
                 rowsPerPageOptions={[5, 10, 20]}
                 pagination
-                // components={{
-                //   Toolbar: AttendanceTool,
-                // }}
-                // onStateChange={(stateParams) =>
-                //   setRowCount(stateParams.pagination.rowCount)
-                // }
-                // loading={exploreLoading}
+                
+                onStateChange={(stateParams) =>
+                  setRowCount(stateParams.pagination.rowCount)
+                }
+                loading={loading}
                 componentsProps={{
                   toolbar: {
                     showQuickFilter: true,
@@ -513,15 +432,17 @@ const SkillInsights = () => {
                 }}
                 rowHeight={dataGridRowHeight}
                 headerHeight={dataGridHeaderFooterHeight}
-                // rows={empEffortGetData}
-                // columns={EmployeeColumn}
-                rows={detailData[selectedAssessment] || []}
                 columns={detailColumns}
+                loading={loading2}
+                rows={insightsData2}
+                 getRowId={(row) => row.RecordID}
+               // getRowId={(row) => row.RecordID} // match the id field
+                
                 disableSelectionOnClick
-                //getRowId={(row) => row.SLNO}
+              
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                onCellClick={(params) => {}}
+                // onCellClick={(params) => {}}
                 rowsPerPageOptions={[5, 10, 20]}
                 pagination
                 // components={{
