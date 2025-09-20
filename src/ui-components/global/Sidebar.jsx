@@ -609,7 +609,8 @@ const child = {
         {
           name: "Insights",
           id: 5849,
-          url: "/Apps/TR286/List of Employees",
+          //url: "/Apps/TR286/List of Employees",
+          url: "/Apps/SkillGlow/SkillInsights",
           // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
           icon: (
             <Tooltip title="Insights">

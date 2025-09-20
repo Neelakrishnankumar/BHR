@@ -112,7 +112,8 @@ geolocationupdateUrl:APIurl + "EmpGeoLocationUpdate.php",
 LeaveTypeurl: APIurl +"APIController.php",
 subsNewUrl: APIurl +"SubscriptionPostController.php",
 AssessmentAutoUrl: APIurl + "ScheduleAssessmentLookup.php",
-
+InsightsUrl1: APIurl + "InsightGetController.php",
+InsightsUrl2: APIurl + "InsightEmpPerformance.php",
   };
 
 export const getUrlSlice = createSlice({

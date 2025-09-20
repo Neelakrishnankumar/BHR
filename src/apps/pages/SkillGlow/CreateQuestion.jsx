@@ -354,7 +354,7 @@ const CreateQuestion = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    {mode == "A" ? "New" : "Edit"}
+                    {mode == "A" ? "New" : mode == "D"? "Delete" : "Edit"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -987,121 +987,127 @@ const CreateQuestion = () => {
                       ))} */}
 
                     {answerType === "T/F" &&
-                      ["True", "False"].map((label, i) => (
-                        <Box
-                          key={i}
-                          sx={{
-                            display: "flex",
-                            mb: 1,
-                            gap: 2,
-                            alignItems: "end",
-                          }}
-                        >
-                          <Box sx={{ width: "40px", textAlign: "center" }}>
-                            <Typography variant="body1">{i + 1}</Typography>
-                          </Box>
+                      ["True", "False"].map((label, i) => {
+                        if (values[`Option${i + 1}`] !== label) {
+                          setFieldValue(`Option${i + 1}`, label);
+                        }
 
-                          {/* Fixed Option TextField */}
-                          <Box sx={{ flex: 1 }}>
-                            <TextField
-                              fullWidth
-                              name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
-                              variant="standard"
-                              value={label} // always True / False
-                              InputProps={{
-                                readOnly: true, // user can’t change
-                              }}
-                            />
-                          </Box>
+                        return (
+                          // <-- add return here
+                          <Box
+                            key={i}
+                            sx={{
+                              display: "flex",
+                              mb: 1,
+                              gap: 2,
+                              alignItems: "end",
+                            }}
+                          >
+                            <Box sx={{ width: "40px", textAlign: "center" }}>
+                              <Typography variant="body1">{i + 1}</Typography>
+                            </Box>
 
-                          {/* Marks Field */}
-                          <Box sx={{ width: "155px" }}>
-                            <TextField
-                              fullWidth
-                              name={`Rate${i + 1}`}
-                              label="Marks"
-                              variant="standard"
-                              value={values[`Rate${i + 1}`]}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={
-                                touched[`Rate${i + 1}`] &&
-                                Boolean(errors[`Rate${i + 1}`])
-                              }
-                              helperText={
-                                touched[`Rate${i + 1}`] &&
-                                errors[`Rate${i + 1}`]
-                              }
-                              InputProps={{
-                                inputProps: {
-                                  style: { textAlign: "right" },
-                                },
-                              }}
-                            />
+                            {/* Fixed Option TextField */}
+                            <Box sx={{ flex: 1 }}>
+                              <TextField
+                                fullWidth
+                                name={`Option${i + 1}`}
+                                label={`Option ${i + 1}`}
+                                variant="standard"
+                                value={label} // always True / False
+                                InputProps={{
+                                  readOnly: true, // user can’t change
+                                }}
+                              />
+                            </Box>
+
+                            {/* Marks Field */}
+                            <Box sx={{ width: "155px" }}>
+                              <TextField
+                                fullWidth
+                                name={`Rate${i + 1}`}
+                                label="Marks"
+                                variant="standard"
+                                value={values[`Rate${i + 1}`]}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={
+                                  touched[`Rate${i + 1}`] &&
+                                  Boolean(errors[`Rate${i + 1}`])
+                                }
+                                helperText={
+                                  touched[`Rate${i + 1}`] &&
+                                  errors[`Rate${i + 1}`]
+                                }
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
+                            </Box>
                           </Box>
-                        </Box>
-                      ))}
+                        );
+                      })}
+
                     {answerType === "Y/N" &&
-                      ["Yes", "No"].map((label, i) => (
-                        <Box
-                          key={i}
-                          sx={{
-                            display: "flex",
-                            mb: 1,
-                            gap: 2,
-                            //alignItems: "center",
-                            alignItems: "end",
-                          }}
-                        >
-                          {/* <Box sx={{ flex: 1 }}>
-                                  <FormControlLabel
-                                    value={label}
-                                    control={<Radio />}
-                                    label={label}
-                                  />
-                                </Box> */}
-                          <Box sx={{ width: "40px", textAlign: "center" }}>
-                            <Typography variant="body1">{i + 1}</Typography>
+                      ["Yes", "No"].map((label, i) => {
+                        if (values[`Option${i + 1}`] !== label) {
+                          setFieldValue(`Option${i + 1}`, label);
+                        }
+
+                        return (
+                          <Box
+                            key={i}
+                            sx={{
+                              display: "flex",
+                              mb: 1,
+                              gap: 2,
+                              alignItems: "end",
+                            }}
+                          >
+                            <Box sx={{ width: "40px", textAlign: "center" }}>
+                              <Typography variant="body1">{i + 1}</Typography>
+                            </Box>
+                            <Box sx={{ flex: 1 }}>
+                              <TextField
+                                fullWidth
+                                name={`Option${i + 1}`}
+                                label={`Option ${i + 1}`}
+                                variant="standard"
+                                value={label} // always Yes / No
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                            <Box sx={{ width: "155px" }}>
+                              <TextField
+                                fullWidth
+                                name={`Rate${i + 1}`}
+                                label="Marks"
+                                variant="standard"
+                                value={values[`Rate${i + 1}`]}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={
+                                  touched[`Rate${i + 1}`] &&
+                                  Boolean(errors[`Rate${i + 1}`])
+                                }
+                                helperText={
+                                  touched[`Rate${i + 1}`] &&
+                                  errors[`Rate${i + 1}`]
+                                }
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
+                            </Box>
                           </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <TextField
-                              fullWidth
-                              name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
-                              variant="standard"
-                              value={label} // always Yes / NO
-                              InputProps={{
-                                readOnly: true, // user can’t change
-                              }}
-                            />
-                          </Box>
-                          <Box sx={{ width: "155px" }}>
-                            <TextField
-                              fullWidth
-                              name={`Rate${i + 1}`}
-                              label="Marks"
-                              variant="standard"
-                              value={values[`Rate${i + 1}`]}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={
-                                touched[`Rate${i + 1}`] &&
-                                Boolean(errors[`Rate${i + 1}`])
-                              }
-                              helperText={
-                                touched[`Rate${i + 1}`] &&
-                                errors[`Rate${i + 1}`]
-                              }
-                              InputProps={{
-                                inputProps: {
-                                  style: { textAlign: "right" },
-                                },
-                              }}
-                            />
-                          </Box>
-                        </Box>
-                      ))}
+                        );
+                      })}
 
                     {(answerType === "Text" || answerType === "Number") && (
                       <Box

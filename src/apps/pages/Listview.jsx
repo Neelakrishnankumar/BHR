@@ -83,7 +83,7 @@ const Listview = () => {
   
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  const [pageSize, setPageSize] = React.useState(15);
+  const [pageSize, setPageSize] = React.useState(20);
   const [page, setPage] = React.useState(currentPage || 0);
   const [collapse, setcollapse] = React.useState(false);
   var invoice;
@@ -162,18 +162,38 @@ const Listview = () => {
   //   () => listViewcolumn.filter(filterByID),
   //   [listViewcolumn]
   // );
-    const columns = React.useMemo(
-    () => listViewcolumn.filter(filterByID) ? [   {
-    field: "slno",
-    headerName: "SL#",
-    width: 50,
-    sortable: false,
-    filterable: false,
-    valueGetter: (params) =>
-      `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
-  },   ,...listViewcolumn.filter(filterByID)] :[],
-    [listViewcolumn]
-  );
+  //   const columns = React.useMemo(
+  //   () => listViewcolumn.filter(filterByID) ? [   {
+  //   field: "slno",
+  //   headerName: "SL#",
+  //   width: 50,
+  //   sortable: false,
+  //   filterable: false,
+  //   valueGetter: (params) =>
+  //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+  // },   ,...listViewcolumn.filter(filterByID)] :[],
+  //   [listViewcolumn]
+  // );
+  const columns = React.useMemo(
+  () =>
+    listViewcolumn.filter(filterByID)
+      ? [
+          {
+            field: "slno",
+            headerName: "SL#",
+            width: 50,
+            sortable: false,
+            filterable: false,
+            valueGetter: (params) =>
+              page * pageSize +
+              params.api.getRowIndexRelativeToVisibleRows(params.id) +
+              1,
+          },
+          ...listViewcolumn.filter(filterByID),
+        ]
+      : [],
+  [listViewcolumn, page, pageSize] // include page & pageSize as deps
+);
   // console.log("🚀 ~ file: Listview.jsx:88 ~ Listview ~ columns:", columns)
 
   const columnShow = React.useMemo(

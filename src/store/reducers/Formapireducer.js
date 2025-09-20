@@ -76,6 +76,12 @@ const initialState = {
   partyBankgetloading: false,
   partyBankPostdata: {},
   partyContactgetdata: {},
+  skillInsights1getdata:{},
+  skillInsights1status:"",
+  skillInsights1loading:false,
+  skillInsights2getdata:[],
+  skillInsights2status:"",
+  skillInsights2loading:false,
 
 };
 
@@ -1078,7 +1084,48 @@ export const sprintprojectplanGetData = createAsyncThunk(
     return response.data;
   }
 );
+//SKILL-INSIGHTS
+export const getInsights1 = createAsyncThunk(
+  "getInsights1/get",
+  async () => {
+    const url = store.getState().globalurl.InsightsUrl1;
 
+    const response = await axios.post(
+      url,
+      {}, //  empty body since API doesn't need input
+      {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      }
+    );
+
+    console.log("API Response:", response.data);
+    return response.data;
+  }
+);
+
+export const getInsights2 = createAsyncThunk(
+  "getInsights2/get",
+  async (AssessmentID) => {
+    const url = store.getState().globalurl.InsightsUrl2;
+
+    const response = await axios.post(
+      url,
+      {  AssessmentID : AssessmentID}, 
+      {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      }
+    );
+
+    console.log("API Response:", response.data);
+    return response.data;
+  }
+);
 /* settings Get*/
 export const getSettingsData = createAsyncThunk(
   "Settings/get",
@@ -2389,8 +2436,54 @@ export const getApiSlice = createSlice({
       })
 
 
+//SKILL-INSIGHTS
+  .addCase(getInsights1.pending, (state) => {
+    state.skillInsights2getdata = [];
+    state.skillInsights1getdata = {};
+    state.skillInsights1loading = true;
+    state.error = null;
+  })
+  .addCase(getInsights1.fulfilled, (state, action) => {
+     state.skillInsights2getdata = [];
+    if (action.payload.Status === "Y") {
+      // store full Data object
+          state.skillInsights1getdata = action.payload.Data;
+
+    } else {
+      state.skillInsights1getdata = {};
+    }
+    state.skillInsights1loading = false;
+    state.error = null;
+  })
+  .addCase(getInsights1.rejected, (state, action) => {
+    state.skillInsights2getdata = [];
+    state.skillInsights1getdata = {};
+    state.skillInsights1loading = false;
+    state.error = action.error.message;
+  })
 
 
+    .addCase(getInsights2.pending, (state) => {
+    state.skillInsights2getdata = [];
+    state.skillInsights2loading = true;
+    state.error = null;
+  })
+  .addCase(getInsights2.fulfilled, (state, action) => {
+    // if (action.payload.Status === "Y") {
+      // store full Data object
+          state.skillInsights2getdata = action.payload.Data;
+
+    // } else {
+    //   state.skillInsights2getdata = [];
+    // }
+    state.skillInsights2loading = false;
+    state.error = null;
+  })
+  .addCase(getInsights2.rejected, (state, action) => {
+    state.skillInsights2getdata = [];
+    state.skillInsights2loading = false;
+    state.error = action.error.message;
+  })
 
    .addCase(getLeaveweeklyData.pending, (state) => {
         state.Status = "idle";

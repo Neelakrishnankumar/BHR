@@ -1285,7 +1285,15 @@ const Editemployee = () => {
     elligibledays: "",
     Year: "",
   });
-
+  const [empLoaData, SetEmpLoaData] = useState({
+    recordID: "",
+    description: "",
+    category: "",
+    RenewalDate: "",
+    personal: false,
+    renewal: false,
+    Attachment: ""
+  });
   const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
     setFunMode(mode);
     setLaoMode(mode);
@@ -1341,6 +1349,8 @@ const Editemployee = () => {
       });
     } else {
       console.log(rowData, "--rowData");
+      console.log(rowData.Description, "rowData.Description")
+      console.log(rowData.Category, "rowData.Category")
       if (field == "action") {
 
 
@@ -1351,21 +1361,7 @@ const Editemployee = () => {
         // Name: rowData.FunctionName,
         // });
 
-        setFieldValue("functionLookup", {
-          RecordID: rowData.FunctionsID,
-          Code: rowData.FunctionCode,
-          Name: rowData.FunctionName,
-        });
-        setFieldValue("vendor", {
-          RecordID: rowData.Vendor,
-          Code: rowData.VendorCode,
-          Name: rowData.VendorName,
-        });
-        setFieldValue("customer", {
-          RecordID: rowData.Vendor,
-          Code: rowData.VendorCode,
-          Name: rowData.VendorName,
-        });
+
         // SetVendorlookup({
         //   RecordID: rowData.Vendor,
         //   Code: rowData.VendorCode,
@@ -1377,6 +1373,7 @@ const Editemployee = () => {
         //   Code: rowData.VendorCode,
         //   Name: rowData.VendorName,
         // });
+
 
         SetEmpLoaData({
           description: rowData.Description,
@@ -1443,7 +1440,21 @@ const Editemployee = () => {
             : null,
           Year: rowData.Year,
         });
-
+        setFieldValue("functionLookup", {
+          RecordID: rowData.FunctionsID,
+          Code: rowData.FunctionCode,
+          Name: rowData.FunctionName,
+        });
+        setFieldValue("vendor", {
+          RecordID: rowData.Vendor,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+        });
+        setFieldValue("customer", {
+          RecordID: rowData.Vendor,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+        });
       }
     }
   };
@@ -2063,6 +2074,7 @@ const Editemployee = () => {
     const response = await dispatch(postDeployment({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
+      dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
     } else {
       toast.error(response.payload.Msg);
@@ -2135,21 +2147,15 @@ const Editemployee = () => {
     const response = await dispatch(postDeployment({ data: idata }));
     // return;
     if (response.payload.Status == "Y") {
+      dispatch(getDeployment({ HeaderID: recID }));
       toast.success(response.payload.Msg);
+
     } else {
       toast.error(response.payload.Msg);
     }
   };
   /*************LOA************* */
-  const [empLoaData, SetEmpLoaData] = useState({
-    recordID: "",
-    description: "",
-    category: "",
-    RenewalDate: "",
-    personal: false,
-    renewal: false,
-    Attachment: ""
-  });
+
   const [bonotifyMode, setnotifyBomode] = useState("6");
   const [selectedFile, setSelectedFile] = useState();
   const [uploadFile, setUploadFile] = useState();

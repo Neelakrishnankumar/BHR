@@ -61,7 +61,7 @@ import {
 } from "../../ui-components/global/utils";
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 
@@ -98,7 +98,7 @@ const ListviewSecondary = () => {
   var accessID = params.secondaryAccessID
     ? params.secondaryAccessID
     : params.accessID;
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(20);
   const [collapse, setcollapse] = React.useState(false);
   const [page, setPage] = React.useState(secondaryCurrentPage);
   var parentID = params.filtertype;
@@ -114,7 +114,7 @@ const ListviewSecondary = () => {
   //const rowData = location.state || {};
 
   // skillglow
-const [errorMsgData, setErrorMsgData] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -131,8 +131,8 @@ const [errorMsgData, setErrorMsgData] = useState(null);
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
 
-  
-  
+
+
 
   var Description = params.Desc;
   var Number = params.Number;
@@ -174,13 +174,12 @@ const [errorMsgData, setErrorMsgData] = useState(null);
   } else if (accessID == "TR079") {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR097") {
-    filter = `${
-      parentID.slice(-1) == "I"
+    filter = `${parentID.slice(-1) == "I"
         ? "(DcType IN ('I','B'))"
         : parentID === "PO"
-        ? "(DcType IN ('O','P'))"
-        : "(DcType IN ('O','B'))"
-    }`;
+          ? "(DcType IN ('O','P'))"
+          : "(DcType IN ('O','B'))"
+      }`;
   } else if (accessID == "TR102") {
     filter = `InvType='${parentID}'`;
   } else if (accessID == "TR123") {
@@ -198,9 +197,8 @@ const [errorMsgData, setErrorMsgData] = useState(null);
   } else if (accessID == "TR118") {
     filter = "";
   } else if (accessID == "TR051") {
-    filter = `parentID='${parentID}' AND ${
-      params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
-    }`;
+    filter = `parentID='${parentID}' AND ${params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
+      }`;
   } else if (accessID == "TR091") {
     filter = `parentID=${params.bomID}`;
   } else if (accessID == "TR087") {
@@ -215,7 +213,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
     filter = "";
   } else if (accessID == "TR283") {
     filter = `EmployeeID ='${parentID2}'`;
-  } 
+  }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
   // } 
@@ -284,24 +282,44 @@ const [errorMsgData, setErrorMsgData] = useState(null);
   //   [listViewcolumn]
   // );
 
+  // const columns = React.useMemo(
+  //   () =>
+  //     listViewcolumn.filter(filterByID)
+  //       ? [
+  //           {
+  //             field: "slno",
+  //             headerName: "SL#",
+  //             width: 50,
+  //             sortable: false,
+  //             filterable: false,
+  //             valueGetter: (params) =>
+  //               `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+  //           },
+  //           ,
+  //           ...listViewcolumn.filter(filterByID),
+  //         ]
+  //       : [],
+  //   [listViewcolumn]
+  // );
   const columns = React.useMemo(
     () =>
       listViewcolumn.filter(filterByID)
         ? [
-            {
-              field: "slno",
-              headerName: "SL#",
-              width: 50,
-              sortable: false,
-              filterable: false,
-              valueGetter: (params) =>
-                `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
-            },
-            ,
-            ...listViewcolumn.filter(filterByID),
-          ]
+          {
+            field: "slno",
+            headerName: "SL#",
+            width: 50,
+            sortable: false,
+            filterable: false,
+            valueGetter: (params) =>
+              page * pageSize +
+              params.api.getRowIndexRelativeToVisibleRows(params.id) +
+              1,
+          },
+          ...listViewcolumn.filter(filterByID),
+        ]
         : [],
-    [listViewcolumn]
+    [listViewcolumn, page, pageSize] // include page & pageSize as deps
   );
   var apprval = "";
   var hderName = `Production Card(${params.Number})`;
@@ -834,11 +852,11 @@ const [errorMsgData, setErrorMsgData] = useState(null);
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -903,7 +921,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
               <Typography
                 variant="h5"
                 color="#0000D1"
-                sx={{ cursor: "default" }} 
+                sx={{ cursor: "default" }}
               >
                 List of Assessment Category
               </Typography>
@@ -943,18 +961,18 @@ const [errorMsgData, setErrorMsgData] = useState(null);
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
-                //     { state: { ...state } }
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+              //     { state: { ...state } }
+              //   );
+              // }}
               >
                 List of Schedule
               </Typography>
             </Breadcrumbs>
           </Box>
-        ): accessID == "TR073" ? (
+        ) : accessID == "TR073" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
@@ -2570,10 +2588,9 @@ const [errorMsgData, setErrorMsgData] = useState(null);
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${
-                          screenName === "Remarks"
-                            ? "Delivery Chalan"
-                            : screenName
+                        `./Edit${screenName === "Remarks"
+                          ? "Delivery Chalan"
+                          : screenName
                         }/-1/A`,
                         {
                           state: { ...state },
@@ -2590,10 +2607,9 @@ const [errorMsgData, setErrorMsgData] = useState(null);
                 <AddOutlinedIcon
                   onClick={() => {
                     navigate(
-                      `./Edit${
-                        screenName === "Remarks"
-                          ? "Delivery Chalan"
-                          : screenName
+                      `./Edit${screenName === "Remarks"
+                        ? "Delivery Chalan"
+                        : screenName
                       }/-1/A`,
                       {
                         state: { ...state },
@@ -2765,7 +2781,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
           </Box>
         ) : accessID == "TR280" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            
+
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -2776,7 +2792,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
               label="Delete"
               variant="outlined"
             />
-            
+
             <Chip
               icon={<Category color="primary" />}
               label="Question Group"
@@ -2798,7 +2814,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
           </Box>
         ) : accessID == "TR283" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-           <Chip
+            <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
@@ -2809,9 +2825,9 @@ const [errorMsgData, setErrorMsgData] = useState(null);
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR281" ? (
+        ) : accessID == "TR281" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-           
+
 
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -2823,7 +2839,7 @@ const [errorMsgData, setErrorMsgData] = useState(null);
               label="Delete"
               variant="outlined"
             />
-             <Chip
+            <Chip
               icon={<QuizIcon color="primary" />}
               label="Question"
               variant="outlined"
