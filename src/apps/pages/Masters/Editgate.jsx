@@ -61,7 +61,6 @@ const Editgate = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
 
-
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const rowData = location.state || {};
@@ -76,7 +75,9 @@ const Editgate = () => {
       .then((data) => {
         setErrorMsgData(data);
 
-        let schemaFields = {};
+        let schemaFields = {
+          name: Yup.string().required(data.Geogate.name),
+        };
 
         if (CompanyAutoCode === "N") {
           schemaFields.code = Yup.string().required(data.Geogate.code);
@@ -103,7 +104,7 @@ const Editgate = () => {
     disable: data.Disable === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false,
     latitude: data.Latitude,
-    longitude: data.Longitude
+    longitude: data.Longitude,
   };
 
   const Fnsave = async (values) => {
@@ -125,7 +126,7 @@ const Editgate = () => {
       ReaderCode: values.readercode,
       ReaderName: values.readername,
       Latitude: values.latitude,
-      Longitude: values.longitude
+      Longitude: values.longitude,
       // Finyear,
       // CompanyID,
     };
@@ -217,7 +218,8 @@ const Editgate = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`, { state: rowData }
+                    `/Apps/Secondarylistview/TR127/Gate Entry/${params.filtertype}/${params.parentID}`,
+                    { state: rowData }
                   );
                 }}
               >
@@ -297,15 +299,14 @@ const Editgate = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         },
-                        gridColumn: "span 2"
+                        gridColumn: "span 2",
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -314,7 +315,10 @@ const Editgate = () => {
                       id="code"
                       label={
                         <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       variant="standard"
@@ -326,22 +330,28 @@ const Editgate = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         },
-                        gridColumn: "span 2"
+                        gridColumn: "span 2",
                       }}
                       autoFocus
-
                     />
                   )}
                   <TextField
                     name="name"
                     type="text"
                     id="name"
-                    label="Name"
+                    // label="Name"
+                    label={
+                      <>
+                        Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
@@ -427,7 +437,6 @@ const Editgate = () => {
                     error={!!touched.comment && !!errors.comment}
                     helperText={touched.comment && errors.comment}
                     sx={{ gridColumn: "span 2" }}
-
                   />
 
                   <TextField

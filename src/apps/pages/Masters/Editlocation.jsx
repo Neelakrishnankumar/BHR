@@ -78,7 +78,9 @@ const Editlocation = () => {
       .then((data) => {
         setErrorMsgData(data);
 
-        let schemaFields = {};
+        let schemaFields = {
+          name: Yup.string().required(data.GeoLoc.name),
+        };
 
         if (CompanyAutoCode === "N") {
           schemaFields.code = Yup.string().required(data.GeoLoc.code);
@@ -97,7 +99,6 @@ const Editlocation = () => {
 
   const rowData = location.state || {};
 
-
   const InitialValue = {
     code: data.Code,
     name: data.Name,
@@ -108,8 +109,7 @@ const Editlocation = () => {
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
     // contactperson: data.ContactPerson ? {RecordID:data.ContactPerson,Code:data.ContactPersonCode,Name:data.ContactPersonName} : null
-    delete: data.DeleteFlag === "Y" ? true : false
-
+    delete: data.DeleteFlag === "Y" ? true : false,
   };
 
   const Fnsave = async (values) => {
@@ -243,10 +243,11 @@ const Editlocation = () => {
                   navigate("/Apps/TR128/Location");
                 }}
               >
-                {mode === "E" ? `Location(${rowData.LocationName})` : "Location(New)"}
+                {mode === "E"
+                  ? `Location(${rowData.LocationName})`
+                  : "Location(New)"}
 
                 {/* {`Location(${rowData.LocationName})`} */}
-
               </Typography>
 
               {/* <Typography variant="h3">Location</Typography> */}
@@ -286,7 +287,7 @@ const Editlocation = () => {
               isSubmitting,
               values,
               handleSubmit,
-              setFieldValue
+              setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -332,15 +333,14 @@ const Editlocation = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         },
-                        gridColumn: "span 2"
+                        gridColumn: "span 2",
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -349,7 +349,10 @@ const Editlocation = () => {
                       id="code"
                       label={
                         <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       variant="standard"
@@ -361,22 +364,28 @@ const Editlocation = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                         },
-                        gridColumn: "span 2"
+                        gridColumn: "span 2",
                       }}
                       autoFocus
-
                     />
                   )}
                   <TextField
                     name="name"
                     type="text"
                     id="name"
-                    label="Name"
+                    // label="Name"
+                    label={
+                      <>
+                        Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     variant="standard"
                     focused
                     value={values.name}
@@ -387,7 +396,7 @@ const Editlocation = () => {
                     sx={{ gridColumn: "span 2" }}
                     autoFocus={CompanyAutoCode == "Y"}
                   />
-                  <TextField
+                  {/* <TextField
                     name="address"
                     type="text"
                     id="address"
@@ -452,7 +461,7 @@ const Editlocation = () => {
                     error={!!touched.contactmail && !!errors.contactmail}
                     helperText={touched.contactmail && errors.contactmail}
                     sx={{ gridColumn: "span 2" }}
-                  />
+                  /> */}
                   <TextField
                     name="sortorder"
                     type="number"
