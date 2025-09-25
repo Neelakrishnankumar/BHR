@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Typography, Box, Stack, Grid, LinearProgress } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Stack,
+  Grid,
+  LinearProgress,
+  CircularProgress,
+} from "@mui/material";
 import { FaHourglassHalf, FaSyncAlt, FaCheckCircle } from "react-icons/fa";
 // import {
 //   dataGridHeight,
@@ -13,7 +22,11 @@ import {
   formGap,
   dataGridRowHeight,
 } from "../../../ui-components/utils";
-import { DataGrid } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import { useTheme } from "@emotion/react";
 import { tokens } from "../../../Theme";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,19 +50,17 @@ const SkillInsights = () => {
 
   useEffect(() => {
     dispatch(getInsights1()); // no arguments needed
-  },[dispatch]);
+  }, [dispatch]);
 
   // ✅ rename selector variable
   const insightsData = useSelector(
     (state) => state.formApi.skillInsights1getdata
   );
   const loading = useSelector((state) => state.formApi.skillInsights1loading);
-  const error=useSelector((state) => state.formApi.error);
+  const error = useSelector((state) => state.formApi.error);
 
-  
-  console.log("🚀 ~ SkillInsights ~ loading:", loading)
+  console.log("🚀 ~ SkillInsights ~ loading:", loading);
   console.log("🚀 ~ SkillInsights ~ getInsights1:", insightsData);
-
 
   const insightsData2 = useSelector(
     (state) => state.formApi.skillInsights2getdata
@@ -57,43 +68,59 @@ const SkillInsights = () => {
   console.log("🚀 ~ SkillInsights ~ insightsData2:", insightsData2);
   const loading2 = useSelector((state) => state.formApi.skillInsights2loading);
 
+  // Auto-load first master row when insightsData is ready
+  useEffect(() => {
+    if (!loading && insightsData?.ASSESSMENTLIST?.length > 0) {
+      const firstRow = insightsData.ASSESSMENTLIST[0];
+      setSelectedMaster(firstRow); // highlight first row
+      dispatch(getInsights2(firstRow.RecordID)); // fetch its details
+    }
+  }, [loading, insightsData, dispatch]);
+
   const columns = [
     {
-      field: "id",
+      field: "Slno",
       headerName: "SL#",
-      flex: 0.5,
+      width: 50,
       align: "right",
       headerAlign: "center",
       sortable: false,
       filterable: false,
-      valueGetter: (params) =>
-        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+      // valueGetter: (params) =>
+      //   `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
     },
     {
       field: "Assessment",
       headerName: "Assessment",
-      flex: 1,
+      //flex: 1,
+      width: 200,
       align: "left",
       headerAlign: "center",
     },
     {
       field: "Scheduled",
       headerName: "Scheduled",
-      flex: 1,
+      //flex: 1,
+      width: 100,
+
       align: "right",
       headerAlign: "center",
     },
     {
       field: "Passed",
       headerName: "Passed",
-      flex: 1,
+      //// flex: 1,
+      width: 100,
+
       align: "right",
       headerAlign: "center",
     },
     {
       field: "Failed",
       headerName: "Failed",
-      flex: 1,
+      //flex: 1,
+      width: 100,
+
       align: "right",
       headerAlign: "center",
     },
@@ -107,13 +134,13 @@ const SkillInsights = () => {
     {
       field: "NotAttended",
       headerName: "Not Attended",
-      flex: 1,
+      //flex: 1,
+      width: 100,
       align: "right",
       headerAlign: "center",
     },
   ];
 
- 
   const detailColumns = [
     {
       field: "SLNO",
@@ -124,7 +151,7 @@ const SkillInsights = () => {
       sortable: false,
       filterable: false,
     },
-     
+
     {
       field: "EmpName",
       headerName: "Employee Name",
@@ -183,38 +210,92 @@ const SkillInsights = () => {
     },
   ];
 
-
-
   const cards = [
     {
       title: "Total Assessment",
       count: insightsData?.TotalNoOfAssessment || 0,
-      //color: "linear-gradient(to right, #ec4899, #ef4444)", // pink-red
-      color: "linear-gradient(135deg, #f7971e, #ffd200)", // pink-red
+      //color: "linear-gradient(90deg, #f7971e, #ffd200)", // pink-red
+      color: "linear-gradient(90deg, #f7971e, #ffd200, #f7971e)",
+
       icon: <FaHourglassHalf size={32} />,
     },
     {
       title: "Assigned Assessment",
       count: insightsData?.AssignedAssessment || 0,
-      //color: "linear-gradient(to right, #3b82f6, #1e40af)", // blue
-      color: "linear-gradient(135deg, #17ead9, #6078ea)", // blue
+      color: "linear-gradient(90deg, #1e40af, #3b82f6, #1e40af)", // blue
+      //color: "linear-gradient(135deg, #17ead9, #6078ea)", // blue
       icon: <FaCheckCircle size={32} />,
     },
     {
       title: "Yet to assign",
       count: insightsData?.YetToAssessment || 0,
-      //color: "linear-gradient(to right, #22c55e, #15803d)", // green
-      color: "linear-gradient(135deg, #42e695, #3bb2b8)", // green
+      color: "linear-gradient(90deg, #3bb2b8, #42e695, #3bb2b8)", // green
+      //color: "linear-gradient(90deg, #ee0979, #ff6a00, #ee0979)", // green
       icon: <FaSyncAlt size={32} />,
     },
   ];
-const handleID=(id)=>{
+  const handleID = (id, params) => {
+    dispatch(getInsights2(id));
+  };
 
-  dispatch(getInsights2(id));
-}
+  //MASTER TABLE
+  function MasterTool() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography variant="h6">List of Assessment</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
+  //DETAIL TABLE
+  const [selectedMaster, setSelectedMaster] = useState(null);
+
+  function DetailTool() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography variant="h6">
+            Employee Performance{" "}
+            {selectedMaster?.Assessment ? `(${selectedMaster.Assessment})` : ""}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
   return (
     <React.Fragment>
-       {(loading && loading2) ? <LinearProgress /> : false}
+      {loading && loading2 ? <LinearProgress /> : false}
       <Typography
         variant="h5"
         fontWeight="bold"
@@ -225,6 +306,7 @@ const handleID=(id)=>{
       >
         INSIGHTS
       </Typography>
+
       <Grid container spacing={3} sx={{ p: "0px 10px" }}>
         {cards.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
@@ -246,22 +328,33 @@ const handleID=(id)=>{
                   justifyContent: "center",
                 }}
               >
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight="600">
-                      {card.title}
-                    </Typography>
-                    <Typography variant="h4" fontWeight="bold">
-                      {card.count}
-                    </Typography>
-                  </Box>
+                {!loading ? (
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Box>
+                      <Typography variant="subtitle1" fontWeight="600">
+                        {card.title}
+                      </Typography>
+                      <Typography variant="h4" fontWeight="bold">
+                        {card.count}
+                      </Typography>
+                    </Box>
 
-                  <Box sx={{ opacity: 0.9 }}>{card.icon}</Box>
-                </Box>
+                    <Box sx={{ opacity: 0.9 }}>{card.icon}</Box>
+                  </Box>
+                ) : (
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%" // ensures proper vertical centering
+                  >
+                    <CircularProgress />
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </Grid>
@@ -278,12 +371,12 @@ const handleID=(id)=>{
           padding: "0px 10px",
         }}
       >
-    
-        <Grid item sx={{ width: "50%" }}>
-          <Typography variant="h4">List Of Assessment</Typography>
-          <Card sx={{ borderRadius: 2, boxShadow: 2, height: "100%" }}>
+        <Grid item xs={12} md={6}>
+          {/* <Typography variant="h4">List Of Assessment</Typography> */}
+
+          <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
             <Box
-              height={300}
+              //height={350}
               sx={{
                 "& .MuiDataGrid-root": {
                   // border: "none",
@@ -319,6 +412,12 @@ const handleID=(id)=>{
                   backgroundColor: "#d0edec",
                   color: "", // Color for even rows
                 },
+                height: "350px",
+                width: "100%",
+                "& .selected-row": {
+                  backgroundColor: "#C0C0C0 !important",
+                  color: "#000",
+                },
               }}
             >
               <DataGrid
@@ -330,23 +429,27 @@ const handleID=(id)=>{
                 }}
                 rowHeight={dataGridRowHeight}
                 headerHeight={dataGridHeaderFooterHeight}
-                rows={
-                  insightsData?.ASSESSMENTLIST?.map((row, index) => ({
-                    id: row.RecordID,
-                    ...row,
-                  })) || []
-                }
+                // rows={
+                //   insightsData?.ASSESSMENTLIST?.map((row, index) => ({
+                //     id: row.RecordID,
+                //     ...row,
+                //   })) || []
+                // }
+                rows={insightsData?.ASSESSMENTLIST || []}
                 columns={columns}
-               
-                onRowClick={(params)=>handleID(params.row.RecordID)}
+                //onRowClick={(params) => handleID(params.row.RecordID)}
+                onRowClick={(params) => {
+                  setSelectedMaster(params.row);
+                  dispatch(getInsights2(params.row.RecordID));
+                }}
                 getRowId={(row) => row.RecordID} // 👈 ensures uniqueness
                 disableSelectionOnClick
+                selectionModel={selectedMaster ? [selectedMaster.RecordID] : []} // highlight selected row
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 onCellClick={(params) => {}}
                 rowsPerPageOptions={[5, 10, 20]}
                 pagination
-                
                 onStateChange={(stateParams) =>
                   setRowCount(stateParams.pagination.rowCount)
                 }
@@ -362,22 +465,27 @@ const handleID=(id)=>{
                 //     ? "odd-row"
                 //     : "even-row"
                 // }
-                getRowClassName={(params) =>
-                  params.indexRelativeToCurrentPage % 2 === 0
+                getRowClassName={(params) => {
+                  if (selectedMaster?.RecordID === params.row.RecordID)
+                    return "selected-row"; // highlight selected
+                  return params.indexRelativeToCurrentPage % 2 === 0
                     ? "odd-row"
-                    : "even-row"
-                }
+                    : "even-row";
+                }}
+                components={{
+                  Toolbar: MasterTool,
+                }}
               />
             </Box>
           </Card>
         </Grid>
 
-        <Grid item sx={{ width: "50%" }}>
-          <Typography variant="h4">Employee Performance</Typography>
+        <Grid item xs={12} md={6}>
+          {/* <Typography variant="h4">Employee Performance</Typography> */}
 
-          <Card sx={{ borderRadius: 2, boxShadow: 2, height: "100%" }}>
+          <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
             <Box
-              height={300}
+              //height={350}
               sx={{
                 "& .MuiDataGrid-root": {
                   // border: "none",
@@ -421,6 +529,8 @@ const handleID=(id)=>{
                   backgroundColor: "#c9f5cc", // light green
                   color: "#1b5e20", // dark green text
                 },
+                height: "350px",
+                width: "100%",
               }}
             >
               <DataGrid
@@ -435,19 +545,18 @@ const handleID=(id)=>{
                 columns={detailColumns}
                 loading={loading2}
                 rows={insightsData2}
-                 getRowId={(row) => row.RecordID}
-               // getRowId={(row) => row.RecordID} // match the id field
-                
+                getRowId={(row) => row.RecordID}
+                // getRowId={(row) => row.RecordID} // match the id field
+
                 disableSelectionOnClick
-              
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 // onCellClick={(params) => {}}
                 rowsPerPageOptions={[5, 10, 20]}
                 pagination
-                // components={{
-                //   Toolbar: EmployeeTool,
-                // }}
+                components={{
+                  Toolbar: DetailTool,
+                }}
                 // onStateChange={(stateParams) =>
                 //   setRowCount(stateParams.pagination.rowCount)
                 // }

@@ -74,6 +74,7 @@ const CreateCategoryMain = () => {
         const schema = Yup.object().shape({
           code: Yup.string().required(data.SkillGlowCategory.Code),
           name: Yup.string().required(data.SkillGlowCategory.Name),
+          assessmentType: Yup.string().required(data.SkillGlowCategory.AssessmentType),
         });
         setValidationSchema(schema);
       })
@@ -103,6 +104,7 @@ const CreateCategoryMain = () => {
       CompanyID: CompanyID,
       Code: values.code,
       Name: values.name,
+      AssessmentType: values.assessmentType,
       SortOrder: values.sortOrder || "0",
       Disable: isCheck,
     };
@@ -141,6 +143,7 @@ const CreateCategoryMain = () => {
   const initialValues = {
     name: Data.Name,
     code: Data.Code,
+    assessmentType: Data.AssessmentType,
     sortOrder: Data.SortOrder,
     disable: Data.Disable == "Y" ? true : false,
   };
@@ -299,7 +302,28 @@ const CreateCategoryMain = () => {
                       },
                     }}
                   />
-
+                    <TextField
+                      focused
+                      variant="standard"
+                      label={
+                        <>
+                          Assessment Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      name="assessmentType"
+                      id="assessmentType"
+                      value={values.assessmentType}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      select
+                      error={!!touched.assessmentType && !!errors.assessmentType}
+                      helperText={touched.assessmentType && errors.assessmentType}
+                    >
+                      <MenuItem value={"SkillAssessment"}>Skill Assessment</MenuItem>
+                      <MenuItem value={"Appraisal"}>Appraisal</MenuItem>
+                      <MenuItem value={"Survey"}>Survey</MenuItem>
+                      <MenuItem value={"Feedback"}>Feedback</MenuItem>
+                    </TextField>
                   <TextField
                     fullWidth
                     variant="standard"
@@ -336,12 +360,12 @@ const CreateCategoryMain = () => {
                       />
                     }
                     label="Disable"
-                    sx={{
-                      marginTop: "20px",
-                      "@media (max-width:500px)": {
-                        marginTop: 0,
-                      },
-                    }}
+                    // sx={{
+                    //   marginTop: "20px",
+                    //   "@media (max-width:500px)": {
+                    //     marginTop: 0,
+                    //   },
+                    // }}
                   />
                 </Box>
                 <Box

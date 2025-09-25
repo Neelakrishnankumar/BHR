@@ -175,6 +175,7 @@ const CreateCategory = () => {
     Name: Data.Name || "",
     NoOfQuestions: Data.NoOfQuestions || "",
     AnswerType: Data.AnswerType || "",
+    AvailableNoOfQuestion: Data.AvailableNoOfQues || "",
     SortOrder: Data.SortOrder || "",
     Disable: Data.Disable == "Y" ? true : false,
   };
@@ -359,7 +360,7 @@ const CreateCategory = () => {
                     type="number"
                     // label="No. Of Questions"
                     label={
-                      <>No. Of Questions<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                      <>Assessment No. Of Questions<span style={{color:"red",fontSize:"20px"}}>*</span></>
                     }
                     //placeholder="Enter Your NoOfQuestions Here......"
                     value={values.NoOfQuestions}
@@ -423,12 +424,51 @@ const CreateCategory = () => {
                       <MenuItem value={"Any/4"}>Any Of Four</MenuItem>
                       <MenuItem value={"Text"}>Text</MenuItem>
                       <MenuItem value={"Number"}>Number</MenuItem>
-                      <MenuItem value={"10Rates"}>10 Rates</MenuItem>
-                      <MenuItem value={"5Rates"}>5 Rates</MenuItem>
+                      {/* <MenuItem value={"10Rates"}>10 Rates</MenuItem>
+                      <MenuItem value={"5Rates"}>5 Rates</MenuItem> */}
                       <MenuItem value={"T/F"}>True or False</MenuItem>
                       <MenuItem value={"Y/N"}>Yes or No</MenuItem>
                     </TextField>
                     {/* </FormControl> */}
+
+
+                   
+                   {(mode === "E" || mode === "D") && (
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    // label="No. Of Attempts Permitted"
+                    label="Available No. Of Questions"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.AvailableNoOfQuestion}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="AvailableNoOfQuestion"
+                    name="AvailableNoOfQuestion"
+                    focused
+                    error={
+                      !!touched.AvailableNoOfQuestion && !!errors.AvailableNoOfQuestion
+                    }
+                    helperText={
+                      touched.AvailableNoOfQuestion && errors.AvailableNoOfQuestion
+                    }
+                    disabled
+                    sx={{
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                        //readOnly:true
+                      },
+                    }}
+                  />
+                
+)}
+
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth

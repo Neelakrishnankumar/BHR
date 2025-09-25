@@ -56,8 +56,8 @@ const CreateSkill = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const state = location.state || {}
-  console.log(state, '--------------');
+  const state = location.state || {};
+  console.log(state, "--------------");
 
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
 
@@ -83,18 +83,22 @@ const CreateSkill = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
-        const schema =  Yup.object().shape({
+        const schema = Yup.object().shape({
           Code: Yup.string().required(data.ListofAssessment.Code),
           Name: Yup.string().required(data.ListofAssessment.Name),
           Duration: Yup.string().required(data.ListofAssessment.Duration),
-          Permittedtimes: Yup.number().required(data.ListofAssessment.Permittedtimes),
-          Minimumscore: Yup.number().required(data.ListofAssessment.Minimumscore),
+          Permittedtimes: Yup.number().required(
+            data.ListofAssessment.Permittedtimes
+          ),
+          Minimumscore: Yup.number().required(
+            data.ListofAssessment.Minimumscore
+          ),
           //Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
           Date: Yup.date().nullable().required(data.ListofAssessment.Date),
 
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
-        })
+        });
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -181,6 +185,8 @@ const CreateSkill = () => {
     MinimumScore: Data.MinimumScore || "",
     //NoOfAttempts: Data.NoOfAttempts || "",
     //Noofquestion: Data.Noofquestion || "",
+    NoOfQuestionGroup: Data.NoOfQuestionGroup || "0",
+    TotalNoOfQuestion: Data.NoOfQuestions || "0",
     Minimumscore: Data.Minimumscore || "",
     Permittedtimes: Data.Permittedtimes || "",
     //cutOff: Data.cutOff || "",
@@ -306,7 +312,12 @@ const CreateSkill = () => {
                     variant="standard"
                     type="text"
                     label={
-                      <>Code<span style={{ color: "red", fontSize: "20px" }}>*</span></>
+                      <>
+                        Code
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
                     }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Code}
@@ -329,7 +340,12 @@ const CreateSkill = () => {
                     variant="standard"
                     type="text"
                     label={
-                      <>Name<span style={{ color: "red", fontSize: "20px" }}>*</span></>
+                      <>
+                        Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
                     }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Name}
@@ -410,7 +426,12 @@ const CreateSkill = () => {
                     type="number"
                     // label="Duration (In Days)"
                     label={
-                      <>Duration (In Days)<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                      <>
+                        Duration (In Days)
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
                     }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Duration}
@@ -424,8 +445,8 @@ const CreateSkill = () => {
                     sx={{
                       // backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 "
-                                          },
+                        backgroundColor: "#f5f5f5 ",
+                      },
                     }}
                     InputProps={{
                       inputProps: {
@@ -439,7 +460,12 @@ const CreateSkill = () => {
                     type="text"
                     // label="Mininum Score"
                     label={
-                      <>Minimum Score<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                      <>
+                        Minimum Score
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
                     }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Minimumscore}
@@ -467,7 +493,12 @@ const CreateSkill = () => {
                     type="date"
                     id="Date"
                     label={
-                      <>Date<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                      <>
+                        Date
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
                     }
                     variant="standard"
                     focused
@@ -478,8 +509,8 @@ const CreateSkill = () => {
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
                     sx={{ background: "" }}
-                  // required
-                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    // required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     // fullWidth
@@ -487,7 +518,12 @@ const CreateSkill = () => {
                     type="number"
                     // label="No. Of Attempts Permitted"
                     label={
-                      <>No. Of Attempts Permitted<span style={{color:"red",fontSize:"20px"}}>*</span></>
+                      <>
+                        No. Of Attempts Permitted
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
                     }
                     //placeholder="Enter Your Skills Here......"
                     value={values.Permittedtimes}
@@ -510,6 +546,83 @@ const CreateSkill = () => {
                       },
                     }}
                   />
+
+
+                  {(mode == "E" || mode == "D") && (
+
+                    <>
+{/* NO OF QUESTION GROUP */}
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    // label="No. Of Attempts Permitted"
+                    label="No. Of Question Groups"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.NoOfQuestionGroup}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="NoOfQuestionGroup"
+                    name="NoOfQuestionGroup"
+                    focused
+                    error={
+                      !!touched.NoOfQuestionGroup && !!errors.NoOfQuestionGroup
+                    }
+                    helperText={
+                      touched.NoOfQuestionGroup && errors.NoOfQuestionGroup
+                    }
+                    disabled
+                    sx={{
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                        //readOnly:true
+                      },
+                    }}
+                  />
+
+{/* TOTAL NO OF QUESTIONS */}
+
+                  <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="number"
+                    // label="No. Of Attempts Permitted"
+                    label="No. Of Questions"
+                    //placeholder="Enter Your Skills Here......"
+                    value={values.TotalNoOfQuestion}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="TotalNoOfQuestion"
+                    name="TotalNoOfQuestion"
+                    focused
+                    error={
+                      !!touched.TotalNoOfQuestion && !!errors.TotalNoOfQuestion
+                    }
+                    helperText={
+                      touched.TotalNoOfQuestion && errors.TotalNoOfQuestion
+                    }
+                    disabled
+                    sx={{
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                        //readOnly:true
+                      },
+                    }}
+                  />
+
+                  </>
+                  )}
+
 
 
                   <TextField
@@ -547,12 +660,12 @@ const CreateSkill = () => {
                       />
                     }
                     label="Disable"
-                  // sx={{
-                  //   marginTop: "20px",
-                  //   "@media (max-width:500px)": {
-                  //     marginTop: 0,
-                  //   },
-                  // }}
+                    // sx={{
+                    //   marginTop: "20px",
+                    //   "@media (max-width:500px)": {
+                    //     marginTop: 0,
+                    //   },
+                    // }}
                   />
                 </Box>
                 <Box

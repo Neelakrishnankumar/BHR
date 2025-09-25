@@ -20,8 +20,12 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import Swal from "sweetalert2";
-import BalanceIcon from '@mui/icons-material/Balance';
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../ui-components/global/utils";
+import BalanceIcon from "@mui/icons-material/Balance";
+import {
+  dataGridHeaderFooterHeight,
+  dataGridHeight,
+  dataGridRowHeight,
+} from "../../ui-components/global/utils";
 import MatxCustomizer from "./Mailpdf";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
@@ -57,16 +61,21 @@ import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import NotStartedOutlinedIcon from "@mui/icons-material/NotStartedOutlined";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import EmailIcon from "@mui/icons-material/Email";
 import { searchData } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import { Delete, Psychology, Category} from "@mui/icons-material";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import { Delete, Psychology, Category } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 const Listview = () => {
+
+
+
+
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -75,12 +84,12 @@ const Listview = () => {
   const YearFlag = sessionStorage.getItem("YearFlag");
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
   const location = useLocation();
-  console.log(location,'location -----------------');
-  
+  console.log(location, "location -----------------");
+
   const dispatch = useDispatch();
   const params = useParams();
-  console.log(params,"-------------");
-  
+  console.log(params, "-------------");
+
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const [pageSize, setPageSize] = React.useState(20);
@@ -105,11 +114,15 @@ const Listview = () => {
 
   // console.log("rowdata" + JSON.stringify(listViewData));
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
+
+  
   const [selectedFile, setSelectedFile] = useState();
   const [uploadFile, setUploadFile] = useState();
   const compID = sessionStorage.getItem("compID");
   const YearRecorid = sessionStorage.getItem("YearRecorid");
   const [errorMsgData, setErrorMsgData] = useState(null);
+
+
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -175,25 +188,25 @@ const Listview = () => {
   //   [listViewcolumn]
   // );
   const columns = React.useMemo(
-  () =>
-    listViewcolumn.filter(filterByID)
-      ? [
-          {
-            field: "slno",
-            headerName: "SL#",
-            width: 50,
-            sortable: false,
-            filterable: false,
-            valueGetter: (params) =>
-              page * pageSize +
-              params.api.getRowIndexRelativeToVisibleRows(params.id) +
-              1,
-          },
-          ...listViewcolumn.filter(filterByID),
-        ]
-      : [],
-  [listViewcolumn, page, pageSize] // include page & pageSize as deps
-);
+    () =>
+      listViewcolumn.filter(filterByID)
+        ? [
+            {
+              field: "slno",
+              headerName: "SL#",
+              width: 50,
+              sortable: false,
+              filterable: false,
+              valueGetter: (params) =>
+                page * pageSize +
+                params.api.getRowIndexRelativeToVisibleRows(params.id) +
+                1,
+            },
+            ...listViewcolumn.filter(filterByID),
+          ]
+        : [],
+    [listViewcolumn, page, pageSize] // include page & pageSize as deps
+  );
   // console.log("🚀 ~ file: Listview.jsx:88 ~ Listview ~ columns:", columns)
 
   const columnShow = React.useMemo(
@@ -221,60 +234,59 @@ const Listview = () => {
     setUploadFile(fileData.payload.apiResponse);
   };
 
-const [productFilter,setProductFilter] = useState();
-  const searchProduct = async() => {
-    if(!productFilter){
+  const [productFilter, setProductFilter] = useState();
+  const searchProduct = async () => {
+    if (!productFilter) {
       toast.success("Please type modelno");
       return;
     }
     const idata = {
-      accessID:accessID,
-      filter: productFilter
+      accessID: accessID,
+      filter: productFilter,
+    };
 
-    }
-
-    const response = await dispatch(searchData({ data:idata}));
+    const response = await dispatch(searchData({ data: idata }));
     if (response.payload.status == 200) {
       // toast.success(response.payload.message);
-   
-      if(accessID == "TR002"){
+
+      if (accessID == "TR002") {
         navigate(
           `/Apps/Secondarylistview/TR001/Product Master/${response.payload.data.PRD_PGRID}/${response.payload.data.PGR_DESC}`
         );
       }
-      if(accessID == "TR044"){
+      if (accessID == "TR044") {
         navigate(
           `/Apps/Secondarylistview/TR004/List of Materials/${response.payload.data.MGR_ID}/${response.payload.data.MGR_TYPE}/${response.payload.data.MTL_DESC}/${response.payload.data.MGR_MGROUP}/pm/`
         );
       }
-        
-      
     } else {
-      toast.error(response.payload.message ? response.payload.message : "Error" );
+      toast.error(
+        response.payload.message ? response.payload.message : "Error"
+      );
     }
-  }
-const fnLogOut = (props) => {
-      Swal.fire({
+  };
+  const fnLogOut = (props) => {
+    Swal.fire({
       title: errorMsgData.Warningmsg[props],
-        // text:data.payload.Msg,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: props,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (props === "Logout") {
-            navigate("/");
-          }
-          if (props === "Close") {
-            navigate("/Apps/TR027/Employees");
-          }
-        } else {
-          return;
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
         }
-      });
-    };
+        if (props === "Close") {
+          navigate("/Apps/TR027/Employees");
+        }
+      } else {
+        return;
+      }
+    });
+  };
   function CustomToolbar() {
     return (
       <GridToolbarContainer
@@ -293,10 +305,8 @@ const fnLogOut = (props) => {
             <MenuOutlinedIcon />
           </IconButton>
         )}
-        <Box sx={{ display: "flex", flexDirection: "row" ,gap:10 }}>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 10 }}>
           <Typography variant="h3">{screenName}</Typography>
-
-        
         </Box>
 
         <Box
@@ -361,7 +371,7 @@ const fnLogOut = (props) => {
           ) : (
             false
           )}
-        
+
           {screenName == "UOM Type" ? (
             false
           ) : screenName == "Invoice Category" ? (
@@ -370,7 +380,7 @@ const fnLogOut = (props) => {
             false
           ) : accessID == "TR059" ? (
             false
-          ): accessID == "TR286" ? (
+          ) : accessID == "TR286" ? (
             false
           ) : accessID == "TR072" ? (
             false
@@ -400,7 +410,7 @@ const fnLogOut = (props) => {
             false
           ) : accessID == "TR135" ? (
             false
-          ): accessID == "TR257" ? (
+          ) : accessID == "TR257" ? (
             false
           ) : YearFlag == "true" ? (
             // UGA_ADD ? (
@@ -512,17 +522,16 @@ const fnLogOut = (props) => {
 
   return (
     <React.Fragment>
-     
       <Box m="5px">
-      {accessID == "TR002" || accessID == "TR044" ? 
-      <Paper
+        {accessID == "TR002" || accessID == "TR044" ? (
+          <Paper
             component="form"
             sx={{
               p: "2px 4px",
               display: "flex",
               alignItems: "center",
               width: 300,
-              height:30
+              height: 30,
             }}
           >
             <InputBase
@@ -531,83 +540,95 @@ const fnLogOut = (props) => {
               inputProps={{ "aria-label": "search google maps" }}
               type="text"
               value={productFilter}
-              onChange={(e)=>setProductFilter(e.target.value)}
+              onChange={(e) => setProductFilter(e.target.value)}
             />
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-            <IconButton disabled={searchLoading} type="button" sx={{ p: "10px" }} aria-label="search">
-            {searchLoading?<CircularProgress size={20} /> : <SearchIcon onClick={searchProduct} />}
+            <IconButton
+              disabled={searchLoading}
+              type="button"
+              sx={{ p: "10px" }}
+              aria-label="search"
+            >
+              {searchLoading ? (
+                <CircularProgress size={20} />
+              ) : (
+                <SearchIcon onClick={searchProduct} />
+              )}
             </IconButton>
-          </Paper>:false}
-          <Box m="5px">
+          </Paper>
+        ) : (
+          false
+        )}
+        <Box m="5px">
           <Box
-          m="5px 0 0 0"
-          padding={2}
-          height={dataGridHeight}
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .name-column--cell": {
-              color: colors.greenAccent[300],
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[800],
-              // borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: colors.primary[400],
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
-              backgroundColor: colors.blueAccent[800],
-            },
-            "& .MuiCheckbox-root": {
-              color: `${colors.greenAccent[200]} !important`,
-            },
-            "& .odd-row": {
-              backgroundColor: "",
-              color: "", // Color for odd rows
-            },
-            "& .even-row": {
-              backgroundColor: "#d0edec",
-              color: "", // Color for even rows
-            },
-          }}
-        >
-          <DataGrid
+            m="5px 0 0 0"
+            padding={2}
+            height={dataGridHeight}
             sx={{
-              "& .MuiDataGrid-footerContainer":{
-                height:dataGridHeaderFooterHeight,
-                minHeight:dataGridHeaderFooterHeight,
-              }
-             }}
-            key={accessID}
-            rows={rows}
-            // columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
-            columns={columns}
-            loading={loading}
-            disableSelectionOnClick
-            rowHeight={dataGridRowHeight}
-            headerHeight={dataGridHeaderFooterHeight}
-            getRowId={(row) => row.RecordID}
-            pageSize={pageSize}
-            page={page}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            rowsPerPageOptions={[5, 10, 15, 20]}
-            onPageChange={(pageno) => handlePagechange(pageno)}
-            getRowClassName={(params) =>
-              params.indexRelativeToCurrentPage % 2 === 0
-                ? 'odd-row'
-                : 'even-row'
-            }
-            components={{
-              Toolbar: CustomToolbar,
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .name-column--cell": {
+                color: colors.greenAccent[300],
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: colors.blueAccent[800],
+                // borderBottom: "none",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: colors.primary[400],
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "none",
+                backgroundColor: colors.blueAccent[800],
+              },
+              "& .MuiCheckbox-root": {
+                color: `${colors.greenAccent[200]} !important`,
+              },
+              "& .odd-row": {
+                backgroundColor: "",
+                color: "", // Color for odd rows
+              },
+              "& .even-row": {
+                backgroundColor: "#d0edec",
+                color: "", // Color for even rows
+              },
             }}
-          />
-        </Box> 
+          >
+            <DataGrid
+              sx={{
+                "& .MuiDataGrid-footerContainer": {
+                  height: dataGridHeaderFooterHeight,
+                  minHeight: dataGridHeaderFooterHeight,
+                },
+              }}
+              key={accessID}
+              rows={rows}
+              // columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
+              columns={columns}
+              loading={loading}
+              disableSelectionOnClick
+              rowHeight={dataGridRowHeight}
+              headerHeight={dataGridHeaderFooterHeight}
+              getRowId={(row) => row.RecordID}
+              pageSize={pageSize}
+              page={page}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              rowsPerPageOptions={[5, 10, 15, 20]}
+              onPageChange={(pageno) => handlePagechange(pageno)}
+              getRowClassName={(params) =>
+                params.indexRelativeToCurrentPage % 2 === 0
+                  ? "odd-row"
+                  : "even-row"
+              }
+              components={{
+                Toolbar: CustomToolbar,
+              }}
+            />
+          </Box>
         </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
@@ -633,10 +654,9 @@ const fnLogOut = (props) => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR278" ? (
+        ) : accessID == "TR278" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            
-             <Chip
+            <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
@@ -652,7 +672,7 @@ const fnLogOut = (props) => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR058" ? (
+        ) : accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
@@ -901,27 +921,30 @@ const fnLogOut = (props) => {
               variant="outlined"
             />
           </Box>
-        ) 
-        : accessID == "TR275" ? (
+        ) : accessID == "TR275" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap="5px">
             {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
             /> */}
-             <Chip
+            <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
             />
-             {/* <Chip
+            <Chip
+              icon={<PictureAsPdfIcon color="error" />}
+              label="Download PDF"
+              variant="outlined"
+            />
+            {/* <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label="List of Milestone"
               variant="outlined"
             /> */}
           </Box>
-       )
-       : (
+        ) : (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
