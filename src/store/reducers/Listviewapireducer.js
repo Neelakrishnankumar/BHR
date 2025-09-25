@@ -1,8 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import { Button, IconButton, Tooltip, Stack, Box, Alert } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Tooltip,
+  Stack,
+  Box,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,7 +41,7 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
-import { StockProcessApi } from "./Formapireducer";
+import { getProjectCosting, StockProcessApi } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
@@ -53,8 +61,13 @@ import { Visibility } from "@mui/icons-material";
 import QuizIcon from "@mui/icons-material/Quiz";
 
 import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ProjectPDF from "../../apps/pages/HR/ProjectPDF";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { pdf } from "@react-pdf/renderer";
 
 
 const initialState = {
@@ -483,6 +496,23 @@ export const fetchListview =
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
+  const UserName = sessionStorage.getItem("UserName");
+
+    //PROJECTPDFGET
+
+    // const handlePDFGET = (ProjectID, EmployeeID) => {
+    //   console.log("Dispatching with:", { ProjectID, EmployeeID });
+    //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+    // };
+
+
+// const handlePDFGET = (ProjectID, EmployeeID) => {
+//   const dispatch = store.dispatch; // use store directly
+//   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
+//   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+// };
+
+
     if (
       filter != "" &&
       AccessID !== "TR115" &&
@@ -922,8 +952,138 @@ export const fetchListview =
                 );
               },
             };
-          }
+          } else if (AccessID == "TR275") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+   const dispatch = store.dispatch;
 
+const PDFButton = ({ ProjectID, EmployeeID }) => {
+  const dispatch = store.dispatch;
+  const [loading, setLoading] = React.useState(false);
+
+  const handlePDFGET = async () => {
+    try {
+      setLoading(true);
+
+      const resultAction = await dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+
+      const data = resultAction.payload; // <-- this depends on how your thunk is defined
+     if (!data?.HeaderData?.DetailData?.length) {
+      alert("No Costing available to generate PDF. Kindly add costing...");
+      return;
+    }
+
+      // Generate and download PDF
+      const blob = await pdf(<ProjectPDF data={data} UserName={UserName}/>).toBlob();
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Project.pdf";
+      link.click();
+    } catch (err) {
+      console.error("PDF generation failed", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Tooltip title="Download PDF">
+      <IconButton color="info" size="small" onClick={handlePDFGET}>
+        {loading ? <CircularProgress size={20} /> : <PictureAsPdfIcon color="error" />}
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+                return (
+                  <Box>
+                    <Link to={`./EditProject/${params.row.RecordID}/E`}>
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* <Tooltip title="Download PDF">
+                      <IconButton
+                        color="info"
+                        size="small"
+                        onClick={() => handlePDFGET(params.row.RecordID, params.row.InchargeID)}
+
+                      >
+                        <PDFDownloadLink
+                          document={
+                            <ProjectPDF
+                            //data={projectCostinggetdata}
+                            />
+                          }
+                          fileName="Project.pdf"
+                        >
+                          {({ loading }) =>
+                            loading ? (
+                              <CircularProgress size={20} />
+                            ) : (
+                              <PictureAsPdfIcon color="error" />
+                            )
+                          }
+                        </PDFDownloadLink>
+                      </IconButton>
+                    </Tooltip> */}
+
+                    {/* <Tooltip title="Download PDF">
+                      <IconButton
+                        color="info"
+                        size="small"
+                        onClick={() =>
+                          handlePDFGET(
+                            params.row.RecordID,
+                            params.row.InchargeID,
+                            dispatch
+                          )
+                        }
+                      >
+                        {projectCostingloading ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          <PDFDownloadLink
+                            document={
+                              <ProjectPDF data={projectCostinggetdata} />
+                            }
+                            fileName="Project.pdf"
+                          >
+                            {({ loading }) =>
+                              loading ? (
+                                <CircularProgress size={20} />
+                              ) : (
+                                <PictureAsPdfIcon color="error" />
+                              )
+                            }
+                          </PDFDownloadLink>
+                        )}
+                      </IconButton>
+                    </Tooltip> */}
+       
+      <PDFButton
+        ProjectID={params.row.RecordID}
+        EmployeeID={params.row.InchargeID}
+      />
+
+                    
+                  </Box>
+                );
+              },
+            };
+          }
           // else if (AccessID == "TR286") {
           //   obj = {
           //     field: "action",
@@ -3690,7 +3850,9 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
 
           <Tooltip
             title={
-              ["Pdf", "Ppt"].includes(params.row.ContentType) ? "Download" : "Open Link"
+              ["Pdf", "Ppt"].includes(params.row.ContentType)
+                ? "Download"
+                : "Open Link"
             }
           >
             <IconButton
@@ -3698,7 +3860,9 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               size="small"
               onClick={async () => {
                 if (["Pdf", "Ppt"].includes(params.row.ContentType)) {
-                  const url = `${store.getState().globalurl.baseUrl}uploads/attachments/${params.row.AttachmentName}`;
+                  const url = `${
+                    store.getState().globalurl.baseUrl
+                  }uploads/attachments/${params.row.AttachmentName}`;
 
                   try {
                     const response = await fetch(url);

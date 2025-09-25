@@ -82,6 +82,9 @@ const initialState = {
   skillInsights2getdata:[],
   skillInsights2status:"",
   skillInsights2loading:false,
+  projectCostinggetdata:{},
+  projectCostingstatus:"",
+  projectCostingloading:false,
 
 };
 
@@ -1114,6 +1117,31 @@ export const getInsights2 = createAsyncThunk(
     const response = await axios.post(
       url,
       {  AssessmentID : AssessmentID}, 
+      {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      }
+    );
+
+    console.log("API Response:", response.data);
+    return response.data;
+  }
+);
+
+//PROJECT COSTING
+export const getProjectCosting = createAsyncThunk(
+  "getProjectCosting/get",
+  async ({ProjectID,EmployeeID}) => {
+    const url = store.getState().globalurl.ProjectCostingPDF;
+
+    const response = await axios.post(
+      url,
+      {  
+        ProjectID,
+        EmployeeID
+      }, 
       {
         headers: {
           Authorization:
@@ -2482,6 +2510,24 @@ export const getApiSlice = createSlice({
   .addCase(getInsights2.rejected, (state, action) => {
     state.skillInsights2getdata = [];
     state.skillInsights2loading = false;
+    state.error = action.error.message;
+  })
+
+
+  //PROJECT COSTING PDF
+  .addCase(getProjectCosting.pending, (state) => {
+    state.projectCostinggetdata = {};
+    state.projectCostingloading = true;
+    state.error = null;
+  })
+  .addCase(getProjectCosting.fulfilled, (state, action) => {
+    state.projectCostinggetdata = action.payload.Data;
+    state.projectCostingloading = false;
+    state.error = null;
+  })
+  .addCase(getProjectCosting.rejected, (state, action) => {
+    state.projectCostinggetdata = {};
+    state.projectCostingloading = false;
     state.error = action.error.message;
   })
 

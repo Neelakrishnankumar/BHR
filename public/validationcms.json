@@ -195,7 +195,8 @@
     },
     "SkillGlowCategory": {
         "Code": "Please Enter the Code",
-        "Name": "Please Enter the Name"
+        "Name": "Please Enter the Name",
+        "AssessmentType": "Kindly Select A Type"
     },
     "SkillGlowSession": {
         "Code": "Please Enter the Code",
