@@ -21,7 +21,8 @@
     "Code": "Please Enter the Code",
     "name": "Please Enter the Description",
     "incharge": "Please Enter the Owner",
-    "CurrentStatus": "Please Enter the Status"
+    "CurrentStatus": "Please Enter the Status",
+    "budget": "Please Enter the Budget"
   },
   "Function": {
     "code": "Please Enter the Code",
@@ -101,7 +102,9 @@
     "function": "Please Enter the Function",
     "gate": "Please Enter the Gate",
     "Designation": "Please Enter the Designation",
-    "shift": "Please Enter the Shift"
+    "shift": "Please Enter the Shift",
+    "costofemployee": "Please Enter the Cost to Budget",
+    "costofcompany": "Please Enter the Cost to Company"
   },
   "ContractsIN": {
     "vendor": "Please Enter the Vendor",
