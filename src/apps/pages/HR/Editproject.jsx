@@ -80,7 +80,7 @@ const Editproject = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Project.name),
-          // CurrentStatus: Yup.string().required(data.Project.CurrentStatus),
+          budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
         };
 
@@ -516,7 +516,12 @@ const Editproject = () => {
                     value={values.budget}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    label="Budget"
+                    // label="Budget"
+                     label={
+                      <>
+                        Budget<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                      </>
+                    }
                     sx={{
                       gridColumn: "span 1",
                       backgroundColor: "#ffffff", // Set the background to white
@@ -524,6 +529,8 @@ const Editproject = () => {
                         backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                       },
                     }}
+                    error={!!touched.budget && !!errors.budget}
+                    helperText={touched.budget && errors.budget}
                     focused
                     InputProps={{
                       
