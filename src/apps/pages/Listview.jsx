@@ -661,11 +661,11 @@ const Listview = () => {
               label="Edit"
               variant="outlined"
             />
-            <Chip
+            {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
-            />
+            /> */}
             <Chip
               icon={<Psychology color="primary" />}
               label="Assessment"

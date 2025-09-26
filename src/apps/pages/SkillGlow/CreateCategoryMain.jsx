@@ -58,6 +58,9 @@ const CreateCategoryMain = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
 
+  //AUTOCODE
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+
   //VALIDATION
   const [errorMsgData, setErrorMsgData] = useState(null);
 
@@ -72,14 +75,21 @@ const CreateCategoryMain = () => {
         setErrorMsgData(data);
         //Permission
         const schema = Yup.object().shape({
-          code: Yup.string().required(data.SkillGlowCategory.Code),
+          //code: Yup.string().required(data.SkillGlowCategory.Code),
           name: Yup.string().required(data.SkillGlowCategory.Name),
-          assessmentType: Yup.string().required(data.SkillGlowCategory.AssessmentType),
+          assessmentType: Yup.string().required(
+            data.SkillGlowCategory.AssessmentType
+          ),
         });
+        if (CompanyAutoCode === "N") {
+          schema = schema.shape({
+            code: Yup.string().required(data.SkillGlowCategory.Code),
+          });
+        }
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, []);
+  }, [CompanyAutoCode]);
 
   const CompanyID = sessionStorage.getItem("compID");
 
@@ -90,9 +100,18 @@ const CreateCategoryMain = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
 
-  const CategorySaveFn = async (values) => {
-    let action =
-      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+  const CategorySaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+    let action = "";
+
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
 
     var isCheck = "N";
     if (values.disable == true) {
@@ -107,6 +126,7 @@ const CreateCategoryMain = () => {
       AssessmentType: values.assessmentType,
       SortOrder: values.sortOrder || "0",
       Disable: isCheck,
+      DeleteFlag: values.delete == true ? "Y" : "N",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -146,6 +166,7 @@ const CreateCategoryMain = () => {
     assessmentType: Data.AssessmentType,
     sortOrder: Data.SortOrder,
     disable: Data.Disable == "Y" ? true : false,
+    delete: Data.DeleteFlag == "Y" ? true : false,
   };
 
   // const validationSchema = Yup.object({
@@ -244,35 +265,71 @@ const CreateCategoryMain = () => {
                     },
                   }}
                 >
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="text"
-                    //label="Code"
-                    label={
-                      <span>
-                        Code{" "}
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="text"
+                      label="Code"
+                      // label={
+                      //   <span>
+                      //     Code{" "}
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
+                      placeholder="Auto"
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="code"
+                      name="code"
+                      focused
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{ readOnly: true }}
+
+                    />
+                  ) : (
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="text"
+                      //label="Code"
+                      label={
+                        <span>
+                          Code{" "}
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </span>
-                      </span>
-                    }
-                    //placeholder="Category Code"
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="code"
-                    name="code"
-                    focused
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  />
+                      }
+                      //placeholder="Category Code"
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="code"
+                      name="code"
+                      focused
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                  )}
+
                   <TextField
                     // fullWidth
                     variant="standard"
@@ -301,29 +358,35 @@ const CreateCategoryMain = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
+                    autoFocus={CompanyAutoCode == "Y"}
                   />
-                    <TextField
-                      focused
-                      variant="standard"
-                      label={
-                        <>
-                          Assessment Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
-                      name="assessmentType"
-                      id="assessmentType"
-                      value={values.assessmentType}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      select
-                      error={!!touched.assessmentType && !!errors.assessmentType}
-                      helperText={touched.assessmentType && errors.assessmentType}
-                    >
-                      <MenuItem value={"SkillAssessment"}>Skill Assessment</MenuItem>
-                      <MenuItem value={"Appraisal"}>Appraisal</MenuItem>
-                      <MenuItem value={"Survey"}>Survey</MenuItem>
-                      <MenuItem value={"Feedback"}>Feedback</MenuItem>
-                    </TextField>
+                  <TextField
+                    focused
+                    variant="standard"
+                    label={
+                      <>
+                        Assessment Type
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    name="assessmentType"
+                    id="assessmentType"
+                    value={values.assessmentType}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    select
+                    error={!!touched.assessmentType && !!errors.assessmentType}
+                    helperText={touched.assessmentType && errors.assessmentType}
+                  >
+                    <MenuItem value={"SkillAssessment"}>
+                      Skill Assessment
+                    </MenuItem>
+                    <MenuItem value={"Appraisal"}>Appraisal</MenuItem>
+                    <MenuItem value={"Survey"}>Survey</MenuItem>
+                    <MenuItem value={"Feedback"}>Feedback</MenuItem>
+                  </TextField>
                   <TextField
                     fullWidth
                     variant="standard"
@@ -336,7 +399,7 @@ const CreateCategoryMain = () => {
                     name="sortOrder"
                     // error={!!touched.sortOrder && !!errors.sortOrder}
                     // helperText={touched.sortOrder && errors.sortOrder}
-                    
+
                     sx={{ background: "" }}
                     focused
                     onWheel={(e) => e.target.blur()}
@@ -351,22 +414,36 @@ const CreateCategoryMain = () => {
                       },
                     }}
                   />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="disable"
-                        checked={values.disable}
-                        onChange={handleChange}
-                      />
-                    }
-                    label="Disable"
-                    // sx={{
-                    //   marginTop: "20px",
-                    //   "@media (max-width:500px)": {
-                    //     marginTop: 0,
-                    //   },
-                    // }}
-                  />
+
+                  <Box>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="delete"
+                          checked={values.delete}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Delete"
+                    />
+
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="disable"
+                          checked={values.disable}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Disable"
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                    />
+                  </Box>
                 </Box>
                 <Box
                   display="flex"
@@ -375,13 +452,38 @@ const CreateCategoryMain = () => {
                   gap={2}
                 >
                   <LoadingButton
-                    color={mode == "D" ? "error" : "secondary"}
+                    color="secondary"
                     variant="contained"
                     type="submit"
                     loading={isLoading}
                   >
-                    {mode == "D" ? "Delete" : "Save"}
+                    Save
                   </LoadingButton>
+                  {mode == "E" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            CategorySaveFn(values, "harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : null}
                   <Button
                     variant="contained"
                     color="warning"

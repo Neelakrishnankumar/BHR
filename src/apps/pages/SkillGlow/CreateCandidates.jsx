@@ -41,7 +41,10 @@ import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
-import { SingleFormikSkillAutocomplete, SingleFormikSkillAutocompletePayload } from "./SkillGlowAutocomplete";
+import {
+  SingleFormikSkillAutocomplete,
+  SingleFormikSkillAutocompletePayload,
+} from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
 
 const CreateCandidates = () => {
@@ -67,7 +70,9 @@ const CreateCandidates = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-  const AssessmentAutoUrl = useSelector((state) => state.globalurl.AssessmentAutoUrl);
+  const AssessmentAutoUrl = useSelector(
+    (state) => state.globalurl.AssessmentAutoUrl
+  );
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   useEffect(() => {
@@ -79,12 +84,14 @@ const CreateCandidates = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          assessment: Yup.object().required(data.ListofAssessCat.assessment).nullable(),
+          assessment: Yup.object()
+            .required(data.ListofAssessCat.assessment)
+            .nullable(),
           Date: Yup.string().required(data.ListofAssessCat.Date),
           // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // disable: Yup.boolean(),
-        })
-        setValidationSchema(schema)
+        });
+        setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -92,10 +99,18 @@ const CreateCandidates = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
 
-  const ScheduleSaveFn = async (values) => {
-    let action =
-      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+  const ScheduleSaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+    let action = "";
 
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
     var isCheck = "N";
     if (values.Disable == true) {
       isCheck = "Y";
@@ -118,6 +133,7 @@ const CreateCandidates = () => {
       // Status: values.Status,
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
+      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -163,9 +179,14 @@ const CreateCandidates = () => {
       ? { RecordID: Data.AssessmentID, Name: Data.AssessmentName }
       : null,
     // Date: Data.Date || new Date().toISOString().split("T")[0],
-    Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date,
+    //Date: mode == "A" ? new Date().toISOString().split("T")[0] : Data.Date,
+    Date:
+      mode === "A"
+        ? new Date().toISOString().split("T")[0] // today
+        : Data.Date || new Date().toISOString().split("T")[0],
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
+    DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
 
   // const validationSchema = Yup.object({
@@ -237,7 +258,7 @@ const CreateCandidates = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    {mode == "A" ? "New" : mode == "D" ? "Delete" : "View"}
+                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -311,9 +332,11 @@ const CreateCandidates = () => {
                       helperText={touched.assessment && errors.assessment}
                       // url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
                       url={AssessmentAutoUrl}
-                      payload={{ "SkillCategorieID": params.parentID1, "EmployeeID": EmpId }}
-                    //inputProps={{ disabled: mode == "V" }}
-
+                      payload={{
+                        SkillCategorieID: params.parentID1,
+                        EmployeeID: EmpId,
+                      }}
+                      //inputProps={{ disabled: mode == "V" }}
                     />
                     <TextField
                       name="Date"
@@ -321,7 +344,11 @@ const CreateCandidates = () => {
                       id="Date"
                       label={
                         <>
-                          Date<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                          Date
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
                         </>
                       }
                       variant="standard"
@@ -332,7 +359,9 @@ const CreateCandidates = () => {
                       error={!!touched.Date && !!errors.Date}
                       helperText={touched.Date && errors.Date}
                       sx={{ background: "" }}
-                      inputProps={{ readOnly: true }}
+                      InputProps={{
+                        readOnly: mode === "A", 
+                      }}
                     />
 
                     {/* SORT ORDER */}
@@ -348,8 +377,7 @@ const CreateCandidates = () => {
                       name="Sortorder"
                       // error={!!touched.Sortorder && !!errors.Sortorder}
                       // helperText={touched.Sortorder && errors.Sortorder}
-                      
-                      
+
                       sx={{ background: "" }}
                       focused
                       onWheel={(e) => e.target.blur()}
@@ -361,29 +389,48 @@ const CreateCandidates = () => {
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
-                          readOnly: mode == "V",
+                          //readOnly: mode == "V",
                         },
                       }}
                     />
 
                     {/* CHECKBOX */}
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="Disable"
-                          checked={values.Disable}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Disable"
-                      sx={{
-                        marginTop: "20px",
-                        "@media (max-width:500px)": {
-                          marginTop: 0,
-                        },
-                      }}
-                      inputProps={{ readOnly: mode == "V" }}
-                    />
+                    <Box>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="DeleteFlag"
+                            checked={values.DeleteFlag}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Delete"
+                        sx={{
+                          marginTop: "20px",
+                          "@media (max-width:500px)": {
+                            marginTop: 0,
+                          },
+                        }}
+                        //inputProps={{ readOnly: mode == "V" }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="Disable"
+                            checked={values.Disable}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Disable"
+                        sx={{
+                          marginTop: "20px",
+                          "@media (max-width:500px)": {
+                            marginTop: 0,
+                          },
+                        }}
+                        //inputProps={{ readOnly: mode == "V" }}
+                      />
+                    </Box>
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -395,12 +442,39 @@ const CreateCandidates = () => {
                     <LoadingButton
                       type="submit"
                       variant="contained"
-                      color={mode == "D" ? "error" : "secondary"}
+                      color="secondary"
                       loading={isLoading}
-                      disabled={mode == "V" ? true : false}
+                      //disabled={mode == "V" ? true : false}
                     >
-                      {mode == "D" ? "Delete" : "Save"}
+                      Save
                     </LoadingButton>
+
+                    {mode == "E" ? (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Delete,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              ScheduleSaveFn(values, "harddelete");
+                              // navigate(-1);
+                            } else {
+                              return;
+                            }
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : null}
+
                     <Button
                       variant="contained"
                       color="warning"
