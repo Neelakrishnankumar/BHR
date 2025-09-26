@@ -98,9 +98,20 @@ const CreateCategory = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
 
-  const QuestionGrpSaveFn = async (values) => {
-    let action =
-      mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+  const QuestionGrpSaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+
+
+let action = "";
+
+  if (mode === "A") {
+    action = "insert";
+  } else if (mode === "E" && delAction === "harddelete") {
+    action = "harddelete";
+  } else if (mode === "E") {
+    action = "update";
+  }
 
     var isCheck = "N";
     if (values.Disable == true) {
@@ -116,6 +127,8 @@ const CreateCategory = () => {
       Answertype: values.AnswerType,
       SortOrder: values.SortOrder || "0",
       Disable: isCheck,
+      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
+
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -178,6 +191,7 @@ const CreateCategory = () => {
     AvailableNoOfQuestion: Data.AvailableNoOfQues || "",
     SortOrder: Data.SortOrder || "",
     Disable: Data.Disable == "Y" ? true : false,
+    DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
 
   // const validationSchema = Yup.object({
@@ -498,7 +512,19 @@ const CreateCategory = () => {
                         },
                       }}
                     />
+
+                    <Box>
                     {/* CHECKBOX */}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="DeleteFlag"
+                          checked={values.DeleteFlag}
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Delete"
+                    />
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -509,6 +535,7 @@ const CreateCategory = () => {
                       }
                       label="Disable"
                     />
+                    </Box>
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -520,11 +547,37 @@ const CreateCategory = () => {
                     <LoadingButton
                       type="submit"
                       variant="contained"
-                      color={mode == "D" ? "error" : "secondary"}
+                      color="secondary"
                       loading={isLoading}
                     >
-                      {mode == "D" ? "Delete" : "Save"}
+                      Save
                     </LoadingButton>
+{mode == "E" ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            QuestionGrpSaveFn(values, "harddelete");
+                            // navigate(-1);
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ) : null}
+
                     <Button
                       variant="contained"
                       color="warning"

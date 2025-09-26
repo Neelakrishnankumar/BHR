@@ -2787,11 +2787,11 @@ const ListviewSecondary = () => {
               label="Edit"
               variant="outlined"
             />
-            <Chip
+            {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
-            />
+            /> */}
 
             <Chip
               icon={<Category color="primary" />}
@@ -2814,16 +2814,21 @@ const ListviewSecondary = () => {
           </Box>
         ) : accessID == "TR283" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            <Chip
+            {/* <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
-            />
+            /> */}
             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
-            />
+            /> */}
           </Box>
         ) : accessID == "TR281" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
@@ -2834,11 +2839,11 @@ const ListviewSecondary = () => {
               label="Edit"
               variant="outlined"
             />
-            <Chip
+            {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
-            />
+            /> */}
             <Chip
               icon={<QuizIcon color="primary" />}
               label="Question"
@@ -2852,11 +2857,11 @@ const ListviewSecondary = () => {
               label="Edit"
               variant="outlined"
             />
-            <Chip
+            {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
-            />
+            /> */}
           </Box>
         ) : accessID == "TR279" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">

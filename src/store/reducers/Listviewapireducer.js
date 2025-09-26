@@ -3751,7 +3751,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         {accessID !== "TR279" &&
           accessID !== "TR288" &&
           accessID !== "TR286" &&
-          accessID !== "TR283" && (
+           (
             <Tooltip title="Edit">
               <IconButton
                 color="info"
@@ -3781,7 +3781,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         </Tooltip>)} */}
 
         {/* VIEW FOR SCHEDULE*/}
-        {accessID == "TR283" && (
+        {/* {accessID == "TR283" && (
           <IconButton
             color="primary"
             size="small"
@@ -3795,10 +3795,15 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               <Visibility />
             </Tooltip>
           </IconButton>
-        )}
+        )} */}
         {/* DELETE */}
         {accessID != "TR279" &&
+        accessID !== "TR278" &&
+        accessID !== "TR280" &&
+        accessID !== "TR281" &&
+        accessID !== "TR282" &&
           accessID !== "TR288" &&
+          accessID !== "TR283" &&
           accessID !== "TR286" && (
             <Tooltip title="Delete">
               <IconButton
