@@ -12,10 +12,10 @@ import {
   MenuItem,
   Checkbox,
   FormControlLabel,
-  Chip
+  Chip,
 } from "@mui/material";
-import AlarmOffIcon from '@mui/icons-material/AlarmOff';
-import DeckIcon from '@mui/icons-material/Deck';
+import AlarmOffIcon from "@mui/icons-material/AlarmOff";
+import DeckIcon from "@mui/icons-material/Deck";
 import {
   dataGridHeaderFooterHeight,
   dataGridHeight,
@@ -66,6 +66,7 @@ const EditAttendance = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
+  const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = useState(31);
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
@@ -118,7 +119,6 @@ const EditAttendance = () => {
     } else {
       setproData(null);
     }
-
   };
   const AttColumn = [
     // {
@@ -126,14 +126,35 @@ const EditAttendance = () => {
     //   headerName: "SL#",
     //   width:50
     // },
-    {
+    // {
+    //   field: "slno",
+    //   headerName: "SL#",
+    //   width: 50,
+    //   sortable: false,
+    //   filterable: false,
+    //   valueGetter: (params) =>
+    //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+    // },
+      {
       field: "slno",
       headerName: "SL#",
-      width: 50,
+      width: 60,
       sortable: false,
       filterable: false,
-      valueGetter: (params) =>
-        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
     },
     {
       field: "action",
@@ -143,41 +164,43 @@ const EditAttendance = () => {
       renderCell: (params) => {
         if (params.row.Status === "WeekOff") {
           return <AlarmOffIcon color="primary" titleAccess="WeekOff" />;
-
-
         }
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
-
         }
         return null;
-      }
+      },
     },
     {
       field: "EmplyeeCheckInDateTime",
       headerName: "Employee Check In Date Time",
       flex: 1,
+      headerAlign: "center",
     },
     {
       field: "EmplyeeCheckOutDateTime",
       headerName: "Employee Check Out Date Time",
       flex: 1,
+      headerAlign: "center",
     },
     {
       field: "NumberOfHoursWorked",
       headerName: "Worked Hours",
       flex: 1,
+      headerAlign: "center",
     },
     {
       field: "Status",
       headerName: "Status",
       flex: 1,
+      headerAlign: "center",
     },
     {
       field: "Commend",
       headerName: "Comments",
       width: 150,
-      headerAlign: "center"
+      headerAlign: "center",
+      
     },
   ];
 
@@ -197,17 +220,15 @@ const EditAttendance = () => {
       Month: values.month.toString(),
       Year: values.year,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
-      // ProjectID: proData.RecordID 
+      // ProjectID: proData.RecordID
       ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
       // CompanyID
-
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
 
     // setButtonVisible(true)
   };
-
 
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
@@ -231,13 +252,10 @@ const EditAttendance = () => {
     if (newValue) {
       setempData(newValue);
       console.log(newValue.RecordID, "--selectedproductid");
-
-
-
     } else {
       setempData(null);
     }
-    setUseCurrentEmp(false)
+    setUseCurrentEmp(false);
   };
 
   let employeeFilter = `CompanyID='${CompanyID}'`;
@@ -248,18 +266,19 @@ const EditAttendance = () => {
     employeeFilter = `CompanyID='${CompanyID}' GROUP BY RecordID`;
   }
 
-  const employeeUrl = `${listViewurl}?data=${encodeURIComponent(JSON.stringify({
-    Query: {
-      AccessID: proData ? "2024" : "2117", // or "2101" if you're using EMPLOYEETEAMS
-      ScreenName: "Employee",
-      Filter: employeeFilter,
-      Any: "",
-      CompId: ""
-    }
-  }))}`;
+  const employeeUrl = `${listViewurl}?data=${encodeURIComponent(
+    JSON.stringify({
+      Query: {
+        AccessID: proData ? "2024" : "2117", // or "2101" if you're using EMPLOYEETEAMS
+        ScreenName: "Employee",
+        Filter: employeeFilter,
+        Any: "",
+        CompId: "",
+      },
+    })
+  )}`;
 
   console.log(proData, "--find proData");
-
 
   const [useCurrentEmp, setUseCurrentEmp] = useState(false);
   return (
@@ -405,7 +424,6 @@ const EditAttendance = () => {
 
                      /> */}
 
-
                   <Employeeautocomplete
                     sx={{ width: 400 }}
                     name="ProName"
@@ -415,14 +433,16 @@ const EditAttendance = () => {
                     onChange={handleSelectionProjectChange}
                     error={!!touched.ProName && !!errors.ProName}
                     helperText={touched.ProName && errors.ProName}
-                    url={`${listViewurl}?data=${encodeURIComponent(JSON.stringify({
-                      Query: {
-                        AccessID: "2054",
-                        ScreenName: "Project",
-                        Filter: `parentID=${CompanyID}`,
-                        Any: ""
-                      }
-                    }))}`}
+                    url={`${listViewurl}?data=${encodeURIComponent(
+                      JSON.stringify({
+                        Query: {
+                          AccessID: "2054",
+                          ScreenName: "Project",
+                          Filter: `parentID=${CompanyID}`,
+                          Any: "",
+                        },
+                      })
+                    )}`}
                   />
 
                   <Employeeautocomplete
@@ -507,11 +527,11 @@ const EditAttendance = () => {
                           }}
                         />
                       }
-                      fileName={`Attendance_Report_${empData?.Name || "Employee"
-                        }.pdf`}
+                      fileName={`Attendance_Report_${
+                        empData?.Name || "Employee"
+                      }.pdf`}
                       style={{ color: "#d32f2f", cursor: "pointer" }}
                     >
-
                       {({ loading }) =>
                         loading ? (
                           <PictureAsPdfIcon
@@ -564,11 +584,11 @@ const EditAttendance = () => {
                     },
                     "& .weekoff-row": {
                       backgroundColor: "#f2acb7", // light red
-                      color: "#b71c1c",            // dark red text
+                      color: "#b71c1c", // dark red text
                     },
                     "& .holiday-row": {
                       backgroundColor: "#c9f5cc", // light green
-                      color: "#1b5e20",            // dark green text
+                      color: "#1b5e20", // dark green text
                     },
                   }}
                 >
@@ -586,8 +606,10 @@ const EditAttendance = () => {
                     disableSelectionOnClick
                     getRowId={(row) => row.SLNO}
                     pageSize={pageSize}
+                    page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onCellClick={(params) => { }}
+                    onPageChange={(newPage) => setPage(newPage)}
+                    onCellClick={(params) => {}}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
@@ -612,11 +634,18 @@ const EditAttendance = () => {
                       const status = params.row.Status;
                       if (status === "WeekOff") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
-                      return params.indexRelativeToCurrentPage % 2 === 0 ? "odd-row" : "even-row";
+                      return params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row";
                     }}
                   />
                 </Box>
-                <Box display="flex" flexDirection="row" padding="15px" gap={formGap}>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  padding="15px"
+                  gap={formGap}
+                >
                   <Chip
                     icon={<AlarmOffIcon color="primary" />}
                     label="WeekOff"
@@ -646,4 +675,3 @@ const EditAttendance = () => {
 };
 
 export default EditAttendance;
-
