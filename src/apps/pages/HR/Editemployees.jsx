@@ -90,10 +90,16 @@ import {
 
 const Editemployee = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  var secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
   const [pageSize, setPageSize] = React.useState(10);
+  const [page, setPage] = React.useState(secondaryCurrentPage);
+  const [pageSize2, setPageSize2] = React.useState(10);
+  const [pageSize1, setPageSize1] = React.useState(10);
+  const [page1, setPage1] = React.useState(secondaryCurrentPage);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const CompanyID = sessionStorage.getItem("compID");
@@ -236,7 +242,6 @@ const Editemployee = () => {
           shift: Yup.object().required(data.Deployment.shift).nullable(),
           costofemployee: Yup.string().required(data.Deployment.costofemployee),
           costofcompany: Yup.string().required(data.Deployment.costofcompany),
-
         });
         setValidationSchema2(schema2);
 
@@ -1096,23 +1101,72 @@ const Editemployee = () => {
   //     ),
   //   [explorelistViewcolumn]
   // );
+  const handlePagechange = (pageno) => {
+    setPage(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+   const handlePagechange1 = (pageno) => {
+    setPage1(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
   const columns = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
     );
 
     if (VISIBLE_FIELDS.includes("slno")) {
+      //  const slnoColumn = {
+      //   field: "slno",
+      //   headerName: "SL#",
+      //   width: 50,
+      //   sortable: false,
+      //   filterable: false,
+      //   valueGetter: (params) =>
+      //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+      // };
       const slnoColumn = {
-        field: "slno",
-        headerName: "SL#",
-        width: 50,
-        sortable: false,
-        filterable: false,
-        valueGetter: (params) =>
-          `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
-      };
+          field: "slno",
+          headerName: "SL#",
+          width: 50,
+          sortable: false,
+          filterable: false,
+          valueGetter: (params) =>
+            page * pageSize +
+            params.api.getRowIndexRelativeToVisibleRows(params.id) +
+            1,
+        };
+        visibleColumns = [slnoColumn, ...visibleColumns];
+    }
 
-      visibleColumns = [slnoColumn, ...visibleColumns];
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+   const columns1 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      //  const slnoColumn = {
+      //   field: "slno",
+      //   headerName: "SL#",
+      //   width: 50,
+      //   sortable: false,
+      //   filterable: false,
+      //   valueGetter: (params) =>
+      //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+      // };
+      const slnoColumn = {
+          field: "slno",
+          headerName: "SL#",
+          width: 50,
+          sortable: false,
+          filterable: false,
+          valueGetter: (params) =>
+            page1 * pageSize1 +
+            params.api.getRowIndexRelativeToVisibleRows(params.id) +
+            1,
+        };
+        visibleColumns = [slnoColumn, ...visibleColumns];
     }
 
     return visibleColumns;
@@ -4040,14 +4094,16 @@ const Editemployee = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns1}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize1}
+                        page={page1}
+                        onPageChange={(pageno) => handlePagechange1(pageno)}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize1(newPageSize)
                         }
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
@@ -5746,7 +5802,9 @@ const Editemployee = () => {
                       label={
                         <>
                           Cost to Company
-                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       sx={{
@@ -5780,7 +5838,9 @@ const Editemployee = () => {
                       label={
                         <>
                           Cost to Budget
-                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       sx={{
@@ -8864,10 +8924,12 @@ const Editemployee = () => {
                           rowHeight={dataGridRowHeight}
                           headerHeight={dataGridHeaderFooterHeight}
                           pageSize={pageSize}
+                          page={page}
                           onPageSizeChange={(newPageSize) =>
                             setPageSize(newPageSize)
                           }
-                          rowsPerPageOptions={[5, 10, 20]}
+                          rowsPerPageOptions={[5, 10, 15, 20]}
+                          onPageChange={(pageno) => handlePagechange(pageno)}
                           pagination
                           onCellClick={(params) => {
                             selectCellRowData({

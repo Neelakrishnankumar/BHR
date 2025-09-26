@@ -196,7 +196,7 @@
 //       field: 'FuntionsName',
 //       headerName: 'FuntionsName',
 //       width: 130,
-//     },  
+//     },
 //     {
 //       field: 'Description',
 //       headerName: 'Description',
@@ -220,7 +220,6 @@
 //       width: 130,
 //       hide:true
 //     },
-
 
 //     {
 //       field: 'FunctionCode',
@@ -361,7 +360,6 @@
 //     },
 
 //   ];
-
 
 //   const safeAttendanceData = Array.isArray(AttendanceData)
 //   ? AttendanceData
@@ -699,7 +697,6 @@
 //                                   </Stack>
 //                                 </Box>
 
-
 //                 <Box sx={{ gridColumn: "span 4" }}>
 //                   <Box
 //                     height="500px"
@@ -747,10 +744,8 @@
 //                                 }
 //                                }}
 
-
 //                                 rowHeight={dataGridRowHeight}
 //                                           headerHeight={dataGridHeaderFooterHeight}
-
 
 //                       rows={AttendanceData}
 //                       columns={AttColumn}
@@ -818,14 +813,13 @@
 //         </DialogActions>
 //       </Dialog>
 
-//         </Paper>  
+//         </Paper>
 
 //     </React.Fragment>
 //   );
 // };
 
 // export default EditTimeSheet;
-
 
 import React, { useState, useEffect } from "react";
 import {
@@ -929,7 +923,7 @@ const EditTimeSheet = () => {
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   useEffect(() => {
     dispatch(resetTrackingData());
-  }, [])
+  }, []);
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
   const projectName = useSelector((state) => state.formApi.projectName);
@@ -938,6 +932,7 @@ const EditTimeSheet = () => {
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [pageSize, setPageSize] = useState(25);
+  const [page, setPage] = React.useState(0);
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
   const EMPID = sessionStorage.getItem("EmpId");
@@ -1012,7 +1007,6 @@ const EditTimeSheet = () => {
     );
   }
 
-
   const AttColumn = [
     //    {
     //   field: "serialNo",
@@ -1025,14 +1019,35 @@ const EditTimeSheet = () => {
     //     return params.api.getRowIndex(params.id) + 1;
     //   },
     // },
+    // {
+    //   field: "slno",
+    //   headerName: "SL#",
+    //   width: 50,
+    //   sortable: false,
+    //   filterable: false,
+    //   valueGetter: (params) =>
+    //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+    // },
     {
       field: "slno",
       headerName: "SL#",
-      width: 50,
+      width: 60,
       sortable: false,
       filterable: false,
-      valueGetter: (params) =>
-        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
     },
     {
       field: "RecordID",
@@ -1050,21 +1065,25 @@ const EditTimeSheet = () => {
       field: "Date",
       headerName: "Date",
       width: 80,
+      headerAlign: "center",
     },
     {
       field: "ProjectName",
       headerName: "Project",
       width: 130,
+      headerAlign: "center",
     },
     {
       field: "DesignationsName",
       headerName: "Function",
       width: 130,
+      hide: true,
     },
     {
       field: "Description",
       headerName: "Description",
-      width: 400,
+      width: 600,
+      headerAlign: "center",
       renderCell: (params) => {
         const description = params.row.Description || "";
         const comments = params.row.Comments || "";
@@ -1095,6 +1114,7 @@ const EditTimeSheet = () => {
       field: "Status",
       headerName: "Status",
       width: 120,
+      headerAlign: "center",
     },
     // {
     //   field: "actions",
@@ -1257,7 +1277,6 @@ const EditTimeSheet = () => {
     ? AttColumn.filter((col) => col.field !== "actions")
     : AttColumn;
 
-
   const VISIBLE_FIELDS = [
     "SLNO",
     "OtDate",
@@ -1270,8 +1289,8 @@ const EditTimeSheet = () => {
     () =>
       explorelistViewColumn
         ? explorelistViewColumn.filter((column) =>
-          VISIBLE_FIELDS.includes(column.field)
-        )
+            VISIBLE_FIELDS.includes(column.field)
+          )
         : [],
     [explorelistViewColumn]
   );
@@ -1519,8 +1538,9 @@ const EditTimeSheet = () => {
                           }}
                         />
                       }
-                      fileName={`Attendance_Report_${empData?.Name || EMPNAME
-                        }.pdf`}
+                      fileName={`Attendance_Report_${
+                        empData?.Name || EMPNAME
+                      }.pdf`}
                       style={{ color: "#d32f2f", cursor: "pointer" }} // Red for PDF feel
                     >
                       {({ loading }) =>
@@ -1609,8 +1629,10 @@ const EditTimeSheet = () => {
                     disableSelectionOnClick
                     getRowId={(row) => row.RecordID}
                     pageSize={pageSize}
+                    page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onCellClick={(params) => { }}
+                    onPageChange={(newPage) => setPage(newPage)}
+                    onCellClick={(params) => {}}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
@@ -1672,5 +1694,3 @@ const EditTimeSheet = () => {
 };
 
 export default EditTimeSheet;
-
-

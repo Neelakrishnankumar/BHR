@@ -91,6 +91,7 @@ const EditAttendanceHistory = () => {
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = React.useState(0);
   const [rowCount, setRowCount] = useState(0);
   const [show, setScreen] = React.useState("0");
   const EMPID = sessionStorage.getItem("empID");
@@ -140,14 +141,34 @@ const EditAttendanceHistory = () => {
 
   const AttColumn = [
     // { field: "SLNO", headerName: "SL#", width: 5 },
-    {
+    // {
+    //   field: "slno",
+    //   headerName: "SL#",
+    //   width: 50,
+    //   sortable: false,
+    //   filterable: false,
+    //   valueGetter: (params) =>
+    //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+    // },
+     {
       field: "slno",
       headerName: "SL#",
-      width: 50,
+      width: 60,
       sortable: false,
       filterable: false,
-      valueGetter: (params) =>
-        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
     },
     { field: "Name", headerName: "Employee", width: 150 },
     { field: "Day1", headerName: "1", width: 5 },
@@ -610,9 +631,9 @@ const EditAttendanceHistory = () => {
                     disableSelectionOnClick
                     getRowId={(row) => row.SLNO}
                     pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) =>
-                      setPageSize(newPageSize)
-                    }
+                    page={page}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    onPageChange={(newPage) => setPage(newPage)}
                     onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
