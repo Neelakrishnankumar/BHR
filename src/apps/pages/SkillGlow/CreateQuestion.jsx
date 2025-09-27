@@ -83,8 +83,9 @@ const CreateQuestion = () => {
         setErrorMsgData(data);
 
         let schema = {};
-
-        schema.Code = Yup.string().required("Please Enter the Code");
+        if (CompanyAutoCode === "N") {
+          schema.Code = Yup.string().required("Please Enter the Code");
+        }
 
         schema.Question = Yup.string().required("Please Enter the Question");
 
@@ -158,7 +159,7 @@ const CreateQuestion = () => {
   const QuestionSaveFn = async (values, delAction) => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
-let action = "";
+    let action = "";
 
     if (mode === "A") {
       action = "insert";
@@ -364,7 +365,7 @@ let action = "";
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    {mode == "A" ? "New" : mode == "D"? "Delete" : "Edit"}
+                    {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -420,12 +421,43 @@ let action = "";
                     }}
                   >
                     {/* TEXTFIELD */}
+
+                    {CompanyAutoCode === "Y" ? (
                     <TextField
                       name="Code"
                       id="Code"
                       type="text"
                       variant="standard"
                       label="Code"
+                      placeholder="Auto"
+                      value={values.Code}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      focused
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{readOnly:true}}
+                    />
+                    ):(
+                     <TextField
+                      name="Code"
+                      id="Code"
+                      type="text"
+                      variant="standard"
+                      label={
+                        <span>
+                          Code{" "}
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </span>
+                      }
                       //placeholder="Code"
                       value={values.Code}
                       onChange={handleChange}
@@ -439,7 +471,10 @@ let action = "";
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         },
                       }}
+                      autoFocus
                     />
+                    )}
+
                     {/* TEXTFIELD */}
                     <TextField
                       variant="standard"
@@ -460,6 +495,8 @@ let action = "";
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         },
                       }}
+                      autoFocus={CompanyAutoCode == "Y"}
+
                     />
                     {/* DROPDOWN */}
 
@@ -527,38 +564,38 @@ let action = "";
 
                     {/* CHECKBOX */}
                     <Box>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="DeleteFlag"
-                          checked={values.DeleteFlag}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Delete"
-                      sx={{
-                        marginTop: "20px",
-                        "@media (max-width:500px)": {
-                          marginTop: 0,
-                        },
-                      }}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="Disable"
-                          checked={values.Disable}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Disable"
-                      sx={{
-                        marginTop: "20px",
-                        "@media (max-width:500px)": {
-                          marginTop: 0,
-                        },
-                      }}
-                    />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="DeleteFlag"
+                            checked={values.DeleteFlag}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Delete"
+                        sx={{
+                          marginTop: "20px",
+                          "@media (max-width:500px)": {
+                            marginTop: 0,
+                          },
+                        }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="Disable"
+                            checked={values.Disable}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Disable"
+                        sx={{
+                          marginTop: "20px",
+                          "@media (max-width:500px)": {
+                            marginTop: 0,
+                          },
+                        }}
+                      />
                     </Box>
                   </Box>
                   <Box padding={2}>
@@ -1198,30 +1235,30 @@ let action = "";
                     </LoadingButton>
 
                     {mode == "E" ? (
-                                        <Button
-                                          color="error"
-                                          variant="contained"
-                                          onClick={() => {
-                                            Swal.fire({
-                                              title: errorMsgData.Warningmsg.Delete,
-                                              icon: "warning",
-                                              showCancelButton: true,
-                                              confirmButtonColor: "#3085d6",
-                                              cancelButtonColor: "#d33",
-                                              confirmButtonText: "Confirm",
-                                            }).then((result) => {
-                                              if (result.isConfirmed) {
-                                                QuestionSaveFn(values, "harddelete");
-                                                // navigate(-1);
-                                              } else {
-                                                return;
-                                              }
-                                            });
-                                          }}
-                                        >
-                                          Delete
-                                        </Button>
-                                      ) : null}
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Delete,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              QuestionSaveFn(values, "harddelete");
+                              // navigate(-1);
+                            } else {
+                              return;
+                            }
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : null}
 
                     <Button
                       variant="contained"

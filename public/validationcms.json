@@ -209,6 +209,8 @@
   },
   "ListofAssessment": {
     "Code": "Please Enter the Code",
+    "DesignationID": "Please Select Designation",
+    "AppraisalType": "Please Select Appraisal Type",
     "Name": "Please Enter the Name",
     "Duration": "Please Enter the Duration (In Days)",
     "Permittedtimes": "Please Enter the No. Of Attempts Permitted",

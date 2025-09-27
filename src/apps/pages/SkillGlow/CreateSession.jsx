@@ -83,7 +83,7 @@ const CreateSession = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Code: Yup.string().required(data.ListofSession.Code),
+          //Code: Yup.string().required(data.ListofSession.Code),
           //Name: Yup.string().required(data.ListofSession.Name),
           Name: Yup.string().when("ContentType", {
             is: "Link",
@@ -103,6 +103,11 @@ const CreateSession = () => {
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
         });
+        if(CompanyAutoCode === "N"){
+          schema = schema.shape({
+            Code: Yup.string().required(data.ListofSession.Code),
+          })
+        }
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -327,6 +332,30 @@ const CreateSession = () => {
                     }}
                   >
                     {/* TEXTFIELD */}
+                    {CompanyAutoCode === "Y" ? (
+                    <TextField
+                      variant="standard"
+                      type="text"
+                      name="Code"
+                      label="Code"
+                      id="Code"
+                      placeholder="Auto"
+                      value={values.Code}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      focused
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      //disabled={mode === "V"}
+                      inputProps={{ readOnly: mode == "V" }}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                    />
+                    ):(
                     <TextField
                       variant="standard"
                       type="text"
@@ -355,7 +384,10 @@ const CreateSession = () => {
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         },
                       }}
+                      autoFocus
                     />
+                    )}
+
                     <TextField
                       variant="standard"
                       type="text"
@@ -384,6 +416,8 @@ const CreateSession = () => {
                         },
                       }}
                       inputProps={{ readOnly: mode == "V" }}
+                      autoFocus={CompanyAutoCode == "Y"}
+
                     />
 
                     {/* DROPDOWN */}

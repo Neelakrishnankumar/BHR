@@ -83,13 +83,19 @@ const CreateCategory = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Code: Yup.string().required(data.ListofQuestiongroup.Code),
+          //Code: Yup.string().required(data.ListofQuestiongroup.Code),
           Name: Yup.string().required(data.ListofQuestiongroup.Name),
           AnswerType: Yup.string().required(data.ListofQuestiongroup.AnswerType),
           NoOfQuestions: Yup.string().required(data.ListofQuestiongroup.NoOfQuestions),
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
         })
+
+        if(CompanyAutoCode === "N"){
+          schema = schema.shape({
+            Code: Yup.string().required(data.ListofQuestiongroup.Code),
+          })
+        }
         setValidationSchema(schema)
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -317,7 +323,32 @@ let action = "";
                     }}
                   >
                     {/* TEXTFIELD */}
+
+                    {CompanyAutoCode === "Y" ? (
                     <TextField
+                      variant="standard"
+                      name="Code"
+                      id="Code"
+                      placeholder="Auto"
+                      label="Code"
+                      type="text"
+                      focused
+                      value={values.Code}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{readOnly:true}}
+                    />
+                    ): (
+
+ <TextField
                       variant="standard"
                       name="Code"
                       id="Code"
@@ -340,7 +371,9 @@ let action = "";
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         },
                       }}
+                      autoFocus
                     />
+                    )}
 
                     {/* TEXTFIELD */}
                     <TextField
@@ -366,6 +399,7 @@ let action = "";
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         },
                       }}
+                    autoFocus={CompanyAutoCode == "Y"}
                     />
 
                       <TextField

@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
@@ -43,6 +43,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import { LoadingButton } from "@mui/lab";
 import toast from "react-hot-toast";
+import { AppraisalAutocompletePayload } from "./SkillGlowAutocomplete";
+import { fetchListview } from "../../../store/reducers/Listviewapireducer";
 
 const CreateSkill = () => {
   const navigate = useNavigate();
@@ -60,10 +62,12 @@ const CreateSkill = () => {
   console.log(state, "--------------");
 
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
   const recID = params.id;
   const accessID = params.accessID;
   const screenName = params.screenName;
+  const BreadCrumb = state.BreadCrumb1;
   const mode = params.Mode;
   const CatId = params.parentID1;
   const CompanyID = sessionStorage.getItem("compID");
@@ -75,39 +79,97 @@ const CreateSkill = () => {
   }, []);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
-  useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/validationcms.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-        return res.json();
-      })
-      .then((data) => {
-        setErrorMsgData(data);
-        const schema = Yup.object().shape({
-          //Code: Yup.string().required(data.ListofAssessment.Code),
-          Name: Yup.string().required(data.ListofAssessment.Name),
-          Duration: Yup.string().required(data.ListofAssessment.Duration),
-          Permittedtimes: Yup.number().required(
-            data.ListofAssessment.Permittedtimes
-          ),
-          Minimumscore: Yup.number().required(
-            data.ListofAssessment.Minimumscore
-          ),
-          //Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
-          Date: Yup.date().nullable().required(data.ListofAssessment.Date),
+  // useEffect(() => {
+  //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setErrorMsgData(data);
+  //       const schema = Yup.object().shape({
+  //         //Code: Yup.string().required(data.ListofAssessment.Code),
+  //         Name: Yup.string().required(data.ListofAssessment.Name),
+  //         Duration: Yup.string().required(data.ListofAssessment.Duration),
+  //         Permittedtimes: Yup.number().required(
+  //           data.ListofAssessment.Permittedtimes
+  //         ),
+  //         Minimumscore: Yup.number().required(
+  //           data.ListofAssessment.Minimumscore
+  //         ),
+  //         //Noofquestion: Yup.number().required(data.ListofAssessment.Noofquestion),
+  //         Date: Yup.date().nullable().required(data.ListofAssessment.Date),
+  //       });
+  //       if (CompanyAutoCode === "N") {
+  //         schema = schema.shape({
+  //           Code: Yup.string().required(data.ListofAssessment.Code),
+  //         });
+  //       }
 
-          // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-          // Disable: Yup.boolean(),
-        });
-        if(CompanyAutoCode === "N"){
-          schema = schema.shape({
+  //    if (state.BreadCrumb1 === "Appraisal") {
+  //       schema = schema.concat(
+  //         Yup.object().shape({
+  //           DesignationID: Yup.object()
+  //             .nullable()
+  //             .shape({
+  //               RecordID: Yup.string().required(data.ListofAssessment.DesignationID),
+  //               Name: Yup.string().required(),
+  //             })
+  //             .required(data.ListofAssessment.DesignationID),
+  //           AppraisalType: Yup.string().required(data.ListofAssessment.AppraisalType),
+  //         })
+  //       );
+  //     }
+  //       setValidationSchema(schema);
+  //     })
+  //     .catch((err) => console.error("Error loading validationcms.json:", err));
+  // }, [CompanyAutoCode, BreadCrumb]);
+  useEffect(() => {
+  fetch(process.env.PUBLIC_URL + "/validationcms.json")
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+      return res.json();
+    })
+    .then((data) => {
+      setErrorMsgData(data);
+
+      let schema = Yup.object().shape({
+        Name: Yup.string().required(data.ListofAssessment.Name),
+        Duration: Yup.string().required(data.ListofAssessment.Duration),
+        Permittedtimes: Yup.number().required(data.ListofAssessment.Permittedtimes),
+        Minimumscore: Yup.number().required(data.ListofAssessment.Minimumscore),
+        Date: Yup.date().nullable().required(data.ListofAssessment.Date),
+      });
+
+      if (CompanyAutoCode === "N") {
+        schema = schema.concat(
+          Yup.object().shape({
             Code: Yup.string().required(data.ListofAssessment.Code),
           })
-        }
-        setValidationSchema(schema);
-      })
-      .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode]);
+        );
+      }
+
+      if (state.BreadCrumb1 === "Appraisal") {
+        schema = schema.concat(
+          Yup.object().shape({
+            DesignationID: Yup.object()
+              .nullable()
+              .shape({
+                RecordID: Yup.string().required(data.ListofAssessment.DesignationID),
+                Name: Yup.string().required(),
+              })
+              .required(data.ListofAssessment.DesignationID),
+            AppraisalType: Yup.string().required(data.ListofAssessment.AppraisalType),
+          })
+        );
+      }
+
+      setValidationSchema(schema);
+    })
+    .catch((err) => console.error("Error loading validationcms.json:", err));
+}, [CompanyAutoCode, state.BreadCrumb1]);
+
+  
   const AssessementSaveFn = async (values, delAction) => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
@@ -136,6 +198,9 @@ const CreateSkill = () => {
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
 
       Answertype: values.Answertype,
+      DesignationID: values.DesignationID?.RecordID || "0",
+
+      AppraisalType: values.AppraisalType,
       Date: values.Date,
       Minimumscore: values.Minimumscore,
       //Noofquestion: "0",
@@ -206,9 +271,29 @@ const CreateSkill = () => {
     Permittedtimes: Data.Permittedtimes || "",
     //cutOff: Data.cutOff || "",
     SortOrder: Data.SortOrder || "",
+    //Designation: Data.DesignationID || "",
+    DesignationID: Data.DesignationID
+      ? {
+          RecordID: Data.DesignationID,
+          Name: Data.DesignationName, // used for dropdown display
+        }
+      : null,
+    AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
+const memoizedUrl = useCallback(() => {
+  return `${listViewurl}?data=${encodeURIComponent(
+    JSON.stringify({
+      Query: {
+        AccessID: "2047",
+        ScreenName: "Designation",
+        Filter: `parentID='${CompanyID}'`,
+        Any: "",
+      },
+    })
+  )}`;
+}, [CompanyID]);
 
   // const validationSchema = Yup.object({
   //   Code: Yup.string().required("Please Enter Code Here"),
@@ -324,62 +409,60 @@ const CreateSkill = () => {
                 >
                   {/* {JSON.stringify(errors)} */}
                   {CompanyAutoCode === "Y" ? (
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="text"
-                    label="Code"
-                    placeholder="Auto"
-                    value={values.Code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="Code"
-                    name="Code"
-                    focused
-                    error={!!touched.Code && !!errors.Code}
-                    helperText={touched.Code && errors.Code}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{readOnly : true}}
-                  /> ) : (
-
-
-                   <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="text"
-                    label={
-                      <>
-                        Code
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    //placeholder="Enter Your Skills Here......"
-                    value={values.Code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="Code"
-                    name="Code"
-                    focused
-                    error={!!touched.Code && !!errors.Code}
-                    helperText={touched.Code && errors.Code}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="text"
+                      label="Code"
+                      placeholder="Auto"
+                      value={values.Code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="Code"
+                      name="Code"
+                      focused
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{ readOnly: true }}
+                    />
+                  ) : (
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="text"
+                      label={
+                        <>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      //placeholder="Enter Your Skills Here......"
+                      value={values.Code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="Code"
+                      name="Code"
+                      focused
+                      error={!!touched.Code && !!errors.Code}
+                      helperText={touched.Code && errors.Code}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
                   )}
 
-                  
                   <TextField
                     // fullWidth
                     variant="standard"
@@ -408,7 +491,6 @@ const CreateSkill = () => {
                       },
                     }}
                     autoFocus={CompanyAutoCode == "Y"}
-
                   />
                   {/* <FormControl
                     focused
@@ -668,7 +750,117 @@ const CreateSkill = () => {
                       />
                     </>
                   )}
+                  {state.BreadCrumb1 === "Appraisal" ? (
+                    <>
+                      <AppraisalAutocompletePayload
+                        name="DesignationID"
+                        label={
+                          <span>
+                            Designation{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        id="DesignationID"
+                        value={values.DesignationID}
+                        // onChange={(newValue) =>
+                        //   setFieldValue("DesignationID", newValue)
+                        // }
+                        onChange={(newValue) =>
+                          setFieldValue(
+                            "DesignationID",
+                            newValue
+                              ? {
+                                  RecordID: newValue.RecordID,
+                                  Name: newValue.Name,
+                                }
+                              : null
+                          )
+                        }
+                      onBlur={() => setFieldTouched("DesignationID", true)}
 
+                        error={!!touched.DesignationID && !!errors.DesignationID}
+                        helperText={touched.DesignationID && errors.DesignationID}
+                        //params={{ CompanyID: CompanyID }}
+                        //state={{ globalurl }}
+                        // url={(state, params) =>
+                        //   `${listViewurl}?data=${encodeURIComponent(
+                        //     JSON.stringify({
+                        //       Query: {
+                        //         AccessID: "2047",
+                        //         ScreenName: "Designation",
+                        //         Filter: `parentID='${CompanyID}'`,
+                        //         Any: "",
+                        //       },
+                        //     })
+                        //   )}`
+                        // }
+                        url={memoizedUrl}
+                      />
+
+
+<TextField
+                      focused
+                      variant="standard"
+                      label={
+                        <>
+                          Appraisal Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      name="AppraisalType"
+                      id="AppraisalType"
+                      value={values.AppraisalType}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      select
+                      error={!!touched.AppraisalType && !!errors.AppraisalType}
+                      helperText={touched.AppraisalType && errors.AppraisalType}
+                    >
+                     <MenuItem value={"Self"}>Self</MenuItem>
+                          <MenuItem value={"Manager"}>Manager</MenuItem>
+                          <MenuItem value={"Peer"}>Peer</MenuItem>
+                     
+                    </TextField>
+
+                      {/* <FormControl
+                        focused
+                        variant="standard"
+                        sx={{ background: "#ffffff" }}
+                        error={
+                          !!touched.AppraisalType && !!errors.AppraisalType
+                        }
+                        // sx={{ gridColumn: "span 2", background: "#f5f5f5"  }}
+                      >
+                        <InputLabel id="AppraisalType">
+                          <span>
+                            Appraisal Type{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        </InputLabel>
+                       
+                        <Select
+                          labelId="demo-simple-select-filled-label"
+                          id="AppraisalType"
+                          name="AppraisalType"
+                          required
+                          value={values.AppraisalType}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={"Self"}>Self</MenuItem>
+                          <MenuItem value={"Manager"}>Manager</MenuItem>
+                          <MenuItem value={"Peer"}>Peer</MenuItem>
+                        </Select>
+                      </FormControl> */}
+
+
+                    </>
+                  ) : (
+                    false
+                  )}
                   <TextField
                     fullWidth
                     variant="standard"
