@@ -95,10 +95,10 @@ const Editemployee = () => {
   );
   const listViewData = useSelector((state) => state.listviewApi.rowData);
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(15);
   const [page, setPage] = React.useState(secondaryCurrentPage);
-  const [pageSize2, setPageSize2] = React.useState(10);
-  const [pageSize1, setPageSize1] = React.useState(10);
+  const [pageSize2, setPageSize2] = React.useState(15);
+  const [pageSize1, setPageSize1] = React.useState(15);
   const [page1, setPage1] = React.useState(secondaryCurrentPage);
   const [page2, setPage2] = React.useState(secondaryCurrentPage);
   const theme = useTheme();
