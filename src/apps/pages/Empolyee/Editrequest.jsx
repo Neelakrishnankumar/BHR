@@ -119,6 +119,9 @@ const Editrequests = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const [error, setError] = useState('');
   const [files, setFiles] = useState([]);
+  var secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
   const rowSx = { height: 36, '& td, & th': { py: 0.5 } };
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -131,8 +134,19 @@ const Editrequests = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const state = location.state || {};
   const Finyear = sessionStorage.getItem("YearRecorid");
-
-
+  const [page, setPage] = React.useState(secondaryCurrentPage);
+  const [page1, setPage1] = React.useState(secondaryCurrentPage);
+  const [pageSize1, setPageSize1] = React.useState(10);
+  const [page2, setPage2] = React.useState(secondaryCurrentPage);
+  const [pageSize2, setPageSize2] = React.useState(10);
+  const [page3, setPage3] = React.useState(secondaryCurrentPage);
+  const [pageSize3, setPageSize3] = React.useState(10);
+  const [page4, setPage4] = React.useState(secondaryCurrentPage);
+  const [pageSize4, setPageSize4] = React.useState(10);
+  const [page5, setPage5] = React.useState(secondaryCurrentPage);
+  const [pageSize5, setPageSize5] = React.useState(10);
+  const [page6, setPage6] = React.useState(secondaryCurrentPage);
+  const [pageSize6, setPageSize6] = React.useState(10);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -866,21 +880,66 @@ const Editrequests = () => {
     }
   };
 
-  // const columns = React.useMemo(
-  //   () =>
-  //     explorelistViewcolumn.filter((column) =>
-  //       VISIBLE_FIELDS.includes(column.field)
-  //     ),
-  //   [explorelistViewcolumn]
-  // );
-  const columns = React.useMemo(() => {
 
+  // const columns = React.useMemo(() => {
+
+  //   let visibleColumns = explorelistViewcolumn.filter((column) =>
+  //     VISIBLE_FIELDS.includes(column.field)
+  //   );
+
+
+  //   if (VISIBLE_FIELDS.includes("slno")) {
+  //     const slnoColumn = {
+  //       field: "slno",
+  //       headerName: "SL#",
+  //       width: 50,
+  //       sortable: false,
+  //       filterable: false,
+  //       valueGetter: (params) =>
+  //         `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+  //     };
+
+
+  //     visibleColumns = [slnoColumn, ...visibleColumns];
+  //   }
+
+  //   return visibleColumns;
+  // }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const handlePagechange = (pageno) => {
+    setPage(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+  const handlePagechange1 = (pageno) => {
+    setPage1(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+  const handlePagechange2 = (pageno) => {
+    setPage2(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+  const handlePagechange3 = (pageno) => {
+    setPage3(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+   const handlePagechange4 = (pageno) => {
+    setPage4(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+   const handlePagechange5 = (pageno) => {
+    setPage5(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+   const handlePagechange6 = (pageno) => {
+    setPage6(pageno);
+    sessionStorage.setItem("secondaryCurrentPage", pageno);
+  };
+  const columns = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
     );
 
-
     if (VISIBLE_FIELDS.includes("slno")) {
+
       const slnoColumn = {
         field: "slno",
         headerName: "SL#",
@@ -888,18 +947,154 @@ const Editrequests = () => {
         sortable: false,
         filterable: false,
         valueGetter: (params) =>
-          `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
+          page * pageSize +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
       };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
 
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const columns1 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
 
+    if (VISIBLE_FIELDS.includes("slno")) {
+
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page1 * pageSize1 +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const columns2 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page2 * pageSize2 +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
       visibleColumns = [slnoColumn, ...visibleColumns];
     }
 
     return visibleColumns;
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
 
+   const columns3 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
 
+    if (VISIBLE_FIELDS.includes("slno")) {
 
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page3 * pageSize3 +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+   const columns4 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page4 * pageSize4 +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+   const columns5 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page5 * pageSize5 +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+   const columns6 = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page6 * pageSize6 +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
   const [rowCount, setRowCount] = useState(0);
 
   // *************** EMPLOYEE-FUNCTION SCREEN SAVE FUNCTION *************** //
@@ -4041,15 +4236,17 @@ const Editrequests = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns1}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize1}
+                        page={page1}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize1(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange1(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
@@ -4763,15 +4960,17 @@ const Editrequests = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns3}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize3}
+                        page={page3}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize3(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange3(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
@@ -5344,15 +5543,17 @@ const Editrequests = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns6}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize6}
+                        page={page6}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize6(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange6(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
@@ -5987,15 +6188,17 @@ const Editrequests = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns2}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize2}
+                        page={page2}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize2(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange2(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
@@ -6629,9 +6832,11 @@ const Editrequests = () => {
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
                         pageSize={pageSize}
+                        page={page}
                         onPageSizeChange={(newPageSize) =>
                           setPageSize(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
@@ -7246,15 +7451,17 @@ const Editrequests = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns5}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize5}
+                        page={page5}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize5(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange5(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
@@ -7987,15 +8194,17 @@ const Editrequests = () => {
                           },
                         }}
                         rows={explorelistViewData}
-                        columns={columns}
+                        columns={columns4}
                         disableSelectionOnClick
                         getRowId={(row) => row.RecordID}
                         rowHeight={dataGridRowHeight}
                         headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize}
+                        pageSize={pageSize4}
+                        page={page4}
                         onPageSizeChange={(newPageSize) =>
-                          setPageSize(newPageSize)
+                          setPageSize4(newPageSize)
                         }
+                        onPageChange={(pageno) => handlePagechange4(pageno)}
                         onCellClick={(params) => {
                           selectCellRowData({
                             rowData: params.row,
