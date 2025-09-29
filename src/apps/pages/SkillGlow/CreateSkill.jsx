@@ -68,6 +68,8 @@ const CreateSkill = () => {
   const accessID = params.accessID;
   const screenName = params.screenName;
   const BreadCrumb = state.BreadCrumb1;
+  const AssessmentType = state.AssessmentType;
+  console.log("🚀 ~ CreateSkill ~ AssessmentType:", AssessmentType)
   const mode = params.Mode;
   const CatId = params.parentID1;
   const CompanyID = sessionStorage.getItem("compID");
@@ -125,51 +127,66 @@ const CreateSkill = () => {
   //     .catch((err) => console.error("Error loading validationcms.json:", err));
   // }, [CompanyAutoCode, BreadCrumb]);
   useEffect(() => {
-  fetch(process.env.PUBLIC_URL + "/validationcms.json")
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-      return res.json();
-    })
-    .then((data) => {
-      setErrorMsgData(data);
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
 
-      let schema = Yup.object().shape({
-        Name: Yup.string().required(data.ListofAssessment.Name),
-        Duration: Yup.string().required(data.ListofAssessment.Duration),
-        Permittedtimes: Yup.number().required(data.ListofAssessment.Permittedtimes),
-        Minimumscore: Yup.number().required(data.ListofAssessment.Minimumscore),
-        Date: Yup.date().nullable().required(data.ListofAssessment.Date),
-      });
+        let schema = Yup.object().shape({
+          Name: Yup.string().required(data.ListofAssessment.Name),
+          Duration: Yup.string().required(data.ListofAssessment.Duration),
+          Permittedtimes: Yup.number().required(
+            data.ListofAssessment.Permittedtimes
+          ),
+          Minimumscore: Yup.number().required(
+            data.ListofAssessment.Minimumscore
+          ),
+          Date: Yup.date().nullable().required(data.ListofAssessment.Date),
+        });
 
-      if (CompanyAutoCode === "N") {
-        schema = schema.concat(
-          Yup.object().shape({
-            Code: Yup.string().required(data.ListofAssessment.Code),
-          })
-        );
-      }
+        if (CompanyAutoCode === "N") {
+          schema = schema.concat(
+            Yup.object().shape({
+              Code: Yup.string().required(data.ListofAssessment.Code),
+            })
+          );
+        }
 
-      if (state.BreadCrumb1 === "Appraisal") {
-        schema = schema.concat(
-          Yup.object().shape({
-            DesignationID: Yup.object()
-              .nullable()
-              .shape({
-                RecordID: Yup.string().required(data.ListofAssessment.DesignationID),
-                Name: Yup.string().required(),
-              })
-              .required(data.ListofAssessment.DesignationID),
-            AppraisalType: Yup.string().required(data.ListofAssessment.AppraisalType),
-          })
-        );
-      }
+        if (AssessmentType === "Appraisal") {
+          schema = schema.concat(
+            Yup.object().shape({
+              // DesignationID: Yup.object()
+              //   .nullable()
+              //   .shape({
+              //     RecordID: Yup.string().required(data.ListofAssessment.DesignationID),
+              //     Name: Yup.string().required(),
+              //   })
+              //   .required(data.ListofAssessment.DesignationID),
+              DesignationID: Yup.object()
+                .nullable()
+                .shape({
+                  RecordID: Yup.string().required(
+                    data.ListofAssessment.DesignationID
+                  ),
+                  Name: Yup.string().nullable(), // optional
+                })
+                .required(data.ListofAssessment.DesignationID),
 
-      setValidationSchema(schema);
-    })
-    .catch((err) => console.error("Error loading validationcms.json:", err));
-}, [CompanyAutoCode, state.BreadCrumb1]);
+              AppraisalType: Yup.string().required(
+                data.ListofAssessment.AppraisalType
+              ),
+            })
+          );
+        }
 
-  
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode, AssessmentType]);
+
   const AssessementSaveFn = async (values, delAction) => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
@@ -282,18 +299,18 @@ const CreateSkill = () => {
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
-const memoizedUrl = useCallback(() => {
-  return `${listViewurl}?data=${encodeURIComponent(
-    JSON.stringify({
-      Query: {
-        AccessID: "2047",
-        ScreenName: "Designation",
-        Filter: `parentID='${CompanyID}'`,
-        Any: "",
-      },
-    })
-  )}`;
-}, [CompanyID]);
+  const memoizedUrl = useCallback(() => {
+    return `${listViewurl}?data=${encodeURIComponent(
+      JSON.stringify({
+        Query: {
+          AccessID: "2047",
+          ScreenName: "Designation",
+          Filter: `parentID='${CompanyID}'`,
+          Any: "",
+        },
+      })
+    )}`;
+  }, [CompanyID]);
 
   // const validationSchema = Yup.object({
   //   Code: Yup.string().required("Please Enter Code Here"),
@@ -396,6 +413,7 @@ const memoizedUrl = useCallback(() => {
               setFieldTouched,
             }) => (
               <form onSubmit={handleSubmit}>
+                {/* {JSON.stringify(errors)} */}
                 <Box
                   display="grid"
                   gap={formGap}
@@ -750,7 +768,7 @@ const memoizedUrl = useCallback(() => {
                       />
                     </>
                   )}
-                  {state.BreadCrumb1 === "Appraisal" ? (
+                  {AssessmentType === "Appraisal" ? (
                     <>
                       <AppraisalAutocompletePayload
                         name="DesignationID"
@@ -778,10 +796,13 @@ const memoizedUrl = useCallback(() => {
                               : null
                           )
                         }
-                      onBlur={() => setFieldTouched("DesignationID", true)}
-
-                        error={!!touched.DesignationID && !!errors.DesignationID}
-                        helperText={touched.DesignationID && errors.DesignationID}
+                        onBlur={() => setFieldTouched("DesignationID", true)}
+                        error={
+                          !!touched.DesignationID && !!errors.DesignationID
+                        }
+                        helperText={
+                          touched.DesignationID && errors.DesignationID
+                        }
                         //params={{ CompanyID: CompanyID }}
                         //state={{ globalurl }}
                         // url={(state, params) =>
@@ -799,29 +820,34 @@ const memoizedUrl = useCallback(() => {
                         url={memoizedUrl}
                       />
 
-
-<TextField
-                      focused
-                      variant="standard"
-                      label={
-                        <>
-                          Appraisal Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
-                      name="AppraisalType"
-                      id="AppraisalType"
-                      value={values.AppraisalType}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      select
-                      error={!!touched.AppraisalType && !!errors.AppraisalType}
-                      helperText={touched.AppraisalType && errors.AppraisalType}
-                    >
-                     <MenuItem value={"Self"}>Self</MenuItem>
-                          <MenuItem value={"Manager"}>Manager</MenuItem>
-                          <MenuItem value={"Peer"}>Peer</MenuItem>
-                     
-                    </TextField>
+                      <TextField
+                        focused
+                        variant="standard"
+                        label={
+                          <>
+                            Appraisal Type
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        name="AppraisalType"
+                        id="AppraisalType"
+                        value={values.AppraisalType}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        select
+                        error={
+                          !!touched.AppraisalType && !!errors.AppraisalType
+                        }
+                        helperText={
+                          touched.AppraisalType && errors.AppraisalType
+                        }
+                      >
+                        <MenuItem value={"Self"}>Self</MenuItem>
+                        <MenuItem value={"Manager"}>Manager</MenuItem>
+                        <MenuItem value={"Peer"}>Peer</MenuItem>
+                      </TextField>
 
                       {/* <FormControl
                         focused
@@ -855,8 +881,6 @@ const memoizedUrl = useCallback(() => {
                           <MenuItem value={"Peer"}>Peer</MenuItem>
                         </Select>
                       </FormControl> */}
-
-
                     </>
                   ) : (
                     false

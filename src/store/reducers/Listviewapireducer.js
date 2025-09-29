@@ -3827,7 +3827,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               navigate(
                 `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`,
                 {
-                  state: { BreadCrumb1: params.row.Name },
+                  state: { BreadCrumb1: params.row.Name, AssessmentType:params.row.AssessmentType },
                 }
               )
             }
