@@ -372,3 +372,284 @@ export function MultiFormikSkillAutocomplete({
     />
   );
 }
+
+
+//SELF-APPRAISAL COMBO BOX
+export const SelfAppraisalPayload = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
+export const ManagerAppraisalPayload = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+export const PeerAppraisalPayload = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
+export const SubordinateAppraisalPayload = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};

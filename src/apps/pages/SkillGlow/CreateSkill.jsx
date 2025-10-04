@@ -69,7 +69,7 @@ const CreateSkill = () => {
   const screenName = params.screenName;
   const BreadCrumb = state.BreadCrumb1;
   const AssessmentType = state.AssessmentType;
-  console.log("🚀 ~ CreateSkill ~ AssessmentType:", AssessmentType)
+  console.log("🚀 ~ CreateSkill ~ AssessmentType:", AssessmentType);
   const mode = params.Mode;
   const CatId = params.parentID1;
   const CompanyID = sessionStorage.getItem("compID");
@@ -138,6 +138,18 @@ const CreateSkill = () => {
         let schema = Yup.object().shape({
           Name: Yup.string().required(data.ListofAssessment.Name),
           Duration: Yup.string().required(data.ListofAssessment.Duration),
+          DesignationID: Yup.object()
+            .nullable()
+            .shape({
+              RecordID: Yup.string().required(
+                data.ListofAssessment.DesignationID
+              ),
+              Name: Yup.string().nullable(), // optional
+            })
+            .required(data.ListofAssessment.DesignationID),
+          AppraisalType: Yup.string().required(
+            data.ListofAssessment.AppraisalType
+          ),
           Permittedtimes: Yup.number().required(
             data.ListofAssessment.Permittedtimes
           ),
@@ -155,32 +167,32 @@ const CreateSkill = () => {
           );
         }
 
-        if (AssessmentType === "Appraisal") {
-          schema = schema.concat(
-            Yup.object().shape({
-              // DesignationID: Yup.object()
-              //   .nullable()
-              //   .shape({
-              //     RecordID: Yup.string().required(data.ListofAssessment.DesignationID),
-              //     Name: Yup.string().required(),
-              //   })
-              //   .required(data.ListofAssessment.DesignationID),
-              DesignationID: Yup.object()
-                .nullable()
-                .shape({
-                  RecordID: Yup.string().required(
-                    data.ListofAssessment.DesignationID
-                  ),
-                  Name: Yup.string().nullable(), // optional
-                })
-                .required(data.ListofAssessment.DesignationID),
+        // if (AssessmentType === "Appraisal") {
+        //   schema = schema.concat(
+        //     Yup.object().shape({
+        //       // DesignationID: Yup.object()
+        //       //   .nullable()
+        //       //   .shape({
+        //       //     RecordID: Yup.string().required(data.ListofAssessment.DesignationID),
+        //       //     Name: Yup.string().required(),
+        //       //   })
+        //       //   .required(data.ListofAssessment.DesignationID),
+        //       DesignationID: Yup.object()
+        //         .nullable()
+        //         .shape({
+        //           RecordID: Yup.string().required(
+        //             data.ListofAssessment.DesignationID
+        //           ),
+        //           Name: Yup.string().nullable(), // optional
+        //         })
+        //         .required(data.ListofAssessment.DesignationID),
 
-              AppraisalType: Yup.string().required(
-                data.ListofAssessment.AppraisalType
-              ),
-            })
-          );
-        }
+        //       AppraisalType: Yup.string().required(
+        //         data.ListofAssessment.AppraisalType
+        //       ),
+        //     })
+        //   );
+        // }
 
         setValidationSchema(schema);
       })
@@ -768,88 +780,81 @@ const CreateSkill = () => {
                       />
                     </>
                   )}
-                  {AssessmentType === "Appraisal" ? (
-                    <>
-                      <AppraisalAutocompletePayload
-                        name="DesignationID"
-                        label={
-                          <span>
-                            Designation{" "}
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
+                  {/* {AssessmentType === "Appraisal" ? ( */}
+                  <>
+                    <AppraisalAutocompletePayload
+                      name="DesignationID"
+                      label={
+                        <span>
+                          Designation{" "}
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
                           </span>
-                        }
-                        id="DesignationID"
-                        value={values.DesignationID}
-                        // onChange={(newValue) =>
-                        //   setFieldValue("DesignationID", newValue)
-                        // }
-                        onChange={(newValue) =>
-                          setFieldValue(
-                            "DesignationID",
-                            newValue
-                              ? {
-                                  RecordID: newValue.RecordID,
-                                  Name: newValue.Name,
-                                }
-                              : null
-                          )
-                        }
-                        onBlur={() => setFieldTouched("DesignationID", true)}
-                        error={
-                          !!touched.DesignationID && !!errors.DesignationID
-                        }
-                        helperText={
-                          touched.DesignationID && errors.DesignationID
-                        }
-                        //params={{ CompanyID: CompanyID }}
-                        //state={{ globalurl }}
-                        // url={(state, params) =>
-                        //   `${listViewurl}?data=${encodeURIComponent(
-                        //     JSON.stringify({
-                        //       Query: {
-                        //         AccessID: "2047",
-                        //         ScreenName: "Designation",
-                        //         Filter: `parentID='${CompanyID}'`,
-                        //         Any: "",
-                        //       },
-                        //     })
-                        //   )}`
-                        // }
-                        url={memoizedUrl}
-                      />
+                        </span>
+                      }
+                      id="DesignationID"
+                      value={values.DesignationID}
+                      // onChange={(newValue) =>
+                      //   setFieldValue("DesignationID", newValue)
+                      // }
+                      onChange={(newValue) =>
+                        setFieldValue(
+                          "DesignationID",
+                          newValue
+                            ? {
+                                RecordID: newValue.RecordID,
+                                Name: newValue.Name,
+                              }
+                            : null
+                        )
+                      }
+                      onBlur={() => setFieldTouched("DesignationID", true)}
+                      error={!!touched.DesignationID && !!errors.DesignationID}
+                      helperText={touched.DesignationID && errors.DesignationID}
+                      //params={{ CompanyID: CompanyID }}
+                      //state={{ globalurl }}
+                      // url={(state, params) =>
+                      //   `${listViewurl}?data=${encodeURIComponent(
+                      //     JSON.stringify({
+                      //       Query: {
+                      //         AccessID: "2047",
+                      //         ScreenName: "Designation",
+                      //         Filter: `parentID='${CompanyID}'`,
+                      //         Any: "",
+                      //       },
+                      //     })
+                      //   )}`
+                      // }
+                      url={memoizedUrl}
+                    />
 
-                      <TextField
-                        focused
-                        variant="standard"
-                        label={
-                          <>
-                            Appraisal Type
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        name="AppraisalType"
-                        id="AppraisalType"
-                        value={values.AppraisalType}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        select
-                        error={
-                          !!touched.AppraisalType && !!errors.AppraisalType
-                        }
-                        helperText={
-                          touched.AppraisalType && errors.AppraisalType
-                        }
-                      >
-                        <MenuItem value={"Self"}>Self</MenuItem>
-                        <MenuItem value={"Manager"}>Manager</MenuItem>
-                        <MenuItem value={"Peer"}>Peer</MenuItem>
-                      </TextField>
+                    <TextField
+                      focused
+                      variant="standard"
+                      label={
+                        <>
+                          Appraisal Type
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      name="AppraisalType"
+                      id="AppraisalType"
+                      value={values.AppraisalType}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      select
+                      error={!!touched.AppraisalType && !!errors.AppraisalType}
+                      helperText={touched.AppraisalType && errors.AppraisalType}
+                    >
+                      <MenuItem value={"Self"}>Self</MenuItem>
+                      <MenuItem value={"Manager"}>Manager</MenuItem>
+                      <MenuItem value={"Peer"}>Peer</MenuItem>
+                      <MenuItem value={"Subordinate"}>Subordinate</MenuItem>
+                    </TextField>
 
-                      {/* <FormControl
+                    {/* <FormControl
                         focused
                         variant="standard"
                         sx={{ background: "#ffffff" }}
@@ -881,10 +886,10 @@ const CreateSkill = () => {
                           <MenuItem value={"Peer"}>Peer</MenuItem>
                         </Select>
                       </FormControl> */}
-                    </>
-                  ) : (
+                  </>
+                  {/* ) : (
                     false
-                  )}
+                  )} */}
                   <TextField
                     fullWidth
                     variant="standard"

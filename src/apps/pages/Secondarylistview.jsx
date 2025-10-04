@@ -210,7 +210,7 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR282") {
     filter = `QuestionGroupID ='${parentID1}' AND CompanyID = '${compID}'`;
   } else if (accessID == "TR288") {
-    filter = "";
+    filter = `EmployeeID ='${parentID1}'AND CompanyID = '${compID}'`;
   } else if (accessID == "TR283") {
     filter = `EmployeeID ='${parentID2}'`;
   }
