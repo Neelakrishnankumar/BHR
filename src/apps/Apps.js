@@ -151,6 +151,7 @@ import SkillCandidate from "./pages/SkillGlow/SkillCandidate";
 import CreateSkillCandidate from "./pages/SkillGlow/CreateSkillCandidate";
 import EmployeeSchedule from "./pages/SkillGlow/EmployeeSchedule";
 import SkillInsights from "./pages/SkillGlow/Insights";
+import Editoverheadtype from "./pages/FinanceModule/Editoverheadtype";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -594,6 +595,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditOverhead/:id/:Mode"
                     element={<Editoverhead />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditOverhead Type/:id/:Mode"
+                    element={<Editoverheadtype />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditIndent Purchase Order/:id/:Mode"
