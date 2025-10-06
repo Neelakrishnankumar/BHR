@@ -393,7 +393,7 @@ const Editoverheadtype = () => {
                                     >
                                         SAVE
                                     </LoadingButton>
-                                    {mode == "E" ? (
+                                    {/* {mode == "E" ? (
                                         <Button
                                             color="error"
                                             variant="contained"
@@ -419,7 +419,7 @@ const Editoverheadtype = () => {
                                         </Button>
                                     ) : (
                                         null
-                                    )}
+                                    )} */}
                                     <Button
                                         variant="contained"
                                         color="warning"
