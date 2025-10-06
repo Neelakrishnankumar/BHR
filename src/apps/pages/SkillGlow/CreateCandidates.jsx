@@ -42,8 +42,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import {
+  ManagerAppraisalPayload,
+  PeerAppraisalPayload,
+  SelfAppraisalPayload,
   SingleFormikSkillAutocomplete,
   SingleFormikSkillAutocompletePayload,
+  SubordinateAppraisalPayload,
 } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
 
@@ -65,6 +69,11 @@ const CreateCandidates = () => {
   const state = location.state || {};
 
   const answerType = state.AnswerType;
+
+  const AssessmentType = state.AssessmentType;
+  const DesignationID = state.DesignationID;
+  console.log("🚀 ~ CreateCandidates ~ DesignationID:", DesignationID)
+
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -84,9 +93,9 @@ const CreateCandidates = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          assessment: Yup.object()
-            .required(data.ListofAssessCat.assessment)
-            .nullable(),
+          // assessment: Yup.object()
+          //   .required(data.ListofAssessCat.assessment)
+          //   .nullable(),
           Date: Yup.string().required(data.ListofAssessCat.Date),
           // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // disable: Yup.boolean(),
@@ -119,18 +128,14 @@ const CreateCandidates = () => {
     const idata = {
       RecordID: recID,
       AssessmentID: values?.assessment?.RecordID || 0,
-      //AssessmentName: values?.assessment?.Name || "",
       EmployeeID: EmpId,
       Date: values.Date,
-      // Targeteddate: values.Targeteddate,
-      // Sessionstartdate: values.Sessionstartdate,
-      // Firstattdate: values.Firstattdate,
-      // Firstattscore: values.Firstattscore,
-      // Firstattduration: values.Firstattduration,
-      // Lastattdate: values.Lastattdate,
-      // Lastattscore: values.Lastattscore,
-      // Lastattduration: values.Lastattduration,
-      // Status: values.Status,
+      AssessmentType: AssessmentType || "",
+      SelfRecordID: values?.SelfRecordID?.RecordID || 0,
+      DesignationRecordID: DesignationID || 0,
+      ManagerRecordID: values?.ManagerRecordID?.RecordID || 0,
+      SubordinateRecordID: values?.SubordinateRecordID?.RecordID || 0,
+      PeerRecordID: values?.PeerRecordID?.RecordID || 0,
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
@@ -184,17 +189,18 @@ const CreateCandidates = () => {
       mode === "A"
         ? new Date().toISOString().split("T")[0] // today
         : Data.Date || new Date().toISOString().split("T")[0],
+    SelfRecordID: Data.SelfRecordID
+      ? { RecordID: Data.SelfRecordID, Name: Data.Name }
+      : null,
+
+    ManagerRecordID: Data.ManagerRecordID ? {RecordID : Data.ManagerRecordID, Name: Data.Name} : null,
+    PeerRecordID: Data.PeerRecordID ? {RecordID : Data.PeerRecordID, Name: Data.Name} : null,
+    SubordinateRecordID: Data.SubordinateRecordID ? {RecordID : Data.SubordinateRecordID, Name: Data.Name} : null,
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
 
-  // const validationSchema = Yup.object({
-  //   //assessment: Yup.string().required("Please Enter Candidate Here"),
-  //   //Date: Yup.string().required("Choose a date"),
-  //   sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-  //   disable: Yup.boolean(),
-  // });
   return (
     <>
       <React.Fragment
@@ -302,6 +308,7 @@ const CreateCandidates = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
+                  {/* {JSON.stringify(errors)} */}
                   <Box
                     display="grid"
                     gap={formGap}
@@ -313,31 +320,176 @@ const CreateCandidates = () => {
                       },
                     }}
                   >
-                    <SingleFormikSkillAutocompletePayload
-                      name="assessment"
-                      label={
-                        <span>
-                          Assessment{" "}
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
+                    {AssessmentType === "Appraisal" ? (
+                      <>
+                        <SelfAppraisalPayload
+                          name="SelfRecordID"
+                          label={
+                            <span>
+                              Self{" "}
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          id="SelfRecordID"
+                          value={values.SelfRecordID}
+                          onChange={(newValue) => {
+                            setFieldValue("SelfRecordID", newValue);
+                          }}
+                          error={
+                            !!touched.SelfRecordID && !!errors.SelfRecordID
+                          }
+                          helperText={
+                            touched.SelfRecordID && errors.SelfRecordID
+                          }
+                          url={`${listViewurl}?data=${encodeURIComponent(
+                            JSON.stringify({
+                              Query: {
+                                AccessID: "2122",
+                                ScreenName: "List+Of+Question+Groups",
+                                Filter: `AssessmentType='${AssessmentType}' AND DesignationID='${DesignationID}' AND AppraisalType='Self'`,
+                                Any: "",
+                              },
+                            })
+                          )}`}
+
+                          //url={listViewurl}
+                          // payload={{
+                          //   AssessmentType: AssessmentType,
+                          //   DesignationID: DesignationID,
+                          //   AppraisalType: "Self",
+                          // }}
+                          //inputProps={{ disabled: mode == "V" }}
+                        />
+
+                        <ManagerAppraisalPayload
+                          name="ManagerRecordID"
+                          label={
+                            <span>
+                              Manager{" "}
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          id="ManagerRecordID"
+                          value={values.ManagerRecordID}
+                          onChange={(newValue) => {
+                            setFieldValue("ManagerRecordID", newValue);
+                          }}
+                          error={
+                            !!touched.ManagerRecordID && !!errors.ManagerRecordID
+                          }
+                          helperText={
+                            touched.ManagerRecordID && errors.ManagerRecordID
+                          }
+                          url={`${listViewurl}?data=${encodeURIComponent(
+                            JSON.stringify({
+                              Query: {
+                                AccessID: "2123",
+                                ScreenName: "List+Of+Question+Groups",
+                                Filter: `AssessmentType='${AssessmentType}' AND DesignationID='${DesignationID}' AND AppraisalType='Manager'`,
+                                Any: "",
+                              },
+                            })
+                          )}`}
+                        />
+
+                         <PeerAppraisalPayload
+                          name="PeerRecordID"
+                          label={
+                            <span>
+                              Peer{" "}
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          id="PeerRecordID"
+                          value={values.PeerRecordID}
+                          onChange={(newValue) => {
+                            setFieldValue("PeerRecordID", newValue);
+                          }}
+                          error={
+                            !!touched.PeerRecordID && !!errors.PeerRecordID
+                          }
+                          helperText={
+                            touched.PeerRecordID && errors.PeerRecordID
+                          }
+                          url={`${listViewurl}?data=${encodeURIComponent(
+                            JSON.stringify({
+                              Query: {
+                                AccessID: "2125",
+                                ScreenName: "List+Of+Question+Groups",
+                                Filter: `AssessmentType='${AssessmentType}' AND DesignationID='${DesignationID}' AND AppraisalType='Peer'`,
+                                Any: "",
+                              },
+                            })
+                          )}`}
+                        />
+
+                       <SubordinateAppraisalPayload
+                          name="SubordinateRecordID"
+                          label={
+                            <span>
+                              Subordinate{" "}
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </span>
+                          }
+                          id="SubordinateRecordID"
+                          value={values.SubordinateRecordID}
+                          onChange={(newValue) => {
+                            setFieldValue("SubordinateRecordID", newValue);
+                          }}
+                          error={
+                            !!touched.SubordinateRecordID && !!errors.SubordinateRecordID
+                          }
+                          helperText={
+                            touched.SubordinateRecordID && errors.SubordinateRecordID
+                          }
+                          url={`${listViewurl}?data=${encodeURIComponent(
+                            JSON.stringify({
+                              Query: {
+                                AccessID: "2124",
+                                ScreenName: "List+Of+Question+Groups",
+                                Filter: `AssessmentType='${AssessmentType}' AND DesignationID='${DesignationID}' AND AppraisalType='Subordinate'`,
+                                Any: "",
+                              },
+                            })
+                          )}`}
+                        />
+                      </>
+                    ) : (
+                      <SingleFormikSkillAutocompletePayload
+                        name="assessment"
+                        label={
+                          <span>
+                            Assessment{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
                           </span>
-                        </span>
-                      }
-                      id="assessment"
-                      value={values.assessment}
-                      onChange={(newValue) => {
-                        setFieldValue("assessment", newValue);
-                      }}
-                      error={!!touched.assessment && !!errors.assessment}
-                      helperText={touched.assessment && errors.assessment}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
-                      url={AssessmentAutoUrl}
-                      payload={{
-                        SkillCategorieID: params.parentID1,
-                        EmployeeID: EmpId,
-                      }}
-                      //inputProps={{ disabled: mode == "V" }}
-                    />
+                        }
+                        id="assessment"
+                        value={values.assessment}
+                        onChange={(newValue) => {
+                          setFieldValue("assessment", newValue);
+                        }}
+                        error={!!touched.assessment && !!errors.assessment}
+                        helperText={touched.assessment && errors.assessment}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2120","ScreenName":"Location","Filter":"SkillCategorieID=${params.parentID1}","Any":""}}`}
+                        url={AssessmentAutoUrl}
+                        payload={{
+                          SkillCategorieID: params.parentID1,
+                          EmployeeID: EmpId,
+                        }}
+                        //inputProps={{ disabled: mode == "V" }}
+                      />
+                    )}
+
                     <TextField
                       name="Date"
                       type="date"
@@ -360,7 +512,7 @@ const CreateCandidates = () => {
                       helperText={touched.Date && errors.Date}
                       sx={{ background: "" }}
                       InputProps={{
-                        readOnly: mode === "A", 
+                        readOnly: mode === "A",
                       }}
                     />
 

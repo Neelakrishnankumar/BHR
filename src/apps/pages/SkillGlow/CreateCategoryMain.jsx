@@ -384,6 +384,7 @@ const CreateCategoryMain = () => {
                       Skill Assessment
                     </MenuItem>
                     <MenuItem value={"Appraisal"}>Appraisal</MenuItem>
+                    <MenuItem value={"Compliance"}>Compliance</MenuItem>
                     <MenuItem value={"Survey"}>Survey</MenuItem>
                     <MenuItem value={"Feedback"}>Feedback</MenuItem>
                   </TextField>

@@ -69,7 +69,6 @@ import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { pdf } from "@react-pdf/renderer";
 
-
 const initialState = {
   rowData: [],
   columnData: [],
@@ -496,7 +495,7 @@ export const fetchListview =
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
-  const UserName = sessionStorage.getItem("UserName");
+    const UserName = sessionStorage.getItem("UserName");
 
     //PROJECTPDFGET
 
@@ -505,13 +504,11 @@ export const fetchListview =
     //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
     // };
 
-
-// const handlePDFGET = (ProjectID, EmployeeID) => {
-//   const dispatch = store.dispatch; // use store directly
-//   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
-//   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
-// };
-
+    // const handlePDFGET = (ProjectID, EmployeeID) => {
+    //   const dispatch = store.dispatch; // use store directly
+    //   console.log("Dispatching PDF GET with:", { ProjectID, EmployeeID });
+    //   dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+    // };
 
     if (
       filter != "" &&
@@ -601,6 +598,7 @@ export const fetchListview =
         AccessID != "TR282" &&
         AccessID != "TR283" &&
         AccessID != "TR262" &&
+         AccessID != "TR288" &&
         AccessID != "TR022"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -617,7 +615,7 @@ export const fetchListview =
         AccessID == "TR102" ||
         AccessID == "TR105" ||
         AccessID == "TR002" ||
-        AccessID == "TR086" ||
+        // AccessID == "TR086" ||
         AccessID == "TR091"
       ) {
         // filter = filter;
@@ -626,15 +624,26 @@ export const fetchListview =
       if (AccessID === "TR262") {
         filter = "ProjectID=" + `'${filter}'`;
       }
+      //  if (AccessID === "TR283") {
+      //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
+      // }
+  //     if (AccessID === "TR288") {
+  //       // filter = `"EmployeeID=${Em}"` + `'${filter}'`;
+  //         const EmployeeID = sessionStorage.getItem("RecordID");
+  // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
+  //     }
     } else if (
       AccessID == "TR280" ||
       AccessID == "TR279" ||
       AccessID == "TR281" ||
-      AccessID == "TR282" ||
-      AccessID == "TR283"
+      AccessID == "TR282"
     ) {
       filter = filter;
-    } else {
+    } 
+    // else if (AccessID == "TR283") {
+    //   filter;
+    // } 
+    else {
       filter = `CompanyID=${CompId}`;
     }
     var idata = {
@@ -964,45 +973,59 @@ export const fetchListview =
               disableColumnMenu: true,
               disableExport: true,
               renderCell: (params) => {
-   const dispatch = store.dispatch;
+                const dispatch = store.dispatch;
 
-const PDFButton = ({ ProjectID, EmployeeID }) => {
-  const dispatch = store.dispatch;
-  const [loading, setLoading] = React.useState(false);
+                const PDFButton = ({ ProjectID, EmployeeID }) => {
+                  const dispatch = store.dispatch;
+                  const [loading, setLoading] = React.useState(false);
 
-  const handlePDFGET = async () => {
-    try {
-      setLoading(true);
+                  const handlePDFGET = async () => {
+                    try {
+                      setLoading(true);
 
-      const resultAction = await dispatch(getProjectCosting({ ProjectID, EmployeeID }));
+                      const resultAction = await dispatch(
+                        getProjectCosting({ ProjectID, EmployeeID })
+                      );
 
-      const data = resultAction.payload; // <-- this depends on how your thunk is defined
-     if (!data?.HeaderData?.DetailData?.length) {
-      alert("No Costing available to generate PDF. Kindly add costing...");
-      return;
-    }
+                      const data = resultAction.payload; // <-- this depends on how your thunk is defined
+                      if (!data?.HeaderData?.DetailData?.length) {
+                        alert(
+                          "No Costing available to generate PDF. Kindly add costing..."
+                        );
+                        return;
+                      }
 
-      // Generate and download PDF
-      const blob = await pdf(<ProjectPDF data={data} UserName={UserName}/>).toBlob();
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "Project.pdf";
-      link.click();
-    } catch (err) {
-      console.error("PDF generation failed", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+                      // Generate and download PDF
+                      const blob = await pdf(
+                        <ProjectPDF data={data} UserName={UserName} />
+                      ).toBlob();
+                      const link = document.createElement("a");
+                      link.href = URL.createObjectURL(blob);
+                      link.download = "Project.pdf";
+                      link.click();
+                    } catch (err) {
+                      console.error("PDF generation failed", err);
+                    } finally {
+                      setLoading(false);
+                    }
+                  };
 
-  return (
-    <Tooltip title="Download PDF">
-      <IconButton color="info" size="small" onClick={handlePDFGET}>
-        {loading ? <CircularProgress size={20} /> : <PictureAsPdfIcon color="error" />}
-      </IconButton>
-    </Tooltip>
-  );
-};
+                  return (
+                    <Tooltip title="Download PDF">
+                      <IconButton
+                        color="info"
+                        size="small"
+                        onClick={handlePDFGET}
+                      >
+                        {loading ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          <PictureAsPdfIcon color="error" />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+                  );
+                };
 
                 return (
                   <Box>
@@ -1072,13 +1095,11 @@ const PDFButton = ({ ProjectID, EmployeeID }) => {
                         )}
                       </IconButton>
                     </Tooltip> */}
-       
-      <PDFButton
-        ProjectID={params.row.RecordID}
-        EmployeeID={params.row.InchargeID}
-      />
 
-                    
+                    <PDFButton
+                      ProjectID={params.row.RecordID}
+                      EmployeeID={params.row.InchargeID}
+                    />
                   </Box>
                 );
               },
@@ -1128,7 +1149,7 @@ const PDFButton = ({ ProjectID, EmployeeID }) => {
             AccessID == "TR279" ||
             AccessID == "TR281" ||
             AccessID == "TR282" ||
-            AccessID == "TR288" ||
+            // AccessID == "TR288" ||
             AccessID == "TR286" ||
             AccessID == "TR283"
           ) {
@@ -3751,7 +3772,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         {accessID !== "TR279" &&
           accessID !== "TR288" &&
           accessID !== "TR286" &&
-           (
+          accessID !== "TR283" && (
             <Tooltip title="Edit">
               <IconButton
                 color="info"
@@ -3766,6 +3787,25 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               </IconButton>
             </Tooltip>
           )}
+        {accessID === "TR283" && (
+          <Tooltip title="Edit">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  state: {
+                    ...state,
+                    AssessmentType: params.row.AssessmentType,
+                    DesignationID: params.row.DesignationID,
+                  },
+                })
+              }
+            >
+              <ModeEditOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         {/* {accessID === "TR282" && (<Tooltip title="Edit">
           <IconButton
             color="info"
@@ -3798,10 +3838,10 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         )} */}
         {/* DELETE */}
         {accessID != "TR279" &&
-        accessID !== "TR278" &&
-        accessID !== "TR280" &&
-        accessID !== "TR281" &&
-        accessID !== "TR282" &&
+          accessID !== "TR278" &&
+          accessID !== "TR280" &&
+          accessID !== "TR281" &&
+          accessID !== "TR282" &&
           accessID !== "TR288" &&
           accessID !== "TR283" &&
           accessID !== "TR286" && (
@@ -3827,7 +3867,10 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               navigate(
                 `/Apps/Secondarylistview/skillglow/TR280/List Of Assessment/${params.row.RecordID}`,
                 {
-                  state: { BreadCrumb1: params.row.Name, AssessmentType:params.row.AssessmentType },
+                  state: {
+                    BreadCrumb1: params.row.Name,
+                    AssessmentType: params.row.AssessmentType,
+                  },
                 }
               )
             }
@@ -3910,16 +3953,28 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           <IconButton
             color="primary"
             size="small"
-            onClick={() =>
-              navigate(
-                `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
-                {
-                  state: {
-                    BreadCrumb1: params.row.Name,
-                  },
-                }
-              )
-            }
+            // onClick={() =>
+            //     sessionStorage.setItem("RecordID", params.row.RecordID);
+            //   navigate(
+            //     `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
+            //     {
+            //       state: {
+            //         BreadCrumb1: params.row.Name,
+            //       },
+            //     }
+            //   )
+            // }
+             onClick={() => {
+        sessionStorage.setItem("RecordID", params.row.RecordID);
+        navigate(
+          `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
+          {
+            state: {
+              BreadCrumb1: params.row.Name,
+            },
+          }
+        );
+      }}
           >
             <Tooltip title="Assessment Category">
               <CategoryOutlinedIcon />
@@ -3932,8 +3987,16 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             color="primary"
             size="small"
             onClick={() =>
-              navigate(`./TR283/${params.row.RecordID}`, {
-                state: { ...state, BreadCrumb2: params.row.Name },
+              navigate(`./TR283/${params.row.RecordID}`,
+                 {
+                state: {
+                  ...state,
+                  BreadCrumb2: params.row.Name,
+                  AssessmentType: params.row.AssessmentType,
+                  DesignationID: params.row.DesignationID,
+
+                },
+                
               })
             }
           >
