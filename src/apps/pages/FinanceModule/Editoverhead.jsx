@@ -38,6 +38,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { OverheadSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/utils";
 import * as Yup from "yup";
+import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
 
 
 const Editoverhead = () => {
@@ -58,6 +59,8 @@ const Editoverhead = () => {
   // console.log("🚀 ~ file: Editoverhead.jsx:20 ~ Editoverhead ~ data:", data);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const YearFlag = sessionStorage.getItem("YearFlag");
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -70,7 +73,7 @@ const Editoverhead = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Overhead.name),
-          productCost: Yup.string().required(data.Overhead.productCost),
+          OverheadType: Yup.object().required(data.Overhead.OverheadType),
           frequency: Yup.string().required(data.Overhead.frequency),
         };
 
@@ -94,12 +97,22 @@ const Editoverhead = () => {
     code: data.Code,
     name: data.Name,
     frequency: data.Frequency,
-    productCost: data.Productcost,
+    // productCost: data.Productcost,
+    // OverheadType: data.OverHeadsTypeID
+    //   ? {
+    //     RecordID: data.RecordID,
+    //     Code: data.Code,
+    //     Name: data.Name,
+    //   }
+    //   : null,
+      OverheadType: data.OverHeadTypeID
+      ? { RecordID: data.OverHeadTypeID, Name: data.OverHeadType }
+      : null,
     disable: data.Disable === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false
 
   };
-
+console.log(initialValue,"OverheadType");
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const fnSave = async (values, del) => {
@@ -117,14 +130,16 @@ const Editoverhead = () => {
       Code: values.code,
       Name: values.name,
       Frequency: values.frequency,
-      Productcost: values.productCost,
+      Productcost: values.productCost || "",
+      OverHeadsTypeID: values.OverheadType.RecordID || 0,
+      OverHeadsTypeName: values.OverheadType.Name || "",
       Finyear,
       CompanyID,
       Disable: values.disable == true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
 
     };
-
+    console.log(idata, "idata");
     // console.log("🚀 ~ file: Editoverhead.jsx:57 ~ fnSave ~ saveData:", saveData)
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -230,11 +245,17 @@ const Editoverhead = () => {
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={initialValue}
-            onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                fnSave(values);
-              }, 100);
+            // onSubmit={(values, { resetForm }) => {
+            //   setTimeout(() => {
+            //     fnSave(values);
+            //   }, 100);
+            // }}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              fnSave(values);
+              setSubmitting(false);
             }}
+
             validationSchema={validationSchema}
             enableReinitialize={true}
           >
@@ -246,6 +267,7 @@ const Editoverhead = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -350,6 +372,29 @@ const Editoverhead = () => {
                     <MenuItem value="Q">Quarterly</MenuItem>
                     <MenuItem value="F">Fortnightly</MenuItem>
                   </TextField>
+                  <CheckinAutocomplete
+                    sx={{ marginTop: "1px" }}
+                    name="OverheadType"
+                    label={
+                      <>
+                        Overhead Type
+                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    variant="outlined"
+                    id="OverheadType"
+                    value={values.OverheadType}
+                    onChange={(newValue) => {
+                      setFieldValue("OverheadType", newValue);
+                      console.log(newValue, "--newValue");
+                      console.log(newValue.RecordID, "////");
+                    }}
+                    error={!!touched.OverheadType && !!errors.OverheadType}
+                    helperText={touched.OverheadType && errors.OverheadType}
+                    //  onChange={handleSelectionFunctionname}
+                    // defaultValue={selectedFunctionName}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType","Filter":"","Any":""}}`}
+                  />
                   {/* </FormControl> */}
 
                   {/* <FormControl
@@ -358,7 +403,7 @@ const Editoverhead = () => {
                   //sx={{ gridColumn: "span 2" }}
                   >
                     <InputLabel id="productCost">Type<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel> */}
-                  <TextField
+                  {/* <TextField
                     label={
                       <>
                         Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
@@ -381,8 +426,9 @@ const Editoverhead = () => {
                     <MenuItem value="M">Cost Of Material</MenuItem>
                     <MenuItem value="F">Cost Of Fixed Assets</MenuItem>
                     <MenuItem value="S">Salary</MenuItem>
-                  </TextField>
-                  {/* </FormControl> */}
+                  </TextField> */}
+
+
                   <Box>
                     <Field
                       //  size="small"
@@ -413,15 +459,15 @@ const Editoverhead = () => {
 
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
-                  <LoadingButton
+                 <LoadingButton
                     variant="contained"
                     color="secondary"
                     type="submit"
                     loading={loading}
                   >
                     SAVE
-                  </LoadingButton>
-                  {mode == "E" ? (
+                  </LoadingButton> 
+                  {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -447,7 +493,7 @@ const Editoverhead = () => {
                     </Button>
                   ) : (
                     null
-                  )}
+                  )} */}
                   <Button
                     variant="contained"
                     color="warning"

@@ -103,17 +103,36 @@ const EditAttendanceHistory = () => {
 
   const [errorMsgData, setErrorMsgData] = useState(null);
 
+  // useEffect(() => {
+  //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setErrorMsgData(data);
+  //     })
+  //     .catch((err) => console.error("Error loading validationcms.json:", err));
+  // }, []);
   useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/validationcms.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-        return res.json();
-      })
-      .then((data) => {
-        setErrorMsgData(data);
-      })
-      .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, []);
+
+    const savedMonth = sessionStorage.getItem("month");
+    const savedYear = Number(sessionStorage.getItem("year"));
+    const month = savedMonth || currentMonthNumber;
+    const year = savedYear || currentYear;
+
+    const data = {
+      Month: month,
+      Year: year,
+      Etype: "H",
+      CompanyID,
+      ManagerID: EMPID
+    };
+
+    console.log("Dispatching Attendance on load:", data);
+
+    dispatch(empAttendance({ data }));
+  }, [EMPID, dispatch]);
   function AttendanceTool() {
     return (
       <GridToolbarContainer
@@ -150,7 +169,7 @@ const EditAttendanceHistory = () => {
     //   valueGetter: (params) =>
     //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
     // },
-     {
+    {
       field: "slno",
       headerName: "SL#",
       width: 60,
@@ -259,8 +278,8 @@ const EditAttendanceHistory = () => {
     code: data.Code,
     description: data.Name,
     Sal: data.Sal,
-    month: currentMonthNumber,
-    year: currentYear,
+    month: sessionStorage.getItem("month") || currentMonthNumber,
+    year: Number(sessionStorage.getItem("year")) || currentYear,
   };
   const attendaceFnSave = async (values) => {
     const data = {
@@ -437,7 +456,11 @@ const EditAttendanceHistory = () => {
                     label="Month"
                     value={values.month}
                     focused
-                    onChange={handleChange}
+                    // onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      sessionStorage.setItem("month", e.target.value);
+                    }}
                     onBlur={handleBlur}
                     select
                     sx={{
@@ -471,7 +494,11 @@ const EditAttendanceHistory = () => {
                     value={values.year}
                     inputProps={{ min: "1900", max: "2100", step: "1" }}
                     focused
-                    onChange={handleChange}
+                    // onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      sessionStorage.setItem("year", e.target.value);
+                    }}
                     onBlur={handleBlur}
                     sx={{
                       "& .MuiFilledInput-root": {

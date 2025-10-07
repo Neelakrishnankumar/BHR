@@ -44,7 +44,11 @@
     "code": "Please Enter the Code",
     "name": "Please Enter the Overhead",
     "frequency": "Please Enter the Frequency",
-    "productCost": "Please Enter the Type"
+    "OverheadType": "Please Enter the OverheadType"
+  },
+    "Overheadtype": {
+    "code": "Please Enter the Code",
+    "name": "Please Enter the Name"
   },
   "Holidaylist": {
     "Date": "Please Enter the Holiday Date",

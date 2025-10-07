@@ -136,7 +136,7 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import BadgeIcon from "@mui/icons-material/Badge";
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-
+import SummarizeIcon from '@mui/icons-material/Summarize';
 const child = {
   data: [
     {
@@ -321,6 +321,23 @@ const child = {
         //   UGA_VIEW: true,
         //   UGA_ACCESSIDS: "TR027",
         // },
+         {
+          name: "Overhead Type",
+          id: 47,
+          url: "./TR292/Overhead Type",
+          icon: (
+            <Tooltip title="Overhead Type">
+              <SummarizeIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR292",
+        },
         {
           name: "Overhead",
           id: 41,
@@ -338,6 +355,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR085",
         },
+        
         {
           name: "Holiday List",
           id: 54668,

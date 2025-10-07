@@ -74,20 +74,32 @@ const EditdailyAttendance = () => {
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
 
-  useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/validationcms.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-        return res.json();
-      })
-      .then((data) => {
-        setErrorMsgData(data);
-      })
-      .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, []);
-  useEffect(() => {
-    dispatch(resetTrackingData());
-  }, []);
+  // useEffect(() => {
+  //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setErrorMsgData(data);
+  //     })
+  //     .catch((err) => console.error("Error loading validationcms.json:", err));
+  // }, []);
+  // useEffect(() => {
+  //   dispatch(resetTrackingData());
+  // }, []);
+ useEffect(() => {
+    const savedDate = sessionStorage.getItem("date");
+    const restoredDate = savedDate || new Date().toISOString().split("T")[0];
+
+    const data = {
+      Date: restoredDate,
+      CompanyID
+    };
+
+    console.log("Dispatching MonthlyAttendance:", data);
+    dispatch(MonthlyAttendance({ data }));
+  }, [EMPID, dispatch]);
 
   function AttendanceTool() {
     return (
@@ -190,7 +202,7 @@ const EditdailyAttendance = () => {
   const currentMonthNumber = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const AttInitialvalues = {
-    date: new Date().toISOString().split("T")[0],
+    date: sessionStorage.getItem("date") || new Date().toISOString().split("T")[0],
   };
   const attendaceFnSave = async (values) => {
     const data = {
@@ -311,7 +323,11 @@ const EditdailyAttendance = () => {
                     inputFormat="YYYY-MM-DD"
                     value={values.date}
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    // onChange={handleChange}
+                     onChange={(e) => {
+                      handleChange(e);
+                      sessionStorage.setItem("date", e.target.value);
+                    }}
                     error={!!touched.date && !!errors.date}
                     helperText={touched.date && errors.date}
                     sx={{
