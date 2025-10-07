@@ -76,17 +76,46 @@ const EditAttendance = () => {
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
 
+  // useEffect(() => {
+  //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setErrorMsgData(data);
+  //     })
+  //     .catch((err) => console.error("Error loading validationcms.json:", err));
+  // }, []);
   useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/validationcms.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-        return res.json();
-      })
-      .then((data) => {
-        setErrorMsgData(data);
-      })
-      .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, []);
+
+    const savedProData = sessionStorage.getItem("proData");
+    const savedEmpData = sessionStorage.getItem("empData");
+    const savedMonth = sessionStorage.getItem("month");
+    const savedYear = Number(sessionStorage.getItem("year"));
+
+    const pro = savedProData ? JSON.parse(savedProData) : null;
+    const emp = savedEmpData ? JSON.parse(savedEmpData) : null;
+
+    const month = savedMonth || currentMonthNumber;
+    const year = savedYear || currentYear;
+
+    setproData(pro);
+    setempData(emp);
+
+    const data = {
+      Month: month,
+      Year: year,
+      EmployeeID: emp?.RecordID || "",
+      ProjectID: pro?.RecordID || "",
+    };
+
+    console.log("Dispatching Attendance on load:", data);
+
+    dispatch(Attendance({ data }));
+  }, [EMPID, dispatch]); 
+
+
   function AttendanceTool() {
     return (
       <GridToolbarContainer
@@ -135,7 +164,7 @@ const EditAttendance = () => {
     //   valueGetter: (params) =>
     //     `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`,
     // },
-      {
+    {
       field: "slno",
       headerName: "SL#",
       width: 60,
@@ -200,7 +229,7 @@ const EditAttendance = () => {
       headerName: "Comments",
       width: 150,
       headerAlign: "center",
-      
+
     },
   ];
 
@@ -209,11 +238,14 @@ const EditAttendance = () => {
   const currentMonthNumber = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const AttInitialvalues = {
-    code: data.Code,
-    description: data.Name,
-    Sal: data.Sal,
-    month: currentMonthNumber,
-    year: currentYear,
+    // code: data.Code,
+    // description: data.Name,
+    // Sal: data.Sal,
+    // month: currentMonthNumber,
+    // year: currentYear,
+    month: sessionStorage.getItem("month") || currentMonthNumber,
+    year: Number(sessionStorage.getItem("year")) || currentYear,
+
   };
   const attendaceFnSave = async (values) => {
     const data = {
@@ -332,6 +364,8 @@ const EditAttendance = () => {
               onSubmit={handleSubmit}
               onReset={() => {
                 resetForm();
+                setproData(null);
+                setempData(null);
                 dispatch(resetTrackingData());
               }}
             >
@@ -356,7 +390,11 @@ const EditAttendance = () => {
                     label="Month"
                     value={values.month}
                     focused
-                    onChange={handleChange}
+                    // onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      sessionStorage.setItem("month", e.target.value);
+                    }}
                     onBlur={handleBlur}
                     select
                     sx={{
@@ -390,7 +428,11 @@ const EditAttendance = () => {
                     value={values.year}
                     inputProps={{ min: "1900", max: "2100", step: "1" }}
                     focused
-                    onChange={handleChange}
+                    // onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      sessionStorage.setItem("year", e.target.value);
+                    }}
                     onBlur={handleBlur}
                     sx={{
                       "& .MuiFilledInput-root": {
@@ -430,7 +472,14 @@ const EditAttendance = () => {
                     label="Project"
                     id="ProName"
                     value={proData}
-                    onChange={handleSelectionProjectChange}
+                    // onChange={handleSelectionProjectChange}
+                    onChange={(newValue) => {
+                      setproData(newValue);
+                      if (newValue)
+                        sessionStorage.setItem("proData", JSON.stringify(newValue));
+                      else
+                        sessionStorage.removeItem("proData");
+                    }}
                     error={!!touched.ProName && !!errors.ProName}
                     helperText={touched.ProName && errors.ProName}
                     url={`${listViewurl}?data=${encodeURIComponent(
@@ -451,7 +500,14 @@ const EditAttendance = () => {
                     label="Employee"
                     id="Employee"
                     value={empData}
-                    onChange={handleSelectionEmployeeChange}
+                    // onChange={handleSelectionEmployeeChange}
+                    onChange={(newValue) => {
+                      setempData(newValue);
+                      if (newValue)
+                        sessionStorage.setItem("empData", JSON.stringify(newValue));
+                      else
+                        sessionStorage.removeItem("empData");
+                    }}
                     url={employeeUrl}
                   />
 
@@ -527,9 +583,8 @@ const EditAttendance = () => {
                           }}
                         />
                       }
-                      fileName={`Attendance_Report_${
-                        empData?.Name || "Employee"
-                      }.pdf`}
+                      fileName={`Attendance_Report_${empData?.Name || "Employee"
+                        }.pdf`}
                       style={{ color: "#d32f2f", cursor: "pointer" }}
                     >
                       {({ loading }) =>
@@ -609,7 +664,7 @@ const EditAttendance = () => {
                     page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => {}}
+                    onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
