@@ -60,9 +60,10 @@ const CreateCandidates = () => {
 
   const recID = params.id;
   const accessID = params.accessID;
+  //const accessID = "TR283";
   const screenName = params.screenName;
   const mode = params.Mode;
-  const EmpId = params.parentID2;
+  const EmpId = params.parentID3;
   const QuestionID = params.parentID1;
 
   const CompanyID = sessionStorage.getItem("compID");
@@ -71,8 +72,9 @@ const CreateCandidates = () => {
   const answerType = state.AnswerType;
 
   const AssessmentType = state.AssessmentType;
+  console.log("🚀 ~ CreateCandidates ~ AssessmentType:", AssessmentType);
   const DesignationID = state.DesignationID;
-  console.log("🚀 ~ CreateCandidates ~ DesignationID:", DesignationID)
+  console.log("🚀 ~ CreateCandidates ~ DesignationID:", DesignationID);
 
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Data = useSelector((state) => state.formApi.Data);
@@ -190,12 +192,18 @@ const CreateCandidates = () => {
         ? new Date().toISOString().split("T")[0] // today
         : Data.Date || new Date().toISOString().split("T")[0],
     SelfRecordID: Data.SelfRecordID
-      ? { RecordID: Data.SelfRecordID, Name: Data.Name }
+      ? { RecordID: Data.SelfRecordID, Name: Data.SelfName }
       : null,
 
-    ManagerRecordID: Data.ManagerRecordID ? {RecordID : Data.ManagerRecordID, Name: Data.Name} : null,
-    PeerRecordID: Data.PeerRecordID ? {RecordID : Data.PeerRecordID, Name: Data.Name} : null,
-    SubordinateRecordID: Data.SubordinateRecordID ? {RecordID : Data.SubordinateRecordID, Name: Data.Name} : null,
+    ManagerRecordID: Data.ManagerRecordID
+      ? { RecordID: Data.ManagerRecordID, Name: Data.ManagerName }
+      : null,
+    PeerRecordID: Data.PeerRecordID
+      ? { RecordID: Data.PeerRecordID, Name: Data.PeerName }
+      : null,
+    SubordinateRecordID: Data.SubordinateRecordID
+      ? { RecordID: Data.SubordinateRecordID, Name: Data.SubordinateName }
+      : null,
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
@@ -244,7 +252,7 @@ const CreateCandidates = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => {
                       navigate(
-                        `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID2}`,
+                        `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID3}`,
                         { state: { ...state } }
                       );
                     }}
@@ -379,7 +387,8 @@ const CreateCandidates = () => {
                             setFieldValue("ManagerRecordID", newValue);
                           }}
                           error={
-                            !!touched.ManagerRecordID && !!errors.ManagerRecordID
+                            !!touched.ManagerRecordID &&
+                            !!errors.ManagerRecordID
                           }
                           helperText={
                             touched.ManagerRecordID && errors.ManagerRecordID
@@ -396,7 +405,7 @@ const CreateCandidates = () => {
                           )}`}
                         />
 
-                         <PeerAppraisalPayload
+                        <PeerAppraisalPayload
                           name="PeerRecordID"
                           label={
                             <span>
@@ -429,7 +438,7 @@ const CreateCandidates = () => {
                           )}`}
                         />
 
-                       <SubordinateAppraisalPayload
+                        <SubordinateAppraisalPayload
                           name="SubordinateRecordID"
                           label={
                             <span>
@@ -445,10 +454,12 @@ const CreateCandidates = () => {
                             setFieldValue("SubordinateRecordID", newValue);
                           }}
                           error={
-                            !!touched.SubordinateRecordID && !!errors.SubordinateRecordID
+                            !!touched.SubordinateRecordID &&
+                            !!errors.SubordinateRecordID
                           }
                           helperText={
-                            touched.SubordinateRecordID && errors.SubordinateRecordID
+                            touched.SubordinateRecordID &&
+                            errors.SubordinateRecordID
                           }
                           url={`${listViewurl}?data=${encodeURIComponent(
                             JSON.stringify({
@@ -601,7 +612,7 @@ const CreateCandidates = () => {
                       Save
                     </LoadingButton>
 
-                    {mode == "E" ? (
+                    {/* {mode == "E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -625,7 +636,7 @@ const CreateCandidates = () => {
                       >
                         Delete
                       </Button>
-                    ) : null}
+                    ) : null} */}
 
                     <Button
                       variant="contained"

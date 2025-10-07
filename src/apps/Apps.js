@@ -194,9 +194,13 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
-
+{/* SCHEDULE */}
+                   <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
                      <Route
-                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
                     element={<CreateCandidates />}
                   />
                 

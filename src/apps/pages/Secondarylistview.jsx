@@ -209,10 +209,18 @@ const ListviewSecondary = () => {
     filter = `AssessmentID ='${parentID1}'`;
   } else if (accessID == "TR282") {
     filter = `QuestionGroupID ='${parentID1}' AND CompanyID = '${compID}'`;
-  } else if (accessID == "TR288") {
+  } 
+  else if (accessID == "TR288") {
     filter = `EmployeeID ='${parentID1}'AND CompanyID = '${compID}'`;
-  } else if (accessID == "TR283") {
-    filter = `EmployeeID ='${parentID2}'`;
+  } 
+  // else if (accessID == "TR288") {
+  //   filter = `CompanyID = '${compID}'`;
+  // } 
+  else if (accessID == "TR283") {
+    filter = `EmployeeID ='${parentID3}' AND AssessmentType = '${parentID2}'`;
+  }
+  else if (accessID == "TR291") {
+    filter = `EmployeeID ='${parentID3}' AND AssessmentType = '${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -950,7 +958,7 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID2}`,
+                    `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID3}`,
                     { state: { ...state } }
                   );
                 }}
@@ -972,7 +980,52 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-        ) : accessID == "TR073" ? (
+        ) : accessID == "TR291" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR286/List%20of%20Employees");
+                }}
+              >
+                List of Employees ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.parentID3}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Assessment Category ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+              //     { state: { ...state } }
+              //   );
+              // }}
+              >
+                List of Schedule
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ): accessID == "TR073" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
@@ -2813,6 +2866,24 @@ const ListviewSecondary = () => {
             />
           </Box>
         ) : accessID == "TR283" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            {/* <Chip
+              icon={<Visibility color="primary" />}
+              label="View"
+              variant="outlined"
+            /> */}
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            {/* <Chip
+              icon={<Delete color="error" />}
+              label="Delete"
+              variant="outlined"
+            /> */}
+          </Box>
+        ) : accessID == "TR291" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
             {/* <Chip
               icon={<Visibility color="primary" />}

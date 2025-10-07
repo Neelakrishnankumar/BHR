@@ -520,6 +520,7 @@ export const fetchListview =
       AccessID !== "TR279" &&
       AccessID !== "TR281" &&
       AccessID !== "TR282" &&
+      AccessID !== "TR291" &&
       AccessID !== "TR283" &&
       AccessID !== "TR148"
     ) {
@@ -597,8 +598,9 @@ export const fetchListview =
         AccessID != "TR281" &&
         AccessID != "TR282" &&
         AccessID != "TR283" &&
+        AccessID != "TR291" &&
         AccessID != "TR262" &&
-         AccessID != "TR288" &&
+        AccessID != "TR288" &&
         AccessID != "TR022"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -627,22 +629,25 @@ export const fetchListview =
       //  if (AccessID === "TR283") {
       //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
       // }
-  //     if (AccessID === "TR288") {
-  //       // filter = `"EmployeeID=${Em}"` + `'${filter}'`;
-  //         const EmployeeID = sessionStorage.getItem("RecordID");
-  // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
-  //     }
+      //     if (AccessID === "TR288") {
+      //       // filter = `"EmployeeID=${Em}"` + `'${filter}'`;
+      //         const EmployeeID = sessionStorage.getItem("RecordID");
+      // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
+      //     }
     } else if (
       AccessID == "TR280" ||
       AccessID == "TR279" ||
       AccessID == "TR281" ||
+      AccessID == "TR288" ||
+      AccessID == "TR283" ||
+      AccessID == "TR291" ||
       AccessID == "TR282"
     ) {
       filter = filter;
-    } 
+    }
     // else if (AccessID == "TR283") {
     //   filter;
-    // } 
+    // }
     else {
       filter = `CompanyID=${CompId}`;
     }
@@ -1149,8 +1154,9 @@ export const fetchListview =
             AccessID == "TR279" ||
             AccessID == "TR281" ||
             AccessID == "TR282" ||
-            // AccessID == "TR288" ||
+            AccessID == "TR288" ||
             AccessID == "TR286" ||
+            AccessID == "TR291" ||
             AccessID == "TR283"
           ) {
             obj = {
@@ -3772,6 +3778,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
         {accessID !== "TR279" &&
           accessID !== "TR288" &&
           accessID !== "TR286" &&
+          accessID !== "TR291" &&
           accessID !== "TR283" && (
             <Tooltip title="Edit">
               <IconButton
@@ -3787,7 +3794,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               </IconButton>
             </Tooltip>
           )}
-        {accessID === "TR283" && (
+        {(accessID === "TR283" || accessID === "TR291") && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
@@ -3843,6 +3850,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           accessID !== "TR281" &&
           accessID !== "TR282" &&
           accessID !== "TR288" &&
+          accessID !== "TR291" &&
           accessID !== "TR283" &&
           accessID !== "TR286" && (
             <Tooltip title="Delete">
@@ -3964,17 +3972,17 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
             //     }
             //   )
             // }
-             onClick={() => {
-        sessionStorage.setItem("RecordID", params.row.RecordID);
-        navigate(
-          `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
-          {
-            state: {
-              BreadCrumb1: params.row.Name,
-            },
-          }
-        );
-      }}
+            onClick={() => {
+              sessionStorage.setItem("RecordID", params.row.RecordID);
+              navigate(
+                `/Apps/Secondarylistview/skillglow/TR288/List Of Assessment Category/${params.row.RecordID}`,
+                {
+                  state: {
+                    BreadCrumb1: params.row.Name,
+                  },
+                }
+              );
+            }}
           >
             <Tooltip title="Assessment Category">
               <CategoryOutlinedIcon />
@@ -3982,7 +3990,7 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
           </IconButton>
         )}
         {/* ASSESSMENT CATEGORY */}
-        {accessID == "TR288" && (
+        {/* {accessID == "TR288" && (
           <IconButton
             color="primary"
             size="small"
@@ -4004,6 +4012,31 @@ const PrepareAction = ({ params, accessID, screenName, rights }) => {
               <Psychology />
             </Tooltip>
           </IconButton>
+        )} */}
+        {accessID == "TR288" && (
+          <Tooltip title="Schedule">
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={() => {
+                const targetRoute =
+                  params.row.AssessmentType === "Appraisal"
+                    ? `./${params.row.AssessmentType}/TR291/${params.row.RecordID}`
+                    : `./${params.row.AssessmentType}/TR283/${params.row.RecordID}`;
+
+                navigate(targetRoute, {
+                  state: {
+                    ...state,
+                    BreadCrumb2: params.row.Name,
+                    AssessmentType: params.row.AssessmentType,
+                    DesignationID: params.row.DesignationID,
+                  },
+                });
+              }}
+            >
+              <Psychology />
+            </IconButton>
+          </Tooltip>
         )}
 
         {accessID == "TR280" && (
