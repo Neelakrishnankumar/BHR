@@ -1041,7 +1041,7 @@ const Editvendor = () => {
                       Save
                     </Button>
                   )}
-                  {YearFlag == "true" && mode == "E" ? (
+                  {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -1070,7 +1070,7 @@ const Editvendor = () => {
                     //   Delete
                     // </Button>
                     null
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

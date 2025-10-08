@@ -91,8 +91,8 @@ const EditAttendance = () => {
 
     const savedProData = sessionStorage.getItem("proData");
     const savedEmpData = sessionStorage.getItem("empData");
-    const savedMonth = sessionStorage.getItem("month");
-    const savedYear = Number(sessionStorage.getItem("year"));
+    const savedMonth = sessionStorage.getItem("attmonth");
+    const savedYear = Number(sessionStorage.getItem("attyear"));
 
     const pro = savedProData ? JSON.parse(savedProData) : null;
     const emp = savedEmpData ? JSON.parse(savedEmpData) : null;
@@ -243,14 +243,14 @@ const EditAttendance = () => {
     // Sal: data.Sal,
     // month: currentMonthNumber,
     // year: currentYear,
-    month: sessionStorage.getItem("month") || currentMonthNumber,
-    year: Number(sessionStorage.getItem("year")) || currentYear,
+    attmonth: sessionStorage.getItem("attmonth") || currentMonthNumber,
+    attyear: Number(sessionStorage.getItem("attyear")) || currentYear,
 
   };
   const attendaceFnSave = async (values) => {
     const data = {
-      Month: values.month.toString(),
-      Year: values.year,
+      Month: values.attmonth.toString(),
+      Year: values.attyear,
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
       // ProjectID: proData.RecordID
       ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
@@ -359,6 +359,7 @@ const EditAttendance = () => {
             values,
             handleSubmit,
             resetForm,
+            setFieldValue
           }) => (
             <form
               onSubmit={handleSubmit}
@@ -366,6 +367,12 @@ const EditAttendance = () => {
                 resetForm();
                 setproData(null);
                 setempData(null);
+                setFieldValue("attmonth",currentMonthNumber)
+                setFieldValue("attyear",currentYear)
+                sessionStorage.removeItem("attmonth");
+                sessionStorage.removeItem("attyear");
+                sessionStorage.removeItem("empData");
+                sessionStorage.removeItem("proData");
                 dispatch(resetTrackingData());
               }}
             >
@@ -385,15 +392,15 @@ const EditAttendance = () => {
                     fullWidth
                     variant="standard"
                     type="text"
-                    id="month"
-                    name="month"
+                    id="attmonth"
+                    name="attmonth"
                     label="Month"
-                    value={values.month}
+                    value={values.attmonth}
                     focused
                     // onChange={handleChange}
                     onChange={(e) => {
                       handleChange(e);
-                      sessionStorage.setItem("month", e.target.value);
+                      sessionStorage.setItem("attmonth", e.target.value);
                     }}
                     onBlur={handleBlur}
                     select
@@ -422,16 +429,16 @@ const EditAttendance = () => {
                     fullWidth
                     variant="standard"
                     type="number"
-                    id="year"
-                    name="year"
+                    id="attyear"
+                    name="attyear"
                     label="Year"
-                    value={values.year}
+                    value={values.attyear}
                     inputProps={{ min: "1900", max: "2100", step: "1" }}
                     focused
                     // onChange={handleChange}
                     onChange={(e) => {
                       handleChange(e);
-                      sessionStorage.setItem("year", e.target.value);
+                      sessionStorage.setItem("attyear", e.target.value);
                     }}
                     onBlur={handleBlur}
                     sx={{
@@ -577,8 +584,8 @@ const EditAttendance = () => {
                         <AttendancePDF
                           data={AttendanceData}
                           filters={{
-                            Month: values.month,
-                            Year: values.year,
+                            Month: values.attmonth,
+                            Year: values.attyear,
                             EmployeeID: empData?.Name,
                           }}
                         />

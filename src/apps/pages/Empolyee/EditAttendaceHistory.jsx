@@ -425,11 +425,16 @@ const EditAttendanceHistory = () => {
             values,
             handleSubmit,
             resetForm,
+            setFieldValue
           }) => (
             <form
               onSubmit={handleSubmit}
               onReset={() => {
                 resetForm();
+                setFieldValue("month",currentMonthNumber)
+                setFieldValue("year",currentYear)
+                sessionStorage.removeItem("month");
+                sessionStorage.removeItem("year");
                 dispatch(resetTrackingData());
               }}
             >

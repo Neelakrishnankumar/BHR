@@ -3027,7 +3027,7 @@ const Editemployee = () => {
                     ) : (
                       
                     )} */}
-                    {YearFlag == "true" && mode == "E" ? (
+                    {/* {YearFlag == "true" && mode == "E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -3058,7 +3058,7 @@ const Editemployee = () => {
                       // >
                       //   Delete
                       // </Button>
-                      null}
+                      null} */}
                     <Button
                       color="warning"
                       variant="contained"
