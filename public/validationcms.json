@@ -235,6 +235,10 @@
   },
   "ListofAssessCat": {
     "assessment": "Please Enter the Assessment",
+    "SelfRecordID": "Please Enter the Self Assessment",
+    "ManagerRecordID": "Please Enter the Manager Assessment",
+    "PeerRecordID": "Please Enter the Peer Assessment",
+    "SubordinateRecordID": "Please Enter the Subordinate Assessment",
     "Date": "Please Enter the Date"
   },
   "Warningmsg": {

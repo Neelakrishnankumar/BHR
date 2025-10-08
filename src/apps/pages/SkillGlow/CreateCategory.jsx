@@ -586,7 +586,7 @@ let action = "";
                     >
                       Save
                     </LoadingButton>
-{mode == "E" ? (
+{/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -610,7 +610,7 @@ let action = "";
                     >
                       Delete
                     </Button>
-                  ) : null}
+                  ) : null} */}
 
                     <Button
                       variant="contained"

@@ -94,18 +94,77 @@ const CreateCandidates = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
-        const schema = Yup.object().shape({
-          // assessment: Yup.object()
-          //   .required(data.ListofAssessCat.assessment)
-          //   .nullable(),
-          Date: Yup.string().required(data.ListofAssessCat.Date),
-          // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-          // disable: Yup.boolean(),
+        // const schema = Yup.object().shape({
+        //   // assessment: Yup.object()
+        //   //   .required(data.ListofAssessCat.assessment)
+        //   //   .nullable(),
+        //   Date: Yup.string().required(data.ListofAssessCat.Date),
+        //   // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+        //   // disable: Yup.boolean(),
+        // });
+        const appraisalSchema = Yup.object().shape({
+          Date: Yup.string()
+            .required(data.ListofAssessCat.Date)
+            .test(
+              "valid-date",
+              "Invalid Date",
+              (value) => !!value && !isNaN(new Date(value))
+            ),
+          SelfRecordID: Yup.object()
+            .nullable()
+            .test(
+              "self-required",
+              data.ListofAssessCat.SelfRecordID,
+              (value) => value && value.RecordID
+            ),
+          ManagerRecordID: Yup.object()
+            .nullable()
+            .test(
+              "manager-required",
+              data.ListofAssessCat.ManagerRecordID,
+              (value) => value && value.RecordID
+            ),
+          PeerRecordID: Yup.object()
+            .nullable()
+            .test(
+              "peer-required",
+              data.ListofAssessCat.PeerRecordID,
+              (value) => value && value.RecordID
+            ),
+          SubordinateRecordID: Yup.object()
+            .nullable()
+            .test(
+              "sub-required",
+              data.ListofAssessCat.SubordinateRecordID,
+              (value) => value && value.RecordID
+            ),
         });
+
+        const normalSchema = Yup.object().shape({
+          Date: Yup.string()
+            .required(data.ListofAssessCat.Date)
+            .test(
+              "valid-date",
+              "Invalid Date",
+              (value) => !!value && !isNaN(new Date(value))
+            ),
+          assessment: Yup.object()
+            .nullable()
+            .test(
+              "assessment-required",
+              data.ListofAssessCat.assessment,
+              (value) => value && value.RecordID
+            ),
+        });
+
+        // Pick schema based on AssessmentType
+        const schema =
+          AssessmentType === "Appraisal" ? appraisalSchema : normalSchema;
+
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode]);
+  }, [CompanyAutoCode, AssessmentType]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -182,6 +241,7 @@ const CreateCandidates = () => {
   const [value, setValue] = useState(null);
 
   const initialValues = {
+    AssessmentType: AssessmentType || "",
     assessment: Data.AssessmentID
       ? { RecordID: Data.AssessmentID, Name: Data.AssessmentName }
       : null,
@@ -559,6 +619,7 @@ const CreateCandidates = () => {
 
                     {/* CHECKBOX */}
                     <Box>
+                     
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -612,7 +673,7 @@ const CreateCandidates = () => {
                       Save
                     </LoadingButton>
 
-                    {/* {mode == "E" ? (
+                    {/* {(mode == "E" && AssessmentType === "Appraisal") ? (
                       <Button
                         color="error"
                         variant="contained"

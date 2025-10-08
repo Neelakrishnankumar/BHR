@@ -460,7 +460,7 @@ const CreateCategoryMain = () => {
                   >
                     Save
                   </LoadingButton>
-                  {mode == "E" ? (
+                  {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -484,7 +484,7 @@ const CreateCategoryMain = () => {
                     >
                       Delete
                     </Button>
-                  ) : null}
+                  ) : null} */}
                   <Button
                     variant="contained"
                     color="warning"

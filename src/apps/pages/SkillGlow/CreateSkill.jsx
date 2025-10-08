@@ -962,7 +962,7 @@ const CreateSkill = () => {
                     Save
                   </LoadingButton>
 
-                  {mode == "E" ? (
+                  {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -986,7 +986,7 @@ const CreateSkill = () => {
                     >
                       Delete
                     </Button>
-                  ) : null}
+                  ) : null} */}
 
                   <Button
                     variant="contained"
