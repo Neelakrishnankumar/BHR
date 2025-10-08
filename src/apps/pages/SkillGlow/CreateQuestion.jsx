@@ -1234,7 +1234,7 @@ const CreateQuestion = () => {
                       Save
                     </LoadingButton>
 
-                    {mode == "E" ? (
+                    {/* {mode == "E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -1258,7 +1258,7 @@ const CreateQuestion = () => {
                       >
                         Delete
                       </Button>
-                    ) : null}
+                    ) : null} */}
 
                     <Button
                       variant="contained"
