@@ -393,7 +393,7 @@ console.log(initialValue,"OverheadType");
                     helperText={touched.OverheadType && errors.OverheadType}
                     //  onChange={handleSelectionFunctionname}
                     // defaultValue={selectedFunctionName}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType","Filter":"","Any":""}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
                   {/* </FormControl> */}
 
