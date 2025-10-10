@@ -619,7 +619,25 @@ const CreateCandidates = () => {
 
                     {/* CHECKBOX */}
                     <Box>
-                     
+                     {/* {AssessmentType === "Appraisal" ? (false) : (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="DeleteFlag"
+                            checked={values.DeleteFlag}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Delete"
+                        sx={{
+                          marginTop: "20px",
+                          "@media (max-width:500px)": {
+                            marginTop: 0,
+                          },
+                        }}
+                        //inputProps={{ readOnly: mode == "V" }}
+                      />
+                     )} */}
                       <FormControlLabel
                         control={
                           <Checkbox
