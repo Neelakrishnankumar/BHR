@@ -95,7 +95,7 @@ const Edittimesheetreport = () => {
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const listViewData = useSelector((state) => state.listviewApi.rowData);
     const listViewColumn = useSelector((state) => state.listviewApi.columnData);
-      const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     // const empAttendanceData = useSelector(
     //   (state) => state.formApi.empAttendanceData
     // );
@@ -109,7 +109,7 @@ const Edittimesheetreport = () => {
     const projectName = useSelector((state) => state.formApi.projectName);
     const managerName = useSelector((state) => state.formApi.managerName);
     console.log("AttendanceData", AttendanceData);
-     const CompanyID = sessionStorage.getItem("compID");
+    const CompanyID = sessionStorage.getItem("compID");
     const getLoading = useSelector((state) => state.formApi.getLoading);
     const data = useSelector((state) => state.formApi.Data);
     const isLoading = useSelector((state) => state.formApi.loading);
@@ -129,19 +129,72 @@ const Edittimesheetreport = () => {
         dispatch(resetTrackingData());
     }, [])
     const [errorMsgData, setErrorMsgData] = useState(null);
-    
-        useEffect(() => {
-            fetch(process.env.PUBLIC_URL + "/validationcms.json")
-                .then((res) => {
-                    if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-                    return res.json();
-                })
-                .then((data) => {
-                    setErrorMsgData(data);
-                })
-                .catch((err) => console.error("Error loading validationcms.json:", err));
-        }, []);
 
+    // useEffect(() => {
+    //     fetch(process.env.PUBLIC_URL + "/validationcms.json")
+    //         .then((res) => {
+    //             if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+    //             return res.json();
+    //         })
+    //         .then((data) => {
+    //             setErrorMsgData(data);
+    //         })
+    //         .catch((err) => console.error("Error loading validationcms.json:", err));
+    // }, []);
+    useEffect(() => {
+        const savedProData = sessionStorage.getItem("proData");
+        const savedEmpData = sessionStorage.getItem("empData");
+
+        const savedCheckboxes = {
+            checkbox1: sessionStorage.getItem("checkbox1") === "true",
+            checkbox2: sessionStorage.getItem("checkbox2") === "true",
+            checkbox3: sessionStorage.getItem("checkbox3") === "true",
+            checkbox4: sessionStorage.getItem("checkbox4") === "true",
+            checkbox5: sessionStorage.getItem("checkbox5") === "true",
+            checkbox6: sessionStorage.getItem("checkbox6") === "true",
+            checkbox7: sessionStorage.getItem("checkbox7") === "true",
+            checkbox8: sessionStorage.getItem("checkbox8") === "true",
+        };
+
+        const pro = savedProData ? JSON.parse(savedProData) : [];
+        const emp = savedEmpData ? JSON.parse(savedEmpData) : null;
+
+        setSelectedPro(pro);
+        setempData(emp);
+
+        const projectID = pro
+            ? Array.isArray(pro)
+                ? pro.map(p => p.RecordID).join(',')
+                : pro.RecordID
+            : "";
+        const employeeID = emp?.RecordID || "";
+
+        // Build TaskSource and Status arrays
+        const taskSourceArr = [];
+        if (savedCheckboxes.checkbox1) taskSourceArr.push("S");
+        if (savedCheckboxes.checkbox2) taskSourceArr.push("M");
+        if (savedCheckboxes.checkbox3) taskSourceArr.push("SH");
+
+        const statusArr = [];
+        if (savedCheckboxes.checkbox4) statusArr.push("N", "SH", "A");
+        if (savedCheckboxes.checkbox5) statusArr.push("AP");
+        if (savedCheckboxes.checkbox6) statusArr.push("C");
+        if (savedCheckboxes.checkbox7) statusArr.push("AS", "SH");
+        if (savedCheckboxes.checkbox8) statusArr.push("I");
+
+        // Build AttendanceFilter string
+        let attendanceFilter = `EmployeeID=${employeeID} AND ProjectID=${projectID}`;
+        // let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID})`;
+        if (taskSourceArr.length && statusArr.length) {
+            attendanceFilter += ` AND (TaskSource IN(${taskSourceArr.map(v => `'${v}'`).join(',')}) AND Status IN(${statusArr.map(v => `'${v}'`).join(',')}))`;
+        } else if (taskSourceArr.length) {
+            attendanceFilter += ` AND TaskSource IN(${taskSourceArr.map(v => `'${v}'`).join(',')})`;
+        } else if (statusArr.length) {
+            attendanceFilter += ` AND Status IN(${statusArr.map(v => `'${v}'`).join(',')})`;
+        }
+
+        // dispatch(timeSheetreport({ data: { AttendanceFilter: attendanceFilter } }));
+    }, []);
     const handleUnlock = async () => {
         const idata = {
             action: "update",
@@ -196,27 +249,27 @@ const Edittimesheetreport = () => {
     }
 
     const AttColumn = [
-//         {
-//     field: "serialNo",
-//     headerName: "SL#",
-//     width: 40,
-//     sortable: false,
-//     filterable: false,
-//     disableColumnMenu: true,
-//     renderCell: (params) => {
-//       return params.api.getRowIndex(params.id) + 1;
-//     },
-//   },
- {
-      field: "slno",
-      headerName: "SL#",
-      width: 50,
-      sortable: false,
-      filterable: false,
-      valueGetter: (params) =>
-        `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
-    },
-   {
+        //         {
+        //     field: "serialNo",
+        //     headerName: "SL#",
+        //     width: 40,
+        //     sortable: false,
+        //     filterable: false,
+        //     disableColumnMenu: true,
+        //     renderCell: (params) => {
+        //       return params.api.getRowIndex(params.id) + 1;
+        //     },
+        //   },
+        {
+            field: "slno",
+            headerName: "SL#",
+            width: 50,
+            sortable: false,
+            filterable: false,
+            valueGetter: (params) =>
+                `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+        },
+        {
             field: 'RecordID',
             headerName: 'RecordID',
             width: 80,
@@ -321,15 +374,23 @@ const Edittimesheetreport = () => {
 
     const currentMonthNumber = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
-  const AttInitialvalues = {
-        checkbox1: true,
-        checkbox5: true,
-        checkbox2: false,
-        checkbox3: false,
-        checkbox4: false,
-        checkbox6: false,
-        checkbox7: false,
-        checkbox8: false,
+    const AttInitialvalues = {
+        // checkbox1: true,
+        // checkbox5: true,
+        // checkbox2: false,
+        // checkbox3: false,
+        // checkbox4: false,
+        // checkbox6: false,
+        // checkbox7: false,
+        // checkbox8: false,
+        checkbox1: sessionStorage.getItem("checkbox1") === "true" || false,
+        checkbox2: sessionStorage.getItem("checkbox2") === "true" || false,
+        checkbox3: sessionStorage.getItem("checkbox3") === "true" || false,
+        checkbox4: sessionStorage.getItem("checkbox4") === "true" || false,
+        checkbox5: sessionStorage.getItem("checkbox5") === "true" || false,
+        checkbox6: sessionStorage.getItem("checkbox6") === "true" || false,
+        checkbox7: sessionStorage.getItem("checkbox7") === "true" || false,
+        checkbox8: sessionStorage.getItem("checkbox8") === "true" || false,
     };
     const [getData, setData] = useState("")
     const [useCurrentEmp, setUseCurrentEmp] = useState(false);
@@ -391,7 +452,7 @@ const Edittimesheetreport = () => {
         if (values.checkbox4) statusValues.push('N', 'SH', 'A'); // special handling for checkbox4
         if (values.checkbox5) statusValues.push('AP');
         if (values.checkbox6) statusValues.push('C');
-        if (values.checkbox7) statusValues.push('AS','SH');
+        if (values.checkbox7) statusValues.push('AS', 'SH');
         if (values.checkbox8) statusValues.push('I');
 
         let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID})`;
@@ -536,6 +597,10 @@ const Edittimesheetreport = () => {
                             onSubmit={handleSubmit}
                             onReset={() => {
                                 resetForm();
+                                setSelectedPro([]);
+                                setempData(null);
+                                sessionStorage.removeItem("proData");
+                                sessionStorage.removeItem("empData");
                                 dispatch(resetTrackingData());
                             }}
                         >
@@ -560,33 +625,48 @@ const Edittimesheetreport = () => {
                                             label="Project"
                                             id="ProName"
                                             value={selectedPro}
+                                            // onChange={(e, newValue) => {
+                                            //     setFieldValue("block", newValue);
+                                            //     setSelectedPro(newValue);
+                                            // }}
                                             onChange={(e, newValue) => {
-                                                setFieldValue("block", newValue);
+                                                setFieldValue("ProName", newValue);
                                                 setSelectedPro(newValue);
+                                                if (newValue) {
+                                                    sessionStorage.setItem("proData", JSON.stringify(newValue));
+                                                } else {
+                                                    sessionStorage.removeItem("proData");
+                                                }
                                             }}
                                             url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                         />
                                     </Box>
 
-                                        <Box sx={{ minWidth: 250 }}>
-                                            <Productautocomplete
-                                                name="Employee"
-                                                label={
-                                                    <span>
-                                                        Employee
-                                                        {/* <span style={{ color: "red", fontWeight: "bold" }}>*</span> */}
-                                                    </span>
-                                                }
-                                                variant="outlined"
-                                                id="Employee"
-                                                value={empData}
-                                                //disabled={isManager === "0"}
-                                                onChange={handleSelectionEmployeeChange}
-                                                url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
-                                            />
-                                        </Box>
+                                    <Box sx={{ minWidth: 250 }}>
+                                        <Productautocomplete
+                                            name="Employee"
+                                            label={
+                                                <span>
+                                                    Employee
+                                                    {/* <span style={{ color: "red", fontWeight: "bold" }}>*</span> */}
+                                                </span>
+                                            }
+                                            variant="outlined"
+                                            id="Employee"
+                                            value={empData}
+                                            //disabled={isManager === "0"}
+                                            // onChange={handleSelectionEmployeeChange}
+                                            onChange={(newValue) => {
+                                                setempData(newValue);
+                                                if (newValue) sessionStorage.setItem("empData", JSON.stringify(newValue));
+                                                else sessionStorage.removeItem("empData");
+                                                setUseCurrentEmp(false);
+                                            }}
+                                            url={`${listViewurl}?data={"Query":{"AccessID":"2116","ScreenName":"EMPLOYEETEAMS","Filter":"CompanyID='${CompanyID}'","Any":"","CompId":${CompanyID}}}`}
+                                        />
+                                    </Box>
                                     {/* )} */}
-                                    
+
                                     {/* <FormControlLabel
                                         control={
                                             <Checkbox
@@ -647,88 +727,137 @@ const Edittimesheetreport = () => {
                                     </Box>
                                 </FormControl> */}
 
-                                                             <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
-  <Box sx={{ paddingX: 3, paddingY: 2 }}>
-    <Grid container spacing={2}>
-      {/* Left Section (Main Checkboxes) */}
-      <Grid item xs={12} sm={8}>
-        <Grid container spacing={1}>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox1" as={Checkbox} />}
-              label="Self Task"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox4" as={Checkbox} />}
-              label="Created"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox2" as={Checkbox} />}
-              label="Manager Assigned Task"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox7" as={Checkbox} />}
-              label="Backlog"
-            />
-            {/* <FormControlLabel
+                                <FormControl fullWidth sx={{ gridColumn: "span 1" }}>
+                                    <Box sx={{ paddingX: 3, paddingY: 2 }}>
+                                        <Grid container spacing={2}>
+                                            {/* Left Section (Main Checkboxes) */}
+                                            <Grid item xs={12} sm={8}>
+                                                <Grid container spacing={1}>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox1}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox1", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox1", e.target.checked); // save session
+                                                                }}
+                                                            />
+                                                            }
+                                                            label="Self Task"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox4}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox4", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox4", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Created"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox2}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox2", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox2", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Manager Assigned Task"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox7}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox7", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox7", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Backlog"
+                                                        />
+                                                        {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox5" as={Checkbox} />}
               label="Approved"
             /> */}
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox3" as={Checkbox} />}
-              label="Scheduled Task"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox8" as={Checkbox} />}
-              label="Inprogress"
-            />
-            {/* <FormControlLabel
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox3}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox3", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox3", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Scheduled Task"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox8}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox8", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox8", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Inprogress"
+                                                        />
+                                                        {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox6" as={Checkbox} />}
               label="Rejected"
             /> */}
-          </Grid>
-        </Grid>
-      </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
 
-      {/* Right Section (New Column for Last 2 Checkboxes) */}
-      <Grid item xs={12} sm={4}>
-        <Grid container spacing={1} direction="column">
-          <Grid item>
-            {/* <FormControlLabel
+                                            {/* Right Section (New Column for Last 2 Checkboxes) */}
+                                            <Grid item xs={12} sm={4}>
+                                                <Grid container spacing={1} direction="column">
+                                                    <Grid item>
+                                                        {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox7" as={Checkbox} />}
               label="In Progressnew"
             /> */}
-            <FormControlLabel
-              control={<Field type="checkbox" name="checkbox6" as={Checkbox} />}
-              label="Completed"
-            /> 
-          </Grid>
-          <Grid item>
-            {/* <FormControlLabel
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox6}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox6", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox6", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Completed"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item>
+                                                        {/* <FormControlLabel
               control={<Field type="checkbox" name="checkbox8" as={Checkbox} />}
               label="Completed new"
             /> */}
-              <FormControlLabel
-              control={<Field type="checkbox" name="checkbox5" as={Checkbox} />}
-              label="Approved"
-            />
-           
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
-  </Box>
-</FormControl>
+                                                        <FormControlLabel
+                                                            control={<Checkbox
+                                                                checked={values.checkbox5}
+                                                                onChange={(e) => {
+                                                                    setFieldValue("checkbox5", e.target.checked); // update Formik
+                                                                    sessionStorage.setItem("checkbox5", e.target.checked); // save session
+                                                                }}
+                                                            />}
+                                                            label="Approved"
+                                                        />
+
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </FormControl>
                             </Box>
 
                             <Box
@@ -744,6 +873,16 @@ const Edittimesheetreport = () => {
                                 </Button>
                                 <Button type="reset" variant="contained" color="error">
                                     RESET
+                                </Button>
+                                <Button
+                                    color="warning"
+                                    variant="contained"
+                                    onClick={() => {
+                                        navigate(-1);
+                                    }}
+
+                                >
+                                    Cancel
                                 </Button>
                                 <PDFDownloadLink
                                     document={

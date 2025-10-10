@@ -776,7 +776,7 @@ const Editfunction = () => {
                       Delete
                     </Button>
                   )} */}
-                  {YearFlag === "true" && mode == "E" ? (
+                  {/* {YearFlag === "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -802,7 +802,7 @@ const Editfunction = () => {
                     </Button>
                   ) : (
                     null
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

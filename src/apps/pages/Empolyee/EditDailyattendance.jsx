@@ -293,11 +293,14 @@ const EditdailyAttendance = () => {
             values,
             handleSubmit,
             resetForm,
+            setFieldValue
           }) => (
             <form
               onSubmit={handleSubmit}
               onReset={() => {
                 resetForm();
+                setFieldValue("date",new Date().toISOString().split("T")[0])
+                sessionStorage.removeItem("date")
                 dispatch(resetTrackingData());
               }}
             >

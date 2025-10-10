@@ -645,7 +645,8 @@ const LeaveType = () => {
                     >
                       Save
                     </Button>
-                  )}   {YearFlag == "true" && mode == "E" ? (
+                  )}   
+                  {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -678,7 +679,7 @@ const LeaveType = () => {
                     //   Delete
                     // </Button>
                     null
-                  )}
+                  )} */}
                   <Button
                     color="warning"
                     variant="contained"

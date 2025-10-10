@@ -543,7 +543,7 @@ const Editdept = () => {
                       Delete
                     </Button>
                   )} */}
-                  {mode == "E" ? (
+                  {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -572,7 +572,7 @@ const Editdept = () => {
                     </Button>
                   ) : (
                     null
-                  )}
+                  )} */}
                   {/* <Button
                     color="error"
                     variant="contained"

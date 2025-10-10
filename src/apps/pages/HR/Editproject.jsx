@@ -648,7 +648,7 @@ const Editproject = () => {
                       Save
                     </Button>
                   )}
-                  {YearFlag == "true" && mode == "E" ? (
+                  {/* {YearFlag == "true" && mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -679,7 +679,7 @@ const Editproject = () => {
                     // >
                     //   Delete
                     // </Button>
-                    null}
+                    null} */}
                   <Button
                     color="warning"
                     variant="contained"

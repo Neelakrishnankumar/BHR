@@ -471,7 +471,7 @@ const Editdesignation = () => {
                       Delete
                     </Button>
                   )} */}
-                  {mode == "E" ? (
+                  {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -497,7 +497,7 @@ const Editdesignation = () => {
                     </Button>
                   ) : (
                     null
-                  )}
+                  )} */}
 
                   <Button
                     color="warning"
