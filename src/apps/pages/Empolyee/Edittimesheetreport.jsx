@@ -67,7 +67,7 @@ import { useDispatch } from "react-redux";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-hot-toast";
-import { Employeeautocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Employeeautocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DoneIcon from '@mui/icons-material/Done';
@@ -125,6 +125,8 @@ const Edittimesheetreport = () => {
     console.log(formattedDate);
     const [selectedRow, setSelectedRow] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [empData, setempData] = useState(null);
+    const [selectedPro, setSelectedPro] = useState([]);
     useEffect(() => {
         dispatch(resetTrackingData());
     }, [])
@@ -141,60 +143,61 @@ const Edittimesheetreport = () => {
     //         })
     //         .catch((err) => console.error("Error loading validationcms.json:", err));
     // }, []);
-    useEffect(() => {
-        const savedProData = sessionStorage.getItem("proData");
-        const savedEmpData = sessionStorage.getItem("empData");
+    // useEffect(() => {
+    //     const savedProData = sessionStorage.getItem("proData");
+    //     const savedEmpData = sessionStorage.getItem("empData");
 
-        const savedCheckboxes = {
-            checkbox1: sessionStorage.getItem("checkbox1") === "true",
-            checkbox2: sessionStorage.getItem("checkbox2") === "true",
-            checkbox3: sessionStorage.getItem("checkbox3") === "true",
-            checkbox4: sessionStorage.getItem("checkbox4") === "true",
-            checkbox5: sessionStorage.getItem("checkbox5") === "true",
-            checkbox6: sessionStorage.getItem("checkbox6") === "true",
-            checkbox7: sessionStorage.getItem("checkbox7") === "true",
-            checkbox8: sessionStorage.getItem("checkbox8") === "true",
-        };
+    //     const savedCheckboxes = {
+    //         checkbox1: sessionStorage.getItem("checkbox1") === "true",
+    //         checkbox2: sessionStorage.getItem("checkbox2") === "true",
+    //         checkbox3: sessionStorage.getItem("checkbox3") === "true",
+    //         checkbox4: sessionStorage.getItem("checkbox4") === "true",
+    //         checkbox5: sessionStorage.getItem("checkbox5") === "true",
+    //         checkbox6: sessionStorage.getItem("checkbox6") === "true",
+    //         checkbox7: sessionStorage.getItem("checkbox7") === "true",
+    //         checkbox8: sessionStorage.getItem("checkbox8") === "true",
+    //     };
 
-        const pro = savedProData ? JSON.parse(savedProData) : [];
-        const emp = savedEmpData ? JSON.parse(savedEmpData) : null;
+    //     const pro = savedProData ? JSON.parse(savedProData) : null;
+    //     const emp = savedEmpData ? JSON.parse(savedEmpData) : null;
 
-        setSelectedPro(pro);
-        setempData(emp);
+    //     setSelectedPro(pro);
+    //     setempData(emp);
 
-        const projectID = pro
-            ? Array.isArray(pro)
-                ? pro.map(p => p.RecordID).join(',')
-                : pro.RecordID
-            : "";
-        const employeeID = emp?.RecordID || "";
+    //     const projectID = pro
+    //         ? Array.isArray(pro)
+    //             ? pro.map(p => p.RecordID).join(',')
+    //             : pro.RecordID
+    //         : "";
+    //     const employeeID = emp?.RecordID || "";
 
-        // Build TaskSource and Status arrays
-        const taskSourceArr = [];
-        if (savedCheckboxes.checkbox1) taskSourceArr.push("S");
-        if (savedCheckboxes.checkbox2) taskSourceArr.push("M");
-        if (savedCheckboxes.checkbox3) taskSourceArr.push("SH");
+    //     // Build TaskSource and Status arrays
+    //     const taskSourceArr = [];
+    //     if (savedCheckboxes.checkbox1) taskSourceArr.push("S");
+    //     if (savedCheckboxes.checkbox2) taskSourceArr.push("M");
+    //     if (savedCheckboxes.checkbox3) taskSourceArr.push("SH");
 
-        const statusArr = [];
-        if (savedCheckboxes.checkbox4) statusArr.push("N", "SH", "A");
-        if (savedCheckboxes.checkbox5) statusArr.push("AP");
-        if (savedCheckboxes.checkbox6) statusArr.push("C");
-        if (savedCheckboxes.checkbox7) statusArr.push("AS", "SH");
-        if (savedCheckboxes.checkbox8) statusArr.push("I");
+    //     const statusArr = [];
+    //     if (savedCheckboxes.checkbox4) statusArr.push("N", "SH", "A");
+    //     if (savedCheckboxes.checkbox5) statusArr.push("AP");
+    //     if (savedCheckboxes.checkbox6) statusArr.push("C");
+    //     if (savedCheckboxes.checkbox7) statusArr.push("AS", "SH");
+    //     if (savedCheckboxes.checkbox8) statusArr.push("I");
 
-        // Build AttendanceFilter string
-        let attendanceFilter = `EmployeeID=${employeeID} AND ProjectID=${projectID}`;
-        // let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID})`;
-        if (taskSourceArr.length && statusArr.length) {
-            attendanceFilter += ` AND (TaskSource IN(${taskSourceArr.map(v => `'${v}'`).join(',')}) AND Status IN(${statusArr.map(v => `'${v}'`).join(',')}))`;
-        } else if (taskSourceArr.length) {
-            attendanceFilter += ` AND TaskSource IN(${taskSourceArr.map(v => `'${v}'`).join(',')})`;
-        } else if (statusArr.length) {
-            attendanceFilter += ` AND Status IN(${statusArr.map(v => `'${v}'`).join(',')})`;
-        }
+    //     // Build AttendanceFilter string
+    //     let attendanceFilter = `EmployeeID=${employeeID} AND ProjectID=${projectID} AND CompanyID=${CompanyID}`;
+    //     // let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID})`;
+    //     if (taskSourceArr.length && statusArr.length) {
+    //         attendanceFilter += ` AND (TaskSource IN(${taskSourceArr.map(v => `'${v}'`).join(',')}) AND Status IN(${statusArr.map(v => `'${v}'`).join(',')}))`;
+    //     } else if (taskSourceArr.length) {
+    //         attendanceFilter += ` AND TaskSource IN(${taskSourceArr.map(v => `'${v}'`).join(',')})`;
+    //     } else if (statusArr.length) {
+    //         attendanceFilter += ` AND Status IN(${statusArr.map(v => `'${v}'`).join(',')})`;
+    //     }
 
-        // dispatch(timeSheetreport({ data: { AttendanceFilter: attendanceFilter } }));
-    }, []);
+    //      dispatch(timeSheetreport({ data: { AttendanceFilter: attendanceFilter } }));
+    // }, []);
+    
     const handleUnlock = async () => {
         const idata = {
             action: "update",
@@ -284,17 +287,20 @@ const Edittimesheetreport = () => {
         {
             field: 'Date',
             headerName: 'Date',
+             headerAlign : 'center',
             width: 100,
 
         },
         {
             field: 'ProjectName',
             headerName: 'ProjectName',
+            headerAlign : 'center',
             width: 130,
         },
         {
             field: "Description",
             headerName: "Description",
+             headerAlign : 'center',
             width: 600,
             renderCell: (params) => {
                 const description = params.row.Description || "";
@@ -355,6 +361,7 @@ const Edittimesheetreport = () => {
         {
             field: 'EmpStatus',
             headerName: 'Status',
+             headerAlign : 'center',
             width: 120,
         },
 
@@ -383,6 +390,13 @@ const Edittimesheetreport = () => {
         // checkbox6: false,
         // checkbox7: false,
         // checkbox8: false,
+       
+        ProName: sessionStorage.getItem("proData")
+            ? JSON.parse(sessionStorage.getItem("proData"))
+            : null,
+        Employee: sessionStorage.getItem("empData")
+            ? JSON.parse(sessionStorage.getItem("empData"))
+            : null,
         checkbox1: sessionStorage.getItem("checkbox1") === "true" || false,
         checkbox2: sessionStorage.getItem("checkbox2") === "true" || false,
         checkbox3: sessionStorage.getItem("checkbox3") === "true" || false,
@@ -455,7 +469,7 @@ const Edittimesheetreport = () => {
         if (values.checkbox7) statusValues.push('AS', 'SH');
         if (values.checkbox8) statusValues.push('I');
 
-        let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID})`;
+        let AttendanceFilter = `EmployeeID=${useCurrentEmp ? EMPID : empData.RecordID} AND ProjectID IN(${projecID}) AND CompanyID=${CompanyID}`;
 
         if (taskSourceValues.length > 0 && statusValues.length === 0) {
             AttendanceFilter += ` AND TaskSource IN(${taskSourceValues.map(val => `'${val}'`).join(',')})`;
@@ -515,7 +529,6 @@ const Edittimesheetreport = () => {
             }
         });
     };
-    const [empData, setempData] = useState(null);
     const handleSelectionEmployeeChange = (newValue) => {
 
         if (newValue) {
@@ -531,7 +544,6 @@ const Edittimesheetreport = () => {
 
 
     const [reason, setReason] = useState("")
-    const [selectedPro, setSelectedPro] = useState([]);
     const projecID = selectedPro.map(ProName => ProName.RecordID).join(',');
     return (
         <React.Fragment>
@@ -643,7 +655,7 @@ const Edittimesheetreport = () => {
                                     </Box>
 
                                     <Box sx={{ minWidth: 250 }}>
-                                        <Productautocomplete
+                                        <CheckinAutocomplete
                                             name="Employee"
                                             label={
                                                 <span>

@@ -153,6 +153,7 @@ const EditTimeSheet = () => {
       Month: month,
       Year: year,
       EmployeeID: emp?.RecordID || "",
+      CompanyID
     };
 
 
@@ -448,6 +449,7 @@ const EditTimeSheet = () => {
       Month: values.timemonth.toString(),
       Year: values.timeyear,
       EmployeeID: useCurrentEmp ? EMPID : timeempData.RecordID,
+      CompanyID
     };
     setData(data);
     dispatch(timeSheet({ data }));
