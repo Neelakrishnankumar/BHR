@@ -99,14 +99,14 @@ const CreateSession = () => {
             then: (schema) =>
               schema.required(data.ListofSession.AttachmentName),
             otherwise: (schema) => schema.nullable(),
-          }), 
+          }),
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
         });
-        if(CompanyAutoCode === "N"){
+        if (CompanyAutoCode === "N") {
           schema = schema.shape({
             Code: Yup.string().required(data.ListofSession.Code),
-          })
+          });
         }
         setValidationSchema(schema);
       })
@@ -233,7 +233,7 @@ const CreateSession = () => {
                 borderRadius="3px"
                 alignItems="center"
               >
-                <Breadcrumbs
+                {/* <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"
                   separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
@@ -275,6 +275,65 @@ const CreateSession = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
+                  >
+                    {mode == "A" ? "New" : mode == "V" ? "View" : Data.Name}
+                  </Typography>
+                </Breadcrumbs> */}
+
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                    }}
+                  >
+                    List of Assessment Type ({state.BreadCrumb1})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Category ({state.BreadCrumb2})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}/${params.accessID1}/${params.parentID2}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Assessment ({state.BreadCrumb3})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(-1)}
+                  >
+                    List Of Session
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    //onClick={() => navigate(-1)}
                   >
                     {mode == "A" ? "New" : mode == "V" ? "View" : Data.Name}
                   </Typography>
@@ -333,59 +392,59 @@ const CreateSession = () => {
                   >
                     {/* TEXTFIELD */}
                     {CompanyAutoCode === "Y" ? (
-                    <TextField
-                      variant="standard"
-                      type="text"
-                      name="Code"
-                      label="Code"
-                      id="Code"
-                      placeholder="Auto"
-                      value={values.Code}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      focused
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      //disabled={mode === "V"}
-                      inputProps={{ readOnly: mode == "V" }}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                    />
-                    ):(
-                    <TextField
-                      variant="standard"
-                      type="text"
-                      name="Code"
-                      label={
-                        <>
-                          Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      id="Code"
-                      //placeholder="Enter Your code here......"
-                      value={values.Code}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      focused
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      //disabled={mode === "V"}
-                      inputProps={{ readOnly: mode == "V" }}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
+                      <TextField
+                        variant="standard"
+                        type="text"
+                        name="Code"
+                        label="Code"
+                        id="Code"
+                        placeholder="Auto"
+                        value={values.Code}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        focused
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
+                        //disabled={mode === "V"}
+                        inputProps={{ readOnly: mode == "V" }}
+                        sx={{
+                          // backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                      />
+                    ) : (
+                      <TextField
+                        variant="standard"
+                        type="text"
+                        name="Code"
+                        label={
+                          <>
+                            Code
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        id="Code"
+                        //placeholder="Enter Your code here......"
+                        value={values.Code}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        focused
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
+                        //disabled={mode === "V"}
+                        inputProps={{ readOnly: mode == "V" }}
+                        sx={{
+                          // backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        autoFocus
+                      />
                     )}
 
                     <TextField
@@ -417,7 +476,6 @@ const CreateSession = () => {
                       }}
                       inputProps={{ readOnly: mode == "V" }}
                       autoFocus={CompanyAutoCode == "Y"}
-
                     />
 
                     {/* DROPDOWN */}
@@ -557,24 +615,24 @@ const CreateSession = () => {
                             <CloudUpload fontSize="medium" />
                           </IconButton>
                         </Tooltip>
-                         {(values.ContentType === "Pdf" ||
-                        values.ContentType === "Ppt") && (
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      )}
-                      {/* Show Yup validation error here */}
-                      {touched.AttachmentName && errors.AttachmentName && (
-                        <div
-                          style={{
-                            color: "red",
-                            fontSize: "0.8rem",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {errors.AttachmentName}
-                        </div>
-                      )}
+                        {(values.ContentType === "Pdf" ||
+                          values.ContentType === "Ppt") && (
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        )}
+                        {/* Show Yup validation error here */}
+                        {touched.AttachmentName && errors.AttachmentName && (
+                          <div
+                            style={{
+                              color: "red",
+                              fontSize: "0.8rem",
+                              marginTop: "4px",
+                            }}
+                          >
+                            {errors.AttachmentName}
+                          </div>
+                        )}
                         <Button
                           // disabled={mode === "V"}
                           variant="contained"

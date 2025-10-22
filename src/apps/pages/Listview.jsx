@@ -382,6 +382,8 @@ const Listview = () => {
             false
           ) : accessID == "TR286" ? (
             false
+          ) : accessID == "TR299" ? (
+            false
           ) : accessID == "TR072" ? (
             false
           ) : accessID == "TR058" ? (
@@ -647,6 +649,14 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR286" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<CategoryOutlinedIcon color="primary" />}
+              label="Assessment Category"
+              variant="outlined"
+            />
+          </Box>
+        ) : accessID == "TR299" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<CategoryOutlinedIcon color="primary" />}

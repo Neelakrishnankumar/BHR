@@ -152,6 +152,13 @@ import CreateSkillCandidate from "./pages/SkillGlow/CreateSkillCandidate";
 import EmployeeSchedule from "./pages/SkillGlow/EmployeeSchedule";
 import SkillInsights from "./pages/SkillGlow/Insights";
 import Editoverheadtype from "./pages/FinanceModule/Editoverheadtype";
+import NewCreateCategoryMain from "./pages/SkillGlow/NewCreateCategory";
+import CreateAppraisalSkill from "./pages/SkillGlow/AppraisalSkill";
+import SkillCreate from "./pages/SkillGlow/SkillCreate";
+import CreateSurvey from "./pages/SkillGlow/CreateSurvey";
+import CreateCompliance from "./pages/SkillGlow/CreateCompliance";
+import CreateFeedBack from "./pages/SkillGlow/CreateFeedBack";
+import NewSchedule from "./pages/SkillGlow/NewSchedule";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -189,22 +196,23 @@ function App() {
                   />
 
                   {/* SKILL GLOW */}
-                 
+
                   {/* SCHEDULE */}
-                   <Route
+                  <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
-{/* SCHEDULE */}
-                   <Route
+
+                  {/* SCHEDULE */}
+                  <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
                   />
-                     <Route
+                  <Route
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
                     element={<CreateCandidates />}
                   />
-                
+
                   {/* Session */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
@@ -214,20 +222,60 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Session/:id/:Mode"
                     element={<CreateSession />}
                   />
+
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* NEW SESSION */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1/EditListOfSession/:id/:Mode"
+                    element={<CreateSession />}
+                  />
+                  {/* NEW SCHEDULE */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/:accessID/:parentID2/:parentID1"
+                    element={<NewSchedule />}
+                  />
                   {/* QUESTION GROUP */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
                     element={<ListviewSecondary />}
                   />
-                   <Route
+
+                  {/* NEW QUESTION GROUP */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Question Groups/:id/:Mode"
+                    element={<CreateCategory />}
+                  />
+                  {/* NEW QUESTION GROUP CREATE */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/:parentID1/EditListOfQuestionGroups/:id/:Mode"
                     element={<CreateCategory />}
                   />
 
                   {/* QUESTION */}
-                   <Route
+                  <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID3/:parentID2/:secondaryAccessID/:parentID1"
                     element={<ListviewSecondary />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Question Groups/:id/:Mode"
+                    element={<CreateQuestion />}
+                  />
+                  {/* NEW QUESTION */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID4/:accessID2/:parentID3/:accessID1/:parentID2/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* NEW QUESTION CREATE */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID4/:accessID2/:parentID3/:accessID1/:parentID2/:accessID/:parentID1/EditListOfQuestion/:id/:Mode"
+                    element={<CreateQuestion />}
                   />
                   <Route
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Question Groups/:id/:Mode"
@@ -246,6 +294,45 @@ function App() {
                     path="/:accessID/:screenName/EditList Of Categories/:id/:Mode"
                     element={<CreateCategoryMain />}
                   />
+
+                  {/*NEW CREATE CATEGORY  */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID1/EditList Of Assessment Category/:id/:Mode"
+                    element={<NewCreateCategoryMain />}
+                  />
+                  {/* NEW SKILL ASSESSMENT */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
+                    element={<SkillCreate />}
+                  />
+
+                  {/* APPRAISAL LIST */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* NEW APPRAISAL CREATE */}
+                  {/* <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditList Of Appraisal/:id/:Mode"
+                    element={<CreateAppraisalSkill />}
+                  /> */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfAppraisal/:id/:Mode"
+                    element={<CreateAppraisalSkill />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfSurvey/:id/:Mode"
+                    element={<CreateSurvey />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfCompliance/:id/:Mode"
+                    element={<CreateCompliance />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfFeedBack/:id/:Mode"
+                    element={<CreateFeedBack />}
+                  />
+
                   <Route
                     path="SkillGlow/CandidateMain"
                     element={<CandidateMain />}
@@ -271,10 +358,12 @@ function App() {
                     element={<CreateSkill />}
                   /> */}
 
+                  {/* OLD SKILL */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID1/EditList Of Assessment/:id/:Mode"
                     element={<CreateSkill />}
                   />
+
                   <Route
                     path="/SkillGlow/Assessment/Candidates/SkillCandidate/CreateSkillCandidate"
                     element={<CreateSkillCandidate />}
@@ -295,7 +384,7 @@ function App() {
                     path="/SkillGlow/SkillGlowList/CandidateList"
                     element={<CandidateList />}
                   />
-               
+
                   {/* <Route
                     path="SkillGlow/SkillGlowList/SkillGlowSession/CreateSession"
                     element={<CreateSession />}
@@ -524,7 +613,6 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID1"
                     element={<ListviewSecondary />}
                   />
-
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number"

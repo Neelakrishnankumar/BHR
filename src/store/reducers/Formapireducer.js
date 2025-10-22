@@ -82,6 +82,9 @@ const initialState = {
   skillInsights2getdata:[],
   skillInsights2status:"",
   skillInsights2loading:false,
+  schedulegetdata:[],
+  schedulestatus:"",
+  scheduleloading:false,
   projectCostinggetdata:{},
   projectCostingstatus:"",
   projectCostingloading:false,
@@ -1070,6 +1073,31 @@ export const sprintprojectplanGetData = createAsyncThunk(
       ActivitiesID: ActivitiesID,
       FromDate: FromDate,
       ToDate: ToDate
+    };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//NEW SCHEDULE
+export const scheduleGetData = createAsyncThunk(
+  "scheduleGetData/get",
+  async ({ AssessmentID }) => {
+    var url = store.getState().globalurl.ScheduleGetController;
+    const data = {
+      AssessmentID: AssessmentID,
     };
 
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
@@ -2510,6 +2538,26 @@ export const getApiSlice = createSlice({
   .addCase(getInsights2.rejected, (state, action) => {
     state.skillInsights2getdata = [];
     state.skillInsights2loading = false;
+    state.error = action.error.message;
+  })
+
+
+    .addCase(scheduleGetData.pending, (state) => {
+    state.schedulegetdata = [];
+    state.scheduleloading = true;
+    state.error = null;
+  })
+  .addCase(scheduleGetData.fulfilled, (state, action) => {
+   
+          state.schedulegetdata = action.payload.Data;
+
+   
+    state.scheduleloading = false;
+    state.error = null;
+  })
+  .addCase(scheduleGetData.rejected, (state, action) => {
+    state.schedulegetdata = [];
+    state.scheduleloading = false;
     state.error = action.error.message;
   })
 

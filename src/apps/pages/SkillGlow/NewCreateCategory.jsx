@@ -45,7 +45,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 
-const CreateCategoryMain = () => {
+const NewCreateCategoryMain = () => {
   const navigate = useNavigate();
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const params = useParams();
@@ -55,6 +55,10 @@ const CreateCategoryMain = () => {
 
   const recID = params.id;
   const accessID = params.accessID;
+  const AssessmentType = params.parentID1;
+  //const parentID2 = params.parentID2;
+  const SkillAssTypeID = state.SkillAssTypeID;
+  console.log("🚀 ~ NewCreateCategoryMain ~ SkillAssTypeID:", SkillAssTypeID)
   const screenName = params.screenName;
   const mode = params.Mode;
 
@@ -77,9 +81,9 @@ const CreateCategoryMain = () => {
         const schema = Yup.object().shape({
           //code: Yup.string().required(data.SkillGlowCategory.Code),
           name: Yup.string().required(data.SkillGlowCategory.Name),
-          assessmentType: Yup.string().required(
-            data.SkillGlowCategory.AssessmentType
-          ),
+          // assessmentType: Yup.string().required(
+          //   data.SkillGlowCategory.AssessmentType
+          // ),
         });
         if (CompanyAutoCode === "N") {
           schema = schema.shape({
@@ -97,7 +101,7 @@ const CreateCategoryMain = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID }));
+    dispatch(getFetchData({ accessID: "TR278", get: "get", recID }));
   }, []);
 
   const CategorySaveFn = async (values, delAction) => {
@@ -124,8 +128,8 @@ const CreateCategoryMain = () => {
       Code: values.code,
       Name: values.name,
       AssessmentType: values.assessmentType,
-      SkillAssTypeID: "0",
       SortOrder: values.sortOrder || "0",
+      SkillAssTypeID: SkillAssTypeID || "0",
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
     };
@@ -164,7 +168,7 @@ const CreateCategoryMain = () => {
   const initialValues = {
     name: Data.Name,
     code: Data.Code,
-    assessmentType: Data.AssessmentType,
+    assessmentType: AssessmentType || "",
     sortOrder: Data.SortOrder,
     disable: Data.Disable == "Y" ? true : false,
     delete: Data.DeleteFlag == "Y" ? true : false,
@@ -202,9 +206,17 @@ const CreateCategoryMain = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
+                  onClick={() => navigate("/Apps/TR299/List%20Of%20Assessment%20Type")}
+                >
+                  List Of Assessment Type {(state.BreadCrumb1)}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
                   onClick={() => navigate(-1)}
                 >
-                  List Of Category
+                  List Of Category 
                 </Typography>
                 <Typography
                   variant="h5"
@@ -361,7 +373,7 @@ const CreateCategoryMain = () => {
                     }}
                     autoFocus={CompanyAutoCode == "Y"}
                   />
-                  <TextField
+                  {/* <TextField
                     focused
                     variant="standard"
                     label={
@@ -388,7 +400,43 @@ const CreateCategoryMain = () => {
                     <MenuItem value={"Compliance"}>Compliance</MenuItem>
                     <MenuItem value={"Survey"}>Survey</MenuItem>
                     <MenuItem value={"Feedback"}>Feedback</MenuItem>
-                  </TextField>
+                  </TextField> */}
+
+                   {/* <TextField
+                    // fullWidth
+                    variant="standard"
+                    type="text"
+                    //label="Name"
+                    label={
+                      <span>
+                        Assessment Type{" "}
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </span>
+                    }
+                    //placeholder="Category Name"
+                    value={values.assessmentType}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    id="assessmentType"
+                    name="assessmentType"
+                    focused
+                    error={!!touched.assessmentType && !!errors.assessmentType}
+                    helperText={touched.assessmentType && errors.assessmentType}
+                    sx={{
+                      // backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    InputProps={{
+                      inputProps:{
+                        readOnly:true
+                      }
+                    }}
+                  /> */}
+
                   <TextField
                     fullWidth
                     variant="standard"
@@ -505,4 +553,4 @@ const CreateCategoryMain = () => {
   );
 };
 
-export default CreateCategoryMain;
+export default NewCreateCategoryMain;

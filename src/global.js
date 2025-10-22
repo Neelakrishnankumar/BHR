@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-var APIurl = "https://hr.beyondexs.com/api/"
-var baseurl = "https://hr.beyondexs.com/"
-// var APIurl = "https://bosuat.beyondexs.com/api/"
-// var baseurl = "https://bosuat.beyondexs.com/"
+// var APIurl = "https://hr.beyondexs.com/api/"
+// var baseurl = "https://hr.beyondexs.com/"
+var APIurl = "https://bosuat.beyondexs.com/api/"
+var baseurl = "https://bosuat.beyondexs.com/"
 
 // var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 // var baseurl = "https://dvmtapi.bexatm.com/"
@@ -115,6 +115,7 @@ AssessmentAutoUrl: APIurl + "ScheduleAssessmentLookup.php",
 InsightsUrl1: APIurl + "InsightGetController.php",
 InsightsUrl2: APIurl + "InsightEmpPerformance.php",
 ProjectCostingPDF: APIurl + "ProjectCostingReport.php",
+ScheduleGetController: APIurl + "ScheduleGetController.php",
 };
 
 export const getUrlSlice = createSlice({

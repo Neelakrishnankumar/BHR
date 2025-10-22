@@ -646,6 +646,27 @@ const child = {
         
       ],
     },
+
+     {
+      name: "Assessment2",
+      id: 4579,
+      MenuID: "ST1609",
+      Tooltipname: "Assessment",
+      icon: (
+        <Tooltip title="Assessment">
+          <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      url: "/Apps/TR299/List Of Assessment Type",
+ UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR122",
+     
+    },
     {
       name: "Settings",
       id: 95689,
