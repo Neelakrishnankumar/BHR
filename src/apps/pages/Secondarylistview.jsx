@@ -73,6 +73,9 @@ import GppMaybeOutlinedIcon from "@mui/icons-material/GppMaybeOutlined";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
+import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
+
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -187,13 +190,12 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR079") {
     filter = `${parentID}' AND  Type='${Number}`;
   } else if (accessID == "TR097") {
-    filter = `${
-      parentID.slice(-1) == "I"
-        ? "(DcType IN ('I','B'))"
-        : parentID === "PO"
+    filter = `${parentID.slice(-1) == "I"
+      ? "(DcType IN ('I','B'))"
+      : parentID === "PO"
         ? "(DcType IN ('O','P'))"
         : "(DcType IN ('O','B'))"
-    }`;
+      }`;
   } else if (accessID == "TR102") {
     filter = `InvType='${parentID}'`;
   } else if (accessID == "TR123") {
@@ -211,9 +213,8 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR118") {
     filter = "";
   } else if (accessID == "TR051") {
-    filter = `parentID='${parentID}' AND ${
-      params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
-    }`;
+    filter = `parentID='${parentID}' AND ${params.remarkDec === "L" ? "(Type IN ('L'))" : "(Type NOT IN ('L'))"
+      }`;
   } else if (accessID == "TR091") {
     filter = `parentID=${params.bomID}`;
   } else if (accessID == "TR087") {
@@ -343,19 +344,19 @@ const ListviewSecondary = () => {
     () =>
       listViewcolumn.filter(filterByID)
         ? [
-            {
-              field: "slno",
-              headerName: "SL#",
-              width: 50,
-              sortable: false,
-              filterable: false,
-              valueGetter: (params) =>
-                page * pageSize +
-                params.api.getRowIndexRelativeToVisibleRows(params.id) +
-                1,
-            },
-            ...listViewcolumn.filter(filterByID),
-          ]
+          {
+            field: "slno",
+            headerName: "SL#",
+            width: 50,
+            sortable: false,
+            filterable: false,
+            valueGetter: (params) =>
+              page * pageSize +
+              params.api.getRowIndexRelativeToVisibleRows(params.id) +
+              1,
+          },
+          ...listViewcolumn.filter(filterByID),
+        ]
         : [],
     [listViewcolumn, page, pageSize] // include page & pageSize as deps
   );
@@ -816,7 +817,7 @@ const ListviewSecondary = () => {
                 List of Question Groups
               </Typography>
             </Breadcrumbs> */}
-             <Breadcrumbs
+            <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
@@ -857,7 +858,7 @@ const ListviewSecondary = () => {
               >
                 List of Assessment ({BreadCrumb3})
               </Typography>
-               <Typography
+              <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
@@ -917,7 +918,7 @@ const ListviewSecondary = () => {
                 List of Question
               </Typography>
             </Breadcrumbs> */}
-             <Breadcrumbs
+            <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
@@ -958,7 +959,7 @@ const ListviewSecondary = () => {
               >
                 List of Assessment ({BreadCrumb3})
               </Typography>
-               <Typography
+              <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
@@ -966,7 +967,7 @@ const ListviewSecondary = () => {
               >
                 List of Question Groups ({BreadCrumb4})
               </Typography>
-               <Typography
+              <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
@@ -997,11 +998,11 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -1041,11 +1042,11 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -1085,11 +1086,11 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -1129,11 +1130,11 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -1173,11 +1174,11 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -1217,11 +1218,11 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/TR097/Remarks/${params.filtertype}`
+              //   );
+              // }}
               >
                 List of Assessment
               </Typography>
@@ -1265,7 +1266,7 @@ const ListviewSecondary = () => {
                 List of Session
               </Typography>
             </Breadcrumbs> */}
-             <Breadcrumbs
+            <Breadcrumbs
               maxItems={2}
               aria-label="breadcrumb"
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
@@ -1306,15 +1307,15 @@ const ListviewSecondary = () => {
               >
                 List of Assessment ({BreadCrumb3})
               </Typography>
-               <Typography
+              <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                //onClick={() => navigate(-1)}
+              //onClick={() => navigate(-1)}
               >
-                List Of Session 
+                List Of Session
               </Typography>
-              
+
             </Breadcrumbs>
           </Box>
         ) : accessID == "TR288" ? (
@@ -1377,12 +1378,12 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
-                //     { state: { ...state } }
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+              //     { state: { ...state } }
+              //   );
+              // }}
               >
                 List of Schedule
               </Typography>
@@ -1422,12 +1423,12 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(
-                //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
-                //     { state: { ...state } }
-                //   );
-                // }}
+              // onClick={() => {
+              //   navigate(
+              //     `/Apps/Secondarylistview/skillglow/TR280/List%20Of%20Assessment/${params.parentID2}`,
+              //     { state: { ...state } }
+              //   );
+              // }}
               >
                 List of Schedule
               </Typography>
@@ -3076,10 +3077,9 @@ const ListviewSecondary = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${
-                          screenName === "Remarks"
-                            ? "Delivery Chalan"
-                            : screenName
+                        `./Edit${screenName === "Remarks"
+                          ? "Delivery Chalan"
+                          : screenName
                         }/-1/A`,
                         {
                           state: { ...state },
@@ -3109,114 +3109,113 @@ const ListviewSecondary = () => {
             //     />
             //   </IconButton>
             // </Tooltip>
-             accessID === "TR295" ? (
+            accessID === "TR295" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfAppraisal/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfAppraisal/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ) : accessID === "TR297" ? (
+            ) : accessID === "TR297" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfSurvey/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfSurvey/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ) : accessID === "TR296" ? (
+            ) : accessID === "TR296" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfCompliance/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfCompliance/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ): accessID === "TR298" ? (
+            ) : accessID === "TR298" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfFeedBack/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfFeedBack/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ): accessID === "TR281" ? (
+            ) : accessID === "TR281" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfQuestionGroups/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfQuestionGroups/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ): accessID === "TR282" ? (
+            ) : accessID === "TR282" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfQuestion/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfQuestion/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ): accessID === "TR279" ? (
+            ) : accessID === "TR279" ? (
               <Tooltip arrow title="Add">
-              
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(`./EditListOfSession/-1/A`, {
-                          state: { ...state },
-                        });
-                      }}
-                    />
-                  </IconButton>
-                
+
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(`./EditListOfSession/-1/A`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
               </Tooltip>
-              ): (
+            ) : (
               <Tooltip arrow title="Add">
                 <IconButton>
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${
-                          screenName === "Remarks"
-                            ? "Delivery Chalan"
-                            : screenName
+                        `./Edit${screenName === "Remarks"
+                          ? "Delivery Chalan"
+                          : screenName
                         }/-1/A`,
                         {
                           state: { ...state },
@@ -3459,6 +3458,11 @@ const ListviewSecondary = () => {
               label="Schedule"
               variant="outlined"
             />
+            <Chip
+              icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+              label="Schedule History"
+              variant="outlined"
+            />
           </Box>
         ) : accessID == "TR295" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
@@ -3477,11 +3481,11 @@ const ListviewSecondary = () => {
               label="Session"
               variant="outlined"
             />
-            <Chip
+            {/* <Chip
               icon={<SendTimeExtensionOutlinedIcon color="primary" />}
               label="Schedule"
               variant="outlined"
-            />
+            /> */}
           </Box>
         ) : accessID == "TR296" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
@@ -3503,6 +3507,11 @@ const ListviewSecondary = () => {
             <Chip
               icon={<SendTimeExtensionOutlinedIcon color="primary" />}
               label="Schedule"
+              variant="outlined"
+            />
+            <Chip
+              icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+              label="Schedule History"
               variant="outlined"
             />
           </Box>
@@ -3528,6 +3537,11 @@ const ListviewSecondary = () => {
               label="Schedule"
               variant="outlined"
             />
+            <Chip
+              icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+              label="Schedule History"
+              variant="outlined"
+            />
           </Box>
         ) : accessID == "TR298" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
@@ -3549,6 +3563,11 @@ const ListviewSecondary = () => {
             <Chip
               icon={<SendTimeExtensionOutlinedIcon color="primary" />}
               label="Schedule"
+              variant="outlined"
+            />
+            <Chip
+              icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+              label="Schedule History"
               variant="outlined"
             />
           </Box>

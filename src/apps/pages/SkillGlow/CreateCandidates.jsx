@@ -388,7 +388,7 @@ const CreateCandidates = () => {
                       },
                     }}
                   >
-                    {AssessmentType === "Appraisal" ? (
+                    {AssessmentType === "AP" ? (
                       <>
                         <SelfAppraisalPayload
                           name="SelfRecordID"
@@ -422,13 +422,13 @@ const CreateCandidates = () => {
                             })
                           )}`}
 
-                          //url={listViewurl}
-                          // payload={{
-                          //   AssessmentType: AssessmentType,
-                          //   DesignationID: DesignationID,
-                          //   AppraisalType: "Self",
-                          // }}
-                          //inputProps={{ disabled: mode == "V" }}
+                        //url={listViewurl}
+                        // payload={{
+                        //   AssessmentType: AssessmentType,
+                        //   DesignationID: DesignationID,
+                        //   AppraisalType: "Self",
+                        // }}
+                        //inputProps={{ disabled: mode == "V" }}
                         />
 
                         <ManagerAppraisalPayload
@@ -557,7 +557,7 @@ const CreateCandidates = () => {
                           SkillCategorieID: params.parentID1,
                           EmployeeID: EmpId,
                         }}
-                        //inputProps={{ disabled: mode == "V" }}
+                      //inputProps={{ disabled: mode == "V" }}
                       />
                     )}
 
@@ -619,7 +619,7 @@ const CreateCandidates = () => {
 
                     {/* CHECKBOX */}
                     <Box>
-                     {/* {AssessmentType === "Appraisal" ? (false) : (
+                      {/* {AssessmentType === "Appraisal" ? (false) : (
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -653,7 +653,7 @@ const CreateCandidates = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -670,7 +670,7 @@ const CreateCandidates = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -686,7 +686,7 @@ const CreateCandidates = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>

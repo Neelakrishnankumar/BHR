@@ -159,6 +159,7 @@ import CreateSurvey from "./pages/SkillGlow/CreateSurvey";
 import CreateCompliance from "./pages/SkillGlow/CreateCompliance";
 import CreateFeedBack from "./pages/SkillGlow/CreateFeedBack";
 import NewSchedule from "./pages/SkillGlow/NewSchedule";
+import NewScheduleLatest from "./pages/SkillGlow/NewScheduleLatest";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -320,17 +321,29 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfAppraisal/:id/:Mode"
                     element={<CreateAppraisalSkill />}
                   />
+                  {/* NEW SURVEY CREATE */}
+
                   <Route
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfSurvey/:id/:Mode"
                     element={<CreateSurvey />}
                   />
+
+                  {/* NEW COMPLIANCE CREATE */}
+
                   <Route
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfCompliance/:id/:Mode"
                     element={<CreateCompliance />}
                   />
+
+                  {/* NEW FEEDBACK CREATE */}
+
                   <Route
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID2/:accessID/:parentID1/EditListOfFeedBack/:id/:Mode"
                     element={<CreateFeedBack />}
+                  />
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/ScheduleListAssessment/:parentID2"
+                    element={<NewScheduleLatest />}
                   />
 
                   <Route

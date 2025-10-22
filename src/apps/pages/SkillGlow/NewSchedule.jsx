@@ -97,6 +97,8 @@ const NewSchedule = () => {
   //const colors = tokens(theme.palette.mode);
 
   const answerType = state.AnswerType;
+  const AssessmentName = state.BreadCrumb3;
+  const Designation = state.Designation;
 
   const AssessmentType = state.AssessmentType;
   console.log("🚀 ~ CreateCandidates ~ AssessmentType:", AssessmentType);
@@ -239,10 +241,10 @@ const NewSchedule = () => {
       mode === "A"
         ? "insert"
         : mode === "E"
-        ? delAction === "harddelete"
-          ? "harddelete"
-          : "update"
-        : "";
+          ? delAction === "harddelete"
+            ? "harddelete"
+            : "update"
+          : "";
 
     const idata = {
       Details: selectedEmp.map((emp) => ({
@@ -253,10 +255,13 @@ const NewSchedule = () => {
       })),
     };
 
-    const response = await dispatch(postData({ accessID, action, idata }));
+    const response = await dispatch(postData({ accessID, action: "insert", idata }));
 
     if (response.payload.Status === "Y") {
       toast.success(response.payload.Msg);
+
+      sessionStorage.removeItem("empData");
+
       fetchScheduleData();
     } else {
       toast.error(response.payload.Msg || "Error");
@@ -307,125 +312,211 @@ const NewSchedule = () => {
   // };
   // inside your component
 
-  const handleDeleteClick = (row) => async () => {
-    try {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this record?"
-      );
-      if (!confirmDelete) return;
+  // const handleDeleteClick = (row) => async () => {
+  //   try {
+  //     const confirmDelete = window.confirm(
+  //       "Are you sure you want to delete this record?"
+  //     );
+  //     if (!confirmDelete) return;
 
-      const idata = {
-        RecordID: row.RecordID,
-        AssessmentID: row.AssessmentID || parentID2 || 0,
-        EmployeeID: row.EmployeeID,
-        Date: row.DATE,
-        AssessmentType: row.AssessmentType || "",
-      };
+  //     const idata = {
+  //       RecordID: row.RecordID,
+  //       AssessmentID: row.AssessmentID || parentID2 || 0,
+  //       EmployeeID: row.EmployeeID,
+  //       Date: row.DATE,
+  //       AssessmentType: row.AssessmentType || "",
+  //     };
 
-      const response = await dispatch(
-        postData({ accessID, action: "harddelete", idata })
-      );
+  //     const response = await dispatch(
+  //       postData({ accessID, action: "harddelete", idata })
+  //     );
 
-      if (response.payload?.Status === "Y") {
-        toast.success(response.payload.Msg || "Record deleted successfully!");
-        fetchScheduleData(); // 🔹 refresh the grid after delete
-      } else {
-        toast.error(response.payload?.Msg || "Failed to delete record!");
+  //     if (response.payload?.Status === "Y") {
+  //       toast.success(response.payload.Msg || "Record deleted successfully!");
+  //       fetchScheduleData(); // 🔹 refresh the grid after delete
+  //     } else {
+  //       toast.error(response.payload?.Msg || "Failed to delete record!");
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error deleting row:", error);
+  //     toast.error("Error occurred during delete.");
+  //   }
+  // };
+
+  // const handleDeleteClick = (row) => async () => {
+  //   try {
+  //     const result = await Swal.fire({
+  //       title: "Are you sure?",
+  //       text: "You want to delete this schedule?",
+  //       icon: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonColor: "#3085d6",
+  //       cancelButtonColor: "#d33",
+  //       confirmButtonText: "Yes",
+  //       cancelButtonText: "Cancel",
+  //     });
+
+  //     if (!result.isConfirmed) return;
+
+  //     const idata = {
+  //       RecordID: row.RecordID,
+  //       AssessmentID: row.AssessmentID || parentID2 || 0,
+  //       EmployeeID: row.EmployeeID,
+  //       Date: row.DATE,
+  //       AssessmentType: row.AssessmentType || "",
+  //     };
+
+  //     const response = await dispatch(
+  //       postData({ accessID, action: "harddelete", idata })
+  //     );
+
+  //     if (response.payload?.Status === "Y") {
+  //       toast.success(response.payload.Msg || "Record deleted successfully!");
+  //       fetchScheduleData(); // 🔹 refresh the grid after delete
+  //     } else {
+  //       toast.error(response.payload?.Msg || "Failed to delete record!");
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error deleting row:", error);
+  //     toast.error("Error occurred during delete.");
+  //   }
+  // };
+  const handleLocalDeleteClick = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Remove this schedule entry?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setLocalRows((prev) => prev.filter((row) => row.id !== id));
+        toast.success("Row removed");
       }
-    } catch (error) {
-      console.error("❌ Error deleting row:", error);
-      toast.error("Error occurred during delete.");
-    }
+    });
   };
 
-  const [rowCount, setRowCount] = useState(0);
   const Sprintcolumns = [
-    { field: "SLNO", headerName: "#SL", width: 70 },
     {
-      headerName: "Employee Name",
-      field: "EmployeeName",
-      width: "150",
-      align: "left",
+      field: "SLNO",
+      headerName: "S.No",
+      width: 80,
       headerAlign: "center",
-      hide: false,
-      editable: false,
+      align: "center",
+      renderCell: (params) => params.api.getRowIndex(params.id) + 1,
     },
-    {
-      headerName: "Assessment",
-      field: "Assessment",
-      width: "200",
-      align: "left",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-    {
-      headerName: "Current Attempt",
-      field: "CurrentAllowedAttempt",
-      width: "100",
-      align: "left",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-    {
-      headerName: "Targeted Date",
-      field: "Targeteddate",
-      type: "date",
-
-      width: "100",
-      align: "right",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-
-    {
-      headerName: "Last Att Date",
-      field: "Lastattdate",
-      type: "date",
-      width: "100",
-      align: "left",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-    {
-      headerName: "Last Att Score",
-      field: "Lastattscore",
-      width: "100",
-      align: "left",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-    {
-      headerName: "Status",
-      field: "STATUS",
-      width: "100",
-      align: "left",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-
+    { field: "EmployeeName", headerName: "Employee Name", width: 200, headerAlign: "center" },
+    { field: "Assessment", headerName: "Assessment", width: 150, headerAlign: "center" },
+    { field: "Designation", headerName: "Designation", width: 200, headerAlign: "center" },
+    { field: "Date", headerName: "Date", width: 150, headerAlign: "center", align: "center" },
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 150,
-      cellClassName: "actions",
+      width: 100,
+      headerAlign: "center",
       getActions: (params) => [
         <GridActionsCellItem
-          key="delete"
           icon={<DeleteIcon style={{ color: "#e74c3c" }} />}
           label="Delete"
-          onClick={handleDeleteClick(params.row)}
-          color="inherit"
+          onClick={() => handleLocalDeleteClick(params.row.id)}
         />,
       ],
     },
   ];
+
+  const [localRows, setLocalRows] = useState([]);
+
+  const [rowCount, setRowCount] = useState(0);
+  // const Sprintcolumns = [
+  //   { field: "SLNO", headerName: "#SL", width: 70 },
+  //   {
+  //     headerName: "Employee Name",
+  //     field: "EmployeeName",
+  //     width: "150",
+  //     align: "left",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+  //   {
+  //     headerName: "Assessment",
+  //     field: "Assessment",
+  //     width: "200",
+  //     align: "left",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+  //   {
+  //     headerName: "Current Attempt",
+  //     field: "CurrentAllowedAttempt",
+  //     width: "100",
+  //     align: "left",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+  //   {
+  //     headerName: "Targeted Date",
+  //     field: "Targeteddate",
+  //     type: "date",
+
+  //     width: "100",
+  //     align: "right",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+
+  //   {
+  //     headerName: "Last Att Date",
+  //     field: "Lastattdate",
+  //     type: "date",
+  //     width: "100",
+  //     align: "left",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+  //   {
+  //     headerName: "Last Att Score",
+  //     field: "Lastattscore",
+  //     width: "100",
+  //     align: "left",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+  //   {
+  //     headerName: "Status",
+  //     field: "STATUS",
+  //     width: "100",
+  //     align: "left",
+  //     headerAlign: "center",
+  //     hide: false,
+  //     editable: false,
+  //   },
+
+  //   {
+  //     field: "actions",
+  //     type: "actions",
+  //     headerName: "Actions",
+  //     width: 150,
+  //     cellClassName: "actions",
+  //     getActions: (params) => [
+  //       <GridActionsCellItem
+  //         key="delete"
+  //         icon={<DeleteIcon style={{ color: "#e74c3c" }} />}
+  //         label="Delete"
+  //         onClick={handleDeleteClick(params.row)}
+  //         color="inherit"
+  //       />,
+  //     ],
+  //   },
+  // ];
 
   function Custombar() {
     return (
@@ -448,6 +539,8 @@ const NewSchedule = () => {
       mode === "A"
         ? new Date().toISOString().split("T")[0] // today
         : Data.Date || new Date().toISOString().split("T")[0],
+    AssessmentName: AssessmentName || "",
+    Designation: Designation || "",
   };
 
   return (
@@ -574,13 +667,61 @@ const NewSchedule = () => {
                       },
                     }}
                   >
+
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="text"
+                      label="Assessment Name"
+                      value={values.AssessmentName}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="AssessmentName"
+                      name="AssessmentName"
+                      focused
+                      error={!!touched.AssessmentName && !!errors.AssessmentName}
+                      helperText={touched.AssessmentName && errors.AssessmentName}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: { readOnly: true }
+                      }}
+                    />
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="text"
+                      label="Designation"
+                      value={values.Designation}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="Designation"
+                      name="Designation"
+                      focused
+                      error={!!touched.Designation && !!errors.Designation}
+                      helperText={touched.Designation && errors.Designation}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: { readOnly: true }
+                      }}
+                    />
+
                     <MultiFormikScheduleOptimizedAutocomplete
                       sx={{
                         width: "100%",
                         marginTop: "10px",
                       }}
                       name="EmpName"
-                      label="Assessment Schedule"
+                      label="Employee"
                       id="EmpName"
                       value={selectedEmp}
                       onChange={(e, newValue) => {
@@ -713,7 +854,7 @@ const NewSchedule = () => {
                     </Box> */}
                   </Box>
                   {/* BUTTONS */}
-                  <Box
+                  {/* <Box
                     display="flex"
                     justifyContent="flex-end"
                     padding={1}
@@ -724,7 +865,7 @@ const NewSchedule = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -735,7 +876,62 @@ const NewSchedule = () => {
                     >
                       Cancel
                     </Button>
+                  </Box> */}
+                  <Box display="flex" justifyContent="flex-end" padding={1} gap={2}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        // Prevent adding empty employee selection
+                        if (selectedEmp.length === 0) {
+                          toast.error("Please select at least one employee");
+                          return;
+                        }
+
+                        // Add selected employees as individual rows
+
+                        // const newRows = (selectedEmp || []).map((emp, index) => ({
+                        //   id: emp?.RecordID ? `${emp.RecordID}-${Date.now()}-${index}` : `${Date.now()}-${index}`,
+                        //   AssessmentID: parentID2 || 0,
+                        //   EmployeeID: emp?.RecordID || "",
+                        //   EmployeeName: emp?.EmployeeName || emp?.Name || "N/A",
+                        //   Assessment: AssessmentName || "",
+                        //   Designation: Designation || "",
+                        //   Date: values.Date || "",
+                        //   AssessmentType: AssessmentType || "",
+                        // }));
+                        const newRows = (selectedEmp || [])
+                          .filter(emp => !localRows.some(r => r.RecordID === emp.RecordID))
+                          .map((emp, index) => ({
+                            id: emp.RecordID,
+                            AssessmentID: parentID2 || 0,
+                            EmployeeID: emp?.RecordID || "",
+
+                            EmployeeName: emp?.EmployeeName || emp?.Name || "N/A",
+                            Assessment: AssessmentName || "",
+                            Designation: Designation || "",
+                            Date: values.Date || "",
+                            RecordID: emp.RecordID,
+                            AssessmentType: AssessmentType || "",
+
+                          }));
+
+                        if (newRows.length === 0) {
+                          toast.error("Duplicate employees cannot be added again");
+                          return;
+                        }
+                        // Append to local grid
+                        setLocalRows((prev) => [...prev, ...newRows]);
+
+                        // Clear employee selection
+                        setselectedEmp([]);
+                        setFieldValue("EmpName", []);
+                      }}
+                    >
+                      + Add
+                    </Button>
                   </Box>
+
                 </Form>
               )}
             </Formik>
@@ -785,11 +981,14 @@ const NewSchedule = () => {
                       minHeight: dataGridHeaderFooterHeight,
                     },
                   }}
-                  rows={rows}
+                  //rows={rows}
+                  rows={localRows}
                   columns={Sprintcolumns}
                   loading={scheduleLoading}
                   //rowModesModel={rowModesModel}
-                  getRowId={(row) => row.RecordID}
+                  // getRowId={(row) => row.RecordID}
+                  getRowId={(row) => row.id}
+
                   editMode="cell"
                   disableRowSelectionOnClick
                   rowHeight={dataGridRowHeight}
@@ -818,6 +1017,50 @@ const NewSchedule = () => {
                 />
               </Box>
             </Box>
+            <Box display="flex" justifyContent="flex-end" padding={2} gap={2}>
+              <LoadingButton
+                variant="contained"
+                color="secondary"
+                loading={isLoading}
+                onClick={async () => {
+                  if (localRows.length === 0) {
+                    toast.error("No data to save!");
+                    return;
+                  }
+
+                  const idata = {
+                    Details: localRows.map((row) => ({
+                      AssessmentID: row.AssessmentID,
+                      EmployeeID: row.EmployeeID,
+                      Date: row.Date,
+                      AssessmentType: row.AssessmentType,
+                    })),
+                  };
+
+                  const response = await dispatch(
+                    postData({ accessID, action: "insert", idata })
+                  );
+
+                  if (response.payload?.Status === "Y") {
+                    toast.success(response.payload.Msg || "Saved successfully!");
+                    setLocalRows([]); // clear after save
+                    navigate(-1); // optional
+                  } else {
+                    toast.error(response.payload?.Msg || "Failed to save data!");
+                  }
+                }}
+              >
+                Save
+              </LoadingButton>
+              <Button
+                variant="contained"
+                color="warning"
+                onClick={() => navigate(-1)}
+              >
+                Cancel
+              </Button>
+            </Box>
+
           </Paper>
         ) : (
           false

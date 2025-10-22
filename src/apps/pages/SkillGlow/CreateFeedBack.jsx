@@ -77,7 +77,7 @@ const CreateFeedBack = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID }));
+    dispatch(getFetchData({ accessID: "TR300", get: "get", recID }));
   }, []);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
@@ -237,7 +237,7 @@ const CreateFeedBack = () => {
       Permittedtimes: values.Permittedtimes,
     };
 
-    const response = await dispatch(postData({ accessID, action, idata }));
+    const response = await dispatch(postData({ accessID: "TR300", action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(-1);
@@ -303,9 +303,9 @@ const CreateFeedBack = () => {
     //Designation: Data.DesignationID || "",
     DesignationID: Data.DesignationID
       ? {
-          RecordID: Data.DesignationID,
-          Name: Data.DesignationName, // used for dropdown display
-        }
+        RecordID: Data.DesignationID,
+        Name: Data.DesignationName, // used for dropdown display
+      }
       : null,
     AppraisalType: Data.AppraisalType || "",
     Disable: Data.Disable == "Y" ? true : false,
@@ -356,52 +356,52 @@ const CreateFeedBack = () => {
               borderRadius="3px"
               alignItems="center"
             >
-                <Breadcrumbs
-                            maxItems={2}
-                            aria-label="breadcrumb"
-                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-                          >
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                              onClick={() => {
-                                navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
-                              }}
-                            >
-                              List of Assessment Type ({state.BreadCrumb1})
-                            </Typography>
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                              onClick={() => {
-                                navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
-                                  {state: {...state}}
-                                );
-                              }}
-                            
-                            >
-                              List of Category ({state.BreadCrumb2})
-                            </Typography>
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                            onClick={() => {
-                              navigate(-1);
-                            }}
-                            >
-                              List of Assessment
-                            </Typography>
-                            <Typography
-                              variant="h5"
-                              color="#0000D1"
-                              sx={{ cursor: "default" }}
-                            >
-                              {mode == "A" ? "New" : "Edit"}
-                            </Typography>
-                          </Breadcrumbs>
+              <Breadcrumbs
+                maxItems={2}
+                aria-label="breadcrumb"
+                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+              >
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                  }}
+                >
+                  List of Assessment Type ({state.BreadCrumb1})
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(`/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID2}`,
+                      { state: { ...state } }
+                    );
+                  }}
+
+                >
+                  List of Category ({state.BreadCrumb2})
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  List of Assessment
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  {mode == "A" ? "New" : "Edit"}
+                </Typography>
+              </Breadcrumbs>
             </Box>
           </Box>
 
@@ -685,8 +685,8 @@ const CreateFeedBack = () => {
                     error={!!touched.Date && !!errors.Date}
                     helperText={touched.Date && errors.Date}
                     sx={{ background: "" }}
-                    // required
-                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  // required
+                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     // fullWidth
@@ -819,9 +819,9 @@ const CreateFeedBack = () => {
                           "DesignationID",
                           newValue
                             ? {
-                                RecordID: newValue.RecordID,
-                                Name: newValue.Name,
-                              }
+                              RecordID: newValue.RecordID,
+                              Name: newValue.Name,
+                            }
                             : null
                         )
                       }
@@ -955,12 +955,12 @@ const CreateFeedBack = () => {
                         />
                       }
                       label="Disable"
-                      // sx={{
-                      //   marginTop: "20px",
-                      //   "@media (max-width:500px)": {
-                      //     marginTop: 0,
-                      //   },
-                      // }}
+                    // sx={{
+                    //   marginTop: "20px",
+                    //   "@media (max-width:500px)": {
+                    //     marginTop: 0,
+                    //   },
+                    // }}
                     />
                   </Box>
                 </Box>
