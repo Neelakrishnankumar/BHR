@@ -108,6 +108,7 @@ const EditAttendance = () => {
       Year: year,
       EmployeeID: emp?.RecordID || "",
       ProjectID: pro?.RecordID || "",
+      CompanyID
     };
 
     console.log("Dispatching Attendance on load:", data);
@@ -254,7 +255,7 @@ const EditAttendance = () => {
       EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
       // ProjectID: proData.RecordID
       ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
-      // CompanyID
+      CompanyID
     };
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));

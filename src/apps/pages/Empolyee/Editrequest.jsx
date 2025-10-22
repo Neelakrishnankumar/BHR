@@ -690,7 +690,7 @@ const Editrequests = () => {
     }
 
     if (event.target.value == "6") {
-      dispatch(fetchExplorelitview("TR216", "OT", `EmployeeID=${recID}`, ""));
+      dispatch(fetchExplorelitview("TR216", "OT", `EmployeeID=${recID} AND CompanyID=${companyID}`, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -700,7 +700,7 @@ const Editrequests = () => {
     }
     if (event.target.value == "10") {
       setResponseMsg("");
-      dispatch(fetchExplorelitview("TR219", "Regularization", `EmployeeID=${recID}`, ""));
+      dispatch(fetchExplorelitview("TR219", "Regularization", `EmployeeID=${recID} AND CompanyID=${companyID}`, ""));
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -717,7 +717,7 @@ const Editrequests = () => {
     // }
     if (event.target.value == "2") {
       dispatch(
-        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID} AND CompanyID=${companyID}`, "")
 
       );
       // dispatch(getLeaveweeklyData(`EmployeeID=${recID}`));
@@ -728,7 +728,8 @@ const Editrequests = () => {
     if (event.target.value == "9") {
 
       dispatch(
-        fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
+        // fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
+         fetchExplorelitview("TR086", "Expense", `Approvedby=${recID} AND CompanyID=${companyID}`, "")
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -736,7 +737,7 @@ const Editrequests = () => {
     if (event.target.value == "8") {
 
       dispatch(
-        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID} AND CompanyID=${companyID}`, "")
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -746,7 +747,7 @@ const Editrequests = () => {
         fetchExplorelitview(
           "TR160",
           "Salary Advance",
-          `EmployeeID=${recID}`,
+          `EmployeeID=${recID} AND CompanyID=${companyID}`,
           ""
         )
       );
@@ -757,7 +758,7 @@ const Editrequests = () => {
         fetchExplorelitview(
           "TR266",
           "Permission",
-          `EmployeeID=${recID}`,
+          `EmployeeID=${recID} AND CompanyID=${companyID}`,
           ""
         )
       );
@@ -5706,7 +5707,7 @@ const Editrequests = () => {
                             }}
                             error={!!touched.overhead && !!errors.overhead}
                             helperText={touched.overhead && errors.overhead}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"companyID=${companyID}","Any":""}}`}
                           />
                           {/* {touched.overhead && errors.overhead && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -7636,7 +7637,7 @@ const Editrequests = () => {
                             }}
                             error={!!touched.overhead && !!errors.overhead}
                             helperText={touched.overhead && errors.overhead}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"companyID=${companyID}","Any":""}}`}
                           />
                           {/* {touched.overhead && errors.overhead && (
                             <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>

@@ -159,7 +159,7 @@ const Editvendor = () => {
       dispatch(getFetchData({ accessID, get: "get", recID }));
     }
     else {
-      dispatch(getFetchData({ accessID, get: "", recID }));
+      dispatch(getFetchData({ accessID, get: "get", recID }));
     }
   }, [location.key, recID, mode]);
 
@@ -328,6 +328,7 @@ const Editvendor = () => {
     emailid: data.EmailID || "",
     vendor: data.VendorCheckbox === "Y" ? true : false,
     customer: data.CustomerCheckbox === "Y" ? true : false,
+    prospect: data.Prospects === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false,
     disable: data.Disable === "Y" ? true : false
   };
@@ -363,6 +364,8 @@ const Editvendor = () => {
       CompanyID,
       VendorCheckbox: values.vendor === true ? "Y" : "N",
       CustomerCheckbox: values.customer === true ? "Y" : "N",
+      Prospects: values.prospect === true ? "Y" : "N",
+      LocalityID:"1",
       DeleteFlag: values.delete == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
     };
@@ -921,7 +924,17 @@ const Editvendor = () => {
                       label="Customer"
                     />
                     <FormLabel focused={false}>Customer</FormLabel>
-
+                    <Field
+                      //    size="small"
+                      type="checkbox"
+                      name="prospect"
+                      id="prospect"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Prospects"
+                    />
+                    <FormLabel focused={false}>Prospects</FormLabel>
                   </Box>
                   <Box>
                     <Field
