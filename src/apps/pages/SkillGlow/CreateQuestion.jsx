@@ -60,7 +60,9 @@ const CreateQuestion = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
   const Assessmentid = params.parentID2;
+  console.log("🚀 ~ CreateQuestion ~ Assessmentid:", Assessmentid)
   const QuestionID = params.parentID1;
+  console.log("🚀 ~ CreateQuestion ~ QuestionID:", QuestionID)
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
@@ -311,7 +313,7 @@ const CreateQuestion = () => {
                 borderRadius="3px"
                 alignItems="center"
               >
-                <Breadcrumbs
+                {/* <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"
                   separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
@@ -367,7 +369,77 @@ const CreateQuestion = () => {
                   >
                     {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
                   </Typography>
-                </Breadcrumbs>
+                </Breadcrumbs> */}
+
+                 <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                }}
+              >
+                List of Assessment Type ({state.BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Category ({state.BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID2}/${params.parentID3}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Assessment ({state.BreadCrumb3})
+              </Typography>
+               <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID2}/${params.parentID3}/${params.accessID1}/${params.parentID2}`,
+                  {state: { ...state }}
+                )}}
+              >
+                List of Question Groups ({state.BreadCrumb4})
+              </Typography>
+               <Typography
+                variant="h5"
+                color="#0000D1"
+                onClick={() => navigate(-1)}
+                sx={{ cursor: "default" }}
+              >
+                List of Question
+              </Typography>
+               <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
+                  </Typography>
+            </Breadcrumbs>
               </Box>
             </Box>
 

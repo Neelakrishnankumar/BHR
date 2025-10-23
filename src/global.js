@@ -115,6 +115,7 @@ AssessmentAutoUrl: APIurl + "ScheduleAssessmentLookup.php",
 InsightsUrl1: APIurl + "InsightGetController.php",
 InsightsUrl2: APIurl + "InsightEmpPerformance.php",
 ProjectCostingPDF: APIurl + "ProjectCostingReport.php",
+ScheduleGetController: APIurl + "ScheduleGetController.php",
 };
 
 export const getUrlSlice = createSlice({

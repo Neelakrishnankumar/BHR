@@ -58,9 +58,10 @@ const CreateCategory = () => {
 
   const recID = params.id;
   const accessID = params.accessID;
+  const accessID1 = params.accessID1;
   const screenName = params.screenName;
   const mode = params.Mode;
-  console.log(params, '-------------');
+  console.log(params, "-------------");
 
   const Assessmentid = params.parentID1;
   const CategoryId = params.parentID2;
@@ -85,18 +86,22 @@ const CreateCategory = () => {
         const schema = Yup.object().shape({
           //Code: Yup.string().required(data.ListofQuestiongroup.Code),
           Name: Yup.string().required(data.ListofQuestiongroup.Name),
-          AnswerType: Yup.string().required(data.ListofQuestiongroup.AnswerType),
-          NoOfQuestions: Yup.string().required(data.ListofQuestiongroup.NoOfQuestions),
+          AnswerType: Yup.string().required(
+            data.ListofQuestiongroup.AnswerType
+          ),
+          NoOfQuestions: Yup.string().required(
+            data.ListofQuestiongroup.NoOfQuestions
+          ),
           // SortOrder: Yup.number().min(0, "No negative numbers").nullable(),
           // Disable: Yup.boolean(),
-        })
+        });
 
-        if(CompanyAutoCode === "N"){
+        if (CompanyAutoCode === "N") {
           schema = schema.shape({
             Code: Yup.string().required(data.ListofQuestiongroup.Code),
-          })
+          });
         }
-        setValidationSchema(schema)
+        setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -108,16 +113,15 @@ const CreateCategory = () => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
 
+    let action = "";
 
-let action = "";
-
-  if (mode === "A") {
-    action = "insert";
-  } else if (mode === "E" && delAction === "harddelete") {
-    action = "harddelete";
-  } else if (mode === "E") {
-    action = "update";
-  }
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
 
     var isCheck = "N";
     if (values.Disable == true) {
@@ -134,7 +138,6 @@ let action = "";
       SortOrder: values.SortOrder || "0",
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
-
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -224,7 +227,7 @@ let action = "";
                 borderRadius="3px"
                 alignItems="center"
               >
-                <Breadcrumbs
+                {/* <Breadcrumbs
                   maxItems={3}
                   aria-label="breadcrumb"
                   separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
@@ -261,6 +264,65 @@ let action = "";
                     onClick={() => navigate(-1)}
                   >
                     List Of Question Group
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    {mode == "A" ? "New" : mode == "D" ? "Delete" : Data.Name}
+                  </Typography>
+                </Breadcrumbs> */}
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                    }}
+                  >
+                    List of Assessment Type ({state.BreadCrumb1})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Category ({state.BreadCrumb2})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}/${accessID1}/${params.parentID2}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Assessment ({state.BreadCrumb3})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                  >
+                    List of Question Groups
                   </Typography>
                   <Typography
                     variant="h5"
@@ -325,54 +387,56 @@ let action = "";
                     {/* TEXTFIELD */}
 
                     {CompanyAutoCode === "Y" ? (
-                    <TextField
-                      variant="standard"
-                      name="Code"
-                      id="Code"
-                      placeholder="Auto"
-                      label="Code"
-                      type="text"
-                      focused
-                      value={values.Code}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      InputProps={{readOnly:true}}
-                    />
-                    ): (
-
- <TextField
-                      variant="standard"
-                      name="Code"
-                      id="Code"
-                      //placeholder="Code"
-                      label={
-                        <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
-                      type="text"
-                      focused
-                      value={values.Code}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
+                      <TextField
+                        variant="standard"
+                        name="Code"
+                        id="Code"
+                        placeholder="Auto"
+                        label="Code"
+                        type="text"
+                        focused
+                        value={values.Code}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
+                        sx={{
+                          // backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        InputProps={{ readOnly: true }}
+                      />
+                    ) : (
+                      <TextField
+                        variant="standard"
+                        name="Code"
+                        id="Code"
+                        //placeholder="Code"
+                        label={
+                          <>
+                            Code
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        type="text"
+                        focused
+                        value={values.Code}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
+                        sx={{
+                          // backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        autoFocus
+                      />
                     )}
 
                     {/* TEXTFIELD */}
@@ -381,7 +445,10 @@ let action = "";
                       type="text"
                       label={
                         <>
-                          Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Name
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       name="Name"
@@ -399,38 +466,43 @@ let action = "";
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                         },
                       }}
-                    autoFocus={CompanyAutoCode == "Y"}
+                      autoFocus={CompanyAutoCode == "Y"}
                     />
 
-                      <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="number"
-                    // label="No. Of Questions"
-                    label={
-                      <>Assessment No. Of Questions<span style={{color:"red",fontSize:"20px"}}>*</span></>
-                    }
-                    //placeholder="Enter Your NoOfQuestions Here......"
-                    value={values.NoOfQuestions}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="NoOfQuestions"
-                    name="NoOfQuestions"
-                    focused
-                    error={!!touched.NoOfQuestions && !!errors.NoOfQuestions}
-                    helperText={touched.NoOfQuestions && errors.NoOfQuestions}
-                    sx={{
-                      // backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                  />
+                    <TextField
+                      // fullWidth
+                      variant="standard"
+                      type="number"
+                      // label="No. Of Questions"
+                      label={
+                        <>
+                          Assessment No. Of Questions
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      //placeholder="Enter Your NoOfQuestions Here......"
+                      value={values.NoOfQuestions}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      id="NoOfQuestions"
+                      name="NoOfQuestions"
+                      focused
+                      error={!!touched.NoOfQuestions && !!errors.NoOfQuestions}
+                      helperText={touched.NoOfQuestions && errors.NoOfQuestions}
+                      sx={{
+                        // backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
+                    />
                     {/* DROPDOWN */}
 
                     {/* <FormControl
@@ -446,7 +518,10 @@ let action = "";
                       variant="standard"
                       label={
                         <>
-                          Answer Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Answer Type
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       name="AnswerType"
@@ -457,16 +532,16 @@ let action = "";
                       select
                       error={!!touched.AnswerType && !!errors.AnswerType}
                       helperText={touched.AnswerType && errors.AnswerType}
-                    // required
-                    //error={!!touched.AnswerType && !!errors.AnswerType}
-                    //helperText={touched.AnswerType && errors.AnswerType}
-                    // MenuProps={{
-                    //   PaperProps: {
-                    //     sx: {
-                    //       mt: 1, // Add space so the top border doesn’t get cut
-                    //     },
-                    //   },
-                    // }}
+                      // required
+                      //error={!!touched.AnswerType && !!errors.AnswerType}
+                      //helperText={touched.AnswerType && errors.AnswerType}
+                      // MenuProps={{
+                      //   PaperProps: {
+                      //     sx: {
+                      //       mt: 1, // Add space so the top border doesn’t get cut
+                      //     },
+                      //   },
+                      // }}
                     >
                       <MenuItem value={"1/4"}>One Of Four</MenuItem>
                       <MenuItem value={"Any/4"}>Any Of Four</MenuItem>
@@ -479,43 +554,42 @@ let action = "";
                     </TextField>
                     {/* </FormControl> */}
 
-
-                   
-                   {(mode === "E" || mode === "D") && (
-                  <TextField
-                    // fullWidth
-                    variant="standard"
-                    type="number"
-                    // label="No. Of Attempts Permitted"
-                    label="Available No. Of Questions"
-                    //placeholder="Enter Your Skills Here......"
-                    value={values.AvailableNoOfQuestion}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    id="AvailableNoOfQuestion"
-                    name="AvailableNoOfQuestion"
-                    focused
-                    error={
-                      !!touched.AvailableNoOfQuestion && !!errors.AvailableNoOfQuestion
-                    }
-                    helperText={
-                      touched.AvailableNoOfQuestion && errors.AvailableNoOfQuestion
-                    }
-                    disabled
-                    sx={{
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                        //readOnly:true
-                      },
-                    }}
-                  />
-                
-)}
+                    {(mode === "E" || mode === "D") && (
+                      <TextField
+                        // fullWidth
+                        variant="standard"
+                        type="number"
+                        // label="No. Of Attempts Permitted"
+                        label="Available No. Of Questions"
+                        //placeholder="Enter Your Skills Here......"
+                        value={values.AvailableNoOfQuestion}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        id="AvailableNoOfQuestion"
+                        name="AvailableNoOfQuestion"
+                        focused
+                        error={
+                          !!touched.AvailableNoOfQuestion &&
+                          !!errors.AvailableNoOfQuestion
+                        }
+                        helperText={
+                          touched.AvailableNoOfQuestion &&
+                          errors.AvailableNoOfQuestion
+                        }
+                        disabled
+                        sx={{
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            //readOnly:true
+                          },
+                        }}
+                      />
+                    )}
 
                     {/* SORT ORDER */}
                     <TextField
@@ -530,8 +604,7 @@ let action = "";
                       name="SortOrder"
                       // error={!!touched.SortOrder && !!errors.SortOrder}
                       // helperText={touched.SortOrder && errors.SortOrder}
-                      
-                      
+
                       sx={{ background: "" }}
                       focused
                       onWheel={(e) => e.target.blur()}
@@ -548,27 +621,27 @@ let action = "";
                     />
 
                     <Box>
-                    {/* CHECKBOX */}
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="DeleteFlag"
-                          checked={values.DeleteFlag}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Delete"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="Disable"
-                          checked={values.Disable}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Disable"
-                    />
+                      {/* CHECKBOX */}
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="DeleteFlag"
+                            checked={values.DeleteFlag}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Delete"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="Disable"
+                            checked={values.Disable}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Disable"
+                      />
                     </Box>
                   </Box>
                   {/* BUTTONS */}
@@ -586,7 +659,7 @@ let action = "";
                     >
                       Save
                     </LoadingButton>
-{/* {mode == "E" ? (
+                    {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"

@@ -247,6 +247,10 @@
     "SubordinateRecordID": "Please Enter the Subordinate Assessment",
     "Date": "Please Enter the Date"
   },
+  "ListofAssessCat1": {
+    "Date": "Please Enter the Date",
+    "EmpName": "Please Select A Employee"
+  },
   "Warningmsg": {
     "Logout": "Do you really want to Log Out?",
     "Close": "Do you want to Close?",

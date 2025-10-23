@@ -380,6 +380,8 @@ const Listview = () => {
             false
           ) : accessID == "TR286" ? (
             false
+          ) : accessID == "TR299" ? (
+            false
           ) : accessID == "TR072" ? (
             false
           ) : accessID == "TR058" ? (
@@ -652,6 +654,14 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
+        ) : accessID == "TR299" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<CategoryOutlinedIcon color="primary" />}
+              label="Assessment Category"
+              variant="outlined"
+            />
+          </Box>
         ) : accessID == "TR278" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
             <Chip
@@ -911,22 +921,24 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) : accessID == "TR243" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
+        ) 
+        // : accessID == "TR243" ? (
+        //   <Box display="flex" flexDirection="row" padding="25px">
+        //     <Chip
+        //       icon={<ModeEditOutlinedIcon color="primary" />}
+        //       label="Edit"
+        //       variant="outlined"
+        //     />
 
-            <Chip
-              icon={< Diversity2Icon color="primary"/>}
-              label="Leader"
-              variant="outlined"
-              sx={{ marginLeft: "50px" }}
-            />
-          </Box>
-        ) : accessID == "TR099" ? (
+        //     <Chip
+        //       icon={< Diversity2Icon color="primary"/>}
+        //       label="Leader"
+        //       variant="outlined"
+        //       sx={{ marginLeft: "50px" }}
+        //     />
+        //   </Box>
+        // ) 
+        : accessID == "TR099" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
