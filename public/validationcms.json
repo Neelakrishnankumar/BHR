@@ -117,6 +117,12 @@
     "UnitRate": "Please Enter the Unit Rate",
     "Hsn": "Please Enter the HSN Code"
   },
+   "Locality": {
+    "code": "Please Enter the Code",
+    "name": "Please Enter the Name",
+    "pincode": "Please Enter the Pincode"
+    
+  },
   "CheckIn": {
     "location": "Please Enter the Location",
     "gate": "Please Enter the Gate",

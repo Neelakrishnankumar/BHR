@@ -70,11 +70,9 @@ import { Delete, Psychology, Category } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import Diversity2Icon from '@mui/icons-material/Diversity2';
 
 const Listview = () => {
-
-
-
 
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -909,6 +907,21 @@ const Listview = () => {
             <Chip
               icon={<AddPhotoAlternateIcon color="primary" />}
               label="Image Upload"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ) : accessID == "TR243" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+
+            <Chip
+              icon={< Diversity2Icon color="primary"/>}
+              label="Leader"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />

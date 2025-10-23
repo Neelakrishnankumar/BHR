@@ -43,6 +43,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { tokens } from "../../../Theme";
 import { formGap } from "../../../ui-components/global/utils";
+import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
 
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -55,7 +56,7 @@ const Editvendor = () => {
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
-
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   // Redux state
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -319,6 +320,13 @@ const Editvendor = () => {
     code: data.Code || "",
     name: data.Name || "",
     Pancardnumber: data.PanCardNo || "",
+    locality: data.LocalityID
+      ? {
+        RecordID: data.LocalityID,
+        Code: data.LocalityCode,
+        Name: data.LocalityName,
+      }
+      : null,
     PanImg: data.PanImg || "",
     GstImg: data.gstImage || "",
     gstnumber: data.GstNo || "",
@@ -353,6 +361,8 @@ const Editvendor = () => {
       RecordID: recID,
       Code: values.code,
       Name: values.name,
+      LocalityID: values.locality.RecordID || 0,
+      LocalityName: values.locality.Name || "",
       PanCardNo: values.Pancardnumber,
       PanImg: panImage,
       GstNo: values.gstnumber,
@@ -365,7 +375,7 @@ const Editvendor = () => {
       VendorCheckbox: values.vendor === true ? "Y" : "N",
       CustomerCheckbox: values.customer === true ? "Y" : "N",
       Prospects: values.prospect === true ? "Y" : "N",
-      LocalityID:"1",
+      // LocalityID: "1",
       DeleteFlag: values.delete == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
     };
@@ -725,6 +735,21 @@ const Editvendor = () => {
                     // required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
+                  <CheckinAutocomplete
+                    id="locality"
+                    name="locality"
+                    label="Locality"
+                    variant="outlined"
+                    value={values.locality}
+                    onChange={(newValue) => {
+                      setFieldValue("locality", newValue);
+                      console.log(newValue, "--newvalue locality");
+                      console.log(newValue.RecordID, "locality RecordID");
+                    }}
+                    error={!!touched.locality && !!errors.locality}
+                    helperText={touched.locality && errors.locality}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                  />
                   <TextField
                     name="Pancardnumber"
                     label="Pan Card Number"
@@ -832,7 +857,7 @@ const Editvendor = () => {
                     }}
                     error={!!touched.mobilenumber && !!errors.mobilenumber}
                     helperText={touched.mobilenumber && errors.mobilenumber}
-                    inputProps={{ maxLength: 10}}
+                    inputProps={{ maxLength: 10 }}
                     sx={{ backgroundColor: "#ffffff" }}
                   />
 

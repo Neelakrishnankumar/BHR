@@ -152,6 +152,7 @@ import CreateSkillCandidate from "./pages/SkillGlow/CreateSkillCandidate";
 import EmployeeSchedule from "./pages/SkillGlow/EmployeeSchedule";
 import SkillInsights from "./pages/SkillGlow/Insights";
 import Editoverheadtype from "./pages/FinanceModule/Editoverheadtype";
+import EditLeader from "./pages/HR/Editleader";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -844,8 +845,17 @@ function App() {
                     path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
                     element={<EditContractsout />}
                   />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLeader/:id/:Mode"
+                    element={<EditLeader />}
+                  />
+                  {/* /Apps/Secondarylistview/TR304/Marketing%20Activity/1/EditMarketing%20Activity/1/E */}
+                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditMarketing Activity/:id/:Mode"
+                    element={<EditLeader />}
+                  />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
-
+{/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}
                   {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
                     element={<EditStageweightage />}

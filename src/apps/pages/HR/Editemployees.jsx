@@ -169,6 +169,8 @@ const Editemployee = () => {
   const [validationSchema8, setValidationSchema8] = useState(null);
   const [validationSchema9, setValidationSchema9] = useState(null);
   const [validationSchema10, setValidationSchema10] = useState(null);
+  const [validationSchema11, setValidationSchema11] = useState(null);
+
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -310,6 +312,13 @@ const Editemployee = () => {
           Hsn: Yup.string().required(data.ContractsIN.Hsn),
         });
         setValidationSchema10(schema10);
+
+        const schema11 = Yup.object().shape({
+          localitycode: Yup.string().required(data.Locality.code),
+          localityname: Yup.string().required(data.Locality.name),
+          // Pincode: Yup.string().required(data.Locality.pincode),
+        });
+        setValidationSchema11(schema11);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -754,10 +763,9 @@ const Editemployee = () => {
       dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
     }
- if (event.target.value == "13") {
-      dispatch(fetchExplorelitview("TR302", "Locality", "", ""));
-     
-     selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    if (event.target.value == "13") {
+      dispatch(fetchExplorelitview("TR302", "Locality", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, ""));
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "2") {
       dispatch(
@@ -1062,7 +1070,7 @@ const Editemployee = () => {
   } else if (show == "7") {
     VISIBLE_FIELDS = ["slno", "ItemNumber", "ItemName", "action"];
   } else if (show == "13") {
-    VISIBLE_FIELDS = ["slno", "Code", "Name", "action"];
+    VISIBLE_FIELDS = ["slno", "Locality", "Pincode", "action"];
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "slno",
@@ -1286,10 +1294,10 @@ const Editemployee = () => {
                     : show == "10"
                       ? "List of Configurations"
                       : show == "13"
-                      ? "List of Localities"
-                      : show == "8" || show == "11"
-                        ? "List of Contracts"
-                        : "List of Managers"}
+                        ? "List of Localities"
+                        : show == "8" || show == "11"
+                          ? "List of Contracts"
+                          : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -1312,7 +1320,7 @@ const Editemployee = () => {
   }
   const [laomode, setLaoMode] = useState("A");
   const [laoEmpRecID, setLaoEmpRecID] = useState("");
- 
+
   const functionInitialValue = {
     code: Data.Code,
     description: Data.Name,
@@ -1332,10 +1340,11 @@ const Editemployee = () => {
     itemValue: "",
     reference: "",
   });
-   const [localityData, setLocalityData] = useState({
+  const [localityData, setLocalityData] = useState({
     recordID: "",
     localitycode: "",
     localityname: "",
+    LCpincode: ""
   });
 
   //Contractor
@@ -1400,11 +1409,12 @@ const Editemployee = () => {
         itemValue: "",
         reference: "",
       });
-       setLocalityData({
+      setLocalityData({
         recordID: "",
         localitycode: "",
         localityname: "",
-        
+        LCpincode: ""
+
       });
       setselectLeaveconLTData(null);
       setContractorData({
@@ -1469,14 +1479,15 @@ const Editemployee = () => {
           recordID: rowData.RecordID,
           itemNO: rowData.ItemNumber,
           itemName: rowData.ItemName,
-          assestID: rowData.ItemValue,
+          assestID: rowData.AssestID,
           itemValue: rowData.ItemValue,
-          reference: rowData.ItemValue,
+          reference: rowData.PurchaseReference,
         });
         setLocalityData({
           recordID: rowData.RecordID,
           localitycode: rowData.Code,
-          localityname: rowData.Name,        
+          localityname: rowData.Name,
+          LCpincode: rowData.Pincode
         });
 
         setContractorData({
@@ -1620,13 +1631,14 @@ const Editemployee = () => {
     }
   };
   // locality screen
-const localityinitialValue = {
+  const localityinitialValue = {
     code: Data.Code,
     description: Data.Name,
     localitycode: localityData.localitycode,
-    localityname: localityData.localityname
+    localityname: localityData.localityname,
+    LCpincode: localityData.LCpincode
   };
- const FnLocalilty = async (values, resetForm, del) => {
+  const FnLocalilty = async (values, resetForm, del) => {
     setLoading(true);
     let action =
       funMode === "A" && !del
@@ -1634,20 +1646,21 @@ const localityinitialValue = {
         : funMode === "E" && del
           ? "harddelete"
           : "update";
-          const idata = {
+    const idata = {
       RecordID: localityData.recordID,
       EmployeeID: recID,
       Name: values.localityname,
       Code: values.localitycode,
+      Pincode: values.LCpincode,
       CompanyID,
-  }
-   const response = await dispatch(
+    }
+    const response = await dispatch(
       explorePostData({ accessID: "TR302", action, idata })
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR302", "Locality", "", "")
+        fetchExplorelitview("TR302", "Locality", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -2103,7 +2116,7 @@ const localityinitialValue = {
     // biometric: deploymentData.Biometric === "Y"? true : false,
     // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
     Onsitedateflag: deploymentData.OnsiteDateFlag === "Y" ? true : false,
-    Onsiterole:deploymentData.OnsiteActivityRole || "Project", 
+    Onsiterole: deploymentData.OnsiteActivityRole || "Project",
     biometric: deploymentData.BioMetric === "Y" ? true : false,
     mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
     managermanual: deploymentData.ManagerManual === "Y" ? true : false,
@@ -2144,8 +2157,8 @@ const localityinitialValue = {
       Friday: values.Friday === true ? "Y" : "N",
       Saturday: values.Saturday === true ? "Y" : "N",
       Sunday: values.Sunday === true ? "Y" : "N",
-      OnsiteDateFlag: values.Onsitedateflag === true ? "Y" : "N",      
-      OnsiteActivityRole:values.Onsiterole,
+      OnsiteDateFlag: values.Onsitedateflag === true ? "Y" : "N",
+      OnsiteActivityRole: values.Onsiterole,
       BioMetric: values.biometric === true ? "Y" : "N",
       ManagerManual: values.managermanual === true ? "Y" : "N",
       AutoPresent: values.defaultpresent === true ? "Y" : "N",
@@ -2223,7 +2236,7 @@ const localityinitialValue = {
       Friday: deploymentData.FridayShift === "Y" ? true : false,
       Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
       OnsiteDateFlag: deploymentData.Onsitedateflag === true ? "Y" : "N",
-      OnsiteActivityRole:values.onsiterole,
+      OnsiteActivityRole: values.onsiterole,
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
       CostOfBudget: values.costofemployee,
       CostOfCompany: values.costofcompany,
@@ -2591,7 +2604,7 @@ const localityinitialValue = {
                     >
                       Approvals
                     </Typography>
-                  ):(false)
+                  ) : (false)
                   }
                   {show == "13" ? (
                     <Typography
@@ -2601,7 +2614,7 @@ const localityinitialValue = {
                     >
                       Locality
                     </Typography>
-                  ):(false)
+                  ) : (false)
                   }
                 </Breadcrumbs>
               </Box>
@@ -2634,7 +2647,7 @@ const localityinitialValue = {
                     <MenuItem value={10}>Leave Configuration</MenuItem>
                     <MenuItem value={6}>List of Documents</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
-                    {/* <MenuItem value={13}>Locality</MenuItem> */}
+                    <MenuItem value={13}>Locality</MenuItem>
                   </Select>
                 </FormControl>
               ) : (
@@ -5574,6 +5587,23 @@ const localityinitialValue = {
                       />
                     </FormControl>
 
+                  </Box>
+                    <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                    <Typography variant="h5" padding={1}>
+                      Project Details
+                    </Typography>
+                    <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
                     <FormControl
                       sx={{
                         //gridColumn: "span 2",
@@ -5598,22 +5628,22 @@ const localityinitialValue = {
                         url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
-                     <TextField
-                          label="Onsite Activities Role"
-                          id="Onsiterole"
-                          name="Onsiterole"
-                          focused
-                          variant="standard"
-                          value={values.Onsiterole}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          select
-                          // error={!!touched.Onsiterole && !!errors.Onsiterole}
-                          // helperText={touched.Onsiterole && errors.Onsiterole}
-                        >
-                          <MenuItem value="Project">Project</MenuItem>
-                          <MenuItem value="Marketing">Marketing</MenuItem>
-                        </TextField>
+                    <TextField
+                      label="Onsite Activities Role"
+                      id="Onsiterole"
+                      name="Onsiterole"
+                      focused
+                      variant="standard"
+                      value={values.Onsiterole}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      select
+                    // error={!!touched.Onsiterole && !!errors.Onsiterole}
+                    // helperText={touched.Onsiterole && errors.Onsiterole}
+                    >
+                      <MenuItem value="Project">Project</MenuItem>
+                      <MenuItem value="Marketing">Marketing</MenuItem>
+                    </TextField>
                     <Box>
                       <Field
                         //  size="small"
@@ -5629,8 +5659,7 @@ const localityinitialValue = {
 
                       <FormLabel focused={false}>Allow Backlog Data Entry</FormLabel>
                     </Box>
-                  </Box>
-
+                     </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
                     Shift Details
@@ -6159,7 +6188,7 @@ const localityinitialValue = {
               // onSubmit={handleFormSubmit}
               initialValues={AttachmentInitialValues}
               validationSchema={validationSchema5}
-              enableReinitialize={true}            
+              enableReinitialize={true}
               onSubmit={(values, { resetForm, setFieldValue }) => {
                 if (
                   values.renewal &&
@@ -9346,19 +9375,20 @@ const localityinitialValue = {
         ) : (
           false
         )}
-          {show == "13" ? (
+        {show == "13" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
-              // onSubmit={handleFormSubmit}
+              //  onSubmit={handleFormSubmit}
               initialValues={localityinitialValue}
-              validationSchema={validationSchema5}
-              enableReinitialize={true}            
-              onSubmit={(values, { resetForm, setFieldValue }) => {              
+               validationSchema={validationSchema11}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                console.log("Submitting values:", values);
                 setTimeout(() => {
-                  FnLocalilty(values, resetForm, false, setFieldValue);
+                  FnLocalilty(values, resetForm, false);
                 }, 100);
               }}
-              
+
             >
               {({
                 values,
@@ -9519,14 +9549,17 @@ const localityinitialValue = {
                           value={values.localitycode}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="Code"
-                          sx={{
-                            //gridColumn: "span 2",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          // label="Code"
+                          label={
+                          <span>
+                            Code
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                          error={!!touched.localitycode && !!errors.localitycode}
+                          helperText={touched.localitycode && errors.localitycode}
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         />
@@ -9539,24 +9572,56 @@ const localityinitialValue = {
                           value={values.localityname}
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="Name"
-                          sx={{
-                            //gridColumn: "span 2",
-                            backgroundColor: "#ffffff", // Set the background to white
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                            },
-                          }}
+                          // label="Name"
+                          label={
+                          <span>
+                            Name
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                          error={!!touched.localityname && !!errors.localityname}
+                          helperText={touched.localityname && errors.localityname}
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         />
-                        
+
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="number"
+                          id="LCpincode"
+                          name="LCpincode"
+                          label="Pincode"
+                          value={values.LCpincode}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const inputValue = e.target.value;
+                            if (inputValue.length <= 6) {
+                              handleChange(e);
+                            }
+                          }}
+                          sx={{
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#ffffff",
+                            },
+                          }}
+                          focused
+                          error={!!touched.LCpincode && !!errors.LCpincode}
+                          helperText={touched.LCpincode && errors.LCpincode}
+                          inputProps={{
+                            tabIndex: "-1",
+                          }}
+                        />
+
                         <Box
                           display="flex"
                           justifyContent="end"
                           padding={1}
                           gap={2}
-                        >                         
+                        >
                           {YearFlag == "true" ? (
                             <LoadingButton
                               color="secondary"
@@ -9590,7 +9655,7 @@ const localityinitialValue = {
                                   confirmButtonText: "Confirm",
                                 }).then((result) => {
                                   if (result.isConfirmed) {
-                                    FnAttachment(
+                                    FnLocalilty(
                                       values,
                                       resetForm,
                                       "harddelete"
