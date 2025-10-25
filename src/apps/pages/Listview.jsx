@@ -922,22 +922,22 @@ const Listview = () => {
             />
           </Box>
         ) 
-        // : accessID == "TR243" ? (
-        //   <Box display="flex" flexDirection="row" padding="25px">
-        //     <Chip
-        //       icon={<ModeEditOutlinedIcon color="primary" />}
-        //       label="Edit"
-        //       variant="outlined"
-        //     />
+        : accessID == "TR243" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
 
-        //     <Chip
-        //       icon={< Diversity2Icon color="primary"/>}
-        //       label="Leader"
-        //       variant="outlined"
-        //       sx={{ marginLeft: "50px" }}
-        //     />
-        //   </Box>
-        // ) 
+            {/* <Chip
+              icon={< Diversity2Icon color="primary"/>}
+              label="Leader"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            /> */}
+          </Box>
+        ) 
         : accessID == "TR099" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip

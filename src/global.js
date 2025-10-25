@@ -10,7 +10,7 @@ var baseurl = "https://bosuat.beyondexs.com/"
 // var APIurl = "https://phpmigrationapi.bexatm.com/hr/api/"
 // var baseurl = "https://phpmigrationapi.bexatm.com/"
 
-const initialState = {  
+ const initialState = {  
 //hr
 baseApiUrl: APIurl,
 baseUrl: baseurl,
@@ -115,8 +115,7 @@ AssessmentAutoUrl: APIurl + "ScheduleAssessmentLookup.php",
 InsightsUrl1: APIurl + "InsightGetController.php",
 InsightsUrl2: APIurl + "InsightEmpPerformance.php",
 ProjectCostingPDF: APIurl + "ProjectCostingReport.php",
-ScheduleGetController: APIurl + "ScheduleGetController.php",
-};
+  };
 
 export const getUrlSlice = createSlice({
   name: "globalurl",

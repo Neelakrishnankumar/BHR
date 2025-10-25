@@ -125,6 +125,7 @@ const ListviewSecondary = () => {
   var Code = params.Code;
   var parentRecID = params.parentRecID;
   var CusID = params.CusID;
+  var id = params.id;
   const compID = sessionStorage.getItem("compID");
   var screenName = params.screenName;
   var Type = params.Type;
@@ -1768,7 +1769,8 @@ const ListviewSecondary = () => {
                   navigate("/Apps/TR243/Party");
                 }}
               >
-                {`Party(${state.PartyName})`}
+                Party
+                {/* {`Party(${state.PartyName})`} */}
               </Typography>
               <Typography
                 variant="h5"
@@ -1776,6 +1778,7 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(-1);
+                  // navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${id}`)
                 }}
               >
                 Leader

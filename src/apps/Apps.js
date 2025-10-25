@@ -161,6 +161,7 @@ import CreateFeedBack from "./pages/SkillGlow/CreateFeedBack";
 import NewSchedule from "./pages/SkillGlow/NewSchedule";
 import NewScheduleLatest from "./pages/SkillGlow/NewScheduleLatest";
 import EditLeader from "./pages/HR/Editleader";
+import LeaderCardView from "./pages/HR/Leadercardview";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -947,16 +948,22 @@ function App() {
                     element={<EditContractsout />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLeader/:id/:Mode"
+                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLeader/:id/:Mode"
+                    // path="Secondarylistview/:accessID/:screenName/EditLeader/:id/:Mode"
                     element={<EditLeader />}
                   />
-                  {/* /Apps/Secondarylistview/TR304/Marketing%20Activity/1/EditMarketing%20Activity/1/E */}
-                   <Route
+                  <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditMarketing Activity/:id/:Mode"
+                    // /Apps/Secondarylistview/TR304/Marketing%20Activity/73/EditMarketing%20Activity/30/E
+                    
                     element={<EditLeader />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/LeaderCardView/:id"
+                    element={<LeaderCardView />}
                   />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
-{/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}
+                  {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}
                   {/* <Route
                    path="/:accessID/:screenName/EditStageweightage/:id/:Mode"
                     element={<EditStageweightage />}

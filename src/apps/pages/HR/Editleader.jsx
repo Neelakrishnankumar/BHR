@@ -47,6 +47,7 @@ const EditLeader = () => {
     const accessID = params.accessID;
     const recID = params.id;
     const mode = params.Mode;
+    const filtertype = params.filtertype;
     const location = useLocation();
     const navigate = useNavigate();
     const data = useSelector((state) => state.formApi.Data);
@@ -61,7 +62,8 @@ const EditLeader = () => {
     const [validationSchema, setValidationSchema] = useState(null);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
-
+    const state = location.state || {};
+console.log(state,"state");
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -94,22 +96,24 @@ const EditLeader = () => {
     // const CompanyID = sessionStorage.getItem("compID");
 
     const initialValue = {
-        code: data.Code,
-        name: data.Name,
-        frequency: data.Frequency,
-        // productCost: data.Productcost,
+        applieddate: data.OMDate,
+        leadtitle: data.LeadTitle,
+        comments: data.Comments,
+        visitdate: data.NextVisitDate,
+        // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
+        Status : data.OMStatus,
+        project: data.ProjectID
+            ? { RecordID: data.ProjectID, Name: data.ProjectName }
+            : null,
         // OverheadType: data.OverHeadsTypeID
         //   ? {
         //     RecordID: data.RecordID,
         //     Code: data.Code,
         //     Name: data.Name,
         //   }
-        //   : null,
-        OverheadType: data.OverHeadTypeID
-            ? { RecordID: data.OverHeadTypeID, Name: data.OverHeadType }
-            : null,
-        disable: data.Disable === "Y" ? true : false,
-        delete: data.DeleteFlag === "Y" ? true : false
+        //   : null,      
+        // disable: data.Disable === "Y" ? true : false,
+        // delete: data.DeleteFlag === "Y" ? true : false
 
     };
     console.log(initialValue, "OverheadType");
@@ -127,16 +131,17 @@ const EditLeader = () => {
 
         const idata = {
             RecordID: recID,
-            Code: values.code,
-            Name: values.name,
-            Frequency: values.frequency,
-            Productcost: values.productCost || "",
-            OverHeadsTypeID: values.OverheadType.RecordID || 0,
-            OverHeadsTypeName: values.OverheadType.Name || "",
-            Finyear,
+            PartyID: filtertype,
+            OMDate: values.applieddate,
+            Comments: values.comments,
+            LeadTitle: values.leadtitle,
+            Status: values.Status,
+            NextVisitDate:values.visitdate,
+            ProjectID: values.project.RecordID || 0,
+            ProjectName: values.project.Name || "",
             CompanyID,
-            Disable: values.disable == true ? "Y" : "N",
-            DeleteFlag: values.delete == true ? "Y" : "N",
+            // Disable: values.disable == true ? "Y" : "N",
+            // DeleteFlag: values.delete == true ? "Y" : "N",
 
         };
         console.log(idata, "idata");
@@ -147,7 +152,7 @@ const EditLeader = () => {
             toast.success(response.payload.Msg);
             // setIni(true)
             setLoading(false);
-            navigate(-1);
+            navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
         } else {
             toast.error(response.payload.Msg);
             setLoading(false);
@@ -184,7 +189,7 @@ const EditLeader = () => {
                     navigate("/");
                 }
                 if (props === "Close") {
-                    navigate(-1);
+                    navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
                 }
             } else {
                 return;
@@ -218,6 +223,7 @@ const EditLeader = () => {
                                     sx={{ cursor: "default" }}
 
                                 >
+                                {/* {`Marketing Activity(${state.PartyName})`} */}
                                     Marketing Activity
                                 </Typography>
 
@@ -256,7 +262,7 @@ const EditLeader = () => {
                             setSubmitting(false);
                         }}
 
-                        validationSchema={validationSchema}
+                        // validationSchema={validationSchema}
                         enableReinitialize={true}
                     >
                         {({
@@ -297,7 +303,7 @@ const EditLeader = () => {
                                         helperText={touched.applieddate && errors.applieddate}
                                         inputProps={{
                                             max: new Date().toISOString().split("T")[0],
-                                            readOnly: true,
+                                            // readOnly: true,
                                         }}
                                     />
                                     <CheckinAutocomplete
@@ -317,11 +323,12 @@ const EditLeader = () => {
                                     />
 
                                     <TextField
-                                        label={
-                                            <>
-                                                Lead Title<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                                            </>
-                                        }
+                                        // label={
+                                        //     <>
+                                        //         Lead Title<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        //     </>
+                                        // }
+                                        label="Lead Title"
                                         id="leadtitle"
                                         type="text"
                                         name="leadtitle"
@@ -360,10 +367,10 @@ const EditLeader = () => {
                                         onChange={handleChange}
                                         error={!!touched.visitdate && !!errors.visitdate}
                                         helperText={touched.visitdate && errors.visitdate}                                       
-                                        inputProps={{
-                                            max: new Date().toISOString().split("T")[0],
-                                            readOnly: true,
-                                        }}
+                                        // inputProps={{
+                                        //     max: new Date().toISOString().split("T")[0],
+                                        //     // readOnly: true,
+                                        // }}
                                     />
                                     <TextField
                                         select
@@ -373,15 +380,15 @@ const EditLeader = () => {
                                         value={values.Status}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        required
+                                        // required
                                         focused
                                         variant="standard"
                                     >
-                                        <MenuItem value="AP">Cool</MenuItem>
-                                        <MenuItem value="QR">Warm</MenuItem>
-                                        <MenuItem value="QR">Hot</MenuItem>
+                                        <MenuItem value="Cool">Cool</MenuItem>
+                                        <MenuItem value="Warm">Warm</MenuItem>
+                                        <MenuItem value="Hot">Hot</MenuItem>
                                     </TextField>
-                                    <Box>
+                                    {/* <Box>
                                         <Field
                                             //  size="small"
                                             type="checkbox"
@@ -406,7 +413,7 @@ const EditLeader = () => {
                                         />
 
                                         <FormLabel focused={false}>Disable</FormLabel>
-                                    </Box>
+                                    </Box> */}
 
 
                                 </Box>
@@ -450,7 +457,7 @@ const EditLeader = () => {
                                         variant="contained"
                                         color="warning"
                                         onClick={() => {
-                                            navigate(-1);
+                                        navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
                                         }}
                                     >
                                         CANCEL
