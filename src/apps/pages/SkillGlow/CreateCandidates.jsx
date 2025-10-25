@@ -94,14 +94,14 @@ const CreateCandidates = () => {
       })
       .then((data) => {
         setErrorMsgData(data);
-        // const schema = Yup.object().shape({
-        //   // assessment: Yup.object()
-        //   //   .required(data.ListofAssessCat.assessment)
-        //   //   .nullable(),
-        //   Date: Yup.string().required(data.ListofAssessCat.Date),
-        //   // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
-        //   // disable: Yup.boolean(),
-        // });
+        const schema = Yup.object().shape({
+          // assessment: Yup.object()
+          //   .required(data.ListofAssessCat.assessment)
+          //   .nullable(),
+          Date: Yup.string().required(data.ListofAssessCat.Date),
+          // sortOrder: Yup.number().min(0, "No negative numbers").nullable(),
+          // disable: Yup.boolean(),
+        });
         const appraisalSchema = Yup.object().shape({
           Date: Yup.string()
             .required(data.ListofAssessCat.Date)
@@ -140,26 +140,26 @@ const CreateCandidates = () => {
             ),
         });
 
-        const normalSchema = Yup.object().shape({
-          Date: Yup.string()
-            .required(data.ListofAssessCat.Date)
-            .test(
-              "valid-date",
-              "Invalid Date",
-              (value) => !!value && !isNaN(new Date(value))
-            ),
-          assessment: Yup.object()
-            .nullable()
-            .test(
-              "assessment-required",
-              data.ListofAssessCat.assessment,
-              (value) => value && value.RecordID
-            ),
-        });
+        // const normalSchema = Yup.object().shape({
+        //   Date: Yup.string()
+        //     .required(data.ListofAssessCat.Date)
+        //     .test(
+        //       "valid-date",
+        //       "Invalid Date",
+        //       (value) => !!value && !isNaN(new Date(value))
+        //     ),
+        //   assessment: Yup.object()
+        //     .nullable()
+        //     .test(
+        //       "assessment-required",
+        //       data.ListofAssessCat.assessment,
+        //       (value) => value && value.RecordID
+        //     ),
+        // });
 
         // Pick schema based on AssessmentType
-        const schema =
-          AssessmentType === "Appraisal" ? appraisalSchema : normalSchema;
+        // const schema =
+        //   AssessmentType === "Appraisal" ? appraisalSchema : normalSchema;
 
         setValidationSchema(schema);
       })
@@ -376,7 +376,7 @@ const CreateCandidates = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
-                  {/* {JSON.stringify(errors)} */}
+                  {JSON.stringify(errors)}
                   <Box
                     display="grid"
                     gap={formGap}

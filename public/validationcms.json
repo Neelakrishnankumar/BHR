@@ -251,6 +251,9 @@
     "Date": "Please Enter the Date",
     "EmpName": "Please Select A Employee"
   },
+  "ListOfAppraisalSchedule": {
+    "SelfRecordID": "Please Select A Employee"
+  },
   "Warningmsg": {
     "Logout": "Do you really want to Log Out?",
     "Close": "Do you want to Close?",
