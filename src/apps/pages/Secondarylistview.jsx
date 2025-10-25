@@ -69,6 +69,7 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { useEffect, useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import AssistantIcon from '@mui/icons-material/Assistant';
 import GppMaybeOutlinedIcon from "@mui/icons-material/GppMaybeOutlined";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
@@ -1780,7 +1781,70 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-        ) : accessID == "TR102" ? (
+        )  : accessID == "TR303" ? (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR243/Party");
+                }}
+              >
+                {/* Party */}
+                {`Party(${state.PartyName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}              
+              >
+                Leader
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR304" ? (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR243/Party");
+                }}
+              >
+                {`Party(${state.PartyName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Leader
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}              
+              >
+                Marketing Activity
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ): accessID == "TR102" ? (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Breadcrumbs
               maxItems={2}
@@ -3683,7 +3747,20 @@ const ListviewSecondary = () => {
               variant="outlined"
             /> */}
           </Box>
-        ) : accessID == "TR291" ? (
+        ) : accessID == "TR303" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+             <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<AssistantIcon color="primary" />}
+              label="Marketing Activity"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR291" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
             {/* <Chip
               icon={<Visibility color="primary" />}

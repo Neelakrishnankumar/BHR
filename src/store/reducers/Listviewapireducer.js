@@ -22,6 +22,7 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
+import Diversity2Icon from '@mui/icons-material/Diversity2';
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -68,7 +69,7 @@ import ProjectPDF from "../../apps/pages/HR/ProjectPDF";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { pdf } from "@react-pdf/renderer";
-import AdjustOutlinedIcon from "@mui/icons-material/AdjustOutlined";
+import AssistantIcon from '@mui/icons-material/Assistant';import AdjustOutlinedIcon from "@mui/icons-material/AdjustOutlined";
 import DoneOutlineOutlinedIcon from "@mui/icons-material/DoneOutlineOutlined";
 import GppMaybeOutlinedIcon from "@mui/icons-material/GppMaybeOutlined";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
@@ -624,7 +625,9 @@ export const fetchListview =
         AccessID != "TR262" &&
         AccessID != "TR288" &&
         AccessID != "TR294" &&
-        AccessID != "TR022"
+        AccessID != "TR022" &&
+        AccessID != "TR303" &&
+        AccessID != "TR304"
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -640,7 +643,7 @@ export const fetchListview =
         AccessID == "TR102" ||
         AccessID == "TR105" ||
         AccessID == "TR002" ||
-        // AccessID == "TR086" ||
+        //  AccessID == "TR303" ||
         AccessID == "TR091"
       ) {
         // filter = filter;
@@ -648,6 +651,12 @@ export const fetchListview =
       }
       if (AccessID === "TR262") {
         filter = "ProjectID=" + `'${filter}'`;
+      }
+      if (AccessID === "TR303") {
+        filter = "PartyID=" + `'${filter}'`;
+      }
+      if (AccessID === "TR304") {
+        filter = "LeaderID=" + `'${filter}'`;
       }
       //  if (AccessID === "TR283") {
       //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
@@ -1457,6 +1466,93 @@ export const fetchListview =
                       <Tooltip title="List of Category">
                         <IconButton color="info" size="small">
                           <ListAltOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }
+          // else if (AccessID == "TR243") {
+          //   obj = {
+          //     field: "action",
+          //     headerName: "Action",
+          //     minWidth: 100,
+          //     sortable: false,
+          //     headerAlign: "center",
+          //     align: "center",
+          //     disableColumnMenu: true,
+          //     disableExport: true,
+          //     filterable: false,
+          //     renderCell: (params) => {
+          //       return (
+          //         <Box>
+          //           <Link
+          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+          //           >
+          //             <Tooltip title="Edit">
+          //               <IconButton color="info" size="small">
+          //                 <ModeEditOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+
+          //           <Link
+          //             to={`/Apps/Secondarylistview/TR303/Leader/${params.row.RecordID}`}
+          //             state={{
+          //               PartyName: params.row.Name,
+          //               // MilestoneName: params.row.MilestoneName,
+
+          //             }}
+          //           >
+          //             <Tooltip title="Leader">
+          //               <IconButton color="info" size="small">
+          //                 <Diversity2Icon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+          //         </Box>
+          //       );
+          //     },
+          //   };
+          // }
+          else if (AccessID == "TR303") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                       state={{
+                        PartyName: params.row.Party,
+                      }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    <Link
+                      to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
+                       state={{
+                        PartyName: params.row.Party,
+                      }}
+                    >
+                      <Tooltip title="Marketing Activity">
+                        <IconButton color="info" size="small">
+                          <AssistantIcon />
                         </IconButton>
                       </Tooltip>
                     </Link>
@@ -4077,6 +4173,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </IconButton>
         )}
+
         {/* VIEW */}
         {accessID == "TR279" && (
           // <IconButton
