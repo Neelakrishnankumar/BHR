@@ -161,12 +161,9 @@ import CreateFeedBack from "./pages/SkillGlow/CreateFeedBack";
 import NewSchedule from "./pages/SkillGlow/NewSchedule";
 import NewScheduleLatest from "./pages/SkillGlow/NewScheduleLatest";
 import EditLeader from "./pages/HR/Editleader";
-<<<<<<< HEAD
 import LeaderCardView from "./pages/HR/Leadercardview";
-=======
 import AppraisalSchedule from "./pages/SkillGlow/AppraisalSchedule";
 import AppraisalScheduleList from "./pages/SkillGlow/AppraisalScheduleList";
->>>>>>> dc369828112bc9feaec91860db035203bbdc3940
 
 function App() {
   const [theme, colorMode] = useMode();

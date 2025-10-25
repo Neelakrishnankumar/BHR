@@ -387,6 +387,7 @@ console.log(state,"state");
                                         <MenuItem value="Cool">Cool</MenuItem>
                                         <MenuItem value="Warm">Warm</MenuItem>
                                         <MenuItem value="Hot">Hot</MenuItem>
+                                        <MenuItem value="Close">Close</MenuItem>
                                     </TextField>
                                     {/* <Box>
                                         <Field
