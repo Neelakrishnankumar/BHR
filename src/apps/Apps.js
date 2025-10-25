@@ -160,6 +160,8 @@ import CreateCompliance from "./pages/SkillGlow/CreateCompliance";
 import CreateFeedBack from "./pages/SkillGlow/CreateFeedBack";
 import NewSchedule from "./pages/SkillGlow/NewSchedule";
 import NewScheduleLatest from "./pages/SkillGlow/NewScheduleLatest";
+import AppraisalSchedule from "./pages/SkillGlow/AppraisalSchedule";
+import AppraisalScheduleList from "./pages/SkillGlow/AppraisalScheduleList";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -344,6 +346,23 @@ function App() {
                   <Route
                     path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/ScheduleListAssessment/:parentID2"
                     element={<NewScheduleLatest />}
+                  />
+                  {/* APPRAISAL DESIGNATION LIST*/}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID3/:accessID1/:parentID2/:accessID/AppraisalSchedule/"
+                    element={<ListviewSecondary />}
+                  />
+
+
+                  {/* APPRAISAL SCHEDULE */}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID3/:accessID2/:parentID2/:accessID1/AppraisalSchedule/AppraisalScheduleEMP/:parentID1"
+                    element={<AppraisalSchedule />}
+                  />
+                   {/* APPRAISAL SCHEDULE LIST*/}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID3/:accessID2/:parentID2/:accessID1/AppraisalSchedule/AppraisalScheduleListEMP/:parentID1"
+                    element={<AppraisalScheduleList />}
                   />
 
                   <Route

@@ -242,7 +242,7 @@ const ListviewSecondary = () => {
   } else if (accessID == "TR294") {
     filter = `AssessmentType ='${parentID1}'`;
   }
-  // else if (accessID == "TR288") {
+  // else if (accessID == "TR305") {
   //   filter = `CompanyID = '${compID}'`;
   // }
   else if (accessID == "TR283") {
@@ -1052,6 +1052,61 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
+        ) : accessID == "TR305" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                }}
+              >
+                List of Assessment Type ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Category ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(
+                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}/${accessID1}/${params.parentID2}`,
+                    { state: { ...state } }
+                  );
+                }}
+              >
+                List of Appraisal 
+                {/* ({BreadCrumb3}) */}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              //onClick={() => navigate(-1)}
+              >
+                List Of Designation
+              </Typography>
+
+            </Breadcrumbs>
+          </Box>
         ) : accessID == "TR295" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
@@ -1092,7 +1147,7 @@ const ListviewSecondary = () => {
               //   );
               // }}
               >
-                List of Assessment
+                List of Appraisal
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3044,7 +3099,9 @@ const ListviewSecondary = () => {
             false
           ) : accessID == "TR103" ? (
             false
-          ) : accessID == "TR104" ? (
+          ): accessID == "TR305" ? (
+            false
+          )  : accessID == "TR104" ? (
             false
           ) : accessID == "TR105" ? (
             false
@@ -3110,6 +3167,7 @@ const ListviewSecondary = () => {
             //   </IconButton>
             // </Tooltip>
             accessID === "TR295" ? (
+              <>
               <Tooltip arrow title="Add">
 
                 <IconButton>
@@ -3123,6 +3181,20 @@ const ListviewSecondary = () => {
                 </IconButton>
 
               </Tooltip>
+              <Tooltip arrow title="Schedule">
+
+                <IconButton>
+                  <SendTimeExtensionOutlinedIcon
+                    onClick={() => {
+                      navigate(`./TR305/AppraisalSchedule`, {
+                        state: { ...state },
+                      });
+                    }}
+                  />
+                </IconButton>
+
+              </Tooltip>
+              </>
             ) : accessID === "TR297" ? (
               <Tooltip arrow title="Add">
 
@@ -3481,13 +3553,27 @@ const ListviewSecondary = () => {
               label="Session"
               variant="outlined"
             />
-            {/* <Chip
-              icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+            <Chip
+              icon={<SendTimeExtensionOutlinedIcon />}
               label="Schedule"
               variant="outlined"
-            /> */}
+            />
           </Box>
-        ) : accessID == "TR296" ? (
+        ) : accessID == "TR305" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+              label="Appraisal Schedule"
+              variant="outlined"
+            />
+            <Chip
+              icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+              label="Schedule History"
+              variant="outlined"
+            />
+          
+          </Box>
+        ): accessID == "TR296" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}

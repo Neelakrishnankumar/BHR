@@ -85,6 +85,9 @@ const initialState = {
   schedulegetdata:[],
   schedulestatus:"",
   scheduleloading:false,
+  appraisalSchedulegetdata:[],
+  appraisalSchedulegetdatastatus:"",
+  appraisalSchedulegetdataloading:false,
   projectCostinggetdata:{},
   projectCostingstatus:"",
   projectCostingloading:false,
@@ -1098,6 +1101,32 @@ export const scheduleGetData = createAsyncThunk(
     var url = store.getState().globalurl.ScheduleGetController;
     const data = {
       AssessmentID: AssessmentID,
+    };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
+//APPRAISAL BASED SCHEDULE
+export const appraisalscheduleGetData = createAsyncThunk(
+  "appraisalscheduleGetData/get",
+  async ({ DesignationID, AssessmentType }) => {
+    var url = store.getState().globalurl.AppraisalScheduleGetcontroller;
+    const data = {
+      DesignationID: DesignationID,
+      AssessmentType: AssessmentType,
     };
 
     console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
@@ -2561,6 +2590,26 @@ export const getApiSlice = createSlice({
     state.error = action.error.message;
   })
 
+
+  //APPRAISAL BASED SCHEDULE 
+    .addCase(appraisalscheduleGetData.pending, (state) => {
+    state.appraisalscheduleGetData = [];
+    state.appraisalscheduleGetDataloading = true;
+    state.error = null;
+  })
+  .addCase(appraisalscheduleGetData.fulfilled, (state, action) => {
+   
+          state.appraisalscheduleGetData = action.payload.Data;
+
+   
+    state.appraisalscheduleGetDataloading = false;
+    state.error = null;
+  })
+  .addCase(appraisalscheduleGetData.rejected, (state, action) => {
+    state.appraisalscheduleGetData = [];
+    state.appraisalscheduleGetDataloading = false;
+    state.error = action.error.message;
+  })
 
   //PROJECT COSTING PDF
   .addCase(getProjectCosting.pending, (state) => {

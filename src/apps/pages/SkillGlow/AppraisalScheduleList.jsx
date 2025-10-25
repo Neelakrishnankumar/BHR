@@ -45,6 +45,7 @@ import {
 } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  appraisalscheduleGetData,
   getFetchData,
   postData,
   scheduleGetData,
@@ -74,7 +75,7 @@ import {
 import { useTheme } from "@emotion/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const NewScheduleLatest = () => {
+const AppraisalScheduleList = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -110,7 +111,9 @@ const NewScheduleLatest = () => {
   const Data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
-  const scheduleLoading = useSelector((state) => state.formApi.scheduleloading);
+  const scheduleLoading = useSelector(
+    (state) => state.formApi.appraisalscheduleGetDataloading
+  );
   console.log("🚀 ~ NewSchedule ~ scheduleLoading:", scheduleLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const AssessmentAutoUrl = useSelector(
@@ -149,74 +152,14 @@ const NewScheduleLatest = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
   const [rows, setRows] = useState([]);
-  // useEffect(() => {
-  //   const fetchScheduleData = async () => {
-  //     try {
-  //       const data = await dispatch(
-  //         scheduleGetData({
-  //           AssessmentID: parentID2 ? parentID2 : 0,
-  //         })
-  //       );
 
-  //       console.log("🚀 ~ fetchScheduleData ~ data:", data);
-
-  //       if (data?.payload?.Status === "Y") {
-  //         setRows(data.payload.Data || []);
-  //       } else {
-  //         setRows([]); // Prevents DataGrid errors
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ Error fetching schedule data:", error);
-  //       setRows([]);
-  //     }
-  //   };
-
-  //   // ✅ Only run if parentID2 is valid
-  //   if (parentID2 !== undefined && parentID2 !== null) {
-  //     fetchScheduleData();
-  //   }
-  // }, [dispatch, parentID2]);
-
-  //   const ScheduleSaveFn = async (values, delAction) => {
-  //     // let action =
-  //     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
-  //     let action = "";
-
-  //     if (mode === "A") {
-  //       action = "insert";
-  //     } else if (mode === "E" && delAction === "harddelete") {
-  //       action = "harddelete";
-  //     } else if (mode === "E") {
-  //       action = "update";
-  //     }
-  //     var isCheck = "N";
-  //     if (values.Disable == true) {
-  //       isCheck = "Y";
-  //     }
-  // const empIDs = selectedEmp.map((emp) => emp.RecordID).join(",");
-
-  // const idata = {
-  //   Details: selectedEmp.map((emp) => ({
-  //     AssessmentID: parentID2 || 0,
-  //     EmployeeID: emp.RecordID,
-  //     Date: values.Date,
-  //     AssessmentType: AssessmentType || "",
-  //   })),
-  // };
-
-  //     const response = await dispatch(postData({ accessID, action, idata }));
-  //     if (response.payload.Status == "Y") {
-  //       toast.success(response.payload.Msg);
-  //       navigate(-1);
-  //     } else {
-  //       toast.error(response.payload.Msg ? response.payload.Msg : "Error");
-  //     }
-  //   };
-  // define it at the top of your component
   const fetchScheduleData = async () => {
     try {
       const data = await dispatch(
-        scheduleGetData({ AssessmentID: parentID2 || 0 })
+        appraisalscheduleGetData({
+          DesignationID: parentID1 || 0,
+          AssessmentType: "AP",
+        })
       );
 
       console.log("🚀 ~ fetchScheduleData ~ data:", data);
@@ -232,44 +175,10 @@ const NewScheduleLatest = () => {
     }
   };
   useEffect(() => {
-    if (parentID2 !== undefined && parentID2 !== null) {
+    if (parentID1 !== undefined && parentID1 !== null) {
       fetchScheduleData();
     }
   }, [dispatch, parentID2]);
-
-  const ScheduleSaveFn = async (values, delAction) => {
-    let action =
-      mode === "A"
-        ? "insert"
-        : mode === "E"
-        ? delAction === "harddelete"
-          ? "harddelete"
-          : "update"
-        : "";
-
-    const idata = {
-      Details: selectedEmp.map((emp) => ({
-        AssessmentID: parentID2 || 0,
-        EmployeeID: emp.RecordID,
-        Date: values.Date,
-        AssessmentType: AssessmentType || "",
-      })),
-    };
-
-    const response = await dispatch(
-      postData({ accessID, action: "insert", idata })
-    );
-
-    if (response.payload.Status === "Y") {
-      toast.success(response.payload.Msg);
-
-      sessionStorage.removeItem("empData");
-
-      fetchScheduleData();
-    } else {
-      toast.error(response.payload.Msg || "Error");
-    }
-  };
 
   const fnLogOut = (props) => {
     Swal.fire({
@@ -361,16 +270,19 @@ const NewScheduleLatest = () => {
 
       if (!result.isConfirmed) return;
 
+      //   const idata = {
+      //     RecordID: row.RecordID,
+      //     AssessmentID: row.AssessmentID || 0,
+      //     EmployeeID: row.EmployeeID,
+      //     Date: row.DATE,
+      //     AssessmentType: row.AssessmentType || "",
+      //   };
       const idata = {
         RecordID: row.RecordID,
-        AssessmentID: row.AssessmentID || parentID2 || 0,
-        EmployeeID: row.EmployeeID,
-        Date: row.DATE,
-        AssessmentType: row.AssessmentType || "",
       };
 
       const response = await dispatch(
-        postData({ accessID: "TR301", action: "harddelete", idata })
+        postData({ accessID: "TR306", action: "harddelete", idata })
       );
 
       if (response.payload?.Status === "Y") {
@@ -408,9 +320,9 @@ const NewScheduleLatest = () => {
       editable: false,
     },
     {
-      headerName: "Assessment",
+      headerName: "Appraisal",
       field: "Assessment",
-      width: "200",
+      width: "250",
       align: "left",
       headerAlign: "center",
       hide: false,
@@ -522,7 +434,7 @@ const NewScheduleLatest = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Schedule</Typography>
+          <Typography>List of Schedule History</Typography>
         </Box>
         <GridToolbarQuickFilter />
       </GridToolbarContainer>
@@ -580,7 +492,7 @@ const NewScheduleLatest = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => {
                       navigate(
-                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}`,
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}`,
                         { state: { ...state } }
                       );
                     }}
@@ -593,12 +505,21 @@ const NewScheduleLatest = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => {
                       navigate(
-                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID1}/${params.parentID3}`,
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID3}/${params.accessID2}/${params.parentID2}`,
                         { state: { ...state } }
                       );
                     }}
                   >
-                    List of Assessment ({state.BreadCrumb3})
+                    List of Appraisal
+                    {/* ({state.BreadCrumb3}) */}
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(-1)}
+                  >
+                    List Of Designation ({Designation})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -724,4 +645,4 @@ const NewScheduleLatest = () => {
   );
 };
 
-export default NewScheduleLatest;
+export default AppraisalScheduleList;
