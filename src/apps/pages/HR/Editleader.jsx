@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     fetchApidata,
     getFetchData,
+    LeaderData,
     postApidata,
     postData,
 } from "../../../store/reducers/Formapireducer";
@@ -47,11 +48,15 @@ const EditLeader = () => {
     const accessID = params.accessID;
     const recID = params.id;
     const mode = params.Mode;
-    const Type = "T";
+    const Type = params.Type;
+    console.log(Type, "Type");
     const filtertype = params.filtertype;
+    const filtertype2 = params.filtertype2;
     const location = useLocation();
     const navigate = useNavigate();
     const data = useSelector((state) => state.formApi.Data);
+    const leader = useSelector((state) => state.formApi.leaderDetails);
+    console.log(leader, "leader");
     const getLoading = useSelector((state) => state.formApi.getLoading);
     const [loading, setLoading] = useState(false);
     const Finyear = sessionStorage.getItem("YearRecorid");
@@ -63,8 +68,9 @@ const EditLeader = () => {
     const [validationSchema, setValidationSchema] = useState(null);
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
+    const [leaderDetails, setLeaderDetails] = useState(null);
     const state = location.state || {};
-console.log(state,"state");
+    console.log(state, "state");
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -89,55 +95,64 @@ console.log(state,"state");
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, [CompanyAutoCode]);
+    const curdate = new Date().toISOString().split("T")[0];
+    const [formData, setFormData] = useState({
+        applieddate: curdate,
+        leadtitle: "",
+        comments: "",
+        visitdate: "",
+        Status: "",
+        project: null,
+    });
 
     // useEffect(() => {
     //     dispatch(getFetchData({ accessID, get: "get", recID }));
     // }, [location.key]);
     useEffect(() => {
-  const fetchData = async () => {
-    if (Type === "T") {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          "https://bosuat.beyondexs.com/api/LeaderGetController.php",
-          {
-            method: "POST",
-           headers: {
-                        Authorization:
-                            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-                    },
-            body: JSON.stringify({ LeaderID: recID }), // dynamic LeaderID
-          }
-        );
+        const fetchData = async () => {
+            if (Type === "T") {
+                try {
+                    setLoading(true);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+                    const resultAction = await dispatch(
+                        LeaderData({ data: { LeaderID: filtertype } })
+                    );
 
-        const result = await response.json();
-        console.log("Leader API Response:", result);
+                    const result = resultAction.payload;
+                    console.log("Leader API Redux Response:", result);
 
-        // ✅ Optional: update form fields
-        // setFieldValue("leadtitle", result.LeadTitle || "");
-        // setFieldValue("comments", result.Comments || "");
+                    if (result?.Status === "Y" && result?.Data?.length > 0) {
+                        const leaderData = result.Data[0];
+                        setLeaderDetails(leaderData); 
 
-      } catch (error) {
-        console.error("Error fetching Leader data:", error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // ✅ Always run Redux fetch only when Type !== "T"
-      dispatch(getFetchData({ accessID, get: "get", recID }));
-    }
-  };
+                        // ✅ Set form data for Formik initialValues
+                        setFormData({
+                            applieddate: curdate, // You can fill default date if required
+                            leadtitle: leaderData.LeadTitle || "",
+                            comments: "",
+                            visitdate: "",
+                            Status: "",
+                            project: leaderData.ProjectID
+                                ? {
+                                    RecordID: leaderData.ProjectID,
+                                    Name: leaderData.ProjectName,
+                                }
+                                : null,
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error fetching Leader data:", error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                // 🔹 Normal get call for other types
+                dispatch(getFetchData({ accessID, get: "get", recID }));
+            }
+        };
 
-  fetchData();
-}, [Type, recID, accessID, dispatch]);
-
-
-    // const YearRecorid = sessionStorage.getItem("YearRecorid");
-    // const CompanyID = sessionStorage.getItem("compID");
+        fetchData();
+    }, [Type, recID, accessID, dispatch, filtertype]);
 
     const initialValue = {
         applieddate: data.OMDate,
@@ -145,19 +160,10 @@ console.log(state,"state");
         comments: data.Comments,
         visitdate: data.NextVisitDate,
         // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
-        Status : data.OMStatus,
+        Status: data.OMStatus,
         project: data.ProjectID
             ? { RecordID: data.ProjectID, Name: data.ProjectName }
             : null,
-        // OverheadType: data.OverHeadsTypeID
-        //   ? {
-        //     RecordID: data.RecordID,
-        //     Code: data.Code,
-        //     Name: data.Name,
-        //   }
-        //   : null,      
-        // disable: data.Disable === "Y" ? true : false,
-        // delete: data.DeleteFlag === "Y" ? true : false
 
     };
     console.log(initialValue, "OverheadType");
@@ -175,12 +181,13 @@ console.log(state,"state");
 
         const idata = {
             RecordID: recID,
-            PartyID: filtertype,
+            PartyID: Type ==="T"? leaderDetails?.PartyID : filtertype,
+            LeaderID: Type ==="T"? filtertype : 0,
             OMDate: values.applieddate,
             Comments: values.comments,
             LeadTitle: values.leadtitle,
             Status: values.Status,
-            NextVisitDate:values.visitdate,
+            NextVisitDate: values.visitdate,
             ProjectID: values.project.RecordID || 0,
             ProjectName: values.project.Name || "",
             CompanyID,
@@ -196,7 +203,13 @@ console.log(state,"state");
             toast.success(response.payload.Msg);
             // setIni(true)
             setLoading(false);
-            navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+            // navigate(-1);
+                            navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
+            // if (Type === "S") {
+            //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/${filtertype2}`);
+            // }
+            // else {
+            // };
         } else {
             toast.error(response.payload.Msg);
             setLoading(false);
@@ -267,7 +280,7 @@ console.log(state,"state");
                                     sx={{ cursor: "default" }}
 
                                 >
-                                {/* {`Marketing Activity(${state.PartyName})`} */}
+                                    {/* {`Marketing Activity(${state.PartyName})`} */}
                                     Marketing Activity
                                 </Typography>
 
@@ -294,7 +307,7 @@ console.log(state,"state");
 
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
-                        initialValues={initialValue}
+                        initialValues={formData}
                         // onSubmit={(values, { resetForm }) => {
                         //   setTimeout(() => {
                         //     fnSave(values);
@@ -349,6 +362,7 @@ console.log(state,"state");
                                             max: new Date().toISOString().split("T")[0],
                                             // readOnly: true,
                                         }}
+                                        disabled={Type ==="T"}
                                     />
                                     <CheckinAutocomplete
                                         id="project"
@@ -363,6 +377,7 @@ console.log(state,"state");
                                         }}
                                         error={!!touched.project && !!errors.project}
                                         helperText={touched.project && errors.project}
+                                        disabled={Type ==="T"}
                                         url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                     />
 
@@ -383,7 +398,7 @@ console.log(state,"state");
                                         onChange={handleChange}
                                         error={!!touched.leadtitle && !!errors.leadtitle}
                                         helperText={touched.leadtitle && errors.leadtitle}
-
+                                        disabled={Type ==="T"}
                                     />
                                     <TextField
                                         fullWidth
@@ -410,11 +425,11 @@ console.log(state,"state");
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.visitdate && !!errors.visitdate}
-                                        helperText={touched.visitdate && errors.visitdate}                                       
-                                        // inputProps={{
-                                        //     max: new Date().toISOString().split("T")[0],
-                                        //     // readOnly: true,
-                                        // }}
+                                        helperText={touched.visitdate && errors.visitdate}
+                                    // inputProps={{
+                                    //     max: new Date().toISOString().split("T")[0],
+                                    //     // readOnly: true,
+                                    // }}
                                     />
                                     <TextField
                                         select
@@ -502,7 +517,8 @@ console.log(state,"state");
                                         variant="contained"
                                         color="warning"
                                         onClick={() => {
-                                        navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+                                            // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+                                            navigate(-1)
                                         }}
                                     >
                                         CANCEL

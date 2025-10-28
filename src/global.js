@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// var APIurl = "https://hr.beyondexs.com/api/"
-// var baseurl = "https://hr.beyondexs.com/"
+// var APIurl = "https://bos.beyondexs.com/api/"
+// var baseurl = "https://bos.beyondexs.com/"
 var APIurl = "https://bosuat.beyondexs.com/api/"
 var baseurl = "https://bosuat.beyondexs.com/"
 
@@ -117,6 +117,8 @@ InsightsUrl2: APIurl + "InsightEmpPerformance.php",
 ProjectCostingPDF: APIurl + "ProjectCostingReport.php",
 ScheduleGetController: APIurl + "ScheduleGetController.php",
 AppraisalScheduleGetcontroller: APIurl + "AppraisalScheduleGetcontroller.php",
+Leadergeturl:  APIurl + "LeaderGetController.php",
+
 };
 
 export const getUrlSlice = createSlice({

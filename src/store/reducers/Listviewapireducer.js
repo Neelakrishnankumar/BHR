@@ -502,6 +502,7 @@ export const fetchListview =
   (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
+    
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
@@ -654,10 +655,16 @@ export const fetchListview =
       if (AccessID === "TR303") {
         filter = "PartyID=" + `'${filter}'`;
       }
-      if (AccessID === "TR304") {
-         filter = "PartyID=" + `'${filter}'`;
-        // filter = ""
-      }
+      //   if (AccessID === "TR304") {
+      //    filter = "LeaderID=" + `'${filter}'`;
+
+      // }
+      // if (AccessID === "TR304") {
+      //    filter = "PartyID=" + `'${filter}'`;
+
+      // }
+     
+
       //  if (AccessID === "TR283") {
       //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
       // }
@@ -681,7 +688,8 @@ export const fetchListview =
       AccessID == "TR291" ||
       AccessID == "TR299" ||
       AccessID == "TR294" ||
-      AccessID == "TR282"
+      AccessID == "TR282" 
+      // AccessID == "TR304"
     ) {
       filter = filter;
     }
@@ -1592,14 +1600,14 @@ export const fetchListview =
               filterable: false,
               renderCell: (params) => {
                 const count = Number(params.row.MarketingCount || 0);
-                 const id = params.row.RecordID;
+                const id = params.row.RecordID;
                 // const filtertype = params.row.RecordID
 
                 const leaderLink =
                   count >= 1
                     ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
                     // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
-                    : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A`;
+                    : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
 
                 const leaderState =
                   count === 1
@@ -1624,8 +1632,10 @@ export const fetchListview =
 
                     {/* Leader Button */}
                     <Link to={leaderLink} state={
-                      {PartyName: params.row.Name,
-                      Count: count}
+                      {
+                        PartyName: params.row.Name,
+                        Count: count
+                      }
                     }>
                       <Tooltip title="Leader">
                         <IconButton
@@ -1674,8 +1684,9 @@ export const fetchListview =
                     </Link>
 
                     <Link
-                      to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
-                      state={{
+                      //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
+                        to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
+                       state={{
                         PartyName: params.row.Party,
                       }}
                     >
