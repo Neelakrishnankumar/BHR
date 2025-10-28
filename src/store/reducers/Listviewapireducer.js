@@ -1579,72 +1579,72 @@ export const fetchListview =
           //     },
           //   };
           // }
-          // else if (AccessID === "TR243") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       const count = Number(params.row.MarketingCount || 0);
-          //        const id = params.row.RecordID;
-          //       // const filtertype = params.row.RecordID
+          else if (AccessID === "TR243") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                const count = Number(params.row.MarketingCount || 0);
+                 const id = params.row.RecordID;
+                // const filtertype = params.row.RecordID
 
-          //       const leaderLink =
-          //         count >= 1
-          //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-          //           // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
-          //           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A`;
+                const leaderLink =
+                  count >= 1
+                    ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                    // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
+                    : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A`;
 
-          //       const leaderState =
-          //         count === 1
-          //           ? {
-          //             PartyName: params.row.Name,
-          //             Count: count,
-          //           }
-          //           : null;
+                const leaderState =
+                  count === 1
+                    ? {
+                      PartyName: params.row.Name,
+                      Count: count,
+                    }
+                    : null;
 
-          //       return (
-          //         <Box>
-          //           {/* Edit Button */}
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //           >
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
+                return (
+                  <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
 
-          //           {/* Leader Button */}
-          //           <Link to={leaderLink} state={
-          //             {PartyName: params.row.Name,
-          //             Count: count}
-          //           }>
-          //             <Tooltip title="Leader">
-          //               <IconButton
-          //                 color="info"
-          //                 size="small"
-          //                 onClick={(e) => {
-          //                   e.stopPropagation();
-          //                   console.log("MarketingCount:", count);
-          //                 }}
-          //               >
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
+                    {/* Leader Button */}
+                    <Link to={leaderLink} state={
+                      {PartyName: params.row.Name,
+                      Count: count}
+                    }>
+                      <Tooltip title="Leader">
+                        <IconButton
+                          color="info"
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log("MarketingCount:", count);
+                          }}
+                        >
+                          <Diversity2Icon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }
 
           else if (AccessID == "TR303") {
             obj = {

@@ -47,6 +47,7 @@ const EditLeader = () => {
     const accessID = params.accessID;
     const recID = params.id;
     const mode = params.Mode;
+    const Type = "T";
     const filtertype = params.filtertype;
     const location = useLocation();
     const navigate = useNavigate();
@@ -89,9 +90,52 @@ console.log(state,"state");
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, [CompanyAutoCode]);
 
+    // useEffect(() => {
+    //     dispatch(getFetchData({ accessID, get: "get", recID }));
+    // }, [location.key]);
     useEffect(() => {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
-    }, [location.key]);
+  const fetchData = async () => {
+    if (Type === "T") {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          "https://bosuat.beyondexs.com/api/LeaderGetController.php",
+          {
+            method: "POST",
+           headers: {
+                        Authorization:
+                            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+                    },
+            body: JSON.stringify({ LeaderID: recID }), // dynamic LeaderID
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Leader API Response:", result);
+
+        // ✅ Optional: update form fields
+        // setFieldValue("leadtitle", result.LeadTitle || "");
+        // setFieldValue("comments", result.Comments || "");
+
+      } catch (error) {
+        console.error("Error fetching Leader data:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // ✅ Always run Redux fetch only when Type !== "T"
+      dispatch(getFetchData({ accessID, get: "get", recID }));
+    }
+  };
+
+  fetchData();
+}, [Type, recID, accessID, dispatch]);
+
+
     // const YearRecorid = sessionStorage.getItem("YearRecorid");
     // const CompanyID = sessionStorage.getItem("compID");
 
