@@ -200,7 +200,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 const LeaderCardView = () => {
-    const { id } = useParams();
+    // const { id } = useParams();
+    const { recordID, partyID } = useParams();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -215,7 +216,7 @@ const LeaderCardView = () => {
                     Query: {
                         AccessID: "TR303",
                         ScreenName: "Leader",
-                        Filter: `PartyID='${id}'`,
+                        Filter: `PartyID='${partyID}'`,
                         Any: "",
                     },
                 };
@@ -249,15 +250,19 @@ const LeaderCardView = () => {
         };
 
         fetchLeaderData();
-    }, [id, listViewUrl]);
+    }, [partyID, listViewUrl]);
 
     const handleAdd = () => {
-        navigate(`/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A`);
+        navigate(`/Apps/Secondarylistview/TR304/Leader/${partyID}/EditLeader/-1/A/S`);
     };
 
-    const handleactivitylistview = () => {
-        navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${id}`);
-    };
+    // const handleactivitylistview = () => {
+    //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}`);
+    // };
+    const handleactivitylistview = (recordID, partyID) => {
+        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}/${recordID}`);
+         navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`);
+   };
 
     const handleCancel = () => {
         navigate(-1);
@@ -333,9 +338,11 @@ const LeaderCardView = () => {
                                         variant="h6"
                                         sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}
                                     >
-                                        #SL: {index + 1}   {row.ProjectName || ""}
+                                        #SL: {index + 1}   {row.LeadTitle || ""}
                                     </Typography>
-
+                                    <Typography>
+                                        <strong>Project Name:</strong>  {row.ProjectName || ""}
+                                    </Typography>
                                     <Typography>
                                         <strong>First Call Date:</strong> {row.FirstCallDate || ""}
                                     </Typography>
@@ -356,14 +363,23 @@ const LeaderCardView = () => {
                                 </CardContent>
                                 <Box display="flex" justifyContent="flex-end" mt={-4}>
                                     <Tooltip title="Marketing Activity">
-                                        <IconButton
+                                        {/* <IconButton
                                             color="primary"
                                             onClick={handleactivitylistview}
                                             size="small"
                                             disabled={row.LEStatus === "Close"}
                                         >
                                             <AssistantIcon sx={{ fontSize: 30 }} />
+                                        </IconButton> */}
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() => handleactivitylistview(row.RecordID, row.PartyID)} // ✅ pass both
+                                            size="small"
+                                            disabled={row.LEStatus === "Close"}
+                                        >
+                                            <AssistantIcon sx={{ fontSize: 30 }} />
                                         </IconButton>
+
                                     </Tooltip>
                                 </Box>
                             </Card>

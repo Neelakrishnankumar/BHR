@@ -126,9 +126,13 @@ const ListviewSecondary = () => {
   var parentRecID = params.parentRecID;
   var CusID = params.CusID;
   var id = params.id;
+  var leaderID = params.leaderID;
+  var recordID = params.recordID;
   const compID = sessionStorage.getItem("compID");
   var screenName = params.screenName;
   var Type = params.Type;
+  console.log(Type,"type");
+  // var type = `${Type}`;
   var remarkDec = params.remarkDec;
   const { toggleSidebar, broken, rtl } = useProSidebar();
   //const rowData = location.state || {};
@@ -247,6 +251,11 @@ const ListviewSecondary = () => {
   // else if (accessID == "TR305") {
   //   filter = `CompanyID = '${compID}'`;
   // }
+  else if (accessID === "TR304") {   
+       
+         filter = Type == "T"?`LeaderID='${leaderID}'`:`PartyID='${leaderID}'`;
+      // filter =`PartyID='${leaderID}'`;
+    }
   else if (accessID == "TR283") {
     filter = `EmployeeID ='${parentID3}' AND AssessmentType = '${parentID2}'`;
   } else if (accessID == "TR291") {

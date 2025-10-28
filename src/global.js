@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// var APIurl = "https://hr.beyondexs.com/api/"
-// var baseurl = "https://hr.beyondexs.com/"
+// var APIurl = "https://bos.beyondexs.com/api/"
+// var baseurl = "https://bos.beyondexs.com/"
 var APIurl = "https://bosuat.beyondexs.com/api/"
 var baseurl = "https://bosuat.beyondexs.com/"
 
