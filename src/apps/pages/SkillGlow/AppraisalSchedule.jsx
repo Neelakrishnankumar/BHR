@@ -175,10 +175,10 @@ const AppraisalSchedule = () => {
       mode === "A"
         ? "insert"
         : mode === "E"
-        ? delAction === "harddelete"
-          ? "harddelete"
-          : "update"
-        : "";
+          ? delAction === "harddelete"
+            ? "harddelete"
+            : "update"
+          : "";
 
     const idata = {
       Details: selectedEmp.map((emp) => ({
@@ -271,7 +271,7 @@ const AppraisalSchedule = () => {
       headerName: "Appraisal",
       //width: 200,
       headerAlign: "center",
-      hide:true
+      hide: true
     },
     {
       field: "DisplayAssessmentType",
@@ -524,7 +524,7 @@ const AppraisalSchedule = () => {
                           Query: {
                             AccessID: "2122",
                             ScreenName: "List+Of+Question+Groups",
-                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Self'`,
+                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Self' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
                           },
                         })
@@ -551,7 +551,7 @@ const AppraisalSchedule = () => {
                           Query: {
                             AccessID: "2123",
                             ScreenName: "List+Of+Question+Groups",
-                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Manager'`,
+                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Manager' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
                           },
                         })
@@ -574,7 +574,7 @@ const AppraisalSchedule = () => {
                           Query: {
                             AccessID: "2125",
                             ScreenName: "List+Of+Question+Groups",
-                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Peer'`,
+                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Peer' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
                           },
                         })
@@ -611,7 +611,7 @@ const AppraisalSchedule = () => {
                           Query: {
                             AccessID: "2124",
                             ScreenName: "List+Of+Question+Groups",
-                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Subordinate'`,
+                            Filter: `AssessmentType='AP' AND DesignationID='${DesignationID}' AND AppraisalType='Subordinate' AND AssessmentStatus = 'Ready to Assign'`,
                             Any: "",
                           },
                         })
@@ -925,9 +925,8 @@ const AppraisalSchedule = () => {
                         if (values.ManagerRecordID)
                           appraisalTypes.push({
                             key: "Manager",
-                            label: `${
-                              values.ManagerRecordID.Name || ""
-                            }`,
+                            label: `${values.ManagerRecordID.Name || ""
+                              }`,
                             id: values.ManagerRecordID.RecordID,
                           });
 
@@ -941,9 +940,8 @@ const AppraisalSchedule = () => {
                         if (values.SubordinateRecordID)
                           appraisalTypes.push({
                             key: "Subordinate",
-                            label: `${
-                              values.SubordinateRecordID.Name || ""
-                            }`,
+                            label: `${values.SubordinateRecordID.Name || ""
+                              }`,
                             id: values.SubordinateRecordID.RecordID,
                           });
 
@@ -986,9 +984,8 @@ const AppraisalSchedule = () => {
                               //       : "0",
                               // });
                               newRows.push({
-                                id: `${emp.RecordID}-${
-                                  type.label
-                                }-${Date.now()}`,
+                                id: `${emp.RecordID}-${type.label
+                                  }-${Date.now()}`,
                                 EmployeeID: emp.RecordID,
                                 EmployeeName:
                                   emp.EmployeeName || emp.Name || "N/A",
