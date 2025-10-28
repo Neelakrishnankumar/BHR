@@ -528,6 +528,7 @@ export const fetchListview =
       AccessID !== "TR152" &&
       AccessID !== "TR280" &&
       AccessID !== "TR300" &&
+      AccessID !== "TR305" &&
       AccessID !== "TR301" &&
       AccessID !== "TR295" &&
       AccessID !== "TR296" &&
@@ -611,6 +612,7 @@ export const fetchListview =
         AccessID != "TR235" &&
         AccessID != "TR280" &&
         AccessID != "TR300" &&
+        AccessID != "TR305" &&
         AccessID != "TR301" &&
         AccessID != "TR295" &&
         AccessID != "TR296" &&
@@ -688,6 +690,9 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
+     else if (AccessID == "TR305") {
+      filter = '';
+    }
     else {
       filter = `CompanyID=${CompId}`;
     }
@@ -1187,6 +1192,7 @@ export const fetchListview =
             AccessID == "TR280" ||
             AccessID == "TR301" ||
             AccessID == "TR300" ||
+            AccessID == "TR305" ||
             AccessID == "TR295" ||
             AccessID == "TR296" ||
             AccessID == "TR297" ||
@@ -4044,6 +4050,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID !== "TR291" &&
           accessID !== "TR299" &&
           accessID !== "TR295" &&
+          accessID !== "TR305" &&
           accessID !== "TR296" &&
           accessID !== "TR297" &&
           accessID !== "TR298" &&
@@ -4107,6 +4114,39 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </IconButton>
           </Tooltip>
         )}
+
+         {(accessID === "TR305") && (
+          <Tooltip title="Appraisal Schedule">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`./AppraisalScheduleEMP/${params.row.RecordID}`, {
+                  state: { ...state, Designation:params.row.DesignationName },
+                })
+              }
+            >
+              <SendTimeExtensionOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        {(accessID === "TR305") && (
+          <Tooltip title="Schedule History">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`./AppraisalScheduleListEMP/${params.row.RecordID}`, {
+                  state: { ...state, Designation:params.row.DesignationName },
+                })
+              }
+            >
+              <HistoryToggleOffOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+
+
         {(accessID === "TR281") && (
           <Tooltip title="Edit">
             <IconButton
@@ -4223,6 +4263,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID !== "TR280" &&
           accessID !== "TR301" &&
           accessID !== "TR300" &&
+          accessID !== "TR305" &&
           accessID !== "TR295" &&
           accessID !== "TR296" &&
           accessID !== "TR297" &&
@@ -4648,7 +4689,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </IconButton>
         )} */}
-        {(accessID == "TR300" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && (
+        {(accessID == "TR300" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && params.row.AssessmentStatus === "Ready to Assign" && (
           <IconButton
             color="primary"
             size="small"
@@ -4671,7 +4712,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </IconButton>
         )}
-        {(accessID == "TR300" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && (
+        {(accessID == "TR300" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && params.row.AssessmentStatus === "Ready to Assign" && (
           <IconButton
             color="primary"
             size="small"
