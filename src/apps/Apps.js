@@ -214,6 +214,15 @@ function App() {
                     element={<ListviewSecondary />}
                   />
                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:leaderID/:Type"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:leaderID"
+                    element={<ListviewSecondary />}
+                  />
+                  {/* /Apps/Secondarylistview/TR304/Marketing%20Activity/31/84 */}
+                  <Route
                     path="/Secondarylistview/skillglow/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditList Of Assessment Category/:id/:Mode"
                     element={<CreateCandidates />}
                   />
@@ -647,6 +656,10 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID1"
                     element={<ListviewSecondary />}
                   />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID1/:Type"
+                    element={<ListviewSecondary />}
+                  />
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number"
@@ -967,18 +980,18 @@ function App() {
                     element={<EditContractsout />}
                   />
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLeader/:id/:Mode"
+                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLeader/:id/:Mode/:Type"
                     // path="Secondarylistview/:accessID/:screenName/EditLeader/:id/:Mode"
                     element={<EditLeader />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditMarketing Activity/:id/:Mode"
-                    // /Apps/Secondarylistview/TR304/Marketing%20Activity/73/EditMarketing%20Activity/30/E
+                    // /Apps/Secondarylistview/TR304/Marketing%20Activity/31/84/EditMarketing%20Activity/-1/A
                     
                     element={<EditLeader />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/LeaderCardView/:id"
+                    path="/Secondarylistview/:accessID/LeaderCardView/:partyID"
                     element={<LeaderCardView />}
                   />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

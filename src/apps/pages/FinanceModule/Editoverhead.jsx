@@ -97,6 +97,7 @@ const Editoverhead = () => {
     code: data.Code,
     name: data.Name,
     frequency: data.Frequency,
+    accounttype: data.AccountType || "Debit",
     // productCost: data.Productcost,
     // OverheadType: data.OverHeadsTypeID
     //   ? {
@@ -130,6 +131,7 @@ console.log(initialValue,"OverheadType");
       Code: values.code,
       Name: values.name,
       Frequency: values.frequency,
+      AccountType: values.accounttype,
       Productcost: values.productCost || "",
       OverHeadsTypeID: values.OverheadType.RecordID || 0,
       OverHeadsTypeName: values.OverheadType.Name || "",
@@ -395,6 +397,30 @@ console.log(initialValue,"OverheadType");
                     // defaultValue={selectedFunctionName}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
+                  <TextField
+                    label={
+                      <>
+                        Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    select
+                    id="accounttype"
+                    name="accounttype"
+                    focused
+                    variant="standard"
+                    value={values.accounttype}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.accounttype && !!errors.accounttype}
+                    helperText={touched.accounttype && errors.accounttype}
+                  // required
+                  >
+
+                    <MenuItem value="Debit">Debit</MenuItem>
+                    <MenuItem value="Credit">Credit</MenuItem>
+                    
+                  </TextField>
+                   
                   {/* </FormControl> */}
 
                   {/* <FormControl

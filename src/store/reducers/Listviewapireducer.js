@@ -502,6 +502,7 @@ export const fetchListview =
   (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
+    
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
@@ -656,10 +657,16 @@ export const fetchListview =
       if (AccessID === "TR303") {
         filter = "PartyID=" + `'${filter}'`;
       }
-      if (AccessID === "TR304") {
-         filter = "PartyID=" + `'${filter}'`;
-        // filter = ""
-      }
+      //   if (AccessID === "TR304") {
+      //    filter = "LeaderID=" + `'${filter}'`;
+
+      // }
+      // if (AccessID === "TR304") {
+      //    filter = "PartyID=" + `'${filter}'`;
+
+      // }
+     
+
       //  if (AccessID === "TR283") {
       //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
       // }
@@ -683,7 +690,8 @@ export const fetchListview =
       AccessID == "TR291" ||
       AccessID == "TR299" ||
       AccessID == "TR294" ||
-      AccessID == "TR282"
+      AccessID == "TR282" 
+      // AccessID == "TR304"
     ) {
       filter = filter;
     }
@@ -1585,72 +1593,74 @@ export const fetchListview =
           //     },
           //   };
           // }
-          // else if (AccessID === "TR243") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       const count = Number(params.row.MarketingCount || 0);
-          //        const id = params.row.RecordID;
-          //       // const filtertype = params.row.RecordID
+          else if (AccessID === "TR243") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                const count = Number(params.row.MarketingCount || 0);
+                const id = params.row.RecordID;
+                // const filtertype = params.row.RecordID
 
-          //       const leaderLink =
-          //         count >= 1
-          //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-          //           // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
-          //           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A`;
+                const leaderLink =
+                  count >= 1
+                    ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                    // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
+                    : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
 
-          //       const leaderState =
-          //         count === 1
-          //           ? {
-          //             PartyName: params.row.Name,
-          //             Count: count,
-          //           }
-          //           : null;
+                const leaderState =
+                  count === 1
+                    ? {
+                      PartyName: params.row.Name,
+                      Count: count,
+                    }
+                    : null;
 
-          //       return (
-          //         <Box>
-          //           {/* Edit Button */}
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //           >
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
+                return (
+                  <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
 
-          //           {/* Leader Button */}
-          //           <Link to={leaderLink} state={
-          //             {PartyName: params.row.Name,
-          //             Count: count}
-          //           }>
-          //             <Tooltip title="Leader">
-          //               <IconButton
-          //                 color="info"
-          //                 size="small"
-          //                 onClick={(e) => {
-          //                   e.stopPropagation();
-          //                   console.log("MarketingCount:", count);
-          //                 }}
-          //               >
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
+                    {/* Leader Button */}
+                    <Link to={leaderLink} state={
+                      {
+                        PartyName: params.row.Name,
+                        Count: count
+                      }
+                    }>
+                      <Tooltip title="Leader">
+                        <IconButton
+                          color="info"
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log("MarketingCount:", count);
+                          }}
+                        >
+                          <Diversity2Icon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }
 
           else if (AccessID == "TR303") {
             obj = {
@@ -1680,8 +1690,9 @@ export const fetchListview =
                     </Link>
 
                     <Link
-                      to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
-                      state={{
+                      //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
+                        to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
+                       state={{
                         PartyName: params.row.Party,
                       }}
                     >

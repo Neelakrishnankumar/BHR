@@ -47,7 +47,10 @@ const EditLeader = () => {
     const accessID = params.accessID;
     const recID = params.id;
     const mode = params.Mode;
+    const type =params.Type;
+    console.log(type,"Type");
     const filtertype = params.filtertype;
+    const filtertype2 = params.filtertype2;
     const location = useLocation();
     const navigate = useNavigate();
     const data = useSelector((state) => state.formApi.Data);
@@ -132,6 +135,7 @@ console.log(state,"state");
         const idata = {
             RecordID: recID,
             PartyID: filtertype,
+            // LeaderID: filtertype,
             OMDate: values.applieddate,
             Comments: values.comments,
             LeadTitle: values.leadtitle,
@@ -152,8 +156,14 @@ console.log(state,"state");
             toast.success(response.payload.Msg);
             // setIni(true)
             setLoading(false);
-            navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
-        } else {
+            // navigate(-1);
+           if(type ==="S"){
+             navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/${filtertype2}`);
+        }
+        else{
+            navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
+        };
+ } else {
             toast.error(response.payload.Msg);
             setLoading(false);
         }
@@ -458,8 +468,9 @@ console.log(state,"state");
                                         variant="contained"
                                         color="warning"
                                         onClick={() => {
-                                        navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
-                                        }}
+                                        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+                                        navigate(-1)
+                                    }}
                                     >
                                         CANCEL
                                     </Button>
