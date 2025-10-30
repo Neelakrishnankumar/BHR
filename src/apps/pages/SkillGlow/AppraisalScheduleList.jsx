@@ -320,7 +320,7 @@ const AppraisalScheduleList = () => {
       editable: false,
     },
     {
-      headerName: "Appraisal",
+      headerName: "Appraisal By",
       field: "Assessment",
       width: "400",
       align: "left",
