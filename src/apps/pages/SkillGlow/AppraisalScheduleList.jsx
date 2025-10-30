@@ -313,7 +313,7 @@ const AppraisalScheduleList = () => {
     {
       headerName: "Employee Name",
       field: "EmployeeName",
-      width: "150",
+      width: "200",
       align: "left",
       headerAlign: "center",
       hide: false,
@@ -322,21 +322,21 @@ const AppraisalScheduleList = () => {
     {
       headerName: "Appraisal",
       field: "Assessment",
-      width: "250",
+      width: "400",
       align: "left",
       headerAlign: "center",
       hide: false,
       editable: false,
     },
-    {
-      headerName: "Current Attempt",
-      field: "CurrentAllowedAttempt",
-      width: "100",
-      align: "right",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
+    // {
+    //   headerName: "Current Attempt",
+    //   field: "CurrentAllowedAttempt",
+    //   width: "100",
+    //   align: "right",
+    //   headerAlign: "center",
+    //   hide: false,
+    //   editable: false,
+    // },
     {
       headerName: "Targeted Date",
       field: "Targeteddate",
@@ -349,25 +349,25 @@ const AppraisalScheduleList = () => {
       editable: false,
     },
 
-    {
-      headerName: "Last Att Date",
-      field: "Lastattdate",
-      type: "date",
-      width: "100",
-      align: "center",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
-    {
-      headerName: "Last Att Score",
-      field: "Lastattscore",
-      width: "100",
-      align: "right",
-      headerAlign: "center",
-      hide: false,
-      editable: false,
-    },
+    // {
+    //   headerName: "Last Att Date",
+    //   field: "Lastattdate",
+    //   type: "date",
+    //   width: "100",
+    //   align: "center",
+    //   headerAlign: "center",
+    //   hide: false,
+    //   editable: false,
+    // },
+    // {
+    //   headerName: "Last Att Score",
+    //   field: "Lastattscore",
+    //   width: "100",
+    //   align: "right",
+    //   headerAlign: "center",
+    //   hide: false,
+    //   editable: false,
+    // },
     {
       headerName: "Status",
       field: "STATUS",
@@ -407,14 +407,14 @@ const AppraisalScheduleList = () => {
             <DeleteIcon
               style={{
                 color: "#e74c3c",
-                opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+                opacity: params.row.STATUS === "Yet To Appraise" ? 1 : 0.3,
               }}
             />
           }
           label="Delete"
-          disabled={params.row.STATUS !== "Not Attended"}
+          disabled={params.row.STATUS !== "Yet To Appraise"}
           onClick={
-            params.row.STATUS === "Not Attended"
+            params.row.STATUS === "Yet To Appraise"
               ? handleDeleteClick(params.row) // ✅ Correct
               : undefined
           }
