@@ -98,7 +98,7 @@ const Editvendor = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Party.name),
-
+          locality: Yup.object().required(data.Party.locality).nullable(),
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
         };
@@ -168,32 +168,7 @@ const Editvendor = () => {
     return <LinearProgress />;
   }
 
-  // const validationSchema = Yup.object({
-  //   Pancardnumber: Yup.string()
-  //     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Card Number"),
-  //   gstnumber: Yup.string()
-  //     .matches(
-  //       /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
-  //       "Invalid GST Number"
-  //     )
 
-  // });
-  //const BankvalidationSchema = Yup.object({
-  //   bankname: Yup.string().required('Bank Name is required'),
-  //   branchname: Yup.string().required('Branch Name is required'),
-  //   Accounttype: Yup.string().required('Account Type is required'),
-  //   ifsc: Yup.string()
-  //     .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code')
-  //     .required('IFSC Code is required'),
-  //   bankloc: Yup.string().required('Bank Location is required'),
-  //   accountholdname: Yup.string().required('Account Holder Name is required'),
-  //   accountnumber: Yup.string()
-  //     .matches(/^\d+$/, "Account number must be digits only")
-  //     .min(9, "Account number must be at least 9 digits")
-  //     .max(18, "Account number can't exceed 18 digits")
-  //     .required("Account number is required"),
-  //   bankaddress: Yup.string().required('Bank Address is required'),
-  // });
   const contactvalidationSchema = Yup.object().shape({
     name1: Yup.string().required('Name is required'),
     emailid1: Yup.string()
@@ -327,6 +302,8 @@ const Editvendor = () => {
         Name: data.LocalityName,
       }
       : null,
+    address: data.Address || "",
+    maplink: data.MapLocation || "",
     PanImg: data.PanImg || "",
     GstImg: data.gstImage || "",
     gstnumber: data.GstNo || "",
@@ -364,6 +341,8 @@ const Editvendor = () => {
       LocalityID: values.locality.RecordID || 0,
       LocalityName: values.locality.Name || "",
       PanCardNo: values.Pancardnumber,
+      Address : values.address,
+      MapLocation: values.maplink,
       PanImg: panImage,
       GstNo: values.gstnumber,
       GstImg: gstImage,
@@ -738,7 +717,11 @@ const Editvendor = () => {
                   <CheckinAutocomplete
                     id="locality"
                     name="locality"
-                    label="Locality"
+                    label={
+                      <>
+                        Locality<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
                     variant="outlined"
                     value={values.locality}
                     onChange={(newValue) => {
@@ -803,38 +786,7 @@ const Editvendor = () => {
                     }}
                   // autoFocus
                   />
-                  {/* <TextField
-                    name="mobilenumber"
-                    type="number"
-                    id="mobilenumber"
-                    label={
-                      <>
-                        Contact Mobile Number<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.mobilenumber}
-                    onBlur={handleBlur}
-                    // onChange={(e) => {
-                    //   const value = e.target.value;
-                    //   // Only allow numbers and max 10 digits
-                    //   if (/^\d{0,10}$/.test(value)) {
-                    //     handleChange(e);
-                    //   }
-                    // }}
-                    error={!!touched.mobilenumber && !!errors.mobilenumber}
-                    helperText={touched.mobilenumber && errors.mobilenumber}
-                    inputProps={{ maxLength: 10 }}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  // autoFocus
-                  /> */}
+                  
                   <TextField
                     name="mobilenumber"
                     id="mobilenumber"
@@ -922,7 +874,47 @@ const Editvendor = () => {
                       },
                     }}
                   />
-
+                  
+                  <TextField
+                    name="maplink"
+                    type="text"
+                    id="maplink"
+                    label="Map Location"
+                    variant="standard"
+                    focused
+                    value={values.maplink}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    // error={!!touched.maplink && !!errors.maplink}
+                    // helperText={touched.maplink && errors.maplink}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}                 
+                  />
+                  <TextField
+                    name="address"
+                    type="text"
+                    id="address"
+                    label="Address"
+                    variant="standard"
+                    focused
+                    multiline
+                    rows={3}
+                    value={values.address}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    // error={!!touched.address && !!errors.address}
+                    // helperText={touched.address && errors.address}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}                 
+                  />
                   {/* panimage */}
 
                   <Box>
@@ -1079,36 +1071,7 @@ const Editvendor = () => {
                       Save
                     </Button>
                   )}
-                  {/* {YearFlag == "true" && mode == "E" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Swal.fire({
-                          title: errorMsgData.Warningmsg.Delete,
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Confirm",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            Fnsave(values, "harddelete");
-                            // navigate(-1);
-                          } else {
-                            return;
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  ) : (
-                    // <Button color="error" variant="contained" disabled={true}>
-                    //   Delete
-                    // </Button>
-                    null
-                  )} */}
+                  
                   <Button
                     color="warning"
                     variant="contained"
@@ -1161,52 +1124,7 @@ const Editvendor = () => {
                     },
                   }}
                 >
-                  {/* <Typography>Contact Person 1</Typography> */}
-                  {/* <TextField
-                                        name="code"
-                                        type="text"
-                                        id="code"
-                                        label="Bank Name"
-                                        variant="standard"
-                                        focused
-                                        required
-                                        // value={values.code}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.code && !!errors.code}
-                                        helperText={touched.code && errors.code}
-                                        sx={{
-
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            }
-                                        }}
-                                        autoFocus
-                                    /> */}
-                  {/* <TextField
-                                        name="name"
-                                        type="text"
-                                        id="name"
-                                        label="Name"
-                                        variant="standard"
-                                        focused
-                                        value={values.name}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.name && !!errors.name}
-                                        helperText={touched.name && errors.name}
-                                        sx={{
-
-                                            backgroundColor: "#ffffff", // Set the background to white
-                                            "& .MuiFilledInput-root": {
-                                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                                            }
-                                        }}
-                                        autoFocus
-                                    /> */}
-
-                  {/* <Box display="flex" gap={2}> */}
+                  
                   <Box
                     sx={{
                       padding: 1.5,

@@ -60,7 +60,8 @@
     "name": "Please Enter the Name",
     "mobilenumber": "Please Enter the Contact Mobile Number",
     "Pancardnumber": "Invalid Pan Card Number",
-    "gstnumber": "Invalid GST Number"
+    "gstnumber": "Invalid GST Number",
+    "locality" : "Please Enter the Locality"
   },
   "BankDetails": {
     "bankname": "Please Enter the Bank Name",

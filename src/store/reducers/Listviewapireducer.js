@@ -20,6 +20,7 @@ import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
 import BalanceIcon from "@mui/icons-material/Balance";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import VisibilityIcon from "@mui/icons-material/Visibility"
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
 import Diversity2Icon from '@mui/icons-material/Diversity2';
@@ -502,7 +503,7 @@ export const fetchListview =
   (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
-    
+
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
@@ -665,7 +666,7 @@ export const fetchListview =
       //    filter = "PartyID=" + `'${filter}'`;
 
       // }
-     
+
 
       //  if (AccessID === "TR283") {
       //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
@@ -690,7 +691,7 @@ export const fetchListview =
       AccessID == "TR291" ||
       AccessID == "TR299" ||
       AccessID == "TR294" ||
-      AccessID == "TR282" 
+      AccessID == "TR282"
       // AccessID == "TR304"
     ) {
       filter = filter;
@@ -698,7 +699,7 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
-     else if (AccessID == "TR305") {
+    else if (AccessID == "TR305") {
       filter = '';
     }
     else {
@@ -1628,6 +1629,10 @@ export const fetchListview =
                     {/* Edit Button */}
                     <Link
                       to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      state={{
+                        PartyName: params.row.Party,
+                        Count: params.row.MarketingCount
+                      }}
                     >
                       <Tooltip title="Edit">
                         <IconButton color="info" size="small">
@@ -1691,8 +1696,8 @@ export const fetchListview =
 
                     <Link
                       //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
-                        to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
-                       state={{
+                      to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
+                      state={{
                         PartyName: params.row.Party,
                       }}
                     >
@@ -1707,6 +1712,71 @@ export const fetchListview =
               },
             };
           }
+          else if (AccessID === "TR304") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                // Check per-row Editable value
+                sessionStorage.setItem("Status", params.row.OMStatus); 
+                if (String(params.row.Editable) === "1" && params.row.OMStatus !== "Close") {
+                  return (
+                    
+                    <Box>
+                      <Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          PartyID: params.row.PartyID,
+                          LeadTitle: params.row.LeadTitle
+                        }}
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton color="info" size="small">
+                            <ModeEditOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                      </Link>
+                      {/* if (params.row.Editable === "Close") */}
+
+                    </Box>
+                  );
+                }
+                if (String(params.row.Editable) === "0" || params.row.OMStatus === "Close") {
+                  return (
+                    <Box>
+                      <Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/V`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          PartyID: params.row.PartyID,
+                          LeadTitle: params.row.LeadTitle,
+                        }}
+                      >
+                        <Tooltip title="View">
+                          <IconButton style={{ color: '#eb710dff' }} size="small">
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                    </Box>
+                  );
+                }
+
+                // If Editable is "0", render nothing
+                return null;
+              },
+            };
+          }
+
           // STOCKENQUIRY
           else if (
             AccessID == "TR078"
@@ -4126,14 +4196,14 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Tooltip>
         )}
 
-         {(accessID === "TR305") && (
+        {(accessID === "TR305") && (
           <Tooltip title="Appraisal Schedule">
             <IconButton
               color="info"
               size="small"
               onClick={() =>
                 navigate(`./AppraisalScheduleEMP/${params.row.RecordID}`, {
-                  state: { ...state, Designation:params.row.DesignationName },
+                  state: { ...state, Designation: params.row.DesignationName },
                 })
               }
             >
@@ -4148,7 +4218,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               size="small"
               onClick={() =>
                 navigate(`./AppraisalScheduleListEMP/${params.row.RecordID}`, {
-                  state: { ...state, Designation:params.row.DesignationName },
+                  state: { ...state, Designation: params.row.DesignationName },
                 })
               }
             >

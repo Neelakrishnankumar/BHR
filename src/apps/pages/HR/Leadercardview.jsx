@@ -14,6 +14,7 @@ import {
 import CancelIcon from "@mui/icons-material/Cancel";
 import { AddCircle } from "@mui/icons-material";
 import AssistantIcon from "@mui/icons-material/Assistant";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -77,13 +78,23 @@ const LeaderCardView = () => {
     // const handleactivitylistview = () => {
     //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}`);
     // };
-    const handleactivitylistview = (recordID, partyID) => {
-        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}/${recordID}`);
-         navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`);
-   };
+    // const handleactivitylistview = (recordID, partyID) => {
+    //     // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}/${recordID}`);
+    //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`);
+    // };
 
+    const handleactivitylistview = (recordID, partyID, leadTitle,PartyName,LEStatus) => {
+        navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`, {
+            state: {
+                PartyID: partyID,
+                LeadTitle: leadTitle,
+                PartyName: PartyName ,
+                LEStatus: LEStatus 
+            },
+        });
+    };
     const handleCancel = () => {
-        navigate(-1);
+        navigate("/Apps/TR243/Party");
     };
 
     return (
@@ -103,13 +114,13 @@ const LeaderCardView = () => {
                 mb={2}
             >
                 <Box display="flex" alignItems="center" gap={2}>
-                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                        Leader Details
+                    <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                        Leads
                     </Typography>
                     {partyName && (
                         <Typography
-                            variant="h6"
-                            sx={{ color: "#1976d2", fontWeight: 800 }}
+                            variant="h5"
+                            sx={{ color: "#1976d2", fontWeight: 700 }}
                         >
                             ({partyName})
                         </Typography>
@@ -172,11 +183,16 @@ const LeaderCardView = () => {
                                         <strong>Last Call Date:</strong> {row.LastCallDate || ""}
                                     </Typography>
                                     <Typography>
-                                        <strong>Last Call Comments:</strong>{" "}
-                                        {row.LastCallComments || ""}
+                                        <strong>Last Call Comments:</strong> {row.LastCallComments || ""}
                                     </Typography>
                                     <Typography>
                                         <strong>Status:</strong> {row.LEStatus || ""}
+                                    </Typography>
+                                     <Typography>
+                                        <strong>No of Visits:</strong> {row.NoOfVisits || ""}
+                                    </Typography>
+                                     <Typography>
+                                        <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                                     </Typography>
                                 </CardContent>
                                 <Box display="flex" justifyContent="flex-end" mt={-4}>
@@ -189,14 +205,25 @@ const LeaderCardView = () => {
                                         >
                                             <AssistantIcon sx={{ fontSize: 30 }} />
                                         </IconButton> */}
-                                        <IconButton
+                                        {/* <IconButton
                                             color="primary"
                                             onClick={() => handleactivitylistview(row.RecordID, row.PartyID)} // ✅ pass both
                                             size="small"
-                                            disabled={row.LEStatus === "Close"}
+                                            // disabled={row.LEStatus === "Close"}
                                         >
-                                            <AssistantIcon sx={{ fontSize: 30 }} />
+                                            <ListAltOutlinedIcon sx={{ fontSize: 30 }} />
+                                        </IconButton> */}
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() =>
+                                                handleactivitylistview(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName,row.LEStatus)
+                                            }
+                                            size="small"
+                                        // disabled={row.LEStatus === "Close"}
+                                        >
+                                            <ListAltOutlinedIcon sx={{ fontSize: 30 }} />
                                         </IconButton>
+
 
                                     </Tooltip>
                                 </Box>

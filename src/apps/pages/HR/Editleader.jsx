@@ -103,14 +103,31 @@ const EditLeader = () => {
         visitdate: "",
         Status: "",
         project: null,
+        // applieddate: mode === "E" || mode === "V" ? data.OMDate : curdate,
+        // leadtitle: mode === "E" || mode === "V" ? data.LeadTitle : "",
+        // comments: mode === "E" || mode === "V" ? data.Comments : "",
+        // visitdate: mode === "E" || mode === "V" ? data.NextVisitDate : "",
+        // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
+        // Status: mode === "E" || mode === "V" ? data.OMStatus : "",
+        // project: data.ProjectID
+        //     ? { RecordID: data.ProjectID, Name: data.ProjectName }
+        //     : null,
+        // project:
+        //     mode === "A"
+        //         ? null
+        //         : data.ProjectID
+        //             ? { RecordID: data.ProjectID, Name: data.ProjectName }
+        //             : null
+
     });
+    console.log(formData, "formdata");
 
     // useEffect(() => {
     //     dispatch(getFetchData({ accessID, get: "get", recID }));
     // }, [location.key]);
     useEffect(() => {
         const fetchData = async () => {
-            if (Type === "T") {
+            if (Type === "T" && mode === "A") {
                 try {
                     setLoading(true);
 
@@ -123,7 +140,7 @@ const EditLeader = () => {
 
                     if (result?.Status === "Y" && result?.Data?.length > 0) {
                         const leaderData = result.Data[0];
-                        setLeaderDetails(leaderData); 
+                        setLeaderDetails(leaderData);
 
                         // ✅ Set form data for Formik initialValues
                         setFormData({
@@ -145,28 +162,48 @@ const EditLeader = () => {
                 } finally {
                     setLoading(false);
                 }
-            } else {
-                // 🔹 Normal get call for other types
+            }
+            // else if(mode === "V"){
+            //     dispatch(getFetchData({ accessID, get: "get", recID }));
+            // }
+            else {
                 dispatch(getFetchData({ accessID, get: "get", recID }));
             }
         };
 
         fetchData();
     }, [Type, recID, accessID, dispatch, filtertype]);
+    useEffect(() => {
+        if (!data) return;
 
-    const initialValue = {
-        applieddate: data.OMDate,
-        leadtitle: data.LeadTitle,
-        comments: data.Comments,
-        visitdate: data.NextVisitDate,
-        // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
-        Status: data.OMStatus,
-        project: data.ProjectID
-            ? { RecordID: data.ProjectID, Name: data.ProjectName }
-            : null,
+        setFormData({
+            applieddate: mode === "E" || mode === "V" ? data.OMDate : curdate,
+            leadtitle: mode === "E" || mode === "V" ? data.LeadTitle : "",
+            comments: mode === "E" || mode === "V" ? data.Comments : "",
+            visitdate: mode === "E" || mode === "V" ? data.NextVisitDate : "",
+            Status: mode === "E" || mode === "V" ? data.OMStatus : "",
+            project:
+                mode === "A"
+                    ? null
+                    : data.ProjectID
+                        ? { RecordID: data.ProjectID, Name: data.ProjectName }
+                        : null,
+        });
+    }, [data, mode, curdate]);
 
-    };
-    console.log(initialValue, "OverheadType");
+    // const initialValue = {
+    //     applieddate: data.OMDate,
+    //     leadtitle: data.LeadTitle,
+    //     comments: data.Comments,
+    //     visitdate: data.NextVisitDate,
+    //     // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
+    //     Status: data.OMStatus,
+    //     project: data.ProjectID
+    //         ? { RecordID: data.ProjectID, Name: data.ProjectName }
+    //         : null,
+
+    // };
+    // console.log(initialValue, "OverheadType");
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
     const fnSave = async (values, del) => {
@@ -181,8 +218,8 @@ const EditLeader = () => {
 
         const idata = {
             RecordID: recID,
-            PartyID: Type ==="T"? leaderDetails?.PartyID : filtertype,
-            LeaderID: Type ==="T"? filtertype : 0,
+            PartyID: Type === "T" ? leaderDetails?.PartyID || data.PartyID : filtertype,
+            LeaderID: Type === "T" ? filtertype : 0,
             OMDate: values.applieddate,
             Comments: values.comments,
             LeadTitle: values.leadtitle,
@@ -204,12 +241,22 @@ const EditLeader = () => {
             // setIni(true)
             setLoading(false);
             // navigate(-1);
-                            navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
-            // if (Type === "S") {
-            //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/${filtertype2}`);
-            // }
-            // else {
-            // };
+            console.log(Type, "Type");
+            //  console.log("LeadTitle:", response.payload.LeadTitle);
+            // const stateData = { LeadTitle: response.payload.LeadTitle };
+            // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
+            if (Type === "T") {
+                // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
+                navigate(-1);
+            }
+            else if (Type === "S") {
+                // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/S`);
+                navigate(-1);
+            }
+            else {
+                // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+                navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
+            };
         } else {
             toast.error(response.payload.Msg);
             setLoading(false);
@@ -307,20 +354,17 @@ const EditLeader = () => {
 
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
-                        initialValues={formData}
-                        // onSubmit={(values, { resetForm }) => {
-                        //   setTimeout(() => {
-                        //     fnSave(values);
-                        //   }, 100);
-                        // }}
+                        initialValues={formData}                     
+                        enableReinitialize={true}
                         onSubmit={(values, { setSubmitting }) => {
                             setSubmitting(true);
+                            sessionStorage.setItem("Status", values.Status);
                             fnSave(values);
                             setSubmitting(false);
                         }}
 
                         // validationSchema={validationSchema}
-                        enableReinitialize={true}
+                        
                     >
                         {({
                             errors,
@@ -362,7 +406,7 @@ const EditLeader = () => {
                                             max: new Date().toISOString().split("T")[0],
                                             // readOnly: true,
                                         }}
-                                        disabled={Type ==="T"}
+                                        disabled={Type === "T"}
                                     />
                                     <CheckinAutocomplete
                                         id="project"
@@ -377,7 +421,7 @@ const EditLeader = () => {
                                         }}
                                         error={!!touched.project && !!errors.project}
                                         helperText={touched.project && errors.project}
-                                        disabled={Type ==="T"}
+                                        disabled={Type === "T"}
                                         url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                     />
 
@@ -398,7 +442,7 @@ const EditLeader = () => {
                                         onChange={handleChange}
                                         error={!!touched.leadtitle && !!errors.leadtitle}
                                         helperText={touched.leadtitle && errors.leadtitle}
-                                        disabled={Type ==="T"}
+                                        disabled={Type === "T"}
                                     />
                                     <TextField
                                         fullWidth
@@ -411,6 +455,7 @@ const EditLeader = () => {
                                         onChange={handleChange}
                                         label="Comments"
                                         focused
+                                        disabled={mode === "V"}
                                     // inputProps={{ readOnly: true }}
                                     />
                                     <TextField
@@ -426,6 +471,7 @@ const EditLeader = () => {
                                         onChange={handleChange}
                                         error={!!touched.visitdate && !!errors.visitdate}
                                         helperText={touched.visitdate && errors.visitdate}
+                                        disabled={mode === "V"}
                                     // inputProps={{
                                     //     max: new Date().toISOString().split("T")[0],
                                     //     // readOnly: true,
@@ -438,8 +484,13 @@ const EditLeader = () => {
                                         name="Status"
                                         value={values.Status}
                                         onBlur={handleBlur}
-                                        onChange={handleChange}
+                                        // onChange={handleChange}
+                                        disabled={mode === "V"}
                                         // required
+                                        onChange={(e) => {
+                                            handleChange(e); // update form state (Formik)
+                                            sessionStorage.setItem("Status", e.target.value); // save to sessionStorage
+                                        }}
                                         focused
                                         variant="standard"
                                     >
@@ -448,33 +499,6 @@ const EditLeader = () => {
                                         <MenuItem value="Hot">Hot</MenuItem>
                                         <MenuItem value="Close">Close</MenuItem>
                                     </TextField>
-                                    {/* <Box>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="delete"
-                                            id="delete"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Delete"
-                                        />
-
-                                        <FormLabel focused={false}>Delete</FormLabel>
-                                        <Field
-                                            //  size="small"
-                                            type="checkbox"
-                                            name="disable"
-                                            id="disable"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            as={Checkbox}
-                                            label="Disable"
-                                        />
-
-                                        <FormLabel focused={false}>Disable</FormLabel>
-                                    </Box> */}
-
 
                                 </Box>
                                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
@@ -486,33 +510,7 @@ const EditLeader = () => {
                                     >
                                         SAVE
                                     </LoadingButton>
-                                    {/* {mode == "E" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Swal.fire({
-                          title: errorMsgData.Warningmsg.Delete,
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Confirm",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            fnSave(values, "harddelete");
-                            // navigate(-1);
-                          } else {
-                            return;
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  ) : (
-                    null
-                  )} */}
+
                                     <Button
                                         variant="contained"
                                         color="warning"
