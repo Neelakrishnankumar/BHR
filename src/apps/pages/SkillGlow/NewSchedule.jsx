@@ -410,7 +410,19 @@ const NewSchedule = () => {
     { field: "EmployeeName", headerName: "Employee Name", width: 200, headerAlign: "center" },
     { field: "Assessment", headerName: "Assessment", width: 150, headerAlign: "center" },
     { field: "Designation", headerName: "Designation", width: 200, headerAlign: "center" },
-    { field: "Date", headerName: "Date", width: 150, headerAlign: "center", align: "center" },
+    { field: "Date", 
+      headerName: "Date",
+       width: 150, 
+       headerAlign: "center", 
+       align: "center",
+       valueFormatter: (params) => {
+    if (!params.value) return "";
+    const date = new Date(params.value);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }, },
     {
       field: "actions",
       type: "actions",

@@ -930,12 +930,12 @@ const Listview = () => {
               variant="outlined"
             />
 
-            <Chip
+            {/* <Chip
               icon={< Diversity2Icon color="primary"/>}
               label="Leader"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
-            />
+            /> */}
           </Box>
         ) 
         : accessID == "TR099" ? (

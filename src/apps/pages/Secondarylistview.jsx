@@ -3600,24 +3600,24 @@ const ListviewSecondary = () => {
               />
             </Box>
           )
-            : accessID == "TR294" ? (
+            : (accessID == "TR294" && params.parentID1 === "AP") ? (
               <Box display="flex" flexDirection="row" gap={2} padding="25px">
                 <Chip
                   icon={<ModeEditOutlinedIcon color="primary" />}
                   label="Edit"
                   variant="outlined"
                 />
-                <Chip
+                {/* <Chip
                   icon={<Psychology color="primary" />}
                   label="Skill Assessment"
                   variant="outlined"
-                />
+                /> */}
                 <Chip
                   icon={<CategoryOutlinedIcon color="primary" />}
                   label="Appraisal"
                   variant="outlined"
                 />
-                <Chip
+                {/* <Chip
                   icon={<GppMaybeOutlinedIcon color="primary" />}
                   label="Compliance"
                   variant="outlined"
@@ -3631,9 +3631,61 @@ const ListviewSecondary = () => {
                   icon={<FeedbackOutlinedIcon color="primary" />}
                   label="Feedback"
                   variant="outlined"
-                />
+                /> */}
+          </Box>
+        ) : (accessID == "TR294" && params.parentID1 === "SK") ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<Psychology color="primary" />}
+              label="Skill Assessment"
+              variant="outlined"
+            />
               </Box>
-            ) : accessID == "TR280" ? (
+            ): (accessID == "TR294" && params.parentID1 === "SV") ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+             <Chip
+              icon={<QuestionAnswerOutlinedIcon color="primary" />}
+              label="Survey"
+              variant="outlined"
+            />
+          </Box>
+        ): (accessID == "TR294" && params.parentID1 === "FB") ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<FeedbackOutlinedIcon color="primary" />}
+              label="Feedback"
+              variant="outlined"
+            /> 
+          </Box>
+        ): (accessID == "TR294" && params.parentID1 === "CL") ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+             <Chip
+              icon={<GppMaybeOutlinedIcon color="primary" />}
+              label="Compliance"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR280" ? (
               <Box display="flex" flexDirection="row" gap={2} padding="25px">
                 <Chip
                   icon={<ModeEditOutlinedIcon color="primary" />}

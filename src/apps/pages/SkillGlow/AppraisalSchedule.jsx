@@ -125,9 +125,15 @@ const AppraisalSchedule = () => {
       .then((data) => {
         setErrorMsgData(data);
         const normalSchema = Yup.object().shape({
-          SelfRecordID: Yup.string().required(
-            data.ListOfAppraisalSchedule.SelfRecordID
-          ),
+          SelfRecordID: Yup.object()
+            .nullable()
+            .shape({
+              RecordID: Yup.string().required(
+                data.ListOfAppraisalSchedule.SelfRecordID
+              ),
+              Name: Yup.string().nullable(),
+            })
+            .required(data.ListOfAppraisalSchedule.SelfRecordID),
         });
         // SelfRecordID: Yup.object()
         //             .nullable()
@@ -175,10 +181,10 @@ const AppraisalSchedule = () => {
       mode === "A"
         ? "insert"
         : mode === "E"
-          ? delAction === "harddelete"
-            ? "harddelete"
-            : "update"
-          : "";
+        ? delAction === "harddelete"
+          ? "harddelete"
+          : "update"
+        : "";
 
     const idata = {
       Details: selectedEmp.map((emp) => ({
@@ -271,7 +277,7 @@ const AppraisalSchedule = () => {
       headerName: "Appraisal",
       //width: 200,
       headerAlign: "center",
-      hide: true
+      hide: true,
     },
     {
       field: "DisplayAssessmentType",
@@ -291,6 +297,14 @@ const AppraisalSchedule = () => {
       width: 150,
       headerAlign: "center",
       align: "center",
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      },
     },
     {
       field: "actions",
@@ -341,6 +355,9 @@ const AppraisalSchedule = () => {
         : Data.Date || new Date().toISOString().split("T")[0],
     AssessmentName: AssessmentName || "",
     Designation: Designation || "",
+    SelfRecordID: Data.SelfRecordID
+      ? { RecordID: Data.SelfRecordID, Name: Data.Name }
+      : null,
   };
 
   return (
@@ -462,6 +479,7 @@ const AppraisalSchedule = () => {
                 setFieldValue,
                 handleSubmit,
                 setFieldTouched,
+                validateForm,
               }) => (
                 <Form onSubmit={handleSubmit}>
                   {/* {JSON.stringify(errors)} */}
@@ -878,15 +896,19 @@ const AppraisalSchedule = () => {
                           return;
                         }
 
+                        // if (!values.SelfRecordID) {
+                        //   Swal.fire(
+                        //     "Warning",
+                        //     "Please select Self Appraisal",
+                        //     "warning"
+                        //   );
+                        //   return;
+                        // }
                         if (!values.SelfRecordID) {
-                          Swal.fire(
-                            "Warning",
-                            "Please select Self Appraisal",
-                            "warning"
-                          );
+                          setFieldTouched("SelfRecordID", true); // mark field as touched
+                          validateForm(); // trigger validation
                           return;
                         }
-
                         // Collect all selected appraisal types with actual label
                         // const appraisalTypes = [];
 
@@ -925,8 +947,7 @@ const AppraisalSchedule = () => {
                         if (values.ManagerRecordID)
                           appraisalTypes.push({
                             key: "Manager",
-                            label: `${values.ManagerRecordID.Name || ""
-                              }`,
+                            label: `${values.ManagerRecordID.Name || ""}`,
                             id: values.ManagerRecordID.RecordID,
                           });
 
@@ -940,8 +961,7 @@ const AppraisalSchedule = () => {
                         if (values.SubordinateRecordID)
                           appraisalTypes.push({
                             key: "Subordinate",
-                            label: `${values.SubordinateRecordID.Name || ""
-                              }`,
+                            label: `${values.SubordinateRecordID.Name || ""}`,
                             id: values.SubordinateRecordID.RecordID,
                           });
 
@@ -954,6 +974,7 @@ const AppraisalSchedule = () => {
                                 r.EmployeeID === emp.RecordID &&
                                 r.AssessmentType === type.label
                             );
+
                             if (!exists) {
                               // newRows.push({
                               //   id: `${emp.RecordID}-${
@@ -984,8 +1005,9 @@ const AppraisalSchedule = () => {
                               //       : "0",
                               // });
                               newRows.push({
-                                id: `${emp.RecordID}-${type.label
-                                  }-${Date.now()}`,
+                                id: `${emp.RecordID}-${
+                                  type.label
+                                }-${Date.now()}`,
                                 EmployeeID: emp.RecordID,
                                 EmployeeName:
                                   emp.EmployeeName || emp.Name || "N/A",

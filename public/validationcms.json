@@ -253,7 +253,7 @@
     "EmpName": "Please Select A Employee"
   },
   "ListOfAppraisalSchedule": {
-    "SelfRecordID": "Please Select A Employee"
+    "SelfRecordID": "Please Select A Self Appraisal"
   },
   "Warningmsg": {
     "Logout": "Do you really want to Log Out?",

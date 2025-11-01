@@ -213,10 +213,10 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
                 <Text style={styles.cell1}>{row.Day31}</Text>
                 <Text style={styles.cell2}>{row.Present}</Text>
                 {/* <Text style={styles.cell2}>{row.Leave}</Text> */}
-                <Text style={styles.cell2}>{row.UNPAID_LEAVE}</Text>
+                <Text style={styles.cell2}>{row.Unpaidleave}</Text>
                 <Text style={styles.cell2}>{row.Absent}</Text>
                 {/* <Text style={styles.cell2}>{row.IRREGULAR}</Text> */}
-                <Text style={styles.cell2}>{row.HOLIDAYS}</Text>
+                <Text style={styles.cell2}>{row.Holidays}</Text>
                 <Text style={styles.cell2}>{row.Weekoff}</Text>
                 <Text style={styles.cell2}>{row.Total}</Text>
               </View> 

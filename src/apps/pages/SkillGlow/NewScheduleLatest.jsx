@@ -350,7 +350,7 @@ const NewScheduleLatest = () => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "You want to delete this schedule?",
+        text: "You want to delete this schedule",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
