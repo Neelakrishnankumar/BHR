@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
 
 const paginateData = (data) => {
   if (!Array.isArray(data)) return [];
-  const firstPage = data.slice(0, 31);
+  const firstPage = data.slice(0, 40);
   const otherPages = [];
 
-  for (let i = 31; i < data.length; i += 26) {
+  for (let i = 40; i < data.length; i += 26) {
     otherPages.push(data.slice(i, i + 26));
   }
 

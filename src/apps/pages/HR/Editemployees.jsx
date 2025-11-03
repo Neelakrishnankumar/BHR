@@ -313,11 +313,19 @@ const Editemployee = () => {
         });
         setValidationSchema10(schema10);
 
-        const schema11 = Yup.object().shape({
-          localitycode: Yup.string().required(data.Locality.code),
+        // const schema11 = Yup.object().shape({
+        //   localitycode: Yup.string().required(data.Locality.code),
+        //   // Pincode: Yup.string().required(data.Locality.pincode),
+        // });
+        let schemaFields2 = {
           localityname: Yup.string().required(data.Locality.name),
-          // Pincode: Yup.string().required(data.Locality.pincode),
-        });
+        };
+        if (CompanyAutoCode === "N") {
+          schemaFields2.localitycode = Yup.string().required(data.Locality.localitycode);
+        }
+
+        const schema11 = Yup.object().shape(schemaFields2);
+
         setValidationSchema11(schema11);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
@@ -1650,7 +1658,7 @@ const Editemployee = () => {
       RecordID: localityData.recordID,
       EmployeeID: recID,
       Name: values.localityname,
-      Code: values.localitycode,
+      Code: values.localitycode || "",
       Pincode: values.LCpincode,
       CompanyID,
     }
@@ -5588,11 +5596,11 @@ const Editemployee = () => {
                     </FormControl>
 
                   </Box>
-                    <Divider variant="fullWidth" sx={{ mt: "20px" }} />
-                    <Typography variant="h5" padding={1}>
-                      Project Details
-                    </Typography>
-                    <Box
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5" padding={1}>
+                    Project Details
+                  </Typography>
+                  <Box
                     display="grid"
                     gap={formGap}
                     padding={1}
@@ -5659,7 +5667,7 @@ const Editemployee = () => {
 
                       <FormLabel focused={false}>Allow Backlog Data Entry</FormLabel>
                     </Box>
-                     </Box>
+                  </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
                     Shift Details
@@ -9380,7 +9388,7 @@ const Editemployee = () => {
             <Formik
               //  onSubmit={handleFormSubmit}
               initialValues={localityinitialValue}
-               validationSchema={validationSchema11}
+              validationSchema={validationSchema11}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 console.log("Submitting values:", values);
@@ -9433,6 +9441,7 @@ const Editemployee = () => {
                           focused
                         // inputProps={{ readOnly: true }}
                         />
+                       
 
                         <TextField
                           fullWidth
@@ -9540,7 +9549,7 @@ const Editemployee = () => {
                           mt: { xs: "opx", md: "150px" },
                         }}
                       >
-                        <TextField
+                        {/* <TextField
                           fullWidth
                           variant="standard"
                           type="text"
@@ -9551,18 +9560,71 @@ const Editemployee = () => {
                           onChange={handleChange}
                           // label="Code"
                           label={
-                          <span>
-                            Code
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
+                            <span>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
                             </span>
-                          </span>
-                        }
+                          }
                           error={!!touched.localitycode && !!errors.localitycode}
                           helperText={touched.localitycode && errors.localitycode}
                           focused
                           inputProps={{ tabIndex: "-1" }}
-                        />
+                        /> */}
+                         {CompanyAutoCode == "Y" ? (
+                          <TextField
+                            name="localitycode"
+                            type="text"
+                            id="localitycode"
+                            label="Locality Code"
+                            placeholder="Auto"
+                            variant="standard"
+                            focused
+                            // required
+                            value={values.localitycode}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.localitycode && !!errors.localitycode}
+                            helperText={touched.localitycode && errors.localitycode}
+                            sx={{
+
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              }
+                            }}
+                            InputProps={{ readOnly: true }}
+                          // autoFocus
+                          />
+                        ) : (
+                          <TextField
+                            name="localitycode"
+                            type="text"
+                            id="localitycode"
+                            label={
+                              <>
+                                Locality Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                              </>
+                            }
+                            variant="standard"
+                            focused
+                            // required
+                            value={values.localitycode}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.localitycode && !!errors.localitycode}
+                            helperText={touched.localitycode && errors.localitycode}
+                            sx={{
+
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              }
+                            }}
+
+                            autoFocus
+                          />)}
                         <TextField
                           fullWidth
                           variant="standard"
@@ -9574,13 +9636,13 @@ const Editemployee = () => {
                           onChange={handleChange}
                           // label="Name"
                           label={
-                          <span>
-                            Name
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
+                            <span>
+                              Name
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
                             </span>
-                          </span>
-                        }
+                          }
                           error={!!touched.localityname && !!errors.localityname}
                           helperText={touched.localityname && errors.localityname}
                           focused
