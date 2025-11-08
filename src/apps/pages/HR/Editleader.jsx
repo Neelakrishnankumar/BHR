@@ -71,6 +71,7 @@ const EditLeader = () => {
     const [leaderDetails, setLeaderDetails] = useState(null);
     const state = location.state || {};
     console.log(state, "state");
+console.log(location, "location");
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -142,7 +143,7 @@ const EditLeader = () => {
                         const leaderData = result.Data[0];
                         setLeaderDetails(leaderData);
 
-                        // ✅ Set form data for Formik initialValues
+                        // Set form data for Formik initialValues
                         setFormData({
                             applieddate: curdate, // You can fill default date if required
                             leadtitle: leaderData.LeadTitle || "",
@@ -327,8 +328,8 @@ const EditLeader = () => {
                                     sx={{ cursor: "default" }}
 
                                 >
-                                    {/* {`Marketing Activity(${state.PartyName})`} */}
-                                    Marketing Activity
+                                    {`Marketing Activity(${state.PartyName || ""})`}
+                                    {/* Marketing Activity */}
                                 </Typography>
 
                             </Breadcrumbs>
@@ -354,7 +355,7 @@ const EditLeader = () => {
 
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
-                        initialValues={formData}                     
+                        initialValues={formData}
                         enableReinitialize={true}
                         onSubmit={(values, { setSubmitting }) => {
                             setSubmitting(true);
@@ -363,8 +364,8 @@ const EditLeader = () => {
                             setSubmitting(false);
                         }}
 
-                        // validationSchema={validationSchema}
-                        
+                    // validationSchema={validationSchema}
+
                     >
                         {({
                             errors,

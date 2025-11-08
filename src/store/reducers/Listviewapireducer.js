@@ -630,7 +630,8 @@ export const fetchListview =
         AccessID != "TR294" &&
         AccessID != "TR022" &&
         AccessID != "TR303" &&
-        AccessID != "TR304"
+        AccessID != "TR304" &&
+        AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
         // console.log("---4---",filter);
@@ -1612,17 +1613,16 @@ export const fetchListview =
 
                 const leaderLink =
                   count >= 1
-                    ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                    ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
                     // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
                     : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
 
                 const leaderState =
-                  count === 1
-                    ? {
-                      PartyName: params.row.Name,
-                      Count: count,
-                    }
-                    : null;
+                {
+                  PartyName: params.row.Name,
+                  Count: count,
+                }
+
 
                 return (
                   <Box>
@@ -1634,6 +1634,7 @@ export const fetchListview =
                         Count: params.row.MarketingCount
                       }}
                     >
+
                       <Tooltip title="Edit">
                         <IconButton color="info" size="small">
                           <ModeEditOutlinedIcon />
@@ -1642,25 +1643,28 @@ export const fetchListview =
                     </Link>
 
                     {/* Leader Button */}
-                    <Link to={leaderLink} state={
-                      {
+                    <Link
+                      to={
+                        count >= 1
+                          ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                          : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
+                      }
+                      state={{
                         PartyName: params.row.Name,
                         Count: count
-                      }
-                    }>
+                      }}
+                    >
                       <Tooltip title="Leader">
                         <IconButton
                           color="info"
                           size="small"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log("MarketingCount:", count);
-                          }}
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <Diversity2Icon />
                         </IconButton>
                       </Tooltip>
                     </Link>
+
                   </Box>
                 );
               },
@@ -1725,10 +1729,10 @@ export const fetchListview =
               filterable: false,
               renderCell: (params) => {
                 // Check per-row Editable value
-                sessionStorage.setItem("Status", params.row.OMStatus); 
+                sessionStorage.setItem("Status", params.row.OMStatus);
                 if (String(params.row.Editable) === "1" && params.row.OMStatus !== "Close") {
                   return (
-                    
+
                     <Box>
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}

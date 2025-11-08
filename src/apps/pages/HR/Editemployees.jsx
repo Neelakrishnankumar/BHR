@@ -19,6 +19,7 @@ import {
   Select,
   Tooltip,
   Paper,
+  Grid
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -555,6 +556,8 @@ const Editemployee = () => {
   const [customerlookup, SetCustomerlookup] = useState(null);
 
   const [vendorlookup, SetVendorlookup] = useState(null);
+  const [itemslookup, SetItemslookup] = useState(null);
+
   //   {
   //   venRecordID: "",
   //   venCode: "",
@@ -804,6 +807,13 @@ const Editemployee = () => {
     if (event.target.value == "7") {
       dispatch(
         fetchExplorelitview("TR212", "itemcustody", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+      );
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
+    //ITEMSERVICES
+    if (event.target.value == "14") {
+      dispatch(
+        fetchExplorelitview("TR309", "itemservices", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1079,6 +1089,8 @@ const Editemployee = () => {
     VISIBLE_FIELDS = ["slno", "ItemNumber", "ItemName", "action"];
   } else if (show == "13") {
     VISIBLE_FIELDS = ["slno", "Locality", "Pincode", "action"];
+  } else if (show == "14") {
+    VISIBLE_FIELDS = ["slno", "EISDate", "Complaints", "CompletedDate", "ExpectedReturnDate", "ActualReturnDate", "TentativeCharges", "ActualCharges", "Comments", "action"];
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "slno",
@@ -1303,9 +1315,11 @@ const Editemployee = () => {
                       ? "List of Configurations"
                       : show == "13"
                         ? "List of Localities"
-                        : show == "8" || show == "11"
-                          ? "List of Contracts"
-                          : "List of Managers"}
+                        : show == "14"
+                          ? "List of Services"
+                          : show == "8" || show == "11"
+                            ? "List of Contracts"
+                            : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -1347,6 +1361,19 @@ const Editemployee = () => {
     assestID: "",
     itemValue: "",
     reference: "",
+  });
+  const [itemServicesData, setItemServicesData] = useState({
+    recordID: "",
+    servicedate: "",
+    complaints: "",
+    tentativecharge: "",
+    returndate: "",
+    completeddate: "",
+    actualreturndate: "",
+    actualcharges: "",
+    servicecomments: "",
+    vendors: "",
+    items: ""
   });
   const [localityData, setLocalityData] = useState({
     recordID: "",
@@ -1398,6 +1425,7 @@ const Editemployee = () => {
       setFunEmpRecID("");
       SetFunctionLookup(null);
       SetVendorlookup(null);
+      SetItemslookup(null);
       SetCustomerlookup(null);
       SetEmpLoaData({
         description: "",
@@ -1416,6 +1444,19 @@ const Editemployee = () => {
         assestID: "",
         itemValue: "",
         reference: "",
+      });
+      setItemServicesData({
+        recordID: "",
+        servicedate: "",
+        complaints: "",
+        tentativecharge: "",
+        returndate: "",
+        completeddate: "",
+        actualreturndate: "",
+        actualcharges: "",
+        servicecomments: "",
+        vendors: "",
+        items: ""
       });
       setLocalityData({
         recordID: "",
@@ -1491,6 +1532,31 @@ const Editemployee = () => {
           itemValue: rowData.ItemValue,
           reference: rowData.PurchaseReference,
         });
+        setItemServicesData({
+          recordID: rowData.RecordID,
+          servicedate: rowData.EISDate,
+          complaints: rowData.Complaints,
+          tentativecharge: rowData.TentativeCharges,
+          returndate: rowData.ExpectedReturnDate,
+          completeddate: rowData.CompletedDate,
+          actualreturndate: rowData.ActualReturnDate,
+          actualcharges: rowData.ActualCharges,
+          servicecomments: rowData.Comments,
+          vendors: rowData.PartyID
+            ? {
+              RecordID: rowData.PartyID,
+              Code: rowData.PartyCode,
+              Name: rowData.PartyName,
+            }
+            : null,
+          items: rowData.Item
+            ? {
+              RecordID: rowData.ItemID,
+              Code: rowData.ItemCode,
+              Name: rowData.ItemName,
+            }
+            : null,
+        });
         setLocalityData({
           recordID: rowData.RecordID,
           localitycode: rowData.Code,
@@ -1554,6 +1620,16 @@ const Editemployee = () => {
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
         });
+        setFieldValue("vendors", {
+          RecordID: rowData.PartyID,
+          Code: rowData.PartyCode,
+          Name: rowData.PartyName,
+        });
+        setFieldValue("items", {
+          RecordID: rowData.RecordID,
+          Code: rowData.ItemNumber,
+          Name: rowData.ItemName,
+        });
         setFieldValue("customer", {
           RecordID: rowData.Vendor,
           Code: rowData.VendorCode,
@@ -1561,6 +1637,7 @@ const Editemployee = () => {
         });
       }
     }
+    console.log(selectCellRowData, "Itemservices");
   };
 
   const selectCellRowDataMGR = ({ rowData, mode, field, setFieldValue }) => {
@@ -1688,11 +1765,6 @@ const Editemployee = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-    ItemNumber: itemCustodyData.itemNO,
-    ItemName: itemCustodyData.itemName,
-    AssestID: itemCustodyData.assestID,
-    PurchaseReference: itemCustodyData.reference,
-    ItemValue: itemCustodyData.itemValue,
     Disable: "N",
   };
   const empItemCustodyFn = async (values, resetForm, del) => {
@@ -1735,6 +1807,68 @@ const Editemployee = () => {
     }
   };
 
+  const itemservicesInitialValue = {
+    code: Data.Code,
+    description: Data.Name,
+    imageurl: Data.ImageName
+      ? store.getState().globalurl.imageUrl + Data.ImageName
+      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+    items: null,
+    vendors: null,
+    //  servicedate : "",
+    //  complaints:"",
+    //  tentativecharge:"",
+    //  returndate:"",
+    //  completeddate:"",  
+    //  actualreturndate:"",
+    //  actualcharges:"",
+    // servicecomments:""  
+  };
+  const empItemServicesFn = async (values, resetForm, del) => {
+    setLoading(true);
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+    const idata = {
+      RecordID: itemServicesData.recordID,
+      EmployeeID: recID,
+      ItemcustodyID: values?.items?.RecordID || 0,
+      PartyID: values?.vendors?.RecordID || 0,
+      PartyName: values?.vendors?.Name || "",
+      PartyCode: values?.vendors?.Code || "",
+      EISDate: values.servicedate,
+      Complaints: values.complaints,
+      CompletedDate: values.completeddate,
+      ExpectedReturnDate: values.returndate,
+      ActualReturnDate: values.actualreturndate,
+      TentativeCharges: values.tentativecharge,
+      ActualCharges: values.actualcharges,
+      Comments: values.servicecomments,
+      CompanyID,
+    };
+    // console.log("save" + JSON.stringify(saveData));
+
+    const response = await dispatch(
+      explorePostData({ accessID: "TR309", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      dispatch(
+        fetchExplorelitview("TR309", "ItemServices", `EmployeeID=${recID}`, "")
+      );
+
+      toast.success(response.payload.Msg);
+
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
   //contract initialvalue
   const ContractInitialValue = {
     Code: Data.Code,
@@ -2559,6 +2693,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "14" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Item Services
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                   {show == "8" ? (
                     <Typography
                       variant="h5"
@@ -2655,6 +2800,7 @@ const Editemployee = () => {
                     <MenuItem value={10}>Leave Configuration</MenuItem>
                     <MenuItem value={6}>List of Documents</MenuItem>
                     <MenuItem value={7}>Item Custody</MenuItem>
+                    <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
                   </Select>
                 </FormControl>
@@ -7091,7 +7237,565 @@ const Editemployee = () => {
         ) : (
           false
         )}
+        {show == "14" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={itemservicesInitialValue}
+              enableReinitialize={true}
+              // validationSchema={validationSchema6}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  empItemServicesFn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        label="Code"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
 
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        label="Name"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                    <Stack
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="50vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={explorelistViewData}
+                        columns={columns}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <CheckinAutocomplete
+                        name="items"
+                        label={
+                          <>
+                            Item
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        id="items"
+                        // value={itemslookup}
+                        value={values.items}
+                        onChange={(newValue) => {
+                          setFieldValue("items", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          console.log(newValue, "--newvalue items");
+                          console.log(newValue.RecordID, "items RecordID");
+                        }}
+                        error={!!touched.items && !!errors.items}
+                        helperText={touched.items && errors.items}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2129","ScreenName":"Items","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                      />
+                      <CheckinAutocomplete
+                        name="vendors"
+                        label={
+                          <>
+                            Vendor
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        id="vendors"
+                        // value={vendorlookup}
+                        value={values.vendors}
+                        onChange={(newValue) => {
+                          setFieldValue("vendors", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          console.log(newValue, "--newvalue vendors");
+
+                          console.log(newValue.RecordID, "vendors RecordID");
+
+                          // SetVendorlookup({
+                          //   RecordID: newValue.RecordID,
+                          //   Code: newValue.Code,
+                          //   Name: newValue.Name,
+                          // });
+                        }}
+                        error={!!touched.vendors && !!errors.vendors}
+                        helperText={touched.vendors && errors.vendors}
+                        //  onChange={handleSelectionFunctionname}
+                        // defaultValue={selectedFunctionName}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="date"
+                        id="servicedate"
+                        name="servicedate"
+                        label={
+                          <>
+                            Date{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        // required
+                        value={values.servicedate}
+                        inputFormat="YYYY-MM-DD"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.servicedate && !!errors.servicedate}
+                        helperText={touched.servicedate && errors.servicedate}
+                        focused
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="complaints"
+                        name="complaints"
+                        label={
+                          <>
+                            Complaints{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        // required
+                        value={values.complaints}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.complaints && !!errors.complaints}
+                        helperText={touched.complaints && errors.complaints}
+                        focused
+                        multiline
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        value={values.tentativecharge}
+                        id="tentativecharge"
+                        name="tentativecharge"
+                        label={
+                          <>
+                            Tentative Charges{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        // required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.tentativecharge && !!errors.tentativecharge}
+                        helperText={touched.tentativecharge && errors.tentativecharge}
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          {/* <TextField
+                            fullWidth
+                            variant="standard"
+                            type="date"
+                            value={values.returndate}
+                            id="returndate"
+                            name="returndate"
+                            label={
+                              <>
+                                Expected Return Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                              </>
+                            }
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            inputFormat="YYYY-MM-DD"
+                            error={!!touched.returndate && !!errors.returndate}
+                            helperText={touched.returndate && errors.returndate}
+                            sx={{ backgroundColor: "#ffffff" }}
+                            focused
+
+                          /> */}
+                          <TextField
+                            fullWidth
+                            name="returndate"
+                            type="date"
+                            id="returndate"
+                            label={
+                              <>
+                                Expected Return Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                              </>
+                            }
+                            variant="standard"
+                            focused
+                            inputFormat="YYYY-MM-DD"
+                            value={values.returndate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.returndate && !!errors.returndate}
+                            helperText={touched.returndate && errors.returndate}
+                            sx={{ background: "" }}
+                          // required
+                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="date"
+                            value={values.completeddate}
+                            id="completeddate"
+                            name="completeddate"
+                            label="Completed Date"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            inputFormat="YYYY-MM-DD"
+                            error={!!touched.completeddate && !!errors.completeddate}
+                            helperText={touched.completeddate && errors.completeddate}
+                            sx={{ backgroundColor: "#ffffff" }}
+                            focused
+
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="date"
+                            value={values.actualreturndate}
+                            id="actualreturndate"
+                            name="actualreturndate"
+                            label="Actual Return Date"
+                            // required
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            inputFormat="YYYY-MM-DD"
+                            error={!!touched.actualreturndate && !!errors.actualreturndate}
+                            helperText={touched.actualreturndate && errors.actualreturndate}
+                            focused
+
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            fullWidth
+                            variant="standard"
+                            type="text"
+                            value={values.actualcharges}
+                            id="actualcharges"
+                            name="actualcharges"
+                            label="Actual Charges"
+                            // required
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.actualcharges &&
+                              !!errors.actualcharges
+                            }
+                            helperText={
+                              touched.actualcharges && errors.actualcharges
+                            }
+                            sx={{
+                              //gridColumn: "span 2",
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            focused
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        value={values.servicecomments}
+                        id="servicecomments"
+                        name="servicecomments"
+                        label="Comments"
+                        // required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.servicecomments && !!errors.servicecomments}
+                        helperText={touched.servicecomments && errors.servicecomments}
+                        sx={{
+                          backgroundColor: "#ffffff",
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff",
+                          },
+                        }}
+                        focused
+                        multiline
+                        inputProps={{ maxLength: 90 }}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    // style={{ marginTop: "-40px" }}
+                    gap={2}
+                  >
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? ( */}
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            empItemServicesFn(values, resetForm, "harddelete");
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                    {/* ) : (
+                      <Button color="error" variant="contained" disabled={true}>
+                        Delete
+                      </Button>
+                    )} */}
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  <Popup
+                    title="Functions"
+                    openPopup={openFunPopup}
+                    setOpenPopup={setOpenFunPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2048"
+                      screenName="Functions"
+                      childToParent={childToParent}
+                      filterName={"CompanyID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                  <Popup
+                    title="Designations"
+                    openPopup={openDesPopup}
+                    setOpenPopup={setOpenDesPopup}
+                  >
+                    <Listviewpopup
+                      accessID="2049"
+                      screenName="Designations"
+                      childToParent={childToParent}
+                      filterName={"parentID"}
+                      filterValue={CompanyID}
+                    />
+                  </Popup>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
         {/*Contracts In */}
         {show == "8" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
@@ -9441,7 +10145,7 @@ const Editemployee = () => {
                           focused
                         // inputProps={{ readOnly: true }}
                         />
-                       
+
 
                         <TextField
                           fullWidth
@@ -9572,7 +10276,7 @@ const Editemployee = () => {
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         /> */}
-                         {CompanyAutoCode == "Y" ? (
+                        {CompanyAutoCode == "Y" ? (
                           <TextField
                             name="localitycode"
                             type="text"

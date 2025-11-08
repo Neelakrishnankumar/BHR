@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
     Box,
     Card,
@@ -20,12 +20,15 @@ import { useSelector } from "react-redux";
 
 const LeaderCardView = () => {
     // const { id } = useParams();
+    const location = useLocation();
     const { recordID, partyID } = useParams();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [partyName, setPartyName] = useState(""); // ✅ new state for party name
     const listViewUrl = useSelector((store) => store.globalurl.listViewurl);
+    const state = location.state || {};
+    console.log(state, "state");
 
     useEffect(() => {
         const fetchLeaderData = async () => {
@@ -54,7 +57,7 @@ const LeaderCardView = () => {
                     const rows = response.data.Data.rows;
                     setData(rows);
 
-                    // ✅ Set the Party Name (assuming it’s the same for all rows)
+                    //  Set the Party Name (assuming it’s the same for all rows)
                     if (rows.length > 0 && rows[0].Party) {
                         setPartyName(rows[0].Party);
                     }
@@ -72,7 +75,9 @@ const LeaderCardView = () => {
     }, [partyID, listViewUrl]);
 
     const handleAdd = () => {
-        navigate(`/Apps/Secondarylistview/TR304/Leader/${partyID}/EditLeader/-1/A/S`);
+        navigate(`/Apps/Secondarylistview/TR304/Leader/${partyID}/EditLeader/-1/A/S`,{
+                          state: { ...state },
+                        })
     };
 
     // const handleactivitylistview = () => {
@@ -88,7 +93,7 @@ const LeaderCardView = () => {
             state: {
                 PartyID: partyID,
                 LeadTitle: leadTitle,
-                PartyName: PartyName ,
+                PartyName: PartyName,
                 LEStatus: LEStatus 
             },
         });

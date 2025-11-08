@@ -173,7 +173,9 @@ const ListviewSecondary = () => {
   if (accessID == "TR011") {
     filter = invoiceFilter;
   } else if (accessID == "TR074") {
-    filter = `${parentID}' AND Finyear='${year}' AND CompID = '${compID}`;
+    filter = `'${parentID}' AND Finyear='${year}' AND CompID = '${compID}'`;
+  } else if (accessID == "TR127") {
+    filter = `parentID='${leaderID}'`;
   } else if (accessID == "TR112" || accessID == "TR112") {
     filter = `'${parentID}' AND Finyear='${year}'`;
   } else if (accessID == "TR047") {
@@ -3244,7 +3246,9 @@ const ListviewSecondary = () => {
                 <IconButton>
                   <AddOutlinedIcon
                     onClick={() => {
-                      navigate(`./EditMarketing Activity/-1/A`);
+                      navigate(`./EditMarketing Activity/-1/A`,{
+                          state: { ...state },
+                        });
                     }}
                   />
                 </IconButton>
