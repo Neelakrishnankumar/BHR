@@ -76,6 +76,7 @@ import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlin
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 
 const ListviewSecondary = () => {
@@ -3599,6 +3600,12 @@ const ListviewSecondary = () => {
               <Chip
                 icon={< VisibilityIcon style={{ color: '#eb710dff' }} />}
                 label="View"
+                variant="outlined"
+                sx={{ marginLeft: "50px" }}
+              />
+              <Chip
+                icon={<AttachFileIcon color="primary" />}
+                label="Attachment"
                 variant="outlined"
                 sx={{ marginLeft: "50px" }}
               />

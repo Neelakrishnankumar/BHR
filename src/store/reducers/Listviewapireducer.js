@@ -78,7 +78,7 @@ import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlin
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
-
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const initialState = {
   rowData: [],
@@ -1671,51 +1671,51 @@ export const fetchListview =
             };
           }
 
-          else if (AccessID == "TR303") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                      state={{
-                        PartyName: params.row.Party,
-                      }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+          // else if (AccessID == "TR303") {
+          //   obj = {
+          //     field: "action",
+          //     headerName: "Action",
+          //     minWidth: 100,
+          //     sortable: false,
+          //     headerAlign: "center",
+          //     align: "center",
+          //     disableColumnMenu: true,
+          //     disableExport: true,
+          //     filterable: false,
+          //     renderCell: (params) => {
+          //       return (
+          //         <Box>
+          //           <Link
+          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+          //             state={{
+          //               PartyName: params.row.Party,
+          //             }}
+          //           >
+          //             <Tooltip title="Edit">
+          //               <IconButton color="info" size="small">
+          //                 <ModeEditOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
 
-                    <Link
-                      //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
-                      to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
-                      state={{
-                        PartyName: params.row.Party,
-                      }}
-                    >
-                      <Tooltip title="Marketing Activity">
-                        <IconButton color="info" size="small">
-                          <AssistantIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          }
+          //           <Link
+          //             //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
+          //             to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
+          //             state={{
+          //               PartyName: params.row.Party,
+          //             }}
+          //           >
+          //             <Tooltip title="Marketing Activity">
+          //               <IconButton color="info" size="small">
+          //                 <AssistantIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+          //         </Box>
+          //       );
+          //     },
+          //   };
+          // }
           else if (AccessID === "TR304") {
             obj = {
               field: "action",
@@ -1749,6 +1749,13 @@ export const fetchListview =
                         </Tooltip>
 
                       </Link>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}>
+                        <Tooltip title="Attachment">
+                          <IconButton color="info" size="small">
+                            <AttachFileIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
                       {/* if (params.row.Editable === "Close") */}
 
                     </Box>
@@ -1771,10 +1778,17 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}>
+                        <Tooltip title="Attachment">
+                          <IconButton color="info" size="small">
+                            <AttachFileIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+
                     </Box>
                   );
                 }
-
                 // If Editable is "0", render nothing
                 return null;
               },

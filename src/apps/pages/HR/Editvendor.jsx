@@ -341,7 +341,7 @@ const Editvendor = () => {
       LocalityID: values.locality.RecordID || 0,
       LocalityName: values.locality.Name || "",
       PanCardNo: values.Pancardnumber,
-      Address : values.address,
+      Address: values.address,
       MapLocation: values.maplink,
       PanImg: panImage,
       GstNo: values.gstnumber,
@@ -786,7 +786,7 @@ const Editvendor = () => {
                     }}
                   // autoFocus
                   />
-                  
+
                   <TextField
                     name="mobilenumber"
                     id="mobilenumber"
@@ -874,7 +874,7 @@ const Editvendor = () => {
                       },
                     }}
                   />
-                  
+
                   <TextField
                     name="maplink"
                     type="text"
@@ -892,7 +892,7 @@ const Editvendor = () => {
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
-                    }}                 
+                    }}
                   />
                   <TextField
                     name="address"
@@ -913,72 +913,78 @@ const Editvendor = () => {
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
-                    }}                 
+                    }}
                   />
                   {/* panimage */}
 
-                  <Box>
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="vendor"
-                      id="vendor"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Vendor"
-                    />
-                    <FormLabel focused={false}>Vendor</FormLabel>
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    {/* First row */}
+                    <Box display="flex" gap={2}>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="vendor"
+                          id="vendor"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Vendor</FormLabel>
+                      </Box>
 
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="customer"
-                      id="customer"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Customer"
-                    />
-                    <FormLabel focused={false}>Customer</FormLabel>
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="prospect"
-                      id="prospect"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Prospects"
-                    />
-                    <FormLabel focused={false}>Prospects</FormLabel>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="customer"
+                          id="customer"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Customer</FormLabel>
+                      </Box>
+
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="prospect"
+                          id="prospect"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Prospects</FormLabel>
+                      </Box>
+                    </Box>
+
+                    {/* Second row */}
+                    <Box display="flex" gap={2}>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="delete"
+                          id="delete"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Delete</FormLabel>
+                      </Box>
+
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="disable"
+                          id="disable"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Disable</FormLabel>
+                      </Box>
+                    </Box>
                   </Box>
-                  <Box>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="delete"
-                      id="delete"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Delete"
-                    />
 
-                    <FormLabel focused={false}>Delete</FormLabel>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="disable"
-                      id="disable"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Disable"
-                    />
-
-                    <FormLabel focused={false}>Disable</FormLabel>
-                  </Box>
                 </Box>
 
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
@@ -1071,7 +1077,7 @@ const Editvendor = () => {
                       Save
                     </Button>
                   )}
-                  
+
                   <Button
                     color="warning"
                     variant="contained"
@@ -1124,7 +1130,7 @@ const Editvendor = () => {
                     },
                   }}
                 >
-                  
+
                   <Box
                     sx={{
                       padding: 1.5,
