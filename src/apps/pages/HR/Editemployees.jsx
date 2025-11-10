@@ -19,7 +19,7 @@ import {
   Select,
   Tooltip,
   Paper,
-  Grid
+  Grid,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -43,7 +43,7 @@ import {
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import basicSchema from "../../Security/validation";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -171,7 +171,6 @@ const Editemployee = () => {
   const [validationSchema9, setValidationSchema9] = useState(null);
   const [validationSchema10, setValidationSchema10] = useState(null);
   const [validationSchema11, setValidationSchema11] = useState(null);
-
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -322,7 +321,9 @@ const Editemployee = () => {
           localityname: Yup.string().required(data.Locality.name),
         };
         if (CompanyAutoCode === "N") {
-          schemaFields2.localitycode = Yup.string().required(data.Locality.localitycode);
+          schemaFields2.localitycode = Yup.string().required(
+            data.Locality.localitycode
+          );
         }
 
         const schema11 = Yup.object().shape(schemaFields2);
@@ -447,10 +448,10 @@ const Editemployee = () => {
   const initialValues = {
     Department: Data.DeptRecordID
       ? {
-        RecordID: Data.DeptRecordID,
-        Code: Data.DeptCode,
-        Name: Data.DeptName,
-      }
+          RecordID: Data.DeptRecordID,
+          Code: Data.DeptCode,
+          Name: Data.DeptName,
+        }
       : null,
     Code: Data.Code,
     Name: Data.Name,
@@ -460,14 +461,14 @@ const Editemployee = () => {
       Data.EmpType === "Prohibition"
         ? "PP"
         : Data.EmpType === "Permanent"
-          ? "PM"
-          : Data.EmpType === "Contracts In"
-            ? "CI"
-            : Data.EmpType === "Contracts Out"
-              ? "CO"
-              : // : Data.EmpType === "Contractor"
-              // ? "CT"
-              "",
+        ? "PM"
+        : Data.EmpType === "Contracts In"
+        ? "CI"
+        : Data.EmpType === "Contracts Out"
+        ? "CO"
+        : // : Data.EmpType === "Contractor"
+          // ? "CT"
+          "",
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
@@ -681,8 +682,8 @@ const Editemployee = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     var isCheck = "N";
     if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
@@ -770,24 +771,48 @@ const Editemployee = () => {
       dispatch(fetchApidata(accessID, "get", recID));
     }
     if (event.target.value == "1") {
-      dispatch(fetchExplorelitview("TR038", "Skills", `${recID} AND CompanyID=${CompanyID}`, ""));
+      dispatch(
+        fetchExplorelitview(
+          "TR038",
+          "Skills",
+          `${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
+      );
       dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
     }
     if (event.target.value == "13") {
-      dispatch(fetchExplorelitview("TR302", "Locality", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, ""));
+      dispatch(
+        fetchExplorelitview(
+          "TR302",
+          "Locality",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
+      );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "2") {
       dispatch(
-        fetchExplorelitview("TR125", "Function", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR125",
+          "Function",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "3") {
       dispatch(fetchApidata(accessID, "get", recID));
       dispatch(
-        fetchExplorelitview("TR126", "Manager", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR126",
+          "Manager",
+          `parentID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -800,20 +825,35 @@ const Editemployee = () => {
     }
     if (event.target.value == "6") {
       dispatch(
-        fetchExplorelitview("TR210", "Attachment", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR210",
+          "Attachment",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "7") {
       dispatch(
-        fetchExplorelitview("TR212", "itemcustody", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR212",
+          "itemcustody",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     //ITEMSERVICES
     if (event.target.value == "14") {
       dispatch(
-        fetchExplorelitview("TR309", "itemservices", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR309",
+          "itemservices",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -1090,7 +1130,18 @@ const Editemployee = () => {
   } else if (show == "13") {
     VISIBLE_FIELDS = ["slno", "Locality", "Pincode", "action"];
   } else if (show == "14") {
-    VISIBLE_FIELDS = ["slno", "EISDate", "Complaints", "CompletedDate", "ExpectedReturnDate", "ActualReturnDate", "TentativeCharges", "ActualCharges", "Comments", "action"];
+    VISIBLE_FIELDS = [
+      "slno",
+      "EISDate",
+      "Complaints",
+      "CompletedDate",
+      "ExpectedReturnDate",
+      "ActualReturnDate",
+      "TentativeCharges",
+      "ActualCharges",
+      "Comments",
+      "action",
+    ];
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "slno",
@@ -1306,20 +1357,20 @@ const Editemployee = () => {
             {show == "2"
               ? "List of Functions"
               : show == "6"
-                ? "List of Documents"
-                : show == "3"
-                  ? "List of Managers"
-                  : show == "7"
-                    ? "Item Custody"
-                    : show == "10"
-                      ? "List of Configurations"
-                      : show == "13"
-                        ? "List of Localities"
-                        : show == "14"
-                          ? "List of Services"
-                          : show == "8" || show == "11"
-                            ? "List of Contracts"
-                            : "List of Managers"}
+              ? "List of Documents"
+              : show == "3"
+              ? "List of Managers"
+              : show == "7"
+              ? "Item Custody"
+              : show == "10"
+              ? "List of Configurations"
+              : show == "13"
+              ? "List of Localities"
+              : show == "14"
+              ? "List of Services"
+              : show == "8" || show == "11"
+              ? "List of Contracts"
+              : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -1362,24 +1413,24 @@ const Editemployee = () => {
     itemValue: "",
     reference: "",
   });
-  const [itemServicesData, setItemServicesData] = useState({
-    recordID: "",
-    servicedate: "",
-    complaints: "",
-    tentativecharge: "",
-    returndate: "",
-    completeddate: "",
-    actualreturndate: "",
-    actualcharges: "",
-    servicecomments: "",
-    vendors: "",
-    items: ""
-  });
+  // const [itemServicesData, setItemServicesData] = useState({
+  //   recordID: "",
+  //   servicedate: "",
+  //   complaints: "",
+  //   tentativecharge: "",
+  //   returndate: "",
+  //   completeddate: "",
+  //   actualreturndate: "",
+  //   actualcharges: "",
+  //   servicecomments: "",
+  //   vendors: "",
+  //   items: "",
+  // });
   const [localityData, setLocalityData] = useState({
     recordID: "",
     localitycode: "",
     localityname: "",
-    LCpincode: ""
+    LCpincode: "",
   });
 
   //Contractor
@@ -1416,6 +1467,7 @@ const Editemployee = () => {
     renewal: false,
     Attachment: "",
   });
+
   const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
     setFunMode(mode);
     setLaoMode(mode);
@@ -1456,14 +1508,13 @@ const Editemployee = () => {
         actualcharges: "",
         servicecomments: "",
         vendors: "",
-        items: ""
+        items: "",
       });
       setLocalityData({
         recordID: "",
         localitycode: "",
         localityname: "",
-        LCpincode: ""
-
+        LCpincode: "",
       });
       setselectLeaveconLTData(null);
       setContractorData({
@@ -1532,36 +1583,42 @@ const Editemployee = () => {
           itemValue: rowData.ItemValue,
           reference: rowData.PurchaseReference,
         });
+        const formatDateForInputItems = (dateStr) => {
+          if (!dateStr) return "";
+          const [day, month, year] = dateStr.split("-");
+          return `${year}-${month}-${day}`;
+        };
         setItemServicesData({
           recordID: rowData.RecordID,
-          servicedate: rowData.EISDate,
-          complaints: rowData.Complaints,
-          tentativecharge: rowData.TentativeCharges,
-          returndate: rowData.ExpectedReturnDate,
-          completeddate: rowData.CompletedDate,
-          actualreturndate: rowData.ActualReturnDate,
-          actualcharges: rowData.ActualCharges,
-          servicecomments: rowData.Comments,
+          servicedate: formatDateForInputItems(rowData.EISDate) || "",
+          complaints: rowData.Complaints || "",
+          tentativecharge: rowData.TentativeCharges || "",
+          returndate: formatDateForInputItems(rowData.ExpectedReturnDate) || "",
+          completeddate: formatDateForInputItems(rowData.CompletedDate) || "",
+          actualreturndate:
+            formatDateForInputItems(rowData.ActualReturnDate) || "",
+          actualcharges: rowData.ActualCharges || "",
+          servicecomments: rowData.Comments || "",
           vendors: rowData.PartyID
             ? {
-              RecordID: rowData.PartyID,
-              Code: rowData.PartyCode,
-              Name: rowData.PartyName,
-            }
+                RecordID: rowData.PartyID,
+                Code: rowData.PartyCode || "",
+                Name: rowData.PartyName || "",
+              }
             : null,
-          items: rowData.Item
+          items: rowData.ItemcustodyID
             ? {
-              RecordID: rowData.ItemID,
-              Code: rowData.ItemCode,
-              Name: rowData.ItemName,
-            }
+                RecordID: rowData.ItemcustodyID,
+                Code: rowData.ItemCode || "",
+                Name: rowData.ItemName || "",
+              }
             : null,
         });
         setLocalityData({
           recordID: rowData.RecordID,
           localitycode: rowData.Code,
           localityname: rowData.Name,
-          LCpincode: rowData.Pincode
+          LCpincode: rowData.Pincode,
         });
 
         setContractorData({
@@ -1574,10 +1631,10 @@ const Editemployee = () => {
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.Vendor
             ? {
-              RecordID: rowData.Vendor,
-              Code: rowData.VendorCode,
-              Name: rowData.VendorName,
-            }
+                RecordID: rowData.Vendor,
+                Code: rowData.VendorCode,
+                Name: rowData.VendorName,
+              }
             : null,
           hsnCode: rowData.Hsn,
           cgst: rowData.Gst,
@@ -1603,10 +1660,10 @@ const Editemployee = () => {
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-              RecordID: rowData.LeaveTypeID,
-              Code: "",
-              Name: rowData.LeavePart,
-            }
+                RecordID: rowData.LeaveTypeID,
+                Code: "",
+                Name: rowData.LeavePart,
+              }
             : null,
           Year: rowData.Year,
         });
@@ -1686,8 +1743,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
@@ -1721,7 +1778,7 @@ const Editemployee = () => {
     description: Data.Name,
     localitycode: localityData.localitycode,
     localityname: localityData.localityname,
-    LCpincode: localityData.LCpincode
+    LCpincode: localityData.LCpincode,
   };
   const FnLocalilty = async (values, resetForm, del) => {
     setLoading(true);
@@ -1729,8 +1786,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: localityData.recordID,
       EmployeeID: recID,
@@ -1738,14 +1795,19 @@ const Editemployee = () => {
       Code: values.localitycode || "",
       Pincode: values.LCpincode,
       CompanyID,
-    }
+    };
     const response = await dispatch(
       explorePostData({ accessID: "TR302", action, idata })
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR302", "Locality", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview(
+          "TR302",
+          "Locality",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
       );
 
       toast.success(response.payload.Msg);
@@ -1773,8 +1835,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: itemCustodyData.recordID,
       EmployeeID: recID,
@@ -1806,32 +1868,68 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const [itemServicesData, setItemServicesData] = useState({
+    recordID: "",
+    servicedate: "",
+    complaints: "",
+    tentativecharge: "",
+    returndate: "",
+    completeddate: "",
+    actualreturndate: "",
+    actualcharges: "",
+    servicecomments: "",
+    vendors: "",
+    items: "",
+  });
+  console.log("🚀 ~ Editemployee ~ itemServicesData:", itemServicesData);
 
-  const itemservicesInitialValue = {
-    code: Data.Code,
-    description: Data.Name,
-    imageurl: Data.ImageName
-      ? store.getState().globalurl.imageUrl + Data.ImageName
-      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
-    items: null,
-    vendors: null,
-    //  servicedate : "",
-    //  complaints:"",
-    //  tentativecharge:"",
-    //  returndate:"",
-    //  completeddate:"",  
-    //  actualreturndate:"",
-    //  actualcharges:"",
-    // servicecomments:""  
-  };
+  // const itemservicesInitialValue = {
+  //   code: Data.Code,
+  //   description: Data.Name,
+  //   imageurl: Data.ImageName
+  //     ? store.getState().globalurl.imageUrl + Data.ImageName
+  //     : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+  //   items: itemServicesData.items || null,
+  // vendors: itemServicesData.vendors || null,
+  // servicedate: itemServicesData.servicedate || "",
+  // complaints: itemServicesData.complaints || "",
+  // tentativecharge: itemServicesData.tentativecharge || "",
+  // returndate: itemServicesData.returndate || "",
+  // completeddate: itemServicesData.completeddate || "",
+  // actualreturndate: itemServicesData.actualreturndate || "",
+  // actualcharges: itemServicesData.actualcharges || "",
+  // servicecomments: itemServicesData.servicecomments || "",
+  // };
+  const itemservicesInitialValue = useMemo(
+    () => ({
+      code: Data.Code,
+      description: Data.Name,
+      imageurl: Data.ImageName
+        ? store.getState().globalurl.imageUrl + Data.ImageName
+        : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+      recordID: itemServicesData.recordID || "",
+      servicedate: itemServicesData.servicedate || "",
+      complaints: itemServicesData.complaints || "",
+      tentativecharge: itemServicesData.tentativecharge || "",
+      returndate: itemServicesData.returndate || "",
+      completeddate: itemServicesData.completeddate || "",
+      actualreturndate: itemServicesData.actualreturndate || "",
+      actualcharges: itemServicesData.actualcharges || "",
+      servicecomments: itemServicesData.servicecomments || "",
+      vendors: itemServicesData.vendors || null,
+      items: itemServicesData.items || null,
+    }),
+    [Data, itemServicesData]
+  );
+
   const empItemServicesFn = async (values, resetForm, del) => {
     setLoading(true);
     let action =
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: itemServicesData.recordID,
       EmployeeID: recID,
@@ -1840,13 +1938,13 @@ const Editemployee = () => {
       PartyName: values?.vendors?.Name || "",
       PartyCode: values?.vendors?.Code || "",
       EISDate: values.servicedate,
-      Complaints: values.complaints,
-      CompletedDate: values.completeddate,
-      ExpectedReturnDate: values.returndate,
-      ActualReturnDate: values.actualreturndate,
-      TentativeCharges: values.tentativecharge,
-      ActualCharges: values.actualcharges,
-      Comments: values.servicecomments,
+      Complaints: values.complaints || "",
+      CompletedDate: values.completeddate || "",
+      ExpectedReturnDate: values.returndate || "",
+      ActualReturnDate: values.actualreturndate || "",
+      TentativeCharges: values.tentativecharge || "0",
+      ActualCharges: values.actualcharges || "0",
+      Comments: values.servicecomments || "",
       CompanyID,
     };
     // console.log("save" + JSON.stringify(saveData));
@@ -1882,12 +1980,12 @@ const Editemployee = () => {
       contractorData.units === "Hours"
         ? "HS"
         : contractorData.units === "Days"
-          ? "DS"
-          : contractorData.units === "Week"
-            ? "WS"
-            : contractorData.units === "Month"
-              ? "MS"
-              : "",
+        ? "DS"
+        : contractorData.units === "Week"
+        ? "WS"
+        : contractorData.units === "Month"
+        ? "MS"
+        : "",
     Hsn: contractorData.hsnCode,
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
@@ -1908,8 +2006,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
@@ -1937,15 +2035,15 @@ const Editemployee = () => {
         show === "8"
           ? values?.vendor?.RecordID || 0
           : show === "11"
-            ? values?.customer?.RecordID || 0
-            : 0,
+          ? values?.customer?.RecordID || 0
+          : 0,
 
       VendorName:
         show === "8"
           ? values?.vendor?.Name || 0
           : show === "11"
-            ? values?.customer?.Name || 0
-            : 0,
+          ? values?.customer?.Name || 0
+          : 0,
 
       Hsn: values.Hsn,
       Gst: values.Gst,
@@ -1969,21 +2067,21 @@ const Editemployee = () => {
       setLoading(false);
       show == "8"
         ? dispatch(
-          fetchExplorelitview(
-            "TR244",
-            "Contracts In",
-            `EmployeeID='${recID}' AND Vendors='Y'`,
-            ""
+            fetchExplorelitview(
+              "TR244",
+              "Contracts In",
+              `EmployeeID='${recID}' AND Vendors='Y'`,
+              ""
+            )
           )
-        )
         : dispatch(
-          fetchExplorelitview(
-            "TR244",
-            "Contracts Out",
-            `EmployeeID='${recID}' AND Customer='Y'`,
-            ""
-          )
-        );
+            fetchExplorelitview(
+              "TR244",
+              "Contracts Out",
+              `EmployeeID='${recID}' AND Customer='Y'`,
+              ""
+            )
+          );
 
       toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -2010,8 +2108,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       EmployeeID: recID,
       Longtitude: values.longitude,
@@ -2050,10 +2148,10 @@ const Editemployee = () => {
       LeaveCondata.Year === "2024"
         ? "2024"
         : LeaveCondata.Year === "2025"
-          ? "2025"
-          : LeaveCondata.Year === "2026"
-            ? "2026"
-            : "",
+        ? "2025"
+        : LeaveCondata.Year === "2026"
+        ? "2026"
+        : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -2069,8 +2167,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
 
     const idata = {
       RecordID: LeaveCondata.recordID,
@@ -2145,8 +2243,8 @@ const Editemployee = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
@@ -2199,45 +2297,45 @@ const Editemployee = () => {
     description: Data.Name,
     Designation: deploymentData.DesignationID
       ? {
-        RecordID: deploymentData.DesignationID,
-        Code: deploymentData.DesignationCode,
-        Name: deploymentData.DesignationName,
-      }
+          RecordID: deploymentData.DesignationID,
+          Code: deploymentData.DesignationCode,
+          Name: deploymentData.DesignationName,
+        }
       : null,
     location: deploymentData.LocationID
       ? {
-        RecordID: deploymentData.LocationID,
-        Code: deploymentData.LocationCode,
-        Name: deploymentData.LocationName,
-      }
+          RecordID: deploymentData.LocationID,
+          Code: deploymentData.LocationCode,
+          Name: deploymentData.LocationName,
+        }
       : null,
     gate: deploymentData.StoregatemasterID
       ? {
-        RecordID: deploymentData.StoregatemasterID,
-        Code: deploymentData.StoregatemasterCode,
-        Name: deploymentData.StoregatemasterName,
-      }
+          RecordID: deploymentData.StoregatemasterID,
+          Code: deploymentData.StoregatemasterCode,
+          Name: deploymentData.StoregatemasterName,
+        }
       : null,
     project: deploymentData.DefaultProject
       ? {
-        RecordID: deploymentData.DefaultProject,
-        Code: deploymentData.ProjectCode,
-        Name: deploymentData.ProjectName,
-      }
+          RecordID: deploymentData.DefaultProject,
+          Code: deploymentData.ProjectCode,
+          Name: deploymentData.ProjectName,
+        }
       : null,
     function: deploymentData.DefaultFunction
       ? {
-        RecordID: deploymentData.DefaultFunction,
-        Code: deploymentData.FunctionCode,
-        Name: deploymentData.FunctionName,
-      }
+          RecordID: deploymentData.DefaultFunction,
+          Code: deploymentData.FunctionCode,
+          Name: deploymentData.FunctionName,
+        }
       : null,
     shift: deploymentData.ShiftID
       ? {
-        RecordID: deploymentData.ShiftID,
-        Code: deploymentData.ShiftCode,
-        Name: deploymentData.ShiftName,
-      }
+          RecordID: deploymentData.ShiftID,
+          Code: deploymentData.ShiftCode,
+          Name: deploymentData.ShiftName,
+        }
       : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
@@ -2453,16 +2551,16 @@ const Editemployee = () => {
       empLoaData.category == "Education"
         ? "EC"
         : empLoaData.category == "Insurance "
-          ? "IS"
-          : empLoaData.category == "Award "
-            ? "AD"
-            : empLoaData.category == "Certificate "
-              ? "CT"
-              : empLoaData.category == "Warranty "
-                ? "WT"
-                : empLoaData.category == "Others "
-                  ? "OS"
-                  : "",
+        ? "IS"
+        : empLoaData.category == "Award "
+        ? "AD"
+        : empLoaData.category == "Certificate "
+        ? "CT"
+        : empLoaData.category == "Warranty "
+        ? "WT"
+        : empLoaData.category == "Others "
+        ? "OS"
+        : "",
     RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
@@ -2471,8 +2569,8 @@ const Editemployee = () => {
       laomode === "A" && !del
         ? "insert"
         : laomode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
 
     console.log(values);
 
@@ -2757,8 +2855,9 @@ const Editemployee = () => {
                     >
                       Approvals
                     </Typography>
-                  ) : (false)
-                  }
+                  ) : (
+                    false
+                  )}
                   {show == "13" ? (
                     <Typography
                       variant="h5"
@@ -2767,8 +2866,9 @@ const Editemployee = () => {
                     >
                       Locality
                     </Typography>
-                  ) : (false)
-                  }
+                  ) : (
+                    false
+                  )}
                 </Breadcrumbs>
               </Box>
             </Box>
@@ -3186,8 +3286,8 @@ const Editemployee = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="confirmdate"
@@ -3203,8 +3303,8 @@ const Editemployee = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         fullWidth
@@ -3228,7 +3328,7 @@ const Editemployee = () => {
                         focused
                         inputProps={{ maxLength: 90 }}
                         multiline
-                      // rows={2}
+                        // rows={2}
                       />
                       <TextField
                         fullWidth
@@ -3362,7 +3462,7 @@ const Editemployee = () => {
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                    // filterValue={locationLookup.locationRecordID}
+                      // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -3445,7 +3545,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -3466,7 +3566,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     <Stack
@@ -3785,7 +3885,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -3806,7 +3906,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                   </Box>
@@ -4292,8 +4392,8 @@ const Editemployee = () => {
                       }}
                       focused
 
-                    //  error={!!touched.Desc && !!errors.Desc}
-                    //  helperText={touched.Desc && errors.Desc}
+                      //  error={!!touched.Desc && !!errors.Desc}
+                      //  helperText={touched.Desc && errors.Desc}
                     />
 
                     <TextField
@@ -4594,10 +4694,10 @@ const Editemployee = () => {
                               variant="contained"
                               type="submit"
                               loading={loading}
-                            // onClick={() => {
-                            //   fnProcess(values, resetForm, "");
-                            //   //navigate("")
-                            // }}
+                              // onClick={() => {
+                              //   fnProcess(values, resetForm, "");
+                              //   //navigate("")
+                              // }}
                             >
                               Save
                             </LoadingButton>
@@ -5511,7 +5611,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -5532,7 +5632,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
                       {/* <TextField
                         fullWidth
@@ -5703,8 +5803,9 @@ const Editemployee = () => {
                         }}
                         error={!!touched.gate && !!errors.gate}
                         helperText={touched.gate && errors.gate}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
-                          }'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
+                          values.location ? values.location.RecordID : 0
+                        }'","Any":""}}`}
                       />
                     </FormControl>
 
@@ -5740,7 +5841,6 @@ const Editemployee = () => {
  ='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
-
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
@@ -5792,8 +5892,8 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       select
-                    // error={!!touched.Onsiterole && !!errors.Onsiterole}
-                    // helperText={touched.Onsiterole && errors.Onsiterole}
+                      // error={!!touched.Onsiterole && !!errors.Onsiterole}
+                      // helperText={touched.Onsiterole && errors.Onsiterole}
                     >
                       <MenuItem value="Project">Project</MenuItem>
                       <MenuItem value="Marketing">Marketing</MenuItem>
@@ -5808,10 +5908,12 @@ const Editemployee = () => {
                         onBlur={handleBlur}
                         as={Checkbox}
                         label="Onsitedateflag"
-                      // disabled
+                        // disabled
                       />
 
-                      <FormLabel focused={false}>Allow Backlog Data Entry</FormLabel>
+                      <FormLabel focused={false}>
+                        Allow Backlog Data Entry
+                      </FormLabel>
                     </Box>
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
@@ -6033,7 +6135,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="biometric"
-                    // disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Biometric</FormLabel>
@@ -6047,7 +6149,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="mobile"
-                    // disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Mobile Geofencing</FormLabel>
@@ -6061,7 +6163,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="cloud"
-                    // disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Cloud Application</FormLabel>
@@ -6075,7 +6177,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="managermanual"
-                    // disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Manager Manual</FormLabel>
@@ -6088,7 +6190,7 @@ const Editemployee = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="defaultpresent"
-                    // disabled
+                      // disabled
                     />
 
                     <FormLabel focused={false}>Default Present</FormLabel>
@@ -6403,7 +6505,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Code"
                           focused
-                        // inputProps={{ readOnly: true }}
+                          // inputProps={{ readOnly: true }}
                         />
 
                         <TextField
@@ -6417,7 +6519,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Name"
                           focused
-                        // inputProps={{ readOnly: true }}
+                          // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -7258,7 +7360,7 @@ const Editemployee = () => {
                 values,
                 handleSubmit,
                 resetForm,
-                setFieldValue
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -7382,6 +7484,7 @@ const Editemployee = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue,
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}
@@ -7537,8 +7640,12 @@ const Editemployee = () => {
                         // required
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        error={!!touched.tentativecharge && !!errors.tentativecharge}
-                        helperText={touched.tentativecharge && errors.tentativecharge}
+                        error={
+                          !!touched.tentativecharge && !!errors.tentativecharge
+                        }
+                        helperText={
+                          touched.tentativecharge && errors.tentativecharge
+                        }
                         sx={{
                           //gridColumn: "span 2",
                           backgroundColor: "#ffffff", // Set the background to white
@@ -7553,6 +7660,7 @@ const Editemployee = () => {
                           },
                         }}
                       />
+
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
                           {/* <TextField
@@ -7583,7 +7691,12 @@ const Editemployee = () => {
                             id="returndate"
                             label={
                               <>
-                                Expected Return Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                Expected Return Date{" "}
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
                               </>
                             }
                             variant="standard"
@@ -7595,108 +7708,127 @@ const Editemployee = () => {
                             error={!!touched.returndate && !!errors.returndate}
                             helperText={touched.returndate && errors.returndate}
                             sx={{ background: "" }}
-                          // required
-                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField
-                            fullWidth
-                            variant="standard"
-                            type="date"
-                            value={values.completeddate}
-                            id="completeddate"
-                            name="completeddate"
-                            label="Completed Date"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            inputFormat="YYYY-MM-DD"
-                            error={!!touched.completeddate && !!errors.completeddate}
-                            helperText={touched.completeddate && errors.completeddate}
-                            sx={{ backgroundColor: "#ffffff" }}
-                            focused
-
+                            // required
+                            //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                           />
                         </Grid>
                       </Grid>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <TextField
-                            fullWidth
-                            variant="standard"
-                            type="date"
-                            value={values.actualreturndate}
-                            id="actualreturndate"
-                            name="actualreturndate"
-                            label="Actual Return Date"
-                            // required
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            inputFormat="YYYY-MM-DD"
-                            error={!!touched.actualreturndate && !!errors.actualreturndate}
-                            helperText={touched.actualreturndate && errors.actualreturndate}
-                            focused
+                      {show == "14" && funMode === "E" ? (
+                        <>
+                          <Grid item xs={6}>
+                            <TextField
+                              fullWidth
+                              variant="standard"
+                              type="date"
+                              value={values.completeddate}
+                              id="completeddate"
+                              name="completeddate"
+                              label="Completed Date"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              inputFormat="YYYY-MM-DD"
+                              error={
+                                !!touched.completeddate &&
+                                !!errors.completeddate
+                              }
+                              helperText={
+                                touched.completeddate && errors.completeddate
+                              }
+                              sx={{ backgroundColor: "#ffffff" }}
+                              focused
+                            />
+                          </Grid>
 
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                              <TextField
+                                fullWidth
+                                variant="standard"
+                                type="date"
+                                value={values.actualreturndate}
+                                id="actualreturndate"
+                                name="actualreturndate"
+                                label="Actual Return Date"
+                                // required
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                inputFormat="YYYY-MM-DD"
+                                error={
+                                  !!touched.actualreturndate &&
+                                  !!errors.actualreturndate
+                                }
+                                helperText={
+                                  touched.actualreturndate &&
+                                  errors.actualreturndate
+                                }
+                                focused
+                              />
+                            </Grid>
+                            <Grid item xs={6}>
+                              <TextField
+                                fullWidth
+                                variant="standard"
+                                type="text"
+                                value={values.actualcharges}
+                                id="actualcharges"
+                                name="actualcharges"
+                                label="Actual Charges"
+                                // required
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={
+                                  !!touched.actualcharges &&
+                                  !!errors.actualcharges
+                                }
+                                helperText={
+                                  touched.actualcharges && errors.actualcharges
+                                }
+                                sx={{
+                                  //gridColumn: "span 2",
+                                  backgroundColor: "#ffffff", // Set the background to white
+                                  "& .MuiFilledInput-root": {
+                                    backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                  },
+                                }}
+                                focused
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
                           <TextField
                             fullWidth
                             variant="standard"
                             type="text"
-                            value={values.actualcharges}
-                            id="actualcharges"
-                            name="actualcharges"
-                            label="Actual Charges"
+                            value={values.servicecomments}
+                            id="servicecomments"
+                            name="servicecomments"
+                            label="Comments"
                             // required
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={
-                              !!touched.actualcharges &&
-                              !!errors.actualcharges
+                              !!touched.servicecomments &&
+                              !!errors.servicecomments
                             }
                             helperText={
-                              touched.actualcharges && errors.actualcharges
+                              touched.servicecomments && errors.servicecomments
                             }
                             sx={{
-                              //gridColumn: "span 2",
-                              backgroundColor: "#ffffff", // Set the background to white
+                              backgroundColor: "#ffffff",
                               "& .MuiFilledInput-root": {
-                                backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                backgroundColor: "#ffffff",
                               },
                             }}
                             focused
-                            InputProps={{
-                              inputProps: {
-                                style: { textAlign: "right" },
-                              },
-                            }}
+                            multiline
+                            inputProps={{ maxLength: 90 }}
                           />
-                        </Grid>
-                      </Grid>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        value={values.servicecomments}
-                        id="servicecomments"
-                        name="servicecomments"
-                        label="Comments"
-                        // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.servicecomments && !!errors.servicecomments}
-                        helperText={touched.servicecomments && errors.servicecomments}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff",
-                          },
-                        }}
-                        focused
-                        multiline
-                        inputProps={{ maxLength: 90 }}
-                      />
+                        </>
+                      ) : null}
                     </FormControl>
                   </Box>
                   <Box
@@ -8106,13 +8238,13 @@ const Editemployee = () => {
                         helperText={touched.BillingUnits && errors.BillingUnits}
                         // required
                         focused
-                      // sx={{
-                      //   gridColumn: "span 2",
-                      //   backgroundColor: "#ffffff",
-                      //   "& .MuiInputBase-root": {
-                      //     backgroundColor: "",
-                      //   },
-                      // }}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -8203,11 +8335,11 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8230,11 +8362,11 @@ const Editemployee = () => {
                         inputProps={{ maxLength: 25 }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8256,11 +8388,11 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8282,11 +8414,11 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
 
                       <TextField
@@ -8302,10 +8434,10 @@ const Editemployee = () => {
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                      // helperText={touched.FromPeriod && errors.FromPeriod}
-                      //sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                        // helperText={touched.FromPeriod && errors.FromPeriod}
+                        //sx={{ background: "" }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -8867,13 +8999,13 @@ const Editemployee = () => {
                         focused
                         error={!!touched.BillingUnits && !!errors.BillingUnits}
                         helperText={touched.BillingUnits && errors.BillingUnits}
-                      // sx={{
-                      //   gridColumn: "span 2",
-                      //   backgroundColor: "#ffffff",
-                      //   "& .MuiInputBase-root": {
-                      //     backgroundColor: "",
-                      //   },
-                      // }}
+                        // sx={{
+                        //   gridColumn: "span 2",
+                        //   backgroundColor: "#ffffff",
+                        //   "& .MuiInputBase-root": {
+                        //     backgroundColor: "",
+                        //   },
+                        // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -8963,11 +9095,11 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8990,11 +9122,11 @@ const Editemployee = () => {
                         inputProps={{ maxLength: 25 }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -9016,11 +9148,11 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -9042,11 +9174,11 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                      // onInput={(e) => {
-                      //   e.target.value = Math.max(0, parseInt(e.target.value))
-                      //     .toString()
-                      //     .slice(0, 11);
-                      // }}
+                        // onInput={(e) => {
+                        //   e.target.value = Math.max(0, parseInt(e.target.value))
+                        //     .toString()
+                        //     .slice(0, 11);
+                        // }}
                       />
                       <TextField
                         name="FromPeriod"
@@ -9061,10 +9193,10 @@ const Editemployee = () => {
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                      // helperText={touched.FromPeriod && errors.FromPeriod}
-                      //sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                        // helperText={touched.FromPeriod && errors.FromPeriod}
+                        //sx={{ background: "" }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -9375,7 +9507,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -9396,7 +9528,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                      // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -10100,7 +10232,6 @@ const Editemployee = () => {
                   FnLocalilty(values, resetForm, false);
                 }, 100);
               }}
-
             >
               {({
                 values,
@@ -10143,9 +10274,8 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Code"
                           focused
-                        // inputProps={{ readOnly: true }}
+                          // inputProps={{ readOnly: true }}
                         />
-
 
                         <TextField
                           fullWidth
@@ -10158,7 +10288,7 @@ const Editemployee = () => {
                           onChange={handleChange}
                           label="Name"
                           focused
-                        // inputProps={{ readOnly: true }}
+                          // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -10289,17 +10419,20 @@ const Editemployee = () => {
                             value={values.localitycode}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.localitycode && !!errors.localitycode}
-                            helperText={touched.localitycode && errors.localitycode}
+                            error={
+                              !!touched.localitycode && !!errors.localitycode
+                            }
+                            helperText={
+                              touched.localitycode && errors.localitycode
+                            }
                             sx={{
-
                               backgroundColor: "#ffffff", // Set the background to white
                               "& .MuiFilledInput-root": {
                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                              }
+                              },
                             }}
                             InputProps={{ readOnly: true }}
-                          // autoFocus
+                            // autoFocus
                           />
                         ) : (
                           <TextField
@@ -10308,7 +10441,12 @@ const Editemployee = () => {
                             id="localitycode"
                             label={
                               <>
-                                Locality Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                Locality Code
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
                               </>
                             }
                             variant="standard"
@@ -10317,18 +10455,21 @@ const Editemployee = () => {
                             value={values.localitycode}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            error={!!touched.localitycode && !!errors.localitycode}
-                            helperText={touched.localitycode && errors.localitycode}
+                            error={
+                              !!touched.localitycode && !!errors.localitycode
+                            }
+                            helperText={
+                              touched.localitycode && errors.localitycode
+                            }
                             sx={{
-
                               backgroundColor: "#ffffff", // Set the background to white
                               "& .MuiFilledInput-root": {
                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                              }
+                              },
                             }}
-
                             autoFocus
-                          />)}
+                          />
+                        )}
                         <TextField
                           fullWidth
                           variant="standard"
@@ -10347,8 +10488,12 @@ const Editemployee = () => {
                               </span>
                             </span>
                           }
-                          error={!!touched.localityname && !!errors.localityname}
-                          helperText={touched.localityname && errors.localityname}
+                          error={
+                            !!touched.localityname && !!errors.localityname
+                          }
+                          helperText={
+                            touched.localityname && errors.localityname
+                          }
                           focused
                           inputProps={{ tabIndex: "-1" }}
                         />
