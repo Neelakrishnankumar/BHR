@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-var APIurl = "https://bos.beyondexs.com/api/"
-var baseurl = "https://bos.beyondexs.com/"
+// var APIurl = "https://bos.beyondexs.com/api/"
+// var baseurl = "https://bos.beyondexs.com/"
 
-// var APIurl = "https://bosuat.beyondexs.com/api/"
-// var baseurl = "https://bosuat.beyondexs.com/"
+var APIurl = "https://bosuat.beyondexs.com/api/"
+var baseurl = "https://bosuat.beyondexs.com/"
 // var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 // var baseurl = "https://dvmtapi.bexatm.com/"
 
