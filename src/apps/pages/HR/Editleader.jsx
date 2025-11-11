@@ -30,11 +30,11 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    fetchApidata,
-    getFetchData,
-    LeaderData,
-    postApidata,
-    postData,
+  fetchApidata,
+  getFetchData,
+  LeaderData,
+  postApidata,
+  postData,
 } from "../../../store/reducers/Formapireducer";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -97,15 +97,15 @@ const EditLeader = () => {
             .then((data) => {
                 setErrorMsgData(data);
 
-                let schemaFields = {
-                    name: Yup.string().required(data.Overhead.name),
-                    OverheadType: Yup.object().required(data.Overhead.OverheadType),
-                    frequency: Yup.string().required(data.Overhead.frequency),
-                };
+        let schemaFields = {
+          name: Yup.string().required(data.Overhead.name),
+          OverheadType: Yup.object().required(data.Overhead.OverheadType),
+          frequency: Yup.string().required(data.Overhead.frequency),
+        };
 
-                if (CompanyAutoCode === "N") {
-                    schemaFields.code = Yup.string().required(data.Overhead.code);
-                }
+        if (CompanyAutoCode === "N") {
+          schemaFields.code = Yup.string().required(data.Overhead.code);
+        }
 
                 const schema = Yup.object().shape(schemaFields);
                 setValidationSchema(schema);
@@ -171,50 +171,50 @@ const EditLeader = () => {
                 try {
                     setLoading(true);
 
-                    const resultAction = await dispatch(
-                        LeaderData({ data: { LeaderID: filtertype } })
-                    );
+          const resultAction = await dispatch(
+            LeaderData({ data: { LeaderID: filtertype } })
+          );
 
-                    const result = resultAction.payload;
-                    console.log("Leader API Redux Response:", result);
+          const result = resultAction.payload;
+          console.log("Leader API Redux Response:", result);
 
-                    if (result?.Status === "Y" && result?.Data?.length > 0) {
-                        const leaderData = result.Data[0];
-                        setLeaderDetails(leaderData);
+          if (result?.Status === "Y" && result?.Data?.length > 0) {
+            const leaderData = result.Data[0];
+            setLeaderDetails(leaderData);
 
-                        // Set form data for Formik initialValues
-                        setFormData({
-                            applieddate: curdate, // You can fill default date if required
-                            leadtitle: leaderData.LeadTitle || "",
-                            comments: "",
-                            visitdate: "",
-                            Status: "",
-                            project: leaderData.ProjectID
-                                ? {
-                                    RecordID: leaderData.ProjectID,
-                                    Name: leaderData.ProjectName,
-                                }
-                                : null,
-                        });
-                    }
-                } catch (error) {
-                    console.error("Error fetching Leader data:", error);
-                } finally {
-                    setLoading(false);
-                }
-            }
-            // else if(mode === "V"){
-            //     dispatch(getFetchData({ accessID, get: "get", recID }));
-            // }
-            else {
-                dispatch(getFetchData({ accessID, get: "get", recID }));
-            }
-        };
+            // Set form data for Formik initialValues
+            setFormData({
+              applieddate: curdate, // You can fill default date if required
+              leadtitle: leaderData.LeadTitle || "",
+              comments: "",
+              visitdate: "",
+              Status: "",
+              project: leaderData.ProjectID
+                ? {
+                    RecordID: leaderData.ProjectID,
+                    Name: leaderData.ProjectName,
+                  }
+                : null,
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching Leader data:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+      // else if(mode === "V"){
+      //     dispatch(getFetchData({ accessID, get: "get", recID }));
+      // }
+      else {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+      }
+    };
 
-        fetchData();
-    }, [Type, recID, accessID, dispatch, filtertype]);
-    useEffect(() => {
-        if (!data) return;
+    fetchData();
+  }, [Type, recID, accessID, dispatch, filtertype]);
+  useEffect(() => {
+    if (!data) return;
 
         setFormData({
             applieddate: mode === "E" || mode === "V" || mode === "IM" ? data.OMDate : curdate,
@@ -243,30 +243,30 @@ const EditLeader = () => {
         });
     }, [data, mode, curdate]);
 
-    // const initialValue = {
-    //     applieddate: data.OMDate,
-    //     leadtitle: data.LeadTitle,
-    //     comments: data.Comments,
-    //     visitdate: data.NextVisitDate,
-    //     // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
-    //     Status: data.OMStatus,
-    //     project: data.ProjectID
-    //         ? { RecordID: data.ProjectID, Name: data.ProjectName }
-    //         : null,
+  // const initialValue = {
+  //     applieddate: data.OMDate,
+  //     leadtitle: data.LeadTitle,
+  //     comments: data.Comments,
+  //     visitdate: data.NextVisitDate,
+  //     // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
+  //     Status: data.OMStatus,
+  //     project: data.ProjectID
+  //         ? { RecordID: data.ProjectID, Name: data.ProjectName }
+  //         : null,
 
-    // };
-    // console.log(initialValue, "OverheadType");
-    const isNonMobile = useMediaQuery("(min-width:600px)");
+  // };
+  // console.log(initialValue, "OverheadType");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
 
-    const fnSave = async (values, del) => {
-        // let action = mode === "A" ? "insert" : "update";
-        let action =
-            mode === "A" && !del
-                ? "insert"
-                : mode === "E" && del
-                    ? "harddelete"
-                    : "update";
-        setLoading(true);
+  const fnSave = async (values, del) => {
+    // let action = mode === "A" ? "insert" : "update";
+    let action =
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+        ? "harddelete"
+        : "update";
+    setLoading(true);
 
         const idata = {
             RecordID: recID,
@@ -290,47 +290,45 @@ const EditLeader = () => {
         console.log(idata, "idata");
         // console.log("🚀 ~ file: Editoverhead.jsx:57 ~ fnSave ~ saveData:", saveData)
 
-        const response = await dispatch(postData({ accessID, action, idata }));
-        if (response.payload.Status == "Y") {
-            toast.success(response.payload.Msg);
-            // setIni(true)
-            setLoading(false);
-            // navigate(-1);
-            console.log(Type, "Type");
-            //  console.log("LeadTitle:", response.payload.LeadTitle);
-            // const stateData = { LeadTitle: response.payload.LeadTitle };
-            // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
-            if (Type === "T") {
-                // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
-                navigate(-1);
-            }
-            else if (Type === "S") {
-                // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/S`);
-                navigate(-1);
-            }
-            else {
-                // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
-                navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
-            };
-        } else {
-            toast.error(response.payload.Msg);
-            setLoading(false);
-        }
-    };
-    const style = {
-        height: "55px",
-        border: "2px solid #1769aa ",
-        borderRadius: "6px",
-        backgroundColor: "#EDEDED",
-    };
-    const ref = useRef(null);
-    const fnLogOut = (props) => {
-        //   if(Object.keys(ref.current.touched).length === 0){
-        //     if(props === 'Logout'){
-        //       navigate("/")}
-        //       if(props === 'Close'){
-        //         navigate("/Apps/TR022/Bank Master")
-        //       }
+    const response = await dispatch(postData({ accessID, action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      // setIni(true)
+      setLoading(false);
+      // navigate(-1);
+      console.log(Type, "Type");
+      //  console.log("LeadTitle:", response.payload.LeadTitle);
+      // const stateData = { LeadTitle: response.payload.LeadTitle };
+      // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
+      if (Type === "T") {
+        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
+        navigate(-1);
+      } else if (Type === "S") {
+        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/S`);
+        navigate(-1);
+      } else {
+        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+        navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
+      }
+    } else {
+      toast.error(response.payload.Msg);
+      setLoading(false);
+    }
+  };
+  const style = {
+    height: "55px",
+    border: "2px solid #1769aa ",
+    borderRadius: "6px",
+    backgroundColor: "#EDEDED",
+  };
+  const ref = useRef(null);
+  const fnLogOut = (props) => {
+    //   if(Object.keys(ref.current.touched).length === 0){
+    //     if(props === 'Logout'){
+    //       navigate("/")}
+    //       if(props === 'Close'){
+    //         navigate("/Apps/TR022/Bank Master")
+    //       }
 
         //       return
         //  }
@@ -435,95 +433,93 @@ const EditLeader = () => {
                         </Box>
                     </Box>
 
-                    <Box display="flex">
-                        <Tooltip title="Close">
-                            <IconButton onClick={() => fnLogOut("Close")} color="error">
-                                <ResetTvIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Logout">
-                            <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                                <LogoutOutlinedIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
-                </Box>
-            </Paper>
+          <Box display="flex">
+            <Tooltip title="Close">
+              <IconButton onClick={() => fnLogOut("Close")} color="error">
+                <ResetTvIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                <LogoutOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Paper>
 
-            {!getLoading ? (
+      {!getLoading ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={formData}
+            enableReinitialize={true}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              sessionStorage.setItem("Status", values.Status);
+              fnSave(values);
+              setSubmitting(false);
+            }}
 
-                <Paper elevation={3} sx={{ margin: "10px" }}>
-                    <Formik
-                        initialValues={formData}
-                        enableReinitialize={true}
-                        onSubmit={(values, { setSubmitting }) => {
-                            setSubmitting(true);
-                            sessionStorage.setItem("Status", values.Status);
-                            fnSave(values);
-                            setSubmitting(false);
-                        }}
-
-                    // validationSchema={validationSchema}
-
-                    >
-                        {({
-                            errors,
-                            touched,
-                            handleBlur,
-                            handleChange,
-                            isSubmitting,
-                            values,
-                            handleSubmit,
-                            setFieldValue
-                        }) => (
-                            <form onSubmit={handleSubmit}>
-                                <Box
-                                    display="grid"
-                                    gap={formGap}
-                                    padding={1}
-                                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                                    // gap="30px"
-                                    sx={{
-                                        "& > div": {
-                                            gridColumn: isNonMobile ? undefined : "span 2",
-                                        },
-                                    }}
-                                >
-                                    <TextField
-                                        name="applieddate"
-                                        type="date"
-                                        id="applieddate"
-                                        label="Applied Date"
-                                        variant="standard"
-                                        focused
-                                        inputFormat="YYYY-MM-DD"
-                                        value={values.applieddate}
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.applieddate && !!errors.applieddate}
-                                        helperText={touched.applieddate && errors.applieddate}
-                                        inputProps={{
-                                            max: new Date().toISOString().split("T")[0],
-                                            // readOnly: true,
-                                        }}
-                                        disabled={Type === "T"}
-                                    />
-                                    <CheckinAutocomplete
-                                        id="project"
-                                        name="project"
-                                        label="Project"
-                                        variant="outlined"
-                                        value={values.project}
-                                        onChange={(newValue) => {
-                                            setFieldValue("project", newValue);
-                                            console.log(newValue, "--newvalue project");
-                                            console.log(newValue.RecordID, "project RecordID");
-                                        }}
-                                        error={!!touched.project && !!errors.project}
-                                        helperText={touched.project && errors.project}
-                                        disabled={Type === "T"}
-                                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                                    />
+            // validationSchema={validationSchema}
+          >
+            {({
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              isSubmitting,
+              values,
+              handleSubmit,
+              setFieldValue,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <TextField
+                    name="applieddate"
+                    type="date"
+                    id="applieddate"
+                    label="Applied Date"
+                    variant="standard"
+                    focused
+                    inputFormat="YYYY-MM-DD"
+                    value={values.applieddate}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.applieddate && !!errors.applieddate}
+                    helperText={touched.applieddate && errors.applieddate}
+                    inputProps={{
+                      max: new Date().toISOString().split("T")[0],
+                      // readOnly: true,
+                    }}
+                    disabled={Type === "T"}
+                  />
+                  <CheckinAutocomplete
+                    id="project"
+                    name="project"
+                    label="Project"
+                    variant="outlined"
+                    value={values.project}
+                    onChange={(newValue) => {
+                      setFieldValue("project", newValue);
+                      console.log(newValue, "--newvalue project");
+                      console.log(newValue.RecordID, "project RecordID");
+                    }}
+                    error={!!touched.project && !!errors.project}
+                    helperText={touched.project && errors.project}
+                    disabled={Type === "T"}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                  />
 
                                     <TextField
                                         // label={
