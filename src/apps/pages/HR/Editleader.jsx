@@ -14,7 +14,13 @@ import {
     Paper,
     Breadcrumbs,
     Tooltip,
-    Checkbox
+    Checkbox,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -40,7 +46,12 @@ import { OverheadSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/utils";
 import * as Yup from "yup";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
-
+import FileUploadIconButton from "../../../ui-components/global/Fileuploadbutton";
+import { attachmentPost } from "../../../store/reducers/LoginReducer";
+import store from "../../..";
+import axios from "axios";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const EditLeader = () => {
     const dispatch = useDispatch();
@@ -69,9 +80,14 @@ const EditLeader = () => {
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const YearFlag = sessionStorage.getItem("YearFlag");
     const [leaderDetails, setLeaderDetails] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [error, setError] = useState('');
+    const rowSx = { height: 36, '& td, & th': { py: 0.5 } };
     const state = location.state || {};
     console.log(state, "state");
-console.log(location, "location");
+    const { id, name } = useParams();
+    console.log("Received Name:", decodeURIComponent(name));
+    console.log(location, "location");
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -96,6 +112,29 @@ console.log(location, "location");
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, [CompanyAutoCode]);
+    useEffect(() => {
+        dispatch(getFetchData({ accessID, get: "get", recID })).then((res) => {
+            console.log(res, "response");
+            console.log(res.payload.Data.PartyID, "response");
+            var url = store.getState().globalurl.empGetAttachmentUrl;
+            axios
+                .get(url, {
+                    params: {
+                        empId: res.payload.Data.PartyID,
+                        appId: recID
+                    }
+                })
+                .then((response) => {
+                    setFiles(response.data);
+                })
+                .catch((err) => {
+                    setError('Failed to fetch attachments.');
+                    console.error(err);
+                })
+                .finally(() => setLoading(false));
+
+        })
+    }, []);
     const curdate = new Date().toISOString().split("T")[0];
     const [formData, setFormData] = useState({
         applieddate: curdate,
@@ -128,7 +167,7 @@ console.log(location, "location");
     // }, [location.key]);
     useEffect(() => {
         const fetchData = async () => {
-            if (Type === "T" && mode === "A") {
+            if (Type === "T" && mode === "A" && mode == "IM") {
                 try {
                     setLoading(true);
 
@@ -178,11 +217,23 @@ console.log(location, "location");
         if (!data) return;
 
         setFormData({
-            applieddate: mode === "E" || mode === "V" ? data.OMDate : curdate,
-            leadtitle: mode === "E" || mode === "V" ? data.LeadTitle : "",
-            comments: mode === "E" || mode === "V" ? data.Comments : "",
-            visitdate: mode === "E" || mode === "V" ? data.NextVisitDate : "",
-            Status: mode === "E" || mode === "V" ? data.OMStatus : "",
+            applieddate: mode === "E" || mode === "V" || mode === "IM" ? data.OMDate : curdate,
+            leadtitle: mode === "E" || mode === "V" || mode === "IM" ? data.LeadTitle : "",
+            comments: mode === "E" || mode === "V" || mode === "IM" ? data.Comments : "",
+            visitdate: mode === "E" || mode === "V" || mode === "IM" ? data.NextVisitDate : "",
+            // Status: mode === "E" || mode === "V" || mode === "IM" ? data.OMStatus : "",
+            Status:
+                mode === "E" || mode === "V" || mode === "IM"
+                    ? data.OMStatus === "Cool"
+                        ? "Cool"
+                        : data.OMStatus === "Warm"
+                            ? "Warm"
+                            : data.OMStatus === "Hot"
+                                ? "Hot"
+                                : data.OMStatus === "Close"
+                                    ? "Close"
+                                    : ""
+                    : "",
             project:
                 mode === "A"
                     ? null
@@ -229,6 +280,9 @@ console.log(location, "location");
             ProjectID: values.project.RecordID || 0,
             ProjectName: values.project.Name || "",
             CompanyID,
+            Latitude: 0,
+            Longitude: 0
+
             // Disable: values.disable == true ? "Y" : "N",
             // DeleteFlag: values.delete == true ? "Y" : "N",
 
@@ -301,6 +355,51 @@ console.log(location, "location");
             }
         });
     };
+    async function fileUpload(file, EMPID, action, id, purpose) {
+        console.log("🚀 ~ fileUpload ~ file:", file)
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('empId', data.PartyID);
+        formData.append('appId', data.RecordID);
+        formData.append('type', "MA");
+        formData.append('source', "HR");
+        formData.append("action", action);
+        formData.append("id", id);
+        formData.append("purpose", purpose);
+        console.log("FormData contents:");
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
+
+        const respose = await dispatch(attachmentPost({ data: formData }))
+
+        if (respose.payload.success) {
+            toast.success(respose.payload.message)
+            //setShowtable(true);
+            var url = store.getState().globalurl.empGetAttachmentUrl;
+            axios
+                .get(url, {
+                    params: {
+                        empId: data.PartyID,
+                        appId: data.RecordID,
+
+                    }
+                })
+                .then((response) => {
+                    setFiles(response.data);
+                })
+                .catch((err) => {
+                    setError('Failed to fetch attachments.');
+                    console.error(err);
+                })
+                .finally(() => setLoading(false));
+        }
+        else {
+            toast.success(respose.payload.message)
+        }
+
+        console.log("🚀 ~ fileUpload ~ respose:", respose)
+    }
     return (
         <React.Fragment>
             {getLoading ? <LinearProgress /> : false}
@@ -328,7 +427,7 @@ console.log(location, "location");
                                     sx={{ cursor: "default" }}
 
                                 >
-                                    {`Marketing Activity(${state.PartyName || ""})`}
+                                    {`Marketing Activity(${state.Party || ""})`}
                                     {/* Marketing Activity */}
                                 </Typography>
 
@@ -503,6 +602,40 @@ console.log(location, "location");
 
                                 </Box>
                                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
+                                    {mode == "IM" && (
+                                        <>
+                                            <TextField
+                                                name="purpose"
+                                                type="text"
+                                                id="purpose"
+                                                label="Purpose"
+                                                variant="standard"
+                                                focused
+                                                value={values.purpose}
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                error={!!touched.purpose && !!errors.purpose}
+                                                helperText={touched.purpose && errors.purpose}
+                                                sx={{ gridColumn: "span 2", height: "20px" }}
+                                                InputLabelProps={{ shrink: true }}
+
+                                            />
+
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                <FileUploadIconButton onFileSelect={(file) => {
+                                                    fileUpload(
+                                                        file,
+                                                        data.PartyID,
+                                                        "upload",
+                                                        "",
+                                                        values.purpose
+                                                    )
+                                                    setFieldValue("purpose", "");
+                                                }}
+                                                />
+                                            </Box>
+                                        </>
+                                    )}
                                     <LoadingButton
                                         variant="contained"
                                         color="secondary"
@@ -530,6 +663,81 @@ console.log(location, "location");
             ) : (
                 false
             )}
+            {mode == "IM" && files.length > 0 ? (
+                <Box mt={2}
+                >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                        <TableContainer component={Paper} >
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow sx={rowSx}>
+                                        <TableCell width={20}><strong>SL#</strong></TableCell>
+                                        <TableCell width={160}><strong>Uploaded Date</strong></TableCell>
+                                        <TableCell width={250}><strong>Filename</strong></TableCell>
+                                        <TableCell width={150}><strong>Purpose</strong></TableCell>
+                                        <TableCell width={100}><strong>Source</strong></TableCell>
+                                        <TableCell ><strong>View</strong></TableCell>
+
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {files.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} align="center">
+                                                No files uploaded yet.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        files.map((file, index) => (
+                                            <TableRow key={file.id || index} sx={rowSx}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{file.uploadedDate}</TableCell>
+                                                <TableCell>{file.filename}</TableCell>
+                                                <TableCell>{file.purpose}</TableCell>
+                                                <TableCell>{file.source}</TableCell>
+                                                <TableCell>
+                                                    <Tooltip title="Open File">
+                                                        <IconButton
+                                                            color="primary"
+                                                            component="a"
+                                                            href={file.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            size="small"
+                                                        >
+                                                            <OpenInNewIcon fontSize="small" />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip title="delete">
+                                                        <IconButton
+                                                            color="error"
+                                                            onClick={() => fileUpload(
+                                                                file.filename,
+                                                                data.PartyID,
+                                                                "delete",
+                                                                file.id,
+                                                                file.purpose
+                                                            )}
+                                                            size="small"
+                                                        >
+                                                            <DeleteForeverIcon fontSize="small" />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </TableCell>
+
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
+                </Box>
+            ) : null}
         </React.Fragment>
     );
 };

@@ -1489,51 +1489,7 @@ export const fetchListview =
               },
             };
           }
-          // else if (AccessID == "TR243") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       return (
-          //         <Box>
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //           >
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
 
-          //           <Link
-          //             //  to={`/Apps/Secondarylistview/TR303/Leader/${params.row.RecordID}`}
-          //              to={`/Apps/Secondarylistview/TR303/LeaderCardView/${params.row.RecordID}`}
-          //             state={{
-          //               PartyName: params.row.Name,
-          //               Count:params.row.MarketingCount
-          //               // MilestoneName: params.row.MilestoneName,
-
-          //             }}
-          //           >
-          //             <Tooltip title="Leader">
-          //               <IconButton color="info" size="small">
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
           //          else if (AccessID == "TR243") {
           //   obj = {
           //     field: "action",
@@ -1609,19 +1565,20 @@ export const fetchListview =
               renderCell: (params) => {
                 const count = Number(params.row.MarketingCount || 0);
                 const id = params.row.RecordID;
+                const PartyName = params.row.Name;
                 // const filtertype = params.row.RecordID
-
+                console.log(count, id, PartyName, "statess");
                 const leaderLink =
                   count >= 1
                     ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
                     // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
                     : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
 
-                const leaderState =
-                {
-                  PartyName: params.row.Name,
-                  Count: count,
-                }
+                // const leaderState =
+                // {
+                //   PartyName: params.row.Name,
+                //   Count: count,
+                // }
 
 
                 return (
@@ -1630,7 +1587,7 @@ export const fetchListview =
                     <Link
                       to={`./Edit${screenName}/${params.row.RecordID}/E`}
                       state={{
-                        PartyName: params.row.Party,
+                         PartyName: params.row.Party,
                         Count: params.row.MarketingCount
                       }}
                     >
@@ -1650,11 +1607,11 @@ export const fetchListview =
                           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
                       }
                       state={{
-                        PartyName: params.row.Name,
+                        PartyName: PartyName,
                         Count: count
                       }}
                     >
-                      <Tooltip title="Leader">
+                      <Tooltip title="Leads">
                         <IconButton
                           color="info"
                           size="small"
@@ -1749,7 +1706,12 @@ export const fetchListview =
                         </Tooltip>
 
                       </Link>
-                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          PartyID: params.row.PartyID,
+                          LeadTitle: params.row.LeadTitle
+                        }}>
                         <Tooltip title="Attachment">
                           <IconButton color="info" size="small">
                             <AttachFileIcon />
@@ -1778,7 +1740,12 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          PartyID: params.row.PartyID,
+                          LeadTitle: params.row.LeadTitle,
+                        }}>
                         <Tooltip title="Attachment">
                           <IconButton color="info" size="small">
                             <AttachFileIcon />

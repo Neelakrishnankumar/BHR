@@ -1822,7 +1822,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                Leader
+                Leads
               </Typography>
             </Breadcrumbs>
           </Box>

@@ -932,7 +932,7 @@ const Listview = () => {
 
             <Chip
               icon={< Diversity2Icon color="primary"/>}
-              label="Leader"
+              label="Leads"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />
