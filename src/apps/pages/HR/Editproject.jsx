@@ -440,7 +440,7 @@ const Editproject = () => {
                     >
                       Routine Tasks
                     </FormLabel>
-                    <Field
+                    {/* <Field
                       type="checkbox"
                       name="ServiceMaintenance"
                       id="ServiceMaintenance"
@@ -454,7 +454,7 @@ const Editproject = () => {
                       // sx={{ ml: 1,marginLeft:0}}
                     >
                       Service & Maintenance
-                    </FormLabel>
+                    </FormLabel> */}
                     <Field
                       type="checkbox"
                       name="ByProduct"
@@ -468,8 +468,34 @@ const Editproject = () => {
                       // htmlFor="ServiceMaintenance"
                       // sx={{ ml: 1,marginLeft:0}}
                     >
-                      By Product
+                      Product
                     </FormLabel>
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
+               
                   </Box>
 
                   <TextField
@@ -497,32 +523,7 @@ const Editproject = () => {
                         .slice(0, 8);
                     }}
                   />
-                  <Box>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="delete"
-                      id="delete"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Delete"
-                    />
-
-                    <FormLabel focused={false}>Delete</FormLabel>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="disable"
-                      id="disable"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Disable"
-                    />
-
-                    <FormLabel focused={false}>Disable</FormLabel>
-                  </Box>
+                 
                 </Box>
                 <Typography variant="h5" padding={1}>
                   Costing:

@@ -35,7 +35,14 @@ import { Field, Formik } from "formik";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { postData, getFetchData, PartyBankget, partyBankpostData, PartyContactget, partyContactData } from "../../../store/reducers/Formapireducer";
+import {
+  postData,
+  getFetchData,
+  PartyBankget,
+  partyBankpostData,
+  PartyContactget,
+  partyContactData,
+} from "../../../store/reducers/Formapireducer";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
@@ -60,9 +67,15 @@ const Editvendor = () => {
   // Redux state
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
-  const partyBankgetloading = useSelector((state) => state.formApi.partyBankgetloading);
-  const partyBankgetdata = useSelector((state) => state.formApi.partyBankgetdata);
-  const partyContactgetdata = useSelector((state) => state.formApi.partyContactgetdata);
+  const partyBankgetloading = useSelector(
+    (state) => state.formApi.partyBankgetloading
+  );
+  const partyBankgetdata = useSelector(
+    (state) => state.formApi.partyBankgetdata
+  );
+  const partyContactgetdata = useSelector(
+    (state) => state.formApi.partyContactgetdata
+  );
   console.log(partyContactgetdata, "--partyContactgetdata");
 
   const YearFlag = sessionStorage.getItem("YearFlag");
@@ -101,7 +114,8 @@ const Editvendor = () => {
           locality: Yup.object().required(data.Party.locality).nullable(),
           ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
           mobilenumber: Yup.string()
-            .required(data.Party.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+            .required(data.Party.mobilenumber)
+            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
         };
 
         if (CompanyAutoCode === "N") {
@@ -128,30 +142,31 @@ const Editvendor = () => {
           bankname: Yup.string().required(data.BankDetails.bankname),
           branchname: Yup.string().required(data.BankDetails.branchname),
           Accounttype: Yup.string().required(data.BankDetails.Accounttype),
-          ifsc: Yup.string().required(data.BankDetails.ifsc)
+          ifsc: Yup.string()
+            .required(data.BankDetails.ifsc)
             .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code"),
           accountnumber: Yup.string()
             .required(data.BankDetails.accountnumber)
             .matches(/^\d{9,18}$/, "Invalid Account Number"),
           bankloc: Yup.string().required(data.BankDetails.bankloc),
-          accountholdname: Yup.string().required(data.BankDetails.accountholdname),
+          accountholdname: Yup.string().required(
+            data.BankDetails.accountholdname
+          ),
           bankaddress: Yup.string().required(data.BankDetails.bankaddress),
-
         });
         const schema3 = Yup.object().shape({
           name1: Yup.string().required(data.Contactdetails.name1),
           emailid1: Yup.string()
-            .email('Invalid Email ID')
+            .email("Invalid Email ID")
             .required(data.Contactdetails.emailid1),
           mobileno1: Yup.string()
-            .matches(/^[0-9]{10}$/, 'Invalid Mobile Number')
+            .matches(/^[0-9]{10}$/, "Invalid Mobile Number")
             .required(data.Contactdetails.mobileno1),
-        })
+        });
 
         setValidationSchema(schema);
         setValidationSchema2(schema2);
         setValidationSchema3(schema3);
-
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -159,8 +174,7 @@ const Editvendor = () => {
   useEffect(() => {
     if (recID && mode === "E") {
       dispatch(getFetchData({ accessID, get: "get", recID }));
-    }
-    else {
+    } else {
       dispatch(getFetchData({ accessID, get: "get", recID }));
     }
   }, [location.key, recID, mode]);
@@ -169,15 +183,14 @@ const Editvendor = () => {
     return <LinearProgress />;
   }
 
-
   const contactvalidationSchema = Yup.object().shape({
-    name1: Yup.string().required('Name is required'),
+    name1: Yup.string().required("Name is required"),
     emailid1: Yup.string()
-      .email('Invalid email format')
-      .required('Email ID is required'),
+      .email("Invalid email format")
+      .required("Email ID is required"),
     mobileno1: Yup.string()
-      .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
-      .required('Mobile No is required'),
+      .matches(/^[0-9]{10}$/, "Mobile No must be 10 digits")
+      .required("Mobile No is required"),
     // name2: Yup.string().required('Name is required'),
     // emailid2: Yup.string()
     //   .email('Invalid email format')
@@ -286,9 +299,7 @@ const Editvendor = () => {
 
     if (event.target.value == "2") {
       dispatch(PartyBankget({ VendorID: recID }));
-
     }
-
   };
   // Page params
 
@@ -298,17 +309,17 @@ const Editvendor = () => {
     Pancardnumber: data.PanCardNo || "",
     locality: data.LocalityID
       ? {
-        RecordID: data.LocalityID,
-        Code: data.LocalityCode,
-        Name: data.LocalityName,
-      }
+          RecordID: data.LocalityID,
+          Code: data.LocalityCode,
+          Name: data.LocalityName,
+        }
       : null,
     ReferenceBy: data.ReferenceID
       ? {
-        RecordID: data.ReferenceID,
-        Code: data.ReferenceByName,
-        Name: data.ReferenceByName,
-      }
+          RecordID: data.ReferenceID,
+          Code: data.ReferenceByName,
+          Name: data.ReferenceByName,
+        }
       : null,
     address: data.Address || "",
     maplink: data.MapLocation || "",
@@ -324,7 +335,7 @@ const Editvendor = () => {
     prospect: data.Prospects === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false,
     BusinessPartner: data.BusinessPartner === "Y" ? true : false,
-    disable: data.Disable === "Y" ? true : false
+    disable: data.Disable === "Y" ? true : false,
   };
   console.log(data.PanImg, "dooo");
   const Fnsave = async (values, del) => {
@@ -334,8 +345,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     // var isCheck = "N";
     // if (values.disable == true) {
     //   isCheck = "Y";
@@ -386,7 +397,7 @@ const Editvendor = () => {
       setLoading(false);
     }
   };
-  //Bank details 
+  //Bank details
   console.log(partyBankgetdata, "partyBankgetdata");
 
   const BankInitialValue = {
@@ -397,8 +408,7 @@ const Editvendor = () => {
     bankloc: partyBankgetdata.BankLocation || "",
     accountnumber: partyBankgetdata.BankAccountNo || "",
     bankaddress: partyBankgetdata.BankAddress || "",
-    accountholdname: partyBankgetdata.BankAccountHolderName || ""
-
+    accountholdname: partyBankgetdata.BankAccountHolderName || "",
   };
 
   const Banksave = async (values, del) => {
@@ -408,8 +418,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
 
     const idata = {
       VendorID: recID,
@@ -439,7 +449,6 @@ const Editvendor = () => {
     }
   };
 
-
   //Contact Details
   const contactInitialValue = {
     name1: partyContactgetdata.ContactPerson1 || "",
@@ -448,7 +457,6 @@ const Editvendor = () => {
     emailid2: partyContactgetdata.ContactPersonEmailID2 || "",
     mobileno1: partyContactgetdata.ContactPersonMobileNo1 || "",
     mobileno2: partyContactgetdata.ContactPersonMobileNo2 || "",
-
   };
   const contactsave = async (values, del) => {
     setLoading(true);
@@ -457,8 +465,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
 
     const idata = {
       VendorID: recID,
@@ -468,7 +476,6 @@ const Editvendor = () => {
       ContactPersonEmailID2: values.emailid2,
       ContactPersonMobileNo1: values.mobileno1,
       ContactPersonMobileNo2: values.mobileno2,
-
     };
 
     try {
@@ -486,7 +493,6 @@ const Editvendor = () => {
       setLoading(false);
     }
   };
-
 
   const fnLogOut = (props) => {
     Swal.fire({
@@ -674,40 +680,48 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
-                  ) : (<TextField
-                    name="code"
-                    type="text"
-                    id="code"
-                    label={
-                      <>
-                        Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.code && !!errors.code}
-                    helperText={touched.code && errors.code}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    autoFocus
-                  />)}
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                  )}
                   <TextField
                     name="name"
                     type="text"
                     id="name"
                     label={
                       <>
-                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -731,7 +745,10 @@ const Editvendor = () => {
                     name="locality"
                     label={
                       <>
-                        Locality<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Locality
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="outlined"
@@ -769,7 +786,7 @@ const Editvendor = () => {
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                  // autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="gstnumber"
@@ -796,7 +813,7 @@ const Editvendor = () => {
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                  // autoFocus
+                    // autoFocus
                   />
 
                   <TextField
@@ -805,7 +822,9 @@ const Editvendor = () => {
                     label={
                       <>
                         Contact Mobile Number
-                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -841,7 +860,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                  // autoFocus
+                    // autoFocus
                   />
                   <TextField
                     name="date"
@@ -863,7 +882,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                  //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                   <TextField
                     name="verifieddate"
@@ -906,12 +925,15 @@ const Editvendor = () => {
                       },
                     }}
                   />
-                   <CheckinAutocomplete
+                  <CheckinAutocomplete
                     id="ReferenceBy"
                     name="ReferenceBy"
                     label={
                       <>
-                        Reference By<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Reference By
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="outlined"
@@ -963,78 +985,76 @@ const Editvendor = () => {
                         <FormLabel focused={false}>Vendor</FormLabel>
                       </Box>
                       <Box display="flex" alignItems="center">
+                        <Field
+                          //    size="small"
+                          type="checkbox"
+                          name="customer"
+                          id="customer"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Customer"
+                        />
+                        <FormLabel focused={false}>Customer</FormLabel>
+                      </Box>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          //    size="small"
+                          type="checkbox"
+                          name="prospect"
+                          id="prospect"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Prospects"
+                        />
 
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="customer"
-                      id="customer"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Customer"
-                    />
-                    </Box>
-                    <Box display="flex" alignItems="center">
-                    <FormLabel focused={false}>Customer</FormLabel>
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="prospect"
-                      id="prospect"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Prospects"
-                    />
-                    </Box>
-                    <Box display="flex" alignItems="center">
-                    <FormLabel focused={false}>Prospects</FormLabel>
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="BusinessPartner"
-                      id="BusinessPartner"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Business Partner"
-                    />
-                    <FormLabel focused={false}>BusinessPartner</FormLabel>
-                    </Box>
-<Box display="flex" alignItems="center">
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="delete"
-                      id="delete"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Delete"
-                    />
+                        <FormLabel focused={false}>Prospects</FormLabel>
+                      </Box>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          //    size="small"
+                          type="checkbox"
+                          name="BusinessPartner"
+                          id="BusinessPartner"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Business Partner"
+                        />
+                        <FormLabel focused={false}>Partner</FormLabel>
+                      </Box>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="delete"
+                          id="delete"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Delete"
+                        />
 
-                    <FormLabel focused={false}>Delete</FormLabel>
+                        <FormLabel focused={false}>Delete</FormLabel>
+                      </Box>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="disable"
+                          id="disable"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
+                      </Box>
                     </Box>
-                    <Box display="flex" alignItems="center">
-
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="disable"
-                      id="disable"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Disable"
-                    />
-
-                    <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
-                  </Box>
-                 
                 </Box>
- </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   <Tooltip title="PAN Upload">
                     <IconButton
@@ -1059,13 +1079,13 @@ const Editvendor = () => {
                     onClick={() => {
                       data.PanImg || panImage
                         ? window.open(
-                          panImage
-                            ? store.getState().globalurl.attachmentUrl +
                             panImage
-                            : store.getState().globalurl.attachmentUrl +
-                            data.PanImg,
-                          "_blank"
-                        )
+                              ? store.getState().globalurl.attachmentUrl +
+                                  panImage
+                              : store.getState().globalurl.attachmentUrl +
+                                  data.PanImg,
+                            "_blank"
+                          )
                         : toast.error("Please Upload File");
                     }}
                   >
@@ -1095,13 +1115,13 @@ const Editvendor = () => {
                     onClick={() => {
                       data.GstImg || gstImage
                         ? window.open(
-                          gstImage
-                            ? store.getState().globalurl.attachmentUrl +
                             gstImage
-                            : store.getState().globalurl.attachmentUrl +
-                            data.GstImg,
-                          "_blank"
-                        )
+                              ? store.getState().globalurl.attachmentUrl +
+                                  gstImage
+                              : store.getState().globalurl.attachmentUrl +
+                                  data.GstImg,
+                            "_blank"
+                          )
                         : toast.error("Please Upload File");
                     }}
                   >
@@ -1136,7 +1156,6 @@ const Editvendor = () => {
                     Cancel
                   </Button>
                 </Box>
-               
               </form>
             )}
           </Formik>
@@ -1179,37 +1198,42 @@ const Editvendor = () => {
                     },
                   }}
                 >
-
                   <Box
                     sx={{
                       padding: 1.5,
-                      backgroundColor: '#b2dfdb', // light green
+                      backgroundColor: "#b2dfdb", // light green
                       borderRadius: 1,
-                      width: '100%',
+                      width: "100%",
                     }}
                   >
-                    <Typography variant="h5" fontWeight="bold">Contact Person 1</Typography>
+                    <Typography variant="h5" fontWeight="bold">
+                      Contact Person 1
+                    </Typography>
                   </Box>
 
                   <Box
                     sx={{
                       padding: 1.5,
-                      backgroundColor: '#b2dfdb',
+                      backgroundColor: "#b2dfdb",
                       borderRadius: 1,
-                      width: '100%',
+                      width: "100%",
                     }}
                   >
-                    <Typography variant="h5" fontWeight="bold">Contact Person 2</Typography>
+                    <Typography variant="h5" fontWeight="bold">
+                      Contact Person 2
+                    </Typography>
                   </Box>
                   {/* </Box> */}
-
 
                   {/* <Typography>Contact Person 2</Typography> */}
                   <TextField
                     name="name1"
                     label={
                       <>
-                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1269,7 +1293,10 @@ const Editvendor = () => {
                     id="emailid1"
                     label={
                       <>
-                        Email ID<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Email ID
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1321,7 +1348,10 @@ const Editvendor = () => {
                     id="mobileno1"
                     label={
                       <>
-                        Mobile No<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Mobile No
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1360,7 +1390,6 @@ const Editvendor = () => {
                     }}
                     autoFocus
                   />
-
                 </Box>
                 <Box
                   display="flex"
@@ -1460,7 +1489,10 @@ const Editvendor = () => {
                     id="bankname"
                     label={
                       <>
-                        Bank Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Bank Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1485,7 +1517,10 @@ const Editvendor = () => {
                     id="Accounttype"
                     label={
                       <>
-                        Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Account Type
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1508,7 +1543,10 @@ const Editvendor = () => {
                     name="branchname"
                     label={
                       <>
-                        Branch Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Branch Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1539,7 +1577,10 @@ const Editvendor = () => {
                     name="ifsc"
                     label={
                       <>
-                        IFSC Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        IFSC Code
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1573,7 +1614,10 @@ const Editvendor = () => {
                     id="accountholdname"
                     label={
                       <>
-                        Account Holder Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Account Holder Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1582,9 +1626,12 @@ const Editvendor = () => {
                     value={values.accountholdname}
                     onBlur={handleBlur}
                     onChange={handleChange}
-
-                    error={!!touched.accountholdname && !!errors.accountholdname}
-                    helperText={touched.accountholdname && errors.accountholdname}
+                    error={
+                      !!touched.accountholdname && !!errors.accountholdname
+                    }
+                    helperText={
+                      touched.accountholdname && errors.accountholdname
+                    }
                     // inputProps={{ maxLength: 10 }}
                     sx={{
                       backgroundColor: "#ffffff", // Set the background to white
@@ -1601,7 +1648,10 @@ const Editvendor = () => {
                     id="bankloc"
                     label={
                       <>
-                        Bank Location<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Bank Location
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1645,7 +1695,10 @@ const Editvendor = () => {
                     id="accountnumber"
                     label={
                       <>
-                        Account Number<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Account Number
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -1678,7 +1731,10 @@ const Editvendor = () => {
                     id="bankaddress"
                     label={
                       <>
-                        Bank Address<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Bank Address
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
