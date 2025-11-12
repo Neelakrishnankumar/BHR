@@ -7554,7 +7554,7 @@ const ItemdataGridHeight = "57vh";
                         }}
                         error={!!touched.items && !!errors.items}
                         helperText={touched.items && errors.items}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2129","ScreenName":"Items","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2129","ScreenName":"Items","Filter":"CompanyID=${CompanyID} AND EmployeeID =${recID}","Any":""}}`}
                       />
                       <CheckinAutocomplete
                         name="vendors"

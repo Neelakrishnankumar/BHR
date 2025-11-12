@@ -68,13 +68,14 @@ const EditOrder = () => {
     const InitialValue = {
         orderno: data.Code,
         orderdate: mode == "A" ? currentDate : data.OrderDate,
-        partyname: data.PartyName,
+        partyname: state.PartyName || "",
         // sortorder: data.SortOrder,
         // disable: data.Disable === "Y" ? true : false,
         delivercharges: data.DeliveryCharges || 0,
         totalprice: data.TotalPrice || 0,
         tentativedeliverdate: data.TentativeDeliveryDate,
-        deliverby: mode == "A" ? "Yes" : data.DeliveryYesorNo === "Yes" ? "Yes" : "No",
+        deliveredby: data.DeliveryBy,
+        deliver: mode == "A" ? "Yes" : data.DeliveryYesorNo === "Yes" ? "Yes" : "No",
         paid: mode == "A" ? "Yes" : data.PaidYesorNo === "Yes" ? "Yes" : "No",
         processdate: data.ProcessDate,
         paiddate: data.PaidDate,
@@ -117,21 +118,25 @@ const EditOrder = () => {
         const idata = {
             RecordID: recID,
             Code: values.code,
-            PartyName: values.partyname,
-            OrderDate: values.orderdate,
-            DeliveryCharges: values.delivercharges,
-            TotalPrice: values.totalprice,
-            TentativeDeliveryDate: values.tentativedeliverdate,
-            DeliveryYesorNo: values.deliverby,
-            PaidYesorNo: values.paid,
-            ProcessDate: values.processdate,
-            PaidDate: values.paiddate,
-            DeliveryDate: values.deliverydate,
-            PaidAmount: values.paidamount,
-            ORStatus: values.Status,
-            PaymentMode: values.paymentmode,
-            ReceiverName: values.receivername,
-            ReceiverMobileNumber: values.mobilenumber,
+            PartyRecordID: state.PartyID,
+            EmployeeRecordID: state.PartyID,
+            LeaderID: params.filtertype,
+            PartyName: values.partyname || "",
+            OrderDate: values.orderdate || "",
+            DeliveryCharges: values.delivercharges || 0,
+            TotalPrice: values.totalprice || 0,
+            TentativeDeliveryDate: values.tentativedeliverdate || "",
+            DeliveryBy: values.deliveredby || "",
+            DeliveryYesorNo: values.deliver || "",
+            PaidYesorNo: values.paid || "",
+            ProcessDate: values.processdate || "",
+            PaidDate: values.paiddate || "",
+            DeliveryDate: values.deliverydate || "",
+            PaidAmount: values.paidamount || 0,
+            ORStatus: values.Status || "",
+            PaymentMode: values.paymentmode || "",
+            ReceiverName: values.receivername || "",
+            ReceiverMobileNumber: values.mobilenumber || "",
             // SortOrder: values.sortorder,
             // Disable: isCheck,
             //   Finyear,
@@ -451,17 +456,17 @@ const EditOrder = () => {
                                     />
                                     <TextField
                                         select
-                                        label="Deliver By"
-                                        id="deliverby"
-                                        name="deliverby"
-                                        value={values.deliverby}
+                                        label="Delivered"
+                                        id="deliver"
+                                        name="deliver"
+                                        value={values.deliver}
                                         onBlur={handleBlur}
                                         // onChange={handleChange}
                                         // disabled={mode === "V"}
                                         // required
                                         onChange={(e) => {
                                             handleChange(e); // update form state (Formik)
-                                            sessionStorage.setItem("deliverby", e.target.value); // save to sessionStorage
+                                            sessionStorage.setItem("deliver", e.target.value); // save to sessionStorage
                                         }}
                                         focused
                                         variant="standard"
@@ -530,6 +535,25 @@ const EditOrder = () => {
                                         onChange={handleChange}
                                         error={!!touched.deliverydate && !!errors.deliverydate}
                                         helperText={touched.deliverydate && errors.deliverydate}
+                                    />
+                                    <TextField
+                                        name="deliveredby"
+                                        type="text"
+                                        id="deliveredby"
+                                        label="Delivered By"
+                                        variant="standard"
+                                        focused
+                                        value={values.deliveredby}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.deliveredby && !!errors.deliveredby}
+                                        helperText={touched.deliveredby && errors.deliveredby}
+                                        // InputProps={{
+                                        //     inputProps: {
+                                        //         style: { textAlign: "right" },
+                                        //     },
+                                        // }}
+                                        autoFocus
                                     />
                                     <TextField
                                         name="paidamount"
