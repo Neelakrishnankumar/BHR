@@ -42,6 +42,8 @@ import {
   partyBankpostData,
   PartyContactget,
   partyContactData,
+  VendorRegisterpostData,
+  VendorRegisterFetchData,
 } from "../../../store/reducers/Formapireducer";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -76,7 +78,12 @@ const Editvendor = () => {
   const partyContactgetdata = useSelector(
     (state) => state.formApi.partyContactgetdata
   );
-  console.log(partyContactgetdata, "--partyContactgetdata");
+  const partyRegistergetdata = useSelector(
+    (state) => state.formApi.vendorregisterGetData
+  );
+  const isPartyRegisterLoading = useSelector(
+    (state) => state.formApi.vendorregisterGetDataloading
+  );
 
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
@@ -99,6 +106,7 @@ const Editvendor = () => {
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
   const [validationSchema3, setValidationSchema3] = useState(null);
+  const [validationSchema4, setValidationSchema4] = useState(null);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -122,20 +130,20 @@ const Editvendor = () => {
           schemaFields.code = Yup.string().required(data.Party.code);
         }
 
-        schemaFields.Pancardnumber = Yup.string()
-          .nullable()
-          .notRequired()
-          .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, data.Party.Pancardnumber)
-          .transform((value) => (value === "" ? null : value));
+        // schemaFields.Pancardnumber = Yup.string()
+        //   .nullable()
+        //   .notRequired()
+        //   .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, data.Party.Pancardnumber)
+        //   .transform((value) => (value === "" ? null : value));
 
-        schemaFields.gstnumber = Yup.string()
-          .nullable()
-          .notRequired()
-          .matches(
-            /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
-            data.Party.gstnumber
-          )
-          .transform((value) => (value === "" ? null : value));
+        // schemaFields.gstnumber = Yup.string()
+        //   .nullable()
+        //   .notRequired()
+        //   .matches(
+        //     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+        //     data.Party.gstnumber
+        //   )
+        //   .transform((value) => (value === "" ? null : value));
 
         const schema = Yup.object().shape(schemaFields);
         const schema2 = Yup.object().shape({
@@ -163,10 +171,27 @@ const Editvendor = () => {
             .matches(/^[0-9]{10}$/, "Invalid Mobile Number")
             .required(data.Contactdetails.mobileno1),
         });
+        const schema4 = Yup.object().shape({
+          Pancardnumber: Yup.string()
+            .nullable()
+            .notRequired()
+            .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, data.Party.Pancardnumber)
+            .transform((value) => (value === "" ? null : value)),
+
+          gstnumber: Yup.string()
+            .nullable()
+            .notRequired()
+            .matches(
+              /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+              data.Party.gstnumber
+            )
+            .transform((value) => (value === "" ? null : value)),
+        });
 
         setValidationSchema(schema);
         setValidationSchema2(schema2);
         setValidationSchema3(schema3);
+        setValidationSchema4(schema4);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -293,6 +318,13 @@ const Editvendor = () => {
         dispatch(getFetchData({ accessID, get: "", recID }));
       }
     }
+    if (event.target.value == "3") {
+      if (recID && mode === "E") {
+        dispatch(VendorRegisterFetchData({ accessID, get: "get", recID }));
+      } else {
+        dispatch(VendorRegisterFetchData({ accessID, get: "", recID }));
+      }
+    }
     if (event.target.value == "1") {
       dispatch(PartyContactget({ VendorID: recID }));
     }
@@ -397,8 +429,61 @@ const Editvendor = () => {
       setLoading(false);
     }
   };
-  //Bank details
-  console.log(partyBankgetdata, "partyBankgetdata");
+
+  //   const RegisterInitialValue = {
+  //   Pancardnumber: data.PanCardNo || "",
+  //   PanImg: data.PanImg || "",
+  //   GstImg: data.gstImage || "",
+  //   gstnumber: data.GstNo || "",
+  // };
+  const RegisterInitialValue = {
+    Pancardnumber: partyRegistergetdata.PanCardNo || "",
+    PanImg: partyRegistergetdata.PanImg || "",
+    GstImg: partyRegistergetdata.GstImg || "",
+    gstnumber: partyRegistergetdata.GstNo || "",
+  };
+
+  const RegisterFnsave = async (values, del) => {
+    setLoading(true);
+    if (!panImage && !values.PanImg) {
+      toast.error("Please upload PAN image before saving.");
+      return;
+    }
+    if (!gstImage && !values.GstImg) {
+      toast.error("Please upload GST image before saving.");
+      return;
+    }
+    let action =
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+        ? "harddelete"
+        : "update";
+    const idata = {
+      RecordID: recID,
+      PanCardNo: values.Pancardnumber || 0,
+      PanImg: panImage || "",
+      GstNo: values.gstnumber || 0,
+      GstImg: gstImage || "",
+    };
+
+    try {
+      const response = await dispatch(
+        VendorRegisterpostData({ accessID, action, idata })
+      );
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        navigate("/Apps/TR243/Party");
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const BankInitialValue = {
     bankname: partyBankgetdata.BankName || "",
@@ -572,6 +657,17 @@ const Editvendor = () => {
                 ) : (
                   false
                 )}
+                {show == "3" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Registration
+                  </Typography>
+                ) : (
+                  false
+                )}
               </Breadcrumbs>
             </Box>
           </Box>
@@ -588,6 +684,7 @@ const Editvendor = () => {
                   onChange={screenChange}
                 >
                   <MenuItem value={0}>Party</MenuItem>
+                  <MenuItem value={3}>Registration</MenuItem>
                   <MenuItem value={2}>Bank Details</MenuItem>
                   <MenuItem value={1}>Contact Details</MenuItem>
                   {/* {initialValues.employeetype === "CI" ? (
@@ -762,7 +859,7 @@ const Editvendor = () => {
                     helperText={touched.locality && errors.locality}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
-                  <TextField
+                  {/* <TextField
                     name="Pancardnumber"
                     label="Pan Card Number"
                     variant="standard"
@@ -786,7 +883,7 @@ const Editvendor = () => {
                     sx={{
                       backgroundColor: "#ffffff",
                     }}
-                    // autoFocus
+                    
                   />
                   <TextField
                     name="gstnumber"
@@ -814,7 +911,7 @@ const Editvendor = () => {
                       backgroundColor: "#ffffff",
                     }}
                     // autoFocus
-                  />
+                  /> */}
 
                   <TextField
                     name="mobilenumber"
@@ -1056,7 +1153,7 @@ const Editvendor = () => {
                   </Box>
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                  <Tooltip title="PAN Upload">
+                  {/* <Tooltip title="PAN Upload">
                     <IconButton
                       size="small"
                       color="warning"
@@ -1091,7 +1188,6 @@ const Editvendor = () => {
                   >
                     PAN Image View
                   </Button>
-                  {/* GSTimage */}
                   <Tooltip title="GST Upload">
                     <IconButton
                       size="small"
@@ -1126,7 +1222,7 @@ const Editvendor = () => {
                     }}
                   >
                     GST Image View
-                  </Button>
+                  </Button> */}
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -1803,6 +1899,210 @@ const Editvendor = () => {
                     Cancel
                   </Button>
                 </Box>
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+      {show == "3" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={RegisterInitialValue}
+            onSubmit={(values, setSubmitting) => {
+              setTimeout(() => {
+                RegisterFnsave(values);
+              }, 100);
+            }}
+            validationSchema={validationSchema4}
+            enableReinitialize={true}
+          >
+            {({
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              isSubmitting,
+              values,
+              handleSubmit,
+              setFieldValue,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                {!isPartyRegisterLoading ? (
+                  <>
+                    <Box
+                      display="grid"
+                      gap={formGap}
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      // gap="30px"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
+                      }}
+                    >
+                      <TextField
+                        name="Pancardnumber"
+                        label="Pan Card Number"
+                        variant="standard"
+                        focused
+                        value={values.Pancardnumber}
+                        onBlur={handleBlur}
+                        // required
+                        onChange={(e) => {
+                          const input = e.target.value.toUpperCase();
+                          if (/^[A-Z0-9]*$/.test(input) || input === "") {
+                            handleChange({
+                              target: {
+                                name: "Pancardnumber",
+                                value: input,
+                              },
+                            });
+                          }
+                        }}
+                        error={
+                          !!touched.Pancardnumber && !!errors.Pancardnumber
+                        }
+                        helperText={
+                          touched.Pancardnumber && errors.Pancardnumber
+                        }
+                        sx={{
+                          backgroundColor: "#ffffff",
+                        }}
+                        // autoFocus
+                      />
+                      <TextField
+                        name="gstnumber"
+                        label="GST Number"
+                        variant="standard"
+                        focused
+                        value={values.gstnumber}
+                        // required
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const input = e.target.value.toUpperCase();
+                          if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                            // This updates Formik value correctly
+                            handleChange({
+                              target: {
+                                name: "gstnumber",
+                                value: input,
+                              },
+                            });
+                          }
+                        }}
+                        error={!!touched.gstnumber && !!errors.gstnumber}
+                        helperText={touched.gstnumber && errors.gstnumber}
+                        sx={{
+                          backgroundColor: "#ffffff",
+                        }}
+                        // autoFocus
+                      />
+                    </Box>
+                    <Box
+                      display="flex"
+                      justifyContent="end"
+                      padding={1}
+                      gap="20px"
+                    >
+                      <Tooltip title="PAN Upload">
+                        <IconButton
+                          size="small"
+                          color="warning"
+                          aria-label="upload picture"
+                          component="label"
+                        >
+                          <input
+                            hidden
+                            accept="all/*"
+                            type="file"
+                            onChange={getFilepanChange}
+                          />
+                          <PictureAsPdfOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        component={"a"}
+                        onClick={() => {
+                          data.PanImg || panImage
+                            ? window.open(
+                                panImage
+                                  ? store.getState().globalurl.attachmentUrl +
+                                      panImage
+                                  : store.getState().globalurl.attachmentUrl +
+                                      data.PanImg,
+                                "_blank"
+                              )
+                            : toast.error("Please Upload File");
+                        }}
+                      >
+                        PAN Image View
+                      </Button>
+                      {/* GSTimage */}
+                      <Tooltip title="GST Upload">
+                        <IconButton
+                          size="small"
+                          color="warning"
+                          aria-label="upload picture"
+                          component="label"
+                        >
+                          <input
+                            hidden
+                            accept="all/*"
+                            type="file"
+                            onChange={getFilegstChange}
+                          />
+                          <PictureAsPdfOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        component={"a"}
+                        onClick={() => {
+                          data.GstImg || gstImage
+                            ? window.open(
+                                gstImage
+                                  ? store.getState().globalurl.attachmentUrl +
+                                      gstImage
+                                  : store.getState().globalurl.attachmentUrl +
+                                      data.GstImg,
+                                "_blank"
+                              )
+                            : toast.error("Please Upload File");
+                        }}
+                      >
+                        GST Image View
+                      </Button>
+
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          navigate("/Apps/TR243/Party");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  </>
+                ) : (
+                  false
+                )}
               </form>
             )}
           </Formik>

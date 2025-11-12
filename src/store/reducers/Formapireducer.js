@@ -88,6 +88,9 @@ const initialState = {
   appraisalSchedulegetdata:[],
   appraisalSchedulegetdatastatus:"",
   appraisalSchedulegetdataloading:false,
+  vendorregisterGetData:{},
+vendorregisterGetDatastatus:"",
+vendorregisterGetDataloading:false,
   projectCostinggetdata:{},
   projectCostingstatus:"",
   projectCostingloading:false,
@@ -961,7 +964,31 @@ export const getFetchData = createAsyncThunk(
     return response.data;
   }
 );
+export const VendorRegisterFetchData = createAsyncThunk(
+  "VendorRegisterFetchData/Header",
+  async ({ accessID, get, recID, }) => {
+    var url = store.getState().globalurl.VendorRegistrationGet;
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+    };
 
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 //PartyBank Get
 export const PartyBankget = createAsyncThunk(
   "party bank/Get",
@@ -1384,6 +1411,27 @@ export const postData = createAsyncThunk(
   }
 );
 
+export const VendorRegisterpostData = createAsyncThunk(
+  "VendorRegisterpostData/post",
+  async ({ accessID, action, idata }) => {
+    const url = store.getState().globalurl.VendorRegistration;
+
+    const data = {
+      accessid: accessID,
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
 
 //Settings Post
 
@@ -2108,7 +2156,20 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.postLoading = false;
       })
-
+//VENDOR - REGISTRATION
+ .addCase(VendorRegisterpostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(VendorRegisterpostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        state.partyContactData = action.meta.arg.idata;
+      })
+      .addCase(VendorRegisterpostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
 
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
@@ -2647,6 +2708,25 @@ export const getApiSlice = createSlice({
     state.error = action.error.message;
   })
 
+    //VENDOR REGISTRATION GET 
+    .addCase(VendorRegisterFetchData.pending, (state) => {
+    state.vendorregisterGetData = {};
+    state.vendorregisterGetDataloading = true;
+    state.error = null;
+  })
+  .addCase(VendorRegisterFetchData.fulfilled, (state, action) => {
+   
+          state.vendorregisterGetData = action.payload.Data;
+
+   
+    state.vendorregisterGetDataloading = false;
+    state.error = null;
+  })
+  .addCase(VendorRegisterFetchData.rejected, (state, action) => {
+    state.vendorregisterGetData = {};
+    state.vendorregisterGetDataloading = false;
+    state.error = action.error.message;
+  })
   //PROJECT COSTING PDF
   .addCase(getProjectCosting.pending, (state) => {
     state.projectCostinggetdata = {};
