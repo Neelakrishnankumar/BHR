@@ -99,6 +99,7 @@ const Editvendor = () => {
         let schemaFields = {
           name: Yup.string().required(data.Party.name),
           locality: Yup.object().required(data.Party.locality).nullable(),
+          ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber).matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
         };
@@ -302,6 +303,13 @@ const Editvendor = () => {
         Name: data.LocalityName,
       }
       : null,
+    ReferenceBy: data.ReferenceID
+      ? {
+        RecordID: data.ReferenceID,
+        Code: data.ReferenceByName,
+        Name: data.ReferenceByName,
+      }
+      : null,
     address: data.Address || "",
     maplink: data.MapLocation || "",
     PanImg: data.PanImg || "",
@@ -315,6 +323,7 @@ const Editvendor = () => {
     customer: data.CustomerCheckbox === "Y" ? true : false,
     prospect: data.Prospects === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false,
+    BusinessPartner: data.BusinessPartner === "Y" ? true : false,
     disable: data.Disable === "Y" ? true : false
   };
   console.log(data.PanImg, "dooo");
@@ -340,6 +349,8 @@ const Editvendor = () => {
       Name: values.name,
       LocalityID: values.locality.RecordID || 0,
       LocalityName: values.locality.Name || "",
+      ReferenceID: values.ReferenceBy.RecordID || 0,
+      ReferenceName: values.ReferenceBy.Name || "",
       PanCardNo: values.Pancardnumber,
       Address: values.address,
       MapLocation: values.maplink,
@@ -356,6 +367,7 @@ const Editvendor = () => {
       Prospects: values.prospect === true ? "Y" : "N",
       // LocalityID: "1",
       DeleteFlag: values.delete == true ? "Y" : "N",
+      BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
     };
 
@@ -894,6 +906,25 @@ const Editvendor = () => {
                       },
                     }}
                   />
+                   <CheckinAutocomplete
+                    id="ReferenceBy"
+                    name="ReferenceBy"
+                    label={
+                      <>
+                        Reference By<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                      </>
+                    }
+                    variant="outlined"
+                    value={values.ReferenceBy}
+                    onChange={(newValue) => {
+                      setFieldValue("ReferenceBy", newValue);
+                      console.log(newValue, "--newvalue ReferenceBy");
+                      console.log(newValue.RecordID, "ReferenceBy RecordID");
+                    }}
+                    error={!!touched.ReferenceBy && !!errors.ReferenceBy}
+                    helperText={touched.ReferenceBy && errors.ReferenceBy}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Functions","Filter":"ParentID=${CompanyID}","Any":""}}`}
+                  />
                   <TextField
                     name="address"
                     type="text"
@@ -902,7 +933,7 @@ const Editvendor = () => {
                     variant="standard"
                     focused
                     multiline
-                    rows={3}
+                    rows={2}
                     value={values.address}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -931,62 +962,79 @@ const Editvendor = () => {
                         />
                         <FormLabel focused={false}>Vendor</FormLabel>
                       </Box>
-
                       <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="customer"
-                          id="customer"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                        />
-                        <FormLabel focused={false}>Customer</FormLabel>
-                      </Box>
 
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="prospect"
-                          id="prospect"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                        />
-                        <FormLabel focused={false}>Prospects</FormLabel>
-                      </Box>
+                    <Field
+                      //    size="small"
+                      type="checkbox"
+                      name="customer"
+                      id="customer"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Customer"
+                    />
                     </Box>
-
-                    {/* Second row */}
-                    <Box display="flex" gap={2}>
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="delete"
-                          id="delete"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                        />
-                        <FormLabel focused={false}>Delete</FormLabel>
-                      </Box>
-
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="disable"
-                          id="disable"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                        />
-                        <FormLabel focused={false}>Disable</FormLabel>
-                      </Box>
+                    <Box display="flex" alignItems="center">
+                    <FormLabel focused={false}>Customer</FormLabel>
+                    <Field
+                      //    size="small"
+                      type="checkbox"
+                      name="prospect"
+                      id="prospect"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Prospects"
+                    />
                     </Box>
+                    <Box display="flex" alignItems="center">
+                    <FormLabel focused={false}>Prospects</FormLabel>
+                    <Field
+                      //    size="small"
+                      type="checkbox"
+                      name="BusinessPartner"
+                      id="BusinessPartner"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Business Partner"
+                    />
+                    <FormLabel focused={false}>BusinessPartner</FormLabel>
+                    </Box>
+<Box display="flex" alignItems="center">
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="delete"
+                      id="delete"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Delete"
+                    />
+
+                    <FormLabel focused={false}>Delete</FormLabel>
+                    </Box>
+                    <Box display="flex" alignItems="center">
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="disable"
+                      id="disable"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Disable"
+                    />
+
+                    <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
-
+                  </Box>
+                 
                 </Box>
-
+ </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   <Tooltip title="PAN Upload">
                     <IconButton
@@ -1088,6 +1136,7 @@ const Editvendor = () => {
                     Cancel
                   </Button>
                 </Box>
+               
               </form>
             )}
           </Formik>

@@ -22,7 +22,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 const LeaderCardView = () => {
     // const { id } = useParams();
     const location = useLocation();
-    const {partyID } = useParams();
+    const { partyID } = useParams();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -99,7 +99,7 @@ const LeaderCardView = () => {
             },
         });
     };
-    const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {      
+    const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
         if (OrdHdrCount == 0) {
             // Case 1: No order yet → go to Add Order
             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/EditOrder/-1/A`, {
@@ -111,7 +111,7 @@ const LeaderCardView = () => {
                     OrderCount: OrdHdrCount,
                 },
             });
-            
+
         } else if (OrdHdrCount >= 1) {
             // Case 2: Existing order(s) → go to Order List or Edit
             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}`, {

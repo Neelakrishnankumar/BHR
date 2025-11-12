@@ -124,6 +124,9 @@ const Editemployee = () => {
   };
   const YearFlag = sessionStorage.getItem("YearFlag");
   console.log(YearFlag, "--YearFlag");
+// FOR ITEM SERVICES DATA GRID 
+const ItemdataGridHeight = "57vh";
+
 
   const navigate = useNavigate();
   let params = useParams();
@@ -171,6 +174,7 @@ const Editemployee = () => {
   const [validationSchema9, setValidationSchema9] = useState(null);
   const [validationSchema10, setValidationSchema10] = useState(null);
   const [validationSchema11, setValidationSchema11] = useState(null);
+  const [validationSchema12, setValidationSchema12] = useState(null);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -329,6 +333,17 @@ const Editemployee = () => {
         const schema11 = Yup.object().shape(schemaFields2);
 
         setValidationSchema11(schema11);
+
+        //ITEM SERIVICES
+         const schema12 = Yup.object().shape({
+          items: Yup.object().required(data.ItemServices.items).nullable(),
+          vendors: Yup.object().required(data.ItemServices.vendors).nullable(),
+          servicedate: Yup.string().required(data.ItemServices.servicedate),
+          returndate: Yup.string().required(data.ItemServices.returndate),
+          complaints: Yup.string().required(data.ItemServices.complaints),
+          tentativecharge: Yup.string().required(data.ItemServices.tentativecharge),
+        });
+        setValidationSchema12(schema12);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -1132,6 +1147,8 @@ const Editemployee = () => {
   } else if (show == "14") {
     VISIBLE_FIELDS = [
       "slno",
+      "Item",
+      "Party",
       "EISDate",
       "Complaints",
       "CompletedDate",
@@ -7344,7 +7361,7 @@ const Editemployee = () => {
             <Formik
               initialValues={itemservicesInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema6}
+            validationSchema={validationSchema12}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   empItemServicesFn(values, resetForm, false);
@@ -7427,7 +7444,8 @@ const Editemployee = () => {
                     <Box
                       m="5px 0 0 0"
                       //height={dataGridHeight}
-                      height="50vh"
+                      //height="50vh"
+                      height={ItemdataGridHeight}
                       sx={{
                         "& .MuiDataGrid-root": {
                           border: "none",
@@ -7510,7 +7528,7 @@ const Editemployee = () => {
                       />
                     </Box>
 
-                    <FormControl sx={{ gap: formGap }}>
+                    <FormControl sx={{ gap: formGap , height:{ItemdataGridHeight}}}>
                       <CheckinAutocomplete
                         name="items"
                         label={
@@ -7622,7 +7640,7 @@ const Editemployee = () => {
                         multiline
                       />
 
-                      <TextField
+                      {/* <TextField
                         fullWidth
                         variant="standard"
                         type="text"
@@ -7659,8 +7677,7 @@ const Editemployee = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                      />
-
+                      /> */}
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
                           {/* <TextField
@@ -7711,6 +7728,46 @@ const Editemployee = () => {
                             // required
                             //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                           />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        value={values.tentativecharge}
+                        id="tentativecharge"
+                        name="tentativecharge"
+                        label={
+                          <>
+                            Tentative Charges{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        // required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.tentativecharge && !!errors.tentativecharge
+                        }
+                        helperText={
+                          touched.tentativecharge && errors.tentativecharge
+                        }
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
                         </Grid>
                       </Grid>
                       {show == "14" && funMode === "E" ? (
