@@ -118,6 +118,14 @@
     "UnitRate": "Please Enter the Unit Rate",
     "Hsn": "Please Enter the HSN Code"
   },
+  "ItemServices": {
+    "items": "Please Enter the Vendor",
+    "vendors": "Please Enter the Customer",
+    "servicedate": "Please Enter the Date",
+    "returndate": "Please Enter the Expected Return Date",
+    "complaints": "Please Enter the Complaints",
+    "tentativecharge": "Please Enter the Charges"
+  },
    "Locality": {
     "code": "Please Enter the Code",
     "name": "Please Enter the Name",

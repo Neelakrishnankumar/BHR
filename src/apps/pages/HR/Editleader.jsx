@@ -408,7 +408,7 @@ const EditLeader = () => {
                   <CheckinAutocomplete
                     id="project"
                     name="project"
-                    label="Project"
+                    label="Product"
                     variant="outlined"
                     value={values.project}
                     onChange={(newValue) => {
@@ -419,7 +419,8 @@ const EditLeader = () => {
                     error={!!touched.project && !!errors.project}
                     helperText={touched.project && errors.project}
                     disabled={Type === "T"}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                    //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
 
                   <TextField

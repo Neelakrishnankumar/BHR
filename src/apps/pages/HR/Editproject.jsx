@@ -38,7 +38,10 @@ import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
-import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import {
+  CheckinAutocomplete,
+  Productautocomplete,
+} from "../../../ui-components/global/Autocomplete";
 
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
@@ -80,7 +83,7 @@ const Editproject = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Project.name),
-          budget: Yup.string().required(data.Project.budget),
+          //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
         };
 
@@ -112,14 +115,16 @@ const Editproject = () => {
       ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
+    ByProduct: data.ByProduct === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
-    budget:data.Budget,
-    scheduled:data.ScheduledCost || 0,
+    budget: data.Budget || 0,
+    scheduled: data.ScheduledCost || 0,
     actual: data.ActualCost || 0,
-    OtherExpenses: data.OtherExpenses || 0
+        price:data.Price || "0",
 
+    OtherExpenses: data.OtherExpenses || 0,
   };
 
   const Fnsave = async (values, del) => {
@@ -128,13 +133,12 @@ const Editproject = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "softdelete"
-          : "update";
+        ? "softdelete"
+        : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
     }
-
 
     const idata = {
       RecordID: recID,
@@ -148,8 +152,10 @@ const Editproject = () => {
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
-      ActualCost:values.actual || 0,
-      Budget:values.budget,
+      ByProduct: values.ByProduct == true ? "Y" : "N",
+      ActualCost: values.actual || 0,
+      Price: values.price || 0,
+      Budget: values.budget || 0,
       ScheduledCost: values.scheduled || 0,
       Finyear,
       CompanyID,
@@ -278,7 +284,7 @@ const Editproject = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -287,7 +293,10 @@ const Editproject = () => {
                       id="code"
                       label={
                         <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       variant="standard"
@@ -308,7 +317,10 @@ const Editproject = () => {
                     id="name"
                     label={
                       <>
-                        Description<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Description
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -326,7 +338,11 @@ const Editproject = () => {
                     name="incharge"
                     label={
                       <>
-                        Owner<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        Owner
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          {" "}
+                          *{" "}
+                        </span>
                       </>
                     }
                     id="incharge"
@@ -378,7 +394,11 @@ const Editproject = () => {
                     type="text"
                     label={
                       <>
-                        Status<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        Status
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          {" "}
+                          *{" "}
+                        </span>
                       </>
                     }
                     // required
@@ -387,19 +407,15 @@ const Editproject = () => {
                     variant="standard"
                     error={!!touched.CurrentStatus && !!errors.CurrentStatus}
                     helperText={touched.CurrentStatus && errors.CurrentStatus}
-                    value={
-                      mode == "A" ? "CU" : values.CurrentStatus
-                    }
+                    value={mode == "A" ? "CU" : values.CurrentStatus}
                     // value={values.CurrentStatus}
                     onBlur={handleBlur}
                     onChange={(e) => {
-                      setFieldValue("CurrentStatus", e.target.value)
+                      setFieldValue("CurrentStatus", e.target.value);
                       if (e.target.value == "CU") {
-
-                        setFieldValue("disable", false)
+                        setFieldValue("disable", false);
                       } else {
-                        setFieldValue("disable", true)
-
+                        setFieldValue("disable", true);
                       }
                     }}
                   >
@@ -407,7 +423,7 @@ const Editproject = () => {
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
-                  <Box >
+                  <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
@@ -418,8 +434,9 @@ const Editproject = () => {
                       onBlur={handleBlur}
                       as={Checkbox}
                     />
-                    <FormLabel focused={false}
-                    // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
+                    <FormLabel
+                      focused={false}
+                      // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
                     >
                       Routine Tasks
                     </FormLabel>
@@ -433,10 +450,25 @@ const Editproject = () => {
                     />
                     <FormLabel
                       focused={false}
-                    // htmlFor="ServiceMaintenance"
-                    // sx={{ ml: 1,marginLeft:0}}
+                      // htmlFor="ServiceMaintenance"
+                      // sx={{ ml: 1,marginLeft:0}}
                     >
                       Service & Maintenance
+                    </FormLabel>
+                    <Field
+                      type="checkbox"
+                      name="ByProduct"
+                      id="ByProduct"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel
+                      focused={false}
+                      // htmlFor="ServiceMaintenance"
+                      // sx={{ ml: 1,marginLeft:0}}
+                    >
+                      By Product
                     </FormLabel>
                   </Box>
 
@@ -491,9 +523,12 @@ const Editproject = () => {
 
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
-
                 </Box>
-                <Typography variant="h5" padding={1}>Costing:</Typography>
+                <Typography variant="h5" padding={1}>
+                  Costing:
+                </Typography>
+
+                {values.ByProduct === true ?  
                 <Box
                   display="grid"
                   gap={formGap}
@@ -504,9 +539,47 @@ const Editproject = () => {
                     "& > div": {
                       gridColumn: isNonMobile ? undefined : "span 2",
                     },
-                  }}>
-                  
+                  }}
+                >
+                <TextField
+                    //fullWidth
+                    variant="standard"
+                    type="number"
+                    id="price"
+                    name="price"
+                    value={values.price}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Price (If it is a product)"
+                    sx={{
+                      gridColumn: "span 1",
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    focused
+                    InputProps={{
+                      inputProps: {
+                        style: {
+                          textAlign: "right",
 
+                        },
+                      },
+                    }}
+                  /> </Box>: 
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
                   <TextField
                     fullWidth
                     variant="standard"
@@ -517,9 +590,13 @@ const Editproject = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     // label="Budget"
-                     label={
+                    label={
                       <>
-                        Budget<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        Budget
+                        {/* <span style={{ color: "red", fontSize: "20px" }}>
+                          {" "}
+                          *{" "}
+                        </span> */}
                       </>
                     }
                     sx={{
@@ -533,7 +610,6 @@ const Editproject = () => {
                     helperText={touched.budget && errors.budget}
                     focused
                     InputProps={{
-                      
                       inputProps: {
                         style: {
                           textAlign: "right",
@@ -591,7 +667,6 @@ const Editproject = () => {
                       inputProps: {
                         style: {
                           textAlign: "right",
-
                         },
                       },
                     }}
@@ -619,15 +694,13 @@ const Editproject = () => {
                       inputProps: {
                         style: {
                           textAlign: "right",
-
                         },
                       },
                     }}
                   />
 
                   {/* </FormControl> */}
-                  
-                </Box>
+                </Box> }
 
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
