@@ -631,6 +631,7 @@ export const fetchListview =
         AccessID != "TR022" &&
         AccessID != "TR303" &&
         AccessID != "TR304" &&
+        AccessID != "TR310" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -1551,6 +1552,82 @@ export const fetchListview =
           //     },
           //   };
           // }
+          // else if (AccessID === "TR243") {
+          //   obj = {
+          //     field: "action",
+          //     headerName: "Action",
+          //     minWidth: 100,
+          //     sortable: false,
+          //     headerAlign: "center",
+          //     align: "center",
+          //     disableColumnMenu: true,
+          //     disableExport: true,
+          //     filterable: false,
+          //     renderCell: (params) => {
+          //       const count = Number(params.row.MarketingCount || 0);
+          //       const id = params.row.RecordID;
+          //       const PartyName = params.row.Name;
+          //       // const filtertype = params.row.RecordID
+          //       console.log(count, id, PartyName, "statess");
+          //       const leaderLink =
+          //         count >= 1
+          //           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
+          //           // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
+          //           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
+
+          //       // const leaderState =
+          //       // {
+          //       //   PartyName: params.row.Name,
+          //       //   Count: count,
+          //       // }
+
+
+          //       return (
+          //         <Box>
+          //           {/* Edit Button */}
+          //           <Link
+          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+          //             state={{
+          //                PartyName: params.row.Party,
+          //               Count: params.row.MarketingCount
+          //             }}
+          //           >
+
+          //             <Tooltip title="Edit">
+          //               <IconButton color="info" size="small">
+          //                 <ModeEditOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+
+          //           {/* Leader Button */}
+          //           <Link
+          //             to={
+          //               count >= 1
+          //                 ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+          //                 : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
+          //             }
+          //             state={{
+          //               PartyName: PartyName,
+          //               Count: count
+          //             }}
+          //           >
+          //             <Tooltip title="Leads">
+          //               <IconButton
+          //                 color="info"
+          //                 size="small"
+          //                 onClick={(e) => e.stopPropagation()}
+          //               >
+          //                 <Diversity2Icon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+
+          //         </Box>
+          //       );
+          //     },
+          //   };
+          // }
           else if (AccessID === "TR243") {
             obj = {
               field: "action",
@@ -1566,20 +1643,9 @@ export const fetchListview =
                 const count = Number(params.row.MarketingCount || 0);
                 const id = params.row.RecordID;
                 const PartyName = params.row.Name;
-                // const filtertype = params.row.RecordID
-                console.log(count, id, PartyName, "statess");
-                const leaderLink =
-                  count >= 1
-                    ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
-                    // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
-                    : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
 
-                // const leaderState =
-                // {
-                //   PartyName: params.row.Name,
-                //   Count: count,
-                // }
-
+                // Encode PartyName to make it URL-safe
+                // const encodedName = encodeURIComponent(PartyName);
 
                 return (
                   <Box>
@@ -1587,11 +1653,10 @@ export const fetchListview =
                     <Link
                       to={`./Edit${screenName}/${params.row.RecordID}/E`}
                       state={{
-                         PartyName: params.row.Party,
-                        Count: params.row.MarketingCount
+                        PartyName: params.row.Party,
+                        Count: params.row.MarketingCount,
                       }}
                     >
-
                       <Tooltip title="Edit">
                         <IconButton color="info" size="small">
                           <ModeEditOutlinedIcon />
@@ -1604,29 +1669,22 @@ export const fetchListview =
                       to={
                         count >= 1
                           ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
-                          : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
+                          : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
                       }
-                      state={{
-                        PartyName: PartyName,
-                        Count: count
-                      }}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <Tooltip title="Leads">
-                        <IconButton
-                          color="info"
-                          size="small"
-                          onClick={(e) => e.stopPropagation()}
-                        >
+                        <IconButton color="info" size="small">
                           <Diversity2Icon />
                         </IconButton>
                       </Tooltip>
                     </Link>
-
                   </Box>
                 );
               },
             };
           }
+
 
           // else if (AccessID == "TR303") {
           //   obj = {

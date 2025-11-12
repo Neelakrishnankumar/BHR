@@ -13,15 +13,16 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { AddCircle } from "@mui/icons-material";
-import AssistantIcon from "@mui/icons-material/Assistant";
+// import AssistantIcon from "@mui/icons-material/Assistant";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import axios from "axios";
 import { useSelector } from "react-redux";
-
+import CategoryIcon from '@mui/icons-material/Category';
+import GridViewIcon from '@mui/icons-material/GridView';
 const LeaderCardView = () => {
     // const { id } = useParams();
     const location = useLocation();
-    const { recordID, partyID } = useParams();
+    const {partyID } = useParams();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -58,8 +59,8 @@ const LeaderCardView = () => {
                     setData(rows);
 
                     //  Set the Party Name (assuming it’s the same for all rows)
-                    if (rows.length > 0 && rows[0].Party) {
-                        setPartyName(rows[0].Party);
+                    if (rows.length > 0 && rows[0].PartyName) {
+                        setPartyName(rows[0].PartyName);
                     }
                 } else {
                     setData([]);
@@ -75,9 +76,9 @@ const LeaderCardView = () => {
     }, [partyID, listViewUrl]);
 
     const handleAdd = () => {
-        navigate(`/Apps/Secondarylistview/TR304/Leader/${partyID}/EditLeader/-1/A/S`,{
-                          state: { ...state },
-                        })
+        navigate(`/Apps/Secondarylistview/TR304/Leader/${partyID}/${partyName}/EditLeader/-1/A/S`, {
+            state: { ...state },
+        })
     };
 
     // const handleactivitylistview = () => {
@@ -88,16 +89,55 @@ const LeaderCardView = () => {
     //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`);
     // };
 
-    const handleactivitylistview = (recordID, partyID, leadTitle,PartyName,LEStatus) => {
+    const handleactivitylistview = (recordID, partyID, leadTitle, PartyName, LEStatus) => {
         navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`, {
             state: {
                 PartyID: partyID,
                 LeadTitle: leadTitle,
                 PartyName: PartyName,
-                LEStatus: LEStatus 
+                LEStatus: LEStatus
             },
         });
     };
+    const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {      
+        if (OrdHdrCount == 0) {
+            // Case 1: No order yet → go to Add Order
+            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/EditOrder/-1/A`, {
+                state: {
+                    PartyID: partyID,
+                    LeadTitle: leadTitle,
+                    PartyName: PartyName,
+                    LEStatus: LEStatus,
+                    OrderCount: OrdHdrCount,
+                },
+            });
+            
+        } else if (OrdHdrCount >= 1) {
+            // Case 2: Existing order(s) → go to Order List or Edit
+            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}`, {
+                state: {
+                    PartyID: partyID,
+                    LeadTitle: leadTitle,
+                    PartyName: PartyName,
+                    LEStatus: LEStatus,
+                    OrderCount: OrdHdrCount,
+                },
+            });
+        }
+    };
+
+    const handleorderitemscreen = (recordID, partyID, leadTitle, PartyName, LEStatus) => {
+        navigate(`/Apps/Secondarylistview/TR306/Orderitem/${recordID}/EditOrderitem/-1/A`
+            , {
+                state: {
+                    PartyID: partyID,
+                    LeadTitle: leadTitle,
+                    PartyName: PartyName,
+                    LEStatus: LEStatus
+                },
+            });
+    };
+
     const handleCancel = () => {
         navigate("/Apps/TR243/Party");
     };
@@ -193,10 +233,10 @@ const LeaderCardView = () => {
                                     <Typography>
                                         <strong>Status:</strong> {row.LEStatus || ""}
                                     </Typography>
-                                     <Typography>
+                                    <Typography>
                                         <strong>No of Visits:</strong> {row.NoOfVisits || ""}
                                     </Typography>
-                                     <Typography>
+                                    <Typography>
                                         <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                                     </Typography>
                                 </CardContent>
@@ -221,16 +261,43 @@ const LeaderCardView = () => {
                                         <IconButton
                                             color="primary"
                                             onClick={() =>
-                                                handleactivitylistview(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName,row.LEStatus)
+                                                handleactivitylistview(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
                                             }
                                             size="small"
-                                        // disabled={row.LEStatus === "Close"}
+                                        //disabled={row.LEStatus === "Close"}
                                         >
-                                            <ListAltOutlinedIcon sx={{ fontSize: 30 }} />
+                                            <ListAltOutlinedIcon sx={{ fontSize: 20 }} />
                                         </IconButton>
-
-
                                     </Tooltip>
+                                    {/* {row.LEStatus === "Close" && (
+                                        <>
+                                            <Tooltip title="Order">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() =>
+                                                        handleorderscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus, 1)
+                                                    }
+                                                    size="small"
+                                                // disabled={row.LEStatus === "Close"}
+                                                >
+                                                    <CategoryIcon sx={{ fontSize: 20 }} />
+                                                </IconButton>
+                                            </Tooltip>
+
+                                            <Tooltip title="Order Item">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() =>
+                                                        handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
+                                                    }
+                                                    size="small"
+                                                // disabled={row.LEStatus === "Close"}
+                                                >
+                                                    <GridViewIcon sx={{ fontSize: 20 }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </>
+                                    )} */}
                                 </Box>
                             </Card>
                         </Grid>

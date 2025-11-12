@@ -164,6 +164,8 @@ import EditLeader from "./pages/HR/Editleader";
 import LeaderCardView from "./pages/HR/Leadercardview";
 import AppraisalSchedule from "./pages/SkillGlow/AppraisalSchedule";
 import AppraisalScheduleList from "./pages/SkillGlow/AppraisalScheduleList";
+import EditOrder from "./pages/HR/Editorder";
+import EditOrderitem from "./pages/HR/Editorderitem";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -981,7 +983,8 @@ function App() {
                   />
                   {/* Type S */}
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditLeader/:id/:Mode/:Type"
+                      path="/Secondarylistview/:accessID/:screenName/:filtertype/:Name/EditLeader/:id/:Mode/:Type"
+                      // /Apps/Secondarylistview/TR304/Leader/168/Nk/EditLeader/-1/A/F
                     // path="Secondarylistview/:accessID/:screenName/EditLeader/:id/:Mode"
                     element={<EditLeader />}
                   />
@@ -994,6 +997,16 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/LeaderCardView/:partyID"
                     element={<LeaderCardView />}
+                  />
+                  <Route
+                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditOrder/:id/:Mode"
+                    // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
+                    element={<EditOrder />}
+                  />
+                  <Route
+                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode"
+                    // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
+                    element={<EditOrderitem />}
                   />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}
