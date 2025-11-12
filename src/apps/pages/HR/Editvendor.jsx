@@ -352,7 +352,7 @@ const Editvendor = () => {
       ReferenceID: values.ReferenceBy.RecordID || 0,
       ReferenceName: values.ReferenceBy.Name || "",
       PanCardNo: values.Pancardnumber,
-      Address : values.address,
+      Address: values.address,
       MapLocation: values.maplink,
       PanImg: panImage,
       GstNo: values.gstnumber,
@@ -798,7 +798,7 @@ const Editvendor = () => {
                     }}
                   // autoFocus
                   />
-                  
+
                   <TextField
                     name="mobilenumber"
                     id="mobilenumber"
@@ -886,7 +886,7 @@ const Editvendor = () => {
                       },
                     }}
                   />
-                  
+
                   <TextField
                     name="maplink"
                     type="text"
@@ -904,7 +904,7 @@ const Editvendor = () => {
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
-                    }}                 
+                    }}
                   />
                    <CheckinAutocomplete
                     id="ReferenceBy"
@@ -944,22 +944,25 @@ const Editvendor = () => {
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
-                    }}                 
+                    }}
                   />
                   {/* panimage */}
 
-                  <Box>
-                    <Field
-                      //    size="small"
-                      type="checkbox"
-                      name="vendor"
-                      id="vendor"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Vendor"
-                    />
-                    <FormLabel focused={false}>Vendor</FormLabel>
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    {/* First row */}
+                    <Box display="flex" gap={2}>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="vendor"
+                          id="vendor"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Vendor</FormLabel>
+                      </Box>
+                      <Box display="flex" alignItems="center">
 
                     <Field
                       //    size="small"
@@ -971,6 +974,8 @@ const Editvendor = () => {
                       as={Checkbox}
                       label="Customer"
                     />
+                    </Box>
+                    <Box display="flex" alignItems="center">
                     <FormLabel focused={false}>Customer</FormLabel>
                     <Field
                       //    size="small"
@@ -982,6 +987,8 @@ const Editvendor = () => {
                       as={Checkbox}
                       label="Prospects"
                     />
+                    </Box>
+                    <Box display="flex" alignItems="center">
                     <FormLabel focused={false}>Prospects</FormLabel>
                     <Field
                       //    size="small"
@@ -994,7 +1001,8 @@ const Editvendor = () => {
                       label="Business Partner"
                     />
                     <FormLabel focused={false}>BusinessPartner</FormLabel>
-
+                    </Box>
+<Box display="flex" alignItems="center">
                     <Field
                       //  size="small"
                       type="checkbox"
@@ -1007,6 +1015,9 @@ const Editvendor = () => {
                     />
 
                     <FormLabel focused={false}>Delete</FormLabel>
+                    </Box>
+                    <Box display="flex" alignItems="center">
+
                     <Field
                       //  size="small"
                       type="checkbox"
@@ -1020,34 +1031,10 @@ const Editvendor = () => {
 
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
-                  {/* <Box>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="delete"
-                      id="delete"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Delete"
-                    />
-
-                    <FormLabel focused={false}>Delete</FormLabel>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="disable"
-                      id="disable"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Disable"
-                    />
-
-                    <FormLabel focused={false}>Disable</FormLabel>
-                  </Box> */}
+                  </Box>
+                 
                 </Box>
-
+ </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   <Tooltip title="PAN Upload">
                     <IconButton
@@ -1138,7 +1125,7 @@ const Editvendor = () => {
                       Save
                     </Button>
                   )}
-                  
+
                   <Button
                     color="warning"
                     variant="contained"
@@ -1149,6 +1136,7 @@ const Editvendor = () => {
                     Cancel
                   </Button>
                 </Box>
+               
               </form>
             )}
           </Formik>
@@ -1191,7 +1179,7 @@ const Editvendor = () => {
                     },
                   }}
                 >
-                  
+
                   <Box
                     sx={{
                       padding: 1.5,

@@ -78,7 +78,7 @@ import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlin
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
-
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const initialState = {
   rowData: [],
@@ -1489,51 +1489,7 @@ export const fetchListview =
               },
             };
           }
-          // else if (AccessID == "TR243") {
-          //   obj = {
-          //     field: "action",
-          //     headerName: "Action",
-          //     minWidth: 100,
-          //     sortable: false,
-          //     headerAlign: "center",
-          //     align: "center",
-          //     disableColumnMenu: true,
-          //     disableExport: true,
-          //     filterable: false,
-          //     renderCell: (params) => {
-          //       return (
-          //         <Box>
-          //           <Link
-          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
-          //           >
-          //             <Tooltip title="Edit">
-          //               <IconButton color="info" size="small">
-          //                 <ModeEditOutlinedIcon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
 
-          //           <Link
-          //             //  to={`/Apps/Secondarylistview/TR303/Leader/${params.row.RecordID}`}
-          //              to={`/Apps/Secondarylistview/TR303/LeaderCardView/${params.row.RecordID}`}
-          //             state={{
-          //               PartyName: params.row.Name,
-          //               Count:params.row.MarketingCount
-          //               // MilestoneName: params.row.MilestoneName,
-
-          //             }}
-          //           >
-          //             <Tooltip title="Leader">
-          //               <IconButton color="info" size="small">
-          //                 <Diversity2Icon />
-          //               </IconButton>
-          //             </Tooltip>
-          //           </Link>
-          //         </Box>
-          //       );
-          //     },
-          //   };
-          // }
           //          else if (AccessID == "TR243") {
           //   obj = {
           //     field: "action",
@@ -1609,19 +1565,20 @@ export const fetchListview =
               renderCell: (params) => {
                 const count = Number(params.row.MarketingCount || 0);
                 const id = params.row.RecordID;
+                const PartyName = params.row.Name;
                 // const filtertype = params.row.RecordID
-
+                console.log(count, id, PartyName, "statess");
                 const leaderLink =
                   count >= 1
                     ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id},`
                     // : `/Apps/Secondarylistview/TR304/Leader/EditLeader/${id}/A`
                     : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`;
 
-                const leaderState =
-                {
-                  PartyName: params.row.Name,
-                  Count: count,
-                }
+                // const leaderState =
+                // {
+                //   PartyName: params.row.Name,
+                //   Count: count,
+                // }
 
 
                 return (
@@ -1630,7 +1587,7 @@ export const fetchListview =
                     <Link
                       to={`./Edit${screenName}/${params.row.RecordID}/E`}
                       state={{
-                        PartyName: params.row.Party,
+                         PartyName: params.row.Party,
                         Count: params.row.MarketingCount
                       }}
                     >
@@ -1650,11 +1607,11 @@ export const fetchListview =
                           : `/Apps/Secondarylistview/TR304/Leader/${id}/EditLeader/-1/A/F`
                       }
                       state={{
-                        PartyName: params.row.Name,
+                        PartyName: PartyName,
                         Count: count
                       }}
                     >
-                      <Tooltip title="Leader">
+                      <Tooltip title="Leads">
                         <IconButton
                           color="info"
                           size="small"
@@ -1671,51 +1628,51 @@ export const fetchListview =
             };
           }
 
-          else if (AccessID == "TR303") {
-            obj = {
-              field: "action",
-              headerName: "Action",
-              minWidth: 100,
-              sortable: false,
-              headerAlign: "center",
-              align: "center",
-              disableColumnMenu: true,
-              disableExport: true,
-              filterable: false,
-              renderCell: (params) => {
-                return (
-                  <Box>
-                    <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
-                      state={{
-                        PartyName: params.row.Party,
-                      }}
-                    >
-                      <Tooltip title="Edit">
-                        <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
+          // else if (AccessID == "TR303") {
+          //   obj = {
+          //     field: "action",
+          //     headerName: "Action",
+          //     minWidth: 100,
+          //     sortable: false,
+          //     headerAlign: "center",
+          //     align: "center",
+          //     disableColumnMenu: true,
+          //     disableExport: true,
+          //     filterable: false,
+          //     renderCell: (params) => {
+          //       return (
+          //         <Box>
+          //           <Link
+          //             to={`./Edit${screenName}/${params.row.RecordID}/E`}
+          //             state={{
+          //               PartyName: params.row.Party,
+          //             }}
+          //           >
+          //             <Tooltip title="Edit">
+          //               <IconButton color="info" size="small">
+          //                 <ModeEditOutlinedIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
 
-                    <Link
-                      //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
-                      to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
-                      state={{
-                        PartyName: params.row.Party,
-                      }}
-                    >
-                      <Tooltip title="Marketing Activity">
-                        <IconButton color="info" size="small">
-                          <AssistantIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Link>
-                  </Box>
-                );
-              },
-            };
-          }
+          //           <Link
+          //             //  to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.RecordID}`}
+          //             to={`/Apps/Secondarylistview/TR304/Marketing Activity/${params.row.PartyID}/${params.row.RecordID}`}
+          //             state={{
+          //               PartyName: params.row.Party,
+          //             }}
+          //           >
+          //             <Tooltip title="Marketing Activity">
+          //               <IconButton color="info" size="small">
+          //                 <AssistantIcon />
+          //               </IconButton>
+          //             </Tooltip>
+          //           </Link>
+          //         </Box>
+          //       );
+          //     },
+          //   };
+          // }
           else if (AccessID === "TR304") {
             obj = {
               field: "action",
@@ -1749,6 +1706,18 @@ export const fetchListview =
                         </Tooltip>
 
                       </Link>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          PartyID: params.row.PartyID,
+                          LeadTitle: params.row.LeadTitle
+                        }}>
+                        <Tooltip title="Attachment">
+                          <IconButton color="info" size="small">
+                            <AttachFileIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
                       {/* if (params.row.Editable === "Close") */}
 
                     </Box>
@@ -1771,10 +1740,22 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
+                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                        state={{
+                          PartyName: params.row.PartyName,
+                          PartyID: params.row.PartyID,
+                          LeadTitle: params.row.LeadTitle,
+                        }}>
+                        <Tooltip title="Attachment">
+                          <IconButton color="info" size="small">
+                            <AttachFileIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+
                     </Box>
                   );
                 }
-
                 // If Editable is "0", render nothing
                 return null;
               },

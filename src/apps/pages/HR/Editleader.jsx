@@ -1,20 +1,26 @@
 import React from "react";
 import {
-  TextField,
-  Box,
-  Typography,
-  FormControl,
-  FormLabel,
-  Button,
-  IconButton,
-  Select,
-  InputLabel,
-  MenuItem,
-  LinearProgress,
-  Paper,
-  Breadcrumbs,
-  Tooltip,
-  Checkbox,
+    TextField,
+    Box,
+    Typography,
+    FormControl,
+    FormLabel,
+    Button,
+    IconButton,
+    Select,
+    InputLabel,
+    MenuItem,
+    LinearProgress,
+    Paper,
+    Breadcrumbs,
+    Tooltip,
+    Checkbox,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -40,45 +46,56 @@ import { OverheadSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/utils";
 import * as Yup from "yup";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
+import FileUploadIconButton from "../../../ui-components/global/Fileuploadbutton";
+import { attachmentPost } from "../../../store/reducers/LoginReducer";
+import store from "../../..";
+import axios from "axios";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const EditLeader = () => {
-  const dispatch = useDispatch();
-  const params = useParams();
-  const accessID = params.accessID;
-  const recID = params.id;
-  const mode = params.Mode;
-  const Type = params.Type;
-  console.log(Type, "Type");
-  const filtertype = params.filtertype;
-  const filtertype2 = params.filtertype2;
-  const location = useLocation();
-  const navigate = useNavigate();
-  const data = useSelector((state) => state.formApi.Data);
-  const leader = useSelector((state) => state.formApi.leaderDetails);
-  console.log(leader, "leader");
-  const getLoading = useSelector((state) => state.formApi.getLoading);
-  const [loading, setLoading] = useState(false);
-  const Finyear = sessionStorage.getItem("YearRecorid");
-  const CompanyID = sessionStorage.getItem("compID");
-  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
-  const { toggleSidebar, broken, rtl } = useProSidebar();
-  // console.log("🚀 ~ file: Editoverhead.jsx:20 ~ Editoverhead ~ data:", data);
-  const [errorMsgData, setErrorMsgData] = useState(null);
-  const [validationSchema, setValidationSchema] = useState(null);
-  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-  const YearFlag = sessionStorage.getItem("YearFlag");
-  const [leaderDetails, setLeaderDetails] = useState(null);
-  const state = location.state || {};
-  console.log(state, "state");
-  console.log(location, "location");
-  useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/validationcms.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-        return res.json();
-      })
-      .then((data) => {
-        setErrorMsgData(data);
+    const dispatch = useDispatch();
+    const params = useParams();
+    const accessID = params.accessID;
+    const recID = params.id;
+    const mode = params.Mode;
+    const Type = params.Type;
+    console.log(Type, "Type");
+    const filtertype = params.filtertype;
+    const filtertype2 = params.filtertype2;
+    const location = useLocation();
+    const navigate = useNavigate();
+    const data = useSelector((state) => state.formApi.Data);
+    const leader = useSelector((state) => state.formApi.leaderDetails);
+    console.log(leader, "leader");
+    const getLoading = useSelector((state) => state.formApi.getLoading);
+    const [loading, setLoading] = useState(false);
+    const Finyear = sessionStorage.getItem("YearRecorid");
+    const CompanyID = sessionStorage.getItem("compID");
+    const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+    const { toggleSidebar, broken, rtl } = useProSidebar();
+    // console.log("🚀 ~ file: Editoverhead.jsx:20 ~ Editoverhead ~ data:", data);
+    const [errorMsgData, setErrorMsgData] = useState(null);
+    const [validationSchema, setValidationSchema] = useState(null);
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+    const YearFlag = sessionStorage.getItem("YearFlag");
+    const [leaderDetails, setLeaderDetails] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [error, setError] = useState('');
+    const rowSx = { height: 36, '& td, & th': { py: 0.5 } };
+    const state = location.state || {};
+    console.log(state, "state");
+    const { id, name } = useParams();
+    console.log("Received Name:", decodeURIComponent(name));
+    console.log(location, "location");
+    useEffect(() => {
+        fetch(process.env.PUBLIC_URL + "/validationcms.json")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+                return res.json();
+            })
+            .then((data) => {
+                setErrorMsgData(data);
 
         let schemaFields = {
           name: Yup.string().required(data.Overhead.name),
@@ -90,45 +107,69 @@ const EditLeader = () => {
           schemaFields.code = Yup.string().required(data.Overhead.code);
         }
 
-        const schema = Yup.object().shape(schemaFields);
-        setValidationSchema(schema);
-      })
-      .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode]);
-  const curdate = new Date().toISOString().split("T")[0];
-  const [formData, setFormData] = useState({
-    applieddate: curdate,
-    leadtitle: "",
-    comments: "",
-    visitdate: "",
-    Status: "",
-    project: null,
-    // applieddate: mode === "E" || mode === "V" ? data.OMDate : curdate,
-    // leadtitle: mode === "E" || mode === "V" ? data.LeadTitle : "",
-    // comments: mode === "E" || mode === "V" ? data.Comments : "",
-    // visitdate: mode === "E" || mode === "V" ? data.NextVisitDate : "",
-    // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
-    // Status: mode === "E" || mode === "V" ? data.OMStatus : "",
-    // project: data.ProjectID
-    //     ? { RecordID: data.ProjectID, Name: data.ProjectName }
-    //     : null,
-    // project:
-    //     mode === "A"
-    //         ? null
-    //         : data.ProjectID
-    //             ? { RecordID: data.ProjectID, Name: data.ProjectName }
-    //             : null
-  });
-  console.log(formData, "formdata");
+                const schema = Yup.object().shape(schemaFields);
+                setValidationSchema(schema);
+            })
+            .catch((err) => console.error("Error loading validationcms.json:", err));
+    }, [CompanyAutoCode]);
+    useEffect(() => {
+        dispatch(getFetchData({ accessID, get: "get", recID })).then((res) => {
+            console.log(res, "response");
+            console.log(res.payload.Data.PartyID, "response");
+            var url = store.getState().globalurl.empGetAttachmentUrl;
+            axios
+                .get(url, {
+                    params: {
+                        empId: res.payload.Data.PartyID,
+                        appId: recID
+                    }
+                })
+                .then((response) => {
+                    setFiles(response.data);
+                })
+                .catch((err) => {
+                    setError('Failed to fetch attachments.');
+                    console.error(err);
+                })
+                .finally(() => setLoading(false));
 
-  // useEffect(() => {
-  //     dispatch(getFetchData({ accessID, get: "get", recID }));
-  // }, [location.key]);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (Type === "T" && mode === "A") {
-        try {
-          setLoading(true);
+        })
+    }, []);
+    const curdate = new Date().toISOString().split("T")[0];
+    const [formData, setFormData] = useState({
+        applieddate: curdate,
+        leadtitle: "",
+        comments: "",
+        visitdate: "",
+        Status: "",
+        project: null,
+        // applieddate: mode === "E" || mode === "V" ? data.OMDate : curdate,
+        // leadtitle: mode === "E" || mode === "V" ? data.LeadTitle : "",
+        // comments: mode === "E" || mode === "V" ? data.Comments : "",
+        // visitdate: mode === "E" || mode === "V" ? data.NextVisitDate : "",
+        // Status: mode === "AP" ? "AP" : mode === "QR" ? "QR" : Data.ApprovedStatus,
+        // Status: mode === "E" || mode === "V" ? data.OMStatus : "",
+        // project: data.ProjectID
+        //     ? { RecordID: data.ProjectID, Name: data.ProjectName }
+        //     : null,
+        // project:
+        //     mode === "A"
+        //         ? null
+        //         : data.ProjectID
+        //             ? { RecordID: data.ProjectID, Name: data.ProjectName }
+        //             : null
+
+    });
+    console.log(formData, "formdata");
+
+    // useEffect(() => {
+    //     dispatch(getFetchData({ accessID, get: "get", recID }));
+    // }, [location.key]);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (Type === "T" && mode === "A" && mode == "IM") {
+                try {
+                    setLoading(true);
 
           const resultAction = await dispatch(
             LeaderData({ data: { LeaderID: filtertype } })
@@ -175,20 +216,32 @@ const EditLeader = () => {
   useEffect(() => {
     if (!data) return;
 
-    setFormData({
-      applieddate: mode === "E" || mode === "V" ? data.OMDate : curdate,
-      leadtitle: mode === "E" || mode === "V" ? data.LeadTitle : "",
-      comments: mode === "E" || mode === "V" ? data.Comments : "",
-      visitdate: mode === "E" || mode === "V" ? data.NextVisitDate : "",
-      Status: mode === "E" || mode === "V" ? data.OMStatus : "",
-      project:
-        mode === "A"
-          ? null
-          : data.ProjectID
-          ? { RecordID: data.ProjectID, Name: data.ProjectName }
-          : null,
-    });
-  }, [data, mode, curdate]);
+        setFormData({
+            applieddate: mode === "E" || mode === "V" || mode === "IM" ? data.OMDate : curdate,
+            leadtitle: mode === "E" || mode === "V" || mode === "IM" ? data.LeadTitle : "",
+            comments: mode === "E" || mode === "V" || mode === "IM" ? data.Comments : "",
+            visitdate: mode === "E" || mode === "V" || mode === "IM" ? data.NextVisitDate : "",
+            // Status: mode === "E" || mode === "V" || mode === "IM" ? data.OMStatus : "",
+            Status:
+                mode === "E" || mode === "V" || mode === "IM"
+                    ? data.OMStatus === "Cool"
+                        ? "Cool"
+                        : data.OMStatus === "Warm"
+                            ? "Warm"
+                            : data.OMStatus === "Hot"
+                                ? "Hot"
+                                : data.OMStatus === "Close"
+                                    ? "Close"
+                                    : ""
+                    : "",
+            project:
+                mode === "A"
+                    ? null
+                    : data.ProjectID
+                        ? { RecordID: data.ProjectID, Name: data.ProjectName }
+                        : null,
+        });
+    }, [data, mode, curdate]);
 
   // const initialValue = {
   //     applieddate: data.OMDate,
@@ -215,26 +268,27 @@ const EditLeader = () => {
         : "update";
     setLoading(true);
 
-    const idata = {
-      RecordID: recID,
-      PartyID:
-        Type === "T" ? leaderDetails?.PartyID || data.PartyID : filtertype,
-      LeaderID: Type === "T" ? filtertype : 0,
-      OMDate: values.applieddate,
-      Comments: values.comments,
-      LeadTitle: values.leadtitle,
-      Status: values.Status,
-      NextVisitDate: values.visitdate,
-      ProjectID: values.project.RecordID || 0,
-      ProjectName: values.project.Name || "",
-      CompanyID,
-      // Disable: values.disable == true ? "Y" : "N",
-      // DeleteFlag: values.delete == true ? "Y" : "N",
-      Latitude: "0",
-      Longitude: "0",
-    };
-    console.log(idata, "idata");
-    // console.log("🚀 ~ file: Editoverhead.jsx:57 ~ fnSave ~ saveData:", saveData)
+        const idata = {
+            RecordID: recID,
+            PartyID: Type === "T" ? leaderDetails?.PartyID || data.PartyID : filtertype,
+            LeaderID: Type === "T" ? filtertype : 0,
+            OMDate: values.applieddate,
+            Comments: values.comments,
+            LeadTitle: values.leadtitle,
+            Status: values.Status,
+            NextVisitDate: values.visitdate,
+            ProjectID: values.project.RecordID || 0,
+            ProjectName: values.project.Name || "",
+            CompanyID,
+            Latitude: 0,
+            Longitude: 0
+
+            // Disable: values.disable == true ? "Y" : "N",
+            // DeleteFlag: values.delete == true ? "Y" : "N",
+
+        };
+        console.log(idata, "idata");
+        // console.log("🚀 ~ file: Editoverhead.jsx:57 ~ fnSave ~ saveData:", saveData)
 
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
@@ -276,63 +330,108 @@ const EditLeader = () => {
     //         navigate("/Apps/TR022/Bank Master")
     //       }
 
-    //       return
-    //  }
-    Swal.fire({
-      title: errorMsgData.Warningmsg[props],
-      // text:data.payload.Msg,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: props,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (props === "Logout") {
-          navigate("/");
+        //       return
+        //  }
+        Swal.fire({
+            title: errorMsgData.Warningmsg[props],
+            // text:data.payload.Msg,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: props,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (props === "Logout") {
+                    navigate("/");
+                }
+                if (props === "Close") {
+                    navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+                }
+            } else {
+                return;
+            }
+        });
+    };
+    async function fileUpload(file, EMPID, action, id, purpose) {
+        console.log("🚀 ~ fileUpload ~ file:", file)
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('empId', data.PartyID);
+        formData.append('appId', data.RecordID);
+        formData.append('type', "MA");
+        formData.append('source', "HR");
+        formData.append("action", action);
+        formData.append("id", id);
+        formData.append("purpose", purpose);
+        console.log("FormData contents:");
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
         }
-        if (props === "Close") {
-          navigate(
-            `/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`
-          );
+
+        const respose = await dispatch(attachmentPost({ data: formData }))
+
+        if (respose.payload.success) {
+            toast.success(respose.payload.message)
+            //setShowtable(true);
+            var url = store.getState().globalurl.empGetAttachmentUrl;
+            axios
+                .get(url, {
+                    params: {
+                        empId: data.PartyID,
+                        appId: data.RecordID,
+
+                    }
+                })
+                .then((response) => {
+                    setFiles(response.data);
+                })
+                .catch((err) => {
+                    setError('Failed to fetch attachments.');
+                    console.error(err);
+                })
+                .finally(() => setLoading(false));
         }
-      } else {
-        return;
-      }
-    });
-  };
-  return (
-    <React.Fragment>
-      {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                >
-                  {`Marketing Activity(${state.PartyName || ""})`}
-                  {/* Marketing Activity */}
-                </Typography>
-              </Breadcrumbs>
-            </Box>
-          </Box>
+        else {
+            toast.success(respose.payload.message)
+        }
+
+        console.log("🚀 ~ fileUpload ~ respose:", respose)
+    }
+    return (
+        <React.Fragment>
+            {getLoading ? <LinearProgress /> : false}
+            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+                <Box display="flex" justifyContent="space-between" p={2}>
+                    <Box display="flex" borderRadius="3px" alignItems="center">
+                        {broken && !rtl && (
+                            <IconButton onClick={() => toggleSidebar()}>
+                                <MenuOutlinedIcon />
+                            </IconButton>
+                        )}
+                        <Box
+                            display={isNonMobile ? "flex" : "none"}
+                            borderRadius="3px"
+                            alignItems="center"
+                        >
+                            <Breadcrumbs
+                                maxItems={3}
+                                aria-label="breadcrumb"
+                                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+
+                                >
+                                    {`Marketing Activity(${state.Party || ""})`}
+                                    {/* Marketing Activity */}
+                                </Typography>
+
+                            </Breadcrumbs>
+                        </Box>
+                    </Box>
 
           <Box display="flex">
             <Tooltip title="Close">
@@ -423,116 +522,221 @@ const EditLeader = () => {
                     url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                   />
 
-                  <TextField
-                    // label={
-                    //     <>
-                    //         Lead Title<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                    //     </>
-                    // }
-                    label="Lead Title"
-                    id="leadtitle"
-                    type="text"
-                    name="leadtitle"
-                    focused
-                    variant="standard"
-                    value={values.leadtitle}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.leadtitle && !!errors.leadtitle}
-                    helperText={touched.leadtitle && errors.leadtitle}
-                    disabled={Type === "T"}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="text"
-                    id="comments"
-                    name="comments"
-                    value={values.comments}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Comments"
-                    focused
-                    disabled={mode === "V"}
-                    // inputProps={{ readOnly: true }}
-                  />
-                  <TextField
-                    name="visitdate"
-                    type="date"
-                    id="visitdate"
-                    label="Next Visit Date"
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.visitdate}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.visitdate && !!errors.visitdate}
-                    helperText={touched.visitdate && errors.visitdate}
-                    disabled={mode === "V"}
-                    // inputProps={{
-                    //     max: new Date().toISOString().split("T")[0],
-                    //     // readOnly: true,
-                    // }}
-                  />
-                  <TextField
-                    select
-                    label="Status"
-                    id="Status"
-                    name="Status"
-                    value={values.Status}
-                    onBlur={handleBlur}
-                    // onChange={handleChange}
-                    disabled={mode === "V"}
-                    // required
-                    onChange={(e) => {
-                      handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Status", e.target.value); // save to sessionStorage
-                    }}
-                    focused
-                    variant="standard"
-                  >
-                    <MenuItem value="Cool">Cool</MenuItem>
-                    <MenuItem value="Warm">Warm</MenuItem>
-                    <MenuItem value="Hot">Hot</MenuItem>
-                    <MenuItem value="Close">Close</MenuItem>
-                  </TextField>
-                </Box>
-                <Box
-                  display="flex"
-                  justifyContent="end"
-                  padding={1}
-                  gap={formGap}
-                >
-                  <LoadingButton
-                    variant="contained"
-                    color="secondary"
-                    type="submit"
-                    loading={loading}
-                  >
-                    SAVE
-                  </LoadingButton>
+                                    <TextField
+                                        // label={
+                                        //     <>
+                                        //         Lead Title<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                                        //     </>
+                                        // }
+                                        label="Lead Title"
+                                        id="leadtitle"
+                                        type="text"
+                                        name="leadtitle"
+                                        focused
+                                        variant="standard"
+                                        value={values.leadtitle}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.leadtitle && !!errors.leadtitle}
+                                        helperText={touched.leadtitle && errors.leadtitle}
+                                        disabled={Type === "T"}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        type="text"
+                                        id="comments"
+                                        name="comments"
+                                        value={values.comments}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        label="Comments"
+                                        focused
+                                        disabled={mode === "V"}
+                                    // inputProps={{ readOnly: true }}
+                                    />
+                                    <TextField
+                                        name="visitdate"
+                                        type="date"
+                                        id="visitdate"
+                                        label="Next Visit Date"
+                                        variant="standard"
+                                        focused
+                                        inputFormat="YYYY-MM-DD"
+                                        value={values.visitdate}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.visitdate && !!errors.visitdate}
+                                        helperText={touched.visitdate && errors.visitdate}
+                                        disabled={mode === "V"}
+                                    // inputProps={{
+                                    //     max: new Date().toISOString().split("T")[0],
+                                    //     // readOnly: true,
+                                    // }}
+                                    />
+                                    <TextField
+                                        select
+                                        label="Status"
+                                        id="Status"
+                                        name="Status"
+                                        value={values.Status}
+                                        onBlur={handleBlur}
+                                        // onChange={handleChange}
+                                        disabled={mode === "V"}
+                                        // required
+                                        onChange={(e) => {
+                                            handleChange(e); // update form state (Formik)
+                                            sessionStorage.setItem("Status", e.target.value); // save to sessionStorage
+                                        }}
+                                        focused
+                                        variant="standard"
+                                    >
+                                        <MenuItem value="Cool">Cool</MenuItem>
+                                        <MenuItem value="Warm">Warm</MenuItem>
+                                        <MenuItem value="Hot">Hot</MenuItem>
+                                        <MenuItem value="Close">Close</MenuItem>
+                                    </TextField>
 
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => {
-                      // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
-                      navigate(-1);
-                    }}
-                  >
-                    CANCEL
-                  </Button>
-                </Box>
-              </form>
+                                </Box>
+                                <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
+                                    {mode == "IM" && (
+                                        <>
+                                            <TextField
+                                                name="purpose"
+                                                type="text"
+                                                id="purpose"
+                                                label="Purpose"
+                                                variant="standard"
+                                                focused
+                                                value={values.purpose}
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                error={!!touched.purpose && !!errors.purpose}
+                                                helperText={touched.purpose && errors.purpose}
+                                                sx={{ gridColumn: "span 2", height: "20px" }}
+                                                InputLabelProps={{ shrink: true }}
+
+                                            />
+
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                <FileUploadIconButton onFileSelect={(file) => {
+                                                    fileUpload(
+                                                        file,
+                                                        data.PartyID,
+                                                        "upload",
+                                                        "",
+                                                        values.purpose
+                                                    )
+                                                    setFieldValue("purpose", "");
+                                                }}
+                                                />
+                                            </Box>
+                                        </>
+                                    )}
+                                    <LoadingButton
+                                        variant="contained"
+                                        color="secondary"
+                                        type="submit"
+                                        loading={loading}
+                                    >
+                                        SAVE
+                                    </LoadingButton>
+
+                                    <Button
+                                        variant="contained"
+                                        color="warning"
+                                        onClick={() => {
+                                            // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
+                                            navigate(-1)
+                                        }}
+                                    >
+                                        CANCEL
+                                    </Button>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+                </Paper>
+            ) : (
+                false
             )}
-          </Formik>
-        </Paper>
-      ) : (
-        false
-      )}
-    </React.Fragment>
-  );
+            {mode == "IM" && files.length > 0 ? (
+                <Box mt={2}
+                >
+                    <Paper elevation={3} sx={{ padding: 2 }}>
+                        {/* <Typography variant="h6" gutterBottom>
+              Uploaded Files
+            </Typography> */}
+                        <TableContainer component={Paper} >
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow sx={rowSx}>
+                                        <TableCell width={20}><strong>SL#</strong></TableCell>
+                                        <TableCell width={160}><strong>Uploaded Date</strong></TableCell>
+                                        <TableCell width={250}><strong>Filename</strong></TableCell>
+                                        <TableCell width={150}><strong>Purpose</strong></TableCell>
+                                        <TableCell width={100}><strong>Source</strong></TableCell>
+                                        <TableCell ><strong>View</strong></TableCell>
+
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {files.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} align="center">
+                                                No files uploaded yet.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        files.map((file, index) => (
+                                            <TableRow key={file.id || index} sx={rowSx}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{file.uploadedDate}</TableCell>
+                                                <TableCell>{file.filename}</TableCell>
+                                                <TableCell>{file.purpose}</TableCell>
+                                                <TableCell>{file.source}</TableCell>
+                                                <TableCell>
+                                                    <Tooltip title="Open File">
+                                                        <IconButton
+                                                            color="primary"
+                                                            component="a"
+                                                            href={file.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            size="small"
+                                                        >
+                                                            <OpenInNewIcon fontSize="small" />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip title="delete">
+                                                        <IconButton
+                                                            color="error"
+                                                            onClick={() => fileUpload(
+                                                                file.filename,
+                                                                data.PartyID,
+                                                                "delete",
+                                                                file.id,
+                                                                file.purpose
+                                                            )}
+                                                            size="small"
+                                                        >
+                                                            <DeleteForeverIcon fontSize="small" />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </TableCell>
+
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Paper>
+                </Box>
+            ) : null}
+        </React.Fragment>
+    );
 };
 
 export default EditLeader;
