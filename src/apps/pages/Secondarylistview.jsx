@@ -269,6 +269,11 @@ const ListviewSecondary = () => {
     filter = `LeaderID='${leaderID}'`;
     // filter =`PartyID='${leaderID}'`;
   }
+  else if (accessID === "TR311") {
+
+    filter = `''`;
+    // filter =`PartyID='${leaderID}'`;
+  }
   else if (accessID == "TR283") {
     filter = `EmployeeID ='${parentID3}' AND AssessmentType = '${parentID2}'`;
   } else if (accessID == "TR291") {

@@ -633,6 +633,7 @@ export const fetchListview =
         AccessID != "TR303" &&
         AccessID != "TR304" &&
         AccessID != "TR310" &&
+        AccessID != "TR311" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -1757,8 +1758,10 @@ export const fetchListview =
                     <Link
                       to={`./Edit${screenName}/${params.row.RecordID}/E`}
                       state={{
-                        PartyName: params.row.Party,
+                        PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
+                        LeadTitle: params.row.LeadTitle,
+                        PartyID: params.row.PartyRecordID
                       }}
                     >
                       <Tooltip title="Edit">
@@ -1770,7 +1773,14 @@ export const fetchListview =
 
                     {/* Leader Button */}
                     <Link
-                      to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
+                      // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
+                      to={`/Apps/Secondarylistview/TR311/Orderitem/${id}`}
+                      state={{
+                        PartyName: params.row.PartyName,
+                        Count: params.row.MarketingCount,
+                        LeadTitle: params.row.LeadTitle,
+                        PartyID: params.row.PartyRecordID
+                      }}
                       // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
                     >
                       <Tooltip title="Order Item">

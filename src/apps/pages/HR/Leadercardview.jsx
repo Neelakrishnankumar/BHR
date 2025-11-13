@@ -275,7 +275,7 @@ const LeaderCardView = () => {
                                                 <IconButton
                                                     color="primary"
                                                     onClick={() =>
-                                                        handleorderscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus, 1)
+                                                        handleorderscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus, row.OrdHdrCount)
                                                     }
                                                     size="small"
                                                 // disabled={row.LEStatus === "Close"}
@@ -284,7 +284,7 @@ const LeaderCardView = () => {
                                                 </IconButton>
                                             </Tooltip>
 
-                                            
+                                           
                                         </>
                                     )} */}
                                 </Box>

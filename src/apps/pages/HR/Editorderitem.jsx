@@ -11,6 +11,7 @@ import {
     Checkbox,
     LinearProgress,
     Paper,
+    Breadcrumbs
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -34,6 +35,7 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 // import CryptoJS from "crypto-js";
 const EditOrderitem = () => {
@@ -86,15 +88,29 @@ const EditOrderitem = () => {
 
         const idata = {
             RecordID: recID,
-            Code: values.code,
-            Name: values.name,
-            SortOrder: values.sortorder,
-            Disable: isCheck,
-            //   Finyear,
             CompanyID,
+            OrderHeareID: "",
+            ProductCombo: values.product.RecordID || 0,
+            Quantity: values.quantity,
+            Price: values.price || 0,
+            Discount: values.discount || 0,
+            NetPrice: values.netprice || 0,
+            Amount: values.amount,
         };
 
-
+        // {
+        //     "Status": "Y",
+        //     "Data": {
+        //         "RecordID": "",
+        //         "OrderHeareID": "",
+        //         "ProductCombo": "",
+        //         "Quantity": "",
+        //         "Price": "",
+        //         "Discount": "",
+        //         "NetPrice": "",
+        //         "Amount": ""
+        //     }
+        // }
         const response = await dispatch(postData({ accessID, action, idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
@@ -151,16 +167,55 @@ const EditOrderitem = () => {
                                 <MenuOutlinedIcon />
                             </IconButton>
                         )}
-                        <Typography
-                            variant="h5"
-                            color="#0000D1"
-                            sx={{ cursor: "default" }}
-
+                        <Breadcrumbs
+                            maxItems={2}
+                            aria-label="breadcrumb"
+                            separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
                         >
-                            {`Order Item(${state.LeadTitle || ""})`}
-                        </Typography>
-                    </Box>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    navigate("/Apps/TR243/Party");
+                                }}
 
+                            >
+                                {`Party(${state.PartyName || ""})`}
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+
+                            >
+                                {`Lead(${state.LeadTitle || ""})`}
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+
+                            >
+                                Order
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                color="#0000D1"
+                                sx={{ cursor: "default" }}
+
+                            >
+                                Order Item
+                            </Typography>
+
+                        </Breadcrumbs>
+                    </Box>
                     <Box display="flex">
                         <Tooltip title="Close">
                             <IconButton onClick={() => fnLogOut("Close")} color="error">
@@ -234,7 +289,7 @@ const EditOrderitem = () => {
                                             helperText={touched.product && errors.product}
                                             url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Productt","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                         />
-                                    </FormControl>                                    
+                                    </FormControl>
                                     <TextField
                                         name="price"
                                         type="number"
@@ -252,7 +307,7 @@ const EditOrderitem = () => {
                                             inputProps: {
                                                 style: { textAlign: "right" },
                                             },
-                                        }} 
+                                        }}
                                         autoFocus
                                     />
                                     <TextField
@@ -271,7 +326,7 @@ const EditOrderitem = () => {
                                             inputProps: {
                                                 style: { textAlign: "right" },
                                             },
-                                        }} 
+                                        }}
                                         autoFocus
                                     />
                                     <TextField
@@ -290,7 +345,7 @@ const EditOrderitem = () => {
                                             inputProps: {
                                                 style: { textAlign: "right" },
                                             },
-                                        }} 
+                                        }}
                                         autoFocus
                                     />
                                     <TextField
@@ -309,7 +364,7 @@ const EditOrderitem = () => {
                                             inputProps: {
                                                 style: { textAlign: "right" },
                                             },
-                                        }} 
+                                        }}
                                         autoFocus
                                     />
                                     <TextField
@@ -328,7 +383,7 @@ const EditOrderitem = () => {
                                             inputProps: {
                                                 style: { textAlign: "right" },
                                             },
-                                        }} 
+                                        }}
                                         autoFocus
                                     />
 

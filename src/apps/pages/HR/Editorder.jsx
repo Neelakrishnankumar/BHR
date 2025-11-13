@@ -55,6 +55,7 @@ const EditOrder = () => {
     const Year = sessionStorage.getItem("year");
     const Finyear = sessionStorage.getItem("YearRecorid");
     const CompanyID = sessionStorage.getItem("compID");
+    const LoginID = sessionStorage.getItem("loginrecordID");
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     const location = useLocation();
@@ -81,11 +82,14 @@ const EditOrder = () => {
         paiddate: data.PaidDate,
         deliverydate: data.DeliveryDate,
         paidamount: data.PaidAmount || 0,
-        Status:
-            mode === "A" ? "Ordercreated" : data.ORStatus === "Ordercreated"
+        status:
+            // mode === "A" ? "Ordercreated" :
+             data.ORStatus === "Ordercreated"
                 ? "Ordercreated"
-                : data.ORStatus === "ProcessedReadyfordelivery"
-                    ? "ProcessedReadyfordelivery"
+                : data.ORStatus === "Processed"
+                    ? "Processed"
+                    : data.ORStatus === "Readyfordelivery"
+                    ? "Readyfordelivery"
                     : data.ORStatus === "Picked"
                         ? "Picked"
                         : data.ORStatus === "Delivered"
@@ -117,7 +121,7 @@ const EditOrder = () => {
 
         const idata = {
             RecordID: recID,
-            Code: values.code,
+            Code: values.orderno || "",
             PartyRecordID: state.PartyID,
             EmployeeRecordID: state.PartyID,
             LeaderID: params.filtertype,
@@ -133,10 +137,12 @@ const EditOrder = () => {
             PaidDate: values.paiddate || "",
             DeliveryDate: values.deliverydate || "",
             PaidAmount: values.paidamount || 0,
-            ORStatus: values.Status || "",
+            ORStatus: values.status || "",
             PaymentMode: values.paymentmode || "",
             ReceiverName: values.receivername || "",
             ReceiverMobileNumber: values.mobilenumber || "",
+            PartyRecordID: state.PartyID || 0,
+            EmployeeRecordID: LoginID,
             // SortOrder: values.sortorder,
             // Disable: isCheck,
             //   Finyear,
@@ -581,9 +587,6 @@ const EditOrder = () => {
                                         name="status"
                                         value={values.status}
                                         onBlur={handleBlur}
-                                        // onChange={handleChange}
-                                        disabled={mode === "V"}
-                                        // required
                                         onChange={(e) => {
                                             handleChange(e); // update form state (Formik)
                                             sessionStorage.setItem("status", e.target.value); // save to sessionStorage
@@ -592,7 +595,8 @@ const EditOrder = () => {
                                         variant="standard"
                                     >
                                         <MenuItem value="Ordercreated">Order Created</MenuItem>
-                                        <MenuItem value="ProcessedReadyfordelivery">Processed-Ready for Delivery</MenuItem>
+                                        <MenuItem value="ProcessedReadyfordelivery">Processed</MenuItem>
+                                        <MenuItem value="Readyfordelivery">Ready for Delivery</MenuItem>
                                         <MenuItem value="Picked">Picked</MenuItem>
                                         <MenuItem value="Delivered">Delivered</MenuItem>
                                         <MenuItem value="Paid">Paid</MenuItem>
@@ -631,7 +635,7 @@ const EditOrder = () => {
                                     <TextField
                                         name="mobilenumber"
                                         id="mobilenumber"
-                                        label="Receiver" Mobile Number
+                                        label="Receiver Mobile Number"
                                         variant="standard"
                                         focused
                                         value={values.mobilenumber}
