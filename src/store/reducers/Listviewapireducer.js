@@ -79,6 +79,7 @@ import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import GridViewIcon from '@mui/icons-material/GridView';
 
 const initialState = {
   rowData: [],
@@ -1731,6 +1732,62 @@ export const fetchListview =
           //     },
           //   };
           // }
+          else if (AccessID === "TR310") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                const count = Number(params.row.MarketingCount || 0);
+                const id = params.row.RecordID;
+                const PartyName = params.row.Name;
+
+                // Encode PartyName to make it URL-safe
+                // const encodedName = encodeURIComponent(PartyName);
+
+                return (
+                  <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      state={{
+                        PartyName: params.row.Party,
+                        Count: params.row.MarketingCount,
+                      }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* Leader Button */}
+                    <Link
+                      to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
+                      // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
+                    >
+                      <Tooltip title="Order Item">
+                        <IconButton color="info" size="small"
+                          // onClick={() =>
+                          //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
+                          // }
+                        >
+                          <GridViewIcon/>
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }
           else if (AccessID === "TR304") {
             obj = {
               field: "action",

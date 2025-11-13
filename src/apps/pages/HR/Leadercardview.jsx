@@ -215,7 +215,7 @@ const LeaderCardView = () => {
                                         #SL: {index + 1}   {row.LeadTitle || ""}
                                     </Typography>
                                     <Typography>
-                                        <strong>Project Name:</strong>  {row.ProjectName || ""}
+                                        <strong>Product Name:</strong>  {row.ProjectName || ""}
                                     </Typography>
                                     <Typography>
                                         <strong>First Call Date:</strong> {row.FirstCallDate || ""}
@@ -275,7 +275,7 @@ const LeaderCardView = () => {
                                                 <IconButton
                                                     color="primary"
                                                     onClick={() =>
-                                                        handleorderscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus, row.OrdHdrCount)
+                                                        handleorderscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus, 1)
                                                     }
                                                     size="small"
                                                 // disabled={row.LEStatus === "Close"}
@@ -284,18 +284,7 @@ const LeaderCardView = () => {
                                                 </IconButton>
                                             </Tooltip>
 
-                                            <Tooltip title="Order Item">
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() =>
-                                                        handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
-                                                    }
-                                                    size="small"
-                                                // disabled={row.LEStatus === "Close"}
-                                                >
-                                                    <GridViewIcon sx={{ fontSize: 20 }} />
-                                                </IconButton>
-                                            </Tooltip>
+                                            
                                         </>
                                     )} */}
                                 </Box>

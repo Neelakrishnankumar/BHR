@@ -77,7 +77,7 @@ import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
 import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-
+import GridViewIcon from '@mui/icons-material/GridView';
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -1862,7 +1862,7 @@ const ListviewSecondary = () => {
                 }}
               >
                 {/* Leader */}
-                {`Leader(${state.LeadTitle})`}
+                {`Lead(${state.LeadTitle})`}
               </Typography>
               <Typography
                 variant="h5"
@@ -1870,6 +1870,49 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
               >
                 Marketing Activities
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) 
+        : accessID == "TR310" ? (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR243/Party");
+                }}
+              >
+
+                {/* {Type === "F"
+                  ? "Party" 
+                  : `Party(${state.PartyName})`} */}
+                {`Party(${state.PartyName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  console.log(state.PartyID, "PartyID");
+                  navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`, { state: { ...state } });
+                }}
+              >
+                {/* Leader */}
+                {`Lead(${state.LeadTitle})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                Order
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3614,6 +3657,21 @@ const ListviewSecondary = () => {
                 variant="outlined"
                 sx={{ marginLeft: "50px" }}
               />
+            </Box>
+          )
+          : accessID == "TR310" ? (
+            <Box display="flex" flexDirection="row" padding="25px">
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={< GridViewIcon color="primary" />}
+                label="Order Item"
+                variant="outlined"
+                sx={{ marginLeft: "50px" }}
+              />            
             </Box>
           )
             : (accessID == "TR294" && params.parentID1 === "AP") ? (
