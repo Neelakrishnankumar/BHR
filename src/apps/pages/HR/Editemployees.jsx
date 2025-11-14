@@ -79,6 +79,7 @@ import {
 } from "../../../ui-components/global/utils";
 import {
   CheckinAutocomplete,
+  MultiFormikOptimizedAutocomplete,
   Productautocomplete,
   ProductautocompleteLevel,
   SingleFormikOptimizedAutocomplete,
@@ -112,7 +113,7 @@ const Editemployee = () => {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const [selectedPro, setSelectedPro] = useState([]);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -124,8 +125,8 @@ const Editemployee = () => {
   };
   const YearFlag = sessionStorage.getItem("YearFlag");
   console.log(YearFlag, "--YearFlag");
-// FOR ITEM SERVICES DATA GRID 
-const ItemdataGridHeight = "57vh";
+  // FOR ITEM SERVICES DATA GRID 
+  const ItemdataGridHeight = "57vh";
 
 
   const navigate = useNavigate();
@@ -335,7 +336,7 @@ const ItemdataGridHeight = "57vh";
         setValidationSchema11(schema11);
 
         //ITEM SERIVICES
-         const schema12 = Yup.object().shape({
+        const schema12 = Yup.object().shape({
           items: Yup.object().required(data.ItemServices.items).nullable(),
           vendors: Yup.object().required(data.ItemServices.vendors).nullable(),
           servicedate: Yup.string().required(data.ItemServices.servicedate),
@@ -463,10 +464,10 @@ const ItemdataGridHeight = "57vh";
   const initialValues = {
     Department: Data.DeptRecordID
       ? {
-          RecordID: Data.DeptRecordID,
-          Code: Data.DeptCode,
-          Name: Data.DeptName,
-        }
+        RecordID: Data.DeptRecordID,
+        Code: Data.DeptCode,
+        Name: Data.DeptName,
+      }
       : null,
     Code: Data.Code,
     Name: Data.Name,
@@ -476,14 +477,14 @@ const ItemdataGridHeight = "57vh";
       Data.EmpType === "Prohibition"
         ? "PP"
         : Data.EmpType === "Permanent"
-        ? "PM"
-        : Data.EmpType === "Contracts In"
-        ? "CI"
-        : Data.EmpType === "Contracts Out"
-        ? "CO"
-        : // : Data.EmpType === "Contractor"
-          // ? "CT"
-          "",
+          ? "PM"
+          : Data.EmpType === "Contracts In"
+            ? "CI"
+            : Data.EmpType === "Contracts Out"
+              ? "CO"
+              : // : Data.EmpType === "Contractor"
+              // ? "CT"
+              "",
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
@@ -697,8 +698,8 @@ const ItemdataGridHeight = "57vh";
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.checkbox || values.scrummaster == true) {
       isCheck = "Y";
@@ -1374,20 +1375,20 @@ const ItemdataGridHeight = "57vh";
             {show == "2"
               ? "List of Functions"
               : show == "6"
-              ? "List of Documents"
-              : show == "3"
-              ? "List of Managers"
-              : show == "7"
-              ? "Item Custody"
-              : show == "10"
-              ? "List of Configurations"
-              : show == "13"
-              ? "List of Localities"
-              : show == "14"
-              ? "List of Services"
-              : show == "8" || show == "11"
-              ? "List of Contracts"
-              : "List of Managers"}
+                ? "List of Documents"
+                : show == "3"
+                  ? "List of Managers"
+                  : show == "7"
+                    ? "Item Custody"
+                    : show == "10"
+                      ? "List of Configurations"
+                      : show == "13"
+                        ? "List of Localities"
+                        : show == "14"
+                          ? "List of Services"
+                          : show == "8" || show == "11"
+                            ? "List of Contracts"
+                            : "List of Managers"}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
@@ -1618,17 +1619,17 @@ const ItemdataGridHeight = "57vh";
           servicecomments: rowData.Comments || "",
           vendors: rowData.PartyID
             ? {
-                RecordID: rowData.PartyID,
-                Code: rowData.PartyCode || "",
-                Name: rowData.PartyName || "",
-              }
+              RecordID: rowData.PartyID,
+              Code: rowData.PartyCode || "",
+              Name: rowData.PartyName || "",
+            }
             : null,
           items: rowData.ItemcustodyID
             ? {
-                RecordID: rowData.ItemcustodyID,
-                Code: rowData.ItemCode || "",
-                Name: rowData.ItemName || "",
-              }
+              RecordID: rowData.ItemcustodyID,
+              Code: rowData.ItemCode || "",
+              Name: rowData.ItemName || "",
+            }
             : null,
         });
         setLocalityData({
@@ -1648,10 +1649,10 @@ const ItemdataGridHeight = "57vh";
           renewalperiod: rowData.RenewableNotification,
           vendor: rowData.Vendor
             ? {
-                RecordID: rowData.Vendor,
-                Code: rowData.VendorCode,
-                Name: rowData.VendorName,
-              }
+              RecordID: rowData.Vendor,
+              Code: rowData.VendorCode,
+              Name: rowData.VendorName,
+            }
             : null,
           hsnCode: rowData.Hsn,
           cgst: rowData.Gst,
@@ -1677,10 +1678,10 @@ const ItemdataGridHeight = "57vh";
           elligibledays: rowData.EligibleDays,
           LeaveTypeID: rowData.LeaveTypeID
             ? {
-                RecordID: rowData.LeaveTypeID,
-                Code: "",
-                Name: rowData.LeavePart,
-              }
+              RecordID: rowData.LeaveTypeID,
+              Code: "",
+              Name: rowData.LeavePart,
+            }
             : null,
           Year: rowData.Year,
         });
@@ -1760,8 +1761,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funEmpRecID,
       EmployeeID: recID,
@@ -1803,8 +1804,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: localityData.recordID,
       EmployeeID: recID,
@@ -1852,8 +1853,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: itemCustodyData.recordID,
       EmployeeID: recID,
@@ -1945,8 +1946,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: itemServicesData.recordID,
       EmployeeID: recID,
@@ -1997,12 +1998,12 @@ const ItemdataGridHeight = "57vh";
       contractorData.units === "Hours"
         ? "HS"
         : contractorData.units === "Days"
-        ? "DS"
-        : contractorData.units === "Week"
-        ? "WS"
-        : contractorData.units === "Month"
-        ? "MS"
-        : "",
+          ? "DS"
+          : contractorData.units === "Week"
+            ? "WS"
+            : contractorData.units === "Month"
+              ? "MS"
+              : "",
     Hsn: contractorData.hsnCode,
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
@@ -2023,8 +2024,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: contractorData.recordID,
       EmployeeID: recID,
@@ -2052,15 +2053,15 @@ const ItemdataGridHeight = "57vh";
         show === "8"
           ? values?.vendor?.RecordID || 0
           : show === "11"
-          ? values?.customer?.RecordID || 0
-          : 0,
+            ? values?.customer?.RecordID || 0
+            : 0,
 
       VendorName:
         show === "8"
           ? values?.vendor?.Name || 0
           : show === "11"
-          ? values?.customer?.Name || 0
-          : 0,
+            ? values?.customer?.Name || 0
+            : 0,
 
       Hsn: values.Hsn,
       Gst: values.Gst,
@@ -2084,21 +2085,21 @@ const ItemdataGridHeight = "57vh";
       setLoading(false);
       show == "8"
         ? dispatch(
-            fetchExplorelitview(
-              "TR244",
-              "Contracts In",
-              `EmployeeID='${recID}' AND Vendors='Y'`,
-              ""
-            )
+          fetchExplorelitview(
+            "TR244",
+            "Contracts In",
+            `EmployeeID='${recID}' AND Vendors='Y'`,
+            ""
           )
+        )
         : dispatch(
-            fetchExplorelitview(
-              "TR244",
-              "Contracts Out",
-              `EmployeeID='${recID}' AND Customer='Y'`,
-              ""
-            )
-          );
+          fetchExplorelitview(
+            "TR244",
+            "Contracts Out",
+            `EmployeeID='${recID}' AND Customer='Y'`,
+            ""
+          )
+        );
 
       toast.success(response.payload.Msg);
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -2125,8 +2126,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       EmployeeID: recID,
       Longtitude: values.longitude,
@@ -2165,10 +2166,10 @@ const ItemdataGridHeight = "57vh";
       LeaveCondata.Year === "2024"
         ? "2024"
         : LeaveCondata.Year === "2025"
-        ? "2025"
-        : LeaveCondata.Year === "2026"
-        ? "2026"
-        : "",
+          ? "2025"
+          : LeaveCondata.Year === "2026"
+            ? "2026"
+            : "",
   };
   // const [funMgrRecID, setFunMgrRecID] = useState("");
   const currentYear = new Date().getFullYear();
@@ -2184,8 +2185,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       RecordID: LeaveCondata.recordID,
@@ -2260,8 +2261,8 @@ const ItemdataGridHeight = "57vh";
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funMgrRecID,
       EmployeeID: recID,
@@ -2314,45 +2315,45 @@ const ItemdataGridHeight = "57vh";
     description: Data.Name,
     Designation: deploymentData.DesignationID
       ? {
-          RecordID: deploymentData.DesignationID,
-          Code: deploymentData.DesignationCode,
-          Name: deploymentData.DesignationName,
-        }
+        RecordID: deploymentData.DesignationID,
+        Code: deploymentData.DesignationCode,
+        Name: deploymentData.DesignationName,
+      }
       : null,
     location: deploymentData.LocationID
       ? {
-          RecordID: deploymentData.LocationID,
-          Code: deploymentData.LocationCode,
-          Name: deploymentData.LocationName,
-        }
+        RecordID: deploymentData.LocationID,
+        Code: deploymentData.LocationCode,
+        Name: deploymentData.LocationName,
+      }
       : null,
     gate: deploymentData.StoregatemasterID
       ? {
-          RecordID: deploymentData.StoregatemasterID,
-          Code: deploymentData.StoregatemasterCode,
-          Name: deploymentData.StoregatemasterName,
-        }
+        RecordID: deploymentData.StoregatemasterID,
+        Code: deploymentData.StoregatemasterCode,
+        Name: deploymentData.StoregatemasterName,
+      }
       : null,
     project: deploymentData.DefaultProject
       ? {
-          RecordID: deploymentData.DefaultProject,
-          Code: deploymentData.ProjectCode,
-          Name: deploymentData.ProjectName,
-        }
+        RecordID: deploymentData.DefaultProject,
+        Code: deploymentData.ProjectCode,
+        Name: deploymentData.ProjectName,
+      }
       : null,
     function: deploymentData.DefaultFunction
       ? {
-          RecordID: deploymentData.DefaultFunction,
-          Code: deploymentData.FunctionCode,
-          Name: deploymentData.FunctionName,
-        }
+        RecordID: deploymentData.DefaultFunction,
+        Code: deploymentData.FunctionCode,
+        Name: deploymentData.FunctionName,
+      }
       : null,
     shift: deploymentData.ShiftID
       ? {
-          RecordID: deploymentData.ShiftID,
-          Code: deploymentData.ShiftCode,
-          Name: deploymentData.ShiftName,
-        }
+        RecordID: deploymentData.ShiftID,
+        Code: deploymentData.ShiftCode,
+        Name: deploymentData.ShiftName,
+      }
       : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
@@ -2569,16 +2570,16 @@ const ItemdataGridHeight = "57vh";
       empLoaData.category == "Education"
         ? "EC"
         : empLoaData.category == "Insurance "
-        ? "IS"
-        : empLoaData.category == "Award "
-        ? "AD"
-        : empLoaData.category == "Certificate "
-        ? "CT"
-        : empLoaData.category == "Warranty "
-        ? "WT"
-        : empLoaData.category == "Others "
-        ? "OS"
-        : "",
+          ? "IS"
+          : empLoaData.category == "Award "
+            ? "AD"
+            : empLoaData.category == "Certificate "
+              ? "CT"
+              : empLoaData.category == "Warranty "
+                ? "WT"
+                : empLoaData.category == "Others "
+                  ? "OS"
+                  : "",
     RenewalDate: empLoaData.RenewalDate || "",
     Sortorder: "",
   };
@@ -2587,8 +2588,8 @@ const ItemdataGridHeight = "57vh";
       laomode === "A" && !del
         ? "insert"
         : laomode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     console.log(values);
 
@@ -3204,6 +3205,25 @@ const ItemdataGridHeight = "57vh";
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
                       <Box>
+                        <MultiFormikOptimizedAutocomplete
+                          sx={{ width: "100%" }}
+                          name="Module"
+                          label="Module"
+                          id="Module"
+                          value={selectedPro}                 
+                          onChange={(e, newValue) => {
+                            setFieldValue("Module", newValue);
+                            setSelectedPro(newValue);
+                          //   if (newValue) {
+                          //     sessionStorage.setItem("proData", JSON.stringify(newValue));
+                          //   } else {
+                          //     sessionStorage.removeItem("proData");
+                          //   }
+                           }}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Module","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        />
+                      </Box>
+                      <Box>
                         <Field
                           //  size="small"
                           type="checkbox"
@@ -3304,8 +3324,8 @@ const ItemdataGridHeight = "57vh";
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                        // required
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // required
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="confirmdate"
@@ -3321,8 +3341,8 @@ const ItemdataGridHeight = "57vh";
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                        // required
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // required
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         fullWidth
@@ -3346,7 +3366,7 @@ const ItemdataGridHeight = "57vh";
                         focused
                         inputProps={{ maxLength: 90 }}
                         multiline
-                        // rows={2}
+                      // rows={2}
                       />
                       <TextField
                         fullWidth
@@ -3480,7 +3500,7 @@ const ItemdataGridHeight = "57vh";
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                      // filterValue={locationLookup.locationRecordID}
+                    // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -3563,7 +3583,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -3584,7 +3604,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     <Stack
@@ -3903,7 +3923,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -3924,7 +3944,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                   </Box>
@@ -4410,8 +4430,8 @@ const ItemdataGridHeight = "57vh";
                       }}
                       focused
 
-                      //  error={!!touched.Desc && !!errors.Desc}
-                      //  helperText={touched.Desc && errors.Desc}
+                    //  error={!!touched.Desc && !!errors.Desc}
+                    //  helperText={touched.Desc && errors.Desc}
                     />
 
                     <TextField
@@ -4712,10 +4732,10 @@ const ItemdataGridHeight = "57vh";
                               variant="contained"
                               type="submit"
                               loading={loading}
-                              // onClick={() => {
-                              //   fnProcess(values, resetForm, "");
-                              //   //navigate("")
-                              // }}
+                            // onClick={() => {
+                            //   fnProcess(values, resetForm, "");
+                            //   //navigate("")
+                            // }}
                             >
                               Save
                             </LoadingButton>
@@ -5629,7 +5649,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -5650,7 +5670,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                       {/* <TextField
                         fullWidth
@@ -5821,9 +5841,8 @@ const ItemdataGridHeight = "57vh";
                         }}
                         error={!!touched.gate && !!errors.gate}
                         helperText={touched.gate && errors.gate}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${
-                          values.location ? values.location.RecordID : 0
-                        }'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2050","ScreenName":"Gate","Filter":"parentID='${values.location ? values.location.RecordID : 0
+                          }'","Any":""}}`}
                       />
                     </FormControl>
 
@@ -5910,8 +5929,8 @@ const ItemdataGridHeight = "57vh";
                       onBlur={handleBlur}
                       onChange={handleChange}
                       select
-                      // error={!!touched.Onsiterole && !!errors.Onsiterole}
-                      // helperText={touched.Onsiterole && errors.Onsiterole}
+                    // error={!!touched.Onsiterole && !!errors.Onsiterole}
+                    // helperText={touched.Onsiterole && errors.Onsiterole}
                     >
                       <MenuItem value="Project">Project</MenuItem>
                       <MenuItem value="Marketing">Marketing</MenuItem>
@@ -5926,7 +5945,7 @@ const ItemdataGridHeight = "57vh";
                         onBlur={handleBlur}
                         as={Checkbox}
                         label="Onsitedateflag"
-                        // disabled
+                      // disabled
                       />
 
                       <FormLabel focused={false}>
@@ -6153,7 +6172,7 @@ const ItemdataGridHeight = "57vh";
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="biometric"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Biometric</FormLabel>
@@ -6167,7 +6186,7 @@ const ItemdataGridHeight = "57vh";
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="mobile"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Mobile Geofencing</FormLabel>
@@ -6181,7 +6200,7 @@ const ItemdataGridHeight = "57vh";
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="cloud"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Cloud Application</FormLabel>
@@ -6195,7 +6214,7 @@ const ItemdataGridHeight = "57vh";
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="managermanual"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Manager Manual</FormLabel>
@@ -6208,7 +6227,7 @@ const ItemdataGridHeight = "57vh";
                       onBlur={handleBlur}
                       as={Checkbox}
                       label="defaultpresent"
-                      // disabled
+                    // disabled
                     />
 
                     <FormLabel focused={false}>Default Present</FormLabel>
@@ -6523,7 +6542,7 @@ const ItemdataGridHeight = "57vh";
                           onChange={handleChange}
                           label="Code"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <TextField
@@ -6537,7 +6556,7 @@ const ItemdataGridHeight = "57vh";
                           onChange={handleChange}
                           label="Name"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -7362,7 +7381,7 @@ const ItemdataGridHeight = "57vh";
             <Formik
               initialValues={itemservicesInitialValue}
               enableReinitialize={true}
-            validationSchema={validationSchema12}
+              validationSchema={validationSchema12}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   empItemServicesFn(values, resetForm, false);
@@ -7529,7 +7548,7 @@ const ItemdataGridHeight = "57vh";
                       />
                     </Box>
 
-                    <FormControl sx={{ gap: formGap , height:{ItemdataGridHeight}}}>
+                    <FormControl sx={{ gap: formGap, height: { ItemdataGridHeight } }}>
                       <CheckinAutocomplete
                         name="items"
                         label={
@@ -7726,49 +7745,49 @@ const ItemdataGridHeight = "57vh";
                             error={!!touched.returndate && !!errors.returndate}
                             helperText={touched.returndate && errors.returndate}
                             sx={{ background: "" }}
-                            // required
-                            //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          // required
+                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                           />
                         </Grid>
                         <Grid item xs={6}>
                           <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        value={values.tentativecharge}
-                        id="tentativecharge"
-                        name="tentativecharge"
-                        label={
-                          <>
-                            Tentative Charges{" "}
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={
-                          !!touched.tentativecharge && !!errors.tentativecharge
-                        }
-                        helperText={
-                          touched.tentativecharge && errors.tentativecharge
-                        }
-                        sx={{
-                          //gridColumn: "span 2",
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
+                            fullWidth
+                            variant="standard"
+                            type="text"
+                            value={values.tentativecharge}
+                            id="tentativecharge"
+                            name="tentativecharge"
+                            label={
+                              <>
+                                Tentative Charges{" "}
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </>
+                            }
+                            // required
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.tentativecharge && !!errors.tentativecharge
+                            }
+                            helperText={
+                              touched.tentativecharge && errors.tentativecharge
+                            }
+                            sx={{
+                              //gridColumn: "span 2",
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                              },
+                            }}
+                            focused
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                              },
+                            }}
+                          />
                         </Grid>
                       </Grid>
                       {show == "14" && funMode === "E" ? (
@@ -8296,13 +8315,13 @@ const ItemdataGridHeight = "57vh";
                         helperText={touched.BillingUnits && errors.BillingUnits}
                         // required
                         focused
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -8393,11 +8412,11 @@ const ItemdataGridHeight = "57vh";
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8420,11 +8439,11 @@ const ItemdataGridHeight = "57vh";
                         inputProps={{ maxLength: 25 }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8446,11 +8465,11 @@ const ItemdataGridHeight = "57vh";
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -8472,11 +8491,11 @@ const ItemdataGridHeight = "57vh";
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
 
                       <TextField
@@ -8492,10 +8511,10 @@ const ItemdataGridHeight = "57vh";
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -9057,13 +9076,13 @@ const ItemdataGridHeight = "57vh";
                         focused
                         error={!!touched.BillingUnits && !!errors.BillingUnits}
                         helperText={touched.BillingUnits && errors.BillingUnits}
-                        // sx={{
-                        //   gridColumn: "span 2",
-                        //   backgroundColor: "#ffffff",
-                        //   "& .MuiInputBase-root": {
-                        //     backgroundColor: "",
-                        //   },
-                        // }}
+                      // sx={{
+                      //   gridColumn: "span 2",
+                      //   backgroundColor: "#ffffff",
+                      //   "& .MuiInputBase-root": {
+                      //     backgroundColor: "",
+                      //   },
+                      // }}
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
@@ -9153,11 +9172,11 @@ const ItemdataGridHeight = "57vh";
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -9180,11 +9199,11 @@ const ItemdataGridHeight = "57vh";
                         inputProps={{ maxLength: 25 }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -9206,11 +9225,11 @@ const ItemdataGridHeight = "57vh";
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         // disabled={mode === "V"}
@@ -9232,11 +9251,11 @@ const ItemdataGridHeight = "57vh";
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        // onInput={(e) => {
-                        //   e.target.value = Math.max(0, parseInt(e.target.value))
-                        //     .toString()
-                        //     .slice(0, 11);
-                        // }}
+                      // onInput={(e) => {
+                      //   e.target.value = Math.max(0, parseInt(e.target.value))
+                      //     .toString()
+                      //     .slice(0, 11);
+                      // }}
                       />
                       <TextField
                         name="FromPeriod"
@@ -9251,10 +9270,10 @@ const ItemdataGridHeight = "57vh";
                         value={values.FromPeriod}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                        // helperText={touched.FromPeriod && errors.FromPeriod}
-                        //sx={{ background: "" }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
+                      // helperText={touched.FromPeriod && errors.FromPeriod}
+                      //sx={{ background: "" }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="ToPeriod"
@@ -9565,7 +9584,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
 
                       <TextField
@@ -9586,7 +9605,7 @@ const ItemdataGridHeight = "57vh";
                           },
                         }}
                         focused
-                        // inputProps={{ readOnly: true }}
+                      // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
                     {/* <Stack
@@ -10332,7 +10351,7 @@ const ItemdataGridHeight = "57vh";
                           onChange={handleChange}
                           label="Code"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <TextField
@@ -10346,7 +10365,7 @@ const ItemdataGridHeight = "57vh";
                           onChange={handleChange}
                           label="Name"
                           focused
-                          // inputProps={{ readOnly: true }}
+                        // inputProps={{ readOnly: true }}
                         />
 
                         <Box
@@ -10490,7 +10509,7 @@ const ItemdataGridHeight = "57vh";
                               },
                             }}
                             InputProps={{ readOnly: true }}
-                            // autoFocus
+                          // autoFocus
                           />
                         ) : (
                           <TextField

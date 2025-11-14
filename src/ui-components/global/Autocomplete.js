@@ -725,6 +725,7 @@ export function MultiFormikOptimizedAutocomplete({
       }}
       size="small"
       multiple={multiple}
+      
       limitTags={1}
       open={open}
       onOpen={() => setOpen(true)}
@@ -732,6 +733,8 @@ export function MultiFormikOptimizedAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
+      variant="standard"  // Set variant to "standard"
+      focused
       isOptionEqualToValue={(option, value) => option?.RecordID === value?.RecordID}
       getOptionLabel={(option) => option?.Name || ""}
       disableCloseOnSelect
