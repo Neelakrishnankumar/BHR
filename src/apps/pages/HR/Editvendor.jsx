@@ -441,6 +441,8 @@ const Editvendor = () => {
     PanImg: partyRegistergetdata.PanImg || "",
     GstImg: partyRegistergetdata.GstImg || "",
     gstnumber: partyRegistergetdata.GstNo || "",
+    date: partyRegistergetdata.RegistrationDate || "",
+    verifieddate: partyRegistergetdata.VerifyConfirmDate || "",
   };
 
   const RegisterFnsave = async (values, del) => {
@@ -462,9 +464,11 @@ const Editvendor = () => {
     const idata = {
       RecordID: recID,
       PanCardNo: values.Pancardnumber || 0,
-      PanImg: panImage || "",
+      PanImg: panImage || values.PanImg,
       GstNo: values.gstnumber || 0,
-      GstImg: gstImage || "",
+      GstImg: gstImage || values.GstImg,
+      RegistrationDate: values.date,
+      VerifyConfirmDate: values.verifieddate,
     };
 
     try {
@@ -837,6 +841,76 @@ const Editvendor = () => {
                     // required
                     autoFocus={CompanyAutoCode == "Y"}
                   />
+
+                    <TextField
+                    name="mobilenumber"
+                    id="mobilenumber"
+                    label={
+                      <>
+                        Contact Mobile Number
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    variant="standard"
+                    focused
+                    value={values.mobilenumber}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Only allow numbers and max 10 digits
+                      if (/^\d{0,10}$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    error={!!touched.mobilenumber && !!errors.mobilenumber}
+                    helperText={touched.mobilenumber && errors.mobilenumber}
+                    inputProps={{ maxLength: 10 }}
+                    sx={{ backgroundColor: "#ffffff" }}
+                  />
+ <TextField
+                    name="emailid"
+                    type="text"
+                    id="emailid"
+                    label="Email ID"
+                    variant="standard"
+                    focused
+                    value={values.emailid}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    // autoFocus
+                  />
+
+
+                   <TextField
+                    name="address"
+                    type="text"
+                    id="address"
+                    label="Address"
+                    variant="standard"
+                    focused
+                    multiline
+                    rows={2}
+                    value={values.address}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    // error={!!touched.address && !!errors.address}
+                    // helperText={touched.address && errors.address}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                  />
+
                   <CheckinAutocomplete
                     id="locality"
                     name="locality"
@@ -913,53 +987,9 @@ const Editvendor = () => {
                     // autoFocus
                   /> */}
 
-                  <TextField
-                    name="mobilenumber"
-                    id="mobilenumber"
-                    label={
-                      <>
-                        Contact Mobile Number
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="standard"
-                    focused
-                    value={values.mobilenumber}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      // Only allow numbers and max 10 digits
-                      if (/^\d{0,10}$/.test(value)) {
-                        handleChange(e);
-                      }
-                    }}
-                    error={!!touched.mobilenumber && !!errors.mobilenumber}
-                    helperText={touched.mobilenumber && errors.mobilenumber}
-                    inputProps={{ maxLength: 10 }}
-                    sx={{ backgroundColor: "#ffffff" }}
-                  />
-
-                  <TextField
-                    name="emailid"
-                    type="text"
-                    id="emailid"
-                    label="Email ID"
-                    variant="standard"
-                    focused
-                    value={values.emailid}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    // autoFocus
-                  />
-                  <TextField
+                
+                 
+                  {/* <TextField
                     name="date"
                     type="date"
                     id="date"
@@ -1001,7 +1031,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ",
                       },
                     }}
-                  />
+                  /> */}
 
                   <TextField
                     name="maplink"
@@ -1025,7 +1055,7 @@ const Editvendor = () => {
                   <CheckinAutocomplete
                     id="ReferenceBy"
                     name="ReferenceBy"
-                    label= "Reference By"                       
+                    label="Reference By"
                     variant="outlined"
                     value={values.ReferenceBy}
                     onChange={(newValue) => {
@@ -1037,27 +1067,7 @@ const Editvendor = () => {
                     helperText={touched.ReferenceBy && errors.ReferenceBy}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Functions","Filter":"ParentID=${CompanyID}","Any":""}}`}
                   />
-                  <TextField
-                    name="address"
-                    type="text"
-                    id="address"
-                    label="Address"
-                    variant="standard"
-                    focused
-                    multiline
-                    rows={2}
-                    value={values.address}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // error={!!touched.address && !!errors.address}
-                    // helperText={touched.address && errors.address}
-                    sx={{
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                  />
+                 
                   {/* panimage */}
 
                   <Box display="flex" flexDirection="column" gap={1}>
@@ -1965,7 +1975,7 @@ const Editvendor = () => {
                         sx={{
                           backgroundColor: "#ffffff",
                         }}
-                        // autoFocus
+                        autoFocus
                       />
                       <TextField
                         name="gstnumber"
@@ -1993,6 +2003,49 @@ const Editvendor = () => {
                           backgroundColor: "#ffffff",
                         }}
                         // autoFocus
+                      />
+                      <TextField
+                        name="date"
+                        type="date"
+                        id="date"
+                        label="Date of Registration"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.date}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.date && !!errors.date}
+                        helperText={touched.date && errors.date}
+                        // required
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                        name="verifieddate"
+                        type="date"
+                        id="verifieddate"
+                        label="Date of Verification & Confirmation"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.verifieddate}
+                        // required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.date && !!errors.date}
+                        helperText={touched.date && errors.date}
+                        sx={{
+                          backgroundColor: "#ffffff",
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ",
+                          },
+                        }}
                       />
                     </Box>
                     <Box
