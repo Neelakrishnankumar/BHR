@@ -269,7 +269,7 @@ const LeaderCardView = () => {
                                             <ListAltOutlinedIcon sx={{ fontSize: 20 }} />
                                         </IconButton>
                                     </Tooltip>
-                                    {/* {row.LEStatus === "Close" && (
+                                    {row.LEStatus === "Close" && (
                                         <>
                                             <Tooltip title="Order">
                                                 <IconButton
@@ -284,9 +284,20 @@ const LeaderCardView = () => {
                                                 </IconButton>
                                             </Tooltip>
 
-                                           
+                                            {/* <Tooltip title="Order Item">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() =>
+                                                        handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
+                                                    }
+                                                    size="small"
+                                                // disabled={row.LEStatus === "Close"}
+                                                >
+                                                    <GridViewIcon sx={{ fontSize: 20 }} />
+                                                </IconButton>
+                                            </Tooltip> */}
                                         </>
-                                    )} */}
+                                    )}
                                 </Box>
                             </Card>
                         </Grid>

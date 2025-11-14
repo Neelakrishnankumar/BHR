@@ -66,11 +66,14 @@ const EditOrderitem = () => {
     const currentDate = new Date().toISOString().split('T')[0];
 
     const InitialValue = {
-        orderno: data.Code,
-        orderdate: currentDate,
-        partyname: data.PartyName,
-        sortorder: data.SortOrder,
-        disable: data.Disable === "Y" ? true : false,
+        quantity: data.Quantity,
+        price: data.Price,
+        netprice: data.NetPrice,
+        amount: data.Amount,
+        discount: data.Discount,
+        project: data.ProductCombo
+            ? { RecordID: data.ProductCombo, Name: data.ProjectName }
+            : null,
     };
 
     const Fnsave = async (values, del) => {
@@ -89,7 +92,7 @@ const EditOrderitem = () => {
         const idata = {
             RecordID: recID,
             CompanyID,
-            OrderHeareID: "",
+            OrderHeareID: params.filtertype,
             ProductCombo: values.product.RecordID || 0,
             Quantity: values.quantity,
             Price: values.price || 0,

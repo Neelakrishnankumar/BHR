@@ -120,7 +120,7 @@ const Editvendor = () => {
         let schemaFields = {
           name: Yup.string().required(data.Party.name),
           locality: Yup.object().required(data.Party.locality).nullable(),
-          ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
+          //ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
             .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
@@ -392,8 +392,8 @@ const Editvendor = () => {
       Name: values.name,
       LocalityID: values.locality.RecordID || 0,
       LocalityName: values.locality.Name || "",
-      ReferenceID: values.ReferenceBy.RecordID || 0,
-      ReferenceName: values.ReferenceBy.Name || "",
+      ReferenceID: values.ReferenceBy?.RecordID || 0,
+      ReferenceName: values.ReferenceBy?.Name || "",
       PanCardNo: values.Pancardnumber,
       Address: values.address,
       MapLocation: values.maplink,
@@ -1025,14 +1025,7 @@ const Editvendor = () => {
                   <CheckinAutocomplete
                     id="ReferenceBy"
                     name="ReferenceBy"
-                    label={
-                      <>
-                        Reference By
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
+                    label= "Reference By"                       
                     variant="outlined"
                     value={values.ReferenceBy}
                     onChange={(newValue) => {

@@ -271,7 +271,7 @@ const ListviewSecondary = () => {
   }
   else if (accessID === "TR311") {
 
-    filter = `''`;
+    filter = `OrderHeaderID='${leaderID}'`;
     // filter =`PartyID='${leaderID}'`;
   }
   else if (accessID == "TR283") {
