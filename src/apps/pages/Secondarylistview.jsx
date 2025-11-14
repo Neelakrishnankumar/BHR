@@ -1921,6 +1921,56 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
+        ): accessID == "TR311" ? (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR243/Party");
+                }}
+              >
+
+                {/* {Type === "F"
+                  ? "Party" 
+                  : `Party(${state.PartyName})`} */}
+                {`Party(${state.PartyName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  console.log(state.PartyID, "PartyID");
+                  navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`, { state: { ...state } });
+                }}
+              >
+                {/* Leader */}
+                {`Lead(${state.LeadTitle})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => navigate(-1)}
+              >
+                Order
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                Order Item
+              </Typography>
+            </Breadcrumbs>
+          </Box>
         ) : accessID == "TR102" ? (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Breadcrumbs

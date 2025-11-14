@@ -1734,6 +1734,7 @@ export const fetchListview =
           //   };
           // }
           else if (AccessID === "TR310") {
+           
             obj = {
               field: "action",
               headerName: "Action",
@@ -1774,7 +1775,10 @@ export const fetchListview =
                     {/* Leader Button */}
                     <Link
                       // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
-                      to={`/Apps/Secondarylistview/TR311/Orderitem/${id}`}
+                      to={params.row.OrderItemsCount >=1 
+                        ? `/Apps/Secondarylistview/TR311/Orderitem/${id}` 
+                        : `/Apps/Secondarylistview/TR311/Orderitem/${id}/EditOrderitem/-1/A` 
+                      }
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
@@ -1798,6 +1802,51 @@ export const fetchListview =
               },
             };
           }
+
+else if (AccessID === "TR311") {
+           
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                const count = Number(params.row.MarketingCount || 0);
+                const id = params.row.RecordID;
+                const PartyName = params.row.Name;
+
+                // Encode PartyName to make it URL-safe
+                // const encodedName = encodeURIComponent(PartyName);
+
+                return (
+                  <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      state={{
+                        PartyName: params.row.PartyName,
+                        Count: params.row.MarketingCount,
+                        LeadTitle: params.row.LeadTitle,
+                        PartyID: params.row.PartyRecordID
+                      }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }
+
           else if (AccessID === "TR304") {
             obj = {
               field: "action",

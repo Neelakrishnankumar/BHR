@@ -1,13 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
-import {
-    Autocomplete,
-    CircularProgress,
-    TextField,
-  } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 
 import axios from "axios";
-
 
 import Checkbox from "@mui/material/Checkbox";
 
@@ -15,7 +10,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 // import { FixedSizeList } from "react-window";
 
-import { Select, MenuItem,   FormControl, InputLabel,  } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 // Context for custom listbox
 const LISTBOX_PADDING = 8; // Padding around the listbox
@@ -30,198 +25,280 @@ const OuterElementType = React.forwardRef((props, ref) => {
 });
 
 // Custom Listbox component
-const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) {
-});
+const ListboxComponent = React.forwardRef(function ListboxComponent(
+  props,
+  ref
+) {});
 
 ListboxComponent.propTypes = {
   children: PropTypes.node,
 };
 
-
 export const Productautocomplete = ({
-    value = null,
-    onChange,
-    url,
-    height = 20,
-    defaultValue,
-    ...props
-  }) => {
-    const [options, setOptions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-// console.log(options, "Productautocomplete auto options");
-    useEffect(() => {
-      const fetchData = async () => {
-        if (!url) return;
-        setLoading(true);
-        try {
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: 
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  // console.log(options, "Productautocomplete auto options");
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
               //"eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
-            },
-          });
-          console.log(response,"cgheck-----------");
-          const data = response.data.Data.rows || [];
-          console.log(data,"cgheck-----------");
-          setOptions(data);
-          
-        } catch (err) {
-          console.error("Error fetching data:", err);
-          setOptions([]);
-          setError("Failed to load. Please try again.");
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchData();
-    }, [url]);
-  useEffect(()=>{
-if(defaultValue){
-  const defaultOption=options.find((option)=>option.Name ===defaultValue);
-  if(defaultOption && !value){
-    onChange(defaultOption);
-  }
-}
-  },[options,defaultValue,onChange])
-    return (
-      <Autocomplete
-        size="small"
-        fullWidth
-        limitTags={1}
-        options={options}
-        loading={loading}
-        value={value}
-        isOptionEqualToValue={(option, value) => option.Name === value.Name}
-        onChange={(event, newValue) => onChange(newValue)}
-        getOptionLabel={(option) => option.Name}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={props.label || "Select Options"}
-            error={!!error}
-            helperText={error}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
-            }}
-          />
-        )}
-        {...props}
-      />
-    );
-  };
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        console.log(response, "cgheck-----------");
+        const data = response.data.Data.rows || [];
+        console.log(data, "cgheck-----------");
+        setOptions(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setOptions([]);
+        setError("Failed to load. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+  useEffect(() => {
+    if (defaultValue) {
+      const defaultOption = options.find(
+        (option) => option.Name === defaultValue
+      );
+      if (defaultOption && !value) {
+        onChange(defaultOption);
+      }
+    }
+  }, [options, defaultValue, onChange]);
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          error={!!error}
+          helperText={error}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
 export const CheckinAutocomplete = ({
-    value = null,
-    onChange,
-    url,
-    height = 20,
-    defaultValue,
-    ...props
-  }) => {
-    const [options, setOptions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        if (!url) return;
-        setLoading(true);
-        try {
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-            },
-          });
-          const data = response.data.Data.rows || [];
-          setOptions(data);
-        } catch (err) {
-          setOptions([]);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchData();
-    }, [url]);
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    return (
-      <Autocomplete
-        size="small"
-        fullWidth
-        limitTags={1}
-        options={options}
-        loading={loading}
-        value={value}
-        isOptionEqualToValue={(option, value) => option.Name === value.Name}
-        onChange={(event, newValue) => onChange(newValue)}
-        getOptionLabel={(option) => option.Name}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={props.label || "Select Options"}
-            // error={!!error}
-            // helperText={error}
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-            {...props}
-            variant="standard"
-            focused
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
-            }}
-          />
-        )}
-        {...props}
-      />
-    );
-  };
-  //For Levels
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
+export const OrderItemAutocomplete = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      //isOptionEqualToValue={(option, value) => option.Name === value.Name && option.Price === value.Price}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) =>
+        option ? `${option.Name}` : ""
+      }
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+//For Levels
 export const ProductautocompleteLevel = ({
   value = null,
   onChange,
   url,
   height = 20,
   defaultValue,
-  payload = {}, 
+  payload = {},
   ...props
 }) => {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-console.log(options, "auto options");
+  console.log(options, "auto options");
 
   const fetchData = async () => {
     if (!url) return;
     setLoading(true);
     try {
-      const response = await axios.post(
-        url,
-        payload,
-        {
-          headers: {
-              Authorization: 
-             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
-            },
-        }
-      );
-          console.log(response,"check response");
-// const rawData = response?.data?.Data;
-// const data = Array.isArray(rawData) ? rawData : [];
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+      console.log(response, "check response");
+      // const rawData = response?.data?.Data;
+      // const data = Array.isArray(rawData) ? rawData : [];
       const data = response?.data?.Data || [];
-                console.log(data,"data response");
+      console.log(data, "data response");
 
       setOptions(data);
     } catch (err) {
@@ -239,7 +316,9 @@ console.log(options, "auto options");
 
   useEffect(() => {
     if (defaultValue) {
-      const defaultOption = options.find((option) => option.Name === defaultValue);
+      const defaultOption = options.find(
+        (option) => option.Name === defaultValue
+      );
       if (defaultOption && !value) {
         onChange(defaultOption);
       }
@@ -253,7 +332,6 @@ console.log(options, "auto options");
       limitTags={1}
       options={options}
       loading={loading}
-      
       value={value}
       isOptionEqualToValue={(option, value) => option.Name === value.Name}
       onChange={(event, newValue) => onChange(newValue)}
@@ -262,14 +340,16 @@ console.log(options, "auto options");
         <TextField
           {...params}
           label={props.label || "Select Options"}
-           {...props}
-           variant="standard"
-           focused
+          {...props}
+          variant="standard"
+          focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -280,7 +360,6 @@ console.log(options, "auto options");
     />
   );
 };
-
 
 //  export const CheckinAutocomplete = ({
 //     value = null,
@@ -293,7 +372,7 @@ console.log(options, "auto options");
 //     const [options, setOptions] = useState([]);
 //     const [loading, setLoading] = useState(false);
 //     const [error, setError] = useState(null);
-  
+
 //     useEffect(() => {
 //       const fetchData = async () => {
 //         if (!url) return;
@@ -312,7 +391,7 @@ console.log(options, "auto options");
 //           setLoading(false);
 //         }
 //       };
-  
+
 //       fetchData();
 //     }, [url]);
 
@@ -349,10 +428,8 @@ console.log(options, "auto options");
 //       />
 //     );
 //   };
-  
 
-  
-  //For Levels
+//For Levels
 // export const ProductautocompleteLevel = ({
 //   value = null,
 //   onChange,
@@ -376,7 +453,7 @@ console.log(options, "auto options");
 //         payload,
 //         {
 //           headers: {
-//               Authorization: 
+//               Authorization:
 //              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
 //             },
 //         }
@@ -460,8 +537,8 @@ export const SprintEmpAutocomplete = ({
       try {
         const response = await axios.get(url, {
           headers: {
-            Authorization: 
-           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
         const data = response.data.Data.rows || [];
@@ -497,7 +574,9 @@ export const SprintEmpAutocomplete = ({
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -623,9 +702,14 @@ export function MultiFormikTwoAutocomplete({
         });
         console.log("API Response:", response.data);
         const data = response?.data?.Data || [];
-        setOptions(Array.isArray(data) ? data.map(item => ({
-          ...item, ProdCatgName: item.ProdCatgName.trim()
-        })) : []);
+        setOptions(
+          Array.isArray(data)
+            ? data.map((item) => ({
+                ...item,
+                ProdCatgName: item.ProdCatgName.trim(),
+              }))
+            : []
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
         setOptions([]);
@@ -648,7 +732,11 @@ export function MultiFormikTwoAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
-      isOptionEqualToValue={(option, value) => option?.RecordID && value?.RecordID && option.RecordID === value.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID &&
+        value?.RecordID &&
+        option.RecordID === value.RecordID
+      }
       getOptionLabel={(option) => option?.ProdCatgName || ""}
       disableCloseOnSelect
       loading={loading}
@@ -700,11 +788,12 @@ export function MultiFormikOptimizedAutocomplete({
       try {
         const response = await axios.get(url, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
         console.log("API Response:", response.data);
-        const data = response?.data?.Data?.rows || [];  // Ensure it's always an array
+        const data = response?.data?.Data?.rows || []; // Ensure it's always an array
         setOptions(Array.isArray(data) ? data : []);
         //setOptions(data);
       } catch (error) {
@@ -714,10 +803,10 @@ export function MultiFormikOptimizedAutocomplete({
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [url]);
-  
+
   return (
     <Autocomplete
       sx={{
@@ -788,11 +877,12 @@ export function MultiFormikScheduleOptimizedAutocomplete({
       try {
         const response = await axios.get(url, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
         console.log("API Response:", response.data);
-        const data = response?.data?.Data?.rows || [];  // Ensure it's always an array
+        const data = response?.data?.Data?.rows || []; // Ensure it's always an array
         setOptions(Array.isArray(data) ? data : []);
         //setOptions(data);
       } catch (error) {
@@ -802,10 +892,10 @@ export function MultiFormikScheduleOptimizedAutocomplete({
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [url]);
-  
+
   return (
     <Autocomplete
       sx={{
@@ -820,7 +910,9 @@ export function MultiFormikScheduleOptimizedAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
-      isOptionEqualToValue={(option, value) => option?.RecordID === value?.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID === value?.RecordID
+      }
       getOptionLabel={(option) => option?.Name || ""}
       disableCloseOnSelect
       loading={loading}
@@ -873,7 +965,7 @@ export function MultiFormikScheduleOptimizedAutocomplete({
 //           },
 //         });
 //         console.log('autocom',response);
-        
+
 //         const data = response.data.Data.rows || [];
 //         setOptions(data);
 //       } catch (error) {
@@ -896,7 +988,7 @@ export function MultiFormikScheduleOptimizedAutocomplete({
 //       options={options}
 //       loading={loading}
 //       value={value}
-      
+
 //       isOptionEqualToValue={(option, value) => option.RecordID === value.RecordID}
 //       onChange={onChange}
 //       getOptionLabel={(option) => `${option.Name}`}
@@ -926,7 +1018,6 @@ export function MultiFormikScheduleOptimizedAutocomplete({
 //     />
 //   );
 // };
- 
 
 export const SingleFormikOptimizedAutocomplete = ({
   value = null,
@@ -1006,101 +1097,101 @@ export const SingleFormikOptimizedAutocomplete = ({
   );
 };
 
-  export const FormikProductautocomplete = ({
-    value = null,
-    onChange = () => {},
-    url,
-    height = 20,
-    ...props
-  }) => {
-    const [options, setOptions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-  
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     setLoading(true);
-    //     try {
-    //       const response = await axios.get(url, {
-    //         headers: {
-    //           Authorization: process.env.REACT_APP_API_TOKEN,
-    //         },
-    //       });
-    //       setOptions(response.data.Data || []); // Assuming API response has `Data` array
-    //     } catch (error) {
-    //       console.error("Error fetching data:", error);
-    //       setOptions([]);
-    //       setError("Failed to load. Please try again.");
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };
-  
-    //   fetchData();
-    // }, [url]);
-    useEffect(() => {
-      const fetchData = async () => {
-        if (!url) return;
-        setLoading(true);
-        try {
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-            },
-          });
-          const data = response.data.Data.rows || [];
-          setOptions(data);
-        } catch (err) {
-          console.error("Error fetching data:", err);
-          setOptions([]);
-          setError("Failed to load. Please try again.");
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchData();
-    }, [url]);
-    return (
-      <Autocomplete
-        size="small"
-        limitTags={1}
-        fullWidth
-        options={options}
-        loading={loading}
-        value={value}
-        // isOptionEqualToValue={(option, value) => option.Name === value.Name}
-        onChange={onChange}
-        // getOptionLabel={(option) => option.Name}
-        isOptionEqualToValue={(option, value) => option.Name === value.Name}
-        // onChange={(event, newValue) => onChange(newValue)}
-        getOptionLabel={(option) => option.Name}
-        ListboxComponent={ListboxComponent} // Custom listbox component
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={props.label || "Select Options"}
-            error={!!error}
-            helperText={error}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
-            }}
-          />
-        )}
-        {...props}
-      />
-    );
-  };
+export const FormikProductautocomplete = ({
+  value = null,
+  onChange = () => {},
+  url,
+  height = 20,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.get(url, {
+  //         headers: {
+  //           Authorization: process.env.REACT_APP_API_TOKEN,
+  //         },
+  //       });
+  //       setOptions(response.data.Data || []); // Assuming API response has `Data` array
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       setOptions([]);
+  //       setError("Failed to load. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [url]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setOptions([]);
+        setError("Failed to load. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+  return (
+    <Autocomplete
+      size="small"
+      limitTags={1}
+      fullWidth
+      options={options}
+      loading={loading}
+      value={value}
+      // isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      onChange={onChange}
+      // getOptionLabel={(option) => option.Name}
+      isOptionEqualToValue={(option, value) => option.Name === value.Name}
+      // onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.Name}
+      ListboxComponent={ListboxComponent} // Custom listbox component
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          error={!!error}
+          helperText={error}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
 export const Employeeautocomplete = ({
   value = null,
   onChange,
@@ -1120,7 +1211,8 @@ export const Employeeautocomplete = ({
       try {
         const response = await axios.get(url, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
         const data = response.data.Data.rows || [];
@@ -1136,14 +1228,14 @@ export const Employeeautocomplete = ({
 
     fetchData();
   }, [url]);
-//   useEffect(()=>{
-// if(defaultValue){
-//   const defaultOption=options.find((option)=>option.Name ===defaultValue);
-//   if(defaultOption && !value){
-//     onChange(defaultOption);
-//   }
-// }
-//   },[options,defaultValue,onChange])
+  //   useEffect(()=>{
+  // if(defaultValue){
+  //   const defaultOption=options.find((option)=>option.Name ===defaultValue);
+  //   if(defaultOption && !value){
+  //     onChange(defaultOption);
+  //   }
+  // }
+  //   },[options,defaultValue,onChange])
   return (
     <Autocomplete
       size="small"
@@ -1157,7 +1249,7 @@ export const Employeeautocomplete = ({
       getOptionLabel={(option) => option.Name}
       renderInput={(params) => (
         <TextField
-        focused
+          focused
           variant="standard"
           {...params}
           label={props.label || "Select Options"}
@@ -1167,7 +1259,9 @@ export const Employeeautocomplete = ({
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
                 {params.InputProps.endAdornment}
               </>
             ),
