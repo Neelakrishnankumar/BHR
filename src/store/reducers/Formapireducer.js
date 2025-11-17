@@ -91,6 +91,10 @@ const initialState = {
   vendorregisterGetData:{},
 vendorregisterGetDatastatus:"",
 vendorregisterGetDataloading:false,
+
+vendorDefaultGetData:{},
+vendorDefaultGetDatastatus:"",
+vendorDefaultGetDataloading:false,
   projectCostinggetdata:{},
   projectCostingstatus:"",
   projectCostingloading:false,
@@ -966,10 +970,33 @@ export const getFetchData = createAsyncThunk(
 );
 export const VendorRegisterFetchData = createAsyncThunk(
   "VendorRegisterFetchData/Header",
-  async ({ accessID, get, recID, }) => {
+  async ({ get, recID, }) => {
     var url = store.getState().globalurl.VendorRegistrationGet;
     const data = {
-      accessid: accessID,
+      action: get,
+      recid: recID,
+    };
+
+    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const VendorDefaultFetchData = createAsyncThunk(
+  "VendorDefaultFetchData/Header",
+  async ({ get, recID, }) => {
+    var url = store.getState().globalurl.VendorDefaultGET;
+    const data = {
       action: get,
       recid: recID,
     };
@@ -1415,6 +1442,27 @@ export const VendorRegisterpostData = createAsyncThunk(
   "VendorRegisterpostData/post",
   async ({ accessID, action, idata }) => {
     const url = store.getState().globalurl.VendorRegistration;
+
+    const data = {
+      accessid: accessID,
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+export const VendorDefaultPUTdata = createAsyncThunk(
+  "VendorDefaultPUTdata/post",
+  async ({ accessID, action, idata }) => {
+    const url = store.getState().globalurl.VendorDefaultPUT;
 
     const data = {
       accessid: accessID,
@@ -2171,6 +2219,21 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
+      //VENDOR - DEFAULT
+ .addCase(VendorDefaultPUTdata.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(VendorDefaultPUTdata.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        state.partyContactData = action.meta.arg.idata;
+      })
+      .addCase(VendorDefaultPUTdata.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
         state.sprintgetstatus = "idle";
@@ -2725,6 +2788,28 @@ export const getApiSlice = createSlice({
   .addCase(VendorRegisterFetchData.rejected, (state, action) => {
     state.vendorregisterGetData = {};
     state.vendorregisterGetDataloading = false;
+    state.error = action.error.message;
+  })
+
+
+    //VENDOR DEFAULT GET 
+    .addCase(VendorDefaultFetchData.pending, (state) => {
+    state.vendorDefaultGetData = {};
+    state.vendorDefaultGetDataloading = true;
+    state.error = null;
+
+  })
+  .addCase(VendorDefaultFetchData.fulfilled, (state, action) => {
+   
+          state.vendorDefaultGetData = action.payload.Data;
+
+   
+    state.vendorDefaultGetDataloading = false;
+    state.error = null;
+  })
+  .addCase(VendorDefaultFetchData.rejected, (state, action) => {
+    state.vendorDefaultGetData = {};
+    state.vendorDefaultGetDataloading = false;
     state.error = action.error.message;
   })
   //PROJECT COSTING PDF

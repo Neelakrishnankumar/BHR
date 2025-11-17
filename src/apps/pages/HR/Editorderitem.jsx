@@ -83,7 +83,7 @@ const EditOrderitem = () => {
       : null,
   };
 
-  const Fnsave = async (values, del) => {
+  const Fnsave = async (values, del, actions) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
       mode === "A" && !del
@@ -99,7 +99,7 @@ const EditOrderitem = () => {
     const idata = {
       RecordID: recID,
       CompanyID,
-      OrderHeareID: params.filtertype,
+      OrderHeareID: params.filtertype1,
       ProductCombo: values.product.RecordID || 0,
       Quantity: values.quantity || 0,
       Price: values.price || 0,
@@ -124,9 +124,27 @@ const EditOrderitem = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(`/Apps/Secondarylistview/TR311/Orderitem/${params.filtertype}`, {
-        state: { ...state },
-      });
+      // navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`, {
+      //   state: { ...state },
+      // });
+      
+      // actions.resetForm();
+      //     actions.setSubmitting(false);
+           // ⭐ CASE 1 → Add Mode → stay on same page
+    if (mode === "A") {
+      actions.resetForm();
+      actions.setSubmitting(false);
+      return; // VERY IMPORTANT → do NOT run navigate()
+    }
+
+    // ⭐ CASE 2 → Edit or Delete → Redirect back to OrderItem list
+    if (mode === "E" || del === "harddelete") {
+      navigate(
+        `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+        { state: { ...state } }
+      );
+    }
+
     } else {
       toast.error(response.payload.Msg);
     }
@@ -190,6 +208,8 @@ const EditOrderitem = () => {
               >
                 {`Party(${state.PartyName || ""})`}
               </Typography>
+
+              {params.Type === "Leader" ?
               <Typography
                 variant="h5"
                 color="#0000D1"
@@ -199,23 +219,45 @@ const EditOrderitem = () => {
                 }}
               >
                 {`Lead(${state.LeadTitle || ""})`}
-              </Typography>
+              </Typography> : null}
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate(-1);
+                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`, {state : {...state}});
                 }}
               >
-                Order
+                Order ({state.Code || ""})
               </Typography>
+              {params.Type === "Party" && mode === "E" ? 
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,{state : {...state}});
+                }}
+              >
+                Order Item
+              </Typography> : null}
+              {params.Type === "Leader"? 
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,{state : {...state}});
+                }}
+              >
+                Order Item
+              </Typography> : null}
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                Order Item
+                {mode === "A" ? "Add Order Item" : "Edit Order Item"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -356,7 +398,7 @@ const EditOrderitem = () => {
                         }}
                         error={!!touched.product && !!errors.product}
                         helperText={touched.product && errors.product}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Productt","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                     </FormControl>
                     <TextField
@@ -500,7 +542,7 @@ const EditOrderitem = () => {
                         Save
                       </Button>
                     )}{" "}
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && mode === "E"? (
                       <Button
                         color="error"
                         variant="contained"
@@ -515,15 +557,25 @@ const EditOrderitem = () => {
                         Delete
                       </Button>
                     )}
-                    <Button
+                    {params.Type === "Party" ?
+                   ( <Button
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate(-1);
+                        navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`, {state:{...state}});
                       }}
                     >
                       Cancel
-                    </Button>
+                    </Button>) :
+                    (<Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${accessID}/${params.filtertype1}`, {state:{...state}});
+                      }}
+                    >
+                      Cancel
+                    </Button>)}
                   </Box>
                   {/* <Box display="flex" justifyContent="end" mt="20px" gap="20px">
                 <LoadingButton 

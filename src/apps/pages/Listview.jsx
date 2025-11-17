@@ -71,6 +71,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Diversity2Icon from '@mui/icons-material/Diversity2';
+import CategoryIcon from '@mui/icons-material/Category';
 
 const Listview = () => {
 
@@ -87,6 +88,8 @@ const Listview = () => {
   const dispatch = useDispatch();
   const params = useParams();
   console.log(params, "-------------");
+  const LoginID = sessionStorage.getItem("loginrecordID");
+  const fromDate = useSelector((state) => state.listviewApi.fromDate);
 
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -330,32 +333,79 @@ const Listview = () => {
           ) : (
             false
           )}
-          {/* {accessID == "TR091" ? (
-            <Tooltip arrow title="Price Of Other Customer">
-              <AssessmentIcon
-                sx={{ marginTop: "10px" }}
-                color="primary"
-                onClick={() => {
-                  navigate("./price-of-other-customer");
-                }}
-              />
-            </Tooltip>
-          ) : (
-            false
-          )} */}
-          {/* {accessID == "TR010" ? (
-            <Tooltip arrow title="Customer Line Chart">
-              <AssessmentIcon
-                sx={{ marginTop: "10px" }}
-                color="primary"
-                onClick={() => {
-                  navigate("/Apps/TR400/Editcustomerlinechart/EditCustomer Line Chart/1/A");
-                }}
-              />
-            </Tooltip>
-          ) : (
-            false
-          )} */}
+           {/* {accessID === "TR313" ? (
+              <>
+                <TextField
+                  name="fromdate"
+                  type="date"
+                  id="fromdate"
+                  label="From Date"
+                  variant="standard"
+                  value={fromDate || ""}
+                  onChange={(e) => {
+                    const newDate2 = e.target.value;
+
+                    // Save in Redux
+                    dispatch(setFromDate(newDate2));
+
+                    // Save in sessionStorage
+                    sessionStorage.setItem("FromDate", newDate2);
+
+                    if (selectedDate) {
+                      dispatch(
+                        fetchListview(
+                          "TR313",
+                          "Order Enquiry",
+                          `EmployeesID='${LoginID}' AND DAILYTASKDATE BETWEEN '${newDate2}' AND '${toDate}'`,
+                          ""
+                        )
+                      );
+                    }
+                  }}
+                  focused
+                  required
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  sx={{ width: 250 }}
+                />
+
+                <TextField
+                  name="date"
+                  type="date"
+                  id="date"
+                  label="To Date"
+                  variant="standard"
+                  value={toDate || ""}
+                  onChange={(e) => {
+                    const newDate = e.target.value;
+
+                    // Save in Redux
+                    dispatch(setToDate(newDate));
+
+                    // Save in sessionStorage
+                    sessionStorage.setItem("ToDate", newDate);
+
+                    dispatch(
+                      fetchListview(
+                        "TR313",
+                        "Scrum Task",
+                        `EmployeesID='${LoginID}' AND DAILYTASKDATE BETWEEN '${fromDate}' AND '${newDate}'`,
+                        ""
+                      )
+                    );
+                  }}
+                  focused
+                  required
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                  //sx={{ width: 250, marginLeft: isManager != 1 ? "100px" : 0 }}
+                  sx={{ width: 250 }}
+                />
+              </>
+            ) : (
+              false
+            )} */}
+     
           {accessID == "TR043" ? (
             <Tooltip arrow title="Product Line Chart">
               <AssessmentIcon
@@ -412,7 +462,9 @@ const Listview = () => {
             false
           ) : accessID == "TR257" ? (
             false
-          ) : YearFlag == "true" ? (
+          ) : accessID == "TR313" ? (
+            false
+          ): YearFlag == "true" ? (
             // UGA_ADD ? (
 
             <Tooltip arrow title="Add">
@@ -936,8 +988,36 @@ const Listview = () => {
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />
+            <Chip
+              icon={< CategoryIcon color="primary"/>}
+              label="Order"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
           </Box>
         ) 
+        : accessID == "TR313" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            {/* <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+
+            <Chip
+              icon={< Diversity2Icon color="primary"/>}
+              label="Leads"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={< CategoryIcon color="primary"/>}
+              label="Order"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            /> */}
+          </Box>
+        )
         : accessID == "TR099" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip

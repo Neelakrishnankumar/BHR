@@ -122,6 +122,8 @@ Leadergeturl:  APIurl + "LeaderGetController.php",
 //VendorRegistration:  APIurl + "vendorregistration.php",
 VendorRegistration:  APIurl + "vendorregistrationV1.php",
 VendorRegistrationGet:  APIurl + "vendorregistrationGet.php",
+VendorDefaultPUT:  APIurl + "vendordefault.php",
+VendorDefaultGET:  APIurl + "vendordefaultGet.php",
 
 };
 
