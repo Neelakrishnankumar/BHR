@@ -40,6 +40,7 @@ import {
   postData,
   geolocationData,
   geolocUpdate,
+  ModuleUrl,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -79,11 +80,17 @@ import {
 } from "../../../ui-components/global/utils";
 import {
   CheckinAutocomplete,
+  CusListRunGrpOptimizedAutocomplete,
+  CusListRunGrpOptimizedAutocomplete1,
+  MultiSelectDropdown,
+  ModuleAutocomplete,
   MultiFormikOptimizedAutocomplete,
   Productautocomplete,
   ProductautocompleteLevel,
   SingleFormikOptimizedAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
+import axios from "axios";
+
 // ***********************************************
 //  Developer:Gowsalya
 // Purpose:To Create Employee
@@ -143,6 +150,8 @@ const Editemployee = () => {
   const Msg = useSelector((state) => state.formApi.msg);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const baseApiUrl = useSelector((state) => state.globalurl.baseApiUrl);
+  const fetchedData = useSelector((state) => state.formApi.data);
+  console.log(fetchedData, "fetcheddata");
   console.log("API URL:", baseApiUrl);
   const state = location.state || {};
   console.log(state, "emnployee");
@@ -156,7 +165,9 @@ const Editemployee = () => {
   );
 
   const gelocData = useSelector((state) => state.formApi.exploreData);
-
+  const [moduleValue, setModuleValue] = useState([]);
+  console.log(moduleValue, "modulevalues");
+  const [moduleOptions, setModuleOptions] = useState([]);
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
@@ -176,6 +187,14 @@ const Editemployee = () => {
   const [validationSchema10, setValidationSchema10] = useState(null);
   const [validationSchema11, setValidationSchema11] = useState(null);
   const [validationSchema12, setValidationSchema12] = useState(null);
+  const dropdownData = [
+    { ID: "All", Name: "All" },
+    { ID: "Selected", Name: "Selected" },
+    { ID: "Task", Name: "Task" },
+    { ID: "NK", Name: "NK" }
+  ];
+
+
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -349,6 +368,19 @@ const Editemployee = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
+  useEffect(() => {
+    dispatch(ModuleUrl({ CompanyID: CompanyID }));
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (fetchedData && fetchedData.Status === "Y") {
+  //     const formattedData = fetchedData.Data.map((item) => ({
+  //       label: item.Name,
+  //       value: item.ID,
+  //     }));
+  //     setModuleOptions(formattedData);
+  //   }
+  // }, [fetchedData]);
   // const deployvalidationSchema = Yup.object().shape({
   //   Designation: Yup.object()
   //     .nullable()
@@ -370,6 +402,8 @@ const Editemployee = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+
+  
   // const validationSchema = Yup.object().shape({
   //   Department: Yup.object()
   //     .nullable()
@@ -460,6 +494,15 @@ const Editemployee = () => {
 
   // console.log(apiData, "--apiData");
   // console.log(apiData.DeptName, "--apiData.DeptName");
+  const moduleIDs = (Data.Module || "")
+    .split(",")
+    .map(v => v.trim())
+    .filter(v => v !== "" && v.toLowerCase() !== "selected")
+    .map(name => {
+      const match = fetchedData?.Data.find(item => item.Name === name);
+      return match ? match.ID : null;
+    })
+    .filter(id => id !== null);
 
   const initialValues = {
     Department: Data.DeptRecordID
@@ -497,7 +540,23 @@ const Editemployee = () => {
     Mgr: Data.Mgr,
     Sal: Data.Sal,
     Fax: Data.Fax,
+    //module:Data.Module,
+    module: Data.Module
+      ? Data.Module.split(",")
+        .map(v => v.trim())
+        .filter(v => v !== "")
+      : []
+
+
+    // moduleSelect: mode === "E" ? Data.Module : ""
+    //  moduleSelect:moduleIDs,
+
   };
+  console.log("🚀 ~ Editemployee ~ Data.Module:", Data.Module);
+  // const [apiReturnValue, setApiReturnValue] = useState(null);
+
+  // // 2. Initialize state
+   const [apiReturnValue, setApiReturnValue] = useState("");
 
   console.log(Data.EmpType, "--Data.EmpType");
   const [openPopup, setOpenPopup] = useState(false);
@@ -726,6 +785,7 @@ const Editemployee = () => {
       Comm: values.Comm,
       Password: values.Password,
       DeleteFlag: values.delete == true ? "Y" : "N",
+      Module: apiReturnValue,
       // DesignID: 0,
       // LocationRecID: 0,
       // GateRecID: 0,
@@ -733,7 +793,9 @@ const Editemployee = () => {
       CompanyID,
       SubscriptionCode,
     };
-
+    console.log("🚀 ~ fnSave ~ saveData:", saveData)
+    console.log(apiReturnValue, "moduleselect");
+    //  return;
     const data = await dispatch(
       postData({ accessID, action, idata: saveData })
     );
@@ -3205,22 +3267,61 @@ const Editemployee = () => {
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
                       <Box>
-                        <MultiFormikOptimizedAutocomplete
-                          sx={{ width: "100%" }}
-                          name="Module"
+                        {/* <CusListRunGrpOptimizedAutocomplete
+                          name="module"
+                          id="module"
                           label="Module"
-                          id="Module"
-                          value={selectedPro}                 
-                          onChange={(e, newValue) => {
-                            setFieldValue("Module", newValue);
-                            setSelectedPro(newValue);
-                          //   if (newValue) {
-                          //     sessionStorage.setItem("proData", JSON.stringify(newValue));
-                          //   } else {
-                          //     sessionStorage.removeItem("proData");
-                          //   }
-                           }}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Module","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                          value={values.module}      
+                          onChange={(event, newValue) => {setFieldValue("module", newValue)}}
+                          url={"https://bos.beyondexs.com/api/CompanyModuleGetController.php"}
+                          companyID="204"
+                        /> */}
+
+                        {/* <MultiSelectDropdown
+                          id="moduleSelect"
+                          name="Select Module"
+                          data={fetchedData?.Data || []}
+                          apiValue={apiReturnValue}     // example: "1,3,5"
+                          onChange={(val) => {
+                            console.log("Send this to API =>", val); // e.g. "1,3,5"
+                            setApiReturnValue(val);
+                          }}
+                        /> */}
+
+                        {/* <MultiSelectDropdown
+                          id="moduleSelect"
+                          name="Module Select"
+                          data={fetchedData?.Data || []}
+                          apiValue={apiReturnValue}   // "1,2,5"
+                          onChange={(val) => {
+                            console.log("Send this to API =>", val);
+                            setApiReturnValue(val);   // store "1,2,5"
+                          }}
+                        /> */}
+
+
+                        {/* <CusListRunGrpOptimizedAutocomplete
+                          name="module"
+                          label="Module"
+                          variant="outlined"
+                          id="module"
+                          value={values.module} // must be array []
+                          onChange={(newValue) => {
+                            setFieldValue("module", newValue);  // ✔ set whole array
+                          }}
+                          url={"https://bos.beyondexs.com/api/CompanyModuleGetController.php"}
+                          companyID="204"
+                        /> */}
+
+                        <MultiSelectDropdown
+                          id="module"
+                          name="Module"
+                          data={fetchedData?.Data || []}         // from API
+                          apiValue={Data.Module}   // from API
+                          onChange={(val) => {
+                            console.log("Send this to API:", val);
+                            setApiReturnValue(val);
+                          }}
                         />
                       </Box>
                       <Box>
