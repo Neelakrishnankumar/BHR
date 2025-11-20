@@ -411,10 +411,20 @@ const EditLeader = () => {
                                     variant="h5"
                                     color="#0000D1"
                                     sx={{ cursor: "default" }}
+                                    onClick={() => {
+                                        navigate("/Apps/TR243/Party");
+                                    }}
+                                >
+                                    {`Party(${state.PartyName || params.Name})`}
+                                </Typography>
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
 
                                 >
-                                    {`Marketing Activity(${state.PartyName || params.Name})`}
-                                    {/* Marketing Activity */}
+                                    {/* {`Marketing Activity(${state.PartyName || params.Name})`} */}
+                                    Marketing Activity
                                 </Typography>
 
                             </Breadcrumbs>

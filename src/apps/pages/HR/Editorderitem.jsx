@@ -23,6 +23,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  DefaultProductDeliveryChargeGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -54,6 +55,12 @@ const EditOrderitem = () => {
   const Msg = useSelector((state) => state.formApi.msg);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+  const DefaultProductDeliveryChargeGetData = useSelector(
+    (state) => state.formApi.DefaultProductDeliveryChargeGetData
+  );
+  const DefaultProductDeliveryChargeGetDataloading = useSelector(
+    (state) => state.formApi.DefaultProductDeliveryChargeGetDataloading
+  );
   const YearFlag = sessionStorage.getItem("YearFlag");
   const Year = sessionStorage.getItem("year");
   const Finyear = sessionStorage.getItem("YearRecorid");
@@ -65,22 +72,40 @@ const EditOrderitem = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
+  const PartyRecordID = state.PartyID;
+  console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
 
+  useEffect(() => {
+    dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
+  }, [location.key]);
   const InitialValue = {
     quantity: data.Quantity,
-    price: data.Price,
+    price:
+      mode === "A"
+        ? DefaultProductDeliveryChargeGetData?.Price || 0
+        : data.Price || 0,
     netprice: data.NetPrice,
     amount: data.Amount,
     discount: data.Discount,
-    product: data.ProductComboID
-      ? {
-          RecordID: data.ProductComboID,
-          Name: data.ProductComboName,
-          Price: data.ProductComboPrice,
-        }
-      : null,
+    product:
+      mode === "A"
+        ? DefaultProductDeliveryChargeGetData?.RecordID
+          ? {
+              RecordID: DefaultProductDeliveryChargeGetData.RecordID,
+              Name: DefaultProductDeliveryChargeGetData.Name,
+              Price: DefaultProductDeliveryChargeGetData.Price,
+            }
+          : null
+        : data.ProductComboID
+        ? {
+            RecordID: data.ProductComboID,
+            Name: data.ProductComboName,
+            Price: data.ProductComboPrice,
+          }
+        : null,
   };
 
   const Fnsave = async (values, del, actions) => {
@@ -127,24 +152,37 @@ const EditOrderitem = () => {
       // navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`, {
       //   state: { ...state },
       // });
-      
+
       // actions.resetForm();
       //     actions.setSubmitting(false);
-           // ⭐ CASE 1 → Add Mode → stay on same page
-    if (mode === "A") {
-      actions.resetForm();
-      actions.setSubmitting(false);
-      return; // VERY IMPORTANT → do NOT run navigate()
-    }
+      // ⭐ CASE 1 → Add Mode → stay on same page
+      // if (mode === "A") {
+      //   actions.resetForm();
+      //   actions.setSubmitting(false);
+      //   return; // VERY IMPORTANT → do NOT run navigate()
+      // }
+       if (mode === "A") {
+        if (params.Type === "Party") {
+          navigate(
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            { state: { ...state } }
+          );
+        } else {
+          navigate(
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            { state: { ...state } }
+          );
+        }
+        return;
+      }
 
-    // ⭐ CASE 2 → Edit or Delete → Redirect back to OrderItem list
-    if (mode === "E" || del === "harddelete") {
-      navigate(
-        `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
-        { state: { ...state } }
-      );
-    }
-
+      // ⭐ CASE 2 → Edit or Delete → Redirect back to OrderItem list
+      if (mode === "E" || del === "harddelete") {
+        navigate(
+          `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+          { state: { ...state } }
+        );
+      }
     } else {
       toast.error(response.payload.Msg);
     }
@@ -209,49 +247,61 @@ const EditOrderitem = () => {
                 {`Party(${state.PartyName || ""})`}
               </Typography>
 
-              {params.Type === "Leader" ?
+              {params.Type === "Leader" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  {`Lead(${state.LeadTitle || ""})`}
+                </Typography>
+              ) : null}
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate(-1);
-                }}
-              >
-                {`Lead(${state.LeadTitle || ""})`}
-              </Typography> : null}
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`, {state : {...state}});
+                  navigate(
+                    `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`,
+                    { state: { ...state } }
+                  );
                 }}
               >
                 Order ({state.Code || ""})
               </Typography>
-              {params.Type === "Party" && mode === "E" ? 
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,{state : {...state}});
-                }}
-              >
-                Order Item
-              </Typography> : null}
-              {params.Type === "Leader"? 
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,{state : {...state}});
-                }}
-              >
-                Order Item
-              </Typography> : null}
+              {params.Type === "Party" && mode === "E" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+                      { state: { ...state } }
+                    );
+                  }}
+                >
+                  Order Item
+                </Typography>
+              ) : null}
+              {params.Type === "Leader" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                  onClick={() => {
+                    navigate(
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+                      { state: { ...state } }
+                    );
+                  }}
+                >
+                  Order Item
+                </Typography>
+              ) : null}
               <Typography
                 variant="h5"
                 color="#0000D1"
@@ -280,12 +330,15 @@ const EditOrderitem = () => {
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
-            onSubmit={(values, setSubmitting) => {
+            //sinitialValues={mode === "A" ? blankInitial : InitialValue}
+
+            onSubmit={(values, setSubmitting, actions) => {
               setTimeout(() => {
-                Fnsave(values);
+                Fnsave(values, actions);
               }, 100);
             }}
             //  validationSchema={ DesignationSchema}
+            //enableReinitialize={mode === "E"}
             enableReinitialize={true}
           >
             {({
@@ -363,10 +416,8 @@ const EditOrderitem = () => {
                         label="Product"
                         variant="outlined"
                         value={values.product}
-                      
                         onChange={(newValue) => {
                           const prevProduct = values.product;
-
                           // Set the selected product
                           setFieldValue("product", newValue);
 
@@ -542,7 +593,7 @@ const EditOrderitem = () => {
                         Save
                       </Button>
                     )}{" "}
-                    {YearFlag == "true" && mode === "E"? (
+                    {YearFlag == "true" && mode === "E" ? (
                       <Button
                         color="error"
                         variant="contained"
@@ -557,25 +608,33 @@ const EditOrderitem = () => {
                         Delete
                       </Button>
                     )}
-                    {params.Type === "Party" ?
-                   ( <Button
-                      color="warning"
-                      variant="contained"
-                      onClick={() => {
-                        navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`, {state:{...state}});
-                      }}
-                    >
-                      Cancel
-                    </Button>) :
-                    (<Button
-                      color="warning"
-                      variant="contained"
-                      onClick={() => {
-                        navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${accessID}/${params.filtertype1}`, {state:{...state}});
-                      }}
-                    >
-                      Cancel
-                    </Button>)}
+                    {params.Type === "Party" ? (
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          navigate(
+                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`,
+                            { state: { ...state } }
+                          );
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    ) : (
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          navigate(
+                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${accessID}/${params.filtertype1}`,
+                            { state: { ...state } }
+                          );
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    )}
                   </Box>
                   {/* <Box display="flex" justifyContent="end" mt="20px" gap="20px">
                 <LoadingButton 

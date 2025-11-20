@@ -74,6 +74,7 @@ const Editvendor = () => {
   // Redux state
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
+  const state = location.state || {};
   const partyBankgetloading = useSelector(
     (state) => state.formApi.partyBankgetloading
   );
@@ -331,7 +332,7 @@ const Editvendor = () => {
     }
     if (event.target.value == "3") {
       if (recID && mode === "E") {
-        dispatch(VendorRegisterFetchData({get: "get", recID }));
+        dispatch(VendorRegisterFetchData({ get: "get", recID }));
       } else {
         dispatch(VendorRegisterFetchData({ get: "", recID }));
       }
@@ -340,7 +341,7 @@ const Editvendor = () => {
       if (recID && mode === "E") {
         dispatch(VendorDefaultFetchData({ get: "get", recID }));
       } else {
-        dispatch(VendorDefaultFetchData({  get: "", recID }));
+        dispatch(VendorDefaultFetchData({ get: "", recID }));
       }
     }
     if (event.target.value == "1") {
@@ -455,6 +456,8 @@ const Editvendor = () => {
   //   gstnumber: data.GstNo || "",
   // };
   const RegisterInitialValue = {
+    code: partyRegistergetdata.Code || "",
+    name: partyRegistergetdata.Name || "",
     Pancardnumber: partyRegistergetdata.PanCardNo || "",
     PanImg: partyRegistergetdata.PanImg || "",
     GstImg: partyRegistergetdata.GstImg || "",
@@ -506,7 +509,10 @@ const Editvendor = () => {
       setLoading(false);
     }
   };
+
   const DefaultInitialValue = {
+    code: partyDefaultgetdata.Code || "",
+    name: partyDefaultgetdata.Name || "",
     Product: partyDefaultgetdata.DefaultProductID
       ? {
           RecordID: partyDefaultgetdata.DefaultProductID,
@@ -515,6 +521,15 @@ const Editvendor = () => {
       : partyDefaultgetdata.DefaultProductID == null ? []
       : null,
     defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
+    DefaultPaymentMode: partyDefaultgetdata.DefaultPaymentMode || "",
+    // DefaultPaymentMode:
+    //   partyDefaultgetdata.DefaultPaymentMode === "COD"
+    //     ? "COD"
+    //     : partyDefaultgetdata.DefaultPaymentMode === "UPI"
+    //     ? "UPI"
+    //     : partyDefaultgetdata.DefaultPaymentMode === "Others"
+    //     ? "Others"
+    //     : null,
   };
 
   const DefaultFnsave = async (values, del) => {
@@ -530,6 +545,7 @@ const Editvendor = () => {
       RecordID: recID,
       DefaultProduct: values.Product.RecordID || 0,
       DeliveryCharge: values.defaultDelivery || 0,
+      DefaultPaymentMode: values.DefaultPaymentMode || "",
     };
 
     try {
@@ -550,6 +566,8 @@ const Editvendor = () => {
     }
   };
   const BankInitialValue = {
+    code: partyBankgetdata.Code || "",
+    name: partyBankgetdata.Name || "",
     bankname: partyBankgetdata.BankName || "",
     Accounttype: partyBankgetdata.BankAccountType || "",
     branchname: partyBankgetdata.BankBranchName || "",
@@ -600,6 +618,8 @@ const Editvendor = () => {
 
   //Contact Details
   const contactInitialValue = {
+    code: partyContactgetdata.Code || "",
+    name: partyContactgetdata.Name || "",
     name1: partyContactgetdata.ContactPerson1 || "",
     name2: partyContactgetdata.ContactPerson2 || "",
     emailid1: partyContactgetdata.ContactPersonEmailID1 || "",
@@ -697,7 +717,10 @@ const Editvendor = () => {
                     setScreen(0);
                   }}
                 >
-                  Party
+                  {/* Party ({state.PName}) */}
+                  {mode === "E"
+                      ? `Party(${state.PName})`
+                      : "Party(New)"}
                 </Typography>
                 {show == "1" ? (
                   <Typography
@@ -728,6 +751,17 @@ const Editvendor = () => {
                     sx={{ cursor: "default" }}
                   >
                     Registration
+                  </Typography>
+                ) : (
+                  false
+                )}
+                {show == "4" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Default Settings
                   </Typography>
                 ) : (
                   false
@@ -1113,7 +1147,7 @@ const Editvendor = () => {
                   <CheckinAutocomplete
                     id="ReferenceBy"
                     name="ReferenceBy"
-                    label="Reference By"
+                    label="Partner Reference"
                     variant="outlined"
                     value={values.ReferenceBy}
                     onChange={(newValue) => {
@@ -1355,6 +1389,93 @@ const Editvendor = () => {
                     },
                   }}
                 >
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      placeholder="Auto"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{ readOnly: true }}
+                      // autoFocus
+                    />
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                  )}
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label={
+                      <>
+                        Name
+                        {/* <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span> */}
+                      </>
+                    }
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        readOnly: true,
+                      },
+                    }}
+                    // required
+                    autoFocus={CompanyAutoCode == "Y"}
+                  />
                   <Box
                     sx={{
                       padding: 1.5,
@@ -1640,6 +1761,93 @@ const Editvendor = () => {
                     },
                   }}
                 >
+                  {CompanyAutoCode == "Y" ? (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label="Code"
+                      variant="standard"
+                      placeholder="Auto"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{ readOnly: true }}
+                      // autoFocus
+                    />
+                  ) : (
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                  )}
+                  <TextField
+                    name="name"
+                    type="text"
+                    id="name"
+                    label={
+                      <>
+                        Name
+                        {/* <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span> */}
+                      </>
+                    }
+                    variant="standard"
+                    focused
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
+                    sx={{
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        readOnly: true,
+                      },
+                    }}
+                    // required
+                    autoFocus={CompanyAutoCode == "Y"}
+                  />
                   <TextField
                     name="bankname"
                     type="text"
@@ -2005,6 +2213,93 @@ const Editvendor = () => {
                         },
                       }}
                     >
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label="Code"
+                          variant="standard"
+                          placeholder="Auto"
+                          focused
+                          // required
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          InputProps={{ readOnly: true }}
+                          // autoFocus
+                        />
+                      ) : (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          variant="standard"
+                          focused
+                          // required
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          autoFocus
+                        />
+                      )}
+                      <TextField
+                        name="name"
+                        type="text"
+                        id="name"
+                        label={
+                          <>
+                            Name
+                            {/* <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span> */}
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name && !!errors.name}
+                        helperText={touched.name && errors.name}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            readOnly: true,
+                          },
+                        }}
+                        // required
+                        autoFocus={CompanyAutoCode == "Y"}
+                      />
                       <TextField
                         name="Pancardnumber"
                         label="Pan Card Number"
@@ -2251,6 +2546,93 @@ const Editvendor = () => {
                         },
                       }}
                     >
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label="Code"
+                          variant="standard"
+                          placeholder="Auto"
+                          focused
+                          // required
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          InputProps={{ readOnly: true }}
+                          // autoFocus
+                        />
+                      ) : (
+                        <TextField
+                          name="code"
+                          type="text"
+                          id="code"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          variant="standard"
+                          focused
+                          // required
+                          value={values.code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.code && !!errors.code}
+                          helperText={touched.code && errors.code}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                          autoFocus
+                        />
+                      )}
+                      <TextField
+                        name="name"
+                        type="text"
+                        id="name"
+                        label={
+                          <>
+                            Name
+                            {/* <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span> */}
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        value={values.name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.name && !!errors.name}
+                        helperText={touched.name && errors.name}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            readOnly: true,
+                          },
+                        }}
+                        // required
+                        autoFocus={CompanyAutoCode == "Y"}
+                      />
                       <OrderItemAutocomplete
                         id="Product"
                         name="Product"
@@ -2270,6 +2652,7 @@ const Editvendor = () => {
                         name="defaultDelivery"
                         label="Default Delivery Charges"
                         variant="standard"
+                        type="number"
                         focused
                         value={values.defaultDelivery}
                         // required
@@ -2291,6 +2674,50 @@ const Editvendor = () => {
                         }}
                         // autoFocus
                       />
+                      {/* <TextField
+                        name="DefaultPaymentMode"
+                        label="Default Payment Mode"
+                        variant="standard"
+                        type="text"
+                        focused
+                        value={values.DefaultPaymentMode}
+                        // required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.DefaultPaymentMode &&
+                          !!errors.DefaultPaymentMode
+                        }
+                        helperText={
+                          touched.DefaultPaymentMode &&
+                          errors.DefaultPaymentMode
+                        }
+                        sx={{
+                          backgroundColor: "#ffffff",
+                        }}
+                      /> */}
+
+                      <TextField
+                        select
+                        label="Default Payment Mode"
+                        id="DefaultPaymentMode"
+                        name="DefaultPaymentMode"
+                        value={values.DefaultPaymentMode}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          handleChange(e); // update form state (Formik)
+                          sessionStorage.setItem(
+                            "DefaultPaymentMode",
+                            e.target.value
+                          ); // save to sessionStorage
+                        }}
+                        focused
+                        variant="standard"
+                      >
+                        <MenuItem value="COD">Cash On Delivery</MenuItem>
+                        <MenuItem value="UPI">UPI</MenuItem>
+                        <MenuItem value="Others">Others</MenuItem>
+                      </TextField>
                     </Box>
                     <Box
                       display="flex"
