@@ -43,7 +43,7 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
-import { getProjectCosting, StockProcessApi } from "./Formapireducer";
+import { getOrderdetailReport, getProjectCosting, StockProcessApi } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
@@ -637,6 +637,7 @@ export const fetchListview =
         AccessID != "TR310" &&
         AccessID != "TR311" &&
         AccessID != "TR313" &&
+        AccessID != "TR243" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -1662,6 +1663,7 @@ export const fetchListview =
                       to={`./Edit${screenName}/${params.row.RecordID}/E`}
                       state={{
                         PartyName: params.row.Party,
+                        PName: params.row.Name,
                         Count: params.row.MarketingCount,
                       }}
                     >
@@ -1689,9 +1691,15 @@ export const fetchListview =
                     </Link>
 
                     {/* ORDER HEADER */}
-                    {params.row.LeaderCount >= 1 ? (
+                    {/* {params.row.LeaderCount >= 1 ? ( */}
                       <Link
-                        to={`/Apps/Secondarylistview/TR310/Order/${id}/Party`}
+                        to={
+                          params.row.OrdHdrCount > 0 
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party` 
+                          
+                          :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A` 
+                           
+                          }
                         state={{
                           PartyID: params.row.RecordID,
                           PartyName: params.row.Name,
@@ -1704,7 +1712,7 @@ export const fetchListview =
                           </IconButton>
                         </Tooltip>
                       </Link>
-                    ) : null}
+                    {/* ) : null} */}
                   </Box>
                 );
               },
@@ -1770,74 +1778,36 @@ export const fetchListview =
               renderCell: (params) => {
                 const count = Number(params.row.MarketingCount || 0);
                 const id = params.row.RecordID;
+            
                 const PartyName = params.row.Name;
 
-                //  const PDFButton = ({ PartyID, OrderHeaderID }) => {
-                //   const dispatch = store.dispatch;
-                //   const [loading, setLoading] = React.useState(false);
-
-                //   const handlePDFGET = async () => {
-                //     try {
-                //       setLoading(true);
-
-                //       const resultAction = await dispatch(
-                //         getProjectCosting({ ProjectID, EmployeeID })
-                //       );
-
-                //       const data = resultAction.payload; // <-- this depends on how your thunk is defined
-                //       if (!data?.HeaderData?.DetailData?.length) {
-                //         alert(
-                //           "No Costing available to generate PDF. Kindly add costing..."
-                //         );
-                //         return;
-                //       }
-
-                //       // Generate and download PDF
-                //       const blob = await pdf(
-                //         <ProjectPDF data={data} UserName={UserName} />
-                //       ).toBlob();
-                //       const link = document.createElement("a");
-                //       link.href = URL.createObjectURL(blob);
-                //       link.download = "Project.pdf";
-                //       link.click();
-                //     } catch (err) {
-                //       console.error("PDF generation failed", err);
-                //     } finally {
-                //       setLoading(false);
-                //     }
-                //   };
-
-                //   return (
-                //     <Tooltip title="Download PDF">
-                //       <IconButton
-                //         color="info"
-                //         size="small"
-                //         onClick={handlePDFGET}
-                //       >
-
-                //           <PictureAsPdfIcon color="error" />
-
-                //         {/* {loading ? (
-                //           <CircularProgress size={20} />
-                //         ) : (
-                //           <PictureAsPdfIcon color="error" />
-                //         )} */}
-                //       </IconButton>
-                //     </Tooltip>
-                //   );
-                // };
-                const PDFButton = () => {
+                 const PDFButton = ({ PartyID, OrderHdrID }) => {
+                  const dispatch = store.dispatch;
                   const [loading, setLoading] = React.useState(false);
 
                   const handlePDFGET = async () => {
                     try {
                       setLoading(true);
 
-                      const blob = await pdf(<OrderHeaderPdf />).toBlob();
+                      const resultAction = await dispatch(
+                        getOrderdetailReport({ PartyID, OrderHdrID })
+                      );
 
+                      const data = resultAction.payload; // <-- this depends on how your thunk is defined
+                      if (!data?.HeaderData?.DetailData?.length) {
+                        alert(
+                          "No Order Items available for this order.."
+                        );
+                        return;
+                      }
+
+                      // Generate and download PDF
+                      const blob = await pdf(
+                        <OrderHeaderPdf data={data} UserName={UserName} />
+                      ).toBlob();
                       const link = document.createElement("a");
                       link.href = URL.createObjectURL(blob);
-                      link.download = "OrderDetails.pdf";
+                      link.download = "OrderDeatils.pdf";
                       link.click();
                     } catch (err) {
                       console.error("PDF generation failed", err);
@@ -1862,6 +1832,42 @@ export const fetchListview =
                     </Tooltip>
                   );
                 };
+                // const PDFButton = () => {
+                //   const [loading, setLoading] = React.useState(false);
+
+                //   const handlePDFGET = async () => {
+                //     try {
+                //       setLoading(true);
+
+                //       const blob = await pdf(<OrderHeaderPdf />).toBlob();
+
+                //       const link = document.createElement("a");
+                //       link.href = URL.createObjectURL(blob);
+                //       link.download = "OrderDetails.pdf";
+                //       link.click();
+                //     } catch (err) {
+                //       console.error("PDF generation failed", err);
+                //     } finally {
+                //       setLoading(false);
+                //     }
+                //   };
+
+                //   return (
+                //     <Tooltip title="Download PDF">
+                //       <IconButton
+                //         color="info"
+                //         size="small"
+                //         onClick={handlePDFGET}
+                //       >
+                //         {loading ? (
+                //           <CircularProgress size={20} />
+                //         ) : (
+                //           <PictureAsPdfIcon color="error" />
+                //         )}
+                //       </IconButton>
+                //     </Tooltip>
+                //   );
+                // };
 
                 // Encode PartyName to make it URL-safe
                 // const encodedName = encodeURIComponent(PartyName);
@@ -1876,6 +1882,8 @@ export const fetchListview =
                         Count: params.row.MarketingCount,
                         LeadTitle: params.row.LeadTitle,
                         PartyID: params.row.PartyRecordID,
+                        Code:params.row.Code,
+
                       }}
                     >
                       <Tooltip title="Edit">
@@ -1920,9 +1928,10 @@ export const fetchListview =
                         Count: params.row.MarketingCount,
                         LeadTitle: params.row.LeadTitle,
                         PartyID: params.row.PartyRecordID,
+                        Code: params.row.Code,
                       }}
                     >
-                      <PDFButton />
+                      <PDFButton PartyID={params.row.PartyRecordID} OrderHdrID={params.row.RecordID}/>
                     </Link> */}
                   </Box>
                 );

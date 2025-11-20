@@ -24,6 +24,7 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  DefaultProductDeliveryChargeGet,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -60,19 +61,53 @@ const EditOrder = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const location = useLocation();
   const state = location.state || {};
+  const DefaultProductDeliveryChargeGetData = useSelector(
+    (state) => state.formApi.DefaultProductDeliveryChargeGetData
+  );
+  const PartyRecordID = state.PartyID;
+  console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
+
+  useEffect(() => {
+    dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
+  }, [location.key]);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
+  // Extract default API data safely
+  const defaultDC = DefaultProductDeliveryChargeGetData?.DeliveryCharge || 0;
+  const defaultPM =
+    DefaultProductDeliveryChargeGetData?.DefaultPaymentMode || "";
 
+  // For edit modes
+  const dataDC = data?.DeliveryCharges || 0;
+  const dataPM = data?.PaymentMode || "";
+
+  // Decide correct delivery charge
+  const deliveryCharges =
+    mode === "A"
+      ? defaultDC || 0 // For ADD
+      : dataDC === 0
+      ? defaultDC || 0 // For EDIT when data is 0
+      : dataDC; // Otherwise use DATA
+
+  // Decide correct payment mode
+  const paymentMode =
+    mode === "A"
+      ? defaultPM || ""
+      : dataPM === "" || dataPM === null
+      ? defaultPM || ""
+      : dataPM;
   const InitialValue = {
     orderno: data.Code,
     orderdate: mode == "A" ? currentDate : data.OrderDate,
     partyname: state.PartyName || "",
     // sortorder: data.SortOrder,
     // disable: data.Disable === "Y" ? true : false,
-    delivercharges: data.DeliveryCharges || 0,
+    //delivercharges: data.DeliveryCharges || 0,
+    delivercharges: deliveryCharges,
     totalprice: data.TotalPrice || 0,
     tentativedeliverdate: data.TentativeDeliveryDate,
     deliveredby: data.DeliveryBy,
@@ -86,11 +121,11 @@ const EditOrder = () => {
     status:
       // mode === "A" ? "Ordercreated" :
       data.ORStatus === "Created"
-        ? "Ordercreated"
+        ? "Created"
         : data.ORStatus === "Process"
-        ? "Processed"
+        ? "Process"
         : data.ORStatus === "Ready To Deliver"
-        ? "Readyfordelivery"
+        ? "Ready To Deliver"
         : data.ORStatus === "Picked"
         ? "Picked"
         : data.ORStatus === "Delivered"
@@ -102,9 +137,11 @@ const EditOrder = () => {
         : // : ""
           "",
     // status: mode == "A" ? "Ordercreated": data.Status,
-    paymentmode: data.PaymentMode,
+    paymentmode: paymentMode,
     receivername: data.ReceiverName,
     mobilenumber: data.ReceiverMobileNumber,
+    DeliveryComments: data.DeliveryComments,
+    PaidComments: data.PaidComments,
     // paid: "Yes",
     // deliverby: "Yes"
   };
@@ -146,6 +183,8 @@ const EditOrder = () => {
       PaymentMode: values.paymentmode || "",
       ReceiverName: values.receivername || "",
       ReceiverMobileNumber: values.mobilenumber || "",
+      DeliveryComments: values.DeliveryComments || "",
+      PaidComments: values.PaidComments || "",
       PartyRecordID: state.PartyID || 0,
       EmployeeRecordID: LoginID,
       // SortOrder: values.sortorder,
@@ -267,15 +306,15 @@ const EditOrder = () => {
                   navigate(-1);
                 }}
               >
-                Order
+                Order ({state.Code})
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(-1);
-                }}
+                // onClick={() => {
+                //   navigate(-1);
+                // }}
               >
                 {mode === "A" ? "Add Order" : "Edit Order"}
               </Typography>
@@ -659,18 +698,16 @@ const EditOrder = () => {
                           variant="standard"
                         >
                           <MenuItem value="Created">Order Created</MenuItem>
-                          <MenuItem value="Process">Processed</MenuItem>
+                          <MenuItem value="Process">Confirm</MenuItem>
                           <MenuItem value="Ready To Deliver">
                             Ready for Delivery
                           </MenuItem>
                           <MenuItem value="Picked">Picked</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
-                          <MenuItem value="Scheduled">
-                            Scheduled
-                          </MenuItem>
+                          <MenuItem value="Scheduled">Scheduled</MenuItem>
                           <MenuItem value="Paid">Paid</MenuItem>
                         </TextField>
-                        <TextField
+                        {/* <TextField
                           name="paymentmode"
                           type="text"
                           id="paymentmode"
@@ -684,7 +721,32 @@ const EditOrder = () => {
                           helperText={touched.paymentmode && errors.paymentmode}
                           autoFocus
                           // disabled
-                        />
+                        /> */}
+
+                        <TextField
+                          select
+                          label="Payment Mode"
+                          id="paymentmode"
+                          name="paymentmode"
+                          value={values.paymentmode}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            handleChange(e); // update form state (Formik)
+                            sessionStorage.setItem(
+                              "paymentmode",
+                              e.target.value
+                            ); // save to sessionStorage
+                          }}
+                          error={!!touched.paymentmode && !!errors.paymentmode}
+                          helperText={touched.paymentmode && errors.paymentmode}
+                          focused
+                          variant="standard"
+                        >
+                          <MenuItem value="COD">Cash On Delivery</MenuItem>
+                          <MenuItem value="UPI">UPI</MenuItem>
+                          <MenuItem value="Others">Others</MenuItem>
+                        </TextField>
+
                         <TextField
                           name="receivername"
                           type="text"
@@ -704,6 +766,7 @@ const EditOrder = () => {
                           autoFocus
                           // disabled
                         />
+
                         <TextField
                           name="mobilenumber"
                           id="mobilenumber"
@@ -727,6 +790,45 @@ const EditOrder = () => {
                           }
                           inputProps={{ maxLength: 10 }}
                           sx={{ backgroundColor: "#ffffff" }}
+                        />
+                        <TextField
+                          name="DeliveryComments"
+                          type="text"
+                          id="DeliveryComments"
+                          label="Delivery Comments"
+                          variant="standard"
+                          focused
+                          value={values.DeliveryComments}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.DeliveryComments &&
+                            !!errors.DeliveryComments
+                          }
+                          helperText={
+                            touched.DeliveryComments && errors.DeliveryComments
+                          }
+                          autoFocus
+                          // disabled
+                        />
+                        <TextField
+                          name="PaidComments"
+                          type="text"
+                          id="PaidComments"
+                          label="Paid Comments"
+                          variant="standard"
+                          focused
+                          value={values.PaidComments}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.PaidComments && !!errors.PaidComments
+                          }
+                          helperText={
+                            touched.PaidComments && errors.PaidComments
+                          }
+                          autoFocus
+                          // disabled
                         />
                       </>
                     )}

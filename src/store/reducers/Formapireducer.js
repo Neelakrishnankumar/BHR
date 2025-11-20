@@ -76,32 +76,36 @@ const initialState = {
   partyBankgetloading: false,
   partyBankPostdata: {},
   partyContactgetdata: {},
-  skillInsights1getdata:{},
-  skillInsights1status:"",
-  skillInsights1loading:false,
-  skillInsights2getdata:[],
-  skillInsights2status:"",
-  skillInsights2loading:false,
-  schedulegetdata:[],
-  schedulestatus:"",
-  scheduleloading:false,
-  appraisalSchedulegetdata:[],
-  appraisalSchedulegetdatastatus:"",
-  appraisalSchedulegetdataloading:false,
-  vendorregisterGetData:{},
-vendorregisterGetDatastatus:"",
-vendorregisterGetDataloading:false,
+  skillInsights1getdata: {},
+  skillInsights1status: "",
+  skillInsights1loading: false,
+  skillInsights2getdata: [],
+  skillInsights2status: "",
+  skillInsights2loading: false,
+  schedulegetdata: [],
+  schedulestatus: "",
+  scheduleloading: false,
+  appraisalSchedulegetdata: [],
+  appraisalSchedulegetdatastatus: "",
+  appraisalSchedulegetdataloading: false,
+  vendorregisterGetData: {},
+  vendorregisterGetDatastatus: "",
+  vendorregisterGetDataloading: false,
 
-vendorDefaultGetData:{},
-vendorDefaultGetDatastatus:"",
-vendorDefaultGetDataloading:false,
-  projectCostinggetdata:{},
-  projectCostingstatus:"",
-  projectCostingloading:false,
-  leaderDetails: null
-
+  vendorDefaultGetData: {},
+  vendorDefaultGetDatastatus: "",
+  vendorDefaultGetDataloading: false,
+  DefaultProductDeliveryChargeGetData: {},
+  DefaultProductDeliveryChargeGetDatastatus: "",
+  DefaultProductDeliveryChargeGetDataloading: false,
+  projectCostinggetdata: {},
+  projectCostingstatus: "",
+  projectCostingloading: false,
+  OrderdetailReportgetdata: {},
+  OrderdetailReportgetstatus: "",
+  OrderdetailReportloading: false,
+  leaderDetails: null,
 };
-
 
 export const subscriptionRenewal = createAsyncThunk(
   "SUB/subscriptionRenewal",
@@ -115,12 +119,10 @@ export const subscriptionRenewal = createAsyncThunk(
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
       });
-      console.log("🚀 ~ response.data:", response.data)
+      console.log("🚀 ~ response.data:", response.data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || error.message
-      );
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -128,7 +130,6 @@ export const subscriptionRenewal = createAsyncThunk(
 export const subScriptionCheck = createAsyncThunk(
   "sub/subScriptionCheck",
   async ({ data }) => {
-
     var url = store.getState().globalurl.subCheckUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
@@ -215,7 +216,6 @@ export const AttendanceProcess = createAsyncThunk(
     console.log("get" + JSON.stringify(data));
     var url = store.getState().globalurl.attendanceprocessUrl;
 
-
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
     const response = await axios.post(url, data, {
       headers: {
@@ -285,7 +285,7 @@ export const geolocationData = createAsyncThunk(
     var data = {
       Query: {
         empID: empID,
-      }
+      },
     };
 
     data = JSON.stringify(data);
@@ -332,44 +332,38 @@ export const geolocUpdate = createAsyncThunk(
   }
 );
 
-export const searchData = createAsyncThunk(
-  "all/search",
-  async ({ data }) => {
-    var url = store.getState().globalurl.searchUrl;
+export const searchData = createAsyncThunk("all/search", async ({ data }) => {
+  var url = store.getState().globalurl.searchUrl;
 
-    console.log("get" + JSON.stringify(data));
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
-  }
-);
-export const LeaderData = createAsyncThunk(
-  "all/search",
-  async ({ data }) => {
-    var url = store.getState().globalurl.Leadergeturl;
+  console.log("get" + JSON.stringify(data));
+  const response = await axios.post(url, data, {
+    headers: {
+      Authorization:
+        "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+    },
+  });
+  console.log(
+    "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+    response
+  );
+  return response.data;
+});
+export const LeaderData = createAsyncThunk("all/search", async ({ data }) => {
+  var url = store.getState().globalurl.Leadergeturl;
 
-    console.log("get" + JSON.stringify(data));
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
-  }
-);
+  console.log("get" + JSON.stringify(data));
+  const response = await axios.post(url, data, {
+    headers: {
+      Authorization:
+        "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+    },
+  });
+  console.log(
+    "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+    response
+  );
+  return response.data;
+});
 export const materialDcTrckChartData = createAsyncThunk(
   "matrial/dc-tracking-chart",
   async ({ RecordID, Type }) => {
@@ -377,7 +371,7 @@ export const materialDcTrckChartData = createAsyncThunk(
     var data = {
       Query: {
         RecordID: RecordID,
-        Type: Type
+        Type: Type,
       },
     };
     data = JSON.stringify(data);
@@ -423,7 +417,6 @@ export const stockorder = createAsyncThunk(
 export const purchaseorderrating = createAsyncThunk(
   "purchase indent order/ rating",
   async ({ data }) => {
-
     var url = store.getState().globalurl.PurchaseorderratingUrl;
 
     console.log("get" + JSON.stringify(data));
@@ -441,8 +434,6 @@ export const purchaseorderrating = createAsyncThunk(
   }
 );
 
-
-
 // Material Procurement
 
 export const procurementTrackingGet = createAsyncThunk(
@@ -452,7 +443,7 @@ export const procurementTrackingGet = createAsyncThunk(
     var data = {
       Query: {
         RecordID: RecordID,
-        Type
+        Type,
       },
     };
     console.log("get" + JSON.stringify(data));
@@ -505,8 +496,7 @@ export const dcSummary = createAsyncThunk(
     var url = store.getState().globalurl.dcsummaryUrl;
     var data = {
       HeaderID: HeaderID,
-      Type
-
+      Type,
     };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -549,7 +539,6 @@ export const getDeployment = createAsyncThunk(
     var url = store.getState().globalurl.getempdeploymentUrl;
     var data = {
       HeaderID: HeaderID,
-
     };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -591,7 +580,7 @@ export const costLeatherData = createAsyncThunk(
     var data = {
       HeaderRecordID: HeaderRecordID,
       LeatherRecordID: LeatherRecordID,
-      LeatherNumber
+      LeatherNumber,
     };
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -650,9 +639,14 @@ export const dpConversionData = createAsyncThunk(
   async ({ Purchase, FromID, Type, MaterialID }) => {
     //alert("purchase"+Purchase);
     var url = store.getState().globalurl.designPUrl;
-    var data = { ConversionID: Purchase, FromID: FromID, Type: Type, MaterialID: MaterialID };
+    var data = {
+      ConversionID: Purchase,
+      FromID: FromID,
+      Type: Type,
+      MaterialID: MaterialID,
+    };
     console.log("get" + JSON.stringify(data));
-    console.log("🚀 ~ file: Formapireducer.js:98 ~ data:", data)
+    console.log("🚀 ~ file: Formapireducer.js:98 ~ data:", data);
     //alert("data---"+data);
     const response = await axios.post(url, data, {
       headers: {
@@ -671,7 +665,12 @@ export const StockProcessApi = createAsyncThunk(
   "Stock/process",
   async (props) => {
     var url = store.getState().globalurl.imageNameUpdateUrl;
-    var data = { accessid: props.accessID, Recordid: props.recID, ImageName: "", Action: "" };
+    var data = {
+      accessid: props.accessID,
+      Recordid: props.recID,
+      ImageName: "",
+      Action: "",
+    };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -703,7 +702,10 @@ export const cbmCalculation = createAsyncThunk(
 export const bomCopyFn = createAsyncThunk(
   "Stock/process",
   async ({ data, accessID }) => {
-    var url = accessID == 'TR001' ? store.getState().globalurl.bomCopyUrl : store.getState().globalurl.bomCopyJobworkUrl;
+    var url =
+      accessID == "TR001"
+        ? store.getState().globalurl.bomCopyUrl
+        : store.getState().globalurl.bomCopyJobworkUrl;
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
       headers: {
@@ -724,7 +726,7 @@ export const invoiceHeaderGetData = createAsyncThunk(
       action: props.get,
       recid: props.recID,
     };
-    console.log("🚀 ~ data:", JSON.stringify(data))
+    console.log("🚀 ~ data:", JSON.stringify(data));
 
     const response = await axios.post(url, data, {
       headers: {
@@ -732,7 +734,10 @@ export const invoiceHeaderGetData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -754,7 +759,10 @@ export const invoiceExploreGetData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -788,7 +796,10 @@ export const getLeaveentryData = createAsyncThunk(
       LeaveTypeID: LeaveTypeID,
     };
     console.log("get" + JSON.stringify(data));
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -811,10 +822,12 @@ export const getLeaveweeklyData = createAsyncThunk(
 
     const data = {
       EmployeeID: EmployeeID,
-
     };
     console.log("get" + JSON.stringify(data));
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -844,18 +857,20 @@ export const stockGetData = createAsyncThunk(
     data = JSON.stringify(data);
 
     console.log("get" + data);
-    const response = await axios
-      .get(url, {
-        params: {
-          data: data,
-        },
+    const response = await axios.get(url, {
+      params: {
+        data: data,
+      },
 
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-        },
-      })
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data.Data;
   }
 );
@@ -891,12 +906,10 @@ export const leaveAppoval = createAsyncThunk(
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
       });
-      console.log("🚀 ~ response.data:", response.data)
+      console.log("🚀 ~ response.data:", response.data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || error.message
-      );
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -916,7 +929,10 @@ export const InvoicePostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -930,7 +946,10 @@ export const InvoicePostExploreData = createAsyncThunk(
       action: action,
       data: idata,
     };
-    console.log("🚀 ~ file: Formapireducer.js:209 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:209 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -938,14 +957,17 @@ export const InvoicePostExploreData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
 
 export const getFetchData = createAsyncThunk(
   "allScreen/Header",
-  async ({ accessID, get, recID, }) => {
+  async ({ accessID, get, recID }) => {
     var url = store.getState().globalurl.apiUrl;
     const data = {
       accessid: accessID,
@@ -953,7 +975,10 @@ export const getFetchData = createAsyncThunk(
       recid: recID,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -970,14 +995,17 @@ export const getFetchData = createAsyncThunk(
 );
 export const VendorRegisterFetchData = createAsyncThunk(
   "VendorRegisterFetchData/Header",
-  async ({ get, recID, }) => {
+  async ({ get, recID }) => {
     var url = store.getState().globalurl.VendorRegistrationGet;
     const data = {
       action: get,
       recid: recID,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -994,14 +1022,43 @@ export const VendorRegisterFetchData = createAsyncThunk(
 );
 export const VendorDefaultFetchData = createAsyncThunk(
   "VendorDefaultFetchData/Header",
-  async ({ get, recID, }) => {
+  async ({ get, recID }) => {
     var url = store.getState().globalurl.VendorDefaultGET;
     const data = {
       action: get,
       recid: recID,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const DefaultProductDeliveryChargeGet = createAsyncThunk(
+  "DefaultProductDeliveryChargeGet/Header",
+  async ({ PartyRecordID }) => {
+    var url = store.getState().globalurl.DefaultProductDeliveryChargeGet;
+    const data = {
+      PartyID: PartyRecordID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1023,10 +1080,12 @@ export const PartyBankget = createAsyncThunk(
     var url = store.getState().globalurl.partyBankUrl;
     const data = {
       VendorID: VendorID,
+    };
 
-    }
-
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1048,7 +1107,6 @@ export const partyBankpostData = createAsyncThunk(
     const url = store.getState().globalurl.partyBankPostUrl;
 
     const data = {
-
       action: action,
       ...idata,
       // data: idata,
@@ -1060,7 +1118,10 @@ export const partyBankpostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1072,10 +1133,12 @@ export const PartyContactget = createAsyncThunk(
     var url = store.getState().globalurl.partyContactgetUrl;
     const data = {
       VendorID: VendorID,
+    };
 
-    }
-
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1097,7 +1160,6 @@ export const partyContactData = createAsyncThunk(
     const url = store.getState().globalurl.partyContactPostUrl;
 
     const data = {
-
       action: action,
       ...idata,
       // data: idata,
@@ -1109,7 +1171,10 @@ export const partyContactData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1121,10 +1186,12 @@ export const sprintGetData = createAsyncThunk(
     var url = store.getState().globalurl.SprintgetUrl;
     const data = {
       SprintHeaderID: SprintHeaderID,
-
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1148,10 +1215,13 @@ export const sprintprojectplanGetData = createAsyncThunk(
     const data = {
       ActivitiesID: ActivitiesID,
       FromDate: FromDate,
-      ToDate: ToDate
+      ToDate: ToDate,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1176,7 +1246,10 @@ export const scheduleGetData = createAsyncThunk(
       AssessmentID: AssessmentID,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1202,7 +1275,10 @@ export const appraisalscheduleGetData = createAsyncThunk(
       AssessmentType: AssessmentType,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1218,26 +1294,23 @@ export const appraisalscheduleGetData = createAsyncThunk(
   }
 );
 //SKILL-INSIGHTS
-export const getInsights1 = createAsyncThunk(
-  "getInsights1/get",
-  async () => {
-    const url = store.getState().globalurl.InsightsUrl1;
+export const getInsights1 = createAsyncThunk("getInsights1/get", async () => {
+  const url = store.getState().globalurl.InsightsUrl1;
 
-    const response = await axios.post(
-      url,
-      {}, //  empty body since API doesn't need input
-      {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-        },
-      }
-    );
+  const response = await axios.post(
+    url,
+    {}, //  empty body since API doesn't need input
+    {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    }
+  );
 
-    console.log("API Response:", response.data);
-    return response.data;
-  }
-);
+  console.log("API Response:", response.data);
+  return response.data;
+});
 
 export const getInsights2 = createAsyncThunk(
   "getInsights2/get",
@@ -1246,7 +1319,7 @@ export const getInsights2 = createAsyncThunk(
 
     const response = await axios.post(
       url,
-      {  AssessmentID : AssessmentID}, 
+      { AssessmentID: AssessmentID },
       {
         headers: {
           Authorization:
@@ -1263,15 +1336,40 @@ export const getInsights2 = createAsyncThunk(
 //PROJECT COSTING
 export const getProjectCosting = createAsyncThunk(
   "getProjectCosting/get",
-  async ({ProjectID,EmployeeID}) => {
+  async ({ ProjectID, EmployeeID }) => {
     const url = store.getState().globalurl.ProjectCostingPDF;
 
     const response = await axios.post(
       url,
-      {  
+      {
         ProjectID,
-        EmployeeID
-      }, 
+        EmployeeID,
+      },
+      {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      }
+    );
+
+    console.log("API Response:", response.data);
+    return response.data;
+  }
+);
+
+//ORDER HEADER PDF
+export const getOrderdetailReport = createAsyncThunk(
+  "getOrderdetailReport/get",
+  async ({ PartyID, OrderHdrID }) => {
+    const url = store.getState().globalurl.OrderdetailReport;
+
+    const response = await axios.post(
+      url,
+      {
+        PartyID,
+        OrderHdrID,
+      },
       {
         headers: {
           Authorization:
@@ -1287,15 +1385,19 @@ export const getProjectCosting = createAsyncThunk(
 /* settings Get*/
 export const getSettingsData = createAsyncThunk(
   "Settings/get",
-  async ({ SubscriptionCode }) => {  // Destructure the SubscriptionCode here
+  async ({ SubscriptionCode }) => {
+    // Destructure the SubscriptionCode here
     const url = store.getState().globalurl.settingsgetUrl;
     console.log(url, "--find url");
 
     const data = {
-      SubscriptionCode: SubscriptionCode,  // Now using SubscriptionCode passed via the thunk
+      SubscriptionCode: SubscriptionCode, // Now using SubscriptionCode passed via the thunk
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1312,15 +1414,19 @@ export const getSettingsData = createAsyncThunk(
 );
 export const getBiometricData = createAsyncThunk(
   "Biometric/get",
-  async ({ CompanyID }) => {  // Destructure the CompanyID here
+  async ({ CompanyID }) => {
+    // Destructure the CompanyID here
     const url = store.getState().globalurl.biometricgetUrl;
     console.log(url, "--find url");
 
     const data = {
-      CompanyID  // Now using SubscriptionCode passed via the thunk
+      CompanyID, // Now using SubscriptionCode passed via the thunk
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1339,67 +1445,19 @@ export const getBiometricData = createAsyncThunk(
 // Settings -- Approvals Checkbox
 export const setttingsApprovalsData = createAsyncThunk(
   "Settings/Approvals get",
-  async ({ CompanyID }) => {  // Destructure the CompanyID here
+  async ({ CompanyID }) => {
+    // Destructure the CompanyID here
     const url = store.getState().globalurl.settingsapprovalGetUrl;
     console.log(url, "--find url");
 
     const data = {
-      CompanyID  // Now using SubscriptionCode passed via the thunk
+      CompanyID, // Now using SubscriptionCode passed via the thunk
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
-
-    const response = await axios.post(url, data, {
-     headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
     console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
     );
-    return response.data;
-  }
-);
-
-
-export const getJioData = createAsyncThunk(
-  "Biometric/getyyyyyy",
-  async ({ CompanyID }) => {  // Destructure the CompanyID here
-    const url = store.getState().globalurl.jiogetUrl;
-    console.log(url, "--find url");
-
-    const data = {
-      CompanyID  // Now using SubscriptionCode passed via the thunk
-    };
-
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
-
-    const response = await axios.post(url, data, {
-     headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
-  }
-);
-export const Regularizationdata = createAsyncThunk(
-  "regularization",
-  async ({ accessID, get, recID, }) => {
-    var url = store.getState().globalurl.regularizationUrl;
-    const data = {
-      accessid: accessID,
-      action: get,
-      recid: recID,
-         };
-
-    console.log("🚀 ~ file: Formapireducer.js:225 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1415,6 +1473,63 @@ export const Regularizationdata = createAsyncThunk(
   }
 );
 
+export const getJioData = createAsyncThunk(
+  "Biometric/getyyyyyy",
+  async ({ CompanyID }) => {
+    // Destructure the CompanyID here
+    const url = store.getState().globalurl.jiogetUrl;
+    console.log(url, "--find url");
+
+    const data = {
+      CompanyID, // Now using SubscriptionCode passed via the thunk
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const Regularizationdata = createAsyncThunk(
+  "regularization",
+  async ({ accessID, get, recID }) => {
+    var url = store.getState().globalurl.regularizationUrl;
+    const data = {
+      accessid: accessID,
+      action: get,
+      recid: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 
 export const postData = createAsyncThunk(
   "allScreen/post",
@@ -1433,7 +1548,10 @@ export const postData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1455,7 +1573,10 @@ export const VendorRegisterpostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1476,7 +1597,10 @@ export const VendorDefaultPUTdata = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1500,7 +1624,10 @@ export const SettingspostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1521,7 +1648,10 @@ export const CompanydetailpostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1542,7 +1672,10 @@ export const BiometricpostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1565,11 +1698,13 @@ export const ApprovalsettingspostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
-
 
 export const getFetchWeightage = createAsyncThunk(
   "allScreen/Header",
@@ -1577,9 +1712,9 @@ export const getFetchWeightage = createAsyncThunk(
     const url = store.getState().globalurl.apiweightageUrl;
 
     const data = {
-      Type: Type,  // Ensure lowercase if required by API
+      Type: Type, // Ensure lowercase if required by API
       HeaderID: HeaderID,
-      CompanyID
+      CompanyID,
     };
 
     console.log("🚀 Request Data:", JSON.stringify(data));
@@ -1594,7 +1729,6 @@ export const getFetchWeightage = createAsyncThunk(
 
       console.log("🚀 API Response:", response.data);
       return response.data;
-
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error; // Ensure proper error handling
@@ -1621,7 +1755,6 @@ export const postWeightage = createAsyncThunk(
 
       console.log("🚀 API Response:", response.data);
       return response.data;
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -1645,7 +1778,10 @@ export const explorePostData = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
     return response.data;
   }
 );
@@ -1683,14 +1819,13 @@ export const getVersionBom = createAsyncThunk(
       accessid: "",
     };
 
-
     const response = await axios.post(url, data, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
   }
 );
@@ -1704,14 +1839,13 @@ export const getVersionJobworkBom = createAsyncThunk(
       accessid: "",
     };
 
-
     const response = await axios.post(url, data, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
   }
 );
@@ -1721,7 +1855,6 @@ export const hashtoken = createAsyncThunk(
     var url = store.getState().globalurl.decryptUrl;
     console.log("Tokeeeeennn", hashtoken);
 
-
     const response = await axios.post(url, hashtoken, {
       headers: {
         Authorization:
@@ -1729,7 +1862,7 @@ export const hashtoken = createAsyncThunk(
       },
     });
     //alert("response",response);
-    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
   }
 );
@@ -1744,14 +1877,13 @@ export const getBomList = createAsyncThunk(
       ProductID,
     };
 
-
     const response = await axios.post(url, data, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
   }
 );
@@ -1759,14 +1891,17 @@ export const postPrdBthData = createAsyncThunk(
   "product/bom",
   async ({ data }) => {
     var url = store.getState().globalurl.prdCardBthUrl;
-    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:334 ~ data:",
+      JSON.stringify(data)
+    );
     const response = await axios.post(url, data, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
   }
 );
@@ -1775,9 +1910,12 @@ export const getDCTracking = createAsyncThunk(
   async ({ idata }) => {
     var url = store.getState().globalurl.dcTrackingUrl;
     var data = {
-      ...idata
+      ...idata,
     };
-    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:334 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1785,7 +1923,7 @@ export const getDCTracking = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
   }
 );
@@ -1794,9 +1932,12 @@ export const proPriceTracking = createAsyncThunk(
   async ({ idata }) => {
     var url = store.getState().globalurl.producttrackingUrl;
     var data = {
-      ...idata
+      ...idata,
     };
-    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:334 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.post(url, data, {
       headers: {
@@ -1804,11 +1945,10 @@ export const proPriceTracking = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
   }
 );
-
 
 export const setReg = createAsyncThunk(
   "Regularization/Price Tracking",
@@ -1816,10 +1956,13 @@ export const setReg = createAsyncThunk(
     console.log("Dispatch received idata:", params);
     // var url = store.getState().globalurl.producttrackingUrl;
     var data = {
-      ...params
+      ...params,
     };
     // setAssignparams(params.rows);
-    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:334 ~ data:",
+      JSON.stringify(data)
+    );
 
     // const response = await axios.post(url, data, {
     //   headers: {
@@ -1878,24 +2021,26 @@ export const setReg = createAsyncThunk(
 //   };
 // }
 
-
 export const customerorderanalysis = createAsyncThunk(
   "Customer Order/Analysis",
   async ({ data }) => {
     var url = store.getState().globalurl.customerorderanalysisUrl;
 
-    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:334 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.get(url, {
       params: {
         data: JSON.stringify(data),
       },
       headers: {
-        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
   }
 );
@@ -1904,18 +2049,21 @@ export const productorderanalysis = createAsyncThunk(
   async ({ data }) => {
     var url = store.getState().globalurl.prductorderanalysisUrl;
 
-    console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:334 ~ data:",
+      JSON.stringify(data)
+    );
 
     const response = await axios.get(url, {
       params: {
         data: JSON.stringify(data),
       },
       headers: {
-        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
-    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response)
+    console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
   }
 );
@@ -1924,44 +2072,48 @@ export const getApiSlice = createSlice({
   initialState,
   reducers: {
     resetTrackingData(state) {
-      state.trackingData = []
-      state.customerData = {}
-      state.productanalysisData = {}
-      state.summeryData = []
-      state.stockorderData = []
-      state.purchaseorderratingData = []
+      state.trackingData = [];
+      state.customerData = {};
+      state.productanalysisData = {};
+      state.summeryData = [];
+      state.stockorderData = [];
+      state.purchaseorderratingData = [];
       state.empAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
-      state.MonthlyAttendanceData = []
-      state.costingLeatherCost.leatherOneCost = 0
-      state.costingLeatherCost.leatherTwoCost = 0
-      state.costingLeatherCost.leatherThreeCost = 0
-      state.costingLeatherCost.materialCost = 0
-      state.costingLeatherCost.latestmaterialCost = 0
-      state.costingLeatherCost.latestleatherOneCost = 0
-      state.costingLeatherCost.latestleatherTwoCost = 0
-      state.costingLeatherCost.latestleatherThreeCost = 0
+      state.MonthlyAttendanceData = [];
+      state.costingLeatherCost.leatherOneCost = 0;
+      state.costingLeatherCost.leatherTwoCost = 0;
+      state.costingLeatherCost.leatherThreeCost = 0;
+      state.costingLeatherCost.materialCost = 0;
+      state.costingLeatherCost.latestmaterialCost = 0;
+      state.costingLeatherCost.latestleatherOneCost = 0;
+      state.costingLeatherCost.latestleatherTwoCost = 0;
+      state.costingLeatherCost.latestleatherThreeCost = 0;
     },
     ratingChange(state, action) {
-      const index = [...action.payload.rowdata].findIndex((value) => value.RecordID === action.payload.id)
+      const index = [...action.payload.rowdata].findIndex(
+        (value) => value.RecordID === action.payload.id
+      );
       action.payload.rowdata[index] = action.payload.rating;
-      state.purchaseorderratingData = action.payload.rowdata
+      state.purchaseorderratingData = action.payload.rowdata;
     },
     packingListCarton(state, action) {
-      console.log("🚀 ~ file: Formapireducer.js:502 ~ packingListCarton ~ action:", action)
+      console.log(
+        "🚀 ~ file: Formapireducer.js:502 ~ packingListCarton ~ action:",
+        action
+      );
       console.log("action called");
       switch (action.payload.type) {
-
         case "INSERTED":
-          state.pakingListCarton.push(...action.payload.data)
-          break
+          state.pakingListCarton.push(...action.payload.data);
+          break;
         case "EDITED":
-          state.pakingListCarton = action.payload.data
-          break
+          state.pakingListCarton = action.payload.data;
+          break;
         case "RESET":
-          state.pakingListCarton = []
-          break
+          state.pakingListCarton = [];
+          break;
       }
     },
     pending(state) {
@@ -2014,26 +2166,25 @@ export const getApiSlice = createSlice({
     },
     userGroupUpdate(state, action) {
       state.userGroup = action.payload.rowData;
-
     },
     resetregularizedata(state, action) {
       state.RegGetData = {
-        "RecordID": "",
-        "EmployeeID": "",
-        "EmployeeName": "",
-        "CheckInDate": "",
-        "CheckOutDate": "",
-        "CheckInType": "",
-        "CheckInTime": "",
-        "CheckOutTime": "",
-        "Status": "",
-        "Remarks": "",
-        "Date": "",
-        "Reason": "",
-        "ManagerComments": "",
-        "AppliedStatus": ""
+        RecordID: "",
+        EmployeeID: "",
+        EmployeeName: "",
+        CheckInDate: "",
+        CheckOutDate: "",
+        CheckInType: "",
+        CheckInTime: "",
+        CheckOutTime: "",
+        Status: "",
+        Remarks: "",
+        Date: "",
+        Reason: "",
+        ManagerComments: "",
+        AppliedStatus: "",
       };
-    }
+    },
   },
   extraReducers(builder) {
     builder
@@ -2056,7 +2207,7 @@ export const getApiSlice = createSlice({
       })
       .addCase(invoiceExploreGetData.pending, (state, action) => {
         state.Status = "idle";
-        state.expgetLoading = true
+        state.expgetLoading = true;
       })
       .addCase(invoiceExploreGetData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2064,12 +2215,12 @@ export const getApiSlice = createSlice({
         if (action.payload.Data.Disable == "Y") {
           action.payload.Data.Disable = true;
         } else action.payload.Data.Disable = false;
-        state.expgetLoading = false
+        state.expgetLoading = false;
         state.inviceEData = action.payload.Data;
       })
       .addCase(invoiceExploreGetData.rejected, (state, action) => {
         state.Status = "Error";
-        state.expgetLoading = false
+        state.expgetLoading = false;
       })
 
       .addCase(InvoicePostData.pending, (state, action) => {
@@ -2110,7 +2261,7 @@ export const getApiSlice = createSlice({
         state.Status = "idle";
         state.getLoading = true;
         state.Data = {};
-        state.msg = "Loading..."
+        state.msg = "Loading...";
       })
       .addCase(getFetchData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2122,7 +2273,7 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.getLoading = false;
         state.Data = {};
-        toast.error('Something Went Wrong')
+        toast.error("Something Went Wrong");
       })
       //PartyBank Details GET
 
@@ -2145,23 +2296,19 @@ export const getApiSlice = createSlice({
         // toast.error('Something Went Wrong')
       })
 
-
-
-
       .addCase(PartyContactget.pending, (state, action) => {
         state.partyBankgetstatus = "idle";
         state.partyContactgetdata = {};
-
       })
       .addCase(PartyContactget.fulfilled, (state, action) => {
         state.partyBankgetstatus = "success";
-        state.partyContactgetdata = action.payload.Data ? action.payload.Data : {};
-
+        state.partyContactgetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
       })
       .addCase(PartyContactget.rejected, (state, action) => {
         state.partyBankgetstatus = "Error";
         state.partyContactgetdata = {};
-
       })
 
       //Partbank POST
@@ -2178,14 +2325,12 @@ export const getApiSlice = createSlice({
 
         state.partyBankPostdata = action.meta.arg.idata;
         console.log(action.meta.arg.idata, "--partyBankPostdata");
-
       })
 
       .addCase(partyBankpostData.rejected, (state, action) => {
         state.Status = "Error";
         state.postLoading = false;
       })
-
 
       .addCase(partyContactData.pending, (state, action) => {
         state.Status = "idle";
@@ -2204,8 +2349,8 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.postLoading = false;
       })
-//VENDOR - REGISTRATION
- .addCase(VendorRegisterpostData.pending, (state, action) => {
+      //VENDOR - REGISTRATION
+      .addCase(VendorRegisterpostData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
       })
@@ -2220,7 +2365,7 @@ export const getApiSlice = createSlice({
       })
 
       //VENDOR - DEFAULT
- .addCase(VendorDefaultPUTdata.pending, (state, action) => {
+      .addCase(VendorDefaultPUTdata.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
       })
@@ -2244,11 +2389,12 @@ export const getApiSlice = createSlice({
       .addCase(sprintGetData.fulfilled, (state, action) => {
         state.sprintgetstatus = "success";
         // state.sprintloading = false;
-        state.sprintget = action.payload.Data ? action.payload.Data.headerData : {};
+        state.sprintget = action.payload.Data
+          ? action.payload.Data.headerData
+          : {};
         state.sprintPPget = action.payload.Data.detailData;
         // state.msg =  action.payload.Msg
         console.log(state.sprintPPget, "--sprintGetData state.sprintPPget");
-
       })
 
       .addCase(sprintGetData.rejected, (state, action) => {
@@ -2257,7 +2403,7 @@ export const getApiSlice = createSlice({
         state.sprintget = [];
         //  toast.error('Something Went Wrong')
       })
-      //Sprint PP GET 
+      //Sprint PP GET
       .addCase(sprintprojectplanGetData.pending, (state, action) => {
         // state.sprintgetstatus = "idle";
         state.sprintloading = true;
@@ -2269,8 +2415,10 @@ export const getApiSlice = createSlice({
         state.sprintloading = false;
         state.sprintPPget = action.payload.Data ? action.payload.Data : [];
         // state.msg =  action.payload.Msg
-        console.log(state.sprintPPget, "--sprintprojectplanGetData state.sprintPPget");
-
+        console.log(
+          state.sprintPPget,
+          "--sprintprojectplanGetData state.sprintPPget"
+        );
       })
       .addCase(sprintprojectplanGetData.rejected, (state, action) => {
         // state.sprintgetstatus = "Error";
@@ -2283,7 +2431,7 @@ export const getApiSlice = createSlice({
         state.Status = "idle";
         state.getLoading = true;
         state.Data = {};
-        state.msg = "Loading..."
+        state.msg = "Loading...";
       })
       .addCase(getSettingsData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2295,13 +2443,13 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.getLoading = false;
         state.Data = {};
-        toast.error('Something Went Wrong')
+        toast.error("Something Went Wrong");
       })
       .addCase(getBiometricData.pending, (state, action) => {
         state.Status = "idle";
         state.getLoading = true;
         state.Data = {};
-        state.msg = "Loading..."
+        state.msg = "Loading...";
       })
       .addCase(getBiometricData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2313,17 +2461,16 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.getLoading = false;
         state.Data = {};
-        toast.error('Something Went Wrong')
+        toast.error("Something Went Wrong");
       })
 
       //settings approals get
 
-      
-   .addCase(setttingsApprovalsData.pending, (state, action) => {
+      .addCase(setttingsApprovalsData.pending, (state, action) => {
         state.Status = "idle";
         state.getLoading = true;
         state.Data = {};
-        state.msg = "Loading..."
+        state.msg = "Loading...";
       })
       .addCase(setttingsApprovalsData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2335,29 +2482,27 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.getLoading = false;
         state.Data = {};
-        toast.error('Something Went Wrong')
+        toast.error("Something Went Wrong");
       })
 
-
-
-    // .addCase(getJioData.pending, (state, action) => {
-    //     state.Status = "idle";
-    //     state.getLoading = true;
-    //     state.Data = {};
-    //     state.msg = "Loading..."
-    //   })
-    //   .addCase(getJioData.fulfilled, (state, action) => {
-    //     state.Status = "success";
-    //     state.getLoading = false;
-    //     state.Data = action.payload.Data ? action.payload.Data : {};
-    //     // state.msg =  action.payload.Msg
-    //   })
-    //   .addCase(getJioData.rejected, (state, action) => {
-    //     state.Status = "Error";
-    //     state.getLoading = false;
-    //     state.Data = {};
-    //     toast.error('Something Went Wrong')
-    //   })
+      // .addCase(getJioData.pending, (state, action) => {
+      //     state.Status = "idle";
+      //     state.getLoading = true;
+      //     state.Data = {};
+      //     state.msg = "Loading..."
+      //   })
+      //   .addCase(getJioData.fulfilled, (state, action) => {
+      //     state.Status = "success";
+      //     state.getLoading = false;
+      //     state.Data = action.payload.Data ? action.payload.Data : {};
+      //     // state.msg =  action.payload.Msg
+      //   })
+      //   .addCase(getJioData.rejected, (state, action) => {
+      //     state.Status = "Error";
+      //     state.getLoading = false;
+      //     state.Data = {};
+      //     toast.error('Something Went Wrong')
+      //   })
       // .addCase(Regularizationdata.pending, (state, action) => {
       //   state.Status = "idle";
       //   state.regularizationLoading = true;
@@ -2396,7 +2541,6 @@ export const getApiSlice = createSlice({
 
       //settingspost
 
-
       .addCase(SettingspostData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
@@ -2415,13 +2559,10 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
-
       .addCase(explorePostData.pending, (state, action) => {
         state.Status = "idle";
         state.postLoading = true;
       })
-
-
 
       .addCase(explorePostData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2511,31 +2652,49 @@ export const getApiSlice = createSlice({
         state.productanalysisData = action.payload.Data;
       })
       .addCase(uomMaterialRate.fulfilled, (state, action) => {
-        state.conversionData = action.payload
+        state.conversionData = action.payload;
       })
       .addCase(costLeatherData.fulfilled, (state, action) => {
-        console.log("🚀 ~ file: Formapireducer.js:863 ~ .addCase ~ action:", action)
+        console.log(
+          "🚀 ~ file: Formapireducer.js:863 ~ .addCase ~ action:",
+          action
+        );
 
         if (action.meta.arg.LeatherNumber == 1) {
-          state.costingLeatherCost.leatherOneCost = Number(action.payload.LeatherCost).toFixed(2)
-          state.costingLeatherCost.latestleatherOneCost = Number(action.payload.LeatherLatestCost).toFixed(2)
+          state.costingLeatherCost.leatherOneCost = Number(
+            action.payload.LeatherCost
+          ).toFixed(2);
+          state.costingLeatherCost.latestleatherOneCost = Number(
+            action.payload.LeatherLatestCost
+          ).toFixed(2);
         }
         if (action.meta.arg.LeatherNumber == 2) {
-          state.costingLeatherCost.leatherTwoCost = Number(action.payload.LeatherCost).toFixed(2)
-          state.costingLeatherCost.latestleatherTwoCost = Number(action.payload.LeatherLatestCost).toFixed(2)
+          state.costingLeatherCost.leatherTwoCost = Number(
+            action.payload.LeatherCost
+          ).toFixed(2);
+          state.costingLeatherCost.latestleatherTwoCost = Number(
+            action.payload.LeatherLatestCost
+          ).toFixed(2);
         }
         if (action.meta.arg.LeatherNumber == 3) {
-          state.costingLeatherCost.leatherThreeCost = Number(action.payload.LeatherCost).toFixed(2)
-          state.costingLeatherCost.latestleatherThreeCost = Number(action.payload.LeatherLatestCost).toFixed(2)
+          state.costingLeatherCost.leatherThreeCost = Number(
+            action.payload.LeatherCost
+          ).toFixed(2);
+          state.costingLeatherCost.latestleatherThreeCost = Number(
+            action.payload.LeatherLatestCost
+          ).toFixed(2);
         }
       })
       .addCase(costingBOMData.fulfilled, (state, action) => {
-        state.costingLeatherCost.materialCost = Number(action.payload.Cost).toFixed(2)
-        state.costingLeatherCost.latestmaterialCost = Number(action.payload.LatestCost).toFixed(2)
+        state.costingLeatherCost.materialCost = Number(
+          action.payload.Cost
+        ).toFixed(2);
+        state.costingLeatherCost.latestmaterialCost = Number(
+          action.payload.LatestCost
+        ).toFixed(2);
       })
       .addCase(customerLeather.fulfilled, (state, action) => {
         state.customerLeatherData = action.payload;
-
       })
       .addCase(dcSummary.fulfilled, (state, action) => {
         state.summaryData = action.payload.Data;
@@ -2553,7 +2712,7 @@ export const getApiSlice = createSlice({
           Amountseries: {},
           categories: [],
           TableData: { data: [] },
-        }
+        };
       })
       .addCase(procurementTrackingGet.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2589,7 +2748,7 @@ export const getApiSlice = createSlice({
       .addCase(materialDcTrckData.pending, (state, action) => {
         state.Status = "idle";
         state.trackingLoading = true;
-        state.matrialDcTrackData = []
+        state.matrialDcTrackData = [];
       })
       .addCase(materialDcTrckData.fulfilled, (state, action) => {
         state.Status = "success";
@@ -2599,7 +2758,7 @@ export const getApiSlice = createSlice({
       .addCase(materialDcTrckData.rejected, (state, action) => {
         state.Status = "Error";
         state.trackingLoading = false;
-        state.matrialDcTrackData = []
+        state.matrialDcTrackData = [];
       })
 
       .addCase(searchData.pending, (state, action) => {
@@ -2639,7 +2798,7 @@ export const getApiSlice = createSlice({
       .addCase(stockorder.pending, (state, action) => {
         state.Status = "idle";
         state.trackingLoading = true;
-        state.stockorderData = []
+        state.stockorderData = [];
       })
 
       .addCase(stockorder.fulfilled, (state, action) => {
@@ -2658,14 +2817,10 @@ export const getApiSlice = createSlice({
         state.purchaseorderratingData = action.payload.Data;
       })
       .addCase(empAttendance.fulfilled, (state, action) => {
-
         state.empAttendanceData = action.payload.Data;
-
       })
       .addCase(Attendance.fulfilled, (state, action) => {
-
         state.AttendanceData = action.payload.Data;
-
       })
       .addCase(RegGetData.pending, (state, action) => {
         state.RegGetData = {};
@@ -2680,156 +2835,175 @@ export const getApiSlice = createSlice({
         state.getLoading = false;
       })
 
-
-//SKILL-INSIGHTS
-  .addCase(getInsights1.pending, (state) => {
-    state.skillInsights2getdata = [];
-    state.skillInsights1getdata = {};
-    state.skillInsights1loading = true;
-    state.error = null;
-  })
-  .addCase(getInsights1.fulfilled, (state, action) => {
-     state.skillInsights2getdata = [];
-    if (action.payload.Status === "Y") {
-      // store full Data object
+      //SKILL-INSIGHTS
+      .addCase(getInsights1.pending, (state) => {
+        state.skillInsights2getdata = [];
+        state.skillInsights1getdata = {};
+        state.skillInsights1loading = true;
+        state.error = null;
+      })
+      .addCase(getInsights1.fulfilled, (state, action) => {
+        state.skillInsights2getdata = [];
+        if (action.payload.Status === "Y") {
+          // store full Data object
           state.skillInsights1getdata = action.payload.Data;
+        } else {
+          state.skillInsights1getdata = {};
+        }
+        state.skillInsights1loading = false;
+        state.error = null;
+      })
+      .addCase(getInsights1.rejected, (state, action) => {
+        state.skillInsights2getdata = [];
+        state.skillInsights1getdata = {};
+        state.skillInsights1loading = false;
+        state.error = action.error.message;
+      })
 
-    } else {
-      state.skillInsights1getdata = {};
-    }
-    state.skillInsights1loading = false;
-    state.error = null;
-  })
-  .addCase(getInsights1.rejected, (state, action) => {
-    state.skillInsights2getdata = [];
-    state.skillInsights1getdata = {};
-    state.skillInsights1loading = false;
-    state.error = action.error.message;
-  })
+      .addCase(getInsights2.pending, (state) => {
+        state.skillInsights2getdata = [];
+        state.skillInsights2loading = true;
+        state.error = null;
+      })
+      .addCase(getInsights2.fulfilled, (state, action) => {
+        // if (action.payload.Status === "Y") {
+        // store full Data object
+        state.skillInsights2getdata = action.payload.Data;
 
+        // } else {
+        //   state.skillInsights2getdata = [];
+        // }
+        state.skillInsights2loading = false;
+        state.error = null;
+      })
+      .addCase(getInsights2.rejected, (state, action) => {
+        state.skillInsights2getdata = [];
+        state.skillInsights2loading = false;
+        state.error = action.error.message;
+      })
 
-    .addCase(getInsights2.pending, (state) => {
-    state.skillInsights2getdata = [];
-    state.skillInsights2loading = true;
-    state.error = null;
-  })
-  .addCase(getInsights2.fulfilled, (state, action) => {
-    // if (action.payload.Status === "Y") {
-      // store full Data object
-          state.skillInsights2getdata = action.payload.Data;
+      .addCase(scheduleGetData.pending, (state) => {
+        state.schedulegetdata = [];
+        state.scheduleloading = true;
+        state.error = null;
+      })
+      .addCase(scheduleGetData.fulfilled, (state, action) => {
+        state.schedulegetdata = action.payload.Data;
 
-    // } else {
-    //   state.skillInsights2getdata = [];
-    // }
-    state.skillInsights2loading = false;
-    state.error = null;
-  })
-  .addCase(getInsights2.rejected, (state, action) => {
-    state.skillInsights2getdata = [];
-    state.skillInsights2loading = false;
-    state.error = action.error.message;
-  })
+        state.scheduleloading = false;
+        state.error = null;
+      })
+      .addCase(scheduleGetData.rejected, (state, action) => {
+        state.schedulegetdata = [];
+        state.scheduleloading = false;
+        state.error = action.error.message;
+      })
 
+      //APPRAISAL BASED SCHEDULE
+      .addCase(appraisalscheduleGetData.pending, (state) => {
+        state.appraisalscheduleGetData = [];
+        state.appraisalscheduleGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(appraisalscheduleGetData.fulfilled, (state, action) => {
+        state.appraisalscheduleGetData = action.payload.Data;
 
-    .addCase(scheduleGetData.pending, (state) => {
-    state.schedulegetdata = [];
-    state.scheduleloading = true;
-    state.error = null;
-  })
-  .addCase(scheduleGetData.fulfilled, (state, action) => {
-   
-          state.schedulegetdata = action.payload.Data;
+        state.appraisalscheduleGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(appraisalscheduleGetData.rejected, (state, action) => {
+        state.appraisalscheduleGetData = [];
+        state.appraisalscheduleGetDataloading = false;
+        state.error = action.error.message;
+      })
 
-   
-    state.scheduleloading = false;
-    state.error = null;
-  })
-  .addCase(scheduleGetData.rejected, (state, action) => {
-    state.schedulegetdata = [];
-    state.scheduleloading = false;
-    state.error = action.error.message;
-  })
+      //VENDOR REGISTRATION GET
+      .addCase(VendorRegisterFetchData.pending, (state) => {
+        state.vendorregisterGetData = {};
+        state.vendorregisterGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(VendorRegisterFetchData.fulfilled, (state, action) => {
+        state.vendorregisterGetData = action.payload.Data;
 
+        state.vendorregisterGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(VendorRegisterFetchData.rejected, (state, action) => {
+        state.vendorregisterGetData = {};
+        state.vendorregisterGetDataloading = false;
+        state.error = action.error.message;
+      })
 
-  //APPRAISAL BASED SCHEDULE 
-    .addCase(appraisalscheduleGetData.pending, (state) => {
-    state.appraisalscheduleGetData = [];
-    state.appraisalscheduleGetDataloading = true;
-    state.error = null;
-  })
-  .addCase(appraisalscheduleGetData.fulfilled, (state, action) => {
-   
-          state.appraisalscheduleGetData = action.payload.Data;
+      //VENDOR DEFAULT GET
+      .addCase(VendorDefaultFetchData.pending, (state) => {
+        state.vendorDefaultGetData = {};
+        state.vendorDefaultGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(VendorDefaultFetchData.fulfilled, (state, action) => {
+        state.vendorDefaultGetData = action.payload.Data;
 
-   
-    state.appraisalscheduleGetDataloading = false;
-    state.error = null;
-  })
-  .addCase(appraisalscheduleGetData.rejected, (state, action) => {
-    state.appraisalscheduleGetData = [];
-    state.appraisalscheduleGetDataloading = false;
-    state.error = action.error.message;
-  })
+        state.vendorDefaultGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(VendorDefaultFetchData.rejected, (state, action) => {
+        state.vendorDefaultGetData = {};
+        state.vendorDefaultGetDataloading = false;
+        state.error = action.error.message;
+      })
+      //DefaultProductDeliveryChargeGet
+      .addCase(DefaultProductDeliveryChargeGet.pending, (state) => {
+        state.DefaultProductDeliveryChargeGetData = {};
+        state.DefaultProductDeliveryChargeGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(DefaultProductDeliveryChargeGet.fulfilled, (state, action) => {
+        state.DefaultProductDeliveryChargeGetData = action.payload.Data;
 
-    //VENDOR REGISTRATION GET 
-    .addCase(VendorRegisterFetchData.pending, (state) => {
-    state.vendorregisterGetData = {};
-    state.vendorregisterGetDataloading = true;
-    state.error = null;
-  })
-  .addCase(VendorRegisterFetchData.fulfilled, (state, action) => {
-   
-          state.vendorregisterGetData = action.payload.Data;
+        state.DefaultProductDeliveryChargeGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(DefaultProductDeliveryChargeGet.rejected, (state, action) => {
+        state.DefaultProductDeliveryChargeGetData = {};
+        state.DefaultProductDeliveryChargeGetDataloading = false;
+        state.error = action.error.message;
+      })
+      //PROJECT COSTING PDF
+      .addCase(getProjectCosting.pending, (state) => {
+        state.projectCostinggetdata = {};
+        state.projectCostingloading = true;
+        state.error = null;
+      })
+      .addCase(getProjectCosting.fulfilled, (state, action) => {
+        state.projectCostinggetdata = action.payload.Data;
+        state.projectCostingloading = false;
+        state.error = null;
+      })
+      .addCase(getProjectCosting.rejected, (state, action) => {
+        state.projectCostinggetdata = {};
+        state.projectCostingloading = false;
+        state.error = action.error.message;
+      })
 
-   
-    state.vendorregisterGetDataloading = false;
-    state.error = null;
-  })
-  .addCase(VendorRegisterFetchData.rejected, (state, action) => {
-    state.vendorregisterGetData = {};
-    state.vendorregisterGetDataloading = false;
-    state.error = action.error.message;
-  })
+      //ORDER HEADER PDF
+      .addCase(getOrderdetailReport.pending, (state) => {
+        state.OrderdetailReportgetdata = {};
+        state.OrderdetailReportloading = true;
+        state.error = null;
+      })
+      .addCase(getOrderdetailReport.fulfilled, (state, action) => {
+        state.OrderdetailReportgetdata = action.payload.Data;
+        state.OrderdetailReportloading = false;
+        state.error = null;
+      })
+      .addCase(getOrderdetailReport.rejected, (state, action) => {
+        state.OrderdetailReportgetdata = {};
+        state.OrderdetailReportloading = false;
+        state.error = action.error.message;
+      })
 
-
-    //VENDOR DEFAULT GET 
-    .addCase(VendorDefaultFetchData.pending, (state) => {
-    state.vendorDefaultGetData = {};
-    state.vendorDefaultGetDataloading = true;
-    state.error = null;
-
-  })
-  .addCase(VendorDefaultFetchData.fulfilled, (state, action) => {
-   
-          state.vendorDefaultGetData = action.payload.Data;
-
-   
-    state.vendorDefaultGetDataloading = false;
-    state.error = null;
-  })
-  .addCase(VendorDefaultFetchData.rejected, (state, action) => {
-    state.vendorDefaultGetData = {};
-    state.vendorDefaultGetDataloading = false;
-    state.error = action.error.message;
-  })
-  //PROJECT COSTING PDF
-  .addCase(getProjectCosting.pending, (state) => {
-    state.projectCostinggetdata = {};
-    state.projectCostingloading = true;
-    state.error = null;
-  })
-  .addCase(getProjectCosting.fulfilled, (state, action) => {
-    state.projectCostinggetdata = action.payload.Data;
-    state.projectCostingloading = false;
-    state.error = null;
-  })
-  .addCase(getProjectCosting.rejected, (state, action) => {
-    state.projectCostinggetdata = {};
-    state.projectCostingloading = false;
-    state.error = action.error.message;
-  })
-
-   .addCase(getLeaveweeklyData.pending, (state) => {
+      .addCase(getLeaveweeklyData.pending, (state) => {
         state.Status = "idle";
         state.getLoading = true;
         state.leaveweeklyData = {
@@ -2837,12 +3011,12 @@ export const getApiSlice = createSlice({
           Year: "",
           LeaveDetailsData: {
             TableData: [],
-            Others: []
-          }
+            Others: [],
+          },
         };
         state.msg = "Loading...";
       })
- 
+
       .addCase(getLeaveweeklyData.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;
@@ -2851,12 +3025,12 @@ export const getApiSlice = createSlice({
           Year: "",
           LeaveDetailsData: {
             TableData: [],
-            Others: []
-          }
+            Others: [],
+          },
         };
         toast.error("Something Went Wrong");
       })
- 
+
       // .addCase(getLeaveweeklyData.fulfilled, (state, action) => {
       //   state.Status = "success";
       //   state.getLoading = false;
@@ -2867,8 +3041,8 @@ export const getApiSlice = createSlice({
         state.Status = "success";
         state.getLoading = false;
         state.leaveweeklyData = action.payload?.Data?.[0] || {
-          Employee: '',
-          Year: '',
+          Employee: "",
+          Year: "",
           LeaveDetailsData: {
             TableData: [],
             Others: [],
@@ -2876,17 +3050,16 @@ export const getApiSlice = createSlice({
         };
       })
 
-
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
-        state.projectName = action.payload?.Data?.ProjectName?.ProjectName || "";
-        state.managerName = action.payload?.Data?.ManagersName?.ManagersName || "";
+        state.projectName =
+          action.payload?.Data?.ProjectName?.ProjectName || "";
+        state.managerName =
+          action.payload?.Data?.ManagersName?.ManagersName || "";
       })
       .addCase(MonthlyAttendance.fulfilled, (state, action) => {
-
         state.MonthlyAttendanceData = action.payload.Data;
-
-      })
+      });
   },
 });
 
@@ -2901,7 +3074,7 @@ export const {
   stockReqSuccess,
   resetTrackingData,
   // packingListCarton
-  ratingChange
+  ratingChange,
 } = getApiSlice.actions;
 
 export default getApiSlice.reducer;
@@ -2917,7 +3090,10 @@ export const fetchApidata =
       recid: idata,
     };
 
-    console.log("🚀 ~ file: Formapireducer.js:794 ~ JSON.stringify(data):", JSON.stringify(data))
+    console.log(
+      "🚀 ~ file: Formapireducer.js:794 ~ JSON.stringify(data):",
+      JSON.stringify(data)
+    );
     dispatch(pending());
     axios
       .post(url, data, {
@@ -2998,15 +3174,11 @@ export const fetchApidata =
             if (apidata.Data.Jobwork == "Y") {
               apidata.Data.Jobwork = true;
             } else apidata.Data.Jobwork = false;
-
-
           }
           if (AccessID == "TR110") {
             if (apidata.Data.Sameplist == "Y") {
               apidata.Data.Sameplist = true;
             } else apidata.Data.Sameplist = false;
-
-
           }
           if (AccessID == "TR085") {
             if (apidata.Data.Productcost == "Y") {
@@ -3058,23 +3230,23 @@ export function postApidata(AccessID, Action, idata) {
     }
     try {
       console.log("---", idata);
-      var isCompanyID = Object.hasOwn(idata, 'CompanyID');
-      var isFinyear = Object.hasOwn(idata, 'Finyear');
+      var isCompanyID = Object.hasOwn(idata, "CompanyID");
+      var isFinyear = Object.hasOwn(idata, "Finyear");
       const Finyear = sessionStorage.getItem("YearRecorid");
       const CompanyID = sessionStorage.getItem("compID");
-      if (!isCompanyID && AccessID !== 'TR030' && AccessID !== 'TR076') {
+      if (!isCompanyID && AccessID !== "TR030" && AccessID !== "TR076") {
         idata = {
           ...idata,
           CompanyID,
-        }
+        };
       }
-      if (!isFinyear && AccessID !== 'TR030' && AccessID !== 'TR076') {
+      if (!isFinyear && AccessID !== "TR030" && AccessID !== "TR076") {
         idata = {
           ...idata,
           Finyear,
-        }
+        };
       }
-      console.log("🚀 ~ file: Formapireducer.js:734 ~ return ~ idata:", idata)
+      console.log("🚀 ~ file: Formapireducer.js:734 ~ return ~ idata:", idata);
       var url = store.getState().globalurl.apiUrl;
       var data = {
         accessid: AccessID,
@@ -3136,7 +3308,7 @@ export function proformainvApidata(
         type: parentID,
         YearID: YearID,
         CompanyID,
-        Finyear
+        Finyear,
       };
       dispatch(pending());
       console.log("postdata" + JSON.stringify(data));
@@ -3189,7 +3361,7 @@ export function finalinvApidata(
         type: parentID,
         YearID: YearID,
         CompanyID,
-        Finyear
+        Finyear,
       };
       dispatch(pending());
       console.log("postdata" + JSON.stringify(data));
@@ -3398,7 +3570,6 @@ export function TrackingFetchfn(MaterialID, Type) {
       var data = {
         MaterialID: MaterialID,
         Type: Type,
-
       };
 
       dispatch(pending());
@@ -3416,8 +3587,6 @@ export function TrackingFetchfn(MaterialID, Type) {
     }
   };
 }
-
-
 
 export function bomCopyApiData(recid, type) {
   return async (dispatch) => {
@@ -3542,8 +3711,6 @@ export function stockFetchapiData(AccessID, Action, idata) {
     }
   };
 }
-
-
 
 export const stockApidata =
   (AccessID, recid, Type, Year) => (dispatch, getState) => {
@@ -3776,7 +3943,7 @@ export function MaterialTrackingFetchData(RecordID, Type) {
       var data = {
         Query: {
           RecordID: RecordID,
-          Type: Type
+          Type: Type,
         },
       };
       data = JSON.stringify(data);
@@ -3799,8 +3966,6 @@ export function MaterialTrackingFetchData(RecordID, Type) {
     }
   };
 }
-
-
 
 export function supplierTrackingFetchData(RecordID) {
   return async (dispatch) => {
@@ -3870,7 +4035,7 @@ export function stockRequirementFetchapiData(name) {
         },
       };
       data = JSON.stringify(data);
-      console.log("🚀 ~ file: Formapireducer.js:1353 ~ return ~ data:", data)
+      console.log("🚀 ~ file: Formapireducer.js:1353 ~ return ~ data:", data);
       // console.log("---"+url);
       dispatch(pending());
 
@@ -3910,7 +4075,6 @@ export const timeSheetPostData = createAsyncThunk(
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
-
     var url = store.getState().globalurl.payrollattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
@@ -3952,7 +4116,6 @@ export const MonthlyAttendance = createAsyncThunk(
 export const timeSheet = createAsyncThunk(
   "timeSheet/timeSheetattendance",
   async ({ data }) => {
-
     var url = store.getState().globalurl.timesheetattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
@@ -3974,7 +4137,6 @@ export const timeSheet = createAsyncThunk(
 export const timeSheetreport = createAsyncThunk(
   "timeSheet/timeSheetattendance",
   async ({ data }) => {
-
     var url = store.getState().globalurl.timesheetreportattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 

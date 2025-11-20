@@ -12,6 +12,11 @@ import {
   InputBase,
   Divider,
   CircularProgress,
+  TextField,
+  Checkbox,
+  Button,
+  Stack,
+  FormControlLabel,
 } from "@mui/material";
 import {
   DataGrid,
@@ -70,11 +75,12 @@ import { Delete, Psychology, Category } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import Diversity2Icon from '@mui/icons-material/Diversity2';
-import CategoryIcon from '@mui/icons-material/Category';
-
+import Diversity2Icon from "@mui/icons-material/Diversity2";
+import CategoryIcon from "@mui/icons-material/Category";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { Formik } from "formik";
 const Listview = () => {
-
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -116,14 +122,12 @@ const Listview = () => {
   // console.log("rowdata" + JSON.stringify(listViewData));
   const listViewcolumn = useSelector((state) => state.listviewApi.columnData);
 
-  
   const [selectedFile, setSelectedFile] = useState();
   const [uploadFile, setUploadFile] = useState();
   const compID = sessionStorage.getItem("compID");
   const YearRecorid = sessionStorage.getItem("YearRecorid");
   const [errorMsgData, setErrorMsgData] = useState(null);
-
-
+  const [showMore, setShowMore] = React.useState(false);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -140,7 +144,7 @@ const Listview = () => {
   //   "🚀 ~ file: Listview.jsx:58 ~ Listview ~ listViewcolumn",
   //   listViewcolumn
   // );
-  // `CompanyID=${compID} AND compID=${YearRecorid}`
+  // `compID=${compID} AND compID=${YearRecorid}`
   React.useEffect(() => {
     dispatch(
       fetchListview(
@@ -313,238 +317,194 @@ const Listview = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexWrap: "wrap", // allow wrapping on very small screens
+            gap: 2,
+            width: "100%",
+            alignItems: "center",
           }}
         >
-          <GridToolbarQuickFilter key={accessID} />
-          {accessID == "TR002" ? (
-            <Tooltip arrow title="Product Tracking">
-              <AssessmentIcon
-                sx={{ marginTop: "10px" }}
-                color="primary"
-                onClick={() => {
-                  navigate(
-                    "/Apps/TR200/Editproducttracking/EditProduct Tracking/1/A"
-                  );
-                }}
-              />
-            </Tooltip>
-          ) : (
-            false
-          )}
-           {/* {accessID === "TR313" ? (
-              <>
-                <TextField
-                  name="fromdate"
-                  type="date"
-                  id="fromdate"
-                  label="From Date"
-                  variant="standard"
-                  value={fromDate || ""}
-                  onChange={(e) => {
-                    const newDate2 = e.target.value;
-
-                    // Save in Redux
-                    dispatch(setFromDate(newDate2));
-
-                    // Save in sessionStorage
-                    sessionStorage.setItem("FromDate", newDate2);
-
-                    if (selectedDate) {
-                      dispatch(
-                        fetchListview(
-                          "TR313",
-                          "Order Enquiry",
-                          `EmployeesID='${LoginID}' AND DAILYTASKDATE BETWEEN '${newDate2}' AND '${toDate}'`,
-                          ""
-                        )
-                      );
-                    }
-                  }}
-                  focused
-                  required
-                  InputLabelProps={{ shrink: true }}
-                  inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                  sx={{ width: 250 }}
-                />
-
-                <TextField
-                  name="date"
-                  type="date"
-                  id="date"
-                  label="To Date"
-                  variant="standard"
-                  value={toDate || ""}
-                  onChange={(e) => {
-                    const newDate = e.target.value;
-
-                    // Save in Redux
-                    dispatch(setToDate(newDate));
-
-                    // Save in sessionStorage
-                    sessionStorage.setItem("ToDate", newDate);
-
-                    dispatch(
-                      fetchListview(
-                        "TR313",
-                        "Scrum Task",
-                        `EmployeesID='${LoginID}' AND DAILYTASKDATE BETWEEN '${fromDate}' AND '${newDate}'`,
-                        ""
-                      )
-                    );
-                  }}
-                  focused
-                  required
-                  InputLabelProps={{ shrink: true }}
-                  inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                  //sx={{ width: 250, marginLeft: isManager != 1 ? "100px" : 0 }}
-                  sx={{ width: 250 }}
-                />
-              </>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "center",
+              flexShrink: 0, // prevent shrinking
+              marginLeft: "auto", // push to right
+            }}
+          >
+            {(accessID === "TR313" || accessID === "TR243") ? (
+              <IconButton onClick={() => setShowMore((prev) => !prev)}>
+                {showMore ? (
+                  <Tooltip title="Close">
+                    <MoreHorizIcon />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Open">
+                    <MoreVertIcon />
+                  </Tooltip>
+                )}
+              </IconButton>
             ) : (
               false
-            )} */}
-     
-          {accessID == "TR043" ? (
-            <Tooltip arrow title="Product Line Chart">
-              <AssessmentIcon
-                sx={{ marginTop: "10px" }}
-                color="primary"
-                onClick={() => {
-                  navigate(`/Apps/product-analysis/1/E`);
-                }}
-              />
-            </Tooltip>
-          ) : (
-            false
-          )}
-
-          {screenName == "UOM Type" ? (
-            false
-          ) : screenName == "Invoice Category" ? (
-            false
-          ) : screenName == "Materials Type" ? (
-            false
-          ) : accessID == "TR059" ? (
-            false
-          ) : accessID == "TR286" ? (
-            false
-          ) : accessID == "TR299" ? (
-            false
-          ) : accessID == "TR072" ? (
-            false
-          ) : accessID == "TR058" ? (
-            false
-          ) : accessID == "TR047" ? (
-            false
-          ) : accessID == "TR076" ? (
-            false
-          ) : accessID == "TR064" ? (
-            false
-          ) : accessID == "TR099" ? (
-            false
-          ) : accessID == "TR043" ? (
-            false
-          ) : accessID == "TR101" ? (
-            false
-          ) : accessID == "TR078" ? (
-            false
-          ) : accessID == "TR116" ? (
-            false
-          ) : accessID == "TR124" ? (
-            false
-          ) : accessID == "TR083" ? (
-            false
-          ) : accessID == "TR136" ? (
-            false
-          ) : accessID == "TR135" ? (
-            false
-          ) : accessID == "TR257" ? (
-            false
-          ) : accessID == "TR313" ? (
-            false
-          ): YearFlag == "true" ? (
-            // UGA_ADD ? (
-
-            <Tooltip arrow title="Add">
-              <IconButton>
-                <AddOutlinedIcon
+            )}
+            <GridToolbarQuickFilter key={accessID} />
+            {accessID == "TR002" ? (
+              <Tooltip arrow title="Product Tracking">
+                <AssessmentIcon
+                  sx={{ marginTop: "10px" }}
+                  color="primary"
                   onClick={() => {
                     navigate(
-                      `./Edit${screenName}/-1/A${
-                        accessID === "TR010" ? "/0" : ""
-                      }`,
-                      {
-                        state: {
-                          CustomerID: "-1",
-                          ProductID: "-1",
-                          BomID: "-1",
-                        },
-                      }
+                      "/Apps/TR200/Editproducttracking/EditProduct Tracking/1/A"
                     );
                   }}
                 />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            // ) : (
-            //   false
-            // )
-            false
-          )}
-          {/* <Tooltip arrow title="Excel">
+              </Tooltip>
+            ) : (
+              false
+            )}
+
+
+            {accessID == "TR043" ? (
+              <Tooltip arrow title="Product Line Chart">
+                <AssessmentIcon
+                  sx={{ marginTop: "10px" }}
+                  color="primary"
+                  onClick={() => {
+                    navigate(`/Apps/product-analysis/1/E`);
+                  }}
+                />
+              </Tooltip>
+            ) : (
+              false
+            )}
+
+            {screenName == "UOM Type" ? (
+              false
+            ) : screenName == "Invoice Category" ? (
+              false
+            ) : screenName == "Materials Type" ? (
+              false
+            ) : accessID == "TR059" ? (
+              false
+            ) : accessID == "TR286" ? (
+              false
+            ) : accessID == "TR299" ? (
+              false
+            ) : accessID == "TR072" ? (
+              false
+            ) : accessID == "TR058" ? (
+              false
+            ) : accessID == "TR047" ? (
+              false
+            ) : accessID == "TR076" ? (
+              false
+            ) : accessID == "TR064" ? (
+              false
+            ) : accessID == "TR099" ? (
+              false
+            ) : accessID == "TR043" ? (
+              false
+            ) : accessID == "TR101" ? (
+              false
+            ) : accessID == "TR078" ? (
+              false
+            ) : accessID == "TR116" ? (
+              false
+            ) : accessID == "TR124" ? (
+              false
+            ) : accessID == "TR083" ? (
+              false
+            ) : accessID == "TR136" ? (
+              false
+            ) : accessID == "TR135" ? (
+              false
+            ) : accessID == "TR257" ? (
+              false
+            ) : accessID == "TR313" ? (
+              false
+            ) : YearFlag == "true" ? (
+              // UGA_ADD ? (
+
+              <Tooltip arrow title="Add">
+                <IconButton>
+                  <AddOutlinedIcon
+                    onClick={() => {
+                      navigate(
+                        `./Edit${screenName}/-1/A${
+                          accessID === "TR010" ? "/0" : ""
+                        }`,
+                        {
+                          state: {
+                            CustomerID: "-1",
+                            ProductID: "-1",
+                            BomID: "-1",
+                          },
+                        }
+                      );
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              // ) : (
+              //   false
+              // )
+              false
+            )}
+            {/* <Tooltip arrow title="Excel">
             <IconButton  color="primary">
             <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
             <FileUploadIcon />
           </IconButton>
             </Tooltip> */}
-          {accessID == "TR064" ? (
-            <Tooltip arrow title="Excel">
-              <IconButton
-                size="large"
-                color="primary"
-                aria-label="upload picture"
-                component="label"
-              >
-                <input
-                  hidden
-                  accept="all/*"
-                  type="file"
-                  onChange={changeHandler}
+            {accessID == "TR064" ? (
+              <Tooltip arrow title="Excel">
+                <IconButton
+                  size="large"
+                  color="primary"
+                  aria-label="upload picture"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept="all/*"
+                    type="file"
+                    onChange={changeHandler}
+                  />
+                  <FileUploadIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              false
+            )}
+            {accessID == "TR059" ? (
+              <Tooltip arrow title="Report">
+                <AssessmentIcon
+                  sx={{ marginTop: "10px" }}
+                  color="primary"
+                  onClick={() => {
+                    navigate("/Apps/TR100/Editreport/EditReport/1/A");
+                  }}
                 />
-                <FileUploadIcon />
+              </Tooltip>
+            ) : (
+              false
+            )}
+
+            <GridToolbarExport
+              printOptions={{ disableToolbarButton: true }}
+              csvOptions={{
+                fileName: `${screenName}`,
+              }}
+            />
+
+            <Tooltip arrow title="Logout">
+              <IconButton onClick={() => fnLogOut("Logout")} color="error">
+                <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
-          ) : (
-            false
-          )}
-          {accessID == "TR059" ? (
-            <Tooltip arrow title="Report">
-              <AssessmentIcon
-                sx={{ marginTop: "10px" }}
-                color="primary"
-                onClick={() => {
-                  navigate("/Apps/TR100/Editreport/EditReport/1/A");
-                }}
-              />
-            </Tooltip>
-          ) : (
-            false
-          )}
-
-          <GridToolbarExport
-            printOptions={{ disableToolbarButton: true }}
-            csvOptions={{
-              fileName: `${screenName}`,
-            }}
-          />
-
-          <Tooltip arrow title="Logout">
-            <IconButton onClick={() => fnLogOut("Logout")} color="error">
-              <LogoutOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+          </Box>
         </Box>
       </GridToolbarContainer>
     );
@@ -617,6 +577,8 @@ const Listview = () => {
             padding={2}
             height={dataGridHeight}
             sx={{
+              display: "flex",
+              direction: "row",
               "& .MuiDataGrid-root": {
                 border: "none",
               },
@@ -680,6 +642,587 @@ const Listview = () => {
                 Toolbar: CustomToolbar,
               }}
             />
+            {showMore && accessID === "TR313" && (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 2,
+                  borderRadius: 1,
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Formik
+                  initialValues={{
+                    fromdate: sessionStorage.getItem("FromDate") || "",
+                    date: sessionStorage.getItem("ToDate") || "",
+                    Created: sessionStorage.getItem("TR313_Created") === "Y",
+                    Process: sessionStorage.getItem("TR313_Process") === "Y",
+                    inprogress:
+                      sessionStorage.getItem("TR313_Picked") === "Y",
+                    completed:
+                      sessionStorage.getItem("TR313_Scheduled") === "Y",
+                    Delivered: sessionStorage.getItem("TR313_Delivered") === "Y",
+                    Scheduled: sessionStorage.getItem("TR313_Scheduled") === "Y",
+                  }}
+                  enableReinitialize
+                  validate={(values) => {
+                    const hasAtLeastOneValue =
+                      values.fromdate ||
+                      values.date ||
+                      values.Created ||
+                      values.Process ||
+                      values.ReadyToDeliver ||
+                      values.Paid ||
+                      values.Scheduled ||
+                      values.Delivered ||
+                      values.Picked;                  
+                  }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    const conditions = [];
+
+                    const fromDate = values.fromdate || "";
+                    const toDate = values.date || "";
+
+                    sessionStorage.setItem("FromDate", fromDate);
+                    sessionStorage.setItem("ToDate", toDate);
+                    // sessionStorage.setItem("EmployeeID", empId);
+
+                    [
+                      "Created",
+                      "Process",
+                      "Ready To Deliver",
+                      "completed",
+                      "approved",
+                      "rejected",
+                    ].forEach((key) => {
+                      sessionStorage.setItem(
+                        `TR313_${key}`,
+                        values[key] ? "Y" : "N"
+                      );
+                    });
+
+                    sessionStorage.setItem(
+                      "TR313_Filters",
+                      JSON.stringify(values)
+                    );
+
+                    // conditions.push(`EmployeesID='${empId}'`);
+
+                    if (fromDate && toDate) {
+                      conditions.push(
+                        `OROrderDate BETWEEN '${fromDate}' AND '${toDate}'`
+                      );
+                    } else if (fromDate) {
+                      conditions.push(`OROrderDate >= '${fromDate}'`);
+                    } else if (toDate) {
+                      conditions.push(`OROrderDate <= '${toDate}'`);
+                    }
+
+                    const statusFilters = [];
+
+                    if (values.Created) statusFilters.push("'Created'");
+                    if (values.Process) statusFilters.push("'Process'");
+                    if (values.ReadyToDeliver) statusFilters.push("'Ready To Deliver'");
+                    if (values.Picked) statusFilters.push("'Picked'");
+                    if (values.Delivered) statusFilters.push("'Delivered'");
+                    if (values.Scheduled) statusFilters.push("'Scheduled'");
+                    if (values.Paid) statusFilters.push("'Paid'");
+
+                    if (statusFilters.length > 0) {
+                      conditions.push(
+                        `Status IN (${statusFilters.join(", ")})`
+                      );
+                    }
+
+                    //conditions.push(`CompanyID='${compID}'`);
+                    const whereClause = conditions.join(" AND ");
+
+                    dispatch(
+                      fetchListview(
+                        accessID,
+                        screenName,
+                        whereClause,
+                        "",
+                        compID
+                      )
+                    );
+                    setTimeout(() => setSubmitting(false), 100);
+                  }}
+                >
+                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Box sx={{ height: 600, overflowY: "auto" }}>
+                        <TextField
+                          name="fromdate"
+                          type="date"
+                          id="fromdate"
+                          label="From Date"
+                          variant="standard"
+                          value={values.fromdate || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("fromdate", newDate);
+                            // dispatch(setFromDate(newDate));
+                            sessionStorage.setItem("FromDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <TextField
+                          name="date"
+                          type="date"
+                          id="date"
+                          label="To Date"
+                          variant="standard"
+                          value={values.date || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("date", newDate);
+                            // dispatch(setToDate(newDate));
+                            sessionStorage.setItem("ToDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <Typography mt={2} fontWeight="bold" color="error">
+                          Status
+                        </Typography>
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Created"
+                              checked={values.Created}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Created", checked);
+                                sessionStorage.setItem(
+                                  "TR313_Created",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Created"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Process"
+                              checked={values.Process}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Process", checked);
+                                sessionStorage.setItem(
+                                  "TR313_Process",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Process"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="ReadyToDeliver"
+                              checked={values.ReadyToDeliver}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("ReadyToDeliver", checked);
+                                sessionStorage.setItem(
+                                  "TR313_ReadyToDeliver",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Ready To Deliver"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Picked"
+                              checked={values.Picked}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Picked", checked);
+                                sessionStorage.setItem(
+                                  "TR313_Picked",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Picked"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Delivered"
+                              checked={values.Delivered}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Delivered", checked);
+                                sessionStorage.setItem(
+                                  "TR313_Delivered",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Delivered"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Paid"
+                              checked={values.Paid}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Paid", checked);
+                                sessionStorage.setItem(
+                                  "TR313_Paid",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Paid"
+                        />
+
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="end"
+                          spacing={1}
+                          mt={2}
+                        >
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                          >
+                            Apply
+                          </Button>
+                        </Stack>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            )}
+
+
+             {showMore && accessID === "TR243" && (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 2,
+                  borderRadius: 1,
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Formik
+                  initialValues={{
+                    fromdate: sessionStorage.getItem("FromDate") || "",
+                    date: sessionStorage.getItem("ToDate") || "",
+                    Created: sessionStorage.getItem("TR243_Created") === "Y",
+                    Process: sessionStorage.getItem("TR243_Process") === "Y",
+                    Paid: sessionStorage.getItem("TR243_Paid") === "Y",
+                    Picked:
+                      sessionStorage.getItem("TR243_Picked") === "Y",
+                    ReadyToDeliver:
+                      sessionStorage.getItem("TR243_ReadyToDeliver") === "Y",
+                    Delivered: sessionStorage.getItem("TR243_Delivered") === "Y",
+                    Scheduled: sessionStorage.getItem("TR243_Scheduled") === "Y",
+                  }}
+                  enableReinitialize
+                  validate={(values) => {
+                    const hasAtLeastOneValue =
+                      values.fromdate ||
+                      values.date ||
+                      values.Created ||
+                      values.Process ||
+                      values.ReadyToDeliver ||
+                      values.Paid ||
+                      values.Scheduled ||
+                      values.Delivered ||
+                      values.Picked;                  
+                  }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    const conditions = [];
+
+                    const fromDate = values.fromdate || "";
+                    const toDate = values.date || "";
+
+                    sessionStorage.setItem("FromDate", fromDate);
+                    sessionStorage.setItem("ToDate", toDate);
+                    // sessionStorage.setItem("EmployeeID", empId);
+
+                    [
+                      "Created",
+                      "Process",
+                      "Ready To Deliver",
+                      "Paid",
+                      "Picked",
+                      "Deivered",
+                      "Scheduled",
+                    ].forEach((key) => {
+                      sessionStorage.setItem(
+                        `TR243_${key}`,
+                        values[key] ? "Y" : "N"
+                      );
+                    });
+
+                    sessionStorage.setItem(
+                      "TR243_Filters",
+                      JSON.stringify(values)
+                    );
+
+                    // conditions.push(`EmployeesID='${empId}'`);
+
+                    if (fromDate && toDate) {
+                      conditions.push(
+                        `HVLastOrderDate BETWEEN '${fromDate}' AND '${toDate}'`
+                      );
+                    } else if (fromDate) {
+                      conditions.push(`HVLastOrderDate >= '${fromDate}'`);
+                    } else if (toDate) {
+                      conditions.push(`HVLastOrderDate <= '${toDate}'`);
+                    }
+
+                    const statusFilters = [];
+
+                    if (values.Created) statusFilters.push("'Created'");
+                    if (values.Process) statusFilters.push("'Process'");
+                    if (values.ReadyToDeliver) statusFilters.push("'Ready To Deliver'");
+                    if (values.Picked) statusFilters.push("'Picked'");
+                    if (values.Delivered) statusFilters.push("'Delivered'");
+                    if (values.Scheduled) statusFilters.push("'Scheduled'");
+                    if (values.Paid) statusFilters.push("'Paid'");
+
+                    if (statusFilters.length > 0) {
+                      conditions.push(
+                        `LastOrderStatus IN (${statusFilters.join(", ")})`
+                      );
+                    }
+
+                    //conditions.push(`CompanyID='${compID}'`);
+                    //const whereClause = conditions.join(" AND ");
+const filter = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
+//const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
+
+
+                    dispatch(
+                      fetchListview(
+                        accessID,
+                        screenName,
+                        filter,
+                        "",
+                        //whereClause,
+                        "",
+                        
+                      )
+                    );
+                    setTimeout(() => setSubmitting(false), 100);
+                  }}
+                >
+                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Box sx={{ height: 600, overflowY: "auto" }}>
+                        <TextField
+                          name="fromdate"
+                          type="date"
+                          id="fromdate"
+                          label="From Date"
+                          variant="standard"
+                          value={values.fromdate || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("fromdate", newDate);
+                            // dispatch(setFromDate(newDate));
+                            sessionStorage.setItem("FromDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <TextField
+                          name="date"
+                          type="date"
+                          id="date"
+                          label="To Date"
+                          variant="standard"
+                          value={values.date || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("date", newDate);
+                            // dispatch(setToDate(newDate));
+                            sessionStorage.setItem("ToDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <Typography mt={2} fontWeight="bold" color="error">
+                          Status
+                        </Typography>
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Created"
+                              checked={values.Created}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Created", checked);
+                                sessionStorage.setItem(
+                                  "TR243_Created",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Created"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Process"
+                              checked={values.Process}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Process", checked);
+                                sessionStorage.setItem(
+                                  "TR243_Process",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Confirm"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="ReadyToDeliver"
+                              checked={values.ReadyToDeliver}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("ReadyToDeliver", checked);
+                                sessionStorage.setItem(
+                                  "TR243_ReadyToDeliver",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Ready To Deliver"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Picked"
+                              checked={values.Picked}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Picked", checked);
+                                sessionStorage.setItem(
+                                  "TR243_Picked",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Picked"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Delivered"
+                              checked={values.Delivered}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Delivered", checked);
+                                sessionStorage.setItem(
+                                  "TR243_Delivered",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Delivered"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Paid"
+                              checked={values.Paid}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Paid", checked);
+                                sessionStorage.setItem(
+                                  "TR243_Paid",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Paid"
+                        />
+
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="end"
+                          spacing={1}
+                          mt={2}
+                        >
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                          >
+                            Apply
+                          </Button>
+                        </Stack>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            )}
           </Box>
         </Box>
         {accessID == "TR049" ? (
@@ -973,8 +1516,7 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) 
-        : accessID == "TR243" ? (
+        ) : accessID == "TR243" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -983,20 +1525,19 @@ const Listview = () => {
             />
 
             <Chip
-              icon={< Diversity2Icon color="primary"/>}
+              icon={<Diversity2Icon color="primary" />}
               label="Leads"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />
             <Chip
-              icon={< CategoryIcon color="primary"/>}
+              icon={<CategoryIcon color="primary" />}
               label="Order"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) 
-        : accessID == "TR313" ? (
+        ) : accessID == "TR313" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             {/* <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -1017,8 +1558,7 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             /> */}
           </Box>
-        )
-        : accessID == "TR099" ? (
+        ) : accessID == "TR099" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}

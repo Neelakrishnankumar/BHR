@@ -124,7 +124,8 @@ VendorRegistration:  APIurl + "vendorregistrationV1.php",
 VendorRegistrationGet:  APIurl + "vendorregistrationGet.php",
 VendorDefaultPUT:  APIurl + "vendordefault.php",
 VendorDefaultGET:  APIurl + "vendordefaultGet.php",
-
+DefaultProductDeliveryChargeGet:  APIurl + "DefaultProductDeliveryChargeGet.php",
+OrderdetailReport:  APIurl + "OrderdetailReportV3.php",
 };
 
 export const getUrlSlice = createSlice({
