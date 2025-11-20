@@ -20,10 +20,10 @@ import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
 import BalanceIcon from "@mui/icons-material/Balance";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import VisibilityIcon from "@mui/icons-material/Visibility"
+import VisibilityIcon from "@mui/icons-material/Visibility";
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { useNavigate } from "react-router-dom";
-import Diversity2Icon from '@mui/icons-material/Diversity2';
+import Diversity2Icon from "@mui/icons-material/Diversity2";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -61,6 +61,7 @@ import {
 } from "@mui/icons-material";
 import { Visibility } from "@mui/icons-material";
 import QuizIcon from "@mui/icons-material/Quiz";
+import CategoryIcon from "@mui/icons-material/Category";
 
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,16 +71,17 @@ import ProjectPDF from "../../apps/pages/HR/ProjectPDF";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { pdf } from "@react-pdf/renderer";
-import AssistantIcon from '@mui/icons-material/Assistant';
+import AssistantIcon from "@mui/icons-material/Assistant";
 import AdjustOutlinedIcon from "@mui/icons-material/AdjustOutlined";
 import DoneOutlineOutlinedIcon from "@mui/icons-material/DoneOutlineOutlined";
 import GppMaybeOutlinedIcon from "@mui/icons-material/GppMaybeOutlined";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
-import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined';
-import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
+import SendTimeExtensionOutlinedIcon from "@mui/icons-material/SendTimeExtensionOutlined";
+import HistoryToggleOffOutlinedIcon from "@mui/icons-material/HistoryToggleOffOutlined";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import GridViewIcon from '@mui/icons-material/GridView';
+import GridViewIcon from "@mui/icons-material/GridView";
+import OrderHeaderPdf from "../../apps/pages/HR/OrderHeaderPdf";
 
 const initialState = {
   rowData: [],
@@ -634,6 +636,7 @@ export const fetchListview =
         AccessID != "TR304" &&
         AccessID != "TR310" &&
         AccessID != "TR311" &&
+        AccessID != "TR313" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -671,7 +674,6 @@ export const fetchListview =
 
       // }
 
-
       //  if (AccessID === "TR283") {
       //   filter = `"AssessmentType=${filter}"` + `'${filter}'`;
       // }
@@ -703,10 +705,9 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
-    else if (AccessID == "TR305") {
-      filter = '';
-    }
-    else {
+    else if (AccessID == "TR305" || AccessID == "TR313") {
+      filter = "";
+    } else {
       filter = `CompanyID=${CompId}`;
     }
     var idata = {
@@ -718,10 +719,10 @@ export const fetchListview =
           AccessID == "TR128"
             ? `parentID=${CompId}`
             : AccessID == "TR273"
-              ? "Type = 'CI'"
-              : AccessID == "TR274"
-                ? "Type = 'CO'"
-                : filter,
+            ? "Type = 'CI'"
+            : AccessID == "TR274"
+            ? "Type = 'CO'"
+            : filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,
@@ -791,8 +792,9 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }productioncard.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }productioncard.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -885,8 +887,9 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }PRODUCTIONCARD.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }PRODUCTIONCARD.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -902,9 +905,11 @@ export const fetchListview =
                     <Tooltip title="Production Requirement">
                       <IconButton
                         component="a"
-                        href={`${store.getState().globalurl.pdfurl
-                          }ProductionRequirement.php?Token=${params.row.Hashtoken
-                          }`}
+                        href={`${
+                          store.getState().globalurl.pdfurl
+                        }ProductionRequirement.php?Token=${
+                          params.row.Hashtoken
+                        }`}
                         target="_blank"
                         rel="noreferrer"
                         sx={{ color: "#4615b2" }}
@@ -923,9 +928,11 @@ export const fetchListview =
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${store.getState().globalurl.pdfurl
-                                  }PRODUCTIONCARD.php?Token=${params.row.Hashtoken
-                                  }`,
+                                link: `${
+                                  store.getState().globalurl.pdfurl
+                                }PRODUCTIONCARD.php?Token=${
+                                  params.row.Hashtoken
+                                }`,
                               })
                             );
                             dispatch(
@@ -1583,7 +1590,6 @@ export const fetchListview =
           //       //   Count: count,
           //       // }
 
-
           //       return (
           //         <Box>
           //           {/* Edit Button */}
@@ -1637,7 +1643,7 @@ export const fetchListview =
               minWidth: 100,
               sortable: false,
               headerAlign: "center",
-              align: "center",
+              align: "left",
               disableColumnMenu: true,
               disableExport: true,
               filterable: false,
@@ -1681,12 +1687,29 @@ export const fetchListview =
                         </IconButton>
                       </Tooltip>
                     </Link>
+
+                    {/* ORDER HEADER */}
+                    {/* {params.row.LeaderCount >= 1 ? ( */}
+                      {/* <Link
+                        to={`/Apps/Secondarylistview/TR310/Order/${id}/Party`}
+                        state={{
+                          PartyID: params.row.RecordID,
+                          PartyName: params.row.Name,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Tooltip title="Order">
+                          <IconButton color="info" size="small">
+                            <CategoryIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link> */}
+                    {/* ) : null} */}
                   </Box>
                 );
               },
             };
           }
-
 
           // else if (AccessID == "TR303") {
           //   obj = {
@@ -1734,7 +1757,6 @@ export const fetchListview =
           //   };
           // }
           else if (AccessID === "TR310") {
-           
             obj = {
               field: "action",
               headerName: "Action",
@@ -1750,6 +1772,97 @@ export const fetchListview =
                 const id = params.row.RecordID;
                 const PartyName = params.row.Name;
 
+                //  const PDFButton = ({ PartyID, OrderHeaderID }) => {
+                //   const dispatch = store.dispatch;
+                //   const [loading, setLoading] = React.useState(false);
+
+                //   const handlePDFGET = async () => {
+                //     try {
+                //       setLoading(true);
+
+                //       const resultAction = await dispatch(
+                //         getProjectCosting({ ProjectID, EmployeeID })
+                //       );
+
+                //       const data = resultAction.payload; // <-- this depends on how your thunk is defined
+                //       if (!data?.HeaderData?.DetailData?.length) {
+                //         alert(
+                //           "No Costing available to generate PDF. Kindly add costing..."
+                //         );
+                //         return;
+                //       }
+
+                //       // Generate and download PDF
+                //       const blob = await pdf(
+                //         <ProjectPDF data={data} UserName={UserName} />
+                //       ).toBlob();
+                //       const link = document.createElement("a");
+                //       link.href = URL.createObjectURL(blob);
+                //       link.download = "Project.pdf";
+                //       link.click();
+                //     } catch (err) {
+                //       console.error("PDF generation failed", err);
+                //     } finally {
+                //       setLoading(false);
+                //     }
+                //   };
+
+                //   return (
+                //     <Tooltip title="Download PDF">
+                //       <IconButton
+                //         color="info"
+                //         size="small"
+                //         onClick={handlePDFGET}
+                //       >
+
+                //           <PictureAsPdfIcon color="error" />
+
+                //         {/* {loading ? (
+                //           <CircularProgress size={20} />
+                //         ) : (
+                //           <PictureAsPdfIcon color="error" />
+                //         )} */}
+                //       </IconButton>
+                //     </Tooltip>
+                //   );
+                // };
+                const PDFButton = () => {
+                  const [loading, setLoading] = React.useState(false);
+
+                  const handlePDFGET = async () => {
+                    try {
+                      setLoading(true);
+
+                      const blob = await pdf(<OrderHeaderPdf />).toBlob();
+
+                      const link = document.createElement("a");
+                      link.href = URL.createObjectURL(blob);
+                      link.download = "OrderDetails.pdf";
+                      link.click();
+                    } catch (err) {
+                      console.error("PDF generation failed", err);
+                    } finally {
+                      setLoading(false);
+                    }
+                  };
+
+                  return (
+                    <Tooltip title="Download PDF">
+                      <IconButton
+                        color="info"
+                        size="small"
+                        onClick={handlePDFGET}
+                      >
+                        {loading ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          <PictureAsPdfIcon color="error" />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+                  );
+                };
+
                 // Encode PartyName to make it URL-safe
                 // const encodedName = encodeURIComponent(PartyName);
 
@@ -1762,7 +1875,7 @@ export const fetchListview =
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
                         LeadTitle: params.row.LeadTitle,
-                        PartyID: params.row.PartyRecordID
+                        PartyID: params.row.PartyRecordID,
                       }}
                     >
                       <Tooltip title="Edit">
@@ -1775,36 +1888,47 @@ export const fetchListview =
                     {/* Leader Button */}
                     <Link
                       // to={`/Apps/Secondarylistview/TR310/Order/${id}/EditOrderitem/-1/E`}
-                      to={params.row.OrderItemsCount >=1 
-                        ? `/Apps/Secondarylistview/TR311/Orderitem/${id}` 
-                        : `/Apps/Secondarylistview/TR311/Orderitem/${id}/EditOrderitem/-1/A` 
+                      to={
+                        params.row.OrderItemsCount >= 1
+                          ? `./TR311/${id}`
+                          : `./TR311/${id}/EditOrderitem/-1/A`
                       }
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
+                        Code: params.row.Code,
                         LeadTitle: params.row.LeadTitle,
-                        PartyID: params.row.PartyRecordID
+                        PartyID: params.row.PartyRecordID,
                       }}
                       // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
                     >
                       <Tooltip title="Order Item">
-                        <IconButton color="info" size="small"
+                        <IconButton
+                          color="info"
+                          size="small"
                           // onClick={() =>
                           //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
                           // }
                         >
-                          <GridViewIcon/>
+                          <GridViewIcon />
                         </IconButton>
                       </Tooltip>
                     </Link>
+                    {/* <Link
+                      state={{
+                        PartyName: params.row.PartyName,
+                        Count: params.row.MarketingCount,
+                        LeadTitle: params.row.LeadTitle,
+                        PartyID: params.row.PartyRecordID,
+                      }}
+                    >
+                      <PDFButton />
+                    </Link> */}
                   </Box>
                 );
               },
             };
-          }
-
-else if (AccessID === "TR311") {
-           
+          } else if (AccessID === "TR311") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1827,12 +1951,13 @@ else if (AccessID === "TR311") {
                   <Box>
                     {/* Edit Button */}
                     <Link
-                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      to={`./EditOrderitem/${params.row.RecordID}/E`}
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
+                        Code: params.row.Code,
                         LeadTitle: params.row.LeadTitle,
-                        PartyID: params.row.PartyRecordID
+                        PartyID: params.row.PartyRecordID,
                       }}
                     >
                       <Tooltip title="Edit">
@@ -1845,9 +1970,7 @@ else if (AccessID === "TR311") {
                 );
               },
             };
-          }
-
-          else if (AccessID === "TR304") {
+          } else if (AccessID === "TR304") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1861,16 +1984,18 @@ else if (AccessID === "TR311") {
               renderCell: (params) => {
                 // Check per-row Editable value
                 sessionStorage.setItem("Status", params.row.OMStatus);
-                if (String(params.row.Editable) === "1" && params.row.OMStatus !== "Close") {
+                if (
+                  String(params.row.Editable) === "1" &&
+                  params.row.OMStatus !== "Close"
+                ) {
                   return (
-
                     <Box>
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={{
                           PartyName: params.row.PartyName,
                           PartyID: params.row.PartyID,
-                          LeadTitle: params.row.LeadTitle
+                          LeadTitle: params.row.LeadTitle,
                         }}
                       >
                         <Tooltip title="Edit">
@@ -1878,14 +2003,15 @@ else if (AccessID === "TR311") {
                             <ModeEditOutlinedIcon />
                           </IconButton>
                         </Tooltip>
-
                       </Link>
-                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                      <Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/IM`}
                         state={{
                           PartyName: params.row.PartyName,
                           PartyID: params.row.PartyID,
-                          LeadTitle: params.row.LeadTitle
-                        }}>
+                          LeadTitle: params.row.LeadTitle,
+                        }}
+                      >
                         <Tooltip title="Attachment">
                           <IconButton color="info" size="small">
                             <AttachFileIcon />
@@ -1893,11 +2019,13 @@ else if (AccessID === "TR311") {
                         </Tooltip>
                       </Link>
                       {/* if (params.row.Editable === "Close") */}
-
                     </Box>
                   );
                 }
-                if (String(params.row.Editable) === "0" || params.row.OMStatus === "Close") {
+                if (
+                  String(params.row.Editable) === "0" ||
+                  params.row.OMStatus === "Close"
+                ) {
                   return (
                     <Box>
                       <Link
@@ -1909,24 +2037,28 @@ else if (AccessID === "TR311") {
                         }}
                       >
                         <Tooltip title="View">
-                          <IconButton style={{ color: '#eb710dff' }} size="small">
+                          <IconButton
+                            style={{ color: "#eb710dff" }}
+                            size="small"
+                          >
                             <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-                      <Link to={`./Edit${screenName}/${params.row.RecordID}/IM`}
+                      <Link
+                        to={`./Edit${screenName}/${params.row.RecordID}/IM`}
                         state={{
                           PartyName: params.row.PartyName,
                           PartyID: params.row.PartyID,
                           LeadTitle: params.row.LeadTitle,
-                        }}>
+                        }}
+                      >
                         <Tooltip title="Attachment">
                           <IconButton color="info" size="small">
                             <AttachFileIcon />
                           </IconButton>
                         </Tooltip>
                       </Link>
-
                     </Box>
                   );
                 }
@@ -2143,8 +2275,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }productpacking.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }productpacking.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -2163,9 +2296,11 @@ else if (AccessID === "TR311") {
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${store.getState().globalurl.pdfurl
-                                  }productpacking.php?Token=${params.row.Hashtoken
-                                  }`,
+                                link: `${
+                                  store.getState().globalurl.pdfurl
+                                }productpacking.php?Token=${
+                                  params.row.Hashtoken
+                                }`,
                               })
                             );
                             dispatch(
@@ -2761,7 +2896,7 @@ else if (AccessID === "TR311") {
                           OperationStageID: params.row.OperationStageID,
                           stagesName: params.row.OperationStageName,
                         }}
-                      //state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                        //state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -2805,83 +2940,83 @@ else if (AccessID === "TR311") {
                 return (
                   <Stack direction="row">
                     {AccessID !== "TR119" &&
-                      AccessID !== "TR118" &&
-                      AccessID !== "TR032" &&
-                      AccessID !== "TR099" &&
-                      AccessID !== "TR048" &&
-                      AccessID !== "TR010" &&
-                      AccessID !== "TR083" &&
-                      AccessID !== "TR097" &&
-                      AccessID !== "TR135" &&
-                      AccessID !== "TR136" &&
-                      AccessID !== "TR091" &&
-                      AccessID !== "TR151" &&
-                      //AccessID !== "TR027" &&
-                      AccessID !== "TR052" ? (
+                    AccessID !== "TR118" &&
+                    AccessID !== "TR032" &&
+                    AccessID !== "TR099" &&
+                    AccessID !== "TR048" &&
+                    AccessID !== "TR010" &&
+                    AccessID !== "TR083" &&
+                    AccessID !== "TR097" &&
+                    AccessID !== "TR135" &&
+                    AccessID !== "TR136" &&
+                    AccessID !== "TR091" &&
+                    AccessID !== "TR151" &&
+                    //AccessID !== "TR027" &&
+                    AccessID !== "TR052" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={
                           AccessID === "TR027"
                             ? {
-                              EmpName: params.row.Name,
-                            }
+                                EmpName: params.row.Name,
+                              }
                             : AccessID === "TR128"
-                              ? {
+                            ? {
                                 LocationName: params.row.Name,
                                 CompanyName: params.row.CompanyName,
                               }
-                              : AccessID === "TR127"
-                                ? {
-                                  GateName: params.row.Name,
-                                  LocationName: params.row.LocationName,
-                                  CompanyName: params.row.CompanyName,
-                                }
-                                : AccessID === "TR257"
-                                  ? {
-                                    EmpName: params.row.Name,
-                                  }
-                                  : AccessID === "TR132"
-                                    ? {
-                                      proName: params.row.ProjectName,
-                                      Date: params.row.Date,
-                                      EmpName: params.row.EmployeeName,
-                                      Locname: params.row.LocationName,
-                                    }
-                                    : AccessID === "TR123"
-                                      ? {
-                                        EmpName: params.row.Name,
-                                      }
-                                      : AccessID === "TR134"
-                                        ? {
-                                          proName: params.row.ProjectName,
-                                          EmpName: params.row.EmployeeName,
-                                          Date: params.row.Date,
-                                          Locname: params.row.LocationName,
-                                          EmployeeID: params.row.EmployeesID,
-                                          checkinID: params.row.CheckinID,
-                                        }
-                                        : AccessID === "TR124"
-                                          ? {
-                                            EmpName: params.row.EmployeeName,
-                                            checkinID: params.row.CheckinID,
-                                          }
-                                          : // : AccessID === "TR127"
-                                          // ? {
-                                          //     GateName: params.row.Name,
-                                          //     LocationName: params.row.LocationName,
-                                          //     CompanyName: params.row.CompanyName,
-                                          //   }
-                                          // : AccessID === "TR129"
-                                          // ? {
-                                          //     bin: params.row.Name,
-                                          //     LocationName: params.row.LocationName,
-                                          //     CompanyName: params.row.CompanyName,
-                                          //   }
-                                          {
-                                            CustomerID: params.row.CustomerRecordID,
-                                            ProductID: params.row.ProductRecordID,
-                                            BomID: params.row.BomRecordID,
-                                          }
+                            : AccessID === "TR127"
+                            ? {
+                                GateName: params.row.Name,
+                                LocationName: params.row.LocationName,
+                                CompanyName: params.row.CompanyName,
+                              }
+                            : AccessID === "TR257"
+                            ? {
+                                EmpName: params.row.Name,
+                              }
+                            : AccessID === "TR132"
+                            ? {
+                                proName: params.row.ProjectName,
+                                Date: params.row.Date,
+                                EmpName: params.row.EmployeeName,
+                                Locname: params.row.LocationName,
+                              }
+                            : AccessID === "TR123"
+                            ? {
+                                EmpName: params.row.Name,
+                              }
+                            : AccessID === "TR134"
+                            ? {
+                                proName: params.row.ProjectName,
+                                EmpName: params.row.EmployeeName,
+                                Date: params.row.Date,
+                                Locname: params.row.LocationName,
+                                EmployeeID: params.row.EmployeesID,
+                                checkinID: params.row.CheckinID,
+                              }
+                            : AccessID === "TR124"
+                            ? {
+                                EmpName: params.row.EmployeeName,
+                                checkinID: params.row.CheckinID,
+                              }
+                            : // : AccessID === "TR127"
+                              // ? {
+                              //     GateName: params.row.Name,
+                              //     LocationName: params.row.LocationName,
+                              //     CompanyName: params.row.CompanyName,
+                              //   }
+                              // : AccessID === "TR129"
+                              // ? {
+                              //     bin: params.row.Name,
+                              //     LocationName: params.row.LocationName,
+                              //     CompanyName: params.row.CompanyName,
+                              //   }
+                              {
+                                CustomerID: params.row.CustomerRecordID,
+                                ProductID: params.row.ProductRecordID,
+                                BomID: params.row.BomRecordID,
+                              }
                         }
                       >
                         <Tooltip title="Edit">
@@ -2950,8 +3085,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }deliverychallan.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }deliverychallan.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -2964,8 +3100,8 @@ else if (AccessID === "TR311") {
                       false
                     )}
                     {params.row.Process != "Y" &&
-                      params.row.parentID == "MO" &&
-                      AccessID == "TR052" ? (
+                    params.row.parentID == "MO" &&
+                    AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -2977,8 +3113,8 @@ else if (AccessID === "TR311") {
                       </Link>
                     ) : null}
                     {params.row.Process != "Y" &&
-                      params.row.parentID == "LO" &&
-                      AccessID == "TR052" ? (
+                    params.row.parentID == "LO" &&
+                    AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -2990,8 +3126,8 @@ else if (AccessID === "TR311") {
                       </Link>
                     ) : null}
                     {params.row.Process != "Y" &&
-                      params.row.parentID == "PO" &&
-                      AccessID == "TR052" ? (
+                    params.row.parentID == "PO" &&
+                    AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -3303,9 +3439,11 @@ else if (AccessID === "TR311") {
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }Leatherpackingreport.php?Token=${params.row.Hashtoken
-                              }`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }Leatherpackingreport.php?Token=${
+                              params.row.Hashtoken
+                            }`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -3317,8 +3455,9 @@ else if (AccessID === "TR311") {
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -3339,9 +3478,11 @@ else if (AccessID === "TR311") {
                           dispatch(
                             mailOpen({
                               row: params.row,
-                              link: `${store.getState().globalurl.pdfurl
-                                }Leatherpackingreport.php?Token=${params.row.Hashtoken
-                                }`,
+                              link: `${
+                                store.getState().globalurl.pdfurl
+                              }Leatherpackingreport.php?Token=${
+                                params.row.Hashtoken
+                              }`,
                             })
                           );
                           dispatch(
@@ -3363,7 +3504,7 @@ else if (AccessID === "TR311") {
                           color="primary"
                           variant="contained"
                           onClick={fnProcess(params.row.RecordID, "TR050")}
-                        // onClick={()=>alert("hai")}
+                          // onClick={()=>alert("hai")}
                         >
                           <SettingsBackupRestoreIcon />
                         </IconButton>
@@ -3374,8 +3515,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Cutting Component">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }BOMCC.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }BOMCC.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="primary"
@@ -3392,8 +3534,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Production">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }BOMPROD.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }BOMPROD.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="success"
@@ -3410,8 +3553,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Packing">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }BOMPACK.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }BOMPACK.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="error"
@@ -3427,8 +3571,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="All BOM">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }BOMALL.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }BOMALL.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color=""
@@ -3444,8 +3589,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Internal Order">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }Internalorder.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }Internalorder.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color=""
@@ -3465,8 +3611,9 @@ else if (AccessID === "TR311") {
                           dispatch(
                             mailOpen({
                               row: params.row,
-                              link: `${store.getState().globalurl.pdfurl
-                                }BOMALL.php?Token=${params.row.Hashtoken}`,
+                              link: `${
+                                store.getState().globalurl.pdfurl
+                              }BOMALL.php?Token=${params.row.Hashtoken}`,
                             })
                           );
                           dispatch(
@@ -3527,12 +3674,13 @@ else if (AccessID === "TR311") {
 
                     {AccessID == "TR074" ? (
                       params.row.parentID == "CC" &&
-                        params.row.Process == "Y" ? (
+                      params.row.Process == "Y" ? (
                         <Tooltip title="Print ">
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }BATCHCC.php?Token=${params.row.Hashtoken}`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }BATCHCC.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -3549,12 +3697,13 @@ else if (AccessID === "TR311") {
                     )}
                     {AccessID == "TR074" ? (
                       params.row.parentID == "PC" &&
-                        params.row.Process == "Y" ? (
+                      params.row.Process == "Y" ? (
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }BATCHPROD.php?Token=${params.row.Hashtoken}`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }BATCHPROD.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -3571,12 +3720,13 @@ else if (AccessID === "TR311") {
                     )}
                     {AccessID == "TR074" ? (
                       params.row.parentID == "PK" &&
-                        params.row.Process == "Y" ? (
+                      params.row.Process == "Y" ? (
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }BATCHPACK.php?Token=${params.row.Hashtoken}`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }BATCHPACK.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -3595,8 +3745,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -3610,8 +3761,9 @@ else if (AccessID === "TR311") {
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }purchaseorder.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }purchaseorder.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -3622,8 +3774,8 @@ else if (AccessID === "TR311") {
                       </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
-                      params.row.parentID == "CC" &&
-                      params.row.Process == "Y" ? (
+                    params.row.parentID == "CC" &&
+                    params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
                           color="info"
@@ -3632,8 +3784,9 @@ else if (AccessID === "TR311") {
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${store.getState().globalurl.pdfurl
-                                  }BATCHCC.php?Token=${params.row.Hashtoken}`,
+                                link: `${
+                                  store.getState().globalurl.pdfurl
+                                }BATCHCC.php?Token=${params.row.Hashtoken}`,
                               })
                             );
                             dispatch(
@@ -3650,8 +3803,8 @@ else if (AccessID === "TR311") {
                       </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
-                      params.row.parentID == "PC" &&
-                      params.row.Process == "Y" ? (
+                    params.row.parentID == "PC" &&
+                    params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
                           color="info"
@@ -3660,8 +3813,9 @@ else if (AccessID === "TR311") {
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${store.getState().globalurl.pdfurl
-                                  }BATCHPROD.php?Token=${params.row.Hashtoken}`,
+                                link: `${
+                                  store.getState().globalurl.pdfurl
+                                }BATCHPROD.php?Token=${params.row.Hashtoken}`,
                               })
                             );
                             dispatch(
@@ -3678,8 +3832,8 @@ else if (AccessID === "TR311") {
                       </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
-                      params.row.parentID == "PK" &&
-                      params.row.Process == "Y" ? (
+                    params.row.parentID == "PK" &&
+                    params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
                           color="info"
@@ -3688,8 +3842,9 @@ else if (AccessID === "TR311") {
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${store.getState().globalurl.pdfurl
-                                  }BATCHPACK.php?Token=${params.row.Hashtoken}`,
+                                link: `${
+                                  store.getState().globalurl.pdfurl
+                                }BATCHPACK.php?Token=${params.row.Hashtoken}`,
                               })
                             );
                             dispatch(
@@ -3951,8 +4106,8 @@ else if (AccessID === "TR311") {
                  </Link>
                 :false} */}
                     {params.row.InvType == "SI" &&
-                      AccessID == "TR011" &&
-                      params.row.Print == "Y" ? (
+                    AccessID == "TR011" &&
+                    params.row.Print == "Y" ? (
                       <Tooltip
                         title={
                           params.row.Process == "Y"
@@ -3962,8 +4117,9 @@ else if (AccessID === "TR311") {
                       >
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }sampleinvoice.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }sampleinvoice.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -3977,9 +4133,9 @@ else if (AccessID === "TR311") {
                     )}
 
                     {params.row.InvType == "FI" &&
-                      AccessID == "TR011" &&
-                      params.row.parentID == "P" &&
-                      params.row.Print == "Y" ? (
+                    AccessID == "TR011" &&
+                    params.row.parentID == "P" &&
+                    params.row.Print == "Y" ? (
                       <Tooltip
                         title={
                           params.row.Process == "Y"
@@ -3989,8 +4145,9 @@ else if (AccessID === "TR311") {
                       >
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }finalreport.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }finalreport.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -4004,9 +4161,9 @@ else if (AccessID === "TR311") {
                     )}
 
                     {params.row.InvType == "FI" &&
-                      AccessID == "TR011" &&
-                      params.row.parentID == "L" &&
-                      params.row.Print == "Y" ? (
+                    AccessID == "TR011" &&
+                    params.row.parentID == "L" &&
+                    params.row.Print == "Y" ? (
                       <Tooltip
                         title={
                           params.row.Process == "Y"
@@ -4016,8 +4173,9 @@ else if (AccessID === "TR311") {
                       >
                         <IconButton
                           component="a"
-                          href={`${store.getState().globalurl.pdfurl
-                            }leatherinvoice.php?Token=${params.row.Hashtoken}`}
+                          href={`${
+                            store.getState().globalurl.pdfurl
+                          }leatherinvoice.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -4030,9 +4188,9 @@ else if (AccessID === "TR311") {
                       false
                     )}
                     {params.row.InvType == "PI" &&
-                      AccessID == "TR011" &&
-                      params.row.parentID == "P" &&
-                      params.row.Print == "Y" ? (
+                    AccessID == "TR011" &&
+                    params.row.parentID == "P" &&
+                    params.row.Print == "Y" ? (
                       <>
                         <Tooltip
                           title={
@@ -4043,8 +4201,9 @@ else if (AccessID === "TR311") {
                         >
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }report.php?Token=${params.row.Hashtoken}`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }report.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4056,9 +4215,11 @@ else if (AccessID === "TR311") {
                         <Tooltip title="Leather Consumption">
                           <IconButton
                             component="a"
-                            href={`${store.getState().globalurl.pdfurl
-                              }leatherconsumption.php?Token=${params.row.Hashtoken
-                              }`}
+                            href={`${
+                              store.getState().globalurl.pdfurl
+                            }leatherconsumption.php?Token=${
+                              params.row.Hashtoken
+                            }`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4330,7 +4491,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </IconButton>
           </Tooltip>
         )}
-        {(accessID === "TR295") && (
+        {accessID === "TR295" && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
@@ -4355,7 +4516,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Tooltip>
         )}
 
-        {(accessID === "TR305") && (
+        {accessID === "TR305" && (
           <Tooltip title="Appraisal Schedule">
             <IconButton
               color="info"
@@ -4370,7 +4531,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </IconButton>
           </Tooltip>
         )}
-        {(accessID === "TR305") && (
+        {accessID === "TR305" && (
           <Tooltip title="Schedule History">
             <IconButton
               color="info"
@@ -4386,28 +4547,29 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Tooltip>
         )}
 
-
-        {(accessID === "TR281") && (
+        {accessID === "TR281" && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
               size="small"
               onClick={() =>
-                navigate(`./EditListOfQuestionGroups/${params.row.RecordID}/E`, {
-                  state: { ...state },
-                })
+                navigate(
+                  `./EditListOfQuestionGroups/${params.row.RecordID}/E`,
+                  {
+                    state: { ...state },
+                  }
+                )
               }
             >
               <ModeEditOutlinedIcon />
             </IconButton>
           </Tooltip>
         )}
-        {(accessID === "TR296") && (
+        {accessID === "TR296" && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
               size="small"
-
               onClick={() =>
                 navigate(`./EditListOfCompliance/${params.row.RecordID}/E`, {
                   state: { ...state },
@@ -4418,12 +4580,11 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </IconButton>
           </Tooltip>
         )}
-        {(accessID === "TR297") && (
+        {accessID === "TR297" && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
               size="small"
-
               onClick={() =>
                 navigate(`./EditListOfSurvey/${params.row.RecordID}/E`, {
                   state: { ...state },
@@ -4434,12 +4595,11 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </IconButton>
           </Tooltip>
         )}
-        {(accessID === "TR298") && (
+        {accessID === "TR298" && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
               size="small"
-
               onClick={() =>
                 navigate(`./EditListOfFeedBack/${params.row.RecordID}/E`, {
                   state: { ...state },
@@ -4450,12 +4610,11 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </IconButton>
           </Tooltip>
         )}
-        {(accessID === "TR282") && (
+        {accessID === "TR282" && (
           <Tooltip title="Edit">
             <IconButton
               color="info"
               size="small"
-
               onClick={() =>
                 navigate(`./EditListOfQuestion/${params.row.RecordID}/E`, {
                   state: { ...state },
@@ -4580,8 +4739,9 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               size="small"
               onClick={async () => {
                 if (["Pdf", "Ppt"].includes(params.row.ContentType)) {
-                  const url = `${store.getState().globalurl.baseUrl
-                    }uploads/attachments/${params.row.AttachmentName}`;
+                  const url = `${
+                    store.getState().globalurl.baseUrl
+                  }uploads/attachments/${params.row.AttachmentName}`;
 
                   try {
                     const response = await fetch(url);
@@ -4662,7 +4822,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 {
                   state: {
                     BreadCrumb1: params.row.Name,
-                    SkillAssTypeID: params.row.RecordID
+                    SkillAssTypeID: params.row.RecordID,
                   },
                 }
               );
@@ -4777,7 +4937,6 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </>
         )}
 
-
         {/* {accessID === "TR294" && codeIcons[params.row.SkillAssTypeCode] && (
           <IconButton
             color="primary"
@@ -4853,7 +5012,12 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </Tooltip>
         )}
 
-        {(accessID == "TR280" || accessID == "TR300" || accessID == "TR295" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && (
+        {(accessID == "TR280" ||
+          accessID == "TR300" ||
+          accessID == "TR295" ||
+          accessID == "TR296" ||
+          accessID == "TR297" ||
+          accessID == "TR298") && (
           <IconButton
             color="primary"
             size="small"
@@ -4866,12 +5030,9 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             //   )
             // }
             onClick={() =>
-              navigate(
-                `./TR281/${params.row.RecordID}`,
-                {
-                  state: { ...state, BreadCrumb3: params.row.Name },
-                }
-              )
+              navigate(`./TR281/${params.row.RecordID}`, {
+                state: { ...state, BreadCrumb3: params.row.Name },
+              })
             }
           >
             <Tooltip title="Question Groups">
@@ -4880,7 +5041,12 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </IconButton>
         )}
 
-        {(accessID == "TR280" || accessID == "TR300" || accessID == "TR295" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && (
+        {(accessID == "TR280" ||
+          accessID == "TR300" ||
+          accessID == "TR295" ||
+          accessID == "TR296" ||
+          accessID == "TR297" ||
+          accessID == "TR298") && (
           <IconButton
             color="primary"
             size="small"
@@ -4893,12 +5059,9 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             //   )
             // }
             onClick={() =>
-              navigate(
-                `./TR279/${params.row.RecordID}`,
-                {
-                  state: { ...state, BreadCrumb3: params.row.Name },
-                }
-              )
+              navigate(`./TR279/${params.row.RecordID}`, {
+                state: { ...state, BreadCrumb3: params.row.Name },
+              })
             }
           >
             <Tooltip title="Session">
@@ -4929,52 +5092,55 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </IconButton>
         )} */}
-        {(accessID == "TR300" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && params.row.AssessmentStatus === "Ready to Assign" && (
-          <IconButton
-            color="primary"
-            size="small"
-            onClick={() =>
-              navigate(
-                `./TR301/${params.row.RecordID}/${params.row.DesignationID}`,
-                {
+        {(accessID == "TR300" ||
+          accessID == "TR296" ||
+          accessID == "TR297" ||
+          accessID == "TR298") &&
+          params.row.AssessmentStatus === "Ready to Assign" && (
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={() =>
+                navigate(
+                  `./TR301/${params.row.RecordID}/${params.row.DesignationID}`,
+                  {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.Name,
+                      Designation: params.row.Designation,
+                    },
+                  }
+                )
+              }
+            >
+              <Tooltip title="Schedule">
+                <SendTimeExtensionOutlinedIcon />
+              </Tooltip>
+            </IconButton>
+          )}
+        {(accessID == "TR300" ||
+          accessID == "TR296" ||
+          accessID == "TR297" ||
+          accessID == "TR298") &&
+          params.row.AssessmentStatus === "Ready to Assign" && (
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={() =>
+                navigate(`./ScheduleListAssessment/${params.row.RecordID}`, {
                   state: {
                     ...state,
                     BreadCrumb3: params.row.Name,
                     Designation: params.row.Designation,
-
                   },
-                }
-              )
-            }
-          >
-            <Tooltip title="Schedule">
-              <SendTimeExtensionOutlinedIcon />
-            </Tooltip>
-          </IconButton>
-        )}
-        {(accessID == "TR300" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && params.row.AssessmentStatus === "Ready to Assign" && (
-          <IconButton
-            color="primary"
-            size="small"
-            onClick={() =>
-              navigate(
-                `./ScheduleListAssessment/${params.row.RecordID}`,
-                {
-                  state: {
-                    ...state,
-                    BreadCrumb3: params.row.Name,
-                    Designation: params.row.Designation,
-
-                  },
-                }
-              )
-            }
-          >
-            <Tooltip title="Schedule History">
-              <HistoryToggleOffOutlinedIcon />
-            </Tooltip>
-          </IconButton>
-        )}
+                })
+              }
+            >
+              <Tooltip title="Schedule History">
+                <HistoryToggleOffOutlinedIcon />
+              </Tooltip>
+            </IconButton>
+          )}
         {/* {accessID === "TR280" &&
           (params.row.AssessmentStatus === "Completed" ? (
             <IconButton color="secondary" size="small">

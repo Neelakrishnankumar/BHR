@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-var APIurl = "https://bos.beyondexs.com/api/"
-var baseurl = "https://bos.beyondexs.com/"
-
+ 
+// var APIurl = "https://bos.beyondexs.com/api/"
+// var baseurl = "https://bos.beyondexs.com/"
+ 
 // var APIurl = "https://bosuat.beyondexs.com/api/"
 // var baseurl = "https://bosuat.beyondexs.com/"
-// var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
-// var baseurl = "https://dvmtapi.bexatm.com/"
-
+var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
+var baseurl = "https://dvmtapi.bexatm.com/"
+ 
 // var APIurl = "https://phpmigrationapi.bexatm.com/hr/api/"
 // var baseurl = "https://phpmigrationapi.bexatm.com/"
-
+ 
  const initialState = {  
 //hr
 baseApiUrl: APIurl,
@@ -122,14 +122,15 @@ Leadergeturl:  APIurl + "LeaderGetController.php",
 //VendorRegistration:  APIurl + "vendorregistration.php",
 VendorRegistration:  APIurl + "vendorregistrationV1.php",
 VendorRegistrationGet:  APIurl + "vendorregistrationGet.php",
+VendorDefaultPUT:  APIurl + "vendordefault.php",
+VendorDefaultGET:  APIurl + "vendordefaultGet.php",
 Moduleurl:  APIurl + "CompanyModuleGetController.php",
-
 };
-
+ 
 export const getUrlSlice = createSlice({
   name: "globalurl",
   initialState,
   reducers: {},
 });
-
+ 
 export default getUrlSlice.reducer;

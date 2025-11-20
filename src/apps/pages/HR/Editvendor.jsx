@@ -44,6 +44,8 @@ import {
   partyContactData,
   VendorRegisterpostData,
   VendorRegisterFetchData,
+  VendorDefaultPUTdata,
+  VendorDefaultFetchData,
 } from "../../../store/reducers/Formapireducer";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -52,7 +54,10 @@ import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { tokens } from "../../../Theme";
 import { formGap } from "../../../ui-components/global/utils";
-import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
+import {
+  CheckinAutocomplete,
+  OrderItemAutocomplete,
+} from "../../../ui-components/global/Autocomplete";
 
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -83,6 +88,12 @@ const Editvendor = () => {
   );
   const isPartyRegisterLoading = useSelector(
     (state) => state.formApi.vendorregisterGetDataloading
+  );
+  const partyDefaultgetdata = useSelector(
+    (state) => state.formApi.vendorDefaultGetData
+  );
+  const isPartyDeaultLoading = useSelector(
+    (state) => state.formApi.vendorDefaultGetDataloading
   );
 
   const YearFlag = sessionStorage.getItem("YearFlag");
@@ -320,9 +331,16 @@ const Editvendor = () => {
     }
     if (event.target.value == "3") {
       if (recID && mode === "E") {
-        dispatch(VendorRegisterFetchData({ accessID, get: "get", recID }));
+        dispatch(VendorRegisterFetchData({get: "get", recID }));
       } else {
-        dispatch(VendorRegisterFetchData({ accessID, get: "", recID }));
+        dispatch(VendorRegisterFetchData({ get: "", recID }));
+      }
+    }
+    if (event.target.value == "4") {
+      if (recID && mode === "E") {
+        dispatch(VendorDefaultFetchData({ get: "get", recID }));
+      } else {
+        dispatch(VendorDefaultFetchData({  get: "", recID }));
       }
     }
     if (event.target.value == "1") {
@@ -447,14 +465,14 @@ const Editvendor = () => {
 
   const RegisterFnsave = async (values, del) => {
     setLoading(true);
-    if (!panImage && !values.PanImg) {
-      toast.error("Please upload PAN image before saving.");
-      return;
-    }
-    if (!gstImage && !values.GstImg) {
-      toast.error("Please upload GST image before saving.");
-      return;
-    }
+    // if (!panImage && !values.PanImg) {
+    //   toast.error("Please upload PAN image before saving.");
+    //   return;
+    // }
+    // if (!gstImage && !values.GstImg) {
+    //   toast.error("Please upload GST image before saving.");
+    //   return;
+    // }
     let action =
       mode === "A" && !del
         ? "insert"
@@ -463,9 +481,9 @@ const Editvendor = () => {
         : "update";
     const idata = {
       RecordID: recID,
-      PanCardNo: values.Pancardnumber || 0,
+      PanCardNo: values.Pancardnumber,
       PanImg: panImage || values.PanImg,
-      GstNo: values.gstnumber || 0,
+      GstNo: values.gstnumber,
       GstImg: gstImage || values.GstImg,
       RegistrationDate: values.date,
       VerifyConfirmDate: values.verifieddate,
@@ -488,7 +506,49 @@ const Editvendor = () => {
       setLoading(false);
     }
   };
+  const DefaultInitialValue = {
+    Product: partyDefaultgetdata.DefaultProductID
+      ? {
+          RecordID: partyDefaultgetdata.DefaultProductID,
+          Name: partyDefaultgetdata.DefaultProductName,
+        }
+      : partyDefaultgetdata.DefaultProductID == null ? []
+      : null,
+    defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
+  };
 
+  const DefaultFnsave = async (values, del) => {
+    setLoading(true);
+
+    let action =
+      mode === "A" && !del
+        ? "insert"
+        : mode === "E" && del
+        ? "harddelete"
+        : "update";
+    const idata = {
+      RecordID: recID,
+      DefaultProduct: values.Product.RecordID || 0,
+      DeliveryCharge: values.defaultDelivery || 0,
+    };
+
+    try {
+      const response = await dispatch(
+        VendorDefaultPUTdata({ accessID, action, idata })
+      );
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        navigate("/Apps/TR243/Party");
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
   const BankInitialValue = {
     bankname: partyBankgetdata.BankName || "",
     Accounttype: partyBankgetdata.BankAccountType || "",
@@ -689,6 +749,7 @@ const Editvendor = () => {
                 >
                   <MenuItem value={0}>Party</MenuItem>
                   <MenuItem value={3}>Registration</MenuItem>
+                  <MenuItem value={4}>Default Settings</MenuItem>
                   <MenuItem value={2}>Bank Details</MenuItem>
                   <MenuItem value={1}>Contact Details</MenuItem>
                   {/* {initialValues.employeetype === "CI" ? (
@@ -842,7 +903,7 @@ const Editvendor = () => {
                     autoFocus={CompanyAutoCode == "Y"}
                   />
 
-                    <TextField
+                  <TextField
                     name="mobilenumber"
                     id="mobilenumber"
                     label={
@@ -869,7 +930,7 @@ const Editvendor = () => {
                     inputProps={{ maxLength: 10 }}
                     sx={{ backgroundColor: "#ffffff" }}
                   />
- <TextField
+                  <TextField
                     name="emailid"
                     type="text"
                     id="emailid"
@@ -888,8 +949,7 @@ const Editvendor = () => {
                     // autoFocus
                   />
 
-
-                   <TextField
+                  <TextField
                     name="address"
                     type="text"
                     id="address"
@@ -987,8 +1047,6 @@ const Editvendor = () => {
                     // autoFocus
                   /> */}
 
-                
-                 
                   {/* <TextField
                     name="date"
                     type="date"
@@ -1067,7 +1125,7 @@ const Editvendor = () => {
                     helperText={touched.ReferenceBy && errors.ReferenceBy}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Functions","Filter":"ParentID=${CompanyID}","Any":""}}`}
                   />
-                 
+
                   {/* panimage */}
 
                   <Box display="flex" flexDirection="column" gap={1}>
@@ -2126,6 +2184,120 @@ const Editvendor = () => {
                         GST Image View
                       </Button>
 
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          navigate("/Apps/TR243/Party");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  </>
+                ) : (
+                  false
+                )}
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+      {show == "4" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={DefaultInitialValue}
+            onSubmit={(values, setSubmitting) => {
+              setTimeout(() => {
+                DefaultFnsave(values);
+              }, 100);
+            }}
+            //validationSchema={validationSchema4}
+            enableReinitialize={true}
+          >
+            {({
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              isSubmitting,
+              values,
+              handleSubmit,
+              setFieldValue,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                {!isPartyDeaultLoading ? (
+                  <>
+                    <Box
+                      display="grid"
+                      gap={formGap}
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      // gap="30px"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
+                        },
+                      }}
+                    >
+                      <OrderItemAutocomplete
+                        id="Product"
+                        name="Product"
+                        label="Default Product"
+                        variant="outlined"
+                        value={values.Product}
+                        onChange={(newValue) => {
+                          setFieldValue("Product", newValue);
+                          console.log(newValue, "--newvalue Product");
+                          console.log(newValue.RecordID, "Product RecordID");
+                        }}
+                        error={!!touched.Product && !!errors.Product}
+                        helperText={touched.Product && errors.Product}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Productt","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
+                      <TextField
+                        name="defaultDelivery"
+                        label="Default Delivery Charges"
+                        variant="standard"
+                        focused
+                        value={values.defaultDelivery}
+                        // required
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.defaultDelivery && !!errors.defaultDelivery
+                        }
+                        helperText={
+                          touched.defaultDelivery && errors.defaultDelivery
+                        }
+                        sx={{
+                          backgroundColor: "#ffffff",
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            textAlign: "right",
+                          },
+                        }}
+                        // autoFocus
+                      />
+                    </Box>
+                    <Box
+                      display="flex"
+                      justifyContent="end"
+                      padding={1}
+                      gap="20px"
+                    >
                       <LoadingButton
                         color="secondary"
                         variant="contained"

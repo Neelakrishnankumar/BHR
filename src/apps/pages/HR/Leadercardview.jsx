@@ -102,7 +102,7 @@ const LeaderCardView = () => {
     const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
         if (OrdHdrCount == 0) {
             // Case 1: No order yet → go to Add Order
-            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/EditOrder/-1/A`, {
+            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
                 state: {
                     PartyID: partyID,
                     LeadTitle: leadTitle,
@@ -114,7 +114,7 @@ const LeaderCardView = () => {
 
         } else if (OrdHdrCount >= 1) {
             // Case 2: Existing order(s) → go to Order List or Edit
-            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}`, {
+            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader`, {
                 state: {
                     PartyID: partyID,
                     LeadTitle: leadTitle,

@@ -114,6 +114,7 @@ const ListviewSecondary = () => {
   var secondaryCurrentPage = parseInt(
     sessionStorage.getItem("secondaryCurrentPage")
   );
+
   var accessID = params.secondaryAccessID
     ? params.secondaryAccessID
     : params.accessID;
@@ -133,6 +134,7 @@ const ListviewSecondary = () => {
   var CusID = params.CusID;
   var id = params.id;
   var leaderID = params.leaderID;
+  var filtertype1 = params.filtertype1;
   // var recordID = params.recordID;
   const compID = sessionStorage.getItem("compID");
   var screenName = params.screenName;
@@ -266,12 +268,15 @@ const ListviewSecondary = () => {
   }
   else if (accessID === "TR310") {
 
-    filter = `LeaderID='${leaderID}'`;
+    //filter = `LeaderID='${leaderID}'`;
+        filter = Type === "Party" ? `PartyRecordID='${leaderID}'` : `LeaderID='${leaderID}'`;
+
+    //filter = `LeaderID='${leaderID}' AND PartyRecordID='${partyID}'`;
     // filter =`PartyID='${leaderID}'`;
   }
   else if (accessID === "TR311") {
 
-    filter = `OrderHeaderID='${leaderID}'`;
+    filter = `OrderHeaderID='${filtertype1}'`;
     // filter =`PartyID='${leaderID}'`;
   }
   else if (accessID == "TR283") {
@@ -1879,7 +1884,7 @@ const ListviewSecondary = () => {
             </Breadcrumbs>
           </Box>
         ) 
-        : accessID == "TR310" ? (
+        : accessID == "TR310" && Type === "Leader" ? (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Breadcrumbs
               maxItems={2}
@@ -1911,6 +1916,37 @@ const ListviewSecondary = () => {
               >
                 {/* Leader */}
                 {`Lead(${state.LeadTitle})`}
+              </Typography>
+
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                Order
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ): accessID == "TR310" && Type === "Party" ? (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR243/Party");
+                }}
+              >
+
+                {/* {Type === "F"
+                  ? "Party" 
+                  : `Party(${state.PartyName})`} */}
+                {`Party(${state.PartyName})`}
               </Typography>
               <Typography
                 variant="h5"
@@ -1942,6 +1978,7 @@ const ListviewSecondary = () => {
                   : `Party(${state.PartyName})`} */}
                 {`Party(${state.PartyName})`}
               </Typography>
+              {params.Type === "Leader" ? 
               <Typography
                 variant="h5"
                 color="#0000D1"
@@ -1951,16 +1988,18 @@ const ListviewSecondary = () => {
                   navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`, { state: { ...state } });
                 }}
               >
-                {/* Leader */}
                 {`Lead(${state.LeadTitle})`}
-              </Typography>
+              </Typography> : null}
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                onClick={() => navigate(-1)}
+                //onClick={() => navigate(-1)}
+                onClick={() => {
+                  navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`, {state : {...state}});
+                }}
               >
-                Order
+                Order ({state.Code || ""})
               </Typography>
               <Typography
                 variant="h5"
@@ -3506,7 +3545,21 @@ const ListviewSecondary = () => {
                   </IconButton>
 
                 </Tooltip>
-              ) : (
+              ) : accessID === "TR311" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditOrderitem/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
+              ): (
                 <Tooltip arrow title="Add">
                   <IconButton>
                     <AddOutlinedIcon

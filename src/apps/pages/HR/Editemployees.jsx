@@ -541,17 +541,18 @@ const Editemployee = () => {
     Sal: Data.Sal,
     Fax: Data.Fax,
     //module:Data.Module,
-    module: Data.Module
-      ? Data.Module.split(",")
-        .map(v => v.trim())
-        .filter(v => v !== "")
-      : []
+    // module: Data.Module
+    //   ? Data.Module.split(",")
+    //     .map(v => v.trim())
+    //     .filter(v => v !== "")
+    //   : []
 
 
     // moduleSelect: mode === "E" ? Data.Module : ""
     //  moduleSelect:moduleIDs,
 
   };
+  
   console.log("🚀 ~ Editemployee ~ Data.Module:", Data.Module);
   // const [apiReturnValue, setApiReturnValue] = useState(null);
 

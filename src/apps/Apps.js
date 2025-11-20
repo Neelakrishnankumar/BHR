@@ -642,6 +642,12 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype"
                     element={<ListviewSecondary />}
                   />
+
+                  {/* NEW ORDER ITEM LIST VIEW */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1"
+                    element={<ListviewSecondary />}
+                  />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditRemarks/:id/:Mode"
                     element={<Editremarks />}
@@ -999,13 +1005,17 @@ function App() {
                     element={<LeaderCardView />}
                   />
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:filtertype/EditOrder/:id/:Mode"
+                      path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/EditOrder/:id/:Mode"
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrder />}
                   />
-                  <Route
+                  {/* <Route
                       path="/Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode"
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
+                    element={<EditOrderitem />}
+                  /> */}
+                   <Route
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
