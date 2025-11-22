@@ -1922,7 +1922,7 @@ export const fetchListview =
                         </IconButton>
                       </Tooltip>
                     </Link>
-                    {/* <Link
+                    <Link
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
@@ -1932,7 +1932,7 @@ export const fetchListview =
                       }}
                     >
                       <PDFButton PartyID={params.row.PartyRecordID} OrderHdrID={params.row.RecordID}/>
-                    </Link> */}
+                    </Link> 
                   </Box>
                 );
               },

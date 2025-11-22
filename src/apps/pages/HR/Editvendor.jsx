@@ -513,7 +513,7 @@ const Editvendor = () => {
   const DefaultInitialValue = {
     code: partyDefaultgetdata.Code || "",
     name: partyDefaultgetdata.Name || "",
-    Product: partyDefaultgetdata.DefaultProductID
+    Product: partyDefaultgetdata.DefaultProductID && partyDefaultgetdata.DefaultProductID !== "0"
       ? {
           RecordID: partyDefaultgetdata.DefaultProductID,
           Name: partyDefaultgetdata.DefaultProductName,
