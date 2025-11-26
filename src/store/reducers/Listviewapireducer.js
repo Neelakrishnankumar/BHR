@@ -82,7 +82,7 @@ import HistoryToggleOffOutlinedIcon from "@mui/icons-material/HistoryToggleOffOu
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import GridViewIcon from "@mui/icons-material/GridView";
 import OrderHeaderPdf from "../../apps/pages/HR/OrderHeaderPdf";
-
+import CurrencyRupeeOutlinedIcon from '@mui/icons-material/CurrencyRupeeOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -636,6 +636,7 @@ export const fetchListview =
         AccessID != "TR304" &&
         AccessID != "TR310" &&
         AccessID != "TR311" &&
+        AccessID != "TR314" &&
         AccessID != "TR313" &&
         AccessID != "TR243" &&
         AccessID != "TR127"
@@ -670,7 +671,7 @@ export const fetchListview =
       //    filter = "LeaderID=" + `'${filter}'`;
 
       // }
-      // if (AccessID === "TR304") {
+      // if (AccessID === "TR314") {
       //    filter = "PartyID=" + `'${filter}'`;
 
       // }
@@ -1641,7 +1642,7 @@ export const fetchListview =
             obj = {
               field: "action",
               headerName: "Action",
-              minWidth: 100,
+              minWidth: 150,
               sortable: false,
               headerAlign: "center",
               align: "left",
@@ -1713,6 +1714,30 @@ export const fetchListview =
                         </Tooltip>
                       </Link>
                     {/* ) : null} */}
+
+                    <Link
+                        // to={
+                        //   params.row.OrdHdrCount > 0 
+                        //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party` 
+                          
+                        //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A` 
+                           
+                        //   }
+                        to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+                        state={{
+                          PartyID: params.row.RecordID,
+                          PartyName: params.row.Name,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Tooltip title="Advance Payment">
+                          <IconButton 
+                          color="info" 
+                          size="small">
+                            <CurrencyRupeeOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
                   </Box>
                 );
               },
@@ -1781,7 +1806,7 @@ export const fetchListview =
             
                 const PartyName = params.row.Name;
 
-                 const PDFButton = ({ PartyID, OrderHdrID }) => {
+                 const PDFButton = ({ PartyID, OrderHdrID,CompanyID }) => {
                   const dispatch = store.dispatch;
                   const [loading, setLoading] = React.useState(false);
 
@@ -1790,7 +1815,7 @@ export const fetchListview =
                       setLoading(true);
 
                       const resultAction = await dispatch(
-                        getOrderdetailReport({ PartyID, OrderHdrID })
+                        getOrderdetailReport({ PartyID, OrderHdrID,CompanyID })
                       );
 
                       const data = resultAction.payload; // <-- this depends on how your thunk is defined
@@ -1805,10 +1830,14 @@ export const fetchListview =
                       const blob = await pdf(
                         <OrderHeaderPdf data={data} UserName={UserName} />
                       ).toBlob();
-                      const link = document.createElement("a");
-                      link.href = URL.createObjectURL(blob);
-                      link.download = "OrderDeatils.pdf";
-                      link.click();
+                      // const link = document.createElement("a");
+                      // link.href = URL.createObjectURL(blob);
+                      // //link.download = "OrderDeatils.pdf";
+                      // link.Open();
+                      // link.click();
+                      const blobUrl = URL.createObjectURL(blob);
+window.open(blobUrl, "_blank");
+
                     } catch (err) {
                       console.error("PDF generation failed", err);
                     } finally {
@@ -1922,7 +1951,7 @@ export const fetchListview =
                         </IconButton>
                       </Tooltip>
                     </Link>
-                    {/* <Link
+                    <Link
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
@@ -1931,8 +1960,8 @@ export const fetchListview =
                         Code: params.row.Code,
                       }}
                     >
-                      <PDFButton PartyID={params.row.PartyRecordID} OrderHdrID={params.row.RecordID}/>
-                    </Link> */}
+                      <PDFButton PartyID={params.row.PartyRecordID} OrderHdrID={params.row.RecordID} CompanyID={params.row.CompanyID}/>
+                    </Link>
                   </Box>
                 );
               },
@@ -1979,7 +2008,46 @@ export const fetchListview =
                 );
               },
             };
-          } else if (AccessID === "TR304") {
+          } else if (AccessID === "TR314") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                const count = Number(params.row.MarketingCount || 0);
+                const id = params.row.RecordID;
+                const PartyName = params.row.Name;
+
+                return (
+                  <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./EditAdvancePayment/${params.row.RecordID}/E`}
+                      state={{
+                        PartyName: params.row.PartyName,
+                        Count: params.row.MarketingCount,
+                        Code: params.row.Code,
+                        LeadTitle: params.row.LeadTitle,
+                        PartyID: params.row.PartyRecordID,
+                      }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }  else if (AccessID === "TR304") {
             obj = {
               field: "action",
               headerName: "Action",

@@ -135,7 +135,7 @@ const ListviewSecondary = () => {
   var id = params.id;
   var leaderID = params.leaderID;
   var filtertype1 = params.filtertype1;
-  // var recordID = params.recordID;
+   //var partyID = params.partyID;
   const compID = sessionStorage.getItem("compID");
   var screenName = params.screenName;
   var Type = params.Type;
@@ -235,6 +235,9 @@ const ListviewSecondary = () => {
     filter = `parentID=${params.bomID}`;
   } else if (accessID == "TR087") {
     filter = `${parentID}' AND CompID = '${compID}`;
+  }
+  else if (accessID == "TR314") {
+    filter = `PartyID=${leaderID}`;
   }
   // else if (accessID == "TR280" || accessID == "TR295"|| accessID == "TR296"|| accessID == "TR297"|| accessID == "TR298") {
   //   filter = `SkillcategoriesID='${parentID1}' AND CompanyID = '${compID}'`;
@@ -2010,7 +2013,36 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-        ) : accessID == "TR102" ? (
+        ) : accessID == "TR314" ? (
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR243/Party");
+                }}
+              >
+                {`Party(${state.PartyName})`}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Advance Payment
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ): accessID == "TR102" ? (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Breadcrumbs
               maxItems={2}

@@ -126,6 +126,15 @@
     "complaints": "Please Enter the Complaints",
     "tentativecharge": "Please Enter the Charges"
   },
+  "OrderItem": {
+    "discount": "Please Enter the discount",
+    "product": "Please select a product",
+    "quantity": "Please Enter the quantity"
+  },
+  "AdvancePayment": {
+    "Amount": "Please Enter the amount",
+    "paymentdate": "Please select a date"  
+  },
    "Locality": {
     "code": "Please Enter the Code",
     "name": "Please Enter the Name",
