@@ -468,14 +468,14 @@ const Editvendor = () => {
 
   const RegisterFnsave = async (values, del) => {
     setLoading(true);
-    if (!panImage && !values.PanImg) {
-      toast.error("Please upload PAN image before saving.");
-      return;
-    }
-    if (!gstImage && !values.GstImg) {
-      toast.error("Please upload GST image before saving.");
-      return;
-    }
+    // if (!panImage && !values.PanImg) {
+    //   toast.error("Please upload PAN image before saving.");
+    //   return;
+    // }
+    // if (!gstImage && !values.GstImg) {
+    //   toast.error("Please upload GST image before saving.");
+    //   return;
+    // }
     let action =
       mode === "A" && !del
         ? "insert"
@@ -484,9 +484,9 @@ const Editvendor = () => {
         : "update";
     const idata = {
       RecordID: recID,
-      PanCardNo: values.Pancardnumber || 0,
+      PanCardNo: values.Pancardnumber,
       PanImg: panImage || values.PanImg,
-      GstNo: values.gstnumber || 0,
+      GstNo: values.gstnumber,
       GstImg: gstImage || values.GstImg,
       RegistrationDate: values.date,
       VerifyConfirmDate: values.verifieddate,
@@ -518,6 +518,7 @@ const Editvendor = () => {
           RecordID: partyDefaultgetdata.DefaultProductID,
           Name: partyDefaultgetdata.DefaultProductName,
         }
+      : partyDefaultgetdata.DefaultProductID == null ? []
       : null,
     defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
     DefaultPaymentMode: partyDefaultgetdata.DefaultPaymentMode || "",
@@ -716,7 +717,10 @@ const Editvendor = () => {
                     setScreen(0);
                   }}
                 >
-                  Party ({state.PName})
+                  {/* Party ({state.PName}) */}
+                  {mode === "E"
+                      ? `Party(${state.PName})`
+                      : "Party(New)"}
                 </Typography>
                 {show == "1" ? (
                   <Typography

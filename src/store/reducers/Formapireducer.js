@@ -92,19 +92,22 @@ const initialState = {
   vendorregisterGetDatastatus: "",
   vendorregisterGetDataloading: false,
 
-  vendorDefaultGetData: {},
-  vendorDefaultGetDatastatus: "",
-  vendorDefaultGetDataloading: false,
+    vendorDefaultGetData:  {},
+    vendorDefaultGetDatastatus:  "",
+    vendorDefaultGetDataloading:  false,
   DefaultProductDeliveryChargeGetData: {},
   DefaultProductDeliveryChargeGetDatastatus: "",
   DefaultProductDeliveryChargeGetDataloading: false,
-  projectCostinggetdata: {},
-  projectCostingstatus: "",
-  projectCostingloading: false,
+  projectCostinggetdata:  {},
+  projectCostingstatus:  "",
+  projectCostingloading:  false,
   OrderdetailReportgetdata: {},
   OrderdetailReportgetstatus: "",
   OrderdetailReportloading: false,
   leaderDetails: null,
+  data: null,  // Store your fetched data here
+  status: 'idle',
+  error: null,
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -991,6 +994,33 @@ export const getFetchData = createAsyncThunk(
       response
     );
     return response.data;
+  }
+);
+export const ModuleUrl = createAsyncThunk(
+  "ModuleFetchData/Header",
+  async ({ CompanyID }) => {
+
+    var url = store.getState().globalurl.Moduleurl;
+    const data = {
+      CompanyID: CompanyID,
+    };
+
+    console.log("🚀 ~ Sending request with data:", JSON.stringify(data));
+
+    try {
+      // Send POST request with axios
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+      console.log("🚀 ~ Response received:", response);
+      return response.data;
+    } catch (error) {
+      console.error("Error during API call:", error);
+      throw error;
+    }
   }
 );
 export const VendorRegisterFetchData = createAsyncThunk(
@@ -2241,6 +2271,21 @@ export const getApiSlice = createSlice({
       .addCase(InvoicePostData.rejected, (state, action) => {
         state.Status = "Error";
         state.postLoading = false;
+      })
+      .addCase(ModuleUrl.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(ModuleUrl.fulfilled, (state, action) => {
+        state.status = "succeeded";
+
+        // Store the API response (ensure your API returns an array)
+        state.data = action.payload || [];
+      })
+      .addCase(ModuleUrl.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        state.data = [];
       })
       .addCase(InvoicePostExploreData.pending, (state, action) => {
         state.Status = "idle";

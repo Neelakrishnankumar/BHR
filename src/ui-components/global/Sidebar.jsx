@@ -255,23 +255,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
         },
-        // {
-        //   name: "Party",
-        //   id: 4346895,
-        //   url: "./TR243/Party",
-        //   icon: (
-        //     <Tooltip title="Party">
-        //       <PersonSearchIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR243",
-        // },
+        {
+          name: "Party",
+          id: 4346895,
+          url: "./TR243/Party",
+          icon: (
+            <Tooltip title="Party">
+              <PersonSearchIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR243",
+        },
         {
           name: "Shift",
           id: 45689,
@@ -413,54 +413,54 @@ const child = {
         },
       ],
     },
-  {
-      name: "CRM",
-      id: 33,
-      MenuID: "CRM1800",
-      Tooltipname: "CRM",
-      icon: (
-        <Tooltip title="CRM">
-          <SupportAgentOutlinedIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-     {
-          name: "Party",
-          id: 4346895,
-          url: "./TR243/Party",
-          icon: (
-            <Tooltip title="Party">
-              <PersonSearchIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR243",
-        },
-        {
-          name: "Order Enquiry",
-          id: 4346899,
-          url: "./TR313/Order Enquiry",
-          icon: (
-            <Tooltip title="Order Enquiry">
-              <QueryStatsOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR313",
-        },
+  // {
+  //     name: "CRM",
+  //     id: 33,
+  //     MenuID: "CRM1800",
+  //     Tooltipname: "CRM",
+  //     icon: (
+  //       <Tooltip title="CRM">
+  //         <SupportAgentOutlinedIcon sx={{ color: "#651fff" }} />
+  //       </Tooltip>
+  //     ),
+  //     children: [
+  //    {
+  //         name: "Party",
+  //         id: 4346895,
+  //         url: "./TR243/Party",
+  //         icon: (
+  //           <Tooltip title="Party">
+  //             <PersonSearchIcon color="info" />
+  //           </Tooltip>
+  //         ),
+  //         UGA_ADD: true,
+  //         UGA_DEL: true,
+  //         UGA_MOD: true,
+  //         UGA_PRINT: true,
+  //         UGA_PROCESS: true,
+  //         UGA_VIEW: true,
+  //         UGA_ACCESSIDS: "TR243",
+  //       },
+  //       {
+  //         name: "Order Enquiry",
+  //         id: 4346899,
+  //         url: "./TR313/Order Enquiry",
+  //         icon: (
+  //           <Tooltip title="Order Enquiry">
+  //             <QueryStatsOutlinedIcon color="info" />
+  //           </Tooltip>
+  //         ),
+  //         UGA_ADD: true,
+  //         UGA_DEL: true,
+  //         UGA_MOD: true,
+  //         UGA_PRINT: true,
+  //         UGA_PROCESS: true,
+  //         UGA_VIEW: true,
+  //         UGA_ACCESSIDS: "TR313",
+  //       },
 
-      ],
-    },
+  //     ],
+  //   },
     {
       name: "Transaction",
       id: 97659,

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
-
+import OutlinedInput from "@mui/material/OutlinedInput";
+import ListItemText from "@mui/material/ListItemText";
 import axios from "axios";
 
 import Checkbox from "@mui/material/Checkbox";
@@ -28,7 +29,7 @@ const OuterElementType = React.forwardRef((props, ref) => {
 const ListboxComponent = React.forwardRef(function ListboxComponent(
   props,
   ref
-) {});
+) { });
 
 ListboxComponent.propTypes = {
   children: PropTypes.node,
@@ -705,9 +706,9 @@ export function MultiFormikTwoAutocomplete({
         setOptions(
           Array.isArray(data)
             ? data.map((item) => ({
-                ...item,
-                ProdCatgName: item.ProdCatgName.trim(),
-              }))
+              ...item,
+              ProdCatgName: item.ProdCatgName.trim(),
+            }))
             : []
         );
       } catch (error) {
@@ -814,6 +815,7 @@ export function MultiFormikOptimizedAutocomplete({
       }}
       size="small"
       multiple={multiple}
+
       limitTags={1}
       open={open}
       onOpen={() => setOpen(true)}
@@ -821,9 +823,9 @@ export function MultiFormikOptimizedAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
-      isOptionEqualToValue={(option, value) =>
-        option?.RecordID === value?.RecordID
-      }
+      variant="standard"  // Set variant to "standard"
+      focused
+      isOptionEqualToValue={(option, value) => option?.RecordID === value?.RecordID}
       getOptionLabel={(option) => option?.Name || ""}
       disableCloseOnSelect
       loading={loading}
@@ -852,6 +854,520 @@ export function MultiFormikOptimizedAutocomplete({
       )}
       {...props}
     />
+  );
+}
+
+export function CusListRunGrpOptimizedAutocomplete1({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  companyID,   // <-- FIX ADDED
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = {
+        CompanyID: companyID,
+      };
+      try {
+        const response = await axios.post(url, data, {
+          headers: {
+            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+          },
+        });
+        setOptions(response.data.Data || []);
+
+        console.log(response.data.Data, "response.data.Data");
+        console.log("OPTIONS:", options);
+
+        setError(null); // clear previous error
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]); //  FIX: prevent undefined
+        setError("Failed to load. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [url]);
+
+
+  return (
+    <Autocomplete
+      sx={{
+        "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+      }}
+      size="small"
+      multiple={multiple}
+      limitTags={1}
+      open={open}
+      // onInputChange={(event, newInputValue, reason) => {
+
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      options={options}
+      isOptionEqualToValue={(option, value) => option.ID === value.ID}
+      onChange={onChange}
+      getOptionLabel={(option) => option?.Name || ''}
+      disableCloseOnSelect
+      disableListWrap
+      loading={loading}
+      ListboxComponent={ListboxComponent}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} style={{ display: "flex", gap: 2, height: 20 }}>
+          <Checkbox size="small" sx={{ marginLeft: -1 }} checked={selected} />
+          {option?.Name}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          error={errors}
+          helperText={helper}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress color="inherit" size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+
+export function CusListRunGrpOptimizedAutocomplete({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  companyID,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+    const [error, setError] = useState(null);
+
+ useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = {
+        CompanyID: companyID,
+      };
+      try {
+        const response = await axios.post(url, data, {
+          headers: {
+            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+          },
+        });
+        setOptions(response.data.Data || []);
+
+        console.log(response.data.Data, "response.data.Data");
+        console.log("OPTIONS:", options);
+
+        setError(null); // clear previous error
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]); //  FIX: prevent undefined
+        setError("Failed to load. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [url]);
+
+
+  return (
+    <Autocomplete
+      multiple={multiple}
+      size="small"
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      options={options}
+      loading={loading}
+      disableCloseOnSelect
+      getOptionLabel={(option) => option?.Name || ""}
+      isOptionEqualToValue={(o, v) => o.RecordID === v.RecordID}
+      onChange={(e, newValue) => onChange(newValue)}
+      renderOption={(props, option, { selected }) => (
+        <li {...props}>
+          <Checkbox checked={selected} size="small" />
+          {option.Name}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          error={errors}
+          helperText={helper}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && <CircularProgress size={20} />}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
+
+
+
+// export function MultiSelectDropdown({
+//   data = [],
+//   apiValue = "",
+//   onChange,
+// }) {
+//   const [selectedValues, setSelectedValues] = useState([]);
+
+//   // Convert API string → array ["All","Selected"]
+//   useEffect(() => {
+//     if (apiValue) {
+//       const arr = apiValue.replace(/"/g, "").split(",");
+//       setSelectedValues(arr);
+//     }
+//   }, [apiValue]);
+
+//   const toggleSelect = (id) => {
+//     let updated;
+
+//     if (selectedValues.includes(id)) {
+//       updated = selectedValues.filter((v) => v !== id);
+//     } else {
+//       updated = [...selectedValues, id];
+//     }
+
+//     setSelectedValues(updated);
+
+//     // Convert array → API format: "All","Task"
+//     const apiFormatted = updated.map((v) => `"${v}"`).join(",");
+//     onChange(apiFormatted);
+//   };
+
+//   return (
+//     <div style={{ border: "1px solid #ddd", padding: 10, borderRadius: 6 }}>
+//       <strong>Select Values:</strong>
+
+//       <div style={{ marginTop: 10, display: "flex", flexDirection: "column" }}>
+//         {data.map((item) => (
+//           <label key={item.ID} style={{ marginBottom: 6 }}>
+//             <input
+//               type="checkbox"
+//               checked={selectedValues.includes(item.ID)}
+//               onChange={() => toggleSelect(item.ID)}
+//             />
+//             <span style={{ marginLeft: 8 }}>{item.Name}</span>
+//           </label>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+// export function MultiSelectDropdown({ data = [], apiValue = "", onChange }) {
+//   const [selectedValues, setSelectedValues] = useState([]);
+
+//   // Convert API value -> array ["All", "Project"]
+//   useEffect(() => {
+//     if (apiValue) {
+//       const arr = apiValue.replace(/"/g, "").split(",");
+//       setSelectedValues(arr.filter((x) => x.trim() !== ""));
+//     }
+//   }, [apiValue]);
+
+//   const handleSelectChange = (event) => {
+//     const value = event.target.value; // array of IDs
+//     setSelectedValues(value);
+
+//     // Convert array -> `"All","Project"`
+//     const apiFormatted = value.map((v) => `"${v}"`).join(",");
+//     onChange(apiFormatted);
+//   };
+
+//   return (
+//     <FormControl fullWidth size="small">
+//       <InputLabel>Module</InputLabel>
+
+//       <Select
+//         multiple
+//         value={selectedValues}
+//         onChange={handleSelectChange}
+//         input={<OutlinedInput label="Select Module" />}
+//         renderValue={(selected) =>
+//           selected
+//             .map((id) => {
+//               const match = data.find((x) => x.ID === id);
+//               return match ? match.Name : id;
+//             })
+//             .join(", ")
+//         }
+//       >
+//         {data?.map((item) => (
+//           <MenuItem key={item.ID} value={item.ID}>
+//             <Checkbox checked={selectedValues.includes(item.ID)} />
+//             <ListItemText primary={item.Name} />
+//           </MenuItem>
+//         ))}
+//       </Select>
+//     </FormControl>
+//   );
+// }
+export function MultiSelectDropdown1({
+  id,
+  name,
+  data = [],
+  apiValue = "",
+  onChange,
+}) {
+  const [selectedValues, setSelectedValues] = useState([]);
+
+  // Convert API string -> array (and remove empty values)
+  // useEffect(() => {
+  //   if (apiValue) {
+  //     const arr = apiValue
+  //       .replace(/"/g, "")   // remove quotes
+  //       .split(",")          // split comma
+  //       .map((v) => v.trim()) // trim spaces
+  //       .filter((v) => v !== ""); // remove empty values
+
+  //     setSelectedValues(arr);
+  //   }
+  // }, [apiValue]);
+useEffect(() => {
+  if (apiValue && apiValue.trim() !== "") {
+    const arr = apiValue
+      .split(",")
+      .map(v => v.trim())
+      .filter(v => v !== "");
+
+    setSelectedValues(arr); // ["1","2"]
+  } else {
+    setSelectedValues([]);  // VERY IMPORTANT → clears previous ID
+  }
+}, [apiValue]);
+
+
+  // User selection -> send comma-separated string
+  const handleSelectChange = (event) => {
+    const value = event.target.value
+      .map((v) => v.trim())
+      .filter((v) => v !== ""); // prevent empty values
+
+    setSelectedValues(value);
+
+    const apiFormatted = value.join(","); // "1,2,5"
+    onChange(apiFormatted);
+  };
+
+  return (
+    <FormControl fullWidth size="small">
+      <InputLabel id={`${id}-label`}>{name}</InputLabel>
+
+      <Select
+        id={id}
+        name={name}
+        labelId={`${id}-label`}
+        multiple
+        displayEmpty
+        value={selectedValues}
+        onChange={handleSelectChange}
+        input={<OutlinedInput label={name} />}
+        renderValue={(selected) => {
+  if (selected.length === 0) return null;
+
+  return selected
+    .map((id) => {
+      const match = data.find((x) => String(x.ID) === String(id));
+      return match ? match.Name : id;
+    })
+    .join(", ");
+}}
+
+        // renderValue={(selected) => {
+        //   if (selected.length === 0) return null;
+
+        //   return selected
+        //     .map((id) => {
+        //       const match = data.find((x) => x.ID === id);
+        //       return match ? match.Name : id;
+        //     })
+        //     .join(", ");
+        // }}
+      >
+        {data?.map((item) => (
+          // <MenuItem key={item.ID} value={item.ID}>
+          <MenuItem key={item.ID} value={String(item.ID)}>
+
+            <Checkbox checked={selectedValues.includes(String(item.ID))} />
+
+            {/* //<Checkbox checked={selectedValues.includes(item.ID)} /> */}
+            <ListItemText primary={item.Name} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+}
+
+export function MultiSelectDropdown({
+  id,
+  name,
+  data = [],          // [{ RecordID, Code, Name }]
+  apiValue = "",      // "Attendance,Leave"
+  onChange,
+}) {
+  const [selectedValues, setSelectedValues] = useState([]);
+
+  // 1️⃣ Convert API → array of Codes
+  useEffect(() => {
+    if (!apiValue || apiValue.trim() === "") {
+      setSelectedValues([]); // nothing selected
+      return;
+    }
+
+    // Example: `"Attendance","Leave"` → ["Attendance","Leave"]
+    const cleaned = apiValue
+      .replace(/"/g, "")
+      .split(",")
+      .map(v => v.trim())
+      .filter(v => v !== "");
+
+    setSelectedValues(cleaned);  // ["Attendance","Leave"]
+  }, [apiValue]);
+
+  // 2️⃣ Convert selection back to comma string: "Attendance,Leave"
+  const handleSelectChange = (event) => {
+    const arr = event.target.value;
+
+    const cleaned = arr
+      .map(v => v.trim())
+      .filter(v => v !== "");
+
+    setSelectedValues(cleaned);
+
+    onChange(cleaned.join(",")); // send to API
+  };
+
+  return (
+    <FormControl fullWidth size="small">
+      <InputLabel id={`${id}-label`}>{name}</InputLabel>
+
+      <Select
+        id={id}
+        name={name}
+        multiple
+        labelId={`${id}-label`}
+        value={selectedValues}
+        onChange={handleSelectChange}
+        input={<OutlinedInput label={name} />}
+        renderValue={(selected) =>
+          selected
+            .map(code => {
+              const match = data.find(x => x.Code === code);
+              return match ? match.Name : code;
+            })
+            .join(", ")
+        }
+      >
+        {data?.map((item) => (
+          <MenuItem key={item.Code} value={item.Code}>
+            <Checkbox checked={selectedValues.includes(item.Code)} />
+            <ListItemText primary={item.Name} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+}
+
+
+
+
+export function ModuleAutocomplete({
+  value = [],
+  onChange,
+  url,
+  options: externalOptions = [],
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  ...props
+}) {
+  const [apiOptions, setApiOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!url) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await axios.get(url);
+        const data = response?.data?.Data?.rows || [];
+        setApiOptions(Array.isArray(data) ? data : []);
+      } catch {
+        setApiOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      multiple
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      value={value}
+      onChange={onChange}
+
+      // Correct options coming from Redux
+      options={externalOptions.length > 0 ? externalOptions : apiOptions}
+
+      // Fix label
+      getOptionLabel={(option) => option?.label || option?.Name || ""}
+
+      // Fix matching
+      isOptionEqualToValue={(o, v) => o.value === v.value}
+
+      disableCloseOnSelect
+      renderInput={(params) => <TextField {...params} label={label} />}
+    />
+
   );
 }
 
@@ -1020,7 +1536,7 @@ export function MultiFormikScheduleOptimizedAutocomplete({
 
 export const SingleFormikOptimizedAutocomplete = ({
   value = null,
-  onChange = () => {},
+  onChange = () => { },
   url,
   height = 20,
   ...props
@@ -1098,7 +1614,7 @@ export const SingleFormikOptimizedAutocomplete = ({
 
 export const FormikProductautocomplete = ({
   value = null,
-  onChange = () => {},
+  onChange = () => { },
   url,
   height = 20,
   ...props
