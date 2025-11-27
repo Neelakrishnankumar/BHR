@@ -166,6 +166,8 @@ import AppraisalSchedule from "./pages/SkillGlow/AppraisalSchedule";
 import AppraisalScheduleList from "./pages/SkillGlow/AppraisalScheduleList";
 import EditOrder from "./pages/HR/Editorder";
 import EditOrderitem from "./pages/HR/Editorderitem";
+import EditPaymentStatus from "./pages/HR/EditPaymentStatus";
+import EditAdvancePayment from "./pages/HR/EditPaymentStatus";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -1008,6 +1010,16 @@ function App() {
                       path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/EditOrder/:id/:Mode"
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrder />}
+                  />
+
+                  {/* ADVANCE PAYMENT */}
+                  <Route
+                      path="/Secondarylistview/:accessID/:screenName/:partyID"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
+                      path="/Secondarylistview/:accessID/:screenName/:partyID/EditAdvancePayment/:id/:Mode"
+                    element={<EditAdvancePayment />}
                   />
                   {/* <Route
                       path="/Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode"

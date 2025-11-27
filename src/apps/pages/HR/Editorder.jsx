@@ -174,7 +174,7 @@ const EditOrder = () => {
       TentativeDeliveryDate: values.tentativedeliverdate || "",
       DeliveryBy: values.deliveredby || "",
       DeliveryYesorNo: mode === "A" ? "N" : values.deliver || "N",
-      PaidYesorNo: mode === "A" ? "N" : values.paid || "N",
+      PaidYesorNo: mode === "A" ? "No" : values.paid || "No",
       ProcessDate: values.processdate || "",
       PaidDate: values.paiddate || "",
       DeliveryDate: values.deliverydate || "",
@@ -306,7 +306,9 @@ const EditOrder = () => {
                   navigate(-1);
                 }}
               >
-                Order ({state.Code})
+                {mode === "E"
+                  ? `Order (${state.Code || ""} )`
+                  : `Order(New)` || ""}
               </Typography>
               <Typography
                 variant="h5"
@@ -703,8 +705,9 @@ const EditOrder = () => {
                             Ready for Delivery
                           </MenuItem>
                           <MenuItem value="Picked">Picked</MenuItem>
-                          <MenuItem value="Delivered">Delivered</MenuItem>
                           <MenuItem value="Scheduled">Scheduled</MenuItem>
+
+                          <MenuItem value="Delivered">Delivered</MenuItem>
                           <MenuItem value="Paid">Paid</MenuItem>
                         </TextField>
                         {/* <TextField

@@ -40,6 +40,7 @@ import {
   OrderItemAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import * as Yup from "yup";
 
 // import CryptoJS from "crypto-js";
 const EditOrderitem = () => {
@@ -69,10 +70,46 @@ const EditOrderitem = () => {
   const location = useLocation();
   const state = location.state || {};
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const [validationSchema, setValidationSchema] = useState(null);
+
+  const [errorMsgData, setErrorMsgData] = useState(null);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
 
+        let schemaFields = {
+          discount: Yup.number()
+            .typeError(data.OrderItem.discount)
+            .required(data.OrderItem.discount),
+          product: Yup.object()
+            .nullable()
+            .shape({
+              RecordID: Yup.string().required(
+                data.OrderItem.product
+              ),
+              Name: Yup.string().nullable(), // optional
+            })
+            .required(data.OrderItem.product),
+          quantity: Yup.number()
+            .typeError(data.OrderItem.quantity)
+            .required(data.OrderItem.quantity)
+            .min(1, "Quantity must be greater than 0"),
+        };
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
   const PartyRecordID = state.PartyID;
@@ -92,7 +129,7 @@ const EditOrderitem = () => {
     discount: data.Discount,
     product:
       mode === "A"
-        ? DefaultProductDeliveryChargeGetData?.RecordID
+        ? DefaultProductDeliveryChargeGetData?.RecordID && DefaultProductDeliveryChargeGetData?.RecordID !== "0"
           ? {
               RecordID: DefaultProductDeliveryChargeGetData.RecordID,
               Name: DefaultProductDeliveryChargeGetData.Name,
@@ -161,7 +198,7 @@ const EditOrderitem = () => {
       //   actions.setSubmitting(false);
       //   return; // VERY IMPORTANT → do NOT run navigate()
       // }
-       if (mode === "A") {
+      if (mode === "A") {
         if (params.Type === "Party") {
           navigate(
             `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
@@ -337,7 +374,7 @@ const EditOrderitem = () => {
                 Fnsave(values, actions);
               }, 100);
             }}
-            //  validationSchema={ DesignationSchema}
+            validationSchema={validationSchema}
             //enableReinitialize={mode === "E"}
             enableReinitialize={true}
           >
@@ -350,6 +387,7 @@ const EditOrderitem = () => {
               values,
               handleSubmit,
               setFieldValue,
+              setFieldTouched,
             }) => {
               const recalc = (changedField, newValue) => {
                 const price = parseFloat(values.price || 0);
@@ -413,9 +451,19 @@ const EditOrderitem = () => {
                       <OrderItemAutocomplete
                         id="product"
                         name="product"
-                        label="Product"
+                        //label="Product"
+                        label={
+                          <>
+                            Product
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
                         variant="outlined"
                         value={values.product}
+                        onBlur={() => setFieldTouched("product", true)}
                         onChange={(newValue) => {
                           const prevProduct = values.product;
                           // Set the selected product
@@ -476,7 +524,16 @@ const EditOrderitem = () => {
                       name="discount"
                       type="number"
                       id="discount"
-                      label="Discount (In Percentage)"
+                      //label="Discount (In Percentage)"
+                      label={
+                        <>
+                          Discount (In Percentage)
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.discount}
@@ -515,7 +572,15 @@ const EditOrderitem = () => {
                       name="quantity"
                       type="number"
                       id="quantity"
-                      label="Quantity"
+                      label={
+                        <>
+                          Quantity
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.quantity}

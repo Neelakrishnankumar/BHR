@@ -80,6 +80,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
+import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -192,26 +193,82 @@ const Listview = () => {
   // },   ,...listViewcolumn.filter(filterByID)] :[],
   //   [listViewcolumn]
   // );
-  const columns = React.useMemo(
-    () =>
-      listViewcolumn.filter(filterByID)
-        ? [
-            {
-              field: "slno",
-              headerName: "SL#",
-              width: 50,
-              sortable: false,
-              filterable: false,
-              valueGetter: (params) =>
-                page * pageSize +
-                params.api.getRowIndexRelativeToVisibleRows(params.id) +
-                1,
-            },
-            ...listViewcolumn.filter(filterByID),
-          ]
-        : [],
-    [listViewcolumn, page, pageSize] // include page & pageSize as deps
-  );
+  // const columns = React.useMemo(
+  //   () =>
+  //     listViewcolumn.filter(filterByID)
+  //       ? [
+  //           {
+  //             field: "slno",
+  //             headerName: "SL#",
+  //             width: 50,
+  //             sortable: false,
+  //             filterable: false,
+  //             valueGetter: (params) =>
+  //               page * pageSize +
+  //               params.api.getRowIndexRelativeToVisibleRows(params.id) +
+  //               1,
+  //           },
+  //           ...listViewcolumn.filter(filterByID),
+  //         ]
+  //       : [],
+  //   [listViewcolumn, page, pageSize] // include page & pageSize as deps
+  // );
+
+  const columns = React.useMemo(() => {
+  const filtered = listViewcolumn.filter(filterByID);
+
+  if (!filtered) return [];
+
+  const enhancedColumns = filtered.map((col) => {
+    if (col.field === "BalanceStatus") {
+      return {
+        ...col,
+        cellClassName: (params) => {
+          if (params.value === "Negative") return "cell-negative-status";
+          if (params.value === "Positive") return "cell-positive-status";
+          return "";
+        },
+      };
+    }
+    if (col.field === "Balance") {
+      return {
+        ...col,
+        renderCell: (params) => {
+          const value = Number(params.value || 0);
+          const absValue = Math.abs(value); // remove minus sign
+
+          return (
+            <span
+              style={{
+                color: value < 0 ? colors.redAccent[500] : colors.greenAccent[400],
+                fontWeight: 600,
+              }}
+            >
+              {absValue}
+            </span>
+          );
+        },
+      };
+    }
+    return col;
+  });
+
+  return [
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) =>
+        page * pageSize +
+        params.api.getRowIndexRelativeToVisibleRows(params.id) +
+        1,
+    },
+    ...enhancedColumns,
+  ];
+}, [listViewcolumn, page, pageSize]);
+
   // console.log("🚀 ~ file: Listview.jsx:88 ~ Listview ~ columns:", columns)
 
   const columnShow = React.useMemo(
@@ -332,7 +389,7 @@ const Listview = () => {
               marginLeft: "auto", // push to right
             }}
           >
-            {(accessID === "TR313" || accessID === "TR243") ? (
+            {accessID === "TR313" || accessID === "TR243" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -363,7 +420,6 @@ const Listview = () => {
             ) : (
               false
             )}
-
 
             {accessID == "TR043" ? (
               <Tooltip arrow title="Product Line Chart">
@@ -582,6 +638,14 @@ const Listview = () => {
               "& .MuiDataGrid-root": {
                 border: "none",
               },
+              "& .cell-negative-status": {
+                 color: colors.redAccent[500],
+  fontWeight: 600,
+              },
+              "& .cell-positive-status": {
+                 color: colors.greenAccent[400],
+  fontWeight: 600,
+              },
               "& .MuiDataGrid-cell": {
                 borderBottom: "none",
               },
@@ -657,12 +721,13 @@ const Listview = () => {
                     date: sessionStorage.getItem("ToDate") || "",
                     Created: sessionStorage.getItem("TR313_Created") === "Y",
                     Process: sessionStorage.getItem("TR313_Process") === "Y",
-                    inprogress:
-                      sessionStorage.getItem("TR313_Picked") === "Y",
+                    inprogress: sessionStorage.getItem("TR313_Picked") === "Y",
                     completed:
                       sessionStorage.getItem("TR313_Scheduled") === "Y",
-                    Delivered: sessionStorage.getItem("TR313_Delivered") === "Y",
-                    Scheduled: sessionStorage.getItem("TR313_Scheduled") === "Y",
+                    Delivered:
+                      sessionStorage.getItem("TR313_Delivered") === "Y",
+                    Scheduled:
+                      sessionStorage.getItem("TR313_Scheduled") === "Y",
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -672,32 +737,108 @@ const Listview = () => {
                       values.Created ||
                       values.Process ||
                       values.ReadyToDeliver ||
+                      values.YetToDeliver ||
                       values.Paid ||
                       values.Scheduled ||
                       values.Delivered ||
-                      values.Picked;                  
+                      values.Picked;
                   }}
+                  // onSubmit={(values, { setSubmitting }) => {
+                  //   const conditions = [];
+
+                  //   const fromDate = values.fromdate || "";
+                  //   const toDate = values.date || "";
+
+                  //   sessionStorage.setItem("FromDate", fromDate);
+                  //   sessionStorage.setItem("ToDate", toDate);
+                  //   // sessionStorage.setItem("EmployeeID", empId);
+
+                  //   [
+                  //     "Created",
+                  //     "Process",
+                  //     "Ready To Deliver",
+                  //     "completed",
+                  //     "approved",
+                  //     "rejected",
+                  //   ].forEach((key) => {
+                  //     sessionStorage.setItem(
+                  //       `TR313_${key}`,
+                  //       values[key] ? "Y" : "N"
+                  //     );
+                  //   });
+
+                  //   sessionStorage.setItem(
+                  //     "TR313_Filters",
+                  //     JSON.stringify(values)
+                  //   );
+
+                  //   // conditions.push(`EmployeesID='${empId}'`);
+
+                  //   if (fromDate && toDate) {
+                  //     conditions.push(
+                  //       `OROrderDate BETWEEN '${fromDate}' AND '${toDate}'`
+                  //     );
+                  //   } else if (fromDate) {
+                  //     conditions.push(`OROrderDate >= '${fromDate}'`);
+                  //   } else if (toDate) {
+                  //     conditions.push(`OROrderDate <= '${toDate}'`);
+                  //   }
+
+                  //   const statusFilters = [];
+
+                  //   if (values.Created) statusFilters.push("'Created'");
+                  //   if (values.Process) statusFilters.push("'Process'");
+                  //   if (values.ReadyToDeliver) statusFilters.push("'Ready To Deliver'");
+                  //   if (values.Picked) statusFilters.push("'Picked'");
+                  //   if (values.Delivered) statusFilters.push("'Delivered'");
+                  //   if (values.Scheduled) statusFilters.push("'Scheduled'");
+                  //   if (values.Paid) statusFilters.push("'Paid'");
+
+                  //   if (statusFilters.length > 0) {
+                  //     conditions.push(
+                  //       `Status IN (${statusFilters.join(", ")})`
+                  //     );
+                  //   }
+
+                  //   //conditions.push(`CompanyID='${compID}'`);
+                  //   const whereClause = conditions.join(" AND ");
+
+                  //   dispatch(
+                  //     fetchListview(
+                  //       accessID,
+                  //       screenName,
+                  //       whereClause,
+                  //       "",
+                  //       compID
+                  //     )
+                  //   );
+                  //   setTimeout(() => setSubmitting(false), 100);
+                  // }}
+
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
+                    const statusDateMap = {
+                      Created: "OROrderDate",
+                      Process: "ORProcessDate",
+                      ReadyToDeliver: "ORTentativeDate",
+                      YetToDeliver: "ORTentativeDate",
+                      Picked: "ORPickedDate",
+                      Scheduled: "ORTentativeDate",
+                      Delivered: "ORDeliveryDate",
+                      Paid: "ORPaidDate",
+                    };
 
                     const fromDate = values.fromdate || "";
                     const toDate = values.date || "";
 
                     sessionStorage.setItem("FromDate", fromDate);
                     sessionStorage.setItem("ToDate", toDate);
-                    // sessionStorage.setItem("EmployeeID", empId);
 
-                    [
-                      "Created",
-                      "Process",
-                      "Ready To Deliver",
-                      "completed",
-                      "approved",
-                      "rejected",
-                    ].forEach((key) => {
+                    // Store checkbox values
+                    Object.keys(statusDateMap).forEach((status) => {
                       sessionStorage.setItem(
-                        `TR313_${key}`,
-                        values[key] ? "Y" : "N"
+                        `TR313_${status}`,
+                        values[status] ? "Y" : "N"
                       );
                     });
 
@@ -706,36 +847,49 @@ const Listview = () => {
                       JSON.stringify(values)
                     );
 
-                    // conditions.push(`EmployeesID='${empId}'`);
+                    // --------------------------
+                    // 1. STATUS IN ('A','B','C')
+                    // --------------------------
+                    const selectedStatuses = Object.keys(statusDateMap).filter(
+                      (status) => values[status]
+                    );
 
-                    if (fromDate && toDate) {
+                    if (selectedStatuses.length > 0) {
                       conditions.push(
-                        `OROrderDate BETWEEN '${fromDate}' AND '${toDate}'`
-                      );
-                    } else if (fromDate) {
-                      conditions.push(`OROrderDate >= '${fromDate}'`);
-                    } else if (toDate) {
-                      conditions.push(`OROrderDate <= '${toDate}'`);
-                    }
-
-                    const statusFilters = [];
-
-                    if (values.Created) statusFilters.push("'Created'");
-                    if (values.Process) statusFilters.push("'Process'");
-                    if (values.ReadyToDeliver) statusFilters.push("'Ready To Deliver'");
-                    if (values.Picked) statusFilters.push("'Picked'");
-                    if (values.Delivered) statusFilters.push("'Delivered'");
-                    if (values.Scheduled) statusFilters.push("'Scheduled'");
-                    if (values.Paid) statusFilters.push("'Paid'");
-
-                    if (statusFilters.length > 0) {
-                      conditions.push(
-                        `Status IN (${statusFilters.join(", ")})`
+                        `Status IN (${selectedStatuses
+                          .map((s) => `'${s}'`)
+                          .join(", ")})`
                       );
                     }
 
-                    //conditions.push(`CompanyID='${compID}'`);
+                    // -------------------------------------------------
+                    // 2. DATE FIELD CONDITIONS based on selected status
+                    // -------------------------------------------------
+                    const dateConditions = [];
+
+                    selectedStatuses.forEach((status) => {
+                      const field = statusDateMap[status];
+
+                      if (fromDate && toDate) {
+                        dateConditions.push(
+                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                        );
+                      } else if (fromDate) {
+                        dateConditions.push(`(${field} >= '${fromDate}')`);
+                      } else if (toDate) {
+                        dateConditions.push(`(${field} <= '${toDate}')`);
+                      }
+                    });
+
+                    if (dateConditions.length > 0) {
+                      conditions.push(`(${dateConditions.join(" OR ")})`);
+                    }
+
+                    // --------------------------
+                    // FINAL WHERE CLAUSE
+                    // --------------------------
                     const whereClause = conditions.join(" AND ");
+                    console.log("FINAL FILTER:", whereClause);
 
                     dispatch(
                       fetchListview(
@@ -746,6 +900,7 @@ const Listview = () => {
                         compID
                       )
                     );
+
                     setTimeout(() => setSubmitting(false), 100);
                   }}
                 >
@@ -851,6 +1006,23 @@ const Listview = () => {
                           }
                           label="Ready To Deliver"
                         />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Scheduled"
+                              checked={values.Scheduled}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Scheduled", checked);
+                                sessionStorage.setItem(
+                                  "TR313_Scheduled",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Scheduled"
+                        />
 
                         <FormControlLabel
                           control={
@@ -929,8 +1101,7 @@ const Listview = () => {
               </Box>
             )}
 
-
-             {showMore && accessID === "TR243" && (
+            {showMore && accessID === "TR243" && (
               <Box
                 sx={{
                   width: 300,
@@ -946,12 +1117,13 @@ const Listview = () => {
                     Created: sessionStorage.getItem("TR243_Created") === "Y",
                     Process: sessionStorage.getItem("TR243_Process") === "Y",
                     Paid: sessionStorage.getItem("TR243_Paid") === "Y",
-                    Picked:
-                      sessionStorage.getItem("TR243_Picked") === "Y",
+                    Picked: sessionStorage.getItem("TR243_Picked") === "Y",
                     ReadyToDeliver:
                       sessionStorage.getItem("TR243_ReadyToDeliver") === "Y",
-                    Delivered: sessionStorage.getItem("TR243_Delivered") === "Y",
-                    Scheduled: sessionStorage.getItem("TR243_Scheduled") === "Y",
+                    Delivered:
+                      sessionStorage.getItem("TR243_Delivered") === "Y",
+                    Scheduled:
+                      sessionStorage.getItem("TR243_Scheduled") === "Y",
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -964,7 +1136,7 @@ const Listview = () => {
                       values.Paid ||
                       values.Scheduled ||
                       values.Delivered ||
-                      values.Picked;                  
+                      values.Picked;
                   }}
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
@@ -1012,7 +1184,8 @@ const Listview = () => {
 
                     if (values.Created) statusFilters.push("'Created'");
                     if (values.Process) statusFilters.push("'Process'");
-                    if (values.ReadyToDeliver) statusFilters.push("'Ready To Deliver'");
+                    if (values.ReadyToDeliver)
+                      statusFilters.push("'Ready To Deliver'");
                     if (values.Picked) statusFilters.push("'Picked'");
                     if (values.Delivered) statusFilters.push("'Delivered'");
                     if (values.Scheduled) statusFilters.push("'Scheduled'");
@@ -1026,9 +1199,11 @@ const Listview = () => {
 
                     //conditions.push(`CompanyID='${compID}'`);
                     //const whereClause = conditions.join(" AND ");
-const filter = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
-//const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
-
+                    const filter = [
+                      `CompanyID='${compID}'`,
+                      ...conditions,
+                    ].join(" AND ");
+                    //const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
 
                     dispatch(
                       fetchListview(
@@ -1037,8 +1212,7 @@ const filter = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
                         filter,
                         "",
                         //whereClause,
-                        "",
-                        
+                        ""
                       )
                     );
                     setTimeout(() => setSubmitting(false), 100);
@@ -1535,7 +1709,13 @@ const filter = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
               label="Order"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
-            /> 
+            />
+            <Chip
+              icon={<CurrencyRupeeOutlinedIcon color="primary" />}
+              label="Advance Payment"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
           </Box>
         ) : accessID == "TR313" ? (
           <Box display="flex" flexDirection="row" padding="25px">

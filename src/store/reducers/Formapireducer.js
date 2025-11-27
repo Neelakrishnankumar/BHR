@@ -1391,7 +1391,7 @@ export const getProjectCosting = createAsyncThunk(
 //ORDER HEADER PDF
 export const getOrderdetailReport = createAsyncThunk(
   "getOrderdetailReport/get",
-  async ({ PartyID, OrderHdrID }) => {
+  async ({ PartyID, OrderHdrID, CompanyID }) => {
     const url = store.getState().globalurl.OrderdetailReport;
 
     const response = await axios.post(
@@ -1399,6 +1399,7 @@ export const getOrderdetailReport = createAsyncThunk(
       {
         PartyID,
         OrderHdrID,
+        CompanyID,
       },
       {
         headers: {

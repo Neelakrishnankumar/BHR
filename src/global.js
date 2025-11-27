@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
  
-// var APIurl = "https://bos.beyondexs.com/api/"
-// var baseurl = "https://bos.beyondexs.com/"
- 
-var APIurl = "https://bosuat.beyondexs.com/api/"
-var baseurl = "https://bosuat.beyondexs.com/"
+var APIurl = "https://bos.beyondexs.com/api/"
+var baseurl = "https://bos.beyondexs.com/"
+var baseurlUAAM = "https://uaam.beyondexs.com/"
+
+// var APIurl = "https://bosuat.beyondexs.com/api/"
+// var baseurl = "https://bosuat.beyondexs.com/"
 // var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 // var baseurl = "https://dvmtapi.bexatm.com/"
  
@@ -24,6 +25,7 @@ imgUploadUrl:baseurl + 'imgup.php',
 compdetailPostUrl:APIurl + 'CompanypostController.php',
 //imgUploadUrl:baseurl + 'imgup6.php',
 imageUrl:baseurl + 'uploads/images/',
+imageUrlUAAM:baseurlUAAM + 'uploads/images/',
 imageNameUpdateUrl:APIurl + 'CMController.php',
 //attachmentUrl:baseurl + 'uploads/images/',
 attachmentUrl:baseurl + 'uploads/images/',
@@ -125,7 +127,9 @@ VendorRegistrationGet:  APIurl + "vendorregistrationGet.php",
 VendorDefaultPUT:  APIurl + "vendordefault.php",
 VendorDefaultGET:  APIurl + "vendordefaultGet.php",
 DefaultProductDeliveryChargeGet:  APIurl + "DefaultProductDeliveryChargeGet.php",
-OrderdetailReport:  APIurl + "OrderdetailReportV3.php",Moduleurl:  APIurl + "CompanyModuleGetController.php",
+//OrderdetailReport:  APIurl + "OrderdetailReportV7.php",
+//OrderdetailReport:  APIurl + "OrderdetailReport.php",
+OrderdetailReport:  APIurl + "OrderdetailReportMV1.php",
 };
  
 export const getUrlSlice = createSlice({
