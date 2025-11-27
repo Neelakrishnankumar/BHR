@@ -1229,6 +1229,7 @@ const Editemployee = () => {
       //"VendorCode",
       //"VendorName",
       "Vendors",
+      "Description",
       "BillingUnits",
       "UnitRate",
       "action",
@@ -1238,6 +1239,7 @@ const Editemployee = () => {
       "slno",
       "VendorCode",
       "VendorName",
+      "Description",
       "BillingUnits",
       "UnitRate",
       "action",
@@ -1520,6 +1522,7 @@ const Editemployee = () => {
 
   const [contractorData, setContractorData] = useState({
     recordID: "",
+    Description:"",
     fromperiod: "",
     toperiod: "",
     units: "",
@@ -1602,6 +1605,7 @@ const Editemployee = () => {
       setselectLeaveconLTData(null);
       setContractorData({
         recordID: "",
+        Description:"",
         fromperiod: "",
         toperiod: "",
         units: "",
@@ -1706,15 +1710,16 @@ const Editemployee = () => {
 
         setContractorData({
           recordID: rowData.RecordID,
+          Description: rowData.Description,
           fromperiod: rowData.FromPeriod,
           toperiod: rowData.ToPeriod,
           units: rowData.BillingUnits,
           unitrate: rowData.UnitRate,
           alertdate: rowData.NotificationAlertDate,
           renewalperiod: rowData.RenewableNotification,
-          vendor: rowData.Vendor
+          vendor: rowData.VendorID
             ? {
-              RecordID: rowData.Vendor,
+              RecordID: rowData.VendorID,
               Code: rowData.VendorCode,
               Name: rowData.VendorName,
             }
@@ -1755,11 +1760,7 @@ const Editemployee = () => {
           Code: rowData.FunctionCode,
           Name: rowData.FunctionName,
         });
-        setFieldValue("vendor", {
-          RecordID: rowData.Vendor,
-          Code: rowData.VendorCode,
-          Name: rowData.VendorName,
-        });
+       
         setFieldValue("vendors", {
           RecordID: rowData.PartyID,
           Code: rowData.PartyCode,
@@ -1771,7 +1772,12 @@ const Editemployee = () => {
           Name: rowData.ItemName,
         });
         setFieldValue("customer", {
-          RecordID: rowData.Vendor,
+          RecordID: rowData.VendorID,
+          Code: rowData.VendorCode,
+          Name: rowData.VendorName,
+        });
+         setFieldValue("vendor", {
+          RecordID: rowData.VendorID,
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
         });
@@ -2063,8 +2069,8 @@ const Editemployee = () => {
     FromPeriod: contractorData.fromperiod,
     ToPeriod: contractorData.toperiod,
     // BillingUnits: contractorData.units,
-    vendor: null,
-    customer: null,
+    vendor: contractorData.vendor || null,
+    customer: contractorData.vendor || null,
     BillingUnits:
       contractorData.units === "Hours"
         ? "HS"
@@ -2083,6 +2089,7 @@ const Editemployee = () => {
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
+    Description: contractorData.Description,
   };
   // console.log(contractorData, "--get a contractorData");
 
@@ -2121,19 +2128,19 @@ const Editemployee = () => {
       //         : 0
       //       : 0,
       Vendor:
-        show === "8"
+        show == "8"
           ? values?.vendor?.RecordID || 0
-          : show === "11"
+          : show == "11"
             ? values?.customer?.RecordID || 0
             : 0,
 
       VendorName:
-        show === "8"
-          ? values?.vendor?.Name || 0
-          : show === "11"
-            ? values?.customer?.Name || 0
-            : 0,
-
+        show == "8"
+          ? values?.vendor?.Name || ""
+          : show == "11"
+            ? values?.customer?.Name || ""
+            : "",
+      Description : values.Description,
       Hsn: values.Hsn,
       Gst: values.Gst,
       Sgst: values.Sgst,
@@ -2148,6 +2155,7 @@ const Editemployee = () => {
       NotificationAlertDate: values.NotificationAlertDate,
       RenewableNotification: values.RenewableNotification,
     };
+    console.log(idata, "--contract idata");
 
     const response = await dispatch(
       explorePostData({ accessID: "TR244", action, idata })
@@ -8377,6 +8385,19 @@ const Editemployee = () => {
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
+                       <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          id="Description"
+                          name="Description"
+                          value={values.Description}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Description"
+                          focused
+                        // inputProps={{ readOnly: true }}
+                        />
                       {/* <SingleFormikOptimizedAutocomplete
                        
                         label="Vendor"
@@ -9138,6 +9159,19 @@ const Editemployee = () => {
                         // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
+                      <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          id="Description"
+                          name="Description"
+                          value={values.Description}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Description"
+                          focused
+                        // inputProps={{ readOnly: true }}
+                        />
                       {/* <SingleFormikOptimizedAutocomplete
                        
                         label="Vendor"
