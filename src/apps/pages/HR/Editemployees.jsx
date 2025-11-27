@@ -1496,6 +1496,8 @@ const Editemployee = () => {
     itemValue: "",
     reference: "",
   });
+  console.log("🚀 ~ Editemployee ~ itemCustodyData:", itemCustodyData)
+  
   // const [itemServicesData, setItemServicesData] = useState({
   //   recordID: "",
   //   servicedate: "",
@@ -1908,14 +1910,20 @@ const Editemployee = () => {
   };
   // *************** ITEMCUSTODY SCREEN SAVE FUNCTION *************** //
 
-  const itemcustodyInitialValue = {
+  const itemcustodyInitialValue = useMemo( () => ({
     code: Data.Code,
     description: Data.Name,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
     Disable: "N",
-  };
+     recordID: itemCustodyData.recordID || "",
+        ItemNumber: itemCustodyData.itemNO || "",
+        ItemName: itemCustodyData.itemName || "",
+        AssestID: itemCustodyData.assestID || "",
+        ItemValue: itemCustodyData.itemValue || "",
+        PurchaseReference: itemCustodyData.reference || "",
+}),[Data,itemCustodyData]);
   const empItemCustodyFn = async (values, resetForm, del) => {
     setLoading(true);
     let action =
@@ -7064,6 +7072,7 @@ const Editemployee = () => {
                 values,
                 handleSubmit,
                 resetForm,
+                setFieldValue
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -7187,6 +7196,7 @@ const Editemployee = () => {
                             rowData: params.row,
                             mode: "E",
                             field: params.field,
+                            setFieldValue
                           });
                         }}
                         rowsPerPageOptions={[5, 10, 20]}

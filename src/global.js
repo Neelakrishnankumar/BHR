@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
  
-var APIurl = "https://bos.beyondexs.com/api/"
-var baseurl = "https://bos.beyondexs.com/"
+// var APIurl = "https://bos.beyondexs.com/api/"
+// var baseurl = "https://bos.beyondexs.com/"
+// var baseurlUAAM = "https://uaam.beyondexs.com/"
 var baseurlUAAM = "https://uaamuat.beyondexs.com/"
 
-// var APIurl = "https://bosuat.beyondexs.com/api/"
-// var baseurl = "https://bosuat.beyondexs.com/"
+var APIurl = "https://bosuat.beyondexs.com/api/"
+var baseurl = "https://bosuat.beyondexs.com/"
 // var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 // var baseurl = "https://dvmtapi.bexatm.com/"
  
@@ -129,7 +130,7 @@ VendorDefaultGET:  APIurl + "vendordefaultGet.php",
 DefaultProductDeliveryChargeGet:  APIurl + "DefaultProductDeliveryChargeGet.php",
 //OrderdetailReport:  APIurl + "OrderdetailReportV7.php",
 OrderdetailReport:  APIurl + "OrderdetailReport.php",
-// OrderdetailReport:  APIurl + "OrderdetailReportMV1.php",
+//OrderdetailReport:  APIurl + "OrderdetailReportMV1.php",
 };
  
 export const getUrlSlice = createSlice({
