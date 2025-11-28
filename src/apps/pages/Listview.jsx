@@ -215,59 +215,60 @@ const Listview = () => {
   // );
 
   const columns = React.useMemo(() => {
-  const filtered = listViewcolumn.filter(filterByID);
+    const filtered = listViewcolumn.filter(filterByID);
 
-  if (!filtered) return [];
+    if (!filtered) return [];
 
-  const enhancedColumns = filtered.map((col) => {
-    if (col.field === "BalanceStatus") {
-      return {
-        ...col,
-        cellClassName: (params) => {
-          if (params.value === "Negative") return "cell-negative-status";
-          if (params.value === "Positive") return "cell-positive-status";
-          return "";
-        },
-      };
-    }
-    if (col.field === "Balance") {
-      return {
-        ...col,
-        renderCell: (params) => {
-          const value = Number(params.value || 0);
-          const absValue = Math.abs(value); // remove minus sign
+    const enhancedColumns = filtered.map((col) => {
+      if (col.field === "BalanceStatus") {
+        return {
+          ...col,
+          cellClassName: (params) => {
+            if (params.value === "Negative") return "cell-negative-status";
+            if (params.value === "Positive") return "cell-positive-status";
+            return "";
+          },
+        };
+      }
+      if (col.field === "Balance") {
+        return {
+          ...col,
+          renderCell: (params) => {
+            const value = Number(params.value || 0);
+            const absValue = Math.abs(value); // remove minus sign
 
-          return (
-            <span
-              style={{
-                color: value < 0 ? colors.redAccent[500] : colors.greenAccent[400],
-                fontWeight: 600,
-              }}
-            >
-              {absValue}
-            </span>
-          );
-        },
-      };
-    }
-    return col;
-  });
+            return (
+              <span
+                style={{
+                  color:
+                    value < 0 ? colors.redAccent[500] : colors.greenAccent[400],
+                  fontWeight: 600,
+                }}
+              >
+                {absValue}
+              </span>
+            );
+          },
+        };
+      }
+      return col;
+    });
 
-  return [
-    {
-      field: "slno",
-      headerName: "SL#",
-      width: 50,
-      sortable: false,
-      filterable: false,
-      valueGetter: (params) =>
-        page * pageSize +
-        params.api.getRowIndexRelativeToVisibleRows(params.id) +
-        1,
-    },
-    ...enhancedColumns,
-  ];
-}, [listViewcolumn, page, pageSize]);
+    return [
+      {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page * pageSize +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      },
+      ...enhancedColumns,
+    ];
+  }, [listViewcolumn, page, pageSize]);
 
   // console.log("🚀 ~ file: Listview.jsx:88 ~ Listview ~ columns:", columns)
 
@@ -639,12 +640,12 @@ const Listview = () => {
                 border: "none",
               },
               "& .cell-negative-status": {
-                 color: colors.redAccent[500],
-  fontWeight: 600,
+                color: colors.redAccent[500],
+                fontWeight: 600,
               },
               "& .cell-positive-status": {
-                 color: colors.greenAccent[400],
-  fontWeight: 600,
+                color: colors.greenAccent[400],
+                fontWeight: 600,
               },
               "& .MuiDataGrid-cell": {
                 borderBottom: "none",
@@ -1138,28 +1139,109 @@ const Listview = () => {
                       values.Delivered ||
                       values.Picked;
                   }}
+                  // onSubmit={(values, { setSubmitting }) => {
+                  //   const conditions = [];
+
+                  //   const fromDate = values.fromdate || "";
+                  //   const toDate = values.date || "";
+
+                  //   sessionStorage.setItem("FromDate", fromDate);
+                  //   sessionStorage.setItem("ToDate", toDate);
+                  //   // sessionStorage.setItem("EmployeeID", empId);
+
+                  //   [
+                  //     "Created",
+                  //     "Process",
+                  //     "Ready To Deliver",
+                  //     "Paid",
+                  //     "Picked",
+                  //     "Deivered",
+                  //     "Scheduled",
+                  //   ].forEach((key) => {
+                  //     sessionStorage.setItem(
+                  //       `TR243_${key}`,
+                  //       values[key] ? "Y" : "N"
+                  //     );
+                  //   });
+
+                  //   sessionStorage.setItem(
+                  //     "TR243_Filters",
+                  //     JSON.stringify(values)
+                  //   );
+
+                  //   // conditions.push(`EmployeesID='${empId}'`);
+
+                  //   if (fromDate && toDate) {
+                  //     conditions.push(
+                  //       `HVLastOrderDate BETWEEN '${fromDate}' AND '${toDate}'`
+                  //     );
+                  //   } else if (fromDate) {
+                  //     conditions.push(`HVLastOrderDate >= '${fromDate}'`);
+                  //   } else if (toDate) {
+                  //     conditions.push(`HVLastOrderDate <= '${toDate}'`);
+                  //   }
+
+                  //   const statusFilters = [];
+
+                  //   if (values.Created) statusFilters.push("'Created'");
+                  //   if (values.Process) statusFilters.push("'Process'");
+                  //   if (values.ReadyToDeliver)
+                  //     statusFilters.push("'Ready To Deliver'");
+                  //   if (values.Picked) statusFilters.push("'Picked'");
+                  //   if (values.Delivered) statusFilters.push("'Delivered'");
+                  //   if (values.Scheduled) statusFilters.push("'Scheduled'");
+                  //   if (values.Paid) statusFilters.push("'Paid'");
+
+                  //   if (statusFilters.length > 0) {
+                  //     conditions.push(
+                  //       `LastOrderStatus IN (${statusFilters.join(", ")})`
+                  //     );
+                  //   }
+
+                  //   //conditions.push(`CompanyID='${compID}'`);
+                  //   //const whereClause = conditions.join(" AND ");
+                  //   const filter = [
+                  //     `CompanyID='${compID}'`,
+                  //     ...conditions,
+                  //   ].join(" AND ");
+                  //   //const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
+
+                  //   dispatch(
+                  //     fetchListview(
+                  //       accessID,
+                  //       screenName,
+                  //       filter,
+                  //       "",
+                  //       //whereClause,
+                  //       ""
+                  //     )
+                  //   );
+                  //   setTimeout(() => setSubmitting(false), 100);
+                  // }}
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
+                    const statusDateMap = {
+                      Created: "OROrderDate",
+                      Process: "ORProcessDate",
+                      ReadyToDeliver: "ORTentativeDate",
+                      YetToDeliver: "ORTentativeDate",
+                      Picked: "ORPickedDate",
+                      Scheduled: "ORTentativeDate",
+                      Delivered: "ORDeliveryDate",
+                      Paid: "ORPaidDate",
+                    };
 
                     const fromDate = values.fromdate || "";
                     const toDate = values.date || "";
 
                     sessionStorage.setItem("FromDate", fromDate);
                     sessionStorage.setItem("ToDate", toDate);
-                    // sessionStorage.setItem("EmployeeID", empId);
 
-                    [
-                      "Created",
-                      "Process",
-                      "Ready To Deliver",
-                      "Paid",
-                      "Picked",
-                      "Deivered",
-                      "Scheduled",
-                    ].forEach((key) => {
+                    // Store checkbox values
+                    Object.keys(statusDateMap).forEach((status) => {
                       sessionStorage.setItem(
-                        `TR243_${key}`,
-                        values[key] ? "Y" : "N"
+                        `TR243_${status}`,
+                        values[status] ? "Y" : "N"
                       );
                     });
 
@@ -1168,53 +1250,60 @@ const Listview = () => {
                       JSON.stringify(values)
                     );
 
-                    // conditions.push(`EmployeesID='${empId}'`);
+                    // --------------------------
+                    // 1. STATUS IN ('A','B','C')
+                    // --------------------------
+                    const selectedStatuses = Object.keys(statusDateMap).filter(
+                      (status) => values[status]
+                    );
 
-                    if (fromDate && toDate) {
+                    if (selectedStatuses.length > 0) {
                       conditions.push(
-                        `HVLastOrderDate BETWEEN '${fromDate}' AND '${toDate}'`
-                      );
-                    } else if (fromDate) {
-                      conditions.push(`HVLastOrderDate >= '${fromDate}'`);
-                    } else if (toDate) {
-                      conditions.push(`HVLastOrderDate <= '${toDate}'`);
-                    }
-
-                    const statusFilters = [];
-
-                    if (values.Created) statusFilters.push("'Created'");
-                    if (values.Process) statusFilters.push("'Process'");
-                    if (values.ReadyToDeliver)
-                      statusFilters.push("'Ready To Deliver'");
-                    if (values.Picked) statusFilters.push("'Picked'");
-                    if (values.Delivered) statusFilters.push("'Delivered'");
-                    if (values.Scheduled) statusFilters.push("'Scheduled'");
-                    if (values.Paid) statusFilters.push("'Paid'");
-
-                    if (statusFilters.length > 0) {
-                      conditions.push(
-                        `LastOrderStatus IN (${statusFilters.join(", ")})`
+                        `LastOrderStatus IN (${selectedStatuses
+                          .map((s) => `'${s}'`)
+                          .join(", ")})`
                       );
                     }
 
-                    //conditions.push(`CompanyID='${compID}'`);
-                    //const whereClause = conditions.join(" AND ");
-                    const filter = [
-                      `CompanyID='${compID}'`,
-                      ...conditions,
-                    ].join(" AND ");
-                    //const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
+                    // -------------------------------------------------
+                    // 2. DATE FIELD CONDITIONS based on selected status
+                    // -------------------------------------------------
+                    const dateConditions = [];
+
+                    selectedStatuses.forEach((status) => {
+                      const field = statusDateMap[status];
+
+                      if (fromDate && toDate) {
+                        dateConditions.push(
+                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                        );
+                      } else if (fromDate) {
+                        dateConditions.push(`(${field} >= '${fromDate}')`);
+                      } else if (toDate) {
+                        dateConditions.push(`(${field} <= '${toDate}')`);
+                      }
+                    });
+
+                    if (dateConditions.length > 0) {
+                      conditions.push(`(${dateConditions.join(" OR ")})`);
+                    }
+
+                    // --------------------------
+                    // FINAL WHERE CLAUSE
+                    // --------------------------
+                    const whereClause = conditions.join(" AND ");
+                    console.log("FINAL FILTER:", whereClause);
 
                     dispatch(
                       fetchListview(
                         accessID,
                         screenName,
-                        filter,
+                        whereClause,
                         "",
-                        //whereClause,
-                        ""
+                        compID
                       )
                     );
+
                     setTimeout(() => setSubmitting(false), 100);
                   }}
                 >
@@ -1320,7 +1409,23 @@ const Listview = () => {
                           }
                           label="Ready To Deliver"
                         />
-
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Scheduled"
+                              checked={values.Scheduled}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Scheduled", checked);
+                                sessionStorage.setItem(
+                                  "TR243_Scheduled",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Scheduled"
+                        />
                         <FormControlLabel
                           control={
                             <Checkbox
