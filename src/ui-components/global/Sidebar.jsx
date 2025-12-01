@@ -205,11 +205,11 @@ const child = {
         },
 
         {
-          name: "Employees",
-          url: "./TR027/Employees",
+          name: "Personnel",
+          url: "./TR027/Personnel",
           id: 5634,
           icon: (
-            <Tooltip title="Employees">
+            <Tooltip title="Personnel">
               <PeopleAltIcon color="info" />
             </Tooltip>
           ),

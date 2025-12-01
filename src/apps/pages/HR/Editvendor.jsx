@@ -386,6 +386,7 @@ const Editvendor = () => {
     prospect: data.Prospects === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false,
     BusinessPartner: data.BusinessPartner === "Y" ? true : false,
+    Parent: data.ParentCheckBox === "Y" ? true : false,
     disable: data.Disable === "Y" ? true : false,
   };
   console.log(data.PanImg, "dooo");
@@ -430,6 +431,7 @@ const Editvendor = () => {
       // LocalityID: "1",
       DeleteFlag: values.delete == true ? "Y" : "N",
       BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
+      ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
     };
 
@@ -1215,6 +1217,18 @@ const Editvendor = () => {
                           label="Business Partner"
                         />
                         <FormLabel focused={false}>Partner</FormLabel>
+                      </Box>
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="Parent"
+                          id="Parent"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Parent"
+                        />
+                        <FormLabel focused={false}>Parent</FormLabel>
                       </Box>
                       <Box display="flex" alignItems="center">
                         <Field
