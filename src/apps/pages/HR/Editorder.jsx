@@ -482,6 +482,28 @@ const EditOrder = () => {
                         },
                       }}
                     />
+                    {mode === "A"?
+                    <TextField
+                      name="tentativedeliverdate"
+                      type="date"
+                      id="tentativedeliverdate"
+                      label="Tentative Deliver Date"
+                      variant="standard"
+                      focused
+                      inputFormat="YYYY-MM-DD"
+                      value={values.tentativedeliverdate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={
+                        !!touched.tentativedeliverdate &&
+                        !!errors.tentativedeliverdate
+                      }
+                      helperText={
+                        touched.tentativedeliverdate &&
+                        errors.tentativedeliverdate
+                      }
+                    /> : false}
+
                     {mode !== "A" && (
                       <>
                         <TextField
