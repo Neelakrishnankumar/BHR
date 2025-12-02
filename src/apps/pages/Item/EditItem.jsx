@@ -216,6 +216,24 @@ const EditItem = () => {
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
+  const FlaginitialValues = {
+    Code: Data.Code || "",
+    Description: Data.Description || "",
+    HSNMasterCode: Data.HSNMasterCode || "",
+    Sortorder: Data.Sortorder || "",
+    Disable: Data.Disable == "Y" ? true : false,
+    DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
+  };
+  const StockinitialValues = {
+    Code: Data.Code || "",
+    Description: Data.Description || "",
+    BoxQuantity: Data.BoxQuantity || "",
+    PieceQuantity: Data.PieceQuantity || "",
+    PurchaseUOM: Data.PurchaseUOM || "",
+    ConsumptionUOM: Data.ConsumptionUOM || "",
+    ConversionQty: Data.ConversionQty || "",
+    GuidelinePrice: Data.GuidelinePrice || "",
+  };
 
   return (
     <>
@@ -386,7 +404,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -572,7 +590,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -589,7 +607,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -605,7 +623,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -680,7 +698,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -799,7 +817,9 @@ const EditItem = () => {
                           <Checkbox
                             name="ServiceAndMaintainence"
                             checked={values.ServiceAndMaintainence}
-                            onChange={handleChange}
+                            //onChange={handleChange}
+                            onChange={(e) => setFieldValue("ServiceAndMaintainence", e.target.checked)}
+
                           />
                         }
                         label="Service And Maintainence"
@@ -845,7 +865,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -862,9 +882,134 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
+                    {values.ServiceAndMaintainence &&
+                      (
+                        <>
+                          <TextField
+                            name="WarrantyPeriod"
+                            type="number"
+                            id="WarrantyPeriod"
+                            label="Warranty Period (In Months)"
+                            variant="standard"
+                            focused
+                            value={values.WarrantyPeriod}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.WarrantyPeriod && !!errors.WarrantyPeriod}
+                            helperText={touched.WarrantyPeriod && errors.WarrantyPeriod}
+                            autoFocus
+                            InputProps={{
+                              inputProps: { textAlign: "right" },
+                            }}
+                          />
+                          <TextField
+                            name="WarrantyEndPeriod"
+                            type="text"
+                            id="WarrantyEndPeriod"
+                            label="Warranty End Period"
+                            variant="standard"
+                            focused
+                            value={values.WarrantyEndPeriod}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.WarrantyEndPeriod && !!errors.WarrantyEndPeriod}
+                            helperText={touched.WarrantyEndPeriod && errors.WarrantyEndPeriod}
+                            autoFocus
+                          // InputProps={{
+                          //   inputProps: { textAlign: "right" },
+                          // }}
+                          />
+
+                          <TextField
+                            name="ExtendedWarranty"
+                            type="number"
+                            id="ExtendedWarranty"
+                            label="Extended Warranty(In Months)"
+                            variant="standard"
+                            focused
+                            value={values.ExtendedWarranty}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.ExtendedWarranty && !!errors.ExtendedWarranty}
+                            helperText={touched.ExtendedWarranty && errors.ExtendedWarranty}
+                            autoFocus
+                            InputProps={{
+                              inputProps: { textAlign: "right" },
+                            }}
+                          />
+                          <TextField
+                            name="ExtendedWarrantyEnd"
+                            type="number"
+                            id="ExtendedWarrantyEnd"
+                            label="Extended Warranty End(In Months)"
+                            variant="standard"
+                            focused
+                            value={values.ExtendedWarrantyEnd}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.ExtendedWarrantyEnd && !!errors.ExtendedWarrantyEnd}
+                            helperText={touched.ExtendedWarrantyEnd && errors.ExtendedWarrantyEnd}
+                            autoFocus
+                            InputProps={{
+                              inputProps: { textAlign: "right" },
+                            }}
+                          />
+                          <Box>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="ExtendedWarranty"
+                                  checked={values.ExtendedWarranty}
+                                  onChange={handleChange}
+                                />
+                              }
+                              label="Extended Warranty Applicable"
+                              sx={{
+                                marginTop: "20px",
+                                "@media (max-width:500px)": {
+                                  marginTop: 0,
+                                },
+                              }}
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="DemandBasis"
+                                  checked={values.DemandBasis}
+                                  onChange={handleChange}
+                                />
+                              }
+                              label="Demand Basis"
+                              sx={{
+                                marginTop: "20px",
+                                "@media (max-width:500px)": {
+                                  marginTop: 0,
+                                },
+                              }}
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name="OnSchedule"
+                                  checked={values.OnSchedule}
+                                  onChange={handleChange}
+                                />
+                              }
+                              label="On Schedule"
+                              sx={{
+                                marginTop: "20px",
+                                "@media (max-width:500px)": {
+                                  marginTop: 0,
+                                },
+                              }}
+                            />
+                          </Box>
+                        </>
+                      )}
+
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -878,7 +1023,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -900,7 +1045,7 @@ const EditItem = () => {
         {show == "2" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
-              initialValues={initialValues}
+              initialValues={StockinitialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   ItemSaveFn(values, resetForm);
@@ -953,7 +1098,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -1011,105 +1156,165 @@ const EditItem = () => {
                       helperText={touched.Description && errors.Description}
                       autoFocus
                     />
-                    <CheckinAutocomplete
-                      id="HSNMasterCode"
-                      name="HSNMasterCode"
-                      //label="HSNMasterCode"
+                    <TextField
+                      name="BoxQuantity"
+                      type="text"
+                      id="BoxQuantity"
                       label={
                         <span>
-                          HSN Code
+                          Box Quantity{" "}
                           <span
                             style={{
-                              color: "red",
                               fontSize: "20px",
+                              color: "red",
                             }}
                           >
                             *
                           </span>
                         </span>
                       }
-                      variant="outlined"
-                      value={values.HSNMasterCode}
-                      onChange={(newValue) => {
-                        setFieldValue("HSNMasterCode", newValue);
-                        console.log(newValue, "--newvalue HSNMasterCode");
-                        console.log(
-                          newValue.RecordID,
-                          "HSNMasterCode RecordID"
-                        );
-                      }}
-                      error={!!touched.HSNMasterCode && !!errors.HSNMasterCode}
-                      helperText={touched.HSNMasterCode && errors.HSNMasterCode}
-                      //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      //url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Project","Filter":"parentID='${CompanyID}' AND ByProduct='Y'","Any":""}}`}
-                    />
-                    {/* SORT ORDER */}
-                    <TextField
-                      fullWidth
                       variant="standard"
-                      type="number"
-                      label="Sort Order"
-                      value={values.Sortorder}
-                      id="Sortorder"
+                      focused
+                      value={values.BoxQuantity}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      name="Sortorder"
-                      // error={!!touched.Sortorder && !!errors.Sortorder}
-                      // helperText={touched.Sortorder && errors.Sortorder}
-
-                      sx={{ background: "" }}
+                      error={!!touched.BoxQuantity && !!errors.BoxQuantity}
+                      helperText={touched.BoxQuantity && errors.BoxQuantity}
+                      autoFocus
+                    />
+                    <TextField
+                      name="PieceQuantity"
+                      type="text"
+                      id="PieceQuantity"
+                      label={
+                        <span>
+                          Piece Quantity{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
                       focused
-                      onWheel={(e) => e.target.blur()}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 8);
-                      }}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                          //readOnly: mode == "V",
-                        },
-                      }}
+                      value={values.PieceQuantity}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.PieceQuantity && !!errors.PieceQuantity}
+                      helperText={touched.PieceQuantity && errors.PieceQuantity}
+                      autoFocus
+                    />
+                    <TextField
+                      name="PurchaseUOM"
+                      type="text"
+                      id="PurchaseUOM"
+                      label={
+                        <span>
+                          Purchase UOM{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.PurchaseUOM}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.PurchaseUOM && !!errors.PurchaseUOM}
+                      helperText={touched.PurchaseUOM && errors.PurchaseUOM}
+                      autoFocus
+                    />
+                    <TextField
+                      name="ConsumptionUOM"
+                      type="text"
+                      id="ConsumptionUOM"
+                      label={
+                        <span>
+                          Purchase UOM{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.ConsumptionUOM}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.ConsumptionUOM && !!errors.ConsumptionUOM}
+                      helperText={touched.ConsumptionUOM && errors.ConsumptionUOM}
+                      autoFocus
+                    />
+                    <TextField
+                      name="ConversionQty"
+                      type="number"
+                      id="ConversionQty"
+                      label={
+                        <span>
+                          Purchase UOM{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.ConversionQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.ConversionQty && !!errors.ConversionQty}
+                      helperText={touched.ConversionQty && errors.ConversionQty}
+                      autoFocus
                     />
 
-                    {/* CHECKBOX */}
-                    <Box>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="DeleteFlag"
-                            checked={values.DeleteFlag}
-                            onChange={handleChange}
-                          />
-                        }
-                        label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="Disable"
-                            checked={values.Disable}
-                            onChange={handleChange}
-                          />
-                        }
-                        label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
-                      />
-                    </Box>
+                    <TextField
+                      name="GuidelinePrice"
+                      type="number"
+                      id="GuidelinePrice"
+                      label={
+                        <span>
+                          Guideline Price (Box){" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.GuidelinePrice}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
+                      helperText={touched.GuidelinePrice && errors.GuidelinePrice}
+                      autoFocus
+                    />
+
+
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -1123,7 +1328,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>

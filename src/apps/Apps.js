@@ -241,6 +241,7 @@ function App() {
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1"
                     element={<ListviewSecondary />}
                   />
+
                   <Route
                     path="/Secondarylistview/skillglow/:accessID/:screenName/:parentID2/:parentID1/EditList Of Session/:id/:Mode"
                     element={<CreateSession />}
@@ -386,12 +387,17 @@ function App() {
 
                   {/* ITEM GROUP EDIT */}
                   <Route
-                    path="/:accessID/:screenName/EditItemGroup/:id/:Mode"
+                    path="/:accessID/:screenName/EditItem Group/:id/:Mode"
                     element={<EditItemGroup />}
+                  />
+                  {/* ITEM CATEGORY LIST VIEW*/}
+                  <Route
+                    path="/Secondarylistview/Item Group/:accessID/:screenName/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
                   />
                   {/* ITEM CATEGORY EDIT */}
                   <Route
-                    path="/ItemGroup/ItemCategory"
+                    path="/Secondarylistview/Item Group/:accessID/:screenName/:parentID2/:parentID1/EditItemCategory/:id/:Mode"
                     element={<EditItemCategory />}
                   />
                   {/* ITEM EDIT */}
@@ -404,9 +410,14 @@ function App() {
                     path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
                     element={<EditHSNCategory />}
                   />
+                  {/* HSN MASTER LIST VIEW*/}
+                  <Route
+                    path="/Secondarylistview/HSN/:accessID/:screenName/:parentID2/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
                   {/* HSN MASTER EDIT */}
                   <Route
-                    path="/HSNCategory/HSNMaster"
+                    path="/Secondarylistview/HSN/:accessID/:screenName/:parentID2/:parentID1/EditHSNMaster/:id/:Mode"
                     element={<EditHSNMaster />}
                   />
                   <Route

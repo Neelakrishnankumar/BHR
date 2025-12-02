@@ -86,21 +86,21 @@ const EditHSNCategory = () => {
   );
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
-    useEffect(() => {
-      fetch(process.env.PUBLIC_URL + "/validationcms.json")
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-          return res.json();
-        })
-        .then((data) => {
-          setErrorMsgData(data);
-          const schema = Yup.object().shape({
-            CategoryName: Yup.string().required(data.HSNCatgory.CategoryName),
-          });
-          setValidationSchema(schema);
-        })
-        .catch((err) => console.error("Error loading validationcms.json:", err));
-    }, [CompanyAutoCode, AssessmentType]);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          CategoryName: Yup.string().required(data.HSNCatgory.CategoryName),
+        });
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode, AssessmentType]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -212,8 +212,8 @@ const EditHSNCategory = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate("/Apps/TR316/HSN%20Category")}
                   >
-                    List Of HSN Category
-                    {/* ({state.BreadCrumb1}) */}
+                    {mode === "E" ? `List Of HSN Category
+                    (${state.BreadCrumb1})` : `List Of HSN Category`}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -297,7 +297,7 @@ const EditHSNCategory = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -384,7 +384,7 @@ const EditHSNCategory = () => {
                         },
                       }}
                     />
-                
+
                     {/* CHECKBOX */}
                     <Box>
                       <FormControlLabel
@@ -402,7 +402,7 @@ const EditHSNCategory = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -419,7 +419,7 @@ const EditHSNCategory = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -435,7 +435,7 @@ const EditHSNCategory = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>

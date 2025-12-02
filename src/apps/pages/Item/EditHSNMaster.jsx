@@ -64,7 +64,7 @@ const EditHSNMaster = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
   const EmpId = params.parentID3;
-  const QuestionID = params.parentID1;
+  const HSNCategoryID = params.parentID1;
 
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
@@ -96,14 +96,14 @@ const EditHSNMaster = () => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
           Description: Yup.string().required(data.HSNMaster.Description),
-          HSNIGST: Yup.string().number().required(data.HSNMaster.HSNIGST),
-          HSNCGST: Yup.string().number().required(data.HSNMaster.HSNCGST),
-          HSNSGST: Yup.string().number().required(data.HSNMaster.HSNSGST),
+          HSNIGST: Yup.number().typeError(data.HSNMaster.HSNIGST).required(data.HSNMaster.HSNIGST),
+          HSNCGST: Yup.number().typeError(data.HSNMaster.HSNCGST).required(data.HSNMaster.HSNCGST),
+          HSNSGST: Yup.number().typeError(data.HSNMaster.HSNSGST).required(data.HSNMaster.HSNSGST),
         });
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode, AssessmentType]);
+  }, [CompanyAutoCode]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -130,7 +130,11 @@ const EditHSNMaster = () => {
       RecordID: recID,
       CompanyID: CompanyID,
       Code: values.Code,
+      HSNCategoryID: HSNCategoryID,
       Description: values.Description || "",
+      IGST: values.HSNIGST,
+      CGST: values.HSNCGST,
+      SGST: values.HSNSGST,
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
@@ -177,9 +181,9 @@ const EditHSNMaster = () => {
   const initialValues = {
     Code: Data.Code || "",
     Description: Data.Description || "",
-    HSNIGST: Data.IGST || 0,
-    HSNCGST: Data.CGST || 0,
-    HSNSGST: Data.SGST || 0,
+    HSNIGST: Data.IGST || "",
+    HSNCGST: Data.CGST || "",
+    HSNSGST: Data.SGST || "",
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
@@ -219,7 +223,7 @@ const EditHSNMaster = () => {
                     onClick={() => navigate("/Apps/TR316/HSN%20Category")}
                   >
                     List Of HSN Category
-                    {/* ({state.BreadCrumb1}) */}
+                    ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -227,8 +231,10 @@ const EditHSNMaster = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate(-1)}
                   >
-                    List Of HSN Master
-                    {/* ({state.BreadCrumb1}) */}
+
+                    {mode === "E" ?
+                      `List Of HSN Master
+                    (${state.BreadCrumb2})` : "List Of HSN Master"}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -312,7 +318,7 @@ const EditHSNMaster = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -370,45 +376,17 @@ const EditHSNMaster = () => {
                       helperText={touched.Description && errors.Description}
                       autoFocus
                     />
-                    <TextField
-                      name="HSNIGST"
-                      type="number"
-                      id="HSNIGST"
-                      //label="IGST(In Percentage)"
-                      label={
-                        <span>
-                          IGST(In Percentage)
-                          <span style={{
-                            fontSize:"20px",
-                            color:"red"
-                          }}>
-                            *
-                          </span>
-                        </span>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.HSNIGST}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.HSNIGST && !!errors.HSNIGST}
-                      helperText={touched.HSNIGST && errors.HSNIGST}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                    />
+
                     <TextField
                       name="HSNCGST"
                       type="number"
                       id="HSNCGST"
-                       label={
+                      label={
                         <span>
                           CGST(In Percentage)
                           <span style={{
-                            fontSize:"20px",
-                            color:"red"
+                            fontSize: "20px",
+                            color: "red"
                           }}>
                             *
                           </span>
@@ -431,12 +409,12 @@ const EditHSNMaster = () => {
                       name="HSNSGST"
                       type="number"
                       id="HSNSGST"
-                       label={
+                      label={
                         <span>
                           SGST(In Percentage)
                           <span style={{
-                            fontSize:"20px",
-                            color:"red"
+                            fontSize: "20px",
+                            color: "red"
                           }}>
                             *
                           </span>
@@ -449,6 +427,35 @@ const EditHSNMaster = () => {
                       onChange={handleChange}
                       error={!!touched.HSNSGST && !!errors.HSNSGST}
                       helperText={touched.HSNSGST && errors.HSNSGST}
+                      InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
+                    />
+                    <TextField
+                      name="HSNIGST"
+                      type="number"
+                      id="HSNIGST"
+                      //label="IGST(In Percentage)"
+                      label={
+                        <span>
+                          IGST(In Percentage)
+                          <span style={{
+                            fontSize: "20px",
+                            color: "red"
+                          }}>
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.HSNIGST}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.HSNIGST && !!errors.HSNIGST}
+                      helperText={touched.HSNIGST && errors.HSNIGST}
                       InputProps={{
                         inputProps: {
                           style: { textAlign: "right" },
@@ -496,13 +503,13 @@ const EditHSNMaster = () => {
                           />
                         }
                         label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -513,13 +520,13 @@ const EditHSNMaster = () => {
                           />
                         }
                         label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -535,7 +542,7 @@ const EditHSNMaster = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>

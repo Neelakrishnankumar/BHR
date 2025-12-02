@@ -191,7 +191,155 @@ export const CheckinAutocomplete = ({
     />
   );
 };
+//ITEM - HSN CATEGORY
+export const HSNCategoryAutocomplete = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.HSNCategory === value.HSNCategory}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.HSNCategory}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
+
+//ITEM - HSN MASTER
+export const HSNMasterAutocomplete = ({
+  value = null,
+  onChange,
+  url,
+  height = 20,
+  defaultValue,
+  ...props
+}) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data.rows || [];
+        setOptions(data);
+      } catch (err) {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      size="small"
+      fullWidth
+      limitTags={1}
+      options={options}
+      loading={loading}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.HSNMaster === value.HSNMaster}
+      onChange={(event, newValue) => onChange(newValue)}
+      getOptionLabel={(option) => option.HSNMaster}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={props.label || "Select Options"}
+          // error={!!error}
+          // helperText={error}
+
+          {...props}
+          variant="standard"
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+};
 export const OrderItemAutocomplete = ({
   value = null,
   onChange,
@@ -966,9 +1114,9 @@ export function CusListRunGrpOptimizedAutocomplete({
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-    const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
- useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const data = {
@@ -1161,18 +1309,18 @@ export function MultiSelectDropdown1({
   //     setSelectedValues(arr);
   //   }
   // }, [apiValue]);
-useEffect(() => {
-  if (apiValue && apiValue.trim() !== "") {
-    const arr = apiValue
-      .split(",")
-      .map(v => v.trim())
-      .filter(v => v !== "");
+  useEffect(() => {
+    if (apiValue && apiValue.trim() !== "") {
+      const arr = apiValue
+        .split(",")
+        .map(v => v.trim())
+        .filter(v => v !== "");
 
-    setSelectedValues(arr); // ["1","2"]
-  } else {
-    setSelectedValues([]);  // VERY IMPORTANT → clears previous ID
-  }
-}, [apiValue]);
+      setSelectedValues(arr); // ["1","2"]
+    } else {
+      setSelectedValues([]);  // VERY IMPORTANT → clears previous ID
+    }
+  }, [apiValue]);
 
 
   // User selection -> send comma-separated string
@@ -1201,26 +1349,26 @@ useEffect(() => {
         onChange={handleSelectChange}
         input={<OutlinedInput label={name} />}
         renderValue={(selected) => {
-  if (selected.length === 0) return null;
+          if (selected.length === 0) return null;
 
-  return selected
-    .map((id) => {
-      const match = data.find((x) => String(x.ID) === String(id));
-      return match ? match.Name : id;
-    })
-    .join(", ");
-}}
+          return selected
+            .map((id) => {
+              const match = data.find((x) => String(x.ID) === String(id));
+              return match ? match.Name : id;
+            })
+            .join(", ");
+        }}
 
-        // renderValue={(selected) => {
-        //   if (selected.length === 0) return null;
+      // renderValue={(selected) => {
+      //   if (selected.length === 0) return null;
 
-        //   return selected
-        //     .map((id) => {
-        //       const match = data.find((x) => x.ID === id);
-        //       return match ? match.Name : id;
-        //     })
-        //     .join(", ");
-        // }}
+      //   return selected
+      //     .map((id) => {
+      //       const match = data.find((x) => x.ID === id);
+      //       return match ? match.Name : id;
+      //     })
+      //     .join(", ");
+      // }}
       >
         {data?.map((item) => (
           // <MenuItem key={item.ID} value={item.ID}>

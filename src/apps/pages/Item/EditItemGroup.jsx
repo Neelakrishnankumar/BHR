@@ -86,21 +86,21 @@ const EditItemGroup = () => {
   );
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
-    useEffect(() => {
-      fetch(process.env.PUBLIC_URL + "/validationcms.json")
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-          return res.json();
-        })
-        .then((data) => {
-          setErrorMsgData(data);
-          const schema = Yup.object().shape({
-            Description: Yup.string().required(data.ItemGroup.Description),
-          });
-          setValidationSchema(schema);
-        })
-        .catch((err) => console.error("Error loading validationcms.json:", err));
-    }, [CompanyAutoCode, AssessmentType]);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        const schema = Yup.object().shape({
+          Description: Yup.string().required(data.ItemGroup.Description),
+        });
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, [CompanyAutoCode, AssessmentType]);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
@@ -219,10 +219,10 @@ const EditItemGroup = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR315/ItemGroup")}
+                    onClick={() => navigate("/Apps/TR315/Item%20Group")}
                   >
-                    List Of Item Group
-                    {/* ({state.BreadCrumb1}) */}
+                    {mode === "E" ? `List Of Item Group
+                    (${state.BreadCrumb1})` : `List Of Item Group`}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -306,7 +306,7 @@ const EditItemGroup = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -470,13 +470,13 @@ const EditItemGroup = () => {
                           />
                         }
                         label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -487,13 +487,13 @@ const EditItemGroup = () => {
                           />
                         }
                         label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -509,7 +509,7 @@ const EditItemGroup = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
