@@ -325,7 +325,7 @@ const child = {
         //   UGA_VIEW: true,
         //   UGA_ACCESSIDS: "TR027",
         // },
-         {
+        {
           name: "Overhead Type",
           id: 47,
           url: "./TR292/Overhead Type",
@@ -359,7 +359,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR085",
         },
-        
+
         {
           name: "Holiday List",
           id: 54668,
@@ -415,7 +415,7 @@ const child = {
         },
       ],
     },
-  {
+    {
       name: "CRM",
       id: 33,
       MenuID: "CRM1800",
@@ -426,10 +426,10 @@ const child = {
         </Tooltip>
       ),
       children: [
-         {
+        {
           name: "Item",
           id: 43468,
-          url: "./TR315/ItemGroup",
+          url: "./TR315/Item Group",
           icon: (
             <Tooltip title="Item">
               <PersonSearchIcon color="info" />
@@ -443,7 +443,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR315",
         },
-         {
+        {
           name: "HSN",
           id: 43468,
           url: "./TR316/HSN Category",
@@ -460,7 +460,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR316",
         },
-     {
+        {
           name: "Party",
           id: 4346895,
           url: "./TR243/Party",
@@ -660,7 +660,7 @@ const child = {
       ],
     },
 
-   
+
 
     // {
     //   name: "Assessment",
@@ -728,11 +728,11 @@ const child = {
     //       UGA_VIEW: true,
     //       UGA_ACCESSIDS: "TR122",
     //     },
-        
+
     //   ],
     // },
 
-     {
+    {
       name: "Assessment",
       id: 4579,
       MenuID: "ST1609",
@@ -743,14 +743,14 @@ const child = {
         </Tooltip>
       ),
       url: "/Apps/TR299/List Of Assessment Type",
- UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR122",
-     
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR122",
+
     },
     {
       name: "Settings",

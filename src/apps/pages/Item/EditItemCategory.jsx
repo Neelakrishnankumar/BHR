@@ -50,7 +50,7 @@ import toast from "react-hot-toast";
 //   SubordinateAppraisalPayload,
 // } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
-import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, HSNCategoryAutocomplete, HSNMasterAutocomplete } from "../../../ui-components/global/Autocomplete";
 
 const EditItemCategory = () => {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const EditItemCategory = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
   const EmpId = params.parentID3;
-  const QuestionID = params.parentID1;
+  const parentID1 = params.parentID1;
 
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
@@ -87,6 +87,11 @@ const EditItemCategory = () => {
   );
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+
+  const [selectedHSNCategoryID, setSelectedHSNCategoryID] = useState(null);
+  const curDate = new Date().toISOString().split("T")[0];
+
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -96,8 +101,9 @@ const EditItemCategory = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.ItemCategory.Description),
-          HSNMasterCode: Yup.string().required(data.ItemCategory.HSNMasterCode),
+          //Description: Yup.required(data.ItemCategory.Description).nullable(),
+          // HSNMaster: Yup.required(data.ItemCategory.HSNMaster).nullable(),
+          // HSNCategory: Yup.string().required(data.ItemCategory.HSNCategory).nullable(),
         });
         setValidationSchema(schema);
       })
@@ -107,7 +113,6 @@ const EditItemCategory = () => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
 
-  const curDate = new Date().toISOString().split("T")[0];
   const ItemCategorySaveFn = async (values, delAction) => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
@@ -128,8 +133,13 @@ const EditItemCategory = () => {
     const idata = {
       RecordID: recID,
       CompanyID: CompanyID,
+      ItemGroupID: parentID1,
+      Date: mode === "A" ? curDate : Data.Date,
+      Image: "",
       Code: values.Code,
       Description: values.Description || "",
+      HSNCode: values.HSNCategory.RecordID || "",
+      HSNMasterRecordID: values.HSNMaster.RecordID || "",
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
@@ -176,7 +186,18 @@ const EditItemCategory = () => {
   const initialValues = {
     Code: Data.Code || "",
     Description: Data.Description || "",
-    HSNMasterCode: Data.HSNMasterCode || "",
+    HSNCategory: Data.RecordID
+      ? {
+        RecordID: Data.RecordID,
+        HSNCategory: Data.HSNCategory,
+      }
+      : null,
+    HSNMaster: Data.RecordID
+      ? {
+        RecordID: Data.RecordID,
+        HSNMaster: Data.HSNMaster,
+      }
+      : null,
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
@@ -213,10 +234,10 @@ const EditItemCategory = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR315/ItemGroup")}
+                    onClick={() => navigate("/Apps/TR315/Item%20Group")}
                   >
                     List Of Item Group
-                    {/* ({state.BreadCrumb1}) */}
+                    ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -224,8 +245,8 @@ const EditItemCategory = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate(-1)}
                   >
-                    List Of Item Category
-                    {/* ({state.BreadCrumb1}) */}
+                    {mode === "E" ? `List Of Item Category
+                    (${state.BreadCrumb2})` : `List Of Item Category`}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -280,7 +301,7 @@ const EditItemCategory = () => {
                     display="grid"
                     gap={formGap}
                     padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    gridTemplateColumns="repeat(2 , minmax(0,1fr))"
                     sx={{
                       "& > div": {
                         gridColumn: isNonMobile ? undefined : "span 2",
@@ -309,7 +330,7 @@ const EditItemCategory = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -367,13 +388,14 @@ const EditItemCategory = () => {
                       helperText={touched.Description && errors.Description}
                       autoFocus
                     />
-                    <CheckinAutocomplete
-                      id="HSNMasterCode"
-                      name="HSNMasterCode"
-                      //label="HSNMasterCode"
+
+                    <HSNCategoryAutocomplete
+                      id="HSNCategory"
+                      name="HSNCategory"
+                      //label="HSNCategory"
                       label={
                         <span>
-                          HSN Code
+                          HSN Category
                           <span
                             style={{
                               color: "red",
@@ -385,20 +407,46 @@ const EditItemCategory = () => {
                         </span>
                       }
                       variant="outlined"
-                      value={values.HSNMasterCode}
+                      value={values.HSNCategory}
                       onChange={(newValue) => {
-                        setFieldValue("HSNMasterCode", newValue);
-                        console.log(newValue, "--newvalue HSNMasterCode");
-                        console.log(
-                          newValue.RecordID,
-                          "HSNMasterCode RecordID"
-                        );
+                        setFieldValue("HSNCategory", newValue);
+
+                        if (newValue) {
+                          console.log(newValue.RecordID, "HSNCategory RecordID");
+                          setSelectedHSNCategoryID(newValue.RecordID);
+                        } else {
+                          setSelectedHSNCategoryID(null);
+                        }
                       }}
-                      error={!!touched.HSNMasterCode && !!errors.HSNMasterCode}
-                      helperText={touched.HSNMasterCode && errors.HSNMasterCode}
-                      //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      //url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Project","Filter":"parentID='${CompanyID}' AND ByProduct='Y'","Any":""}}`}
+                      error={!!touched.HSNCategory && !!errors.HSNCategory}
+                      helperText={touched.HSNCategory && errors.HSNCategory}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2136","ScreenName":"Item Category","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+
                     />
+
+                    <HSNMasterAutocomplete
+                      id="HSNMaster"
+                      name="HSNMaster"
+                      label={
+                        <>
+                          HSN Master
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="outlined"
+                      value={values.HSNMaster}
+                      onChange={(newValue) => {
+                        setFieldValue("HSNMaster", newValue);
+                        console.log(newValue, "--newvalue HSNMaster");
+                        console.log(newValue.RecordID, "HSNMaster RecordID");
+                      }}
+                      error={!!touched.HSNMaster && !!errors.HSNMaster}
+                      helperText={touched.HSNMaster && errors.HSNMaster}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2135","ScreenName":"Item Category","Filter":"CompanyID=${CompanyID} AND HSNCategoryID=${selectedHSNCategoryID}","Any":""}}`}
+                    />
+
                     {/* SORT ORDER */}
                     <TextField
                       fullWidth
@@ -440,13 +488,13 @@ const EditItemCategory = () => {
                           />
                         }
                         label="Delete"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -457,13 +505,13 @@ const EditItemCategory = () => {
                           />
                         }
                         label="Disable"
-                        sx={{
-                          marginTop: "20px",
-                          "@media (max-width:500px)": {
-                            marginTop: 0,
-                          },
-                        }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      // sx={{
+                      //   marginTop: "20px",
+                      //   "@media (max-width:500px)": {
+                      //     marginTop: 0,
+                      //   },
+                      // }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -479,7 +527,7 @@ const EditItemCategory = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>

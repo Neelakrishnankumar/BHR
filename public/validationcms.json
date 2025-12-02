@@ -46,7 +46,7 @@
     "frequency": "Please Enter the Frequency",
     "OverheadType": "Please Enter the OverheadType"
   },
-    "Overheadtype": {
+  "Overheadtype": {
     "code": "Please Enter the Code",
     "name": "Please Enter the Name"
   },
@@ -61,7 +61,7 @@
     "mobilenumber": "Please Enter the Contact Mobile Number",
     "Pancardnumber": "Invalid Pan Card Number",
     "gstnumber": "Invalid GST Number",
-    "locality" : "Please Enter the Locality"
+    "locality": "Please Enter the Locality"
   },
   "BankDetails": {
     "bankname": "Please Enter the Bank Name",
@@ -90,7 +90,8 @@
   },
   "ItemCategory": {
     "Description": "Please Enter the Item Description",
-    "HSNMasterCode": "Please Enter the Item Description"
+    "HSNMaster": "Please Select HSN Master",
+    "HSNCatgory": "Please Select HSN Category"
   },
   "HSNCatgory": {
     "CategoryName": "Please Enter the HSN Category Name"
@@ -149,13 +150,12 @@
   },
   "AdvancePayment": {
     "Amount": "Please Enter the amount",
-    "paymentdate": "Please select a date"  
+    "paymentdate": "Please select a date"
   },
-   "Locality": {
+  "Locality": {
     "code": "Please Enter the Code",
     "name": "Please Enter the Name",
     "pincode": "Please Enter the Pincode"
-    
   },
   "CheckIn": {
     "location": "Please Enter the Location",
