@@ -533,6 +533,7 @@ const Editemployee = () => {
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
     joindate: Data.DateOfJoin,
+    dateofbirth: Data.DateofBirth,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
     SortOrder: Data.SortOrder || 0,
@@ -782,6 +783,7 @@ const Editemployee = () => {
       Sal: "",
       EmpType: values.employeetype,
       DateOfJoin: values.joindate,
+      DateofBirth: values.dateofbirth,
       DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
@@ -1251,7 +1253,7 @@ const Editemployee = () => {
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "slno",
-      // "Vendors",
+      "VendorName",
       "Description",
       "BillingUnits",
       "UnitRate",
@@ -1558,6 +1560,7 @@ const Editemployee = () => {
     sgst: "",
     igst: "",
     tds: "",
+    shift:""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1641,6 +1644,7 @@ const Editemployee = () => {
         sgst: "",
         igst: "",
         tds: "",
+        shift:""
       });
 
       setLeaveCondata({
@@ -1752,6 +1756,13 @@ const Editemployee = () => {
           sgst: rowData.Sgst,
           igst: rowData.Igst,
           tds: rowData.Tds,
+          shift:  rowData.ShiftID
+            ? {
+              RecordID: rowData.ShiftID,
+              Code: rowData.ShiftCode,
+              Name: rowData.ShiftName,
+            }
+            : null,
         });
         setselectLeaveconLTData({
           RecordID: rowData.LeaveTypeID,
@@ -1803,6 +1814,11 @@ const Editemployee = () => {
           RecordID: rowData.VendorID,
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
+        });
+         setFieldValue("shift", {
+          RecordID: rowData.ShiftID,
+          Code: rowData.ShiftCode,
+          Name: rowData.ShiftName,
         });
       }
     }
@@ -2104,7 +2120,7 @@ const Editemployee = () => {
             : contractorData.units === "Month"
               ? "MS"
               : "",
-    Hsn: contractorData.hsnCode,
+    Hsn: funMode === "A"? "000000" : contractorData.hsnCode,
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
     Igst: contractorData.igst,
@@ -2164,19 +2180,22 @@ const Editemployee = () => {
             ? values?.customer?.Name || ""
             : "",
       Description: values.Description,
-      Hsn: values.Hsn,
+      Hsn: values.Hsn || "000000",
       Gst: values.Gst,
       Sgst: values.Sgst,
       Igst: values.Igst,
       Tds: values.TDS,
       // Vendors: show == "8" ? "Y" : "N",
-      // Customer: show == "11" ? "Y" : "N",
+      // Customer: show == "11" ? "Y" : "N",     
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
       BillingUnits: values.BillingUnits,
       UnitRate: values.UnitRate,
       NotificationAlertDate: values.NotificationAlertDate,
       RenewableNotification: values.RenewableNotification,
+      ShiftID: values?.shift?.RecordID || 0,
+      ShiftCode: values?.shift?.Code || "",
+      ShiftName: values?.shift?.Name || "",
     };
     console.log(idata, "--contract idata");
     const isStudent =
@@ -2188,7 +2207,7 @@ const Editemployee = () => {
       : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
     console.log("filterCondition", Data.DesignDesc);
     const response = await dispatch(
-      explorePostData({ accessID: "TR244", action, idata })
+      explorePostData({ accessID: "TR244V1", action, idata })
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
@@ -3465,7 +3484,23 @@ const Editemployee = () => {
                           />
                         </Stack>
                       )}
-
+                    <TextField
+                        name="dateofbirth"
+                        type="date"
+                        id="dateofbirth"
+                        label="Date of Birth"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.dateofbirth}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.dateofbirth && !!errors.dateofbirth}
+                        helperText={touched.dateofbirth && errors.dateofbirth}
+                        sx={{ background: "" }}
+                      // required
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
                       <TextField
                         name="joindate"
                         type="date"
@@ -8707,7 +8742,32 @@ const Editemployee = () => {
                       //     .slice(0, 11);
                       // }}
                       />
-
+                      <CheckinAutocomplete
+                        id="shift"
+                        name="shift"
+                        label={
+                          <span>
+                            Shift
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        variant="outlined"
+                        value={values.shift}
+                        error={!!touched.shift && !!errors.shift}
+                        helperText={touched.shift && errors.shift}
+                        onChange={(newValue) => {          
+                          setFieldValue("shift", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          })               
+                          console.log(newValue, "--newvalue shift");
+                          console.log(newValue.RecordID, "shift RecordID");
+                        }}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      />
                       <TextField
                         name="FromPeriod"
                         type="date"

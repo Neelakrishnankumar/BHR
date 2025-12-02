@@ -17,6 +17,7 @@ import {
   Select,
   Paper,
   Breadcrumbs,
+  Grid
 } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import store from "../../../index";
@@ -360,17 +361,17 @@ const Editvendor = () => {
     Pancardnumber: data.PanCardNo || "",
     locality: data.LocalityID
       ? {
-          RecordID: data.LocalityID,
-          Code: data.LocalityCode,
-          Name: data.LocalityName,
-        }
+        RecordID: data.LocalityID,
+        Code: data.LocalityCode,
+        Name: data.LocalityName,
+      }
       : null,
     ReferenceBy: data.ReferenceID
       ? {
-          RecordID: data.ReferenceID,
-          Code: data.ReferenceByName,
-          Name: data.ReferenceByName,
-        }
+        RecordID: data.ReferenceID,
+        Code: data.ReferenceByName,
+        Name: data.ReferenceByName,
+      }
       : null,
     address: data.Address || "",
     maplink: data.MapLocation || "",
@@ -397,8 +398,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     // var isCheck = "N";
     // if (values.disable == true) {
     //   isCheck = "Y";
@@ -466,6 +467,7 @@ const Editvendor = () => {
     gstnumber: partyRegistergetdata.GstNo || "",
     date: partyRegistergetdata.RegistrationDate || "",
     verifieddate: partyRegistergetdata.VerifyConfirmDate || "",
+    aadharcardnumber: partyRegistergetdata.aadharcardnumber || ""
   };
 
   const RegisterFnsave = async (values, del) => {
@@ -482,8 +484,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: recID,
       PanCardNo: values.Pancardnumber,
@@ -492,6 +494,7 @@ const Editvendor = () => {
       GstImg: gstImage || values.GstImg,
       RegistrationDate: values.date,
       VerifyConfirmDate: values.verifieddate,
+      aadharcardnumber: values.aadharcardnumber
     };
 
     try {
@@ -517,11 +520,11 @@ const Editvendor = () => {
     name: partyDefaultgetdata.Name || "",
     Product: partyDefaultgetdata.DefaultProductID && partyDefaultgetdata.DefaultProductID !== "0"
       ? {
-          RecordID: partyDefaultgetdata.DefaultProductID,
-          Name: partyDefaultgetdata.DefaultProductName,
-        }
+        RecordID: partyDefaultgetdata.DefaultProductID,
+        Name: partyDefaultgetdata.DefaultProductName,
+      }
       : partyDefaultgetdata.DefaultProductID == null ? []
-      : null,
+        : null,
     defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
     DefaultPaymentMode: partyDefaultgetdata.DefaultPaymentMode || "",
     // DefaultPaymentMode:
@@ -541,8 +544,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: recID,
       DefaultProduct: values.Product.RecordID || 0,
@@ -587,8 +590,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       VendorID: recID,
@@ -636,8 +639,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       VendorID: recID,
@@ -721,8 +724,8 @@ const Editvendor = () => {
                 >
                   {/* Party ({state.PName}) */}
                   {mode === "E"
-                      ? `Party(${state.PName})`
-                      : "Party(New)"}
+                    ? `Party(${state.PName})`
+                    : "Party(New)"}
                 </Typography>
                 {show == "1" ? (
                   <Typography
@@ -878,7 +881,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -982,7 +985,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
 
                   <TextField
@@ -1425,7 +1428,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1682,13 +1685,138 @@ const Editvendor = () => {
                     }}
                     autoFocus
                   />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    id="aadharcardnumber1"
+                    name="aadharcardnumber1"
+                    value={values.aadharcardnumber1}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Aadhar Card No"
+                    focused
+                    // onWheel={(e) => e.target.blur()}
+                    error={
+                      touched.aadharcardnumber1 &&
+                      Boolean(errors.aadharcardnumber1)
+                    }
+                    helperText={
+                      touched.aadharcardnumber1 && errors.aadharcardnumber1
+                    }
+                  />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="number"
+                    id="aadharcardnumber2"
+                    name="aadharcardnumber2"
+                    value={values.aadharcardnumber2}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Aadhar Card No"
+                    focused
+                    // onWheel={(e) => e.target.blur()}
+                    error={
+                      touched.aadharcardnumber2 &&
+                      Boolean(errors.aadharcardnumber2)
+                    }
+                    helperText={
+                      touched.aadharcardnumber2 && errors.aadharcardnumber2
+                    }
+                  />
+
                 </Box>
+                <Grid container spacing={2}>
+                  {/* ID Proof (Left side – 50%) */}
+                  <Grid item xs={12} md={6}>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Tooltip title="ID Proof">
+                        <IconButton
+                          size="small"
+                          color="warning"
+                          aria-label="upload picture"
+                          component="label"
+                        >
+                          <input
+                            hidden
+                            accept="all/*"
+                            type="file"
+                            onChange={getFilepanChange}
+                          />
+                          <PictureAsPdfOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => {
+                          data.PanImg || panImage
+                            ? window.open(
+                              panImage
+                                ? store.getState().globalurl.attachmentUrl + panImage
+                                : store.getState().globalurl.attachmentUrl + data.PanImg,
+                              "_blank"
+                            )
+                            : toast.error("Please Upload File");
+                        }}
+                      >
+                        ID Proof View
+                      </Button>
+                    </Box>
+                  </Grid>
+
+                  {/* GST Proof (Right side – 50%) */}
+                  <Grid item xs={12} md={6}>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Tooltip title="ID Proof">
+                        <IconButton
+                          size="small"
+                          color="warning"
+                          aria-label="upload picture"
+                          component="label"
+                        >
+                          <input
+                            hidden
+                            accept="all/*"
+                            type="file"
+                            onChange={getFilegstChange}
+                          />
+                          <PictureAsPdfOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => {
+                          data.GstImg || gstImage
+                            ? window.open(
+                              gstImage
+                                ? store.getState().globalurl.attachmentUrl + gstImage
+                                : store.getState().globalurl.attachmentUrl + data.GstImg,
+                              "_blank"
+                            )
+                            : toast.error("Please Upload File");
+                        }}
+                      >
+                        ID Proof View
+                      </Button>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+
                 <Box
                   display="flex"
                   justifyContent="flex-end"
                   padding={1}
                   gap="20px"
                 >
+
+                  {/* GSTimage */}
+
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -1797,7 +1925,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -2249,7 +2377,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                          // autoFocus
+                        // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2369,7 +2497,27 @@ const Editvendor = () => {
                         sx={{
                           backgroundColor: "#ffffff",
                         }}
-                        // autoFocus
+                      // autoFocus
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        id="aadharcardnumber"
+                        name="aadharcardnumber"
+                        value={values.aadharcardnumber}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Aadhar Card No"
+                        focused
+                        // onWheel={(e) => e.target.blur()}
+                        error={
+                          touched.aadharcardnumber &&
+                          Boolean(errors.aadharcardnumber)
+                        }
+                        helperText={
+                          touched.aadharcardnumber && errors.aadharcardnumber
+                        }
                       />
                       <TextField
                         name="date"
@@ -2391,7 +2539,7 @@ const Editvendor = () => {
                             backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                           },
                         }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="verifieddate"
@@ -2444,13 +2592,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.PanImg || panImage
                             ? window.open(
+                              panImage
+                                ? store.getState().globalurl.attachmentUrl +
                                 panImage
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      panImage
-                                  : store.getState().globalurl.attachmentUrl +
-                                      data.PanImg,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                data.PanImg,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2480,13 +2628,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.GstImg || gstImage
                             ? window.open(
+                              gstImage
+                                ? store.getState().globalurl.attachmentUrl +
                                 gstImage
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      gstImage
-                                  : store.getState().globalurl.attachmentUrl +
-                                      data.GstImg,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                data.GstImg,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2582,7 +2730,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                          // autoFocus
+                        // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2686,7 +2834,7 @@ const Editvendor = () => {
                             textAlign: "right",
                           },
                         }}
-                        // autoFocus
+                      // autoFocus
                       />
                       {/* <TextField
                         name="DefaultPaymentMode"
