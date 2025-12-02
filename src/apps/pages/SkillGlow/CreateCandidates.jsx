@@ -376,7 +376,7 @@ const CreateCandidates = () => {
                 setFieldTouched,
               }) => (
                 <Form onSubmit={handleSubmit}>
-                  {JSON.stringify(errors)}
+                  {/* {JSON.stringify(errors)} */}
                   <Box
                     display="grid"
                     gap={formGap}

@@ -93,9 +93,7 @@ const EditOrderitem = () => {
           product: Yup.object()
             .nullable()
             .shape({
-              RecordID: Yup.string().required(
-                data.OrderItem.product
-              ),
+              RecordID: Yup.string().required(data.OrderItem.product),
               Name: Yup.string().nullable(), // optional
             })
             .required(data.OrderItem.product),
@@ -118,18 +116,27 @@ const EditOrderitem = () => {
   useEffect(() => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
   }, [location.key]);
+
   const InitialValue = {
     quantity: data.Quantity,
     price:
       mode === "A"
         ? DefaultProductDeliveryChargeGetData?.Price || 0
         : data.Price || 0,
-    netprice: data.NetPrice,
+    //netprice: data.NetPrice,
+    netprice:
+      data.NetPrice ||
+      (data.Discount == 0
+        ? (mode === "A"
+            ? DefaultProductDeliveryChargeGetData?.Price
+            : data.Price) || 0
+        : 0),
     amount: data.Amount,
-    discount: data.Discount,
+    discount: data.Discount || 0,
     product:
       mode === "A"
-        ? DefaultProductDeliveryChargeGetData?.RecordID && DefaultProductDeliveryChargeGetData?.RecordID !== "0"
+        ? DefaultProductDeliveryChargeGetData?.RecordID &&
+          DefaultProductDeliveryChargeGetData?.RecordID !== "0"
           ? {
               RecordID: DefaultProductDeliveryChargeGetData.RecordID,
               Name: DefaultProductDeliveryChargeGetData.Name,
@@ -389,15 +396,56 @@ const EditOrderitem = () => {
               setFieldValue,
               setFieldTouched,
             }) => {
+              // const recalc = (changedField, newValue) => {
+              //   const price = parseFloat(values.price || 0);
+              //   const net = parseFloat(values.netprice || 0);
+              //   const qty = parseFloat(values.quantity || 0);
+
+              //   switch (changedField) {
+              //     case "discount": {
+              //       const disc = parseFloat(newValue || 0);
+              //       const newNet = price - (price * disc) / 100;
+              //       setFieldValue("discount", newValue);
+              //       setFieldValue("netprice", newNet.toFixed(2));
+              //       setFieldValue("amount", (newNet * qty).toFixed(2));
+              //       break;
+              //     }
+
+              //     case "quantity": {
+              //       const q = parseFloat(newValue || 0);
+              //       setFieldValue("quantity", newValue);
+              //       setFieldValue("amount", (net * q).toFixed(2));
+              //       break;
+              //     }
+
+              //     case "amount": {
+              //       const newAmt = parseFloat(newValue || 0);
+              //       const newNet = qty > 0 ? newAmt / qty : 0;
+              //       const newDisc = price
+              //         ? ((price - newNet) / price) * 100
+              //         : 0;
+
+              //       setFieldValue("amount", newValue);
+              //       setFieldValue("netprice", newNet.toFixed(2));
+              //       setFieldValue("discount", newDisc.toFixed(2));
+              //       break;
+              //     }
+              //   }
+              // };
               const recalc = (changedField, newValue) => {
                 const price = parseFloat(values.price || 0);
-                const net = parseFloat(values.netprice || 0);
                 const qty = parseFloat(values.quantity || 0);
+                const discount = parseFloat(values.discount || 0);
+                const net = parseFloat(values.netprice || 0);
+
+                // 🔥 Helper → calculate net from price & discount
+                const computeNet = (p, d) => p - (p * d) / 100;
 
                 switch (changedField) {
                   case "discount": {
                     const disc = parseFloat(newValue || 0);
-                    const newNet = price - (price * disc) / 100;
+                    const newNet = computeNet(price, disc);
+
                     setFieldValue("discount", newValue);
                     setFieldValue("netprice", newNet.toFixed(2));
                     setFieldValue("amount", (newNet * qty).toFixed(2));
@@ -407,7 +455,8 @@ const EditOrderitem = () => {
                   case "quantity": {
                     const q = parseFloat(newValue || 0);
                     setFieldValue("quantity", newValue);
-                    setFieldValue("amount", (net * q).toFixed(2));
+                    const netp = discount === 0 ? price : net;
+                    setFieldValue("amount", (netp * q).toFixed(2));
                     break;
                   }
 
@@ -421,6 +470,24 @@ const EditOrderitem = () => {
                     setFieldValue("amount", newValue);
                     setFieldValue("netprice", newNet.toFixed(2));
                     setFieldValue("discount", newDisc.toFixed(2));
+                    break;
+                  }
+
+                  // ⭐ SPECIAL CASE → When PRICE changes (due to product selection)
+                  case "price": {
+                    const newPrice = parseFloat(newValue || 0);
+
+                    setFieldValue("price", newValue);
+
+                    // default behaviour: if discount = 0 → net price = price
+                    if (discount === 0) {
+                      setFieldValue("netprice", newPrice.toFixed(2));
+                      setFieldValue("amount", (newPrice * qty).toFixed(2));
+                    } else {
+                      const newNet = computeNet(newPrice, discount);
+                      setFieldValue("netprice", newNet.toFixed(2));
+                      setFieldValue("amount", (newNet * qty).toFixed(2));
+                    }
                     break;
                   }
                 }

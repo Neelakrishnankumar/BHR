@@ -139,6 +139,8 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
+import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
+
 const child = {
   data: [
     {
@@ -424,6 +426,40 @@ const child = {
         </Tooltip>
       ),
       children: [
+         {
+          name: "Item",
+          id: 43468,
+          url: "./TR315/ItemGroup",
+          icon: (
+            <Tooltip title="Item">
+              <PersonSearchIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR315",
+        },
+         {
+          name: "HSN",
+          id: 43468,
+          url: "./TR316/HSN Category",
+          icon: (
+            <Tooltip title="HSN">
+              <QrCodeScannerOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR316",
+        },
      {
           name: "Party",
           id: 4346895,

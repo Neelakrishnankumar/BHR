@@ -168,6 +168,11 @@ import EditOrder from "./pages/HR/Editorder";
 import EditOrderitem from "./pages/HR/Editorderitem";
 import EditPaymentStatus from "./pages/HR/EditPaymentStatus";
 import EditAdvancePayment from "./pages/HR/EditPaymentStatus";
+import EditItemGroup from "./pages/Item/EditItemGroup";
+import EditHSNCategory from "./pages/Item/EditHSNCategory";
+import EditHSNMaster from "./pages/Item/EditHSNMaster";
+import EditItemCategory from "./pages/Item/EditItemCategory";
+import EditItem from "./pages/Item/EditItem";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -368,18 +373,42 @@ function App() {
                     element={<ListviewSecondary />}
                   />
 
-
                   {/* APPRAISAL SCHEDULE */}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID3/:accessID2/:parentID2/:accessID1/AppraisalSchedule/AppraisalScheduleEMP/:parentID1"
                     element={<AppraisalSchedule />}
                   />
-                   {/* APPRAISAL SCHEDULE LIST*/}
+                  {/* APPRAISAL SCHEDULE LIST*/}
                   <Route
                     path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID3/:accessID2/:parentID2/:accessID1/AppraisalSchedule/AppraisalScheduleListEMP/:parentID1"
                     element={<AppraisalScheduleList />}
                   />
 
+                  {/* ITEM GROUP EDIT */}
+                  <Route
+                    path="/:accessID/:screenName/EditItemGroup/:id/:Mode"
+                    element={<EditItemGroup />}
+                  />
+                  {/* ITEM CATEGORY EDIT */}
+                  <Route
+                    path="/ItemGroup/ItemCategory"
+                    element={<EditItemCategory />}
+                  />
+                  {/* ITEM EDIT */}
+                  <Route
+                    path="/ItemGroup/ItemCategory/Items"
+                    element={<EditItem />}
+                  />
+                  {/* HSN CATEGORY EDIT */}
+                  <Route
+                    path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
+                    element={<EditHSNCategory />}
+                  />
+                  {/* HSN MASTER EDIT */}
+                  <Route
+                    path="/HSNCategory/HSNMaster"
+                    element={<EditHSNMaster />}
+                  />
                   <Route
                     path="SkillGlow/CandidateMain"
                     element={<CandidateMain />}
@@ -991,15 +1020,15 @@ function App() {
                   />
                   {/* Type S */}
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:filtertype/:Name/EditLeader/:id/:Mode/:Type"
-                      // /Apps/Secondarylistview/TR304/Leader/168/Nk/EditLeader/-1/A/F
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:Name/EditLeader/:id/:Mode/:Type"
+                    // /Apps/Secondarylistview/TR304/Leader/168/Nk/EditLeader/-1/A/F
                     // path="Secondarylistview/:accessID/:screenName/EditLeader/:id/:Mode"
                     element={<EditLeader />}
                   />
                   {/* Type T */}
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/EditMarketing Activity/:id/:Mode"
-// /Apps/Secondarylistview/TR304/Marketing%20Activity/45/T/EditMarketing%20Activity/-1/A                    
+                    // /Apps/Secondarylistview/TR304/Marketing%20Activity/45/T/EditMarketing%20Activity/-1/A
                     element={<EditLeader />}
                   />
                   <Route
@@ -1007,18 +1036,18 @@ function App() {
                     element={<LeaderCardView />}
                   />
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/EditOrder/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/EditOrder/:id/:Mode"
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrder />}
                   />
 
                   {/* ADVANCE PAYMENT */}
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:partyID"
+                    path="/Secondarylistview/:accessID/:screenName/:partyID"
                     element={<ListviewSecondary />}
                   />
                   <Route
-                      path="/Secondarylistview/:accessID/:screenName/:partyID/EditAdvancePayment/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:partyID/EditAdvancePayment/:id/:Mode"
                     element={<EditAdvancePayment />}
                   />
                   {/* <Route
@@ -1026,7 +1055,7 @@ function App() {
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrderitem />}
                   /> */}
-                   <Route
+                  <Route
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />

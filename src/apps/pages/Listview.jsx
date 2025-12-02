@@ -81,6 +81,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
+import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
+
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -1843,7 +1845,35 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             /> */}
           </Box>
-        ) : accessID == "TR099" ? (
+        ) : accessID == "TR315" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<CategoryOutlinedIcon color="primary"/>}
+              label="Item Category"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ): accessID == "TR316" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<QrCodeScannerOutlinedIcon color="primary"/>}
+              label="HSN Master"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ): accessID == "TR099" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}

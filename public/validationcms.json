@@ -85,6 +85,22 @@
     "Department": "Please Enter the Department",
     "employeetype": "Please Enter the Employee Type"
   },
+  "ItemGroup": {
+    "Description": "Please Enter the Item Description"
+  },
+  "ItemCategory": {
+    "Description": "Please Enter the Item Description",
+    "HSNMasterCode": "Please Enter the Item Description"
+  },
+  "HSNCatgory": {
+    "CategoryName": "Please Enter the HSN Category Name"
+  },
+  "HSNMaster": {
+    "Description": "Please Enter the HSN Master Name",
+    "HSNIGST": "Please Enter IGST Amount",
+    "HSNCGST": "Please Enter CGST Amount",
+    "HSNSGST": "Please Enter SGST Amount"
+  },
   "Employeecontact": {
     "email": "Please Enter the Email Id",
     "phonenumber": "Phone Number must be exactly 10 digits",

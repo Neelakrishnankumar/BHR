@@ -43,7 +43,11 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import SendIcon from "@mui/icons-material/Send";
 import EmailIcon from "@mui/icons-material/Email";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
-import { getOrderdetailReport, getProjectCosting, StockProcessApi } from "./Formapireducer";
+import {
+  getOrderdetailReport,
+  getProjectCosting,
+  StockProcessApi,
+} from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
@@ -82,7 +86,9 @@ import HistoryToggleOffOutlinedIcon from "@mui/icons-material/HistoryToggleOffOu
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import GridViewIcon from "@mui/icons-material/GridView";
 import OrderHeaderPdf from "../../apps/pages/HR/OrderHeaderPdf";
-import CurrencyRupeeOutlinedIcon from '@mui/icons-material/CurrencyRupeeOutlined';
+import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
+import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -639,6 +645,8 @@ export const fetchListview =
         AccessID != "TR314" &&
         AccessID != "TR313" &&
         AccessID != "TR243" &&
+        AccessID != "TR315" &&
+        AccessID != "TR316" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -1283,6 +1291,27 @@ export const fetchListview =
               //   );
               // },
             };
+          } else if (AccessID == "TR315" || AccessID == "TR316") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 100,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              //align: "left",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => (
+                <ItemAction
+                  // rights={rights}
+                  params={params}
+                  accessID={AccessID}
+                  screenName={screenName}
+                />
+              ),
+            };
           } else if (AccessID == "TR076") {
             obj = {
               field: "action",
@@ -1693,51 +1722,47 @@ export const fetchListview =
 
                     {/* ORDER HEADER */}
                     {/* {params.row.LeaderCount >= 1 ? ( */}
-                      <Link
-                        to={
-                          params.row.OrdHdrCount > 0 
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party` 
-                          
-                          :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A` 
-                           
-                          }
-                        state={{
-                          PartyID: params.row.RecordID,
-                          PartyName: params.row.Name,
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Tooltip title="Order">
-                          <IconButton color="info" size="small">
-                            <CategoryIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                    <Link
+                      to={
+                        params.row.OrdHdrCount > 0
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+                      }
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Order">
+                        <IconButton color="info" size="small">
+                          <CategoryIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
                     {/* ) : null} */}
 
                     <Link
-                        // to={
-                        //   params.row.OrdHdrCount > 0 
-                        //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party` 
-                          
-                        //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A` 
-                           
-                        //   }
-                        to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
-                        state={{
-                          PartyID: params.row.RecordID,
-                          PartyName: params.row.Name,
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Tooltip title="Advance Payment">
-                          <IconButton 
-                          color="info" 
-                          size="small">
-                            <CurrencyRupeeOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
+                      // to={
+                      //   params.row.OrdHdrCount > 0
+                      //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+
+                      //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+
+                      //   }
+                      to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Advance Payment">
+                        <IconButton color="info" size="small">
+                          <CurrencyRupeeOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
                   </Box>
                 );
               },
@@ -1803,10 +1828,10 @@ export const fetchListview =
               renderCell: (params) => {
                 const count = Number(params.row.MarketingCount || 0);
                 const id = params.row.RecordID;
-            
+
                 const PartyName = params.row.Name;
 
-                 const PDFButton = ({ PartyID, OrderHdrID,CompanyID }) => {
+                const PDFButton = ({ PartyID, OrderHdrID, CompanyID }) => {
                   const dispatch = store.dispatch;
                   const [loading, setLoading] = React.useState(false);
 
@@ -1815,14 +1840,12 @@ export const fetchListview =
                       setLoading(true);
 
                       const resultAction = await dispatch(
-                        getOrderdetailReport({ PartyID, OrderHdrID,CompanyID })
+                        getOrderdetailReport({ PartyID, OrderHdrID, CompanyID })
                       );
 
                       const data = resultAction.payload; // <-- this depends on how your thunk is defined
                       if (!data?.HeaderData?.DetailData?.length) {
-                        alert(
-                          "No Order Items available for this order.."
-                        );
+                        alert("No Order Items available for this order..");
                         return;
                       }
 
@@ -1836,8 +1859,7 @@ export const fetchListview =
                       // link.Open();
                       // link.click();
                       const blobUrl = URL.createObjectURL(blob);
-window.open(blobUrl, "_blank");
-
+                      window.open(blobUrl, "_blank");
                     } catch (err) {
                       console.error("PDF generation failed", err);
                     } finally {
@@ -1911,8 +1933,7 @@ window.open(blobUrl, "_blank");
                         Count: params.row.MarketingCount,
                         LeadTitle: params.row.LeadTitle,
                         PartyID: params.row.PartyRecordID,
-                        Code:params.row.Code,
-
+                        Code: params.row.Code,
                       }}
                     >
                       <Tooltip title="Edit">
@@ -1960,7 +1981,11 @@ window.open(blobUrl, "_blank");
                         Code: params.row.Code,
                       }}
                     >
-                      <PDFButton PartyID={params.row.PartyRecordID} OrderHdrID={params.row.RecordID} CompanyID={params.row.CompanyID}/>
+                      <PDFButton
+                        PartyID={params.row.PartyRecordID}
+                        OrderHdrID={params.row.RecordID}
+                        CompanyID={params.row.CompanyID}
+                      />
                     </Link>
                   </Box>
                 );
@@ -2047,7 +2072,7 @@ window.open(blobUrl, "_blank");
                 );
               },
             };
-          }  else if (AccessID === "TR304") {
+          } else if (AccessID === "TR304") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -5254,6 +5279,107 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               <QuizIcon />
             </Tooltip>
           </IconButton>
+        )}
+      </div>
+    </Fragment>
+  );
+};
+
+const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state || {};
+  const dispatch = useDispatch();
+  const ScheduleCheck = () => {
+    Swal.fire({
+      title: "Questions Not Adequate",
+      text: "Kindly create adequate no. of questions for this assessment",
+      icon: "warning",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#3085d6",
+    });
+  };
+
+  return (
+    <Fragment>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        {accessID === "TR315" && (
+          <>
+          <Tooltip title="Edit">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  state: {
+                    ...state,
+                    AssessmentType: params.row.AssessmentType,
+                    DesignationID: params.row.DesignationID,
+                  },
+                })
+              }
+            >
+              <ModeEditOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Item Category">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                //navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                navigate(`/Apps/ItemGroup/ItemCategory`, {
+                  state: {
+                    ...state,
+                    AssessmentType: params.row.AssessmentType,
+                    DesignationID: params.row.DesignationID,
+                  },
+                })
+              }
+            >
+              <CategoryOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+          </>
+        )}
+
+        {accessID === "TR316" && (
+          <>
+          <Tooltip title="Edit">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  state: {
+                    ...state,
+                    AssessmentType: params.row.AssessmentType,
+                    DesignationID: params.row.DesignationID,
+                  },
+                })
+              }
+            >
+              <ModeEditOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+           <Tooltip title="HSN Master">
+            <IconButton
+              color="info"
+              size="small"
+              onClick={() =>
+                navigate(`/Apps/HSNCategory/HSNMaster`, {
+                  state: {
+                    ...state,
+                    AssessmentType: params.row.AssessmentType,
+                    DesignationID: params.row.DesignationID,
+                  },
+                })
+              }
+            >
+              <QrCodeScannerOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+          </>
         )}
       </div>
     </Fragment>

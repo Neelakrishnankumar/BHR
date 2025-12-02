@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // var APIurl = "https://bos.beyondexs.com/api/"
 // var baseurl = "https://bos.beyondexs.com/"
 // var baseurlUAAM = "https://uaam.beyondexs.com/"
-var baseurlUAAM = "https://uaamuat.beyondexs.com/"
+ var baseurlUAAM = "https://uaamuat.beyondexs.com/"
 
 var APIurl = "https://bosuat.beyondexs.com/api/"
 var baseurl = "https://bosuat.beyondexs.com/"
