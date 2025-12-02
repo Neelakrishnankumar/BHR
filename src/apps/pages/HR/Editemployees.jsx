@@ -403,7 +403,7 @@ const Editemployee = () => {
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
 
-  
+
   // const validationSchema = Yup.object().shape({
   //   Department: Yup.object()
   //     .nullable()
@@ -494,15 +494,15 @@ const Editemployee = () => {
 
   // console.log(apiData, "--apiData");
   // console.log(apiData.DeptName, "--apiData.DeptName");
-  const moduleIDs = (Data.Module || "")
-    .split(",")
-    .map(v => v.trim())
-    .filter(v => v !== "" && v.toLowerCase() !== "selected")
-    .map(name => {
-      const match = fetchedData?.Data.find(item => item.Name === name);
-      return match ? match.ID : null;
-    })
-    .filter(id => id !== null);
+  // const moduleIDs = (Data.Module || "")
+  //   .split(",")
+  //   .map(v => v.trim())
+  //   .filter(v => v !== "" && v.toLowerCase() !== "selected")
+  //   .map(name => {
+  //     const match = fetchedData?.Data.find(item => item.Name === name);
+  //     return match ? match.ID : null;
+  //   })
+  //   .filter(id => id !== null);
 
   const initialValues = {
     Department: Data.DeptRecordID
@@ -525,9 +525,9 @@ const Editemployee = () => {
             ? "CI"
             : Data.EmpType === "Contracts Out"
               ? "CO"
-              : // : Data.EmpType === "Contractor"
-              // ? "CT"
-              "",
+              : Data.EmpType === "Student"
+                ? "ST"
+                : "",
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
@@ -552,12 +552,12 @@ const Editemployee = () => {
     //  moduleSelect:moduleIDs,
 
   };
-  
-  console.log("🚀 ~ Editemployee ~ Data.Module:", Data.Module);
+
+  console.log("🚀 ~ Editemployee ~ Data.Module:", initialValues.employeetype, Data.EmpType);
   // const [apiReturnValue, setApiReturnValue] = useState(null);
 
   // // 2. Initialize state
-   const [apiReturnValue, setApiReturnValue] = useState("");
+  const [apiReturnValue, setApiReturnValue] = useState("");
 
   console.log(Data.EmpType, "--Data.EmpType");
   const [openPopup, setOpenPopup] = useState(false);
@@ -807,10 +807,10 @@ const Editemployee = () => {
 
       setLoading(false);
       if (del) {
-        navigate(`/Apps/TR027/Employees`);
+        navigate(`/Apps/TR027/Personnel`);
       } else {
         navigate(
-          `/Apps/TR027/Employees/EditEmployees/${data.payload.Recid}/E`,
+          `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
           { state: { ...state } }
         );
       }
@@ -937,18 +937,43 @@ const Editemployee = () => {
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     //Contractor
+    // if (event.target.value == "8") {
+    //   dispatch(
+    //     fetchExplorelitview(
+    //       "TR244",
+    //       "Contracts In",
+    //       `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`,
+    //       ""
+    //     )
+    //   );
+
+    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    // }
     if (event.target.value == "8") {
+
+      const isStudent =
+        Data.DesignDesc === "Student" ||
+        deploymentInitialValue.Designation.Name === "Student";
+
+      const filterCondition = isStudent
+        ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
+        : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
+
+      console.log("filterCondition", filterCondition);
+
       dispatch(
         fetchExplorelitview(
           "TR244",
           "Contracts In",
-          `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`,
+          filterCondition,
           ""
         )
       );
 
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
+
+
     if (event.target.value == "11") {
       dispatch(
         fetchExplorelitview(
@@ -1226,9 +1251,7 @@ const Editemployee = () => {
   } else if (show == "8") {
     VISIBLE_FIELDS = [
       "slno",
-      //"VendorCode",
-      //"VendorName",
-      "Vendors",
+      // "Vendors",
       "Description",
       "BillingUnits",
       "UnitRate",
@@ -1497,7 +1520,7 @@ const Editemployee = () => {
     reference: "",
   });
   console.log("🚀 ~ Editemployee ~ itemCustodyData:", itemCustodyData)
-  
+
   // const [itemServicesData, setItemServicesData] = useState({
   //   recordID: "",
   //   servicedate: "",
@@ -1522,7 +1545,7 @@ const Editemployee = () => {
 
   const [contractorData, setContractorData] = useState({
     recordID: "",
-    Description:"",
+    Description: "",
     fromperiod: "",
     toperiod: "",
     units: "",
@@ -1605,7 +1628,7 @@ const Editemployee = () => {
       setselectLeaveconLTData(null);
       setContractorData({
         recordID: "",
-        Description:"",
+        Description: "",
         fromperiod: "",
         toperiod: "",
         units: "",
@@ -1760,7 +1783,7 @@ const Editemployee = () => {
           Code: rowData.FunctionCode,
           Name: rowData.FunctionName,
         });
-       
+
         setFieldValue("vendors", {
           RecordID: rowData.PartyID,
           Code: rowData.PartyCode,
@@ -1776,7 +1799,7 @@ const Editemployee = () => {
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
         });
-         setFieldValue("vendor", {
+        setFieldValue("vendor", {
           RecordID: rowData.VendorID,
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
@@ -1910,20 +1933,20 @@ const Editemployee = () => {
   };
   // *************** ITEMCUSTODY SCREEN SAVE FUNCTION *************** //
 
-  const itemcustodyInitialValue = useMemo( () => ({
+  const itemcustodyInitialValue = useMemo(() => ({
     code: Data.Code,
     description: Data.Name,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
     Disable: "N",
-     recordID: itemCustodyData.recordID || "",
-        ItemNumber: itemCustodyData.itemNO || "",
-        ItemName: itemCustodyData.itemName || "",
-        AssestID: itemCustodyData.assestID || "",
-        ItemValue: itemCustodyData.itemValue || "",
-        PurchaseReference: itemCustodyData.reference || "",
-}),[Data,itemCustodyData]);
+    recordID: itemCustodyData.recordID || "",
+    ItemNumber: itemCustodyData.itemNO || "",
+    ItemName: itemCustodyData.itemName || "",
+    AssestID: itemCustodyData.assestID || "",
+    ItemValue: itemCustodyData.itemValue || "",
+    PurchaseReference: itemCustodyData.reference || "",
+  }), [Data, itemCustodyData]);
   const empItemCustodyFn = async (values, resetForm, del) => {
     setLoading(true);
     let action =
@@ -2140,7 +2163,7 @@ const Editemployee = () => {
           : show == "11"
             ? values?.customer?.Name || ""
             : "",
-      Description : values.Description,
+      Description: values.Description,
       Hsn: values.Hsn,
       Gst: values.Gst,
       Sgst: values.Sgst,
@@ -2156,7 +2179,14 @@ const Editemployee = () => {
       RenewableNotification: values.RenewableNotification,
     };
     console.log(idata, "--contract idata");
+    const isStudent =
+      Data.DesignDesc === "Student" ||
+      deploymentInitialValue.Designation.Name === "Student";
 
+    const filterCondition = isStudent
+      ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
+      : `EmployeeID='${recID}' AND Vendors='Y' AND CompanyID=${CompanyID}`;
+    console.log("filterCondition", Data.DesignDesc);
     const response = await dispatch(
       explorePostData({ accessID: "TR244", action, idata })
     );
@@ -2167,7 +2197,7 @@ const Editemployee = () => {
           fetchExplorelitview(
             "TR244",
             "Contracts In",
-            `EmployeeID='${recID}' AND Vendors='Y'`,
+            filterCondition,
             ""
           )
         )
@@ -2473,11 +2503,15 @@ const Editemployee = () => {
     AutoRejectionYesOrNo:
       deploymentData.AutoRejectionYesOrNo === "Y" ? true : false,
     RejectionTolerance: deploymentData.RejectionTolerance,
-
+    Taskmailescalation:
+      deploymentData?.TaskMailEscalation === "N" ? false : true,
+    Requestmailescalation:
+      deploymentData?.RequestMailEscalation === "N" ? false : true,
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
+  console.log(deploymentInitialValue.Designation, "--deploymentInitialValue");
   const Fndeployment = async (values, resetForm, del) => {
     console.log(values, "--values");
 
@@ -2505,6 +2539,8 @@ const Editemployee = () => {
       CostOfCompany: values.costofcompany,
       CostOfCompanyHours: values.costofcompanyhour,
       CostOfBudgetHours: values.costofbudgethour,
+      TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
+      RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -2768,7 +2804,7 @@ const Editemployee = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR027/Employees");
+          navigate("/Apps/TR027/Personnel");
         }
       } else {
         return;
@@ -2809,8 +2845,8 @@ const Editemployee = () => {
                     }}
                   >
                     {mode === "E"
-                      ? `Employee(${state.EmpName})`
-                      : "Employee(New)"}
+                      ? `Personnel(${state.EmpName})`
+                      : "Personnel(New)"}
                   </Typography>
                   {show == "5" ? (
                     <Typography
@@ -2981,7 +3017,7 @@ const Editemployee = () => {
                     label="Explore"
                     onChange={screenChange}
                   >
-                    <MenuItem value={0}>Employee</MenuItem>
+                    <MenuItem value={0}>Personnel</MenuItem>
                     <MenuItem value={5}>Contact</MenuItem>
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>Contracts In</MenuItem>
@@ -3018,6 +3054,7 @@ const Editemployee = () => {
             </Box>
           </Box>
         </Paper>
+
         {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             {/* { <Header title="Products" subtitle="" /> } */}
@@ -3254,7 +3291,7 @@ const Editemployee = () => {
                         variant="standard"
                         label={
                           <>
-                            Employee Type
+                            Type
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -3279,6 +3316,7 @@ const Editemployee = () => {
                       >
                         <MenuItem value="PP">Prohibition Period</MenuItem>
                         <MenuItem value="PM">Permanent</MenuItem>
+                        {/* <MenuItem value="ST">Student</MenuItem> */}
                         <MenuItem value="CI">Contracts In</MenuItem>
                         <MenuItem value="CO">Contracts Out</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
@@ -3576,7 +3614,7 @@ const Editemployee = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate(`/Apps/TR027/Employees`);
+                        navigate(`/Apps/TR027/Personnel`);
                       }}
                     >
                       Cancel
@@ -6352,6 +6390,39 @@ const Editemployee = () => {
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
+                    Mail Confirmation
+                  </Typography>
+                  <Box>
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="Taskmailescalation"
+                      id="Taskmailescalation"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Taskmailescalation"
+
+                    />
+
+                    <FormLabel focused={false}>Task Mail Escalation</FormLabel>
+
+                    <Field
+                      //  size="small"
+                      type="checkbox"
+                      name="Requestmailescalation"
+                      id="Requestmailescalation"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                      label="Requestmailescalation"
+
+                    />
+
+                    <FormLabel focused={false}>Request Mail Escalation</FormLabel>
+                  </Box>
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5" padding={1}>
                     Costing
                   </Typography>
                   <Box
@@ -7728,9 +7799,8 @@ const Editemployee = () => {
                         }}
                         error={!!touched.vendors && !!errors.vendors}
                         helperText={touched.vendors && errors.vendors}
-                        //  onChange={handleSelectionFunctionname}
-                        // defaultValue={selectedFunctionName}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+
                       />
                       <TextField
                         fullWidth
@@ -8383,21 +8453,28 @@ const Editemployee = () => {
                         helperText={touched.vendor && errors.vendor}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={
+                          (Data.DesignDesc === "Student" ||
+                            deploymentInitialValue.Designation.Name === "Student")
+                            ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
+                            : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
+                        }
+
+                      //  url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
-                       <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="Description"
-                          name="Description"
-                          value={values.Description}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Description"
-                          focused
-                        // inputProps={{ readOnly: true }}
-                        />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Description"
+                        name="Description"
+                        value={values.Description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Description"
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
                       {/* <SingleFormikOptimizedAutocomplete
                        
                         label="Vendor"
@@ -9160,18 +9237,18 @@ const Editemployee = () => {
                         url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
                       <TextField
-                          fullWidth
-                          variant="standard"
-                          type="text"
-                          id="Description"
-                          name="Description"
-                          value={values.Description}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Description"
-                          focused
-                        // inputProps={{ readOnly: true }}
-                        />
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Description"
+                        name="Description"
+                        value={values.Description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Description"
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
                       {/* <SingleFormikOptimizedAutocomplete
                        
                         label="Vendor"
