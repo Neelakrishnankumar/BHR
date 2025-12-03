@@ -90,6 +90,14 @@ const EditItemCategory = () => {
 
   const [selectedHSNCategoryID, setSelectedHSNCategoryID] = useState(null);
   const curDate = new Date().toISOString().split("T")[0];
+  // Load existing selected HSN Category ID so HSNMaster loads correctly
+  useEffect(() => {
+    if (Data && Data.HSNCategoriesRecordID) {
+      setSelectedHSNCategoryID(Data.HSNCategoriesRecordID);
+    } else {
+      setSelectedHSNCategoryID(null);
+    }
+  }, [Data]);
 
 
   useEffect(() => {
@@ -101,9 +109,9 @@ const EditItemCategory = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          //Description: Yup.required(data.ItemCategory.Description).nullable(),
-          // HSNMaster: Yup.required(data.ItemCategory.HSNMaster).nullable(),
-          // HSNCategory: Yup.string().required(data.ItemCategory.HSNCategory).nullable(),
+          Description: Yup.string().required(data.ItemCategory.Description).nullable(),
+          HSNMaster: Yup.object().required(data.ItemCategory.HSNMaster).nullable(),
+          HSNCategory: Yup.object().required(data.ItemCategory.HSNCategory).nullable(),
         });
         setValidationSchema(schema);
       })
@@ -138,7 +146,7 @@ const EditItemCategory = () => {
       Image: "",
       Code: values.Code,
       Description: values.Description || "",
-      HSNCode: values.HSNCategory.RecordID || "",
+      HSNCategoriesRecordID: values.HSNCategory.RecordID || "",
       HSNMasterRecordID: values.HSNMaster.RecordID || "",
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
@@ -186,16 +194,16 @@ const EditItemCategory = () => {
   const initialValues = {
     Code: Data.Code || "",
     Description: Data.Description || "",
-    HSNCategory: Data.RecordID
+    HSNCategory: Data.HSNCategoriesRecordID
       ? {
-        RecordID: Data.RecordID,
-        HSNCategory: Data.HSNCategory,
+        RecordID: Data.HSNCategoriesRecordID,
+        HSNCategory: Data.HSNCategoriesCode,
       }
       : null,
-    HSNMaster: Data.RecordID
+    HSNMaster: Data.HSNMasterRecordID
       ? {
-        RecordID: Data.RecordID,
-        HSNMaster: Data.HSNMaster,
+        RecordID: Data.HSNMasterRecordID,
+        HSNMaster: Data.HSNMasterCode,
       }
       : null,
     Sortorder: Data.Sortorder || "",
@@ -417,6 +425,9 @@ const EditItemCategory = () => {
                         } else {
                           setSelectedHSNCategoryID(null);
                         }
+                        //  Reset HSNMaster when category changes
+                        setFieldValue("HSNMaster", null);
+                        setFieldTouched("HSNMaster", false);
                       }}
                       error={!!touched.HSNCategory && !!errors.HSNCategory}
                       helperText={touched.HSNCategory && errors.HSNCategory}

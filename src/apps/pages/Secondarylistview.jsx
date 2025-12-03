@@ -296,6 +296,9 @@ const ListviewSecondary = () => {
   else if (accessID == "TR318") {
     filter = `CompanyID = '${compID} AND ItemGroupID=${parentID1}'`;
   }
+  else if (accessID == "TR319") {
+    filter = `CompanyID = '${compID} AND ItemCategoryID=${parentID1}'`;
+  }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
   // }
@@ -1637,6 +1640,46 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
               >
                 List of Item Category
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR319" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR315/Item%20Group");
+                }}
+              >
+                List of Item Group ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate(`/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`, {
+                    state: {
+                      ...state,
+                    }
+                  });
+                }}
+              >
+                List of Item Category ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Items
               </Typography>
             </Breadcrumbs>
           </Box>

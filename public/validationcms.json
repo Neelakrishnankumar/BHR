@@ -88,6 +88,9 @@
   "ItemGroup": {
     "Description": "Please Enter the Item Description"
   },
+  "Item": {
+    "Description": "Please Enter the Item Description"
+  },
   "ItemCategory": {
     "Description": "Please Enter the Item Description",
     "HSNMaster": "Please Select HSN Master",

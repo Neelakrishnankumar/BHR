@@ -91,16 +91,22 @@ const initialState = {
   vendorregisterGetData: {},
   vendorregisterGetDatastatus: "",
   vendorregisterGetDataloading: false,
+  itemMainGETFetchData: {},
+  itemMainGETFetchDatastatus: "",
+  itemMainGETFetchDataloading: false,
 
-    vendorDefaultGetData:  {},
-    vendorDefaultGetDatastatus:  "",
-    vendorDefaultGetDataloading:  false,
+  vendorDefaultGetData: {},
+  vendorDefaultGetDatastatus: "",
+  vendorDefaultGetDataloading: false,
+  itemMainGetData: {},
+  itemMainGetDatastatus: "",
+  itemMainGetDataloading: false,
   DefaultProductDeliveryChargeGetData: {},
   DefaultProductDeliveryChargeGetDatastatus: "",
   DefaultProductDeliveryChargeGetDataloading: false,
-  projectCostinggetdata:  {},
-  projectCostingstatus:  "",
-  projectCostingloading:  false,
+  projectCostinggetdata: {},
+  projectCostingstatus: "",
+  projectCostingloading: false,
   OrderdetailReportgetdata: {},
   OrderdetailReportgetstatus: "",
   OrderdetailReportloading: false,
@@ -972,6 +978,8 @@ export const getFetchData = createAsyncThunk(
   "allScreen/Header",
   async ({ accessID, get, recID }) => {
     var url = store.getState().globalurl.apiUrl;
+
+
     const data = {
       accessid: accessID,
       action: get,
@@ -1050,6 +1058,33 @@ export const VendorRegisterFetchData = createAsyncThunk(
     return response.data;
   }
 );
+export const ItemMainGETFetchData = createAsyncThunk(
+  "ItemMainGETFetchData/Header",
+  async ({ get, recID }) => {
+    var url = store.getState().globalurl.ItemMainGETFetchData;
+    const data = {
+      action: get,
+      recid: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const VendorDefaultFetchData = createAsyncThunk(
   "VendorDefaultFetchData/Header",
   async ({ get, recID }) => {
@@ -1057,6 +1092,36 @@ export const VendorDefaultFetchData = createAsyncThunk(
     const data = {
       action: get,
       recid: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const ItemMainMenuFetchData = createAsyncThunk(
+  "ItemMainMenuFetchData/Header",
+  async ({ get, CompanyID, ItemCategoryID }) => {
+    var url = store.getState().globalurl.ItemMainMenu;
+    const data = {
+      action: get,
+      data: {
+        CompanyID: CompanyID,
+        ItemCategoryID: ItemCategoryID,
+      },
     };
 
     console.log(
@@ -1586,7 +1651,29 @@ export const postData = createAsyncThunk(
     return response.data;
   }
 );
+export const ItemMainpostData = createAsyncThunk(
+  "ItemMainpostData/post",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.ItemMainMenu;
 
+    const data = {
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 export const VendorRegisterpostData = createAsyncThunk(
   "VendorRegisterpostData/post",
   async ({ accessID, action, idata }) => {
@@ -1635,7 +1722,29 @@ export const VendorDefaultPUTdata = createAsyncThunk(
     return response.data;
   }
 );
+export const ItemFlagPostdata = createAsyncThunk(
+  "ItemFlagPostdata/post",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.VendorDefaultPUT;
 
+    const data = {
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
 //Settings Post
 
 export const SettingspostData = createAsyncThunk(
@@ -2424,6 +2533,34 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.postLoading = false;
       })
+      //ITEM MAIN - POST
+      .addCase(ItemMainpostData.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(ItemMainpostData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(ItemMainpostData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+      //ITEM FLAG - POST
+      .addCase(ItemFlagPostdata.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(ItemFlagPostdata.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(ItemFlagPostdata.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
 
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
@@ -2980,6 +3117,23 @@ export const getApiSlice = createSlice({
         state.vendorregisterGetDataloading = false;
         state.error = action.error.message;
       })
+      //ITEM MAIN GET BY ID
+      .addCase(ItemMainGETFetchData.pending, (state) => {
+        state.itemMainGETFetchData = {};
+        state.itemMainGETFetchDataloading = true;
+        state.error = null;
+      })
+      .addCase(ItemMainGETFetchData.fulfilled, (state, action) => {
+        state.itemMainGETFetchData = action.payload.Data;
+
+        state.itemMainGETFetchDataloading = false;
+        state.error = null;
+      })
+      .addCase(ItemMainGETFetchData.rejected, (state, action) => {
+        state.itemMainGETFetchData = {};
+        state.itemMainGETFetchDataloading = false;
+        state.error = action.error.message;
+      })
 
       //VENDOR DEFAULT GET
       .addCase(VendorDefaultFetchData.pending, (state) => {
@@ -2996,6 +3150,23 @@ export const getApiSlice = createSlice({
       .addCase(VendorDefaultFetchData.rejected, (state, action) => {
         state.vendorDefaultGetData = {};
         state.vendorDefaultGetDataloading = false;
+        state.error = action.error.message;
+      })
+      //ITEM MAIN GET
+      .addCase(ItemMainMenuFetchData.pending, (state) => {
+        state.itemMainGetData = {};
+        state.itemMainGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(ItemMainMenuFetchData.fulfilled, (state, action) => {
+        state.itemMainGetData = action.payload;
+
+        state.itemMainGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(ItemMainMenuFetchData.rejected, (state, action) => {
+        state.itemMainGetData = {};
+        state.itemMainGetDataloading = false;
         state.error = action.error.message;
       })
       //DefaultProductDeliveryChargeGet

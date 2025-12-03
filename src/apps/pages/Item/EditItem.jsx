@@ -39,7 +39,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { getFetchData, ItemMainGETFetchData, ItemMainMenuFetchData, ItemMainpostData, postData } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 // import {
 //   ManagerAppraisalPayload,
@@ -79,6 +79,11 @@ const EditItem = () => {
 
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Data = useSelector((state) => state.formApi.Data);
+  const ItemGetData = useSelector((state) => state.formApi.itemMainGETFetchData);
+  const ItemMainData = useSelector((state) => state.formApi.itemMainGetData);
+  console.log("🚀 ~ CreateCandidates ~ DesignationID:", ItemMainData);
+
+  const ItemMainDataLoading = useSelector((state) => state.formApi.itemMainGetDataloading);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
@@ -87,6 +92,8 @@ const EditItem = () => {
   );
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+
+  const ItemCategorID = params.parentID1
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -96,18 +103,58 @@ const EditItem = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.ItemCategory.Description),
-          HSNMasterCode: Yup.string().required(data.ItemCategory.HSNMasterCode),
+          Description: Yup.string().required(data.Item.Description),
         });
         setValidationSchema(schema);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode, AssessmentType]);
+  }, [CompanyAutoCode]);
+
   useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID }));
+    dispatch(ItemMainMenuFetchData({ get: "get", CompanyID: CompanyID, ItemCategoryID: ItemCategorID }));
+  }, []);
+  useEffect(() => {
+    dispatch(ItemMainGETFetchData({ get: "get", recID: recID }));
   }, []);
 
   const curDate = new Date().toISOString().split("T")[0];
+  const ItemMainSaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+    let action = "";
+
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      CompanyID: CompanyID,
+      ItemCategoryID: ItemCategorID,
+      Code: values.Code,
+      Description: values.Description || "",
+      Sortorder: values.Sortorder || "0",
+      Disable: isCheck,
+      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
+    };
+
+    const response = await dispatch(ItemMainpostData({ action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
+  };
+
   const ItemSaveFn = async (values, delAction) => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
@@ -128,6 +175,7 @@ const EditItem = () => {
     const idata = {
       RecordID: recID,
       CompanyID: CompanyID,
+      ItemCategoryID: ItemCategorID,
       Code: values.Code,
       Description: values.Description || "",
       Sortorder: values.Sortorder || "0",
@@ -135,7 +183,7 @@ const EditItem = () => {
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
     };
 
-    const response = await dispatch(postData({ accessID, action, idata }));
+    const response = await dispatch(ItemMainpostData({ action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(-1);
@@ -143,6 +191,8 @@ const EditItem = () => {
       toast.error(response.payload.Msg ? response.payload.Msg : "Error");
     }
   };
+
+
   const fnLogOut = (props) => {
     Swal.fire({
       title: errorMsgData.Warningmsg[props],
@@ -178,9 +228,9 @@ const EditItem = () => {
       console.log(event.target.value, "--find event.target.value");
 
       if (recID && mode === "E") {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
+        dispatch(ItemMainGETFetchData({ get: "get", recID: recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(ItemMainGETFetchData({ get: "get", recID: recID }));
       }
     }
     // if (event.target.value == "3") {
@@ -209,20 +259,25 @@ const EditItem = () => {
   const [value, setValue] = useState(null);
 
   const initialValues = {
-    Code: Data.Code || "",
-    Description: Data.Description || "",
-    HSNMasterCode: Data.HSNMasterCode || "",
-    Sortorder: Data.Sortorder || "",
-    Disable: Data.Disable == "Y" ? true : false,
-    DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
+    Code: ItemGetData.Code || "",
+    Description: ItemGetData.Description || "",
+    HSNCode: ItemMainData?.HSNDetails?.HSNMasterCode || ItemGetData.HSNMasterCode || "",
+    HSNIGST: ItemMainData?.HSNDetails?.IGST || ItemGetData.IGST || "",
+    HSNCGST: ItemMainData?.HSNDetails?.CGST || ItemGetData.CGST || "",
+    HSNSGST: ItemMainData?.HSNDetails?.SGST || ItemGetData.SGST || "",
+    Sortorder: ItemGetData.Sortorder || "",
+    Disable: ItemGetData.Disable == "Y" ? true : false,
+    DeleteFlag: ItemGetData.DeleteFlag == "Y" ? true : false,
   };
   const FlaginitialValues = {
     Code: Data.Code || "",
     Description: Data.Description || "",
-    HSNMasterCode: Data.HSNMasterCode || "",
-    Sortorder: Data.Sortorder || "",
-    Disable: Data.Disable == "Y" ? true : false,
-    DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
+    ByProduct: Data.ByProduct == "Y" ? true : false,
+    ExpiryApplicable: Data.IfExpiryApplicable == "Y" ? true : false,
+    ServiceAndMaintenance: Data.ServiceAndMaintenance == "Y" ? true : false,
+    SpecRequired: Data.SpecRequired == "Y" ? true : false,
+    UnderEmployeeCustody: Data.UnderEmployeeCustody == "Y" ? true : false,
+    Tradable: Data.Tradable == "Y" ? true : false,
   };
   const StockinitialValues = {
     Code: Data.Code || "",
@@ -269,16 +324,21 @@ const EditItem = () => {
                     onClick={() => navigate("/Apps/TR315/ItemGroup")}
                   >
                     List Of Item Group
-                    {/* ({state.BreadCrumb1}) */}
+                    ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate(`/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`, {
+                      state: {
+                        ...state,
+                      }
+                    })
+                    }
                   >
                     List Of Item Category
-                    {/* ({state.BreadCrumb1}) */}
+                    ({state.BreadCrumb2})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -286,8 +346,8 @@ const EditItem = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate(-1)}
                   >
-                    List Of Items
-                    {/* ({state.BreadCrumb1}) */}
+                    {mode === "E" ? `List Of Items
+                    (${state.BreadCrumb3})` : `List Of Item`}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -301,7 +361,7 @@ const EditItem = () => {
             </Box>
 
             <Box display="flex">
-              {/* {mode !== "A" ? (
+              {mode !== "A" ? (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                   <InputLabel id="demo-select-small">Explore</InputLabel>
                   <Select
@@ -318,21 +378,8 @@ const EditItem = () => {
                 </FormControl>
               ) : (
                 false
-              )} */}
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">Explore</InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  value={show}
-                  label="Explore"
-                  onChange={screenChange}
-                >
-                  <MenuItem value={0}>Main</MenuItem>
-                  <MenuItem value={1}>Flag</MenuItem>
-                  <MenuItem value={2}>Stock</MenuItem>
-                </Select>
-              </FormControl>
+              )}
+
               <Tooltip title="Close">
                 <IconButton onClick={() => fnLogOut("Close")} color="error">
                   <ResetTvIcon />
@@ -354,7 +401,7 @@ const EditItem = () => {
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
-                  ItemSaveFn(values, resetForm);
+                  ItemMainSaveFn(values, resetForm);
                 }, 100);
               }}
               enableReinitialize={true}
@@ -645,14 +692,14 @@ const EditItem = () => {
         {show == "1" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
-              initialValues={initialValues}
+              initialValues={FlaginitialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   ItemSaveFn(values, resetForm);
                 }, 100);
               }}
               enableReinitialize={true}
-              validationSchema={validationSchema}
+            //validationSchema={validationSchema}
             >
               {({
                 values,
@@ -815,10 +862,10 @@ const EditItem = () => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            name="ServiceAndMaintainence"
-                            checked={values.ServiceAndMaintainence}
+                            name="ServiceAndMaintenance"
+                            checked={values.ServiceAndMaintenance}
                             //onChange={handleChange}
-                            onChange={(e) => setFieldValue("ServiceAndMaintainence", e.target.checked)}
+                            onChange={(e) => setFieldValue("ServiceAndMaintenance", e.target.checked)}
 
                           />
                         }
@@ -885,7 +932,7 @@ const EditItem = () => {
                       //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
-                    {values.ServiceAndMaintainence &&
+                    {values.ServiceAndMaintenance &&
                       (
                         <>
                           <TextField

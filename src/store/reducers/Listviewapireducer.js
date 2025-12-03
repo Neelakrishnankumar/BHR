@@ -649,6 +649,7 @@ export const fetchListview =
         AccessID != "TR316" &&
         AccessID != "TR317" &&
         AccessID != "TR318" &&
+        AccessID != "TR319" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -711,6 +712,7 @@ export const fetchListview =
       AccessID == "TR294" ||
       AccessID == "TR317" ||
       AccessID == "TR318" ||
+      AccessID == "TR319" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -1293,7 +1295,8 @@ export const fetchListview =
             AccessID == "TR315" ||
             AccessID == "TR316" ||
             AccessID == "TR317" ||
-            AccessID == "TR318"
+            AccessID == "TR318" ||
+            AccessID == "TR319"
           ) {
             obj = {
               field: "action",
@@ -5393,7 +5396,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`/Apps/ItemGroup/ItemCategory/Items`, {
+                  // navigate(`/Apps/ItemGroup/ItemCategory/Items`, {
+                  navigate(`./TR319/${params.row.RecordID}`, {
                     state: {
                       ...state,
                       BreadCrumb2: params.row.ItemCategory,
@@ -5402,6 +5406,26 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 }
               >
                 <InventoryOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR319" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.Description,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
               </IconButton>
             </Tooltip>
           </>
