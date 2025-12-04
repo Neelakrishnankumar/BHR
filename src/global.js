@@ -136,6 +136,10 @@ const initialState = {
   ItemMainMenu: APIurl + "ItemMainMenu.php",
   ItemFlagMenu: APIurl + "ItemFlagMenu.php",
   ItemMainGETFetchData: APIurl + "ItemMainMenuGet.php",
+  ItemFlagMenuGet: APIurl + "ItemFlagMenuGet.php",
+  ItemFlagMenuPut: APIurl + "ItemFlagMenu.php",
+  ItemStockMenuGet: APIurl + "ItemStockMenuGet.php",
+  ItemStockMenuPut: APIurl + "ItemStockMenu.php",
 };
 
 export const getUrlSlice = createSlice({

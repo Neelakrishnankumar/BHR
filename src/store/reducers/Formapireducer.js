@@ -91,6 +91,12 @@ const initialState = {
   vendorregisterGetData: {},
   vendorregisterGetDatastatus: "",
   vendorregisterGetDataloading: false,
+  itemFlagGetDataGetData: {},
+  itemFlagGetDatastatus: "",
+  itemFlagGetDataloading: false,
+  itemStockGetData: {},
+  itemStockGetDatastatus: "",
+  itemStockGetDataloading: false,
   itemMainGETFetchData: {},
   itemMainGETFetchDatastatus: "",
   itemMainGETFetchDataloading: false,
@@ -1058,6 +1064,62 @@ export const VendorRegisterFetchData = createAsyncThunk(
     return response.data;
   }
 );
+
+export const ItemFlagFetchData = createAsyncThunk(
+  "ItemFlagFetchData/Header",
+  async ({ get, recID }) => {
+    var url = store.getState().globalurl.ItemFlagMenuGet;
+    const data = {
+      action: get,
+      recid: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const ItemStockMenuGet = createAsyncThunk(
+  "ItemStockMenuGet/Header",
+  async ({ get, recID }) => {
+    var url = store.getState().globalurl.ItemStockMenuGet;
+    const data = {
+      action: get,
+      recid: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
 export const ItemMainGETFetchData = createAsyncThunk(
   "ItemMainGETFetchData/Header",
   async ({ get, recID }) => {
@@ -1655,6 +1717,52 @@ export const ItemMainpostData = createAsyncThunk(
   "ItemMainpostData/post",
   async ({ action, idata }) => {
     const url = store.getState().globalurl.ItemMainMenu;
+
+    const data = {
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const ItemFlagMenuPut = createAsyncThunk(
+  "ItemFlagMenuPut/post",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.ItemFlagMenuPut;
+
+    const data = {
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+export const ItemStockMenuPut = createAsyncThunk(
+  "ItemStockMenuPut/post",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.ItemStockMenuPut;
 
     const data = {
       action: action,
@@ -2561,6 +2669,34 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.postLoading = false;
       })
+      //ITEM FLAG - POST
+      .addCase(ItemFlagMenuPut.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(ItemFlagMenuPut.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(ItemFlagMenuPut.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
+      //ITEM STOCK - POST
+      .addCase(ItemStockMenuPut.pending, (state, action) => {
+        state.Status = "idle";
+        state.postLoading = true;
+      })
+      .addCase(ItemStockMenuPut.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.postLoading = false;
+        state.Data = action.meta.arg.idata;
+      })
+      .addCase(ItemStockMenuPut.rejected, (state, action) => {
+        state.Status = "Error";
+        state.postLoading = false;
+      })
 
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
@@ -3115,6 +3251,40 @@ export const getApiSlice = createSlice({
       .addCase(VendorRegisterFetchData.rejected, (state, action) => {
         state.vendorregisterGetData = {};
         state.vendorregisterGetDataloading = false;
+        state.error = action.error.message;
+      })
+      //ITEM FLAG GET
+      .addCase(ItemFlagFetchData.pending, (state) => {
+        state.itemFlagGetData = {};
+        state.itemFlagGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(ItemFlagFetchData.fulfilled, (state, action) => {
+        state.itemFlagGetData = action.payload.Data;
+
+        state.itemFlagGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(ItemFlagFetchData.rejected, (state, action) => {
+        state.itemFlagGetData = {};
+        state.itemFlagGetDataloading = false;
+        state.error = action.error.message;
+      })
+      //ITEM STOCK GET
+      .addCase(ItemStockMenuGet.pending, (state) => {
+        state.itemStockGetData = {};
+        state.itemStockGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(ItemStockMenuGet.fulfilled, (state, action) => {
+        state.itemStockGetData = action.payload.Data;
+
+        state.itemStockGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(ItemStockMenuGet.rejected, (state, action) => {
+        state.itemStockGetData = {};
+        state.itemStockGetDataloading = false;
         state.error = action.error.message;
       })
       //ITEM MAIN GET BY ID
