@@ -324,7 +324,9 @@ const Editemployee = () => {
         setValidationSchema8(schema8);
         const schema9 = Yup.object().shape({
           vendor: Yup.object().required(data.ContractsIN.vendor).nullable(),
+          project: Yup.object().required(data.ContractsIN.project).nullable(),
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
+          BillingType: Yup.string().required(data.ContractsIN.BillingType),
           UnitRate: Yup.string().required(data.ContractsIN.UnitRate),
           Hsn: Yup.string().required(data.ContractsIN.Hsn),
         });
@@ -533,7 +535,7 @@ const Editemployee = () => {
     prjmanager: Data.ProjectManager === "Y" ? true : false,
     qualityassurance: Data.QualityAssurance === "Y" ? true : false,
     joindate: Data.DateOfJoin,
-    dateofbirth: Data.DateofBirth,
+    dateofbirth: Data.DateOfBirth,
     confirmdate: Data.DateOfConfirmation,
     Comm: Data.Comm,
     SortOrder: Data.SortOrder || 0,
@@ -783,7 +785,7 @@ const Editemployee = () => {
       Sal: "",
       EmpType: values.employeetype,
       DateOfJoin: values.joindate,
-      DateofBirth: values.dateofbirth,
+      DateOfBirth: values.dateofbirth,
       DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
@@ -800,7 +802,8 @@ const Editemployee = () => {
     console.log(apiReturnValue, "moduleselect");
     //  return;
     const data = await dispatch(
-      postData({ accessID, action, idata: saveData })
+      // postData({ accessID, action, idata: saveData })
+      postData({ accessID: "TR027V1", action, idata: saveData })
     );
     // const data = await dispatch(postApidatawol(accessID, action, saveData));
     if (data.payload.Status == "Y") {
@@ -1551,6 +1554,7 @@ const Editemployee = () => {
     fromperiod: "",
     toperiod: "",
     units: "",
+    BillingType: "",
     unitrate: "",
     alertdate: "",
     renewalperiod: "",
@@ -1560,7 +1564,9 @@ const Editemployee = () => {
     sgst: "",
     igst: "",
     tds: "",
-    shift:""
+    shift: "",
+    shift2: "",
+    project: ""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -1635,6 +1641,7 @@ const Editemployee = () => {
         fromperiod: "",
         toperiod: "",
         units: "",
+        BillingType: "",
         unitrate: "",
         alertdate: "",
         renewalperiod: "",
@@ -1644,7 +1651,9 @@ const Editemployee = () => {
         sgst: "",
         igst: "",
         tds: "",
-        shift:""
+        shift: "",
+        shift2: "",
+        project: ""
       });
 
       setLeaveCondata({
@@ -1741,6 +1750,7 @@ const Editemployee = () => {
           fromperiod: rowData.FromPeriod,
           toperiod: rowData.ToPeriod,
           units: rowData.BillingUnits,
+          BillingType: rowData.BillingType,
           unitrate: rowData.UnitRate,
           alertdate: rowData.NotificationAlertDate,
           renewalperiod: rowData.RenewableNotification,
@@ -1751,16 +1761,30 @@ const Editemployee = () => {
               Name: rowData.VendorName,
             }
             : null,
+          project: rowData.ProjectID
+            ? {
+              RecordID: rowData.ProjectID,
+              Code: rowData.ProjectCode,
+              Name: rowData.ProjectName,
+            }
+            : null,
           hsnCode: rowData.Hsn,
           cgst: rowData.Gst,
           sgst: rowData.Sgst,
           igst: rowData.Igst,
           tds: rowData.Tds,
-          shift:  rowData.ShiftID
+          shift: rowData.ShiftID
             ? {
               RecordID: rowData.ShiftID,
               Code: rowData.ShiftCode,
               Name: rowData.ShiftName,
+            }
+            : null,
+          shift2: rowData.ShiftID
+            ? {
+              RecordID: rowData.ShiftID2,
+              Code: rowData.ShiftCode2,
+              Name: rowData.ShiftName2,
             }
             : null,
         });
@@ -1815,10 +1839,20 @@ const Editemployee = () => {
           Code: rowData.VendorCode,
           Name: rowData.VendorName,
         });
-         setFieldValue("shift", {
+        setFieldValue("project", {
+          RecordID: rowData.ProjectID,
+          Code: rowData.ProjectCode,
+          Name: rowData.ProjectName,
+        });
+        setFieldValue("shift", {
           RecordID: rowData.ShiftID,
           Code: rowData.ShiftCode,
           Name: rowData.ShiftName,
+        });
+        setFieldValue("shift2", {
+          RecordID: rowData.ShiftID2,
+          Code: rowData.ShiftCode2,
+          Name: rowData.ShiftName2,
         });
       }
     }
@@ -2115,12 +2149,18 @@ const Editemployee = () => {
         ? "HS"
         : contractorData.units === "Days"
           ? "DS"
-          : contractorData.units === "Week"
+          : contractorData.units === "Weeks"
             ? "WS"
-            : contractorData.units === "Month"
+            : contractorData.units === "Months"
               ? "MS"
               : "",
-    Hsn: funMode === "A"? "000000" : contractorData.hsnCode,
+    BillingType:
+      contractorData.BillingType === "CashMemo"
+        ? "CashMemo"
+        : contractorData.BillingType === "GSTInvoice"
+          ? "GSTInvoice"
+          : "",
+    Hsn: funMode === "A" ? "000000" : contractorData.hsnCode,
     Gst: contractorData.cgst,
     Sgst: contractorData.sgst,
     Igst: contractorData.igst,
@@ -2129,6 +2169,7 @@ const Editemployee = () => {
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod,
     Description: contractorData.Description,
+    project: contractorData.project || null,
   };
   // console.log(contractorData, "--get a contractorData");
 
@@ -2190,12 +2231,17 @@ const Editemployee = () => {
       FromPeriod: values.FromPeriod,
       ToPeriod: values.ToPeriod,
       BillingUnits: values.BillingUnits,
+      BillingType: values.BillingType,
       UnitRate: values.UnitRate,
       NotificationAlertDate: values.NotificationAlertDate,
       RenewableNotification: values.RenewableNotification,
       ShiftID: values?.shift?.RecordID || 0,
-      ShiftCode: values?.shift?.Code || "",
-      ShiftName: values?.shift?.Name || "",
+      // ShiftCode: values?.shift?.Code || "",
+      // ShiftName: values?.shift?.Name || "",
+      ShiftID2: values?.shift2?.RecordID || 0,
+      ProjectID: values?.project?.RecordID || 0,
+      ProjectCode: values?.project?.Code || 0,
+      ProjectName: values?.project?.Name || "",
     };
     console.log(idata, "--contract idata");
     const isStudent =
@@ -2483,8 +2529,17 @@ const Editemployee = () => {
         Name: deploymentData.ShiftName,
       }
       : null,
+    shift2: deploymentData.ShiftID2
+      ? {
+        RecordID: deploymentData.ShiftID2,
+        Code: deploymentData.ShiftCode2,
+        Name: deploymentData.ShiftName2,
+      }
+      : null,
     checkin: deploymentData.ShiftStartTime || "",
     checkout: deploymentData.ShiftEndTime || "",
+    checkin2: deploymentData.ShiftStartTime2 || "",
+    checkout2: deploymentData.ShiftEndTime2 || "",
     // monday: deploymentData.Monday === "Y" ? true : false,
     // tuesday: deploymentData.Tuesday === "Y" ? true : false,
     // wednesday: deploymentData.Wednesday === "Y" ? true : false,
@@ -2538,6 +2593,8 @@ const Editemployee = () => {
       HeaderID: recID,
       CheckInTime: values.shift?.ShiftStartTime || "",
       CheckOutTime: values.shift?.ShiftendTime || "",
+      CheckInTime2 : values.shift2?.ShiftStartTime2 || "",
+      CheckOutTime2: values.shift2?.ShiftendTime2 || "",
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
       Monday: values.Monday === true ? "Y" : "N",
@@ -2580,8 +2637,10 @@ const Editemployee = () => {
       FunctionCode: values.function.Code || "",
       FunctionName: values.function.Name || "",
       ShiftID: values.shift.RecordID || 0,
+      ShiftID2: values.shift2.RecordID || 0,
       ShiftCode: values.shift.Code || "",
       ShiftName: values.shift.Name || "",
+
       // Horizontal: values.horizontal === true ? "Y" : "N",
       // Vertical: values.vertical === true ? "Y" : "N",
       // HorizontalMimNo: values.Horizontalmin || 0,
@@ -3484,7 +3543,7 @@ const Editemployee = () => {
                           />
                         </Stack>
                       )}
-                    <TextField
+                      <TextField
                         name="dateofbirth"
                         type="date"
                         id="dateofbirth"
@@ -6148,103 +6207,205 @@ const Editemployee = () => {
                   <Typography variant="h5" padding={1}>
                     Shift Details
                   </Typography>
-                  <Stack
+                  {/* <Stack
                     direction="column"
                     spacing={2}
                     sx={{ width: 500, padding: formGap }}
-                  >
-                    {/* Shift */}
-                    <FormControl variant="standard" fullWidth>
-                      <CheckinAutocomplete
-                        id="shift"
-                        name="shift"
-                        label={
-                          <span>
-                            Shift
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </span>
-                        }
-                        variant="outlined"
-                        value={values.shift}
-                        error={!!touched.shift && !!errors.shift}
-                        helperText={touched.shift && errors.shift}
-                        onChange={(newValue) => {
-                          setFieldValue("shift", newValue);
-                          setFieldValue(
-                            "Monday",
-                            newValue.Monday === "Y" ? true : false
-                          );
-                          setFieldValue(
-                            "Tuesday",
-                            newValue.Tuesday === "Y" ? true : false
-                          );
-                          setFieldValue(
-                            "Wednesday",
-                            newValue.Wednesday === "Y" ? true : false
-                          );
-                          setFieldValue(
-                            "Thursday",
-                            newValue.Thursday === "Y" ? true : false
-                          );
-                          setFieldValue(
-                            "Friday",
-                            newValue.Friday === "Y" ? true : false
-                          );
-                          setFieldValue(
-                            "Saturday",
-                            newValue.Saturday === "Y" ? true : false
-                          );
-                          setFieldValue(
-                            "Sunday",
-                            newValue.Sunday === "Y" ? true : false
-                          );
-                          console.log(newValue, "--newvalue shift");
-                          console.log(newValue.RecordID, "shift RecordID");
-                        }}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
-                      />
-                    </FormControl>
+                  > */}
+                  <Grid container spacing={2}>
+                    {/* Shift 1 */}
+                    <Grid item xs={6}>
+                      <Stack direction="column" spacing={2} padding={2}>
+                        {/* Shift 1*/}
+                        <FormControl variant="standard" fullWidth>
+                          <CheckinAutocomplete
+                            id="shift"
+                            name="shift"
+                            label={
+                              <span>
+                                Shift 1
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </span>
+                            }
+                            variant="outlined"
+                            value={values.shift}
+                            error={!!touched.shift && !!errors.shift}
+                            helperText={touched.shift && errors.shift}
+                            onChange={(newValue) => {
+                              setFieldValue("shift", newValue);
+                              setFieldValue(
+                                "Monday",
+                                newValue.Monday === "Y" ? true : false
+                              );
+                              setFieldValue(
+                                "Tuesday",
+                                newValue.Tuesday === "Y" ? true : false
+                              );
+                              setFieldValue(
+                                "Wednesday",
+                                newValue.Wednesday === "Y" ? true : false
+                              );
+                              setFieldValue(
+                                "Thursday",
+                                newValue.Thursday === "Y" ? true : false
+                              );
+                              setFieldValue(
+                                "Friday",
+                                newValue.Friday === "Y" ? true : false
+                              );
+                              setFieldValue(
+                                "Saturday",
+                                newValue.Saturday === "Y" ? true : false
+                              );
+                              setFieldValue(
+                                "Sunday",
+                                newValue.Sunday === "Y" ? true : false
+                              );
+                              console.log(newValue, "--newvalue shift");
+                              console.log(newValue.RecordID, "shift RecordID");
+                            }}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                          />
+                        </FormControl>
 
-                    {/* Check In Time */}
-                    <FormControl variant="standard">
-                      <TextField
-                        fullWidth
-                        type="time"
-                        id="checkin"
-                        name="checkin"
-                        value={values.shift?.ShiftStartTime || values.checkin}
-                        // value={values.checkin}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Shift Start Time"
-                        inputProps={{
-                          readOnly: true,
-                        }}
-                        focused
-                      />
-                    </FormControl>
+                        {/* Check In Time */}
+                        <FormControl variant="standard">
+                          <TextField
+                            fullWidth
+                            type="time"
+                            id="checkin"
+                            name="checkin"
+                            value={values.shift?.ShiftStartTime || values.checkin}
+                            // value={values.checkin}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Shift Start Time 1"
+                            inputProps={{
+                              readOnly: true,
+                            }}
+                            focused
+                          />
+                        </FormControl>
 
-                    {/* Check Out Time */}
-                    <FormControl variant="standard">
-                      <TextField
-                        fullWidth
-                        type="time"
-                        id="checkout"
-                        name="checkout"
-                        value={values.shift?.ShiftendTime || values.checkout}
-                        // value={values.checkout}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Shift End Time"
-                        focused
-                        inputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    </FormControl>
-                  </Stack>
+                        {/* Check Out Time */}
+                        <FormControl variant="standard">
+                          <TextField
+                            fullWidth
+                            type="time"
+                            id="checkout"
+                            name="checkout"
+                            value={values.shift?.ShiftendTime || values.checkout}
+                            // value={values.checkout}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Shift End Time 1"
+                            focused
+                            inputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      </Stack>
+                    </Grid>
+
+                    {/* Shift 2*/}
+                    <Grid item xs={6}>
+                      <Stack direction="column" spacing={2} padding={2}>
+                        <FormControl variant="standard" fullWidth>
+                          <CheckinAutocomplete
+                            id="shift2"
+                            name="shift2"
+                            label={
+                              <span>
+                                Shift 2
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </span>
+                            }
+                            variant="outlined"
+                            value={values.shift2}
+                            error={!!touched.shift2 && !!errors.shift2}
+                            helperText={touched.shift2 && errors.shift2}
+                            onChange={(newValue) => {
+                              setFieldValue("shift2", newValue);
+                              // setFieldValue(
+                              //   "Monday",
+                              //   newValue.Monday === "Y" ? true : false
+                              // );
+                              // setFieldValue(
+                              //   "Tuesday",
+                              //   newValue.Tuesday === "Y" ? true : false
+                              // );
+                              // setFieldValue(
+                              //   "Wednesday",
+                              //   newValue.Wednesday === "Y" ? true : false
+                              // );
+                              // setFieldValue(
+                              //   "Thursday",
+                              //   newValue.Thursday === "Y" ? true : false
+                              // );
+                              // setFieldValue(
+                              //   "Friday",
+                              //   newValue.Friday === "Y" ? true : false
+                              // );
+                              // setFieldValue(
+                              //   "Saturday",
+                              //   newValue.Saturday === "Y" ? true : false
+                              // );
+                              // setFieldValue(
+                              //   "Sunday",
+                              //   newValue.Sunday === "Y" ? true : false
+                              // );
+                              // console.log(newValue, "--newvalue shift");
+                              // console.log(newValue.RecordID, "shift RecordID");
+                            }}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                          />
+                        </FormControl>
+
+                        {/* Check In Time */}
+                        <FormControl variant="standard">
+                          <TextField
+                            fullWidth
+                            type="time"
+                            id="checkin2"
+                            name="checkin2"
+                            value={values.shift2?.ShiftStartTime || values.checkin2}
+                            // value={values.checkin}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Shift Start Time 2"
+                            inputProps={{
+                              readOnly: true,
+                            }}
+                            focused
+                          />
+                        </FormControl>
+
+                        {/* Check Out Time */}
+                        <FormControl variant="standard">
+                          <TextField
+                            fullWidth
+                            type="time"
+                            id="checkout2"
+                            name="checkout2"
+                            value={values.shift2?.ShiftendTime || values.checkout2}
+                            // value={values.checkout}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Shift End Time 2"
+                            focused
+                            inputProps={{
+                              readOnly: true,
+                            }}
+                          />
+                        </FormControl>
+                      </Stack>
+                    </Grid>
+                  </Grid>
 
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
@@ -8453,7 +8614,30 @@ const Editemployee = () => {
                           value={vendorlookup.venName}
                         />
                       </Box> */}
-
+                      <CheckinAutocomplete
+                        id="project"
+                        name="project"
+                        label={
+                          <>
+                            Project
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        value={values.project}
+                        onChange={(newValue) => {
+                          setFieldValue("project", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          })
+                        }}
+                        error={!!touched.project && !!errors.project}
+                        helperText={touched.project && errors.project}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
                       <CheckinAutocomplete
                         name="vendor"
                         label={
@@ -8612,7 +8796,31 @@ const Editemployee = () => {
                         multiline
                         inputProps={{ maxLength: 90 }}
                       />
-
+                      <TextField
+                        select
+                        fullWidth
+                        variant="standard"
+                        label={
+                          <span>
+                            Billing Type
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
+                        value={values.BillingType}
+                        id="BillingType"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="BillingType"
+                        error={!!touched.BillingType && !!errors.BillingType}
+                        helperText={touched.BillingType && errors.BillingType}
+                        // required
+                        focused
+                      >
+                        <MenuItem value="CashMemo">Cash Memo</MenuItem>
+                        <MenuItem value="GSTInvoice">GST Invoice</MenuItem>
+                      </TextField>
                       <TextField
                         name="Hsn"
                         type="text"
@@ -8747,7 +8955,7 @@ const Editemployee = () => {
                         name="shift"
                         label={
                           <span>
-                            Shift
+                            Shift 1
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -8757,16 +8965,35 @@ const Editemployee = () => {
                         value={values.shift}
                         error={!!touched.shift && !!errors.shift}
                         helperText={touched.shift && errors.shift}
-                        onChange={(newValue) => {          
+                        onChange={(newValue) => {
                           setFieldValue("shift", {
                             RecordID: newValue.RecordID,
                             Code: newValue.Code,
                             Name: newValue.Name,
-                          })               
+                          })
                           console.log(newValue, "--newvalue shift");
                           console.log(newValue.RecordID, "shift RecordID");
                         }}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                      />
+                      <CheckinAutocomplete
+                        id="shift2"
+                        name="shift2"
+                        label="Shift 2"
+                        variant="outlined"
+                        value={values.shift2}
+                        error={!!touched.shift2 && !!errors.shift2}
+                        helperText={touched.shift2 && errors.shift2}
+                        onChange={(newValue) => {
+                          setFieldValue("shift2", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          })
+                          console.log(newValue, "--newvalue shift2");
+                          console.log(newValue.RecordID, "shift2 RecordID");
+                        }}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift2","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <TextField
                         name="FromPeriod"

@@ -29,7 +29,6 @@ import {
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import * as Yup from "yup";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Field, Formik } from "formik";
@@ -104,6 +103,9 @@ const Editvendor = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const [panImage, setPanImage] = useState("");
+  const [ID1Image, setID1Image] = useState("");
+  const [ID2Image, setID2Image] = useState("");
+
   const [panUrl, setPanUrl] = useState(null);
   const [gstImage, setGstImage] = useState("");
   const [gstUrl, setGstUrl] = useState(null);
@@ -237,7 +239,84 @@ const Editvendor = () => {
     //   .matches(/^[0-9]{10}$/, 'Mobile No must be 10 digits')
     //   .required('Mobile No is required'),
   });
+  const getFileID1Change = async (e) => {
+    let files = e.target.files;
+    let fileReader = new FileReader();
 
+    fileReader.readAsDataURL(files[0]);
+    fileReader.onload = (event) => {
+      let fileInput = !!event.target.result;
+      if (fileInput) {
+        try {
+          Resizer.imageFileResizer(
+            files[0],
+            150,
+            150,
+            "JPEG",
+            100,
+            0,
+            async (uri) => {
+              const formData = { image: uri, type: "images" };
+              const fileData = await dispatch(imageUpload({ formData }));
+              console.log("Uploaded File Response:", fileData);
+
+              if (fileData?.payload?.Status === "Y") {
+                toast.success(fileData.payload.Msg);
+                setID1Image(fileData.payload.name);
+              } else {
+                toast.error("File upload failed.");
+              }
+            },
+            "base64",
+            150,
+            150
+          );
+        } catch (err) {
+          console.log(err);
+          toast.error("An error occurred during file processing.");
+        }
+      }
+    };
+  };
+  const getFileID2Change = async (e) => {
+    let files = e.target.files;
+    let fileReader = new FileReader();
+
+    fileReader.readAsDataURL(files[0]);
+    fileReader.onload = (event) => {
+      let fileInput = !!event.target.result;
+      if (fileInput) {
+        try {
+          Resizer.imageFileResizer(
+            files[0],
+            150,
+            150,
+            "JPEG",
+            100,
+            0,
+            async (uri) => {
+              const formData = { image: uri, type: "images" };
+              const fileData = await dispatch(imageUpload({ formData }));
+              console.log("Uploaded File Response:", fileData);
+
+              if (fileData?.payload?.Status === "Y") {
+                toast.success(fileData.payload.Msg);
+                setID2Image(fileData.payload.name);
+              } else {
+                toast.error("File upload failed.");
+              }
+            },
+            "base64",
+            150,
+            150
+          );
+        } catch (err) {
+          console.log(err);
+          toast.error("An error occurred during file processing.");
+        }
+      }
+    };
+  };
   const getFilepanChange = async (e) => {
     let files = e.target.files;
     let fileReader = new FileReader();
@@ -1742,7 +1821,8 @@ const Editvendor = () => {
                             hidden
                             accept="all/*"
                             type="file"
-                            onChange={getFilepanChange}
+                            // onChange={getFilepanChange}
+                            onChange={getFileID1Change}
                           />
                           <PictureAsPdfOutlinedIcon />
                         </IconButton>
@@ -1752,10 +1832,10 @@ const Editvendor = () => {
                         size="small"
                         variant="contained"
                         onClick={() => {
-                          data.PanImg || panImage
+                          data.PanImg || ID1Image
                             ? window.open(
-                              panImage
-                                ? store.getState().globalurl.attachmentUrl + panImage
+                              ID1Image
+                                ? store.getState().globalurl.attachmentUrl + ID1Image
                                 : store.getState().globalurl.attachmentUrl + data.PanImg,
                               "_blank"
                             )
@@ -1781,7 +1861,8 @@ const Editvendor = () => {
                             hidden
                             accept="all/*"
                             type="file"
-                            onChange={getFilegstChange}
+                            // onChange={getFilegstChange}
+                            onChange={getFileID2Change}
                           />
                           <PictureAsPdfOutlinedIcon />
                         </IconButton>
@@ -1791,10 +1872,10 @@ const Editvendor = () => {
                         size="small"
                         variant="contained"
                         onClick={() => {
-                          data.GstImg || gstImage
+                          data.GstImg || ID2Image
                             ? window.open(
-                              gstImage
-                                ? store.getState().globalurl.attachmentUrl + gstImage
+                              ID2Image
+                                ? store.getState().globalurl.attachmentUrl + ID2Image
                                 : store.getState().globalurl.attachmentUrl + data.GstImg,
                               "_blank"
                             )

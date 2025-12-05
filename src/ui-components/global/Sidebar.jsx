@@ -69,6 +69,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 // import LgemsLogo from "../../assets/img/LgemsLogo.png";
 // import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
 import BackOfficelogo from "../../assets/img/Backoffceimage.png";
+import BackOfficelogoV1 from "../../assets/img/BackOfficeImg _V1.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -1076,7 +1077,7 @@ const Sidebars = () => {
                   variant="rounded"
                   // src={LgemsLogo}
                   // src={LgemsLogo}
-                  src={BackOfficelogo}
+                  src={BackOfficelogoV1}
                   // sx={{ width: "100px" }}
                   sx={{ height: "110px", width: "140px" }}
                   onClick={() => {

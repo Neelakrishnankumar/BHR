@@ -130,8 +130,10 @@
   },
   "ContractsIN": {
     "vendor": "Please Enter the Vendor",
+    "project": "Please Enter the Project",
     "customer": "Please Enter the Customer",
     "BillingUnits": "Please Enter the Billing Units",
+    "BillingType": "Please Enter the Billing Type",
     "UnitRate": "Please Enter the Unit Rate",
     "Hsn": "Please Enter the HSN Code"
   },
