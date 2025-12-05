@@ -2170,6 +2170,8 @@ const Editemployee = () => {
     RenewableNotification: contractorData.renewalperiod,
     Description: contractorData.Description,
     project: contractorData.project || null,
+    shift: contractorData.shift || null,
+    shift2: contractorData.shift2 || null,
   };
   // console.log(contractorData, "--get a contractorData");
 
@@ -2615,8 +2617,7 @@ const Editemployee = () => {
       CostOfCompany: values.costofcompany,
       CostOfCompanyHours: values.costofcompanyhour,
       CostOfBudgetHours: values.costofbudgethour,
-      TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
-      RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
+      
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -2638,6 +2639,8 @@ const Editemployee = () => {
       FunctionName: values.function.Name || "",
       ShiftID: values.shift.RecordID || 0,
       ShiftID2: values.shift2.RecordID || 0,
+      TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
+      RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
       ShiftCode: values.shift.Code || "",
       ShiftName: values.shift.Name || "",
 
@@ -2713,6 +2716,9 @@ const Editemployee = () => {
       ShiftID: deploymentData.ShiftID || 0,
       ShiftCode: deploymentData.ShiftCode || "",
       ShiftName: deploymentData.ShiftName || "",
+      ShiftID2: values.shift2.RecordID || 0,
+      TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
+      RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
       // Horizontal: values.horizontal === true ? "Y" : "N",
       // Vertical: values.vertical === true ? "Y" : "N",
       // HorizontalMimNo: values.Horizontalmin || 0,
@@ -8397,7 +8403,7 @@ const Editemployee = () => {
             <Formik
               initialValues={ContractInitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema9}
+              // validationSchema={validationSchema9}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   contractSavefn(values, resetForm, false);

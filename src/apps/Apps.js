@@ -400,9 +400,14 @@ function App() {
                     path="/Secondarylistview/Item Group/:accessID/:screenName/:parentID2/:parentID1/EditItemCategory/:id/:Mode"
                     element={<EditItemCategory />}
                   />
+                  {/* ITEM LIST VIEW*/}
+                  <Route
+                    path="/Secondarylistview/Item Group/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
                   {/* ITEM EDIT */}
                   <Route
-                    path="/ItemGroup/ItemCategory/Items"
+                    path="/Secondarylistview/Item Group/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1/EditItemCategory/:id/:Mode"
                     element={<EditItem />}
                   />
                   {/* HSN CATEGORY EDIT */}

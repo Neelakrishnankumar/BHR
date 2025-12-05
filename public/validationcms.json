@@ -88,6 +88,15 @@
   "ItemGroup": {
     "Description": "Please Enter the Item Description"
   },
+  "Item": {
+    "Description": "Please Enter the Item Description",
+    "BoxQuantity": "Please Enter the Box Quantity",
+    "PieceQuantity": "Please Enter the Piece Quantity",
+    "PurchaseUOM": "Please Enter the Purchase UOM",
+    "ConsumptionUOM": "Please Enter the Consumption UOM",
+    "ConversionQty": "Please Enter the Conversion Quantity",
+    "GuidelinePrice": "Please Enter the Guideline Price"
+  },
   "ItemCategory": {
     "Description": "Please Enter the Item Description",
     "HSNMaster": "Please Select HSN Master",
