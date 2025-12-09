@@ -185,6 +185,16 @@ const Editvendor = () => {
           mobileno1: Yup.string()
             .matches(/^[0-9]{10}$/, "Invalid Mobile Number")
             .required(data.Contactdetails.mobileno1),
+            aadharcardnumber2: Yup.string()
+                      .nullable()
+                      .notRequired()
+                      .transform((value) => (value === "" ? null : value))
+                      .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber2),
+            aadharcardnumber1: Yup.string()
+                      .nullable()
+                      .notRequired()
+                      .transform((value) => (value === "" ? null : value))
+                      .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber1)
         });
         const schema4 = Yup.object().shape({
           Pancardnumber: Yup.string()
