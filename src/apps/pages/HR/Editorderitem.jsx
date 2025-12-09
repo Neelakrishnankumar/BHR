@@ -171,6 +171,7 @@ const EditOrderitem = () => {
       OrderHeareID: params.filtertype1,
       ProductCombo: values.product.RecordID || 0,
       Quantity: values.quantity || 0,
+      DeliverdQty: values.quantity || 0,
       Price: values.price || 0,
       Discount: values.discount || 0,
       NetPrice: values.netprice || 0,

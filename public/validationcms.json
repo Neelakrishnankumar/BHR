@@ -133,7 +133,7 @@
     "function": "Please Enter the Function",
     "gate": "Please Enter the Gate",
     "Designation": "Please Enter the Designation",
-    "shift": "Please Enter the Shift",
+    "shift": "Please Enter the Shift 1",
     "costofemployee": "Please Enter the Cost to Budget",
     "costofcompany": "Please Enter the Cost to Company"
   },
@@ -144,7 +144,8 @@
     "BillingUnits": "Please Enter the Billing Units",
     "BillingType": "Please Enter the Billing Type",
     "UnitRate": "Please Enter the Unit Rate",
-    "Hsn": "Please Enter the HSN Code"
+    "Hsn": "Please Enter the HSN Code",
+    "shift": "Please Enter the Shift 1"
   },
   "ItemServices": {
     "items": "Please Enter the Vendor",

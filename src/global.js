@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // var APIurl = "https://bos.beyondexs.com/api/"
 // var baseurl = "https://bos.beyondexs.com/"
 // var baseurlUAAM = "https://uaam.beyondexs.com/"
-var baseurlUAAM = "https://uaamuat.beyondexs.com/"
+
 
 var APIurl = "https://bosuat.beyondexs.com/api/"
 var baseurl = "https://bosuat.beyondexs.com/"
@@ -102,8 +102,8 @@ const initialState = {
   biometricPostUrl: APIurl + "BioMetricConfigrationUpdateContoller.php",
   partyBankUrl: APIurl + "PartyBankGetController.php",
   partyBankPostUrl: APIurl + "PartyBankUpdateController.php",
-  partyContactgetUrl: APIurl + "PartyContractGetController.php",
-  partyContactPostUrl: APIurl + "PartyContractUpdateController.php",
+  partyContactgetUrl: APIurl + "PartyContractGetControllerV1.php",
+  partyContactPostUrl: APIurl + "PartyContractUpdateControllerV1.php",
   settingsapprovalGetUrl: APIurl + "getcompanyapprovals.php",
   settingsapprovalPOSTtUrl: APIurl + "postcompanyapprovals.php",
   getLeaveweeklyDataUrl: APIurl + "LeaveWeeklyController.php",

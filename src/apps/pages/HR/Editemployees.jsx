@@ -267,8 +267,8 @@ const Editemployee = () => {
           function: Yup.object().required(data.Deployment.function).nullable(),
           gate: Yup.object().required(data.Deployment.gate).nullable(),
           shift: Yup.object().required(data.Deployment.shift).nullable(),
-          costofemployee: Yup.string().required(data.Deployment.costofemployee),
-          costofcompany: Yup.string().required(data.Deployment.costofcompany),
+          // costofemployee: Yup.string().required(data.Deployment.costofemployee),
+          // costofcompany: Yup.string().required(data.Deployment.costofcompany),
         });
         setValidationSchema2(schema2);
 
@@ -324,6 +324,7 @@ const Editemployee = () => {
         setValidationSchema8(schema8);
         const schema9 = Yup.object().shape({
           vendor: Yup.object().required(data.ContractsIN.vendor).nullable(),
+          shift: Yup.object().required(data.ContractsIN.shift).nullable(),
           project: Yup.object().required(data.ContractsIN.project).nullable(),
           BillingUnits: Yup.string().required(data.ContractsIN.BillingUnits),
           BillingType: Yup.string().required(data.ContractsIN.BillingType),
@@ -2614,8 +2615,8 @@ const Editemployee = () => {
       CloudApplication: values.cloud === true ? "Y" : "N",
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
       CostOfBudget: values.costofemployee,
-      CostOfCompany: values.costofcompany,
-      CostOfCompanyHours: values.costofcompanyhour,
+      CostOfCompany: values.costofcompany || 0,
+      CostOfCompanyHours: values.costofcompanyhour || 0,
       CostOfBudgetHours: values.costofbudgethour,
       
       // Monday: values.monday === true ? "Y" : "N",
@@ -2637,8 +2638,8 @@ const Editemployee = () => {
       DefaultFunction: values.function.RecordID || 0,
       FunctionCode: values.function.Code || "",
       FunctionName: values.function.Name || "",
-      ShiftID: values.shift.RecordID || 0,
-      ShiftID2: values.shift2.RecordID || 0,
+      ShiftID: values.shift?.RecordID || 0,
+      ShiftID2: values.shift2?.RecordID || 0,
       TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
       RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
       ShiftCode: values.shift.Code || "",
@@ -2694,8 +2695,8 @@ const Editemployee = () => {
       OnsiteActivityRole: deploymentData.OnsiteActivityRole || "Project",
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
       CostOfBudget: values.costofemployee,
-      CostOfCompany: values.costofcompany,
-      CostOfCompanyHours: values.costofcompanyhour,
+      CostOfCompany: values.costofcompany || 0,
+      CostOfCompanyHours: values.costofcompanyhour || 0,
       CostOfBudgetHours: values.costofbudgethour,
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
@@ -2716,9 +2717,9 @@ const Editemployee = () => {
       ShiftID: deploymentData.ShiftID || 0,
       ShiftCode: deploymentData.ShiftCode || "",
       ShiftName: deploymentData.ShiftName || "",
-      ShiftID2: values.shift2.RecordID || 0,
-      TaskMailEscalation: values.Taskmailescalation === true ? "Y" : "N",
-      RequestMailEscalation: values.Requestmailescalation === true ? "Y" : "N",
+      ShiftID2: deploymentData.ShiftID2 || 0,
+      TaskMailEscalation: deploymentData.TaskMailEscalation === "Y" ? "Y" : "N" || "",
+      RequestMailEscalation: deploymentData.RequestMailEscalation === "Y" ? "Y" : "N" || "",
       // Horizontal: values.horizontal === true ? "Y" : "N",
       // Vertical: values.vertical === true ? "Y" : "N",
       // HorizontalMimNo: values.Horizontalmin || 0,
@@ -6323,50 +6324,13 @@ const Editemployee = () => {
                           <CheckinAutocomplete
                             id="shift2"
                             name="shift2"
-                            label={
-                              <span>
-                                Shift 2
-                                <span style={{ color: "red", fontSize: "20px" }}>
-                                  *
-                                </span>
-                              </span>
-                            }
+                            label="Shift 2"   
                             variant="outlined"
                             value={values.shift2}
-                            error={!!touched.shift2 && !!errors.shift2}
-                            helperText={touched.shift2 && errors.shift2}
+                            // error={!!touched.shift2 && !!errors.shift2}
+                            // helperText={touched.shift2 && errors.shift2}
                             onChange={(newValue) => {
-                              setFieldValue("shift2", newValue);
-                              // setFieldValue(
-                              //   "Monday",
-                              //   newValue.Monday === "Y" ? true : false
-                              // );
-                              // setFieldValue(
-                              //   "Tuesday",
-                              //   newValue.Tuesday === "Y" ? true : false
-                              // );
-                              // setFieldValue(
-                              //   "Wednesday",
-                              //   newValue.Wednesday === "Y" ? true : false
-                              // );
-                              // setFieldValue(
-                              //   "Thursday",
-                              //   newValue.Thursday === "Y" ? true : false
-                              // );
-                              // setFieldValue(
-                              //   "Friday",
-                              //   newValue.Friday === "Y" ? true : false
-                              // );
-                              // setFieldValue(
-                              //   "Saturday",
-                              //   newValue.Saturday === "Y" ? true : false
-                              // );
-                              // setFieldValue(
-                              //   "Sunday",
-                              //   newValue.Sunday === "Y" ? true : false
-                              // );
-                              // console.log(newValue, "--newvalue shift");
-                              // console.log(newValue.RecordID, "shift RecordID");
+                              setFieldValue("shift2", newValue);                            
                             }}
                             url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                           />
@@ -6648,15 +6612,15 @@ const Editemployee = () => {
                       value={values.costofcompany}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // label="Cost to Company"
-                      label={
-                        <>
-                          Cost to Company
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                      label="Cost to Company"
+                      // label={
+                      //   <>
+                      //     Cost to Company
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
                       sx={{
                         gridColumn: "span 1",
                         backgroundColor: "#ffffff",
@@ -6684,15 +6648,15 @@ const Editemployee = () => {
                       value={values.costofemployee}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // label="Cost to Budget"
-                      label={
-                        <>
-                          Cost to Budget
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                       label="Cost to Budget"
+                      // label={
+                      //   <>
+                      //     Cost to Budget
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
                       sx={{
                         gridColumn: "span 1",
                         backgroundColor: "#ffffff", // Set the background to white
@@ -8403,7 +8367,7 @@ const Editemployee = () => {
             <Formik
               initialValues={ContractInitialValue}
               enableReinitialize={true}
-              // validationSchema={validationSchema9}
+              validationSchema={validationSchema9}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   contractSavefn(values, resetForm, false);
@@ -8960,13 +8924,13 @@ const Editemployee = () => {
                         id="shift"
                         name="shift"
                         label={
-                          <span>
-                            Shift 1
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </span>
-                        }
+                              <span>
+                                Shift 1
+                                <span style={{ color: "red", fontSize: "20px" }}>
+                                  *
+                                </span>
+                              </span>
+                            }                           
                         variant="outlined"
                         value={values.shift}
                         error={!!touched.shift && !!errors.shift}
