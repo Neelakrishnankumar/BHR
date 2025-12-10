@@ -320,7 +320,8 @@ const EditItem = () => {
 
   const initialValues = {
     Code: ItemGetData.Code || "",
-    Description: ItemGetData.Description || "",
+    //Description: ItemMainData?.HSNDetails?.HSNDescription || ItemGetData.HSNDescription || "",
+    Description:ItemGetData.Description || "",
     HSNCode: ItemMainData?.HSNDetails?.HSNMasterCode || ItemGetData.HSNMasterCode || "",
     HSNIGST: ItemMainData?.HSNDetails?.IGST || ItemGetData.IGST || "",
     HSNCGST: ItemMainData?.HSNDetails?.CGST || ItemGetData.CGST || "",
@@ -581,7 +582,7 @@ const EditItem = () => {
                       onChange={handleChange}
                       error={!!touched.Description && !!errors.Description}
                       helperText={touched.Description && errors.Description}
-                      InputProps={{ readOnly: true }}
+                      //InputProps={{ readOnly: true }}
 
                       autoFocus
                     />
