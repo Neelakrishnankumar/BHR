@@ -291,13 +291,13 @@ const ListviewSecondary = () => {
     filter = `AssessmentID ='${parentID2}'`;
   }
   else if (accessID == "TR317") {
-    filter = `CompanyID = '${compID} AND HSNCategoryID=${parentID1}'`;
+    filter = `CompanyID = '${compID}' AND HSNCategoryID='${parentID1}'`;
   }
   else if (accessID == "TR318") {
-    filter = `CompanyID = '${compID} AND ItemGroupID=${parentID1}'`;
+    filter = `CompanyID = '${compID}' AND ItemGroupID='${parentID1}'`;
   }
   else if (accessID == "TR319") {
-    filter = `CompanyID = '${compID} AND ItemCategoryID=${parentID1}'`;
+    filter = `CompanyID = '${compID}' AND ItemCategoryID='${parentID1}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;

@@ -482,6 +482,8 @@ const Listview = () => {
               false
             ) : accessID == "TR313" ? (
               false
+            ) : accessID == "TR315" ? (
+              false
             ) : YearFlag == "true" ? (
               // UGA_ADD ? (
 

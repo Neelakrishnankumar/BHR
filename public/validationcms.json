@@ -76,7 +76,9 @@
   "Contactdetails": {
     "emailid1": "Please Enter the Email ID",
     "name1": "Please Enter the Name",
-    "mobileno1": "Please Enter the Mobile Number"
+    "mobileno1": "Please Enter the Mobile Number",
+    "aadharcardnumber1": "Aadhar Card Number must be exactly 12 alphanumeric characters",
+    "aadharcardnumber2": "Aadhar Card Number must be exactly 12 alphanumeric characters"
   },
   "Employee": {
     "Code": "Please Enter the Code",

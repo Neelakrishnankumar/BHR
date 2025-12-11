@@ -141,6 +141,7 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
+import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 
 const child = {
   data: [
@@ -427,23 +428,7 @@ const child = {
         </Tooltip>
       ),
       children: [
-        {
-          name: "Item",
-          id: 43468,
-          url: "./TR315/Item Group",
-          icon: (
-            <Tooltip title="Item">
-              <PersonSearchIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR315",
-        },
+       
         {
           name: "HSN",
           id: 43468,
@@ -460,6 +445,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR316",
+        },
+         {
+          name: "Item",
+          id: 43468,
+          url: "./TR315/Item Group",
+          icon: (
+            <Tooltip title="Item">
+              <InventoryOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR315",
         },
         {
           name: "Party",
