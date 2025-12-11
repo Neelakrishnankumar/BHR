@@ -546,7 +546,7 @@ const Editvendor = () => {
     gstnumber: partyRegistergetdata.GstNo || "",
     date: partyRegistergetdata.RegistrationDate || "",
     verifieddate: partyRegistergetdata.VerifyConfirmDate || "",
-    aadharcardnumber: partyRegistergetdata.aadharcardnumber || ""
+    // aadharcardnumber: partyRegistergetdata.aadharcardnumber || ""
   };
 
   const RegisterFnsave = async (values, del) => {
@@ -573,7 +573,7 @@ const Editvendor = () => {
       GstImg: gstImage || values.GstImg,
       RegistrationDate: values.date,
       VerifyConfirmDate: values.verifieddate,
-      aadharcardnumber: values.aadharcardnumber
+      // aadharcardnumber: values.aadharcardnumber
     };
 
     try {
@@ -2590,26 +2590,7 @@ const Editvendor = () => {
                         }}
                       // autoFocus
                       />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="number"
-                        id="aadharcardnumber"
-                        name="aadharcardnumber"
-                        value={values.aadharcardnumber}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Aadhar Card No"
-                        focused
-                        // onWheel={(e) => e.target.blur()}
-                        error={
-                          touched.aadharcardnumber &&
-                          Boolean(errors.aadharcardnumber)
-                        }
-                        helperText={
-                          touched.aadharcardnumber && errors.aadharcardnumber
-                        }
-                      />
+                     
                       <TextField
                         name="date"
                         type="date"
@@ -2899,7 +2880,9 @@ const Editvendor = () => {
                         }}
                         error={!!touched.Product && !!errors.Product}
                         helperText={touched.Product && errors.Product}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Productt","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
+                      
                       />
                       <TextField
                         name="defaultDelivery"

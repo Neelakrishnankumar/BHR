@@ -100,7 +100,7 @@ const LeaderCardView = () => {
         });
     };
     const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
-        if (OrdHdrCount == 0) {
+        // if (OrdHdrCount == 0) {
             // Case 1: No order yet → go to Add Order
             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
                 state: {
@@ -110,20 +110,22 @@ const LeaderCardView = () => {
                     LEStatus: LEStatus,
                     OrderCount: OrdHdrCount,
                 },
-            });
+            // });
 
-        } else if (OrdHdrCount >= 1) {
+        } 
+    )
+        // else if (OrdHdrCount >= 1) {
             // Case 2: Existing order(s) → go to Order List or Edit
-            navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader`, {
-                state: {
-                    PartyID: partyID,
-                    LeadTitle: leadTitle,
-                    PartyName: PartyName,
-                    LEStatus: LEStatus,
-                    OrderCount: OrdHdrCount,
-                },
-            });
-        }
+        //     navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader`, {
+        //         state: {
+        //             PartyID: partyID,
+        //             LeadTitle: leadTitle,
+        //             PartyName: PartyName,
+        //             LEStatus: LEStatus,
+        //             OrderCount: OrdHdrCount,
+        //         },
+        //     // });
+        // }
     };
 
     const handleorderitemscreen = (recordID, partyID, leadTitle, PartyName, LEStatus) => {
