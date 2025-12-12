@@ -1310,6 +1310,9 @@ const EditItem = () => {
                       error={!!touched.BoxQuantity && !!errors.BoxQuantity}
                       helperText={touched.BoxQuantity && errors.BoxQuantity}
                       autoFocus
+                      InputProps={{
+                              inputProps:{ style : { textAlign: "right" }},
+                            }}
                     />
                     <TextField
                       name="PieceQuantity"
@@ -1336,6 +1339,9 @@ const EditItem = () => {
                       error={!!touched.PieceQuantity && !!errors.PieceQuantity}
                       helperText={touched.PieceQuantity && errors.PieceQuantity}
                       autoFocus
+                       InputProps={{
+                              inputProps:{ style : { textAlign: "right" }},
+                            }}
                     />
                     <TextField
                       name="PurchaseUOM"
@@ -1414,6 +1420,9 @@ const EditItem = () => {
                       error={!!touched.ConversionQty && !!errors.ConversionQty}
                       helperText={touched.ConversionQty && errors.ConversionQty}
                       autoFocus
+                       InputProps={{
+                              inputProps:{ style : { textAlign: "right" }},
+                            }}
                     />
 
                     <TextField
@@ -1441,6 +1450,9 @@ const EditItem = () => {
                       error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
                       helperText={touched.GuidelinePrice && errors.GuidelinePrice}
                       autoFocus
+                       InputProps={{
+                              inputProps:{ style : { textAlign: "right" }},
+                            }}
                     />
 
 
