@@ -40,6 +40,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/global/utils";
 import {
   CheckinAutocomplete,
+  Employeeautocomplete,
   Productautocomplete,
 } from "../../../ui-components/global/Autocomplete";
 
@@ -85,6 +86,7 @@ const Editproject = () => {
           name: Yup.string().required(data.Project.name),
           //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
+          projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
         };
 
         if (CompanyAutoCode === "N") {
@@ -122,8 +124,14 @@ const Editproject = () => {
     budget: data.Budget || 0,
     scheduled: data.ScheduledCost || 0,
     actual: data.ActualCost || 0,
-        price:data.Price || "0",
-
+    price: data.Price || "0",
+    projectOwner: data.ProjectOwnerID
+      ? {
+          RecordID: data.ProjectOwnerID,
+          Code: data.ProjectOwnerCode,
+          Name: data.ProjectOwnerName,
+        }
+      : null,
     OtherExpenses: data.OtherExpenses || 0,
   };
 
@@ -159,6 +167,7 @@ const Editproject = () => {
       ScheduledCost: values.scheduled || 0,
       Finyear,
       CompanyID,
+      ProjectOwnerID: values.projectOwner.RecordID,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -338,7 +347,7 @@ const Editproject = () => {
                     name="incharge"
                     label={
                       <>
-                        Owner
+                        Accountable Incharge
                         <span style={{ color: "red", fontSize: "20px" }}>
                           {" "}
                           *{" "}
@@ -354,6 +363,34 @@ const Editproject = () => {
                     helperText={touched.incharge && errors.incharge}
                     // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                     url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                  />
+
+                  <CheckinAutocomplete
+                    name="projectOwner"
+                    label={
+                      <>
+                        Project Owner
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    variant="outlined"
+                    id="projectOwner"
+                    value={values.projectOwner}
+                    onChange={(newValue) => {
+                      setFieldValue("projectOwner", {
+                        RecordID: newValue.RecordID,
+                        Code: newValue.Code,
+                        Name: newValue.Name,
+                      });
+                      console.log(newValue, "--newvalue projectOwner");
+
+                      console.log(newValue.RecordID, "projectOwner RecordID");
+                    }}
+                    error={!!touched.projectOwner && !!errors.projectOwner}
+                    helperText={touched.projectOwner && errors.projectOwner}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                   />
                   {/* {touched.incharge && errors.incharge && (
                         <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
@@ -423,7 +460,35 @@ const Editproject = () => {
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
-                  <Box>
+                 
+
+                  <TextField
+                    name="sortorder"
+                    type="number"
+                    id="sortorder"
+                    label="Sort Order"
+                    variant="standard"
+                    focused
+                    value={values.sortorder}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.sortorder && !!errors.sortorder}
+                    helperText={touched.sortorder && errors.sortorder}
+                    sx={{ background: "" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                    onWheel={(e) => e.target.blur()}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 8);
+                    }}
+                  />
+
+                   <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
@@ -495,213 +560,187 @@ const Editproject = () => {
                     />
 
                     <FormLabel focused={false}>Disable</FormLabel>
-               
                   </Box>
-
-                  <TextField
-                    name="sortorder"
-                    type="number"
-                    id="sortorder"
-                    label="Sort Order"
-                    variant="standard"
-                    focused
-                    value={values.sortorder}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.sortorder && !!errors.sortorder}
-                    helperText={touched.sortorder && errors.sortorder}
-                    sx={{ background: "" }}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
-                    onWheel={(e) => e.target.blur()}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                  />
-                 
                 </Box>
                 <Typography variant="h5" padding={1}>
                   Costing:
                 </Typography>
 
-                {values.ByProduct === true ?  
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                <TextField
-                    //fullWidth
-                    variant="standard"
-                    type="number"
-                    id="price"
-                    name="price"
-                    value={values.price}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Price (If it is a product)"
+                {values.ByProduct === true ? (
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
                     sx={{
-                      gridColumn: "span 1",
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
-                    focused
-                    InputProps={{
-                      inputProps: {
-                        style: {
-                          textAlign: "right",
-
+                  >
+                    <TextField
+                      //fullWidth
+                      variant="standard"
+                      type="number"
+                      id="price"
+                      name="price"
+                      value={values.price}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Price (If it is a product)"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                         },
+                      }}
+                      focused
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />{" "}
+                  </Box>
+                ) : (
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
-                  /> </Box>: 
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    id="budget"
-                    name="budget"
-                    value={values.budget}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    // label="Budget"
-                    label={
-                      <>
-                        Budget
-                        {/* <span style={{ color: "red", fontSize: "20px" }}>
+                  >
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="budget"
+                      name="budget"
+                      value={values.budget}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // label="Budget"
+                      label={
+                        <>
+                          Budget
+                          {/* <span style={{ color: "red", fontSize: "20px" }}>
                           {" "}
                           *{" "}
                         </span> */}
-                      </>
-                    }
-                    sx={{
-                      gridColumn: "span 1",
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    error={!!touched.budget && !!errors.budget}
-                    helperText={touched.budget && errors.budget}
-                    focused
-                    InputProps={{
-                      inputProps: {
-                        style: {
-                          textAlign: "right",
+                        </>
+                      }
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                         },
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    id="scheduled"
-                    name="scheduled"
-                    value={values.scheduled}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Scheduled Cost"
-                    sx={{
-                      gridColumn: "span 1",
-                      backgroundColor: "#ffffff",
-                      "& .MuiFilledInput-root": {
+                      }}
+                      error={!!touched.budget && !!errors.budget}
+                      helperText={touched.budget && errors.budget}
+                      focused
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="scheduled"
+                      name="scheduled"
+                      value={values.scheduled}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Scheduled Cost"
+                      sx={{
+                        gridColumn: "span 1",
                         backgroundColor: "#ffffff",
-                      },
-                    }}
-                    focused
-                    InputProps={{
-                      readOnly: true,
-                      inputProps: {
-                        style: {
-                          textAlign: "right",
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff",
                         },
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    id="actual"
-                    name="actual"
-                    value={values.actual}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Actual Cost"
-                    sx={{
-                      gridColumn: "span 1",
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    focused
-                    InputProps={{
-                      readOnly: true,
-                      inputProps: {
-                        style: {
-                          textAlign: "right",
+                      }}
+                      focused
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
                         },
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="number"
-                    id="OtherExpenses"
-                    name="OtherExpenses"
-                    value={values.OtherExpenses}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Other Expenses"
-                    sx={{
-                      gridColumn: "span 1",
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                      },
-                    }}
-                    focused
-                    InputProps={{
-                      readOnly: true,
-                      inputProps: {
-                        style: {
-                          textAlign: "right",
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="actual"
+                      name="actual"
+                      value={values.actual}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Actual Cost"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                         },
-                      },
-                    }}
-                  />
+                      }}
+                      focused
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="OtherExpenses"
+                      name="OtherExpenses"
+                      value={values.OtherExpenses}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Other Expenses"
+                      sx={{
+                        gridColumn: "span 1",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      focused
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: {
+                          style: {
+                            textAlign: "right",
+                          },
+                        },
+                      }}
+                    />
 
-                  {/* </FormControl> */}
-                </Box> }
+                    {/* </FormControl> */}
+                  </Box>
+                )}
 
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (

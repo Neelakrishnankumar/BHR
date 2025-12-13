@@ -21,6 +21,7 @@
     "Code": "Please Enter the Code",
     "name": "Please Enter the Description",
     "incharge": "Please Enter the Owner",
+    "projectOwner": "Please Enter the Project Owner",
     "CurrentStatus": "Please Enter the Status",
     "budget": "Please Enter the Budget"
   },
