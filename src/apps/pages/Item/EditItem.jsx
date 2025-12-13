@@ -1291,7 +1291,7 @@ const EditItem = () => {
                       id="BoxQuantity"
                       label={
                         <span>
-                          Box Quantity{" "}
+                          Major Quantity{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1317,7 +1317,7 @@ const EditItem = () => {
                       id="PieceQuantity"
                       label={
                         <span>
-                          Piece Quantity{" "}
+                          Minor Quantity{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1343,7 +1343,7 @@ const EditItem = () => {
                       id="PurchaseUOM"
                       label={
                         <span>
-                          Purchase UOM{" "}
+                          Major UOM{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1369,7 +1369,7 @@ const EditItem = () => {
                       id="ConsumptionUOM"
                       label={
                         <span>
-                          Consumption UOM{" "}
+                          Minor UOM{" "}
                           <span
                             style={{
                               fontSize: "20px",
