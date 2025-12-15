@@ -2909,7 +2909,7 @@ const Editvendor = () => {
                         }}
                         error={!!touched.Product && !!errors.Product}
                         helperText={touched.Product && errors.Product}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Productt","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Productt","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       />
                       <TextField
                         name="defaultDelivery"
