@@ -516,7 +516,7 @@ const EditOrderitem = () => {
                         alignItems: "center",
                       }}
                     >
-                      <OrderItemAutocomplete
+                      {/* <OrderItemAutocomplete
                         id="product"
                         name="product"
                         //label="Product"
@@ -566,6 +566,57 @@ const EditOrderitem = () => {
                         error={!!touched.product && !!errors.product}
                         helperText={touched.product && errors.product}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      /> */}
+                       <OrderItemAutocomplete
+                        id="product"
+                        name="product"
+                        //label="Product"
+                        label={
+                          <>
+                            Product
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        value={values.product}
+                        onBlur={() => setFieldTouched("product", true)}
+                        onChange={(newValue) => {
+                          const prevProduct = values.product;
+                          // Set the selected product
+                          setFieldValue("product", newValue);
+
+                          // If nothing selected (cleared)
+                          if (!newValue) {
+                            setFieldValue("price", "");
+                            setFieldValue("discount", "");
+                            setFieldValue("netprice", "");
+                            setFieldValue("quantity", "");
+                            setFieldValue("amount", "");
+                            return;
+                          }
+
+                          //  If SAME product is selected again — DO NOTHING
+                          if (
+                            prevProduct &&
+                            prevProduct.RecordID === newValue.RecordID
+                          ) {
+                            console.log("Same product selected — no reset");
+                            return;
+                          }
+
+                          // ★ If NEW product selected → reset all dependent fields
+                          setFieldValue("price", newValue.Price);
+                          setFieldValue("discount", "");
+                          setFieldValue("netprice", "");
+                          setFieldValue("quantity", "");
+                          setFieldValue("amount", "");
+                        }}
+                        error={!!touched.product && !!errors.product}
+                        helperText={touched.product && errors.product}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
                       />
                     </FormControl>
                     <TextField

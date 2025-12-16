@@ -16,6 +16,7 @@ import {
   Paper,
   IconButton,
   Tooltip,
+  Divider,
   LinearProgress,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -321,7 +322,7 @@ const EditItem = () => {
   const initialValues = {
     Code: ItemGetData.Code || "",
     //Description: ItemMainData?.HSNDetails?.HSNDescription || ItemGetData.HSNDescription || "",
-    Description:ItemGetData.Description || "",
+    Description: ItemGetData.Description || "",
     HSNCode: ItemMainData?.HSNDetails?.HSNMasterCode || ItemGetData.HSNMasterCode || "",
     HSNIGST: ItemMainData?.HSNDetails?.IGST || ItemGetData.IGST || "",
     HSNCGST: ItemMainData?.HSNDetails?.CGST || ItemGetData.CGST || "",
@@ -359,6 +360,11 @@ const EditItem = () => {
     ConsumptionUOM: ItemStockData?.ConsumptionUOM || "",
     ConversionQty: ItemStockData?.ConversionQty || "",
     GuidelinePrice: ItemStockData?.Price || "",
+    majCusstkQty: ItemStockData?.MajorCusStockQty || "",
+    minCusstkQty: ItemStockData?.MinorCusStockQty || "",
+    majvendorstkQty: ItemStockData?.MajorVenStockQty || "",
+    minvendorstkQty: ItemStockData?.MinorVenStockQty || "",
+
   };
 
   return (
@@ -1285,13 +1291,13 @@ const EditItem = () => {
 
                       autoFocus
                     />
-                    <TextField
+                    {/* <TextField
                       name="BoxQuantity"
                       type="number"
                       id="BoxQuantity"
                       label={
                         <span>
-                          Box Quantity{" "}
+                          Major Quantity{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1311,8 +1317,8 @@ const EditItem = () => {
                       helperText={touched.BoxQuantity && errors.BoxQuantity}
                       autoFocus
                       InputProps={{
-                              inputProps:{ style : { textAlign: "right" }},
-                            }}
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
                     />
                     <TextField
                       name="PieceQuantity"
@@ -1320,7 +1326,7 @@ const EditItem = () => {
                       id="PieceQuantity"
                       label={
                         <span>
-                          Piece Quantity{" "}
+                          Minor Quantity{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1339,17 +1345,17 @@ const EditItem = () => {
                       error={!!touched.PieceQuantity && !!errors.PieceQuantity}
                       helperText={touched.PieceQuantity && errors.PieceQuantity}
                       autoFocus
-                       InputProps={{
-                              inputProps:{ style : { textAlign: "right" }},
-                            }}
-                    />
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
+                    /> */}
                     <TextField
                       name="PurchaseUOM"
                       type="text"
                       id="PurchaseUOM"
                       label={
                         <span>
-                          Purchase UOM{" "}
+                          Major UOM{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1375,7 +1381,7 @@ const EditItem = () => {
                       id="ConsumptionUOM"
                       label={
                         <span>
-                          Consumption UOM{" "}
+                          Minor UOM{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1420,9 +1426,9 @@ const EditItem = () => {
                       error={!!touched.ConversionQty && !!errors.ConversionQty}
                       helperText={touched.ConversionQty && errors.ConversionQty}
                       autoFocus
-                       InputProps={{
-                              inputProps:{ style : { textAlign: "right" }},
-                            }}
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
                     />
 
                     <TextField
@@ -1450,11 +1456,10 @@ const EditItem = () => {
                       error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
                       helperText={touched.GuidelinePrice && errors.GuidelinePrice}
                       autoFocus
-                       InputProps={{
-                              inputProps:{ style : { textAlign: "right" }},
-                            }}
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
                     />
-
 
                   </Box>
                   {/* BUTTONS */}
@@ -1480,6 +1485,162 @@ const EditItem = () => {
                     >
                       Cancel
                     </Button>
+                  </Box>
+                  {/* ===== STOCK ===== */}
+                  <Divider sx={{ mt: 2 }} />
+                  <Typography variant="h6" padding={1}>
+                    Stock
+                  </Typography>
+
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <TextField
+                      name="BoxQuantity"
+                      type="number"
+                      label="Major Quantity"
+                      variant="standard"
+                      value={values.BoxQuantity}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.BoxQuantity && !!errors.BoxQuantity}
+                      helperText={touched.BoxQuantity && errors.BoxQuantity}
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: { style: { textAlign: "right" } }
+                      }}
+
+                    />
+
+                    <TextField
+                      name="PieceQuantity"
+                      type="number"
+                      label="Minor Quantity"
+                      variant="standard"
+                      focused
+                      value={values.PieceQuantity}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.PieceQuantity && !!errors.PieceQuantity}
+                      helperText={touched.PieceQuantity && errors.PieceQuantity}
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: { style: { textAlign: "right" } }
+                      }}
+                    />
+                  </Box>
+
+                  {/* ===== CUSTOMER STOCK ===== */}
+                  <Divider sx={{ mt: 2 }} />
+                  <Typography variant="h6" padding={1}>
+                    Customer Stock
+                  </Typography>
+
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <TextField
+                      name="majCusstkQty"
+                      type="number"
+                      label="Major Quantity"
+                      variant="standard"
+                      focused
+                      value={values.majCusstkQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.majCusstkQty && !!errors.majCusstkQty}
+                      helperText={touched.majCusstkQty && errors.majCusstkQty}
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: { style: { textAlign: "right" } }
+                      }}
+                    />
+
+                    <TextField
+                      name="minCusstkQty"
+                      type="number"
+                      label="Minor Quantity"
+                      variant="standard"
+                      focused
+                      value={values.minCusstkQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.minCusstkQty && !!errors.minCusstkQty}
+                      helperText={touched.minCusstkQty && errors.minCusstkQty}
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: { style: { textAlign: "right" } }
+                      }}
+                    />
+                  </Box>
+
+                  {/* ===== VENDOR STOCK ===== */}
+                  <Divider sx={{ mt: 2 }} />
+                  <Typography variant="h6" padding={1}>
+                    Vendor Stock
+                  </Typography>
+
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <TextField
+                      name="majvendorstkQty"
+                      type="number"
+                      label="Major Quantity"
+                      variant="standard"
+                      focused
+                      value={values.majvendorstkQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.majvendorstkQty && !!errors.majvendorstkQty}
+                      helperText={touched.majvendorstkQty && errors.majvendorstkQty}
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: { style: { textAlign: "right" } }
+                      }}
+                    />
+
+                    <TextField
+                      name="minvendorstkQty"
+                      type="number"
+                      label="Minor Quantity"
+                      variant="standard"
+                      focused
+                      value={values.minvendorstkQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.minvendorstkQty && !!errors.minvendorstkQty}
+                      helperText={touched.minvendorstkQty && errors.minvendorstkQty}
+                      InputProps={{
+                        readOnly: true,
+                        inputProps: { style: { textAlign: "right" } }
+                      }}
+                    />
                   </Box>
                 </Form>
               )}

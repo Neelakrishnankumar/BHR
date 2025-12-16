@@ -506,7 +506,7 @@ const EditLeader = () => {
                                         }}
                                         disabled={Type === "T"}
                                     />
-                                    <CheckinAutocomplete
+                                    {/* <CheckinAutocomplete
                                         id="project"
                                         name="project"
                                         label="Product"
@@ -522,7 +522,24 @@ const EditLeader = () => {
                                         disabled={Type === "T"}
                                         //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                                         url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Project","Filter":"parentID='${CompanyID}' AND ByProduct='Y'","Any":""}}`}
-                                    />
+                                    /> */}
+                                     <CheckinAutocomplete
+                                        id="project"
+                                        name="project"
+                                        label="Product"
+                                        variant="outlined"
+                                        value={values.project}
+                                        onChange={(newValue) => {
+                                            setFieldValue("project", newValue);
+                                            console.log(newValue, "--newvalue project");
+                                            console.log(newValue.RecordID, "project RecordID");
+                                        }}
+                                        error={!!touched.project && !!errors.project}
+                                        helperText={touched.project && errors.project}
+                                        disabled={Type === "T"}
+                                        //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                                        url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Project","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
+                                    /> 
 
                                     <TextField
                                         // label={
