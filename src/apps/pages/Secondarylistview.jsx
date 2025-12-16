@@ -129,6 +129,7 @@ const ListviewSecondary = () => {
   const [page, setPage] = React.useState(secondaryCurrentPage);
   var parentID = params.filtertype;
   var InvType = params.InvType;
+  var OrderType = params.OrderType;
   var Code = params.Code;
   var parentRecID = params.parentRecID;
   var CusID = params.CusID;
@@ -270,9 +271,11 @@ const ListviewSecondary = () => {
     // filter =`PartyID='${leaderID}'`;
   }
   else if (accessID === "TR310") {
+      const orderTypeFilter = `OrderType='${OrderType}'`; // "O" or "Q"
+
 
     //filter = `LeaderID='${leaderID}'`;
-    filter = Type === "Party" ? `PartyRecordID='${leaderID}'` : `LeaderID='${leaderID}'`;
+    filter = Type === "Party" ? `PartyRecordID='${leaderID}' AND ${orderTypeFilter}` : `LeaderID='${leaderID}' AND ${orderTypeFilter}`;
 
     //filter = `LeaderID='${leaderID}' AND PartyRecordID='${partyID}'`;
     // filter =`PartyID='${leaderID}'`;
@@ -2100,7 +2103,7 @@ const ListviewSecondary = () => {
                   sx={{ cursor: "default" }}
                   //onClick={() => navigate(-1)}
                   onClick={() => {
-                    navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`, { state: { ...state } });
+                    navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`, { state: { ...state } });
                   }}
                 >
                   Order ({state.Code || ""})

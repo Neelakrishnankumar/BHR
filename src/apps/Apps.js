@@ -227,6 +227,10 @@ function App() {
                     element={<ListviewSecondary />}
                   />
                   <Route
+                    path="/Secondarylistview/:accessID/:screenName/:leaderID/:Type/:OrderType"
+                    element={<ListviewSecondary />}
+                  />
+                  <Route
                     path="/Secondarylistview/:accessID/:screenName/:leaderID"
                     element={<ListviewSecondary />}
                   />
@@ -689,10 +693,15 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype"
                     element={<ListviewSecondary />}
                   />
+      
 
                   {/* NEW ORDER ITEM LIST VIEW */}
-                  <Route
+                  {/* <Route
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1"
+                    element={<ListviewSecondary />}
+                  /> */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1"
                     element={<ListviewSecondary />}
                   />
                   <Route
@@ -1052,7 +1061,7 @@ function App() {
                     element={<LeaderCardView />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/EditOrder/:id/:Mode"
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/:OrderType/EditOrder/:id/:Mode"
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrder />}
                   />
@@ -1071,8 +1080,14 @@ function App() {
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrderitem />}
                   /> */}
-                  <Route
+
+                  {/* WORKING BEFORE ORDERTYPE IMPLEMENTATION */}
+                  {/* <Route
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
+                    element={<EditOrderitem />}
+                  /> */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

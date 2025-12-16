@@ -89,6 +89,8 @@ import OrderHeaderPdf from "../../apps/pages/HR/OrderHeaderPdf";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -1677,7 +1679,7 @@ export const fetchListview =
             obj = {
               field: "action",
               headerName: "Action",
-              minWidth: 150,
+              minWidth: 170,
               sortable: false,
               headerAlign: "center",
               align: "left",
@@ -1729,10 +1731,15 @@ export const fetchListview =
                     {/* ORDER HEADER */}
                     {/* {params.row.LeaderCount >= 1 ? ( */}
                     <Link
+                      // to={
+                      //   params.row.OrdHdrCount > 0
+                      //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+                      //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+                      // }
                       to={
                         params.row.OrdHdrCount > 0
-                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
-                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
                       }
                       state={{
                         PartyID: params.row.RecordID,
@@ -1743,6 +1750,26 @@ export const fetchListview =
                       <Tooltip title="Order">
                         <IconButton color="info" size="small">
                           <CategoryIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* FOR QUOTATION */}
+                    <Link
+                      to={
+                        params.row.OrdHdrCount > 0
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+                      }
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Quotation">
+                        <IconButton color="info" size="small">
+                          <RequestQuoteOutlinedIcon />
                         </IconButton>
                       </Tooltip>
                     </Link>

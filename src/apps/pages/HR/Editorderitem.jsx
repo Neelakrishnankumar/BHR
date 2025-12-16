@@ -209,12 +209,12 @@ const EditOrderitem = () => {
       if (mode === "A") {
         if (params.Type === "Party") {
           navigate(
-            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/${params.OrderType}/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
             { state: { ...state } }
           );
         } else {
           navigate(
-            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/${params.OrderType}/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
             { state: { ...state } }
           );
         }
@@ -310,7 +310,7 @@ const EditOrderitem = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`,
+                    `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`,
                     { state: { ...state } }
                   );
                 }}
@@ -324,7 +324,7 @@ const EditOrderitem = () => {
                   sx={{ cursor: "default" }}
                   onClick={() => {
                     navigate(
-                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
                       { state: { ...state } }
                     );
                   }}
@@ -339,7 +339,7 @@ const EditOrderitem = () => {
                   sx={{ cursor: "default" }}
                   onClick={() => {
                     navigate(
-                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
                       { state: { ...state } }
                     );
                   }}

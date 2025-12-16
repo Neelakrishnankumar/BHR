@@ -82,7 +82,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
-
+import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -1816,6 +1816,12 @@ const Listview = () => {
             <Chip
               icon={<CategoryIcon color="primary" />}
               label="Order"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={<RequestQuoteOutlinedIcon color="primary" />}
+              label="Quotation"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />

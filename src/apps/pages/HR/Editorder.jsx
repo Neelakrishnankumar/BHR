@@ -113,6 +113,11 @@ const EditOrder = () => {
     deliveredby: data.DeliveryBy,
     deliver:
       mode == "A" ? "Yes" : data.DeliveryYesorNo === "Yes" ? "Yes" : "No",
+    OrderType:
+  mode === "A"
+    ? ""               // ✅ Add mode → blank
+    : data.OrderType || "", // ✅ Edit mode → "O" or "Q"
+
     paid: mode == "A" ? "Yes" : data.PaidYesorNo === "Yes" ? "Yes" : "No",
     processdate: data.ProcessDate,
     paiddate: data.PaidDate,
@@ -191,6 +196,7 @@ const EditOrder = () => {
       // Disable: isCheck,
       //   Finyear,
       CompanyID,
+      OrderType:values.OrderType || "",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -200,7 +206,7 @@ const EditOrder = () => {
         const OrderHeaderId = response.payload.OrderHeaderID;
         const OrderHeaderCode = response.payload.OrderHeaderCode;
         navigate(
-          `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/TR311/${OrderHeaderId}/EditOrderitem/-1/A`,
+          `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${OrderHeaderId}/EditOrderitem/-1/A`,
           { state: { ...state, Code: OrderHeaderCode } }
         );
       } else if (mode === "E") {
@@ -482,6 +488,26 @@ const EditOrder = () => {
                         },
                       }}
                     />
+                    <TextField
+                          select
+                          label="Order Type"
+                          id="OrderType"
+                          name="OrderType"
+                          value={values.OrderType}
+                          onBlur={handleBlur}
+                          // onChange={handleChange}
+                          // disabled={mode === "V"}
+                          // required
+                          onChange={(e) => {
+                            handleChange(e); // update form state (Formik)
+                            sessionStorage.setItem("OrderType", e.target.value); // save to sessionStorage
+                          }}
+                          focused
+                          variant="standard"
+                        >
+                          <MenuItem value="O">Order</MenuItem>
+                          <MenuItem value="Q">Quotation</MenuItem>
+                        </TextField>
                     {mode === "A"?
                     <TextField
                       name="tentativedeliverdate"
