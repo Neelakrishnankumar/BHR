@@ -134,7 +134,7 @@ const Editvendor = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Party.name),
-          locality: Yup.object().required(data.Party.locality).nullable(),
+          // locality: Yup.object().required(data.Party.locality).nullable(),
           //ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
@@ -523,6 +523,7 @@ const Editvendor = () => {
       BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
       ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
+      Source: "Cloud"
     };
 
     try {
@@ -593,7 +594,7 @@ const Editvendor = () => {
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
-        navigate("/Apps/TR243/Party");
+        // navigate("/Apps/TR243/Party");
       } else {
         toast.error(response.payload.Msg);
       }
@@ -649,7 +650,7 @@ const Editvendor = () => {
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
-        navigate("/Apps/TR243/Party");
+        // navigate("/Apps/TR243/Party");
       } else {
         toast.error(response.payload.Msg);
       }
@@ -1112,14 +1113,15 @@ const Editvendor = () => {
                   <CheckinAutocomplete
                     id="locality"
                     name="locality"
-                    label={
-                      <>
-                        Locality
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
+                    label="Locality"
+                    // label={
+                    //   <>
+                    //     Locality
+                    //     <span style={{ color: "red", fontSize: "20px" }}>
+                    //       *
+                    //     </span>
+                    //   </>
+                    // }
                     variant="outlined"
                     value={values.locality}
                     onChange={(newValue) => {
@@ -1127,9 +1129,9 @@ const Editvendor = () => {
                       console.log(newValue, "--newvalue locality");
                       console.log(newValue.RecordID, "locality RecordID");
                     }}
-                    error={!!touched.locality && !!errors.locality}
-                    helperText={touched.locality && errors.locality}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Functions","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                    // error={!!touched.locality && !!errors.locality}
+                    // helperText={touched.locality && errors.locality}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
                   {/* <TextField
                     name="Pancardnumber"
@@ -1259,9 +1261,9 @@ const Editvendor = () => {
                       console.log(newValue, "--newvalue ReferenceBy");
                       console.log(newValue.RecordID, "ReferenceBy RecordID");
                     }}
-                    error={!!touched.ReferenceBy && !!errors.ReferenceBy}
-                    helperText={touched.ReferenceBy && errors.ReferenceBy}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Functions","Filter":"ParentID=${CompanyID}","Any":""}}`}
+                    // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
+                    // helperText={touched.ReferenceBy && errors.ReferenceBy}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":""}}`}
                   />
 
                   {/* panimage */}
