@@ -134,13 +134,13 @@ const Editvendor = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Party.name),
-          // locality: Yup.object().required(data.Party.locality).nullable(),
-          //ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
+          
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
             .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
         };
-
+// locality: Yup.object().required(data.Party.locality).nullable(),
+          //ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
         if (CompanyAutoCode === "N") {
           schemaFields.code = Yup.string().required(data.Party.code);
         }
@@ -448,14 +448,14 @@ const Editvendor = () => {
     code: data.Code || "",
     name: data.Name || "",
     Pancardnumber: data.PanCardNo || "",
-    locality: data.LocalityID
+    locality: data.LocalityID && data.LocalityID !== "0"
       ? {
         RecordID: data.LocalityID,
         Code: data.LocalityCode,
         Name: data.LocalityName,
       }
       : null,
-    ReferenceBy: data.ReferenceID
+    ReferenceBy: data.ReferenceID && data.ReferenceID !== "0"
       ? {
         RecordID: data.ReferenceID,
         Code: data.ReferenceByName,
@@ -500,8 +500,8 @@ const Editvendor = () => {
       RecordID: recID,
       Code: values.code,
       Name: values.name,
-      LocalityID: values.locality.RecordID || 0,
-      LocalityName: values.locality.Name || "",
+      LocalityID: values.locality?.RecordID || 0,
+      LocalityName: values.locality?.Name || "",
       ReferenceID: values.ReferenceBy?.RecordID || 0,
       ReferenceName: values.ReferenceBy?.Name || "",
       PanCardNo: values.Pancardnumber,
@@ -928,13 +928,13 @@ const Editvendor = () => {
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
+            validationSchema={validationSchema}
+            enableReinitialize={true}
             onSubmit={(values, setSubmitting) => {
               setTimeout(() => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={validationSchema}
-            enableReinitialize={true}
           >
             {({
               errors,
@@ -1129,8 +1129,8 @@ const Editvendor = () => {
                       console.log(newValue, "--newvalue locality");
                       console.log(newValue.RecordID, "locality RecordID");
                     }}
-                    // error={!!touched.locality && !!errors.locality}
-                    // helperText={touched.locality && errors.locality}
+                    error={!!touched.locality && !!errors.locality}
+                    helperText={touched.locality && errors.locality}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
                   {/* <TextField
@@ -1258,8 +1258,8 @@ const Editvendor = () => {
                     value={values.ReferenceBy}
                     onChange={(newValue) => {
                       setFieldValue("ReferenceBy", newValue);
-                      console.log(newValue, "--newvalue ReferenceBy");
-                      console.log(newValue.RecordID, "ReferenceBy RecordID");
+                      // console.log(newValue, "--newvalue ReferenceBy");
+                      // console.log(newValue.RecordID, "ReferenceBy RecordID");
                     }}
                     // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
                     // helperText={touched.ReferenceBy && errors.ReferenceBy}
