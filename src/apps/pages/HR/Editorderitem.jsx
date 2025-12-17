@@ -297,8 +297,14 @@ const EditOrderitem = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
+                  // onClick={() => {
+                  //   navigate(-1);
+                  // }}
                   onClick={() => {
-                    navigate(-1);
+                    navigate(
+                      `/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`,
+                      { state: { ...state } }
+                    );
                   }}
                 >
                   {`Lead(${state.LeadTitle || ""})`}
@@ -315,7 +321,8 @@ const EditOrderitem = () => {
                   );
                 }}
               >
-                Order ({state.Code || ""})
+                {params.OrderType === "O" ? "Order" : "Quotation"} (
+                {state.Code || ""})
               </Typography>
               {params.Type === "Party" && mode === "E" ? (
                 <Typography
@@ -329,7 +336,7 @@ const EditOrderitem = () => {
                     );
                   }}
                 >
-                  Order Item
+                  {params.OrderType === "O" ? "Order" : "Quotation"} Item
                 </Typography>
               ) : null}
               {params.Type === "Leader" ? (
@@ -344,7 +351,7 @@ const EditOrderitem = () => {
                     );
                   }}
                 >
-                  Order Item
+                  {params.OrderType === "O" ? "Order" : "Quotation"} Item
                 </Typography>
               ) : null}
               <Typography
@@ -352,7 +359,14 @@ const EditOrderitem = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                {mode === "A" ? "Add Order Item" : "Edit Order Item"}
+                {/* {mode === "A" ? "Add Order Item" : "Edit Order Item"} */}
+                {params.OrderType === "O"
+                  ? mode === "A"
+                    ? "Add Order Item"
+                    : "Edit Order Item"
+                  : mode === "A"
+                  ? "Add Quotation Item"
+                  : "Edit Quotation Item"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -567,7 +581,7 @@ const EditOrderitem = () => {
                         helperText={touched.product && errors.product}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       /> */}
-                       <OrderItemAutocomplete
+                      <OrderItemAutocomplete
                         id="product"
                         name="product"
                         //label="Product"

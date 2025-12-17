@@ -2030,7 +2030,7 @@ const ListviewSecondary = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  Order
+                  {params.OrderType === "O" ? "Order" : "Quotation"}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -2060,7 +2060,7 @@ const ListviewSecondary = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  Order
+                  {params.OrderType === "O" ? "Order" : "Quotation"}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -2106,14 +2106,14 @@ const ListviewSecondary = () => {
                     navigate(`/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`, { state: { ...state } });
                   }}
                 >
-                  Order ({state.Code || ""})
+                  {params.OrderType === "O" ? "Order" : "Quotation"} ({state.Code || ""})
                 </Typography>
                 <Typography
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                  Order Item
+                 {params.OrderType === "O" ? "Order" : "Quotation"}{" "}Item
                 </Typography>
               </Breadcrumbs>
             </Box>

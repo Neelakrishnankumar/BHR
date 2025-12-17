@@ -74,6 +74,7 @@ const EditOrder = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
   // Extract default API data safely
@@ -113,10 +114,14 @@ const EditOrder = () => {
     deliveredby: data.DeliveryBy,
     deliver:
       mode == "A" ? "Yes" : data.DeliveryYesorNo === "Yes" ? "Yes" : "No",
+    // OrderType:
+    //   mode === "A"
+    //     ? ""
+    //     : data.OrderType || "",
     OrderType:
-  mode === "A"
-    ? ""               // ✅ Add mode → blank
-    : data.OrderType || "", // ✅ Edit mode → "O" or "Q"
+      mode === "A"
+        ? params.OrderType || "" // 👈 take from URL
+        : data.OrderType || "",
 
     paid: mode == "A" ? "Yes" : data.PaidYesorNo === "Yes" ? "Yes" : "No",
     processdate: data.ProcessDate,
@@ -170,7 +175,10 @@ const EditOrder = () => {
       //   PartyRecordID: state.PartyID,
       //   EmployeeRecordID: state.PartyID,
       //LeaderID: params.filtertype || 0,
-      LeaderID: params.Type === "Party" ? 0 : params.filtertype || 0,
+      LeaderID:
+        params.Type === "Party"
+          ? data.LeaderRecordID || 0
+          : params.filtertype || 0,
 
       PartyName: values.partyname || "",
       OrderDate: values.orderdate || "",
@@ -196,7 +204,7 @@ const EditOrder = () => {
       // Disable: isCheck,
       //   Finyear,
       CompanyID,
-      OrderType:values.OrderType || "",
+      OrderType: values.OrderType || "",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -312,9 +320,14 @@ const EditOrder = () => {
                   navigate(-1);
                 }}
               >
-                {mode === "E"
+                {/* {mode === "E"
                   ? `Order (${state.Code || ""} )`
-                  : `Order(New)` || ""}
+                  : `Order(New)` || ""} */}
+                  {params.OrderType === "O" ? (
+    mode === "E" ? `Order (${state.Code || ""} )` : `Order(New)` || ""
+  ) : (
+    mode === "E" ? `Quotation (${state.Code || ""} )` : `Quotation(New)` || ""
+  )}
               </Typography>
               <Typography
                 variant="h5"
@@ -324,7 +337,14 @@ const EditOrder = () => {
                 //   navigate(-1);
                 // }}
               >
-                {mode === "A" ? "Add Order" : "Edit Order"}
+                {/* {mode === "A" ? "Add Order" : "Edit Order"} */}
+                {params.OrderType === "O"
+                  ? mode === "A"
+                    ? "Add Order"
+                    : "Edit Order"
+                  : mode === "A"
+                  ? "Add Quotation"
+                  : "Edit Quotation"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -488,47 +508,57 @@ const EditOrder = () => {
                         },
                       }}
                     />
+
                     <TextField
-                          select
-                          label="Order Type"
-                          id="OrderType"
-                          name="OrderType"
-                          value={values.OrderType}
-                          onBlur={handleBlur}
-                          // onChange={handleChange}
-                          // disabled={mode === "V"}
-                          // required
-                          onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem("OrderType", e.target.value); // save to sessionStorage
-                          }}
-                          focused
-                          variant="standard"
-                        >
-                          <MenuItem value="O">Order</MenuItem>
-                          <MenuItem value="Q">Quotation</MenuItem>
-                        </TextField>
-                    {mode === "A"?
-                    <TextField
-                      name="tentativedeliverdate"
-                      type="date"
-                      id="tentativedeliverdate"
-                      label="Tentative Deliver Date"
-                      variant="standard"
-                      focused
-                      inputFormat="YYYY-MM-DD"
-                      value={values.tentativedeliverdate}
+                      select
+                      label="Order Type"
+                      id="OrderType"
+                      name="OrderType"
+                      value={values.OrderType}
                       onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={
-                        !!touched.tentativedeliverdate &&
-                        !!errors.tentativedeliverdate
-                      }
-                      helperText={
-                        touched.tentativedeliverdate &&
-                        errors.tentativedeliverdate
-                      }
-                    /> : false}
+                      // onChange={handleChange}
+                      // disabled={mode === "V"}
+                      // required
+                      onChange={(e) => {
+                        handleChange(e); // update form state (Formik)
+                        sessionStorage.setItem("OrderType", e.target.value); // save to sessionStorage
+                      }}
+                      focused
+                      variant="standard"
+                      // InputProps={{
+                      //   readOnly: params.Type === "Party",
+                      // }}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    >
+                      <MenuItem value="O">Order</MenuItem>
+                      <MenuItem value="Q">Quotation</MenuItem>
+                    </TextField>
+                    {mode === "A" ? (
+                      <TextField
+                        name="tentativedeliverdate"
+                        type="date"
+                        id="tentativedeliverdate"
+                        label="Tentative Deliver Date"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.tentativedeliverdate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.tentativedeliverdate &&
+                          !!errors.tentativedeliverdate
+                        }
+                        helperText={
+                          touched.tentativedeliverdate &&
+                          errors.tentativedeliverdate
+                        }
+                      />
+                    ) : (
+                      false
+                    )}
 
                     {mode !== "A" && (
                       <>

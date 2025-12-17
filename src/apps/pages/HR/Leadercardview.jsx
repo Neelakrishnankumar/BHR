@@ -110,6 +110,23 @@ const LeaderCardView = () => {
       },
     });
   };
+
+//  const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
+//         // if (OrdHdrCount == 0) {
+//             // Case 1: No order yet → go to Add Order
+//             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
+//                 state: {
+//                     PartyID: partyID,
+//                     LeadTitle: leadTitle,
+//                     PartyName: PartyName,
+//                     LEStatus: LEStatus,
+//                     OrderCount: OrdHdrCount,
+//                 },
+//             // });
+ 
+//         }
+//     )
+  
   const handleorderscreen = (
     recordID,
     partyID,
@@ -377,6 +394,52 @@ const LeaderCardView = () => {
                         </IconButton>
                       </Tooltip>
                     </>
+                  )}
+                  {row.LEStatus === "Opt To Order" && (
+                    
+                      <Tooltip title="Order">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleorderscreen(
+                              row.RecordID,
+                              row.PartyID,
+                              row.LeadTitle,
+                              row.PartyName,
+                              row.LEStatus,
+                              row.OrdHdrCount,
+                              row.OrderCount,
+                            )
+                          }
+                          size="small"
+                        >
+                          <CategoryIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                    
+                  )}
+                  {row.LEStatus === "Opt To Quotation" && (
+                    
+                       <Tooltip title="Quotation">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleorderscreen1(
+                              row.RecordID,
+                              row.PartyID,
+                              row.LeadTitle,
+                              row.PartyName,
+                              row.LEStatus,
+                              row.OrdHdrCount,
+                              row.QuotationCount
+                            )
+                          }
+                          size="small"
+                        >
+                          <RequestQuoteOutlinedIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                    
                   )}
                 </Box>
               </Card>

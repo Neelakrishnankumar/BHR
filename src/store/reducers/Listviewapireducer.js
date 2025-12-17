@@ -1737,7 +1737,7 @@ export const fetchListview =
                       //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
                       // }
                       to={
-                        params.row.OrdHdrCount > 0
+                        params.row.OrderCount > 0
                           ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
                           : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
                       }
@@ -1757,7 +1757,7 @@ export const fetchListview =
                     {/* FOR QUOTATION */}
                     <Link
                       to={
-                        params.row.OrdHdrCount > 0
+                        params.row.QuotationCount > 0
                           ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
                           : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
                       }
