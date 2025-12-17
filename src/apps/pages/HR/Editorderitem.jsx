@@ -209,12 +209,12 @@ const EditOrderitem = () => {
       if (mode === "A") {
         if (params.Type === "Party") {
           navigate(
-            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Party/${params.OrderType}/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
             { state: { ...state } }
           );
         } else {
           navigate(
-            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
+            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/Leader/${params.OrderType}/TR311/${params.filtertype1}/EditOrderitem/-1/A`,
             { state: { ...state } }
           );
         }
@@ -297,8 +297,14 @@ const EditOrderitem = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
+                  // onClick={() => {
+                  //   navigate(-1);
+                  // }}
                   onClick={() => {
-                    navigate(-1);
+                    navigate(
+                      `/Apps/Secondarylistview/TR303/LeaderCardView/${state.PartyID}`,
+                      { state: { ...state } }
+                    );
                   }}
                 >
                   {`Lead(${state.LeadTitle || ""})`}
@@ -310,12 +316,13 @@ const EditOrderitem = () => {
                 sx={{ cursor: "default" }}
                 onClick={() => {
                   navigate(
-                    `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`,
+                    `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`,
                     { state: { ...state } }
                   );
                 }}
               >
-                Order ({state.Code || ""})
+                {params.OrderType === "O" ? "Order" : "Quotation"} (
+                {state.Code || ""})
               </Typography>
               {params.Type === "Party" && mode === "E" ? (
                 <Typography
@@ -324,12 +331,12 @@ const EditOrderitem = () => {
                   sx={{ cursor: "default" }}
                   onClick={() => {
                     navigate(
-                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
                       { state: { ...state } }
                     );
                   }}
                 >
-                  Order Item
+                  {params.OrderType === "O" ? "Order" : "Quotation"} Item
                 </Typography>
               ) : null}
               {params.Type === "Leader" ? (
@@ -339,12 +346,12 @@ const EditOrderitem = () => {
                   sx={{ cursor: "default" }}
                   onClick={() => {
                     navigate(
-                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+                      `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
                       { state: { ...state } }
                     );
                   }}
                 >
-                  Order Item
+                  {params.OrderType === "O" ? "Order" : "Quotation"} Item
                 </Typography>
               ) : null}
               <Typography
@@ -352,7 +359,14 @@ const EditOrderitem = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                {mode === "A" ? "Add Order Item" : "Edit Order Item"}
+                {/* {mode === "A" ? "Add Order Item" : "Edit Order Item"} */}
+                {params.OrderType === "O"
+                  ? mode === "A"
+                    ? "Add Order Item"
+                    : "Edit Order Item"
+                  : mode === "A"
+                  ? "Add Quotation Item"
+                  : "Edit Quotation Item"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -567,7 +581,7 @@ const EditOrderitem = () => {
                         helperText={touched.product && errors.product}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2130","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
                       /> */}
-                       <OrderItemAutocomplete
+                      <OrderItemAutocomplete
                         id="product"
                         name="product"
                         //label="Product"
