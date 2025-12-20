@@ -45,7 +45,9 @@
     "code": "Please Enter the Code",
     "name": "Please Enter the Overhead",
     "frequency": "Please Enter the Frequency",
-    "OverheadType": "Please Enter the OverheadType"
+    "OverheadType": "Please Enter the OverheadType",
+    "Overhead": "Please Select the Overhead"
+
   },
   "Overheadtype": {
     "code": "Please Enter the Code",

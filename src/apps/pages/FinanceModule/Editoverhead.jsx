@@ -26,6 +26,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  explorePostData,
   fetchApidata,
   getFetchData,
   postApidata,
@@ -85,6 +86,7 @@ const Editoverhead = () => {
   const [page, setPage] = React.useState(secondaryCurrentPage);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+  const [validationSchema1, setValidationSchema1] = useState(null);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
   const [show, setScreen] = React.useState("0");
@@ -131,7 +133,7 @@ const Editoverhead = () => {
             </Typography> */}
           <Typography>
             {show == "1"
-              ? "List of Overhead Child"
+              ? "List of Additional Expense"
               : ""}
           </Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
@@ -153,13 +155,47 @@ const Editoverhead = () => {
       </GridToolbarContainer>
     );
   }
+  let VISIBLE_FIELDS = [];
+
+  if (show === "1") {
+    VISIBLE_FIELDS = [
+      "slno", 
+      "OverHeadsID",
+      "Sortorder",  
+      "action",
+    ];
+  }
+
+  const columns = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page * pageSize +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, show, page, pageSize]);
+
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
-    LeaveTypeID: "",
-    totaldays: "",
-    availableleave: "",
-    elligibledays: "",
-    Year: "",
+    overhead: "",
+    sortorder: "",
+    checkbox: "",
+
   });
   const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
     setFunMode(mode);
@@ -168,33 +204,30 @@ const Editoverhead = () => {
 
       setLeaveCondata({
         recordID: "",
-        LeaveTypeID: "",
-        totaldays: "",
-        availableleave: "",
-        elligibledays: "",
-        Year: "",
+        overhead: "",
+        sortorder: "",
+        checkbox: "",
       });
     } else {
 
       if (field == "action") {
         setLeaveCondata({
           recordID: rowData.RecordID,
-          totaldays: rowData.TotalDays,
-          availableleave: rowData.AvailDays,
-          elligibledays: rowData.EligibleDays,
-          LeaveTypeID: rowData.LeaveTypeID
+          sortorder: rowData.Sortorder,
+          checkbox: rowData.checkbox==="Y"?true:false,
+          overhead: rowData.OverHeadsID
             ? {
-              RecordID: rowData.LeaveTypeID,
+              RecordID: rowData.OverHeadsID,
               Code: "",
-              Name: rowData.LeavePart,
+              Name: rowData.OverHeadsName,
             }
             : null,
-          Year: rowData.Year,
+         
         });
-        setFieldValue("functionLookup", {
-          RecordID: rowData.FunctionsID,
-          Code: rowData.FunctionCode,
-          Name: rowData.FunctionName,
+        setFieldValue("overhead", {
+          RecordID: rowData.OverHeadsID,
+          Code: "",
+          Name: rowData.OverHeadsName,
         });
 
       }
@@ -221,7 +254,12 @@ const Editoverhead = () => {
         }
 
         const schema = Yup.object().shape(schemaFields);
+          const schema1 = Yup.object().shape({
+          overhead: Yup.object().required(data.Overhead.Overhead).nullable(),       
+        });
         setValidationSchema(schema);
+        setValidationSchema1(schema1);
+
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -239,9 +277,10 @@ const Editoverhead = () => {
     if (event.target.value == "1") {
       dispatch(
         fetchExplorelitview(
-          "TR038",
-          "Skills",
-          `${recID} AND CompanyID=${CompanyID}`,
+          "TR325",
+          "Additional Expense",
+          "",
+          // `${recID} AND CompanyID=${CompanyID}`,
           ""
         )
       );
@@ -255,7 +294,7 @@ const Editoverhead = () => {
     name: data.Name,
     frequency: data.Frequency,
     accounttype: data.AccountType || "Debit",
-   
+
     OverheadType: data.OverHeadTypeID
       ? { RecordID: data.OverHeadTypeID, Name: data.OverHeadType }
       : null,
@@ -305,16 +344,50 @@ const Editoverhead = () => {
       setLoading(false);
     }
   };
-    const initialValue2 = {
+  const initialValue2 = {
     code: data.Code,
-    description: data.Name,   
-    Overhead: data.OverHeadID
-      ? { RecordID: data.OverHeadID, Name: data.OverHeadName }
-      : null,
-    disable: data.Disable === "Y" ? true : false,
+    description: data.Name,
+    overhead: LeaveCondata.overhead,
+    checkbox: data.Disable === "Y" ? true : false,
+    sortorder: LeaveCondata.sortorder,
     // delete: data.DeleteFlag === "Y" ? true : false
 
   };
+    const AddexpFnsave = async (values, resetForm, del) => {
+      setLoading(true);
+      let action =
+        funMode === "A" && !del
+          ? "insert"
+          : funMode === "E" && del
+            ? "harddelete"
+            : "update";
+      const idata = {
+        RecordID: LeaveCondata.recordID,       
+        OverHeadsID: values.overhead.RecordID || 0,
+        Sortorder: values.sortorder,
+        Disable: values.checkbox == true ? "Y" : "N",
+        CompanyID,
+      };
+      // console.log("save" + JSON.stringify(saveData));
+  
+      const response = await dispatch(
+        explorePostData({ accessID: "TR325", action, idata })
+      );
+      if (response.payload.Status == "Y") {
+        setLoading(false);
+        dispatch(
+          fetchExplorelitview("TR325", "Additional Expense", "", "")
+        );
+  
+        toast.success(response.payload.Msg);
+  
+        selectCellRowData({ rowData: {}, mode: "A", field: "" });
+        resetForm();
+      } else {
+        setLoading(false);
+        toast.error(response.payload.Msg);
+      }
+    };
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -388,7 +461,7 @@ const Editoverhead = () => {
           </Box>
 
           <Box display="flex">
-            {/* {mode !== "A" ? (
+            {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Explore</InputLabel>
                 <Select
@@ -404,7 +477,7 @@ const Editoverhead = () => {
               </FormControl>
             ) : (
               false
-            )} */}
+            )}
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -719,12 +792,12 @@ const Editoverhead = () => {
           <Formik
             initialValues={initialValue2}
             enableReinitialize={true}
-          // validationSchema={validationSchema6}
-          // onSubmit={(values, { resetForm }) => {
-          //   setTimeout(() => {
-          //     empItemCustodyFn(values, resetForm, false);
-          //   }, 100);
-          // }}
+           validationSchema={validationSchema1}
+          onSubmit={(values, { resetForm }) => {
+            setTimeout(() => {
+              AddexpFnsave(values, resetForm, false);
+            }, 100);
+          }}
           >
             {({
               errors,
@@ -845,7 +918,7 @@ const Editoverhead = () => {
                         },
                       }}
                       rows={explorelistViewData}
-                      columns={[]}
+                      columns={columns}
                       disableSelectionOnClick
                       getRowId={(row) => row.RecordID}
                       rowHeight={dataGridRowHeight}
@@ -917,80 +990,85 @@ const Editoverhead = () => {
                       error={!!touched.sortorder && !!errors.sortorder}
                       helperText={touched.sortorder && errors.sortorder}
                       focused
+                      InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                     />
                     <Box>
-                    <Field
-                      //  size="small"
-                      type="checkbox"
-                      name="checkbox"
-                      id="checkbox"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                      label="Disable"
-                    />
-                
-                <FormLabel focused={false}>Disable</FormLabel>
-              </Box></FormControl>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="checkbox"
+                        id="checkbox"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Disable"
+                      />
+
+                      <FormLabel focused={false}>Disable</FormLabel>
+                    </Box></FormControl>
                 </Box>
-          <Box
-            display="flex"
-            justifyContent="end"
-            padding={1}
-            style={{ marginTop: "-40px" }}
-            gap={2}
-          >
-            <LoadingButton
-              color="secondary"
-              variant="contained"
-              type="submit"
-              loading={isLoading}
-            >
-              Save
-            </LoadingButton>
+                <Box
+                  display="flex"
+                  justifyContent="end"
+                  padding={1}
+                  style={{ marginTop: "-40px" }}
+                  gap={2}
+                >
+                  <LoadingButton
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
+                    Save
+                  </LoadingButton>
 
-            <Button
-              color="error"
-              variant="contained"
-              onClick={() => {
-                Swal.fire({
-                  title: errorMsgData.Warningmsg.Delete,
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Confirm",
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    // empItemCustodyFn(values, resetForm, "harddelete");
-                  } else {
-                    return;
-                  }
-                });
-              }}
-            >
-              Delete
-            </Button>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => {
+                      Swal.fire({
+                        title: errorMsgData.Warningmsg.Delete,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          // empItemCustodyFn(values, resetForm, "harddelete");
+                        } else {
+                          return;
+                        }
+                      });
+                    }}
+                  >
+                    Delete
+                  </Button>
 
-            <Button
-              type="reset"
-              color="warning"
-              variant="contained"
-              onClick={() => {
-                setScreen(0);
-              }}
-            >
-              Cancel
-            </Button>
-          </Box>
+                  <Button
+                    type="reset"
+                    color="warning"
+                    variant="contained"
+                    onClick={() => {
+                      setScreen(0);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
 
-        </form>
-      )}
-    </Formik>
+              </form>
+            )}
+          </Formik>
         </Paper >
       ) : (
-  false
-)}
+        false
+      )}
     </React.Fragment >
   );
 };

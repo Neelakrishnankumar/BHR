@@ -143,6 +143,7 @@ import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import store from "../..";
 
 const child = {
   data: [
@@ -429,7 +430,7 @@ const child = {
         </Tooltip>
       ),
       children: [
-       
+
         {
           name: "HSN",
           id: 43468,
@@ -447,7 +448,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR316",
         },
-         {
+        {
           name: "Item",
           id: 43468,
           url: "./TR315/Item Group",
@@ -889,7 +890,19 @@ const Sidebars = () => {
   const [selected, setSelected] = useState("Product Category");
 
   const [open, setOpen] = React.useState(false);
+  const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const sessionLogo = sessionStorage.getItem("logoimage");
 
+      const newLogo = sessionLogo
+        ? store.getState().globalurl.attachmentUrl + sessionLogo
+        : BackOfficelogoV1;
+
+      setLogoSrc((prev) => (prev !== newLogo ? newLogo : prev));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -1074,12 +1087,10 @@ const Sidebars = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                // ml="15px"
+              // ml="15px"
               >
-                <img
-                  // variant="rounded"
-                  // src={LgemsLogo}
-                  // src={LgemsLogo}
+                {/* <img
+                 
                   src={BackOfficelogoV1}
                   // sx={{ width: "100px" }}
                   style={{ height: "60px", width: "180px" }}
@@ -1087,7 +1098,13 @@ const Sidebars = () => {
                     // navigate("./Chart");
                     navigate("./HR");
                   }}
-                ></img>
+                ></img> */}
+                <img
+                  src={logoSrc}
+                  style={{ height: "60px", width: "180px", objectFit: "contain" }}
+                  onClick={() => navigate("./HR")}
+                />
+
                 {/* <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography> */}
 
                 {/* <IconButton
