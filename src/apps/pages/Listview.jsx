@@ -83,6 +83,10 @@ import { Formik } from "formik";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
 import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
+import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, OrderItemAutocomplete } from "../../ui-components/global/Autocomplete";
+import OrdEnqProductPDF from "./pdf/OrdEnqProduct";
+import OrdEnqPartyPDF from "./pdf/OrdEnqParty";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -108,7 +112,7 @@ const Listview = () => {
   var invoice;
   const mailData = useSelector((state) => state.listviewApi.mailData);
   const searchLoading = useSelector((state) => state.formApi.searchLoading);
-
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const open = useSelector((state) => state.listviewApi.mailOpen);
   var screenName = params.screenName;
   // console.log("🚀 ~ file: Listview.jsx:54 ~ Listview ~ screenName", screenName);
@@ -492,8 +496,7 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${
-                          accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -909,7 +912,7 @@ const Listview = () => {
                     setTimeout(() => setSubmitting(false), 100);
                   }}
                 >
-                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
+                  {({ values, handleSubmit, handleChange, handleBlur, isSubmitting, setFieldValue }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
                         <TextField
@@ -953,7 +956,52 @@ const Listview = () => {
                           }}
                           sx={{ width: 250, mt: 2 }}
                         />
+                        {/* <MultiFormikOptimizedAutocomplete
+                          sx={{ width: 250, mt: 1 }}
+                          id="party"
+                          name="party"
+                          label="Party"
+                          variant="outlined"
+                          value={values.party}
+                          onChange={(e,newValue) => {
+                            setFieldValue("party", newValue);
+                           
+                          }}
+                          // error={!!touched.party && !!errors.party}
+                          // helperText={touched.party && errors.party}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${compID}","Any":""}}`}
+                        />
+                        <MultiFormikOptimizedAutocomplete
+                          sx={{ width: 250, mt: 1 }}
+                          id="product"
+                          name="product"
+                          label="Product"
+                          variant="outlined"
+                          value={values.product}
+                          onChange={(e,newValue) => {
+                            setFieldValue("product", newValue);
 
+                          }}
+                          // error={!!touched.product && !!errors.product}
+                          // helperText={touched.product && errors.product}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
+                        />
+                        <TextField
+                          select
+                          fullWidth
+                          focused
+                          label="Type"
+                          id="Type"
+                          name="Type"
+                          value={values.Type}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          variant="standard"
+                          sx={{ width: 250, mt: 1 }}
+                        >
+                          <MenuItem value="ByParty">By Party</MenuItem>
+                          <MenuItem value="ByProduct">By Product</MenuItem>
+                        </TextField> */}
                         <Typography mt={2} fontWeight="bold" color="error">
                           Status
                         </Typography>
@@ -1099,6 +1147,78 @@ const Listview = () => {
                             Apply
                           </Button>
                         </Stack>
+                        {/* <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} marginTop={3}>
+                          <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                            Apply
+                          </Button>
+                          {values.Type === "ByProduct" ? (
+                            <PDFDownloadLink
+                              document={
+                                <OrdEnqProductPDF
+                                  data={listViewData}
+                                // Project={values?.project}
+                                // Overhead={values?.overhead}
+                                />
+                              }
+                              fileName={`OrderEnquirySummary_Product}.pdf`}
+                              style={{ color: "#d32f2f", cursor: "pointer" }}
+                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                                ) : (
+                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                )
+                              }
+                            </PDFDownloadLink>
+                          ) : (
+                            <PDFDownloadLink
+                              document={
+                                <OrdEnqPartyPDF
+                                  data={listViewData}
+                                // Project={values?.project}
+                                // Overhead={values?.overhead}
+                                />
+                              }
+                              fileName={`OrderEnquirySummary_Party"}.pdf`}
+                              style={{ color: "#d32f2f", cursor: "pointer" }}
+                            >
+                              {({ loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                                ) : (
+                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                )
+                              }
+                            </PDFDownloadLink>
+                          )}
+
+                          <Button
+                            type="button"
+                            variant="contained"
+                            color="error"
+                            size="small"
+                          // onClick={() => {
+                          //   sessionStorage.removeItem("TR264_Filters");
+                          //   sessionStorage.removeItem("TR264_useCurrentEmp");
+
+                          //   resetForm({
+                          //     values: {
+                          //       project: [],
+                          //       Employee: null,
+                          //       overhead: [],
+                          //       Status: "",
+                          //       fromDate: defaultFromDate,
+                          //       toDate: defaultToDate,
+                          //       self: true,
+                          //       Type: "ByProject",
+                          //     },
+                          //   });
+                          // }}
+                          >
+                            RESET
+                          </Button>
+                        </Stack> */}
                       </Box>
                     </form>
                   )}
@@ -1861,13 +1981,13 @@ const Listview = () => {
               variant="outlined"
             />
             <Chip
-              icon={<CategoryOutlinedIcon color="primary"/>}
+              icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ): accessID == "TR316" ? (
+        ) : accessID == "TR316" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -1875,13 +1995,13 @@ const Listview = () => {
               variant="outlined"
             />
             <Chip
-              icon={<QrCodeScannerOutlinedIcon color="primary"/>}
+              icon={<QrCodeScannerOutlinedIcon color="primary" />}
               label="HSN Master"
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ): accessID == "TR099" ? (
+        ) : accessID == "TR099" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}

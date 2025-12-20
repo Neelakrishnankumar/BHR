@@ -2136,6 +2136,7 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+
   //contract initialvalue
   const ContractInitialValue = {
     Code: Data.Code,
@@ -2175,6 +2176,7 @@ const Editemployee = () => {
     shift2: contractorData.shift2 || null,
   };
   // console.log(contractorData, "--get a contractorData");
+    console.log(Data.DesignDesc ,"--contract idata");
 
   //Contractor Save Function
   const contractSavefn = async (values, resetForm, del) => {
@@ -2246,7 +2248,7 @@ const Editemployee = () => {
       ProjectCode: values?.project?.Code || 0,
       ProjectName: values?.project?.Name || "",
     };
-    console.log(idata, "--contract idata");
+    console.log(idata ,"--contract idata");
     const isStudent =
       Data.DesignDesc === "Student" ||
       deploymentInitialValue.Designation.Name === "Student";
@@ -2486,8 +2488,7 @@ const Editemployee = () => {
     }
   };
   // const [level, setLevel] = useState('2');
-
-  const deploymentInitialValue = {
+   const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
     Designation: deploymentData.DesignationID
@@ -2588,6 +2589,7 @@ const Editemployee = () => {
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
+ 
   console.log(deploymentInitialValue.Designation, "--deploymentInitialValue");
   const Fndeployment = async (values, resetForm, del) => {
     console.log(values, "--values");
