@@ -18,8 +18,9 @@ import {
   Tooltip,
   Divider,
   LinearProgress,
+  FormLabel,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
@@ -31,7 +32,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
@@ -39,9 +40,20 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import { formGap } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridRowHeight, formGap } from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { getFetchData, ItemFlagFetchData, ItemFlagMenuPut, ItemMainGETFetchData, ItemMainMenuFetchData, ItemMainpostData, ItemStockMenuGet, ItemStockMenuPut, postData, VendorRegisterFetchData } from "../../../store/reducers/Formapireducer";
+import {
+  getFetchData,
+  ItemFlagFetchData,
+  ItemFlagMenuPut,
+  ItemMainGETFetchData,
+  ItemMainMenuFetchData,
+  ItemMainpostData,
+  ItemStockMenuGet,
+  ItemStockMenuPut,
+  postData,
+  VendorRegisterFetchData,
+} from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 // import {
 //   ManagerAppraisalPayload,
@@ -53,7 +65,11 @@ import toast from "react-hot-toast";
 // } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
-
+import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { tokens } from "../../../Theme";
+import { useTheme } from "@emotion/react";
 const EditItem = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,14 +97,22 @@ const EditItem = () => {
 
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const Data = useSelector((state) => state.formApi.Data);
-  const ItemGetData = useSelector((state) => state.formApi.itemMainGETFetchData);
+  const ItemGetData = useSelector(
+    (state) => state.formApi.itemMainGETFetchData
+  );
   const ItemMainData = useSelector((state) => state.formApi.itemMainGetData);
   const ItemFlagData = useSelector((state) => state.formApi.itemFlagGetData);
   const ItemStockData = useSelector((state) => state.formApi.itemStockGetData);
 
-  const ItemMainDataLoading = useSelector((state) => state.formApi.itemMainGetDataloading);
-  const ItemFlagDataLoading = useSelector((state) => state.formApi.itemFlagGetDataloading);
-  const ItemStockDataLoading = useSelector((state) => state.formApi.itemStockGetDataloading);
+  const ItemMainDataLoading = useSelector(
+    (state) => state.formApi.itemMainGetDataloading
+  );
+  const ItemFlagDataLoading = useSelector(
+    (state) => state.formApi.itemFlagGetDataloading
+  );
+  const ItemStockDataLoading = useSelector(
+    (state) => state.formApi.itemStockGetDataloading
+  );
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
@@ -99,7 +123,7 @@ const EditItem = () => {
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
 
-  const ItemCategorID = params.parentID1
+  const ItemCategorID = params.parentID1;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -118,6 +142,8 @@ const EditItem = () => {
           PieceQuantity: Yup.string().required(data.Item.PieceQuantity),
           ConversionQty: Yup.string().required(data.Item.ConversionQty),
           GuidelinePrice: Yup.string().required(data.Item.GuidelinePrice),
+          MinStock: Yup.string().required(data.Item.MinStock),
+          ReorderLevel: Yup.string().required(data.Item.ReorderLevel),
         });
         setValidationSchema(schema);
         setValidationSchema2(schema2);
@@ -126,162 +152,66 @@ const EditItem = () => {
   }, [CompanyAutoCode]);
 
   useEffect(() => {
-    dispatch(ItemMainMenuFetchData({ get: "get", CompanyID: CompanyID, ItemCategoryID: ItemCategorID }));
+    dispatch(
+      ItemMainMenuFetchData({
+        get: "get",
+        CompanyID: CompanyID,
+        ItemCategoryID: ItemCategorID,
+      })
+    );
   }, []);
   useEffect(() => {
     dispatch(ItemMainGETFetchData({ get: "get", recID: recID }));
   }, []);
 
   const curDate = new Date().toISOString().split("T")[0];
-  const ItemMainSaveFn = async (values, delAction) => {
-    // let action =
-    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
-    let action = "";
-
-    if (mode === "A") {
-      action = "insert";
-    } else if (mode === "E" && delAction === "harddelete") {
-      action = "harddelete";
-    } else if (mode === "E") {
-      action = "update";
-    }
-    var isCheck = "N";
-    if (values.Disable == true) {
-      isCheck = "Y";
-    }
-
-    const idata = {
-      RecordID: recID,
-      CompanyID: CompanyID,
-      ItemCategoryID: ItemCategorID,
-      Code: values.Code,
-      Description: values.Description || "",
-      Sortorder: values.Sortorder || "0",
-      Disable: isCheck,
-      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
-    };
-
-    const response = await dispatch(ItemMainpostData({ action, idata }));
-    if (response.payload.Status == "Y") {
-      toast.success(response.payload.Msg);
-      navigate(-1);
-    } else {
-      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
-    }
-  };
-  const ItemSaveFn = async (values, delAction) => {
-    // let action =
-    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
-    let action = "";
-
-    if (mode === "A") {
-      action = "insert";
-    } else if (mode === "E" && delAction === "harddelete") {
-      action = "harddelete";
-    } else if (mode === "E") {
-      action = "update";
-    }
-    var isCheck = "N";
-    if (values.Disable == true) {
-      isCheck = "Y";
-    }
-
-    const idata = {
-      RecordID: recID,
-      CompanyID: CompanyID,
-      ItemCategoryRecordID: ItemCategorID,
-      PurchaseUOM: values.PurchaseUOM || "",
-      ConsumptionUOM: values.ConsumptionUOM || "",
-      ConsumptionUOMQty: values.PieceQuantity || "",
-      PurchaseUOMQty: values.BoxQuantity || "",
-      ConversionQty: values.ConversionQty || "",
-      Price: values.GuidelinePrice || "",
-    };
-
-    const response = await dispatch(ItemStockMenuPut({ action, idata }));
-    if (response.payload.Status == "Y") {
-      toast.success(response.payload.Msg);
-      navigate(-1);
-    } else {
-      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
-    }
-  };
-  const ItemFlagSaveFn = async (values, delAction) => {
-    // let action =
-    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
-    let action = "";
-
-    if (mode === "A") {
-      action = "insert";
-    } else if (mode === "E" && delAction === "harddelete") {
-      action = "harddelete";
-    } else if (mode === "E") {
-      action = "update";
-    }
-    var isCheck = "N";
-    if (values.Disable == true) {
-      isCheck = "Y";
-    }
-
-    const idata = {
-      RecordID: recID,
-      CompanyID: CompanyID,
-      ItemCategoryID: ItemCategorID,
-      Tradable: values.Tradable == true ? "Y" : "N",
-      UnderEmployeeCustody: values.UnderEmployeeCustody == true ? "Y" : "N",
-      IfExpiryApplicable: values.ExpiryApplicable == true ? "Y" : "N",
-      ByProduct: values.ByProduct == true ? "Y" : "N",
-      ServiceAndMaintenance: values.ServiceAndMaintenance == true ? "Y" : "N",
-      SpecRequired: values.SpecRequired == true ? "Y" : "N",
-      ExtendedWarrentyApplicable: values.ExtendedWarrentyApplicable == true ? "Y" : "N",
-      OnDemand: values.OnDemand == true ? "Y" : "N",
-      ScheduledService: values.ScheduledService == true ? "Y" : "N",
-      ExtendedWarrentyPeriod: values.ExtendedWarranty || "",
-      ExtendedWarrentyEndPeriod: values.ExtendedWarrantyEnd || "",
-      ToatalWarretyPeriod: values.WarrantyPeriod || "",
-      WarretyEndPeriod: values.WarrantyEndPeriod || "",
-      Disable: isCheck,
-      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
-    };
-
-    const response = await dispatch(ItemFlagMenuPut({ action, idata }));
-    if (response.payload.Status == "Y") {
-      toast.success(response.payload.Msg);
-      navigate(-1);
-    } else {
-      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
-    }
-  };
-
-
-  const fnLogOut = (props) => {
-    Swal.fire({
-      title: errorMsgData.Warningmsg[props],
-      // text:data.payload.Msg,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: props,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (props === "Logout") {
-          navigate("/");
-        }
-        if (props === "Close") {
-          navigate("/Apps/TR026/Department");
-        }
-      } else {
-        return;
-      }
-    });
-  };
-
-  const isNonMobile = useMediaQuery("(min-width:600px)");
-
-  const { toggleSidebar, broken, rtl } = useProSidebar();
   const [show, setScreen] = React.useState("0");
+
+    const [funMode, setFunMode] = useState("A");
+  const [laomode, setLaoMode] = useState("A");
+  const [rowCount, setRowCount] = useState(0);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [loading, setLoading] = useState(false);
+    const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const commentsRef = useRef(null);
+
+
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+
   // **********ScreenChange Function*********
+  const [leadData, setLeadData] = useState({
+    recordID: "",
+    MinOrderQty: "",
+    supplier: "",
+    LeadTime: "",
+    AgreedPrice: "",
+    LastOrderDate: "",
+    LastOrderNo: "",
+    LastOrderPrice: "",
+    LastOrderQty: "",
+    LastOrderRating: "",
+  });
+
+    const LeadInitialValues = {
+    Description: leadData.Name,
+    Code: leadData.TaskDate,
+    supplier: leadData.supplier || null,
+    MinOrderQty: leadData.MinOrderQty || null,
+    LeadTime: leadData.LeadTime || null,
+    AgreedPrice: leadData.AgreedPrice || null,
+    LastOrderDate: leadData.LastOrderDate || null,
+    LastOrderNo: leadData.LastOrderNo || null,
+    LastOrderPrice: leadData.LastOrderPrice || null,
+    LastOrderQty: leadData.LastOrderQty || null,
+    LastOrderRating: leadData.LastOrderRating || null,
+   
+  };
 
   const screenChange = (event) => {
     setScreen(event.target.value);
@@ -316,6 +246,212 @@ const EditItem = () => {
     //   dispatch(PartyBankget({ VendorID: recID }));
     // }
   };
+
+  const ItemMainSaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+    let action = "";
+
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      CompanyID: CompanyID,
+      ItemCategoryID: ItemCategorID,
+      Code: values.Code,
+      Description: values.Description || "",
+      Sortorder: values.Sortorder || "0",
+      Disable: isCheck,
+      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
+    };
+
+    const response = await dispatch(ItemMainpostData({ action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      // if (mode === "A") {
+      //   navigate(-1);
+      // } else if (mode === "E") {
+      //   setScreen("0");
+      // }
+      // setScreen("2");
+      navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
+  };
+  const ItemSaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+    let action = "";
+
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      CompanyID: CompanyID,
+      ItemCategoryRecordID: ItemCategorID,
+      PurchaseUOM: values.PurchaseUOM || "",
+      ConsumptionUOM: values.ConsumptionUOM || "",
+      ConsumptionUOMQty: values.PieceQuantity || "",
+      PurchaseUOMQty: values.BoxQuantity || "",
+      ConversionQty: values.ConversionQty || "",
+      Price: values.GuidelinePrice || "",
+      MinStock: values.MinStock || "",
+      ReorderLevel: values.ReorderLevel || "",
+    };
+
+    const response = await dispatch(ItemStockMenuPut({ action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      setScreen("2");
+      // navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
+  };
+  const ItemFlagSaveFn = async (values, delAction) => {
+    // let action =
+    //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
+    let action = "";
+
+    if (mode === "A") {
+      action = "insert";
+    } else if (mode === "E" && delAction === "harddelete") {
+      action = "harddelete";
+    } else if (mode === "E") {
+      action = "update";
+    }
+    var isCheck = "N";
+    if (values.Disable == true) {
+      isCheck = "Y";
+    }
+
+    const idata = {
+      RecordID: recID,
+      CompanyID: CompanyID,
+      ItemCategoryID: ItemCategorID,
+      Tradable: values.Tradable == true ? "Y" : "N",
+      UnderEmployeeCustody: values.UnderEmployeeCustody == true ? "Y" : "N",
+      IfExpiryApplicable: values.ExpiryApplicable == true ? "Y" : "N",
+      ByProduct: values.ByProduct == true ? "Y" : "N",
+      ServiceAndMaintenance: values.ServiceAndMaintenance == true ? "Y" : "N",
+      SpecRequired: values.SpecRequired == true ? "Y" : "N",
+      ExtendedWarrentyApplicable:
+        values.ExtendedWarrentyApplicable == true ? "Y" : "N",
+      OnDemand: values.OnDemand == true ? "Y" : "N",
+      ScheduledService: values.ScheduledService == true ? "Y" : "N",
+      ExtendedWarrentyPeriod: values.ExtendedWarranty || "",
+      ExtendedWarrentyEndPeriod: values.ExtendedWarrantyEnd || "",
+      ToatalWarretyPeriod: values.WarrantyPeriod || "",
+      WarretyEndPeriod: values.WarrantyEndPeriod || "",
+      Disable: isCheck,
+      DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
+    };
+
+    const response = await dispatch(ItemFlagMenuPut({ action, idata }));
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      setScreen("1");
+      // navigate(-1);
+    } else {
+      toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+    }
+  };
+  const LeadSaveFn = async (values, resetForm, del) => {
+    setLoading(true);
+    const isCheck = values.disable ? "Y" : "N";
+    // let action = "update";
+
+    // if (funMode === "A") action = "insert";
+    // if (funMode === "E" && del) action = "harddelete";
+
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+        ? "harddelete"
+        : "update";
+    const idata = {
+      RecordID: funMode === "A" ? "-1" : leadData.recordID,
+      CompanyID: CompanyID,
+      DailyTaskID: recID || "",
+      SupplierID: values.supplier.RecordID || "",
+      MinOrderQty: values.MinOrderQty || "",
+      LeadTime: values.LeadTime || "0",
+      AgreedPrice: values.AgreedPrice || "0",
+    };
+
+    const response = await dispatch(
+      postData({ accessID: "TR322", action, idata })
+    );
+
+    if (response.payload.Status === "Y") {
+      toast.success(response.payload.Msg);
+   
+      setLoading(false);
+     
+      // dispatch(
+      //   fetchExplorelitview(
+      //     "TR322",
+      //     "Product",
+      //     `CompanyID='${compID}' AND DailyTaskID='${recID}' AND Type='Product'`,
+      //     ""
+      //   )
+      // );
+      dispatch(getFetchData({ accessID, get: "get", recID }));
+      selectCellRowData({ rowData: {}, mode: "A", field: "", type: "product" });
+      resetForm();
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
+  const fnLogOut = (props) => {
+    Swal.fire({
+      title: errorMsgData.Warningmsg[props],
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
+        }
+        if (props === "Close") {
+          navigate("/Apps/TR026/Department");
+        }
+      } else {
+        return;
+      }
+    });
+  };
+
+  const isNonMobile = useMediaQuery("(min-width:600px)");
+
+  const { toggleSidebar, broken, rtl } = useProSidebar();
+
   //   FOR DATEPICKER
   const [value, setValue] = useState(null);
 
@@ -323,7 +459,10 @@ const EditItem = () => {
     Code: ItemGetData.Code || "",
     //Description: ItemMainData?.HSNDetails?.HSNDescription || ItemGetData.HSNDescription || "",
     Description: ItemGetData.Description || "",
-    HSNCode: ItemMainData?.HSNDetails?.HSNMasterCode || ItemGetData.HSNMasterCode || "",
+    HSNCode:
+      ItemMainData?.HSNDetails?.HSNMasterCode ||
+      ItemGetData.HSNMasterCode ||
+      "",
     HSNIGST: ItemMainData?.HSNDetails?.IGST || ItemGetData.IGST || "",
     HSNCGST: ItemMainData?.HSNDetails?.CGST || ItemGetData.CGST || "",
     HSNSGST: ItemMainData?.HSNDetails?.SGST || ItemGetData.SGST || "",
@@ -339,17 +478,19 @@ const EditItem = () => {
     ExtendedWarranty: ItemFlagData?.ExtendedWarrentyPeriod || "",
     WarrantyPeriod: ItemFlagData?.ToatalWarretyPeriod || "",
     WarrantyEndPeriod: ItemFlagData?.WarretyEndPeriod || "",
-    ExtendedWarrentyApplicable: ItemFlagData?.ExtendedWarrentyApplicable == "Y" ? true : false,
+    ExtendedWarrentyApplicable:
+      ItemFlagData?.ExtendedWarrentyApplicable == "Y" ? true : false,
     OnDemand: ItemFlagData?.OnDemand == "Y" ? true : false,
     ScheduledService: ItemFlagData?.ScheduledService == "Y" ? true : false,
 
     ByProduct: ItemFlagData?.ByProduct == "Y" ? true : false,
     ExpiryApplicable: ItemFlagData?.IfExpiryApplicable == "Y" ? true : false,
-    ServiceAndMaintenance: ItemFlagData?.ServiceAndMaintenance == "Y" ? true : false,
+    ServiceAndMaintenance:
+      ItemFlagData?.ServiceAndMaintenance == "Y" ? true : false,
     SpecRequired: ItemFlagData?.SpecRequired == "Y" ? true : false,
-    UnderEmployeeCustody: ItemFlagData?.UnderEmployeeCustody == "Y" ? true : false,
+    UnderEmployeeCustody:
+      ItemFlagData?.UnderEmployeeCustody == "Y" ? true : false,
     Tradable: ItemFlagData?.Tradable == "Y" ? true : false,
-
   };
   const StockinitialValues = {
     Code: ItemStockData?.Code || "",
@@ -364,8 +505,121 @@ const EditItem = () => {
     minCusstkQty: ItemStockData?.MinorCusStockQty || "",
     majvendorstkQty: ItemStockData?.MajorVenStockQty || "",
     minvendorstkQty: ItemStockData?.MinorVenStockQty || "",
-
+    MinStock: ItemStockData?.MinStock || "",
+    ReorderLevel: ItemStockData?.ReorderLevel || "",
   };
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue, type }) => {
+    setFunMode(mode);
+    setLaoMode(mode);
+
+    if (mode == "A") {
+      setLeadData({
+        recordID: "",
+        MinOrderQty: "",
+        supplier: "",
+        LeadTime: "",
+        AgreedPrice: "",
+        LastOrderDate: "",
+        LastOrderNo: "",
+        LastOrderPrice: "",
+        LastOrderQty: "",
+        LastOrderRating: "",
+       
+      });
+    } else {
+      if (field == "action") {
+        setLeadData({
+          recordID: rowData.RecordID,
+          supplier: rowData.RecordID
+            ? {
+                RecordID: rowData.RecordID,
+                Code: rowData.Code || "",
+                Name: rowData.Name || "",
+              }
+            : null,
+          MinOrderQty: rowData.MinOrderQty,
+          LeadTime: rowData.LeadTime,
+          AgreedPrice: rowData.AgreedPrice,
+          LastOrderDate: rowData.LastOrderDate,
+          AgreedPrice: rowData.AgreedPrice,
+          LastOrderNo: rowData.LastOrderNo,
+          LastOrderPrice: rowData.LastOrderPrice,
+          LastOrderQty: rowData.LastOrderQty,
+          LastOrderRating: rowData.LastOrderRating,
+        });
+        setFieldValue("supplier", {
+          RecordID: rowData.RecordID,
+          Code: rowData.Code,
+          Name: rowData.Name,
+        });
+        setFieldValue("productCategoryID", {
+          productCategoryID: rowData.CrmItemCategoryID,
+        });  
+      }
+    }
+
+    console.log(selectCellRowData, "Itemservices");
+  };
+
+let VISIBLE_FIELDS = []; // <-- default always array
+
+  if (show == "3") {
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "CrmItemsName",
+      "Rate",
+      "Qty",
+      "Amount",
+      "action",
+    ];
+  } 
+    const newcolumn = React.useMemo(
+    () =>
+      explorelistViewcolumn.filter((column) =>
+        VISIBLE_FIELDS.includes(column.field)
+      ),
+    [explorelistViewcolumn]
+  );
+
+
+    function Employee() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          {/* <Typography>
+            {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
+            
+          </Typography> */}
+          <Typography>
+            {show == "3"
+              ? "List of Leads"
+              : ""}
+          </Typography>
+          <Typography variant="h5">{`(${rowCount})`}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          <Tooltip title="ADD">
+            <IconButton type="reset">
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
 
   return (
     <>
@@ -378,6 +632,7 @@ const EditItem = () => {
         {ItemMainDataLoading ? <LinearProgress /> : null}
         {ItemFlagDataLoading ? <LinearProgress /> : null}
         {ItemStockDataLoading ? <LinearProgress /> : null}
+        {isLoading ? <LinearProgress /> : null}
 
         {/* BREADCRUMBS */}
         <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
@@ -404,22 +659,24 @@ const EditItem = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate("/Apps/TR315/ItemGroup")}
                   >
-                    List Of Item Group
-                    ({state.BreadCrumb1})
+                    List Of Item Group ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate(`/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`, {
-                      state: {
-                        ...state,
-                      }
-                    })
+                    onClick={() =>
+                      navigate(
+                        `/Apps/SecondarylistView/Item%20Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}`,
+                        {
+                          state: {
+                            ...state,
+                          },
+                        }
+                      )
                     }
                   >
-                    List Of Item Category
-                    ({state.BreadCrumb2})
+                    List Of Item Category ({state.BreadCrumb2})
                   </Typography>
                   <Typography
                     variant="h5"
@@ -427,8 +684,10 @@ const EditItem = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate(-1)}
                   >
-                    {mode === "E" ? `List Of Items
-                    (${state.BreadCrumb3})` : `List Of Item`}
+                    {mode === "E"
+                      ? `List Of Items
+                    (${state.BreadCrumb3})`
+                      : `List Of Item`}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -455,6 +714,7 @@ const EditItem = () => {
                     <MenuItem value={0}>Main</MenuItem>
                     <MenuItem value={1}>Flag</MenuItem>
                     <MenuItem value={2}>Stock</MenuItem>
+                    {/* <MenuItem value={3}>Lead Time</MenuItem> */}
                   </Select>
                 </FormControl>
               ) : (
@@ -532,7 +792,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
+                        // autoFocus
                       />
                     ) : (
                       <TextField
@@ -723,7 +983,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                      //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -740,7 +1000,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                      //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -756,7 +1016,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -785,7 +1045,7 @@ const EditItem = () => {
                 }, 100);
               }}
               enableReinitialize={true}
-            //validationSchema={validationSchema}
+              //validationSchema={validationSchema}
             >
               {({
                 values,
@@ -831,7 +1091,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
+                        // autoFocus
                       />
                     ) : (
                       <TextField
@@ -951,8 +1211,12 @@ const EditItem = () => {
                             name="ServiceAndMaintenance"
                             checked={values.ServiceAndMaintenance}
                             //onChange={handleChange}
-                            onChange={(e) => setFieldValue("ServiceAndMaintenance", e.target.checked)}
-
+                            onChange={(e) =>
+                              setFieldValue(
+                                "ServiceAndMaintenance",
+                                e.target.checked
+                              )
+                            }
                           />
                         }
                         label="Service And Maintainence"
@@ -998,7 +1262,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                      //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -1015,134 +1279,153 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                      //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
-                    {values.ServiceAndMaintenance &&
-                      (
-                        <>
-                          <TextField
-                            name="WarrantyPeriod"
-                            type="number"
-                            id="WarrantyPeriod"
-                            label="Warranty Period (In Months)"
-                            variant="standard"
-                            focused
-                            value={values.WarrantyPeriod}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={!!touched.WarrantyPeriod && !!errors.WarrantyPeriod}
-                            helperText={touched.WarrantyPeriod && errors.WarrantyPeriod}
-                            autoFocus
-                            InputProps={{
-                              inputProps: { textAlign: "right" },
-                            }}
-                          />
-                          <TextField
-                            name="WarrantyEndPeriod"
-                            type="text"
-                            id="WarrantyEndPeriod"
-                            label="Warranty End Period"
-                            variant="standard"
-                            focused
-                            value={values.WarrantyEndPeriod}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={!!touched.WarrantyEndPeriod && !!errors.WarrantyEndPeriod}
-                            helperText={touched.WarrantyEndPeriod && errors.WarrantyEndPeriod}
-                            autoFocus
+                    {values.ServiceAndMaintenance && (
+                      <>
+                        <TextField
+                          name="WarrantyPeriod"
+                          type="number"
+                          id="WarrantyPeriod"
+                          label="Warranty Period (In Months)"
+                          variant="standard"
+                          focused
+                          value={values.WarrantyPeriod}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.WarrantyPeriod && !!errors.WarrantyPeriod
+                          }
+                          helperText={
+                            touched.WarrantyPeriod && errors.WarrantyPeriod
+                          }
+                          autoFocus
+                          InputProps={{
+                            inputProps: { textAlign: "right" },
+                          }}
+                        />
+                        <TextField
+                          name="WarrantyEndPeriod"
+                          type="text"
+                          id="WarrantyEndPeriod"
+                          label="Warranty End Period"
+                          variant="standard"
+                          focused
+                          value={values.WarrantyEndPeriod}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.WarrantyEndPeriod &&
+                            !!errors.WarrantyEndPeriod
+                          }
+                          helperText={
+                            touched.WarrantyEndPeriod &&
+                            errors.WarrantyEndPeriod
+                          }
+                          autoFocus
                           // InputProps={{
                           //   inputProps: { textAlign: "right" },
                           // }}
-                          />
+                        />
 
-                          <TextField
-                            name="ExtendedWarranty"
-                            type="number"
-                            id="ExtendedWarranty"
-                            label="Extended Warranty(In Months)"
-                            variant="standard"
-                            focused
-                            value={values.ExtendedWarranty}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={!!touched.ExtendedWarranty && !!errors.ExtendedWarranty}
-                            helperText={touched.ExtendedWarranty && errors.ExtendedWarranty}
-                            autoFocus
-                            InputProps={{
-                              inputProps: { textAlign: "right" },
+                        <TextField
+                          name="ExtendedWarranty"
+                          type="number"
+                          id="ExtendedWarranty"
+                          label="Extended Warranty(In Months)"
+                          variant="standard"
+                          focused
+                          value={values.ExtendedWarranty}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.ExtendedWarranty &&
+                            !!errors.ExtendedWarranty
+                          }
+                          helperText={
+                            touched.ExtendedWarranty && errors.ExtendedWarranty
+                          }
+                          autoFocus
+                          InputProps={{
+                            inputProps: { textAlign: "right" },
+                          }}
+                        />
+                        <TextField
+                          name="ExtendedWarrantyEnd"
+                          type="number"
+                          id="ExtendedWarrantyEnd"
+                          label="Extended Warranty End(In Months)"
+                          variant="standard"
+                          focused
+                          value={values.ExtendedWarrantyEnd}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.ExtendedWarrantyEnd &&
+                            !!errors.ExtendedWarrantyEnd
+                          }
+                          helperText={
+                            touched.ExtendedWarrantyEnd &&
+                            errors.ExtendedWarrantyEnd
+                          }
+                          autoFocus
+                          InputProps={{
+                            inputProps: { textAlign: "right" },
+                          }}
+                        />
+                        <Box>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name="ExtendedWarrentyApplicable"
+                                checked={values.ExtendedWarrentyApplicable}
+                                onChange={handleChange}
+                              />
+                            }
+                            label="Extended Warranty Applicable"
+                            sx={{
+                              marginTop: "20px",
+                              "@media (max-width:500px)": {
+                                marginTop: 0,
+                              },
                             }}
                           />
-                          <TextField
-                            name="ExtendedWarrantyEnd"
-                            type="number"
-                            id="ExtendedWarrantyEnd"
-                            label="Extended Warranty End(In Months)"
-                            variant="standard"
-                            focused
-                            value={values.ExtendedWarrantyEnd}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            error={!!touched.ExtendedWarrantyEnd && !!errors.ExtendedWarrantyEnd}
-                            helperText={touched.ExtendedWarrantyEnd && errors.ExtendedWarrantyEnd}
-                            autoFocus
-                            InputProps={{
-                              inputProps: { textAlign: "right" },
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name="OnDemand"
+                                checked={values.OnDemand}
+                                onChange={handleChange}
+                              />
+                            }
+                            label="Demand Basis"
+                            sx={{
+                              marginTop: "20px",
+                              "@media (max-width:500px)": {
+                                marginTop: 0,
+                              },
                             }}
                           />
-                          <Box>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  name="ExtendedWarrentyApplicable"
-                                  checked={values.ExtendedWarrentyApplicable}
-                                  onChange={handleChange}
-                                />
-                              }
-                              label="Extended Warranty Applicable"
-                              sx={{
-                                marginTop: "20px",
-                                "@media (max-width:500px)": {
-                                  marginTop: 0,
-                                },
-                              }}
-                            />
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  name="OnDemand"
-                                  checked={values.OnDemand}
-                                  onChange={handleChange}
-                                />
-                              }
-                              label="Demand Basis"
-                              sx={{
-                                marginTop: "20px",
-                                "@media (max-width:500px)": {
-                                  marginTop: 0,
-                                },
-                              }}
-                            />
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  name="ScheduledService"
-                                  checked={values.ScheduledService}
-                                  onChange={handleChange}
-                                />
-                              }
-                              label="On Schedule"
-                              sx={{
-                                marginTop: "20px",
-                                "@media (max-width:500px)": {
-                                  marginTop: 0,
-                                },
-                              }}
-                            />
-                          </Box>
-                        </>
-                      )}
-
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name="ScheduledService"
+                                checked={values.ScheduledService}
+                                onChange={handleChange}
+                              />
+                            }
+                            label="On Schedule"
+                            sx={{
+                              marginTop: "20px",
+                              "@media (max-width:500px)": {
+                                marginTop: 0,
+                              },
+                            }}
+                          />
+                        </Box>
+                      </>
+                    )}
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -1156,14 +1439,15 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
                     <Button
                       variant="contained"
                       color="warning"
-                      onClick={() => navigate(-1)}
+                      //onClick={() => navigate(-1)}
+                      onClick={() => setScreen("0")}
                     >
                       Cancel
                     </Button>
@@ -1231,7 +1515,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
+                        // autoFocus
                       />
                     ) : (
                       <TextField
@@ -1288,7 +1572,6 @@ const EditItem = () => {
                       error={!!touched.Description && !!errors.Description}
                       helperText={touched.Description && errors.Description}
                       InputProps={{ readOnly: true }}
-
                       autoFocus
                     />
                     {/* <TextField
@@ -1397,8 +1680,12 @@ const EditItem = () => {
                       value={values.ConsumptionUOM}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.ConsumptionUOM && !!errors.ConsumptionUOM}
-                      helperText={touched.ConsumptionUOM && errors.ConsumptionUOM}
+                      error={
+                        !!touched.ConsumptionUOM && !!errors.ConsumptionUOM
+                      }
+                      helperText={
+                        touched.ConsumptionUOM && errors.ConsumptionUOM
+                      }
                       autoFocus
                     />
                     <TextField
@@ -1453,14 +1740,83 @@ const EditItem = () => {
                       value={values.GuidelinePrice}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
-                      helperText={touched.GuidelinePrice && errors.GuidelinePrice}
+                      error={
+                        !!touched.GuidelinePrice && !!errors.GuidelinePrice
+                      }
+                      helperText={
+                        touched.GuidelinePrice && errors.GuidelinePrice
+                      }
                       autoFocus
                       InputProps={{
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
-
+                    <TextField
+                      name="MinStock"
+                      type="number"
+                      id="MinStock"
+                      label={
+                        <span>
+                         Minimum Item Quantity{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.MinStock}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={
+                        !!touched.MinStock && !!errors.MinStock
+                      }
+                      helperText={
+                        touched.MinStock && errors.MinStock
+                      }
+                      autoFocus
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
+                    />
+                    <TextField
+                      name="ReorderLevel"
+                      type="number"
+                      id="ReorderLevel"
+                      label={
+                        <span>
+                          Reorder Level{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.ReorderLevel}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={
+                        !!touched.ReorderLevel && !!errors.ReorderLevel
+                      }
+                      helperText={
+                        touched.ReorderLevel && errors.ReorderLevel
+                      }
+                      autoFocus
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
+                    />
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -1474,14 +1830,15 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
                     <Button
                       variant="contained"
                       color="warning"
-                      onClick={() => navigate(-1)}
+                      //onClick={() => navigate(-1)}
+                      onClick={() => setScreen("0")}
                     >
                       Cancel
                     </Button>
@@ -1516,9 +1873,8 @@ const EditItem = () => {
                       helperText={touched.BoxQuantity && errors.BoxQuantity}
                       InputProps={{
                         readOnly: true,
-                        inputProps: { style: { textAlign: "right" } }
+                        inputProps: { style: { textAlign: "right" } },
                       }}
-
                     />
 
                     <TextField
@@ -1534,7 +1890,7 @@ const EditItem = () => {
                       helperText={touched.PieceQuantity && errors.PieceQuantity}
                       InputProps={{
                         readOnly: true,
-                        inputProps: { style: { textAlign: "right" } }
+                        inputProps: { style: { textAlign: "right" } },
                       }}
                     />
                   </Box>
@@ -1569,7 +1925,7 @@ const EditItem = () => {
                       helperText={touched.majCusstkQty && errors.majCusstkQty}
                       InputProps={{
                         readOnly: true,
-                        inputProps: { style: { textAlign: "right" } }
+                        inputProps: { style: { textAlign: "right" } },
                       }}
                     />
 
@@ -1586,7 +1942,7 @@ const EditItem = () => {
                       helperText={touched.minCusstkQty && errors.minCusstkQty}
                       InputProps={{
                         readOnly: true,
-                        inputProps: { style: { textAlign: "right" } }
+                        inputProps: { style: { textAlign: "right" } },
                       }}
                     />
                   </Box>
@@ -1617,11 +1973,15 @@ const EditItem = () => {
                       value={values.majvendorstkQty}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.majvendorstkQty && !!errors.majvendorstkQty}
-                      helperText={touched.majvendorstkQty && errors.majvendorstkQty}
+                      error={
+                        !!touched.majvendorstkQty && !!errors.majvendorstkQty
+                      }
+                      helperText={
+                        touched.majvendorstkQty && errors.majvendorstkQty
+                      }
                       InputProps={{
                         readOnly: true,
-                        inputProps: { style: { textAlign: "right" } }
+                        inputProps: { style: { textAlign: "right" } },
                       }}
                     />
 
@@ -1634,11 +1994,15 @@ const EditItem = () => {
                       value={values.minvendorstkQty}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.minvendorstkQty && !!errors.minvendorstkQty}
-                      helperText={touched.minvendorstkQty && errors.minvendorstkQty}
+                      error={
+                        !!touched.minvendorstkQty && !!errors.minvendorstkQty
+                      }
+                      helperText={
+                        touched.minvendorstkQty && errors.minvendorstkQty
+                      }
                       InputProps={{
                         readOnly: true,
-                        inputProps: { style: { textAlign: "right" } }
+                        inputProps: { style: { textAlign: "right" } },
                       }}
                     />
                   </Box>
@@ -1646,6 +2010,458 @@ const EditItem = () => {
               )}
             </Formik>
           </Paper>
+        ) : (
+          false
+        )}
+        {show == "3" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={LeadInitialValues}
+            enableReinitialize={true}
+            //validationSchema={validationSchema4}
+            onSubmit={(values, { resetForm }) => {
+              setTimeout(() => {
+                LeadSaveFn(values, resetForm, false);
+              }, 100);
+            }}
+          >
+            {({
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              isSubmitting,
+              values,
+              handleSubmit,
+              resetForm,
+              setFieldValue,
+              setFieldTouched,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+                onReset={() => {
+                  selectCellRowData({
+                    rowData: {},
+                    mode: "A",
+                    field: "",
+                    type: "product",
+                  });
+                  resetForm();
+                }}
+              >
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <FormControl sx={{ gap: formGap }}>
+                   
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="Code"
+                      name="Code"
+                      value={values.Code}
+                      label="Code"
+                      focused
+                      inputProps={{ readOnly: true }}
+                    />
+                  </FormControl>
+                  <FormControl sx={{ gap: formGap }}>
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="Description"
+                      name="Description"
+                      value={values.Description}
+                      label="Description"
+                      focused
+                      inputProps={{ readOnly: true }}
+                    />
+                  </FormControl>
+                
+                  <Box
+                    m="5px 0 0 0"
+                    //height={dataGridHeight}
+                    height="65vh"
+                    sx={{
+                      "& .MuiDataGrid-root": {
+                        border: "none",
+                      },
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                      },
+                      "& .name-column--cell": {
+                        color: colors.greenAccent[300],
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[800],
+                        borderBottom: "none",
+                      },
+                      "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                      },
+                      "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[800],
+                      },
+                      "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                      },
+                      "& .odd-row": {
+                        backgroundColor: "",
+                        color: "", // Color for odd rows
+                      },
+                      "& .even-row": {
+                        backgroundColor: "#D3D3D3",
+                        color: "", // Color for even rows
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                          height: dataGridHeaderFooterHeight,
+                          minHeight: dataGridHeaderFooterHeight,
+                        },
+                      }}
+                      rows={explorelistViewData}
+                      columns={newcolumn}
+                      disableSelectionOnClick
+                      getRowId={(row) => row.RecordID}
+                      rowHeight={dataGridRowHeight}
+                      headerHeight={dataGridHeaderFooterHeight}
+                      pageSize={pageSize}
+                      onPageSizeChange={(newPageSize) =>
+                        setPageSize(newPageSize)
+                      }
+                      onCellClick={(params) => {
+                        selectCellRowData({
+                          rowData: params.row,
+                          mode: "E",
+                          field: params.field,
+                          setFieldValue,
+                          type: "product",
+                        });
+                      }}
+                      rowsPerPageOptions={[5, 10, 20]}
+                      pagination
+                      components={{
+                        Toolbar: Employee,
+                      }}
+                      onStateChange={(stateParams) =>
+                        setRowCount(stateParams.pagination.rowCount)
+                      }
+                      getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0
+                          ? "odd-row"
+                          : "even-row"
+                      }
+                      //loading={exploreLoading}
+                      componentsProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                          quickFilterProps: { debounceMs: 500 },
+                        },
+                      }}
+                    />
+                  </Box>
+
+                  <FormControl sx={{ 
+                    gap: formGap, 
+                    marginTop:"10px", 
+                    // justifyContent:"space-evenly" 
+                    }}
+                    >
+                  
+                    <CheckinAutocomplete
+                      name="supplier"
+                      //label="Item"
+                      label={
+                        <>
+                          Supplier
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      id="supplier"
+                      value={values.supplier}
+                      onChange={(newValue) => {
+                        setFieldValue("supplier", {
+                          RecordID: newValue.RecordID,
+                          Code: newValue.Code,
+                          Name: newValue.Name,
+                        });
+                        setFieldTouched("supplier", true);
+
+                        // setFieldValue(
+                        //   "productCategoryID",
+                        //   newValue.CrmItemCategoryID || ""
+                        // );
+                        setTimeout(() => {
+                          commentsRef.current?.focus();
+                        }, 100);
+                      }}
+                      error={!!touched.supplier && !!errors.supplier}
+                      helperText={touched.supplier && errors.supplier}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      variant="standard"
+                      id="MinOrderQty"
+                      name="MinOrderQty"
+                      //label="Min Order Qty"
+                      label={
+                        <>
+                          Min Order Qty
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      value={values.MinOrderQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.MinOrderQty && !!errors.MinOrderQty}
+                      helperText={touched.MinOrderQty && errors.MinOrderQty}
+                      InputProps={{
+                        sx:{
+                          textAlign:"right"
+                        }
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      variant="standard"
+                      id="AgreedPrice"
+                      name="AgreedPrice"
+                      //label="Agreed Price"
+                      label={
+                        <>
+                          Agreed Price
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      value={values.AgreedPrice}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.AgreedPrice && !!errors.AgreedPrice}
+                      helperText={touched.AgreedPrice && errors.AgreedPrice}
+                      InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      variant="standard"
+                      id="LeadTime"
+                      name="LeadTime"
+                      //label="Lead Time (In days)"
+                      label={
+                        <>
+                          Lead Time (In days)
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      value={values.LeadTime}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.LeadTime && !!errors.LeadTime}
+                      helperText={touched.LeadTime && errors.LeadTime}
+                      InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                    />
+                    <TextField
+                      fullWidth
+                      focused
+                      type="date"
+                      variant="standard"
+                      id="LastOrderDate"
+                      name="LastOrderDate"
+                      label="Last Order Date"
+                      inputFormat="YYYY-MM-DD"
+                      value={values.LastOrderDate}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.LastOrderDate && !!errors.LastOrderDate}
+                      helperText={touched.LastOrderDate && errors.LastOrderDate}
+                     InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                      
+                    />
+                    <TextField
+                      fullWidth
+                      type="text"
+                      variant="standard"
+                      id="LastOrderNo"
+                      name="LastOrderNo"
+                      label="Last Order No."
+                      value={values.LastOrderNo}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.LastOrderNo && !!errors.LastOrderNo}
+                      helperText={touched.LastOrderNo && errors.LastOrderNo}
+                      InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      variant="standard"
+                      id="LastOrderQty"
+                      name="LastOrderQty"
+                      label="Last Order Qty"
+                      value={values.LastOrderQty}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.LastOrderQty && !!errors.LastOrderQty}
+                      helperText={touched.LastOrderQty && errors.LastOrderQty}
+                     InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      variant="standard"
+                      id="LastOrderPrice"
+                      name="LastOrderPrice"
+                      label="Last Order Price"
+                      value={values.LastOrderPrice}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.LastOrderPrice && !!errors.LastOrderPrice}
+                      helperText={touched.LastOrderPrice && errors.LastOrderPrice}
+                     InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                    />
+                    <TextField
+                      fullWidth
+                      type="text"
+                      variant="standard"
+                      id="LastOrderRating"
+                      name="LastOrderRating"
+                      label="Last Order Rating"
+                      value={values.LastOrderRating}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      focused
+                      error={!!touched.LastOrderRating && !!errors.LastOrderRating}
+                      helperText={touched.LastOrderRating && errors.LastOrderRating}
+                      InputProps={{
+                          inputProps: {
+                            style:{textAlign: "right"},
+                          },
+                        }}
+                    />
+                  </FormControl>
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent="end"
+                  padding={1}
+                  // style={{ marginTop: "-40px" }}
+                  gap={2}
+                >
+                  {/* {YearFlag == "true" ? ( */}
+                  <LoadingButton
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
+                    Save
+                  </LoadingButton>
+                  {/* ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {YearFlag == "true" ? ( */}
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => {
+                      Swal.fire({
+                        title: errorMsgData.Warningmsg.Delete,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          LeadSaveFn(values, resetForm, "harddelete");
+                        } else {
+                          return;
+                        }
+                      });
+                    }}
+                    disabled={funMode === "A"}
+                    // disabled={funMode === "A" || (data.TaskSource === "Sprint" && data.Status === "AP")}
+
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    type="reset"
+                    color="warning"
+                    variant="contained"
+                    onClick={() => {
+                      setScreen(0);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </form>
+            )}
+          </Formik>
+        </Paper>
         ) : (
           false
         )}

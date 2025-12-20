@@ -220,10 +220,10 @@ const EditLeader = () => {
             ? "Warm"
             : data.OMStatus === "Hot"
             ? "Hot"
-            : data.OMStatus === "O"
-            ? "O"
-            : data.OMStatus === "Q"
-            ? "Q"
+            : data.OMStatus === "Opt to Order"
+            ? "Opt to Order"
+            : data.OMStatus === "Opt to Quote"
+            ? "Opt to Quote"
             : data.OMStatus === "Close"
             ? "Close"
             : ""
@@ -625,8 +625,8 @@ const EditLeader = () => {
                     <MenuItem value="Cool">Cool</MenuItem>
                     <MenuItem value="Warm">Warm</MenuItem>
                     <MenuItem value="Hot">Hot</MenuItem>
-                    <MenuItem value="O">Opt To Order</MenuItem>
-                    <MenuItem value="Q">Opt To Quotation</MenuItem>
+                    <MenuItem value="Opt to Order">Opt to Order</MenuItem>
+                    <MenuItem value="Opt to Quote">Opt to Quote</MenuItem>
                     <MenuItem value="Close">Close</MenuItem>
                   </TextField>
                 </Box>

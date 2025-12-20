@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const OrderHeaderPdf = ({ data, UserName }) => {
+const OrderHeaderPdf = ({ data, UserName, OrderType }) => {
   const OrderNo = data?.HeaderData?.OrderCode || "";
   const OrderDate = data?.HeaderData?.OrderDate || "";
   //const OrderDate = new Date().toLocaleDateString("en-GB");
@@ -341,7 +341,8 @@ const OrderHeaderPdf = ({ data, UserName }) => {
           >
             <View style={styles.headerContainer} fixed>
               {HeaderImage && <Image src={HeaderImage} style={styles.logo} />}
-              <Text style={styles.headerTitle}>Invoice</Text>
+              {/* <Text style={styles.headerTitle}>Invoice</Text> */}
+              <Text style={styles.headerTitle}>{OrderType === "O" ? "Order" : "Quotation"}</Text>
             </View>
 
             {/* HEADER TABLE */}
@@ -351,7 +352,8 @@ const OrderHeaderPdf = ({ data, UserName }) => {
                 <View style={styles.headerColumn}>
                   <View style={styles.headerRow1}>
                     <View style={styles.headerCellLabel}>
-                      <Text>Order No.</Text>
+                      {/* <Text>Order No.</Text> */}
+                      <Text>{OrderType === "O" ? "Order No." : "Quotation No."}</Text>
                     </View>
                     <View style={styles.headerCellValue}>
                       <Text>{OrderNo}</Text>
@@ -360,7 +362,7 @@ const OrderHeaderPdf = ({ data, UserName }) => {
 
                   <View style={styles.headerRow}>
                     <View style={styles.headerCellLabel}>
-                      <Text>Order Date</Text>
+                      <Text>{OrderType === "O" ? "Order Date" : "Quotation Date"}</Text>
                     </View>
                     <View style={styles.headerCellValue}>
                       <Text>{OrderDate}</Text>

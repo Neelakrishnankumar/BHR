@@ -173,6 +173,8 @@ import EditHSNCategory from "./pages/Item/EditHSNCategory";
 import EditHSNMaster from "./pages/Item/EditHSNMaster";
 import EditItemCategory from "./pages/Item/EditItemCategory";
 import EditItem from "./pages/Item/EditItem";
+import EditRoute from "./pages/Route/EditRoute";
+import EditArea from "./pages/Route/EditArea";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -428,6 +430,18 @@ function App() {
                   <Route
                     path="/Secondarylistview/HSN/:accessID/:screenName/:parentID2/:parentID1/EditHSNMaster/:id/:Mode"
                     element={<EditHSNMaster />}
+                  />
+                   {/* ROUTE EDIT */}
+                  <Route
+                    // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
+                    path="/Route/EditRoute"
+                    element={<EditRoute />}
+                  />
+                   {/* AREA EDIT */}
+                  <Route
+                    // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
+                    path="/Route/Area/EditArea"
+                    element={<EditArea />}
                   />
                   <Route
                     path="SkillGlow/CandidateMain"
