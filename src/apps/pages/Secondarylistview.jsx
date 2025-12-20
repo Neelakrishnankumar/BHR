@@ -79,6 +79,9 @@ import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOu
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import GridViewIcon from '@mui/icons-material/GridView';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -3910,12 +3913,26 @@ const ListviewSecondary = () => {
                   label="Edit"
                   variant="outlined"
                 />
+                {params.OrderType === "Q" &&
+                 <Chip
+                  icon={< CurrencyExchangeOutlinedIcon color="primary" />}
+                  label="Convert to Order"
+                  variant="outlined"
+                  sx={{ marginLeft: "50px" }}
+                />}
                 <Chip
                   icon={< GridViewIcon color="primary" />}
                   label="Order Item"
                   variant="outlined"
                   sx={{ marginLeft: "50px" }}
                 />
+                <Chip
+                  icon={< PictureAsPdfIcon color="error" />}
+                  label="Order Pdf"
+                  variant="outlined"
+                  sx={{ marginLeft: "50px" }}
+                />
+               
               </Box>
             )
               : (accessID == "TR294" && params.parentID1 === "AP") ? (

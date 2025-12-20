@@ -810,9 +810,15 @@ const EditOrderitem = () => {
                       <Button
                         color="warning"
                         variant="contained"
+                        // onClick={() => {
+                        //   navigate(
+                        //     `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}`,
+                        //     { state: { ...state } }
+                        //   );
+                        // }}
                         onClick={() => {
                           navigate(
-                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}`,
+                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/${params.filtertype1}`,
                             { state: { ...state } }
                           );
                         }}
@@ -825,7 +831,7 @@ const EditOrderitem = () => {
                         variant="contained"
                         onClick={() => {
                           navigate(
-                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${accessID}/${params.filtertype1}`,
+                            `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/${accessID}/${params.filtertype1}`,
                             { state: { ...state } }
                           );
                         }}

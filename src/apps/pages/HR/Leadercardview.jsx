@@ -395,7 +395,7 @@ const LeaderCardView = () => {
                       </Tooltip>
                     </>
                   )}
-                  {row.LEStatus === "Opt To Order" && (
+                  {row.LEStatus === "Opt to Order" && (
                     
                       <Tooltip title="Order">
                         <IconButton
@@ -418,7 +418,7 @@ const LeaderCardView = () => {
                       </Tooltip>
                     
                   )}
-                  {row.LEStatus === "Opt To Quotation" && (
+                  {row.LEStatus === "Opt to Quote" && (
                     
                        <Tooltip title="Quotation">
                         <IconButton

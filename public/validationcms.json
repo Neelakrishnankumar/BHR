@@ -98,7 +98,9 @@
     "PurchaseUOM": "Please Enter the Purchase UOM",
     "ConsumptionUOM": "Please Enter the Consumption UOM",
     "ConversionQty": "Please Enter the Conversion Quantity",
-    "GuidelinePrice": "Please Enter the Guideline Price"
+    "GuidelinePrice": "Please Enter the Guideline Price",
+    "MinStock": "Please Enter the Minimum Item Quantity",
+    "ReorderLevel": "Please Enter the Reorder Level"
   },
   "ItemCategory": {
     "Description": "Please Enter the Item Description",

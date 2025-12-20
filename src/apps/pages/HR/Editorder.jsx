@@ -128,6 +128,7 @@ const EditOrder = () => {
     paiddate: data.PaidDate,
     deliverydate: data.DeliveryDate,
     paidamount: data.PaidAmount || 0,
+    // Tobepaid: 0,
     status:
       // mode === "A" ? "Ordercreated" :
       data.ORStatus === "Created"
@@ -142,6 +143,8 @@ const EditOrder = () => {
         ? "Delivered"
         : data.ORStatus === "Scheduled"
         ? "Scheduled"
+        : data.ORStatus === "AdjustFromAdvance"
+        ? "AdjustFromAdvance"
         : data.ORStatus === "Paid"
         ? "Paid"
         : // : ""
@@ -156,7 +159,7 @@ const EditOrder = () => {
     // deliverby: "Yes"
   };
 
-  const Fnsave = async (values, del) => {
+  const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
     let action =
       mode === "A" && !del
@@ -192,7 +195,8 @@ const EditOrder = () => {
       PaidDate: values.paiddate || "",
       DeliveryDate: values.deliverydate || "",
       PaidAmount: values.paidamount || 0,
-      ORStatus: values.status || "",
+      // PaidAmount: values.Tobepaid || 0,
+      // ORStatus: values.status || "",
       PaymentMode: values.paymentmode || "",
       ReceiverName: values.receivername || "",
       ReceiverMobileNumber: values.mobilenumber || "",
@@ -204,7 +208,9 @@ const EditOrder = () => {
       // Disable: isCheck,
       //   Finyear,
       CompanyID,
-      OrderType: values.OrderType || "",
+      // OrderType: values.OrderType || "",
+      ORStatus: override.ORStatus ?? values.status ?? "",
+      OrderType: override.OrderType ?? values.OrderType ?? "",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -217,9 +223,15 @@ const EditOrder = () => {
           `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${OrderHeaderId}/EditOrderitem/-1/A`,
           { state: { ...state, Code: OrderHeaderCode } }
         );
-      } else if (mode === "E") {
+      } else if (mode === "E" && params.OrderType === "O") {
         //toast.success(response.payload.Msg);
         navigate(-1);
+      } else if (mode === "E" && params.OrderType === "Q") {
+        //toast.success(response.payload.Msg);
+        navigate(
+          `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/O`,
+          { state: { ...state } }
+        );
       }
       return;
     } else {
@@ -323,11 +335,13 @@ const EditOrder = () => {
                 {/* {mode === "E"
                   ? `Order (${state.Code || ""} )`
                   : `Order(New)` || ""} */}
-                  {params.OrderType === "O" ? (
-    mode === "E" ? `Order (${state.Code || ""} )` : `Order(New)` || ""
-  ) : (
-    mode === "E" ? `Quotation (${state.Code || ""} )` : `Quotation(New)` || ""
-  )}
+                {params.OrderType === "O"
+                  ? mode === "E"
+                    ? `Order (${state.Code || ""} )`
+                    : `Order(New)` || ""
+                  : mode === "E"
+                  ? `Quotation (${state.Code || ""} )`
+                  : `Quotation(New)` || ""}
               </Typography>
               <Typography
                 variant="h5"
@@ -560,7 +574,7 @@ const EditOrder = () => {
                       false
                     )}
 
-                    {mode !== "A" && (
+                    {mode !== "A" && params.OrderType === "O" && (
                       <>
                         <TextField
                           name="delivercharges"
@@ -639,6 +653,7 @@ const EditOrder = () => {
                             errors.tentativedeliverdate
                           }
                         />
+
                         <TextField
                           select
                           label="Delivered"
@@ -757,12 +772,32 @@ const EditOrder = () => {
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
+                            // readOnly:true,
                             inputProps: {
                               style: { textAlign: "right" },
                             },
                           }}
                           autoFocus
                         />
+                        {/* <TextField
+                          name="Tobepaid"
+                          type="number"
+                          id="Tobepaid"
+                          label="Paid Amount"
+                          variant="standard"
+                          focused
+                          value={values.Tobepaid}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.Tobepaid && !!errors.Tobepaid}
+                          helperText={touched.Tobepaid && errors.Tobepaid}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                          autoFocus
+                        /> */}
                         <TextField
                           select
                           label="Status"
@@ -777,7 +812,7 @@ const EditOrder = () => {
                           focused
                           variant="standard"
                         >
-                          <MenuItem value="Created">Order Created</MenuItem>
+                          <MenuItem value="Created">Created</MenuItem>
                           <MenuItem value="Process">Confirm</MenuItem>
                           <MenuItem value="Ready To Deliver">
                             Ready for Delivery
@@ -787,6 +822,9 @@ const EditOrder = () => {
 
                           <MenuItem value="Delivered">Delivered</MenuItem>
                           <MenuItem value="Paid">Paid</MenuItem>
+                          <MenuItem value="AdjustFromAdvance">
+                            Adjust From Advance
+                          </MenuItem>
                         </TextField>
                         {/* <TextField
                           name="paymentmode"
@@ -913,6 +951,116 @@ const EditOrder = () => {
                         />
                       </>
                     )}
+
+                    {mode !== "A" && params.OrderType === "Q" && (
+                      <>
+                        <TextField
+                          name="delivercharges"
+                          type="number"
+                          id="delivercharges"
+                          label="Deliver Charges"
+                          variant="standard"
+                          focused
+                          value={values.delivercharges}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.delivercharges && !!errors.delivercharges
+                          }
+                          helperText={
+                            touched.delivercharges && errors.delivercharges
+                          }
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                          autoFocus
+                        />
+                        <TextField
+                          name="totalprice"
+                          type="number"
+                          id="totalprice"
+                          label="Total Price"
+                          variant="standard"
+                          focused
+                          value={values.totalprice}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.totalprice && !!errors.totalprice}
+                          helperText={touched.totalprice && errors.totalprice}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                          autoFocus
+                        />
+                        <TextField
+                          label="Net Payables"
+                          variant="standard"
+                          focused
+                          value={(
+                            Number(values.delivercharges || 0) +
+                            Number(values.totalprice || 0)
+                          ).toFixed(2)}
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                        />
+                        <TextField
+                          name="tentativedeliverdate"
+                          type="date"
+                          id="tentativedeliverdate"
+                          label="Tentative Deliver Date"
+                          variant="standard"
+                          focused
+                          inputFormat="YYYY-MM-DD"
+                          value={values.tentativedeliverdate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.tentativedeliverdate &&
+                            !!errors.tentativedeliverdate
+                          }
+                          helperText={
+                            touched.tentativedeliverdate &&
+                            errors.tentativedeliverdate
+                          }
+                        />
+                        {/* <TextField
+                          select
+                          label="Status"
+                          id="status"
+                          name="status"
+                          value={values.status}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            handleChange(e); // update form state (Formik)
+                            sessionStorage.setItem("status", e.target.value); // save to sessionStorage
+                          }}
+                          focused
+                          variant="standard"
+                        >
+                          <MenuItem value="Created">Created</MenuItem>
+                          <MenuItem value="Process">Confirm</MenuItem>
+                          <MenuItem value="Ready To Deliver">
+                            Ready for Delivery
+                          </MenuItem>
+                          <MenuItem value="Picked">Picked</MenuItem>
+                          <MenuItem value="Scheduled">Scheduled</MenuItem>
+
+                          <MenuItem value="Delivered">Delivered</MenuItem>
+                          <MenuItem value="Paid">Paid</MenuItem>
+                          <MenuItem value="AdjustFromAdvance">
+                            Adjust From Advance
+                          </MenuItem>
+                        </TextField> */}
+                      </>
+                    )}
                     {/* <TextField
                                         name="sortorder"
                                         type="number"
@@ -959,7 +1107,7 @@ const EditOrder = () => {
                     padding={1}
                     gap="20px"
                   >
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"
@@ -977,6 +1125,22 @@ const EditOrder = () => {
                         Save
                       </Button>
                     )}{" "}
+                    {YearFlag === "true" &&
+                      mode === "E" &&
+                      params.OrderType === "Q" && (
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() =>
+                            Fnsave(values, null, {
+                              OrderType: "O",
+                              ORStatus: "Process",
+                            })
+                          }
+                        >
+                          Convert To Order
+                        </Button>
+                      )}
                     {YearFlag == "true" && mode === "E" ? (
                       <Button
                         color="error"

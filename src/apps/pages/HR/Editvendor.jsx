@@ -1280,7 +1280,7 @@ const Editvendor = () => {
                           onBlur={handleBlur}
                           as={Checkbox}
                         />
-                        <FormLabel focused={false}>Vendor</FormLabel>
+                        <FormLabel focused={false}>Vendor/Supplier</FormLabel>
                       </Box>
                       <Box display="flex" alignItems="center">
                         <Field
