@@ -2511,7 +2511,7 @@ const Editemployee = () => {
         Name: deploymentData.StoregatemasterName,
       }
       : null,
-    project: deploymentData.DefaultProject
+    project: deploymentData.DefaultProject && deploymentData.DefaultProject !=="0"
       ? {
         RecordID: deploymentData.DefaultProject,
         Code: deploymentData.ProjectCode,

@@ -69,7 +69,8 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 // import LgemsLogo from "../../assets/img/LgemsLogo.png";
 // import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
 import BackOfficelogo from "../../assets/img/Backoffceimage.png";
-import BackOfficelogoV1 from "../../assets/img/BackOfficeImg _V1.png";
+// import BackOfficelogoV1 from "../../assets/img/BackOfficeImg _V1.png";
+import BackOfficelogoV1 from "../../assets/img/BexATM.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -735,26 +736,26 @@ const child = {
     //   ],
     // },
 
-    {
-      name: "Assessment",
-      id: 4579,
-      MenuID: "ST1609",
-      Tooltipname: "Assessment",
-      icon: (
-        <Tooltip title="Assessment">
-          <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      url: "/Apps/TR299/List Of Assessment Type",
-      UGA_ADD: true,
-      UGA_DEL: true,
-      UGA_MOD: true,
-      UGA_PRINT: true,
-      UGA_PROCESS: true,
-      UGA_VIEW: true,
-      UGA_ACCESSIDS: "TR122",
+    // {
+    //   name: "Assessment",
+    //   id: 4579,
+    //   MenuID: "ST1609",
+    //   Tooltipname: "Assessment",
+    //   icon: (
+    //     <Tooltip title="Assessment">
+    //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+    //     </Tooltip>
+    //   ),
+    //   url: "/Apps/TR299/List Of Assessment Type",
+    //   UGA_ADD: true,
+    //   UGA_DEL: true,
+    //   UGA_MOD: true,
+    //   UGA_PRINT: true,
+    //   UGA_PROCESS: true,
+    //   UGA_VIEW: true,
+    //   UGA_ACCESSIDS: "TR122",
 
-    },
+    // },
     {
       name: "Settings",
       id: 95689,
@@ -1073,20 +1074,20 @@ const Sidebars = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="15px"
+                // ml="15px"
               >
-                <Avatar
-                  variant="rounded"
+                <img
+                  // variant="rounded"
                   // src={LgemsLogo}
                   // src={LgemsLogo}
                   src={BackOfficelogoV1}
                   // sx={{ width: "100px" }}
-                  sx={{ height: "110px", width: "140px" }}
+                  style={{ height: "60px", width: "180px" }}
                   onClick={() => {
                     // navigate("./Chart");
                     navigate("./HR");
                   }}
-                ></Avatar>
+                ></img>
                 {/* <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography> */}
 
                 {/* <IconButton
