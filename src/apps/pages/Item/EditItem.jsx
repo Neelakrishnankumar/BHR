@@ -714,7 +714,7 @@ let VISIBLE_FIELDS = []; // <-- default always array
                     <MenuItem value={0}>Main</MenuItem>
                     <MenuItem value={1}>Flag</MenuItem>
                     <MenuItem value={2}>Stock</MenuItem>
-                    {/* <MenuItem value={3}>Lead Time</MenuItem> */}
+                    <MenuItem value={3}>Lead Time</MenuItem>
                   </Select>
                 </FormControl>
               ) : (

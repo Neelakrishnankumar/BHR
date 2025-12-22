@@ -91,6 +91,7 @@ const EditLeader = () => {
   const { id, name } = useParams();
   console.log("Received Name:", decodeURIComponent(name));
   console.log(location, "location");
+  const OrderType = params.OrderType;
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -297,10 +298,39 @@ const EditLeader = () => {
       if (Type === "T") {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
         navigate(-1);
-      } else if (Type === "S") {
-        // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/S`);
+      } 
+      else if (
+        Type === "S"
+      ) {
         navigate(-1);
-      } else {
+      } 
+      // else if (values.Status === "Opt to Order" && mode === "A") {
+      //   navigate(
+      //     `/Apps/Secondarylistview/TR310/Order/${recID}/Leader/O/EditOrder/-1/A`,
+      //     {
+      //       ...state,
+      //       PartyID: data.PartyID || filtertype,
+      //       LeadTitle: values.leadtitle,
+      //       PartyName: state.PartyName,
+      //       LEStatus: values.Status,
+      //     }
+      //   );
+      // } 
+      
+      // else if (values.Status === "Opt to Quote" && mode === "A") {
+      //   navigate(
+      //     `/Apps/Secondarylistview/TR310/Order/${recID}/Leader/Q/EditOrder/-1/A`,
+      //     {
+      //       ...state,
+      //       PartyID: data.PartyID,
+      //       LeadTitle: values.leadtitle,
+      //       PartyName: state.PartyName,
+      //       LEStatus: values.Status,
+      //     }
+      //   );
+      // } 
+      
+      else {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
         navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
       }
@@ -579,7 +609,7 @@ const EditLeader = () => {
                     focused
                     disabled={mode === "V"}
                     // inputProps={{ readOnly: true }}
-                     InputLabelProps={{
+                    InputLabelProps={{
                       shrink: true, // ✅ prevents overlap
                     }}
                   />
@@ -601,7 +631,7 @@ const EditLeader = () => {
                     //     max: new Date().toISOString().split("T")[0],
                     //     // readOnly: true,
                     // }}
-                     InputLabelProps={{
+                    InputLabelProps={{
                       shrink: true, // ✅ prevents overlap
                     }}
                   />
