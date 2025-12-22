@@ -20,7 +20,8 @@ import {
   InputAdornment,
   Avatar,
   Tooltip,
-  Breadcrumbs
+  Breadcrumbs,
+  LinearProgress,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import store from "../..";
@@ -82,6 +83,7 @@ const Approval = () => {
   const data = useSelector((state) => state.formApi.Data) || {};
   console.log(data, "--data");
   const isLoading = useSelector((state) => state.formApi.postLoading);
+  const getLoading = useSelector((state) => state.formApi.getLoading);
   const [Appname, setAppname] = useState("");
   const [author, setauthor] = useState("");
   const [Apikey, setApikey] = useState("");
@@ -180,10 +182,13 @@ const Approval = () => {
   //settings password save
   const fnSave = async (values) => {
     console.log(values, "00000000000000000000");
+    const recordIdToSend =
+      data?.RecordID && data.RecordID !== "" ? data.RecordID : "-1";
 
     const idata = {
       // action: "update",
-      RecordID: data.RecordID || "" || recID,
+      //RecordID: data.RecordID || "" || recID,
+      RecordID: recordIdToSend,
       CompanyID,
       PermisionHRManager: values.hrPermission == true ? "Y" : "N",
       PermisionProjectManager: values.projectPermission == true ? "Y" : "N",
@@ -224,6 +229,11 @@ const Approval = () => {
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       // navigate(" /Apps/Approval");
+      dispatch(
+        setttingsApprovalsData({
+          CompanyID,
+        })
+      );
     } else {
       toast.error(response.payload.Msg);
     }
@@ -271,6 +281,7 @@ const Approval = () => {
         >
           Approval
         </Typography> */}
+      {getLoading ? <LinearProgress /> : null}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
@@ -284,16 +295,13 @@ const Approval = () => {
               aria-label="breadcrumb"
               separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
             >
-
               <Typography
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 variant="h5"
-
               >
                 Approval
               </Typography>
-
             </Breadcrumbs>
           </Box>
 
@@ -315,7 +323,7 @@ const Approval = () => {
         <Formik
           initialValues={initialvalues}
           onSubmit={(values, setSubmitting, resetForm) => {
-            console.log(values, '8888888888');
+            console.log(values, "8888888888");
 
             setTimeout(() => {
               fnSave(values);
@@ -847,7 +855,6 @@ const Approval = () => {
                   variant="contained"
                   type="submit"
                   loading={isLoading}
-
                 >
                   Save
                 </LoadingButton>
@@ -856,9 +863,9 @@ const Approval = () => {
                   color={"warning"}
                   variant="contained"
                   onClick={() => resetForm()}
-                // onClick={() => {
-                //   navigate("/Apps/TR213/LeaveType");
-                // }}
+                  // onClick={() => {
+                  //   navigate("/Apps/TR213/LeaveType");
+                  // }}
                 >
                   Cancel
                 </Button>
