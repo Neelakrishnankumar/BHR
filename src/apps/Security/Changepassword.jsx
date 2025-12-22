@@ -63,6 +63,7 @@ const Changepass = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const Subscriptioncode = sessionStorage.getItem("SubscriptionCode");
   const Username = sessionStorage.getItem("UserName");
+  const UserId = sessionStorage.getItem("loginrecordID");
   const data = useSelector((state) => state.formApi.Data) || {};
   console.log(data, "--data");
   const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -129,6 +130,7 @@ const Changepass = () => {
       UserName: Username,
       OldPassword: values.currentpassword,
       NewPassword: values.newpassword,
+      UserRecid:UserId
 
     };
 

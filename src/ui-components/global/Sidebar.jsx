@@ -888,13 +888,13 @@ const Sidebars = () => {
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
   const [selected, setSelected] = useState("Product Category");
-
+  const ATMLogo = 'B2025-ATM01.png' 
   const [open, setOpen] = React.useState(false);
   const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
   React.useEffect(() => {
     const interval = setInterval(() => {
       const sessionLogo = sessionStorage.getItem("logoimage");
-
+      
       const newLogo = sessionLogo
         ? store.getState().globalurl.attachmentUrl + sessionLogo
         : BackOfficelogoV1;

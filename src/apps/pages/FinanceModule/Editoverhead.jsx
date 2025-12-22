@@ -115,6 +115,7 @@ const Editoverhead = () => {
   const explorelistViewcolumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
   );
+  console.log("🚀 ~ Editoverhead ~ explorelistViewcolumn:", explorelistViewcolumn)
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
   function Employee() {
@@ -157,10 +158,10 @@ const Editoverhead = () => {
   }
   let VISIBLE_FIELDS = [];
 
-  if (show === "1") {
+  if (show == "1") {
     VISIBLE_FIELDS = [
       "slno", 
-      "OverHeadsID",
+      "OverHeadsChild",
       "Sortorder",  
       "action",
     ];
@@ -185,16 +186,27 @@ const Editoverhead = () => {
       };
 
       visibleColumns = [slnoColumn, ...visibleColumns];
+      console.log("🚀 ~ Editoverhead ~ visibleColumns:", visibleColumns)
     }
 
     return visibleColumns;
   }, [explorelistViewcolumn, show, page, pageSize]);
+  console.log("🚀 ~ Editoverhead ~ columns:", columns)
+  
+  const newcolumn = React.useMemo(
+    () =>
+      explorelistViewcolumn.filter((column) =>
+        VISIBLE_FIELDS.includes(column.field)
+      ),
+    [explorelistViewcolumn]
+  );
 
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
     overhead: "",
     sortorder: "",
     checkbox: "",
+
 
   });
   const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
@@ -214,20 +226,20 @@ const Editoverhead = () => {
         setLeaveCondata({
           recordID: rowData.RecordID,
           sortorder: rowData.Sortorder,
-          checkbox: rowData.checkbox==="Y"?true:false,
-          overhead: rowData.OverHeadsID
+          checkbox: rowData.Disable,
+          overhead: rowData.ChildID
             ? {
-              RecordID: rowData.OverHeadsID,
-              Code: "",
-              Name: rowData.OverHeadsName,
+              RecordID: rowData.ChildID,
+              Code: rowData.ChildCode,
+              Name: rowData.ChildName,
             }
             : null,
          
         });
         setFieldValue("overhead", {
-          RecordID: rowData.OverHeadsID,
-          Code: "",
-          Name: rowData.OverHeadsName,
+          RecordID: rowData.ChildID,
+          Code: rowData.ChildCode,
+          Name: rowData.ChildName,
         });
 
       }
@@ -279,8 +291,7 @@ const Editoverhead = () => {
         fetchExplorelitview(
           "TR325",
           "Additional Expense",
-          "",
-          // `${recID} AND CompanyID=${CompanyID}`,
+          `parentID=${recID} AND CompanyID=${CompanyID}`,
           ""
         )
       );
@@ -347,8 +358,8 @@ const Editoverhead = () => {
   const initialValue2 = {
     code: data.Code,
     description: data.Name,
-    overhead: LeaveCondata.overhead,
-    checkbox: data.Disable === "Y" ? true : false,
+    overhead: LeaveCondata.overhead || null,
+    checkbox: LeaveCondata.checkbox === "Y" ? true : false,
     sortorder: LeaveCondata.sortorder,
     // delete: data.DeleteFlag === "Y" ? true : false
 
@@ -363,8 +374,11 @@ const Editoverhead = () => {
             : "update";
       const idata = {
         RecordID: LeaveCondata.recordID,       
-        OverHeadsID: values.overhead.RecordID || 0,
-        Sortorder: values.sortorder,
+        OverHeadsID: recID,
+        // values.overhead.RecordID || 0,
+        Code: values.overhead.Code || "",
+        Name: values.overhead.Name || "",
+        Sortorder: values.sortorder || 0,
         Disable: values.checkbox == true ? "Y" : "N",
         CompanyID,
       };
@@ -376,7 +390,7 @@ const Editoverhead = () => {
       if (response.payload.Status == "Y") {
         setLoading(false);
         dispatch(
-          fetchExplorelitview("TR325", "Additional Expense", "", "")
+          fetchExplorelitview("TR325", "Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
         );
   
         toast.success(response.payload.Msg);
@@ -455,6 +469,17 @@ const Editoverhead = () => {
                 >
                   Overhead
                 </Typography>
+                {show == "1" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    Additional Expense
+                  </Typography>
+                ) : (
+                  false
+                )}
 
               </Breadcrumbs>
             </Box>
@@ -919,6 +944,7 @@ const Editoverhead = () => {
                       }}
                       rows={explorelistViewData}
                       columns={columns}
+                      // columns={explorelistViewcolumn}
                       disableSelectionOnClick
                       getRowId={(row) => row.RecordID}
                       rowHeight={dataGridRowHeight}
@@ -1040,7 +1066,7 @@ const Editoverhead = () => {
                         confirmButtonText: "Confirm",
                       }).then((result) => {
                         if (result.isConfirmed) {
-                          // empItemCustodyFn(values, resetForm, "harddelete");
+                           AddexpFnsave(values, resetForm, "harddelete");
                         } else {
                           return;
                         }
