@@ -72,6 +72,8 @@ const Configuration = () => {
     console.log(data, "--data");
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const [logoimage, setlogoimage] = useState("");
+            console.log("Nowlogo", logoimage);
+
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
     const [gst, setGst] = useState("");
@@ -211,6 +213,7 @@ const Configuration = () => {
 
         const fileData = await dispatch(fileUpload({ formData }));
         setlogoimage(fileData.payload.name);
+        sessionStorage.setItem("logoimage", fileData.payload.name);
         console.log(">>>", fileData.payload);
         console.log(
             "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",

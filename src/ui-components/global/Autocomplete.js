@@ -988,6 +988,8 @@ export function MultiFormikOptimizedAutocomplete({
           {...params}
           label={label}
           error={errors}
+          variant="standard"
+          focused
           helperText={helper}
           InputProps={{
             ...params.InputProps,

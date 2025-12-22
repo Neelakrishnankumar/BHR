@@ -41,7 +41,8 @@ import store from "../../index";
 import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { Field, Form, Formik, ErrorMessage } from "formik";
-import background from "../../assets/img/bexlogo.jpg";
+// import background from "../../assets/img/bexlogo.jpg";
+import background from "../../assets/img/BexATM.png";
 import { LoadingButton } from "@mui/lab";
 
 const style = {
@@ -251,7 +252,7 @@ const Login = () => {
                       backgroundImage: `url(${background})`,
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center",
-                      backgroundSize: "50%",
+                      backgroundSize: "75%",
                       padding: 1,
                       borderRadius: "5px",
                       height: "350px",
@@ -266,12 +267,12 @@ const Login = () => {
                       variant="h6"
                       sx={{
 
-                        marginBottom: 1,
-                        marginRight: 6,
+                         marginBottom:8,
+                        // marginRight: 2,
                         textAlign: "center", 
                       }}
                     >
-                      ATM<br />
+                      {/* ATM<br /> */}
                       Back Office System
                     </Typography>
                   </Stack>

@@ -14,7 +14,9 @@ import {
   Paper,
   Breadcrumbs,
   Tooltip,
-  Checkbox
+  Checkbox,
+  Avatar,
+  Stack
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -24,11 +26,21 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  explorePostData,
   fetchApidata,
   getFetchData,
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -39,8 +51,17 @@ import { OverheadSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/utils";
 import * as Yup from "yup";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
+import {
+  dataGridHeaderFooterHeight,
+  dataGridHeight,
+  dataGridRowHeight,
 
-
+} from "../../../ui-components/global/utils";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import store from "../../../index";
+import { useTheme } from "@emotion/react";
+import { tokens } from "../../../Theme";
 const Editoverhead = () => {
   const dispatch = useDispatch();
   const params = useParams();
@@ -57,11 +78,162 @@ const Editoverhead = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   // console.log("🚀 ~ file: Editoverhead.jsx:20 ~ Editoverhead ~ data:", data);
+  var secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [page, setPage] = React.useState(secondaryCurrentPage);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+  const [validationSchema1, setValidationSchema1] = useState(null);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const YearFlag = sessionStorage.getItem("YearFlag");
+  const [show, setScreen] = React.useState("0");
+  const [pageSize, setPageSize] = React.useState(15);
+  const [rowCount, setRowCount] = useState(0);
+  const isLoading = useSelector((state) => state.formApi.loading);
+  const [funMode, setFunMode] = useState("A");
 
+  var userimg = store.getState().globalurl.imageUrl;
+  if (mode == "A") {
+    userimg = userimg + "Defaultimg.jpg";
+  } else {
+    if (
+      data.ImageName == undefined ||
+      data.ImageName == null ||
+      data.ImageName == ""
+    ) {
+      userimg = userimg + "Defaultimg.jpg";
+    } else {
+      userimg = userimg + data.ImageName;
+    }
+  }
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+
+  function Employee() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          {/* <Typography>
+              {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
+              
+            </Typography> */}
+          <Typography>
+            {show == "1"
+              ? "List of Additional Expense"
+              : ""}
+          </Typography>
+          <Typography variant="h5">{`(${rowCount})`}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          <Tooltip title="ADD">
+            <IconButton type="reset">
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
+  let VISIBLE_FIELDS = [];
+
+  if (show === "1") {
+    VISIBLE_FIELDS = [
+      "slno", 
+      "OverHeadsID",
+      "Sortorder",  
+      "action",
+    ];
+  }
+
+  const columns = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page * pageSize +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, show, page, pageSize]);
+
+  const [LeaveCondata, setLeaveCondata] = useState({
+    recordID: "",
+    overhead: "",
+    sortorder: "",
+    checkbox: "",
+
+  });
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
+    setFunMode(mode);
+
+    if (mode == "A") {
+
+      setLeaveCondata({
+        recordID: "",
+        overhead: "",
+        sortorder: "",
+        checkbox: "",
+      });
+    } else {
+
+      if (field == "action") {
+        setLeaveCondata({
+          recordID: rowData.RecordID,
+          sortorder: rowData.Sortorder,
+          checkbox: rowData.checkbox==="Y"?true:false,
+          overhead: rowData.OverHeadsID
+            ? {
+              RecordID: rowData.OverHeadsID,
+              Code: "",
+              Name: rowData.OverHeadsName,
+            }
+            : null,
+         
+        });
+        setFieldValue("overhead", {
+          RecordID: rowData.OverHeadsID,
+          Code: "",
+          Name: rowData.OverHeadsName,
+        });
+
+      }
+    }
+    console.log(selectCellRowData, "Itemservices");
+  };
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -82,7 +254,12 @@ const Editoverhead = () => {
         }
 
         const schema = Yup.object().shape(schemaFields);
+          const schema1 = Yup.object().shape({
+          overhead: Yup.object().required(data.Overhead.Overhead).nullable(),       
+        });
         setValidationSchema(schema);
+        setValidationSchema1(schema1);
+
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -92,28 +269,40 @@ const Editoverhead = () => {
   }, [location.key]);
   // const YearRecorid = sessionStorage.getItem("YearRecorid");
   // const CompanyID = sessionStorage.getItem("compID");
+  const screenChange = (event) => {
+    setScreen(event.target.value);
+    if (event.target.value == "0") {
+      dispatch(fetchApidata(accessID, "get", recID));
+    }
+    if (event.target.value == "1") {
+      dispatch(
+        fetchExplorelitview(
+          "TR325",
+          "Additional Expense",
+          "",
+          // `${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
+      );
+      dispatch(fetchApidata(accessID, "get", recID));
+      // selectcelldata("", "A", "");
+    }
 
+  };
   const initialValue = {
     code: data.Code,
     name: data.Name,
     frequency: data.Frequency,
     accounttype: data.AccountType || "Debit",
-    // productCost: data.Productcost,
-    // OverheadType: data.OverHeadsTypeID
-    //   ? {
-    //     RecordID: data.RecordID,
-    //     Code: data.Code,
-    //     Name: data.Name,
-    //   }
-    //   : null,
-      OverheadType: data.OverHeadTypeID
+
+    OverheadType: data.OverHeadTypeID
       ? { RecordID: data.OverHeadTypeID, Name: data.OverHeadType }
       : null,
     disable: data.Disable === "Y" ? true : false,
     delete: data.DeleteFlag === "Y" ? true : false
 
   };
-console.log(initialValue,"OverheadType");
+  console.log(initialValue, "OverheadType");
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const fnSave = async (values, del) => {
@@ -155,6 +344,50 @@ console.log(initialValue,"OverheadType");
       setLoading(false);
     }
   };
+  const initialValue2 = {
+    code: data.Code,
+    description: data.Name,
+    overhead: LeaveCondata.overhead,
+    checkbox: data.Disable === "Y" ? true : false,
+    sortorder: LeaveCondata.sortorder,
+    // delete: data.DeleteFlag === "Y" ? true : false
+
+  };
+    const AddexpFnsave = async (values, resetForm, del) => {
+      setLoading(true);
+      let action =
+        funMode === "A" && !del
+          ? "insert"
+          : funMode === "E" && del
+            ? "harddelete"
+            : "update";
+      const idata = {
+        RecordID: LeaveCondata.recordID,       
+        OverHeadsID: values.overhead.RecordID || 0,
+        Sortorder: values.sortorder,
+        Disable: values.checkbox == true ? "Y" : "N",
+        CompanyID,
+      };
+      // console.log("save" + JSON.stringify(saveData));
+  
+      const response = await dispatch(
+        explorePostData({ accessID: "TR325", action, idata })
+      );
+      if (response.payload.Status == "Y") {
+        setLoading(false);
+        dispatch(
+          fetchExplorelitview("TR325", "Additional Expense", "", "")
+        );
+  
+        toast.success(response.payload.Msg);
+  
+        selectCellRowData({ rowData: {}, mode: "A", field: "" });
+        resetForm();
+      } else {
+        setLoading(false);
+        toast.error(response.payload.Msg);
+      }
+    };
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -228,6 +461,23 @@ console.log(initialValue,"OverheadType");
           </Box>
 
           <Box display="flex">
+            {mode !== "A" ? (
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Explore</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  value={show}
+                  label="Explore"
+                  onChange={screenChange}
+                >
+                  <MenuItem value={0}>Overhead</MenuItem>
+                  <MenuItem value={1}>Additional Expense</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              false
+            )}
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -242,7 +492,7 @@ console.log(initialValue,"OverheadType");
         </Box>
       </Paper>
 
-      {!getLoading ? (
+      {show == "0" && !getLoading ? (
 
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
@@ -418,9 +668,9 @@ console.log(initialValue,"OverheadType");
 
                     <MenuItem value="Debit">Debit</MenuItem>
                     <MenuItem value="Credit">Credit</MenuItem>
-                    
+
                   </TextField>
-                   
+
                   {/* </FormControl> */}
 
                   {/* <FormControl
@@ -485,14 +735,14 @@ console.log(initialValue,"OverheadType");
 
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
-                 <LoadingButton
+                  <LoadingButton
                     variant="contained"
                     color="secondary"
                     type="submit"
                     loading={loading}
                   >
                     SAVE
-                  </LoadingButton> 
+                  </LoadingButton>
                   {/* {mode == "E" ? (
                     <Button
                       color="error"
@@ -537,7 +787,289 @@ console.log(initialValue,"OverheadType");
       ) : (
         false
       )}
-    </React.Fragment>
+      {show == "1" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={initialValue2}
+            enableReinitialize={true}
+           validationSchema={validationSchema1}
+          onSubmit={(values, { resetForm }) => {
+            setTimeout(() => {
+              AddexpFnsave(values, resetForm, false);
+            }, 100);
+          }}
+          >
+            {({
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              isSubmitting,
+              values,
+              handleSubmit,
+              resetForm,
+              setFieldValue
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+                onReset={() => {
+                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                  resetForm();
+                }}
+              >
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <FormControl sx={{ gap: formGap }}>
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="code"
+                      name="code"
+                      value={values.code}
+                      label="Code"
+                      focused
+                      inputProps={{ readOnly: true }}
+                    />
+
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="description"
+                      name="description"
+                      value={values.description}
+                      label="Name"
+                      focused
+                      inputProps={{ readOnly: true }}
+                    />
+                  </FormControl>
+                  <Stack
+                    sx={{
+                      //    width: {sm:'100%',md:'100%',lg:'100%'},
+                      //gridColumn: "span 2",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      position: "relative",
+                      right: "0px",
+                    }}
+                  >
+                    <Avatar
+                      variant="rounded"
+                      src={userimg}
+                      sx={{ width: "200px", height: "120px" }}
+                    />
+                  </Stack>
+
+                  <Box
+                    m="5px 0 0 0"
+                    //height={dataGridHeight}
+                    height="50vh"
+                    sx={{
+                      "& .MuiDataGrid-root": {
+                        border: "none",
+                      },
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                      },
+                      "& .name-column--cell": {
+                        color: colors.greenAccent[300],
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[800],
+                        borderBottom: "none",
+                      },
+                      "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                      },
+                      "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[800],
+                      },
+                      "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                      },
+                      "& .odd-row": {
+                        backgroundColor: "",
+                        color: "", // Color for odd rows
+                      },
+                      "& .even-row": {
+                        backgroundColor: "#D3D3D3",
+                        color: "", // Color for even rows
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                          height: dataGridHeaderFooterHeight,
+                          minHeight: dataGridHeaderFooterHeight,
+                        },
+                      }}
+                      rows={explorelistViewData}
+                      columns={columns}
+                      disableSelectionOnClick
+                      getRowId={(row) => row.RecordID}
+                      rowHeight={dataGridRowHeight}
+                      headerHeight={dataGridHeaderFooterHeight}
+                      pageSize={pageSize}
+                      onPageSizeChange={(newPageSize) =>
+                        setPageSize(newPageSize)
+                      }
+                      onCellClick={(params) => {
+                        selectCellRowData({
+                          rowData: params.row,
+                          mode: "E",
+                          field: params.field,
+                          setFieldValue
+                        });
+                      }}
+                      rowsPerPageOptions={[5, 10, 20]}
+                      pagination
+                      components={{
+                        Toolbar: Employee,
+                      }}
+                      onStateChange={(stateParams) =>
+                        setRowCount(stateParams.pagination.rowCount)
+                      }
+                      getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0
+                          ? "odd-row"
+                          : "even-row"
+                      }
+                      loading={exploreLoading}
+                      componentsProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                          quickFilterProps: { debounceMs: 500 },
+                        },
+                      }}
+                    />
+                  </Box>
+
+                  <FormControl sx={{ gap: formGap }}>
+                    <CheckinAutocomplete
+                      variant="outlined"
+                      name="overhead"
+                      label={
+                        <>
+                          OverHead
+                          <span style={{ color: "red", fontSize: "20px" }}> * </span>
+                        </>
+                      }
+                      id="overhead"
+                      value={values.overhead}
+                      onChange={(newValue) => {
+                        setFieldValue("overhead", newValue);
+                      }}
+                      error={!!touched.overhead && !!errors.overhead}
+                      helperText={touched.overhead && errors.overhead}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"companyID='${CompanyID}'","Any":""}}`}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      value={values.sortorder}
+                      id="sortorder"
+                      name="sortorder"
+                      label="Sort Order"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.sortorder && !!errors.sortorder}
+                      helperText={touched.sortorder && errors.sortorder}
+                      focused
+                      InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                    />
+                    <Box>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="checkbox"
+                        id="checkbox"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Disable"
+                      />
+
+                      <FormLabel focused={false}>Disable</FormLabel>
+                    </Box></FormControl>
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent="end"
+                  padding={1}
+                  style={{ marginTop: "-40px" }}
+                  gap={2}
+                >
+                  <LoadingButton
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
+                    Save
+                  </LoadingButton>
+
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => {
+                      Swal.fire({
+                        title: errorMsgData.Warningmsg.Delete,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          // empItemCustodyFn(values, resetForm, "harddelete");
+                        } else {
+                          return;
+                        }
+                      });
+                    }}
+                  >
+                    Delete
+                  </Button>
+
+                  <Button
+                    type="reset"
+                    color="warning"
+                    variant="contained"
+                    onClick={() => {
+                      setScreen(0);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+
+              </form>
+            )}
+          </Formik>
+        </Paper >
+      ) : (
+        false
+      )}
+    </React.Fragment >
   );
 };
 
