@@ -311,7 +311,7 @@ const EditAdvancePayment = () => {
                       autoFocus
                       InputProps={{
                         inputProps: {
-                          textAlign: "right",
+                          style:{textAlign: "right"},
                         },
                       }}
                     />

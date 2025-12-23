@@ -287,7 +287,7 @@ export const fetchExplorelitview =
     // const navigate = useNavigate();  
     var url = store.getState().globalurl.listViewurl; 
 
-    if (filter != "" && AccessID !== "TR212" && AccessID !== "TR309" && AccessID !== "TR325" && AccessID !== "TR302" && AccessID !== "TR249" && AccessID !== "TR210" && AccessID !== "TR219" && AccessID !== "TR086" && AccessID !== "TR242" && AccessID !== "TR237" && AccessID !== "TR208"  && AccessID !== "TR160" && AccessID !== "TR266" && AccessID !== "TR216" && AccessID !== "TR146" && AccessID !== "TR019" && AccessID !== "TR017"&& AccessID !== "TR088" && AccessID !== "TR016"&& AccessID !== "TR125" && AccessID !== "TR244" && AccessID !== "TR126"&& AccessID !== "TR130"&& AccessID !== "TR131"&& AccessID !=="TR139") {
+    if (filter != "" && AccessID !== "TR212" && AccessID !== "TR309" && AccessID !== "TR325" && AccessID !== "TR302" && AccessID !== "TR249" && AccessID !== "TR210" && AccessID !== "TR219" && AccessID !== "TR086" && AccessID !== "TR242" && AccessID !== "TR237" && AccessID !== "TR208"  && AccessID !== "TR160" && AccessID !== "TR266" && AccessID !== "TR216" && AccessID !== "TR146" && AccessID !== "TR019" && AccessID !== "TR017"&& AccessID !== "TR088" && AccessID !== "TR016"&& AccessID !== "TR125" && AccessID !== "TR244" && AccessID !== "TR126"&& AccessID !== "TR130"&& AccessID !== "TR131"&& AccessID !=="TR139" && AccessID !=="TR326") {
       filter = "parentID=" + filter;
 
     }

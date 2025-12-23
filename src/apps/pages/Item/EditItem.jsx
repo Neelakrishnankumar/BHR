@@ -20,7 +20,7 @@ import {
   LinearProgress,
   FormLabel,
 } from "@mui/material";
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
 import { ArrowBack } from "@mui/icons-material";
@@ -40,7 +40,11 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import { dataGridHeaderFooterHeight, dataGridRowHeight, formGap } from "../../../ui-components/utils";
+import {
+  dataGridHeaderFooterHeight,
+  dataGridRowHeight,
+  formGap,
+} from "../../../ui-components/utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getFetchData,
@@ -65,8 +69,15 @@ import toast from "react-hot-toast";
 // } from "./SkillGlowAutocomplete";
 import { LoadingButton } from "@mui/lab";
 import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
-import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
-import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import {
+  fetchExplorelitview,
+  getFetchUserData,
+} from "../../../store/reducers/Explorelitviewapireducer";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { tokens } from "../../../Theme";
 import { useTheme } from "@emotion/react";
@@ -122,6 +133,7 @@ const EditItem = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
   const [validationSchema2, setValidationSchema2] = useState(null);
+  const [validationSchema3, setValidationSchema3] = useState(null);
 
   const ItemCategorID = params.parentID1;
   useEffect(() => {
@@ -145,8 +157,18 @@ const EditItem = () => {
           MinStock: Yup.string().required(data.Item.MinStock),
           ReorderLevel: Yup.string().required(data.Item.ReorderLevel),
         });
+        const schema3 = Yup.object().shape({
+          supplier: Yup.object().nullable().required(data.Item.supplier).shape({
+            RecordID: Yup.string().required(),
+            Name: Yup.string().required(),
+          }),
+          MinOrderQty: Yup.string().required(data.Item.MinOrderQty),
+          LeadTime: Yup.string().required(data.Item.LeadTime),
+          AgreedPrice: Yup.string().required(data.Item.AgreedPrice),
+        });
         setValidationSchema(schema);
         setValidationSchema2(schema2);
+        setValidationSchema3(schema3);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -167,21 +189,23 @@ const EditItem = () => {
   const curDate = new Date().toISOString().split("T")[0];
   const [show, setScreen] = React.useState("0");
 
-    const [funMode, setFunMode] = useState("A");
+  const [funMode, setFunMode] = useState("A");
   const [laomode, setLaoMode] = useState("A");
   const [rowCount, setRowCount] = useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [loading, setLoading] = useState(false);
-    const theme = useTheme();
+  const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const commentsRef = useRef(null);
-
 
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
   );
   const explorelistViewcolumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector(
+    (state) => state.exploreApi.loading
   );
 
   // **********ScreenChange Function*********
@@ -196,21 +220,35 @@ const EditItem = () => {
     LastOrderPrice: "",
     LastOrderQty: "",
     LastOrderRating: "",
+    Sortorder: "",
+    Disable: "",
   });
 
-    const LeadInitialValues = {
-    Description: leadData.Name,
-    Code: leadData.TaskDate,
-    supplier: leadData.supplier || null,
-    MinOrderQty: leadData.MinOrderQty || null,
-    LeadTime: leadData.LeadTime || null,
-    AgreedPrice: leadData.AgreedPrice || null,
-    LastOrderDate: leadData.LastOrderDate || null,
-    LastOrderNo: leadData.LastOrderNo || null,
-    LastOrderPrice: leadData.LastOrderPrice || null,
-    LastOrderQty: leadData.LastOrderQty || null,
-    LastOrderRating: leadData.LastOrderRating || null,
-   
+  // const LeadInitialValues = {
+  //   Description: leadData.Name,
+  //   Code: leadData.TaskDate,
+  //   supplier: leadData.supplier || null,
+  //   MinOrderQty: leadData.MinOrderQty || null,
+  //   LeadTime: leadData.LeadTime || null,
+  //   AgreedPrice: leadData.AgreedPrice || null,
+  //   LastOrderDate: leadData.LastOrderDate || null,
+  //   LastOrderNo: leadData.LastOrderNo || null,
+  //   LastOrderPrice: leadData.LastOrderPrice || null,
+  //   LastOrderQty: leadData.LastOrderQty || null,
+  //   LastOrderRating: leadData.LastOrderRating || null,
+  // };
+  const LeadInitialValues = {
+    Description: state.BreadCrumb3 || "",
+    Code: state.ItemCode || "",
+    supplier: null,
+    MinOrderQty: "",
+    LeadTime: "",
+    AgreedPrice: "",
+    LastOrderDate: "",
+    LastOrderNo: "",
+    LastOrderPrice: "",
+    LastOrderQty: "",
+    LastOrderRating: "",
   };
 
   const screenChange = (event) => {
@@ -238,9 +276,25 @@ const EditItem = () => {
         dispatch(ItemStockMenuGet({ get: "", recID }));
       }
     }
-    // if (event.target.value == "1") {
-    //   dispatch(PartyContactget({ VendorID: recID }));
-    // }
+    if (event.target.value === 3) {
+      if (recID && mode === "E") {
+        dispatch(
+          fetchExplorelitview(
+            "TR326",
+            "Lead Time",
+            `CompanyID='${CompanyID}' AND ItemID='${recID}'`,
+            ""
+          )
+        );
+      } else {
+        dispatch(
+          fetchExplorelitview({
+            AccessID: "",
+            Filter: `CompanyID='${CompanyID}'`,
+          })
+        );
+      }
+    }
 
     // if (event.target.value == "2") {
     //   dispatch(PartyBankget({ VendorID: recID }));
@@ -380,10 +434,6 @@ const EditItem = () => {
   const LeadSaveFn = async (values, resetForm, del) => {
     setLoading(true);
     const isCheck = values.disable ? "Y" : "N";
-    // let action = "update";
-
-    // if (funMode === "A") action = "insert";
-    // if (funMode === "E" && del) action = "harddelete";
 
     let action =
       funMode === "A" && !del
@@ -394,33 +444,45 @@ const EditItem = () => {
     const idata = {
       RecordID: funMode === "A" ? "-1" : leadData.recordID,
       CompanyID: CompanyID,
-      DailyTaskID: recID || "",
-      SupplierID: values.supplier.RecordID || "",
-      MinOrderQty: values.MinOrderQty || "",
-      LeadTime: values.LeadTime || "0",
-      AgreedPrice: values.AgreedPrice || "0",
+      PartyID: values.supplier.RecordID || "",
+      ItemID: recID || "",
+      MinimunOrdQty: values.MinOrderQty || "",
+      LeadTimeinDays: values.LeadTime || "0",
+      AggreedPrice: values.AgreedPrice || "0",
+      LastOrdDate: values.LastOrderDate || "",
+      LastOrdNumber: values.LastOrderNo || "0",
+      LastOrdRating: values.LastOrderRating || "0",
+      LastOrdQty: values.LastOrderQty || "0",
+      LastOrdPrice: values.LastOrderPrice || "0",
+      Sortorder: values.Sortorder || "0",
+
+      // LastOrdNumber: 1 || "",
+      // LastOrdQty: 5 || "",
+      // LastOrdPrice: 100 || "",
+      // LastOrdRating: 10 || "",
+      // Sortorder: 1 || "",
+
+      Disable: values.Disable || "N",
     };
 
     const response = await dispatch(
-      postData({ accessID: "TR322", action, idata })
+      postData({ accessID: "TR326B", action, idata })
     );
 
     if (response.payload.Status === "Y") {
       toast.success(response.payload.Msg);
-   
       setLoading(false);
-     
-      // dispatch(
-      //   fetchExplorelitview(
-      //     "TR322",
-      //     "Product",
-      //     `CompanyID='${compID}' AND DailyTaskID='${recID}' AND Type='Product'`,
-      //     ""
-      //   )
-      // );
-      dispatch(getFetchData({ accessID, get: "get", recID }));
+      dispatch(
+        fetchExplorelitview(
+          "TR326",
+          "Lead Time",
+          `CompanyID='${CompanyID}' AND ItemID='${recID}'`,
+          ""
+        )
+      );
       selectCellRowData({ rowData: {}, mode: "A", field: "", type: "product" });
       resetForm();
+      dispatch(ItemMainGETFetchData({ get: "get", recID: recID }));
     } else {
       toast.error(response.payload.Msg);
     }
@@ -508,72 +570,100 @@ const EditItem = () => {
     MinStock: ItemStockData?.MinStock || "",
     ReorderLevel: ItemStockData?.ReorderLevel || "",
   };
-  const selectCellRowData = ({ rowData, mode, field, setFieldValue, type }) => {
+  // const selectCellRowData = ({ rowData, mode, field, setFieldValue, type }) => {
+  //   setFunMode(mode);
+  //   setLaoMode(mode);
+
+  //   if (mode == "A") {
+  //     setLeadData({
+  //       recordID: "",
+  //       MinOrderQty: "",
+  //       supplier: "",
+  //       LeadTime: "",
+  //       AgreedPrice: "",
+  //       LastOrderDate: "",
+  //       LastOrderNo: "",
+  //       LastOrderPrice: "",
+  //       LastOrderQty: "",
+  //       LastOrderRating: "",
+  //       Sortorder: "",
+  //       Disable: "",
+  //     });
+  //   } else {
+  //     if (field == "action") {
+  //       setLeadData({
+  //         recordID: rowData.RecordID,
+  //         supplier: rowData.PartyID
+  //           ? {
+  //               RecordID: rowData.PartyID,
+  //               Code: rowData.PartyCode || "",
+  //               Name: rowData.PartyName || "",
+  //             }
+  //           : null,
+  //         MinOrderQty: rowData.MinimunOrdQty,
+  //         LeadTime: rowData.LeadTimeinDays,
+  //         AgreedPrice: rowData.AggreedPrice,
+  //         LastOrderDate: rowData.LastOrdDate,
+  //         LastOrderNo: rowData.LastOrdNumber,
+  //         LastOrderPrice: rowData.LastOrdPrice,
+  //         LastOrderQty: rowData.LastOrdQty,
+  //         LastOrderRating: rowData.LastOrdRating,
+  //         Sortorder: rowData.Sortorder,
+  //         Disable: rowData.Disable,
+  //       });
+  //       setFieldValue("supplier", {
+  //         RecordID: rowData.PartyID,
+  //         Code: rowData.PartyCode,
+  //         Name: rowData.PartyName,
+  //       });
+  //     }
+  //   }
+
+  //   console.log(selectCellRowData, "Itemservices");
+  // };
+  const selectCellRowData = ({ rowData, mode, setFieldValue }) => {
     setFunMode(mode);
     setLaoMode(mode);
 
-    if (mode == "A") {
-      setLeadData({
-        recordID: "",
-        MinOrderQty: "",
-        supplier: "",
-        LeadTime: "",
-        AgreedPrice: "",
-        LastOrderDate: "",
-        LastOrderNo: "",
-        LastOrderPrice: "",
-        LastOrderQty: "",
-        LastOrderRating: "",
-       
-      });
-    } else {
-      if (field == "action") {
-        setLeadData({
-          recordID: rowData.RecordID,
-          supplier: rowData.RecordID
-            ? {
-                RecordID: rowData.RecordID,
-                Code: rowData.Code || "",
-                Name: rowData.Name || "",
-              }
-            : null,
-          MinOrderQty: rowData.MinOrderQty,
-          LeadTime: rowData.LeadTime,
-          AgreedPrice: rowData.AgreedPrice,
-          LastOrderDate: rowData.LastOrderDate,
-          AgreedPrice: rowData.AgreedPrice,
-          LastOrderNo: rowData.LastOrderNo,
-          LastOrderPrice: rowData.LastOrderPrice,
-          LastOrderQty: rowData.LastOrderQty,
-          LastOrderRating: rowData.LastOrderRating,
-        });
-        setFieldValue("supplier", {
-          RecordID: rowData.RecordID,
-          Code: rowData.Code,
-          Name: rowData.Name,
-        });
-        setFieldValue("productCategoryID", {
-          productCategoryID: rowData.CrmItemCategoryID,
-        });  
-      }
+    if (mode === "A") {
+      return;
     }
 
-    console.log(selectCellRowData, "Itemservices");
+    if (mode === "E") {
+      setFieldValue("supplier", {
+        RecordID: rowData.PartyID,
+        Code: rowData.PartyCode || "",
+        Name: rowData.PartyName || "",
+      });
+
+      setFieldValue("MinOrderQty", rowData.MinimunOrdQty || "");
+      setFieldValue("LeadTime", rowData.LeadTimeinDays || "");
+      setFieldValue("AgreedPrice", rowData.AgreedPrice || "");
+      setFieldValue("LastOrderDate", rowData.LastOrdDate || "");
+      setFieldValue("LastOrderNo", rowData.LastOrdNumber || "");
+      setFieldValue("LastOrderQty", rowData.LastOrdQty || "");
+      setFieldValue("LastOrderPrice", rowData.LastOrdPrice || "");
+      setFieldValue("LastOrderRating", rowData.LastOrdRating || "");
+setLeadData((prev) => ({
+  ...prev,
+  recordID: rowData.RecordID,
+}));
+    }
   };
 
-let VISIBLE_FIELDS = []; // <-- default always array
+  let VISIBLE_FIELDS = []; // <-- default always array
 
   if (show == "3") {
     VISIBLE_FIELDS = [
       "SLNO",
-      "CrmItemsName",
-      "Rate",
-      "Qty",
-      "Amount",
+      "PartyName",
+      "LeadTimeinDays",
+      "MinimunOrdQty",
+      "AgreedPrice",
       "action",
     ];
-  } 
-    const newcolumn = React.useMemo(
+  }
+  const newcolumn = React.useMemo(
     () =>
       explorelistViewcolumn.filter((column) =>
         VISIBLE_FIELDS.includes(column.field)
@@ -581,8 +671,7 @@ let VISIBLE_FIELDS = []; // <-- default always array
     [explorelistViewcolumn]
   );
 
-
-    function Employee() {
+  function Employee() {
     return (
       <GridToolbarContainer
         sx={{
@@ -596,11 +685,7 @@ let VISIBLE_FIELDS = []; // <-- default always array
             {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
             
           </Typography> */}
-          <Typography>
-            {show == "3"
-              ? "List of Leads"
-              : ""}
-          </Typography>
+          <Typography>{show == "3" ? "List of Leads" : ""}</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
         <Box
@@ -1757,7 +1842,7 @@ let VISIBLE_FIELDS = []; // <-- default always array
                       id="MinStock"
                       label={
                         <span>
-                         Minimum Item Quantity{" "}
+                          Minimum Item Quantity{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -1773,12 +1858,8 @@ let VISIBLE_FIELDS = []; // <-- default always array
                       value={values.MinStock}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={
-                        !!touched.MinStock && !!errors.MinStock
-                      }
-                      helperText={
-                        touched.MinStock && errors.MinStock
-                      }
+                      error={!!touched.MinStock && !!errors.MinStock}
+                      helperText={touched.MinStock && errors.MinStock}
                       autoFocus
                       InputProps={{
                         inputProps: { style: { textAlign: "right" } },
@@ -1806,12 +1887,8 @@ let VISIBLE_FIELDS = []; // <-- default always array
                       value={values.ReorderLevel}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={
-                        !!touched.ReorderLevel && !!errors.ReorderLevel
-                      }
-                      helperText={
-                        touched.ReorderLevel && errors.ReorderLevel
-                      }
+                      error={!!touched.ReorderLevel && !!errors.ReorderLevel}
+                      helperText={touched.ReorderLevel && errors.ReorderLevel}
                       autoFocus
                       InputProps={{
                         inputProps: { style: { textAlign: "right" } },
@@ -2015,404 +2092,432 @@ let VISIBLE_FIELDS = []; // <-- default always array
         )}
         {show == "3" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={LeadInitialValues}
-            enableReinitialize={true}
-            //validationSchema={validationSchema4}
-            onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                LeadSaveFn(values, resetForm, false);
-              }, 100);
-            }}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              resetForm,
-              setFieldValue,
-              setFieldTouched,
-            }) => (
-              <form
-                onSubmit={handleSubmit}
-                onReset={() => {
-                  selectCellRowData({
-                    rowData: {},
-                    mode: "A",
-                    field: "",
-                    type: "product",
-                  });
-                  resetForm();
-                }}
-              >
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
+            <Formik
+              initialValues={LeadInitialValues}
+              enableReinitialize={false}
+              validationSchema={validationSchema3}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  LeadSaveFn(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+                setFieldTouched,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({
+                      rowData: {},
+                      mode: "A",
+                      field: "",
+                      type: "product",
+                    });
+                    resetForm({
+                      values: {
+                        Description: "",
+                        Code: "",
+                        supplier: null,
+                        MinOrderQty: "",
+                        LeadTime: "",
+                        AgreedPrice: "",
+                        LastOrderDate: "",
+                        LastOrderNo: "",
+                        LastOrderPrice: "",
+                        LastOrderQty: "",
+                        LastOrderRating: "",
+                      },
+                    });
                   }}
                 >
-                  <FormControl sx={{ gap: formGap }}>
-                   
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="Code"
-                      name="Code"
-                      value={values.Code}
-                      label="Code"
-                      focused
-                      inputProps={{ readOnly: true }}
-                    />
-                  </FormControl>
-                  <FormControl sx={{ gap: formGap }}>
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      id="Description"
-                      name="Description"
-                      value={values.Description}
-                      label="Description"
-                      focused
-                      inputProps={{ readOnly: true }}
-                    />
-                  </FormControl>
-                
                   <Box
-                    m="5px 0 0 0"
-                    //height={dataGridHeight}
-                    height="65vh"
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     sx={{
-                      "& .MuiDataGrid-root": {
-                        border: "none",
-                      },
-                      "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                      },
-                      "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[800],
-                        borderBottom: "none",
-                      },
-                      "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                      },
-                      "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[800],
-                      },
-                      "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                      },
-                      "& .odd-row": {
-                        backgroundColor: "",
-                        color: "", // Color for odd rows
-                      },
-                      "& .even-row": {
-                        backgroundColor: "#D3D3D3",
-                        color: "", // Color for even rows
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
                       },
                     }}
                   >
-                    <DataGrid
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        label="Code"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Description"
+                        name="Description"
+                        value={values.Description}
+                        label="Description"
+                        focused
+                        inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+
+                    <Box
+                      m="5px 0 0 0"
+                      //height={dataGridHeight}
+                      height="65vh"
                       sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
                         "& .MuiDataGrid-footerContainer": {
-                          height: dataGridHeaderFooterHeight,
-                          minHeight: dataGridHeaderFooterHeight,
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
                         },
                       }}
-                      rows={explorelistViewData}
-                      columns={newcolumn}
-                      disableSelectionOnClick
-                      getRowId={(row) => row.RecordID}
-                      rowHeight={dataGridRowHeight}
-                      headerHeight={dataGridHeaderFooterHeight}
-                      pageSize={pageSize}
-                      onPageSizeChange={(newPageSize) =>
-                        setPageSize(newPageSize)
-                      }
-                      onCellClick={(params) => {
-                        selectCellRowData({
-                          rowData: params.row,
-                          mode: "E",
-                          field: params.field,
-                          setFieldValue,
-                          type: "product",
-                        });
-                      }}
-                      rowsPerPageOptions={[5, 10, 20]}
-                      pagination
-                      components={{
-                        Toolbar: Employee,
-                      }}
-                      onStateChange={(stateParams) =>
-                        setRowCount(stateParams.pagination.rowCount)
-                      }
-                      getRowClassName={(params) =>
-                        params.indexRelativeToCurrentPage % 2 === 0
-                          ? "odd-row"
-                          : "even-row"
-                      }
-                      //loading={exploreLoading}
-                      componentsProps={{
-                        toolbar: {
-                          showQuickFilter: true,
-                          quickFilterProps: { debounceMs: 500 },
-                        },
-                      }}
-                    />
-                  </Box>
-
-                  <FormControl sx={{ 
-                    gap: formGap, 
-                    marginTop:"10px", 
-                    // justifyContent:"space-evenly" 
-                    }}
                     >
-                  
-                    <CheckinAutocomplete
-                      name="supplier"
-                      //label="Item"
-                      label={
-                        <>
-                          Supplier
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      id="supplier"
-                      value={values.supplier}
-                      onChange={(newValue) => {
-                        setFieldValue("supplier", {
-                          RecordID: newValue.RecordID,
-                          Code: newValue.Code,
-                          Name: newValue.Name,
-                        });
-                        setFieldTouched("supplier", true);
-
-                        // setFieldValue(
-                        //   "productCategoryID",
-                        //   newValue.CrmItemCategoryID || ""
-                        // );
-                        setTimeout(() => {
-                          commentsRef.current?.focus();
-                        }, 100);
-                      }}
-                      error={!!touched.supplier && !!errors.supplier}
-                      helperText={touched.supplier && errors.supplier}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-
-                    />
-                    <TextField
-                      fullWidth
-                      type="number"
-                      variant="standard"
-                      id="MinOrderQty"
-                      name="MinOrderQty"
-                      //label="Min Order Qty"
-                      label={
-                        <>
-                          Min Order Qty
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      value={values.MinOrderQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.MinOrderQty && !!errors.MinOrderQty}
-                      helperText={touched.MinOrderQty && errors.MinOrderQty}
-                      InputProps={{
-                        sx:{
-                          textAlign:"right"
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={explorelistViewData}
+                        columns={newcolumn}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
                         }
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                            type: "product",
+                          });
+                        }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
+                        components={{
+                          Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        loading={exploreLoading}
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    <FormControl
+                      sx={{
+                        gap: formGap,
+                        marginTop: "10px",
+                        // justifyContent:"space-evenly"
                       }}
-                    />
-                    <TextField
-                      fullWidth
-                      type="number"
-                      variant="standard"
-                      id="AgreedPrice"
-                      name="AgreedPrice"
-                      //label="Agreed Price"
-                      label={
-                        <>
-                          Agreed Price
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      value={values.AgreedPrice}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.AgreedPrice && !!errors.AgreedPrice}
-                      helperText={touched.AgreedPrice && errors.AgreedPrice}
-                      InputProps={{
+                    >
+                      <CheckinAutocomplete
+                        name="supplier"
+                        //label="Item"
+                        label={
+                          <>
+                            Supplier
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        id="supplier"
+                        value={values.supplier}
+                        onChange={(newValue) => {
+                          setFieldValue("supplier", {
+                            RecordID: newValue.RecordID,
+                            Code: newValue.Code,
+                            Name: newValue.Name,
+                          });
+                          setFieldTouched("supplier", true);
+
+                          // setFieldValue(
+                          //   "productCategoryID",
+                          //   newValue.CrmItemCategoryID || ""
+                          // );
+                          setTimeout(() => {
+                            commentsRef.current?.focus();
+                          }, 100);
+                        }}
+                        error={!!touched.supplier && !!errors.supplier}
+                        helperText={touched.supplier && errors.supplier}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        variant="standard"
+                        id="MinOrderQty"
+                        name="MinOrderQty"
+                        //label="Min Order Qty"
+                        label={
+                          <>
+                            Min Order Qty
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        value={values.MinOrderQty}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={!!touched.MinOrderQty && !!errors.MinOrderQty}
+                        helperText={touched.MinOrderQty && errors.MinOrderQty}
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
                           },
                         }}
-                    />
-                    <TextField
-                      fullWidth
-                      type="number"
-                      variant="standard"
-                      id="LeadTime"
-                      name="LeadTime"
-                      //label="Lead Time (In days)"
-                      label={
-                        <>
-                          Lead Time (In days)
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      value={values.LeadTime}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.LeadTime && !!errors.LeadTime}
-                      helperText={touched.LeadTime && errors.LeadTime}
-                      InputProps={{
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        variant="standard"
+                        id="AgreedPrice"
+                        name="AgreedPrice"
+                        //label="Agreed Price"
+                        label={
+                          <>
+                            Agreed Price
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        value={values.AgreedPrice}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={!!touched.AgreedPrice && !!errors.AgreedPrice}
+                        helperText={touched.AgreedPrice && errors.AgreedPrice}
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
                           },
                         }}
-                    />
-                    <TextField
-                      fullWidth
-                      focused
-                      type="date"
-                      variant="standard"
-                      id="LastOrderDate"
-                      name="LastOrderDate"
-                      label="Last Order Date"
-                      inputFormat="YYYY-MM-DD"
-                      value={values.LastOrderDate}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.LastOrderDate && !!errors.LastOrderDate}
-                      helperText={touched.LastOrderDate && errors.LastOrderDate}
-                     InputProps={{
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        variant="standard"
+                        id="LeadTime"
+                        name="LeadTime"
+                        //label="Lead Time (In days)"
+                        label={
+                          <>
+                            Lead Time (In days)
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        value={values.LeadTime}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={!!touched.LeadTime && !!errors.LeadTime}
+                        helperText={touched.LeadTime && errors.LeadTime}
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
                           },
                         }}
-                      
-                    />
-                    <TextField
-                      fullWidth
-                      type="text"
-                      variant="standard"
-                      id="LastOrderNo"
-                      name="LastOrderNo"
-                      label="Last Order No."
-                      value={values.LastOrderNo}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.LastOrderNo && !!errors.LastOrderNo}
-                      helperText={touched.LastOrderNo && errors.LastOrderNo}
-                      InputProps={{
+                      />
+                      <TextField
+                        fullWidth
+                        focused
+                        type="date"
+                        variant="standard"
+                        id="LastOrderDate"
+                        name="LastOrderDate"
+                        label="Last Order Date"
+                        inputFormat="YYYY-MM-DD"
+                        value={values.LastOrderDate}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={
+                          !!touched.LastOrderDate && !!errors.LastOrderDate
+                        }
+                        helperText={
+                          touched.LastOrderDate && errors.LastOrderDate
+                        }
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
+                            readOnly: true,
                           },
                         }}
-                    />
-                    <TextField
-                      fullWidth
-                      type="number"
-                      variant="standard"
-                      id="LastOrderQty"
-                      name="LastOrderQty"
-                      label="Last Order Qty"
-                      value={values.LastOrderQty}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.LastOrderQty && !!errors.LastOrderQty}
-                      helperText={touched.LastOrderQty && errors.LastOrderQty}
-                     InputProps={{
+                      />
+                      <TextField
+                        fullWidth
+                        type="text"
+                        variant="standard"
+                        id="LastOrderNo"
+                        name="LastOrderNo"
+                        label="Last Order No."
+                        value={values.LastOrderNo}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={!!touched.LastOrderNo && !!errors.LastOrderNo}
+                        helperText={touched.LastOrderNo && errors.LastOrderNo}
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
+                            readOnly: true,
                           },
                         }}
-                    />
-                    <TextField
-                      fullWidth
-                      type="number"
-                      variant="standard"
-                      id="LastOrderPrice"
-                      name="LastOrderPrice"
-                      label="Last Order Price"
-                      value={values.LastOrderPrice}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.LastOrderPrice && !!errors.LastOrderPrice}
-                      helperText={touched.LastOrderPrice && errors.LastOrderPrice}
-                     InputProps={{
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        variant="standard"
+                        id="LastOrderQty"
+                        name="LastOrderQty"
+                        label="Last Order Qty"
+                        value={values.LastOrderQty}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={!!touched.LastOrderQty && !!errors.LastOrderQty}
+                        helperText={touched.LastOrderQty && errors.LastOrderQty}
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
+                            readOnly: true,
                           },
                         }}
-                    />
-                    <TextField
-                      fullWidth
-                      type="text"
-                      variant="standard"
-                      id="LastOrderRating"
-                      name="LastOrderRating"
-                      label="Last Order Rating"
-                      value={values.LastOrderRating}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      focused
-                      error={!!touched.LastOrderRating && !!errors.LastOrderRating}
-                      helperText={touched.LastOrderRating && errors.LastOrderRating}
-                      InputProps={{
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        variant="standard"
+                        id="LastOrderPrice"
+                        name="LastOrderPrice"
+                        label="Last Order Price"
+                        value={values.LastOrderPrice}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={
+                          !!touched.LastOrderPrice && !!errors.LastOrderPrice
+                        }
+                        helperText={
+                          touched.LastOrderPrice && errors.LastOrderPrice
+                        }
+                        InputProps={{
                           inputProps: {
-                            style:{textAlign: "right"},
+                            style: { textAlign: "right" },
+                            readOnly: true,
                           },
                         }}
-                    />
-                  </FormControl>
-                </Box>
-                <Box
-                  display="flex"
-                  justifyContent="end"
-                  padding={1}
-                  // style={{ marginTop: "-40px" }}
-                  gap={2}
-                >
-                  {/* {YearFlag == "true" ? ( */}
-                  <LoadingButton
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    loading={isLoading}
+                      />
+                      <TextField
+                        fullWidth
+                        type="text"
+                        variant="standard"
+                        id="LastOrderRating"
+                        name="LastOrderRating"
+                        label="Last Order Rating"
+                        value={values.LastOrderRating}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        focused
+                        error={
+                          !!touched.LastOrderRating && !!errors.LastOrderRating
+                        }
+                        helperText={
+                          touched.LastOrderRating && errors.LastOrderRating
+                        }
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            readOnly: true,
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    // style={{ marginTop: "-40px" }}
+                    gap={2}
                   >
-                    Save
-                  </LoadingButton>
-                  {/* ) : (
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                    {/* ) : (
                       <Button
                         color="secondary"
                         variant="contained"
@@ -2422,46 +2527,45 @@ let VISIBLE_FIELDS = []; // <-- default always array
                       </Button>
                     )}
                     {YearFlag == "true" ? ( */}
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => {
-                      Swal.fire({
-                        title: errorMsgData.Warningmsg.Delete,
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Confirm",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          LeadSaveFn(values, resetForm, "harddelete");
-                        } else {
-                          return;
-                        }
-                      });
-                    }}
-                    disabled={funMode === "A"}
-                    // disabled={funMode === "A" || (data.TaskSource === "Sprint" && data.Status === "AP")}
-
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    type="reset"
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      setScreen(0);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => {
+                        Swal.fire({
+                          title: errorMsgData.Warningmsg.Delete,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Confirm",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            LeadSaveFn(values, resetForm, "harddelete");
+                          } else {
+                            return;
+                          }
+                        });
+                      }}
+                      disabled={funMode === "A"}
+                      // disabled={funMode === "A" || (data.TaskSource === "Sprint" && data.Status === "AP")}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
         ) : (
           false
         )}
