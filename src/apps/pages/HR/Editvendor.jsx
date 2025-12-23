@@ -17,7 +17,7 @@ import {
   Select,
   Paper,
   Breadcrumbs,
-  Grid
+  Grid,
 } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import store from "../../../index";
@@ -134,13 +134,23 @@ const Editvendor = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Party.name),
-          
+
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
             .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+
+          emailid: Yup.string()
+            .nullable()
+            .notRequired()
+            .trim()
+            .test(
+              "email-or-empty",
+              "Invalid Email ID",
+              (value) => !value || Yup.string().email().isValidSync(value)
+            ),
         };
-// locality: Yup.object().required(data.Party.locality).nullable(),
-          //ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
+        // locality: Yup.object().required(data.Party.locality).nullable(),
+        //ReferenceBy: Yup.object().required(data.Party.ReferenceBy).nullable(),
         if (CompanyAutoCode === "N") {
           schemaFields.code = Yup.string().required(data.Party.code);
         }
@@ -185,16 +195,16 @@ const Editvendor = () => {
           mobileno1: Yup.string()
             .matches(/^[0-9]{10}$/, "Invalid Mobile Number")
             .required(data.Contactdetails.mobileno1),
-            aadharcardnumber2: Yup.string()
-                      .nullable()
-                      .notRequired()
-                      .transform((value) => (value === "" ? null : value))
-                      .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber2),
-            aadharcardnumber1: Yup.string()
-                      .nullable()
-                      .notRequired()
-                      .transform((value) => (value === "" ? null : value))
-                      .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber1)
+          aadharcardnumber2: Yup.string()
+            .nullable()
+            .notRequired()
+            .transform((value) => (value === "" ? null : value))
+            .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber2),
+          aadharcardnumber1: Yup.string()
+            .nullable()
+            .notRequired()
+            .transform((value) => (value === "" ? null : value))
+            .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber1),
         });
         const schema4 = Yup.object().shape({
           Pancardnumber: Yup.string()
@@ -448,20 +458,22 @@ const Editvendor = () => {
     code: data.Code || "",
     name: data.Name || "",
     Pancardnumber: data.PanCardNo || "",
-    locality: data.LocalityID && data.LocalityID !== "0"
-      ? {
-        RecordID: data.LocalityID,
-        Code: data.LocalityCode,
-        Name: data.LocalityName,
-      }
-      : null,
-    ReferenceBy: data.ReferenceID && data.ReferenceID !== "0"
-      ? {
-        RecordID: data.ReferenceID,
-        Code: data.ReferenceByName,
-        Name: data.ReferenceByName,
-      }
-      : null,
+    locality:
+      data.LocalityID && data.LocalityID !== "0"
+        ? {
+            RecordID: data.LocalityID,
+            Code: data.LocalityCode,
+            Name: data.LocalityName,
+          }
+        : null,
+    ReferenceBy:
+      data.ReferenceID && data.ReferenceID !== "0"
+        ? {
+            RecordID: data.ReferenceID,
+            Code: data.ReferenceByName,
+            Name: data.ReferenceByName,
+          }
+        : null,
     address: data.Address || "",
     maplink: data.MapLocation || "",
     PanImg: data.PanImg || "",
@@ -487,8 +499,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     // var isCheck = "N";
     // if (values.disable == true) {
     //   isCheck = "Y";
@@ -523,7 +535,7 @@ const Editvendor = () => {
       BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
       ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
-      Source: "Cloud"
+      Source: "Cloud",
     };
 
     try {
@@ -574,8 +586,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: recID,
       PanCardNo: values.Pancardnumber,
@@ -608,12 +620,15 @@ const Editvendor = () => {
   const DefaultInitialValue = {
     code: partyDefaultgetdata.Code || "",
     name: partyDefaultgetdata.Name || "",
-    Product: partyDefaultgetdata.DefaultProductID && partyDefaultgetdata.DefaultProductID !== "0"
-      ? {
-        RecordID: partyDefaultgetdata.DefaultProductID,
-        Name: partyDefaultgetdata.DefaultProductName,
-      }
-      : partyDefaultgetdata.DefaultProductID == null ? []
+    Product:
+      partyDefaultgetdata.DefaultProductID &&
+      partyDefaultgetdata.DefaultProductID !== "0"
+        ? {
+            RecordID: partyDefaultgetdata.DefaultProductID,
+            Name: partyDefaultgetdata.DefaultProductName,
+          }
+        : partyDefaultgetdata.DefaultProductID == null
+        ? []
         : null,
     defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
     DefaultPaymentMode: partyDefaultgetdata.DefaultPaymentMode || "",
@@ -634,8 +649,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     const idata = {
       RecordID: recID,
       DefaultProduct: values.Product.RecordID || 0,
@@ -680,8 +695,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
 
     const idata = {
       VendorID: recID,
@@ -721,11 +736,12 @@ const Editvendor = () => {
     emailid2: partyContactgetdata.ContactPersonEmailID2 || "",
     mobileno1: partyContactgetdata.ContactPersonMobileNo1 || "",
     mobileno2: partyContactgetdata.ContactPersonMobileNo2 || "",
-    aadharcardnumber1:partyContactgetdata.AadhatNo1 || "",
-    aadharcardnumber2:partyContactgetdata.AadhatNo2 || "",
-    ContactPersonIDProofImg1: partyContactgetdata.ContactPersonIDProofImg1 || "",
-    ContactPersonIDProofImg2: partyContactgetdata.ContactPersonIDProofImg2 || ""
-
+    aadharcardnumber1: partyContactgetdata.AadhatNo1 || "",
+    aadharcardnumber2: partyContactgetdata.AadhatNo2 || "",
+    ContactPersonIDProofImg1:
+      partyContactgetdata.ContactPersonIDProofImg1 || "",
+    ContactPersonIDProofImg2:
+      partyContactgetdata.ContactPersonIDProofImg2 || "",
   };
   const contactsave = async (values, del) => {
     setLoading(true);
@@ -734,8 +750,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
 
     const idata = {
       VendorID: recID,
@@ -748,8 +764,7 @@ const Editvendor = () => {
       AadhatNo1: values.aadharcardnumber1,
       AadhatNo2: values.aadharcardnumber2,
       ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
-      ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image
-
+      ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
     };
 
     try {
@@ -823,9 +838,7 @@ const Editvendor = () => {
                   }}
                 >
                   {/* Party ({state.PName}) */}
-                  {mode === "E"
-                    ? `Party(${state.PName})`
-                    : "Party(New)"}
+                  {mode === "E" ? `Party(${state.PName})` : "Party(New)"}
                 </Typography>
                 {show == "1" ? (
                   <Typography
@@ -981,7 +994,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1077,6 +1090,8 @@ const Editvendor = () => {
                     variant="standard"
                     focused
                     value={values.emailid}
+                    error={!!touched.emailid && !!errors.emailid}
+                    helperText={touched.emailid && errors.emailid}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     sx={{
@@ -1085,7 +1100,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                  // autoFocus
+                    // autoFocus
                   />
 
                   <TextField
@@ -1529,7 +1544,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1826,7 +1841,6 @@ const Editvendor = () => {
                       touched.aadharcardnumber2 && errors.aadharcardnumber2
                     }
                   />
-
                 </Box>
                 <Grid container spacing={2}>
                   {/* ID Proof (Left side – 50%) */}
@@ -1856,11 +1870,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.ContactPersonIDProofImg1 || ID1Image
                             ? window.open(
-                              ID1Image
-                                ? store.getState().globalurl.attachmentUrl + ID1Image
-                                : store.getState().globalurl.attachmentUrl + data.ContactPersonIDProofImg1,
-                              "_blank"
-                            )
+                                ID1Image
+                                  ? store.getState().globalurl.attachmentUrl +
+                                      ID1Image
+                                  : store.getState().globalurl.attachmentUrl +
+                                      data.ContactPersonIDProofImg1,
+                                "_blank"
+                              )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -1896,11 +1912,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.ContactPersonIDProofImg2 || ID2Image
                             ? window.open(
-                              ID2Image
-                                ? store.getState().globalurl.attachmentUrl + ID2Image
-                                : store.getState().globalurl.attachmentUrl + data.ContactPersonIDProofImg2,
-                              "_blank"
-                            )
+                                ID2Image
+                                  ? store.getState().globalurl.attachmentUrl +
+                                      ID2Image
+                                  : store.getState().globalurl.attachmentUrl +
+                                      data.ContactPersonIDProofImg2,
+                                "_blank"
+                              )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -1910,14 +1928,12 @@ const Editvendor = () => {
                   </Grid>
                 </Grid>
 
-
                 <Box
                   display="flex"
                   justifyContent="flex-end"
                   padding={1}
                   gap="20px"
                 >
-
                   {/* GSTimage */}
 
                   {YearFlag == "true" ? (
@@ -2028,7 +2044,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -2480,7 +2496,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                        // autoFocus
+                          // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2600,9 +2616,9 @@ const Editvendor = () => {
                         sx={{
                           backgroundColor: "#ffffff",
                         }}
-                      // autoFocus
+                        // autoFocus
                       />
-                     
+
                       <TextField
                         name="date"
                         type="date"
@@ -2623,7 +2639,7 @@ const Editvendor = () => {
                             backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                           },
                         }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="verifieddate"
@@ -2676,13 +2692,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.PanImg || panImage
                             ? window.open(
-                              panImage
-                                ? store.getState().globalurl.attachmentUrl +
                                 panImage
-                                : store.getState().globalurl.attachmentUrl +
-                                data.PanImg,
-                              "_blank"
-                            )
+                                  ? store.getState().globalurl.attachmentUrl +
+                                      panImage
+                                  : store.getState().globalurl.attachmentUrl +
+                                      data.PanImg,
+                                "_blank"
+                              )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2712,13 +2728,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.GstImg || gstImage
                             ? window.open(
-                              gstImage
-                                ? store.getState().globalurl.attachmentUrl +
                                 gstImage
-                                : store.getState().globalurl.attachmentUrl +
-                                data.GstImg,
-                              "_blank"
-                            )
+                                  ? store.getState().globalurl.attachmentUrl +
+                                      gstImage
+                                  : store.getState().globalurl.attachmentUrl +
+                                      data.GstImg,
+                                "_blank"
+                              )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2814,7 +2830,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                        // autoFocus
+                          // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2889,13 +2905,11 @@ const Editvendor = () => {
                           setFieldValue("Product", newValue);
                           console.log(newValue, "--newvalue Product");
                           console.log(newValue.RecordID, "Product RecordID");
-                
                         }}
                         error={!!touched.Product && !!errors.Product}
                         helperText={touched.Product && errors.Product}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"parentID='${CompanyID}'","Any":""}}`}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
-                      
                       />
                       <TextField
                         name="defaultDelivery"
@@ -2918,10 +2932,10 @@ const Editvendor = () => {
                         }}
                         InputProps={{
                           inputProps: {
-                            textAlign: "right",
+                            style: { textAlign: "right" },
                           },
                         }}
-                      // autoFocus
+                        // autoFocus
                       />
                       {/* <TextField
                         name="DefaultPaymentMode"
