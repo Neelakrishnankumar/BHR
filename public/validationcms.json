@@ -102,7 +102,10 @@
     "ConversionQty": "Please Enter the Conversion Quantity",
     "GuidelinePrice": "Please Enter the Guideline Price",
     "MinStock": "Please Enter the Minimum Item Quantity",
-    "ReorderLevel": "Please Enter the Reorder Level"
+    "supplier": "Please select the supplier",
+    "MinOrderQty": "Please Enter The Minimum Order Qty",
+    "LeadTime": "Please Enter the Lead Time",
+    "AgreedPrice": "Please Enter the Agreed Price"
   },
   "ItemCategory": {
     "Description": "Please Enter the Item Description",

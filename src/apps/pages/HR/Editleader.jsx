@@ -66,6 +66,7 @@ const EditLeader = () => {
   console.log(Type, "Type");
   const filtertype = params.filtertype;
   const filtertype2 = params.filtertype2;
+  const Name = params.Name;
   const location = useLocation();
   const navigate = useNavigate();
   const data = useSelector((state) => state.formApi.Data);
@@ -288,6 +289,8 @@ const EditLeader = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
+
+      const LeaderID = response.payload.LeaderID;
       // setIni(true)
       setLoading(false);
       // navigate(-1);
@@ -295,41 +298,40 @@ const EditLeader = () => {
       //  console.log("LeadTitle:", response.payload.LeadTitle);
       // const stateData = { LeadTitle: response.payload.LeadTitle };
       // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
-      if (Type === "T") {
+       if (values.Status === "Opt to Order") {
+        navigate(
+          `/Apps/Secondarylistview/TR310/Order/${LeaderID}/Leader/O/EditOrder/-1/A`,
+          {
+            state: {
+              ...state,
+              PartyID: data.PartyID || filtertype,
+              PartyName: Name || state.PartyName,
+              LeadTitle: values.leadtitle,
+              LEStatus: values.Status,
+            },
+          }
+        );
+      } else if (values.Status === "Opt to Quote") {
+        navigate(
+          `/Apps/Secondarylistview/TR310/Order/${LeaderID}/Leader/Q/EditOrder/-1/A`,
+          {
+            state: {
+              ...state,
+              PartyID: data.PartyID || filtertype,
+              PartyName:Name || state.PartyName,
+              LeadTitle: values.leadtitle,
+              LEStatus: values.Status,
+            },
+          }
+        );
+      } 
+       else if (Type === "T") {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
         navigate(-1);
-      } 
-      else if (
-        Type === "S"
-      ) {
+      }
+      else if (Type === "S") {
         navigate(-1);
-      } 
-      // else if (values.Status === "Opt to Order" && mode === "A") {
-      //   navigate(
-      //     `/Apps/Secondarylistview/TR310/Order/${recID}/Leader/O/EditOrder/-1/A`,
-      //     {
-      //       ...state,
-      //       PartyID: data.PartyID || filtertype,
-      //       LeadTitle: values.leadtitle,
-      //       PartyName: state.PartyName,
-      //       LEStatus: values.Status,
-      //     }
-      //   );
-      // } 
-      
-      // else if (values.Status === "Opt to Quote" && mode === "A") {
-      //   navigate(
-      //     `/Apps/Secondarylistview/TR310/Order/${recID}/Leader/Q/EditOrder/-1/A`,
-      //     {
-      //       ...state,
-      //       PartyID: data.PartyID,
-      //       LeadTitle: values.leadtitle,
-      //       PartyName: state.PartyName,
-      //       LEStatus: values.Status,
-      //     }
-      //   );
-      // } 
-      
+      }
       else {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
         navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
@@ -570,6 +572,9 @@ const EditLeader = () => {
                     error={!!touched.project && !!errors.project}
                     helperText={touched.project && errors.project}
                     disabled={Type === "T"}
+                     InputLabelProps={{
+                      shrink: true, // ✅ prevents overlap
+                    }}
                     //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Project","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
                   />
