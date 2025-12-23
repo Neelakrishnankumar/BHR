@@ -736,6 +736,7 @@ const Listview = () => {
                       sessionStorage.getItem("TR313_Delivered") === "Y",
                     Scheduled:
                       sessionStorage.getItem("TR313_Scheduled") === "Y",
+                    Type:"ByProduct"
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -751,77 +752,6 @@ const Listview = () => {
                       values.Delivered ||
                       values.Picked;
                   }}
-                  // onSubmit={(values, { setSubmitting }) => {
-                  //   const conditions = [];
-
-                  //   const fromDate = values.fromdate || "";
-                  //   const toDate = values.date || "";
-
-                  //   sessionStorage.setItem("FromDate", fromDate);
-                  //   sessionStorage.setItem("ToDate", toDate);
-                  //   // sessionStorage.setItem("EmployeeID", empId);
-
-                  //   [
-                  //     "Created",
-                  //     "Process",
-                  //     "Ready To Deliver",
-                  //     "completed",
-                  //     "approved",
-                  //     "rejected",
-                  //   ].forEach((key) => {
-                  //     sessionStorage.setItem(
-                  //       `TR313_${key}`,
-                  //       values[key] ? "Y" : "N"
-                  //     );
-                  //   });
-
-                  //   sessionStorage.setItem(
-                  //     "TR313_Filters",
-                  //     JSON.stringify(values)
-                  //   );
-
-                  //   // conditions.push(`EmployeesID='${empId}'`);
-
-                  //   if (fromDate && toDate) {
-                  //     conditions.push(
-                  //       `OROrderDate BETWEEN '${fromDate}' AND '${toDate}'`
-                  //     );
-                  //   } else if (fromDate) {
-                  //     conditions.push(`OROrderDate >= '${fromDate}'`);
-                  //   } else if (toDate) {
-                  //     conditions.push(`OROrderDate <= '${toDate}'`);
-                  //   }
-
-                  //   const statusFilters = [];
-
-                  //   if (values.Created) statusFilters.push("'Created'");
-                  //   if (values.Process) statusFilters.push("'Process'");
-                  //   if (values.ReadyToDeliver) statusFilters.push("'Ready To Deliver'");
-                  //   if (values.Picked) statusFilters.push("'Picked'");
-                  //   if (values.Delivered) statusFilters.push("'Delivered'");
-                  //   if (values.Scheduled) statusFilters.push("'Scheduled'");
-                  //   if (values.Paid) statusFilters.push("'Paid'");
-
-                  //   if (statusFilters.length > 0) {
-                  //     conditions.push(
-                  //       `Status IN (${statusFilters.join(", ")})`
-                  //     );
-                  //   }
-
-                  //   //conditions.push(`CompanyID='${compID}'`);
-                  //   const whereClause = conditions.join(" AND ");
-
-                  //   dispatch(
-                  //     fetchListview(
-                  //       accessID,
-                  //       screenName,
-                  //       whereClause,
-                  //       "",
-                  //       compID
-                  //     )
-                  //   );
-                  //   setTimeout(() => setSubmitting(false), 100);
-                  // }}
 
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
@@ -888,6 +818,16 @@ const Listview = () => {
                         dateConditions.push(`(${field} <= '${toDate}')`);
                       }
                     });
+                    if (values.party?.RecordID) {
+                      conditions.push(
+                        `PartyRecordID='${values.party.RecordID}'`
+                      );
+                    }
+                    if (values.product?.RecordID) {
+                      conditions.push(
+                        `ProductID='${values.product.RecordID}'`
+                      );
+                    }
 
                     if (dateConditions.length > 0) {
                       conditions.push(`(${dateConditions.join(" OR ")})`);
@@ -963,13 +903,13 @@ const Listview = () => {
                           label="Party"
                           variant="outlined"
                           value={values.party}
-                          onChange={(e,newValue) => {
+                          onChange={(e, newValue) => {
                             setFieldValue("party", newValue);
-                           
+
                           }}
                           // error={!!touched.party && !!errors.party}
                           // helperText={touched.party && errors.party}
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${compID}","Any":""}}`}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
                         />
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
@@ -978,7 +918,7 @@ const Listview = () => {
                           label="Product"
                           variant="outlined"
                           value={values.product}
-                          onChange={(e,newValue) => {
+                          onChange={(e, newValue) => {
                             setFieldValue("product", newValue);
 
                           }}

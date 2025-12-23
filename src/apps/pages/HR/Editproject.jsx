@@ -86,7 +86,7 @@ const Editproject = () => {
           name: Yup.string().required(data.Project.name),
           //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
-          projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
+          // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
         };
 
         if (CompanyAutoCode === "N") {
@@ -125,7 +125,7 @@ const Editproject = () => {
     scheduled: data.ScheduledCost || 0,
     actual: data.ActualCost || 0,
     price: data.Price || "0",
-    projectOwner: data.ProjectOwnerID
+    projectOwner: data.ProjectOwnerID && data.ProjectOwnerID !== "0"
       ? {
           RecordID: data.ProjectOwnerID,
           Code: data.ProjectOwnerCode,
@@ -167,7 +167,7 @@ const Editproject = () => {
       ScheduledCost: values.scheduled || 0,
       Finyear,
       CompanyID,
-      ProjectOwnerID: values.projectOwner.RecordID,
+      ProjectOwnerID: values.projectOwner?.RecordID || 0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -367,14 +367,15 @@ const Editproject = () => {
 
                   <CheckinAutocomplete
                     name="projectOwner"
-                    label={
-                      <>
-                        Project Owner
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
+                    label="Project Owner"
+                    // label={
+                    //   <>
+                    //     Project Owner
+                    //     <span style={{ color: "red", fontSize: "20px" }}>
+                    //       *
+                    //     </span>
+                    //   </>
+                    // }
                     variant="outlined"
                     id="projectOwner"
                     value={values.projectOwner}
@@ -388,8 +389,8 @@ const Editproject = () => {
 
                       console.log(newValue.RecordID, "projectOwner RecordID");
                     }}
-                    error={!!touched.projectOwner && !!errors.projectOwner}
-                    helperText={touched.projectOwner && errors.projectOwner}
+                    // error={!!touched.projectOwner && !!errors.projectOwner}
+                    // helperText={touched.projectOwner && errors.projectOwner}
                     url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                   />
                   {/* {touched.incharge && errors.incharge && (

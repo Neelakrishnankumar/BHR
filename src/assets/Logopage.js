@@ -19,22 +19,40 @@
 
 // export default Logopage;
 import React, { useState, useEffect } from "react";
-import BackOfficelogoV1 from "../assets/img/BexATM.png"; // adjust path if needed
+import BackOfficelogoV1 from "../assets/img/B2025-ATM01.png"; // adjust path if needed
 // import store from "../redux/store"; // adjust path if needed
 import store from "..";
+// const Logopage = () => {
+//   const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
+
+//   useEffect(() => {
+//     const sessionLogo = sessionStorage.getItem("logoimage");
+//     const CompanyLogo = sessionStorage.getItem("CompanyLogo");
+//     if (sessionLogo) {
+//       setLogoSrc(
+//         store.getState().globalurl.attachmentUrl + sessionLogo
+//       );
+//     } else {
+//       setLogoSrc(BackOfficelogoV1);
+//     }
+//   }, []);
 const Logopage = () => {
   const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
 
   useEffect(() => {
-    const sessionLogo = sessionStorage.getItem("logoimage");
+    const interval = setInterval(() => {
+      // Always read latest values
+      const companyLogo = sessionStorage.getItem("CompanyLogo");
+      const sessionLogo = sessionStorage.getItem("logoimage") || companyLogo;
 
-    if (sessionLogo) {
-      setLogoSrc(
-        store.getState().globalurl.attachmentUrl + sessionLogo
-      );
-    } else {
-      setLogoSrc(BackOfficelogoV1);
-    }
+      const newLogo = sessionLogo
+        ? store.getState().globalurl.attachmentUrl + sessionLogo
+        : BackOfficelogoV1;
+
+      setLogoSrc((prev) => (prev !== newLogo ? newLogo : prev));
+    }, 500);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (

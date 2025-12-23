@@ -163,12 +163,18 @@ const OrdEnqProductPDF = ({ data = [] }) => {
 
                                                     <View style={styles.tableRow}>
                                                         <Text style={[styles.headerCell, { flex: 0.5 }]}>S.No</Text>
-                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
-                                                        <Text style={[styles.headerCell, { flex: 7.5 }]}>Comments</Text>
+                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Name</Text>
+                                                        <Text style={[styles.headerCell, { flex: 7.5 }]}>Qty</Text>
                                                         <Text style={[styles.rightCell, {
                                                             flex: 1.5, fontWeight: "bold", backgroundColor: "#f0f0f0",
                                                             textAlign: "center"
-                                                        }]}>Amount</Text>
+                                                        }]}>Rate</Text>
+                                                        <Text style={[styles.rightCell, {
+                                                            flex: 1.5, fontWeight: "bold", backgroundColor: "#f0f0f0",
+                                                            textAlign: "center"
+                                                        }]}>Value</Text>
+                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Status</Text>
+
                                                     </View>
 
                                                     {productRows.map((row, i) => (
@@ -181,13 +187,16 @@ const OrdEnqProductPDF = ({ data = [] }) => {
                                                             <Text
                                                                 style={[styles.cell, { flex: 1, textAlign: "center" }]}
                                                             >
-                                                                {row.Date}
+                                                                {row.PartyName}
                                                             </Text>
                                                             <Text style={[styles.cell, { flex: 7.5 }]}>
-                                                                {row.Comments}
+                                                                {row.rate}
                                                             </Text>
                                                             <Text style={[styles.rightCell, { flex: 1.5 }]}>
-                                                                {row.Value}
+                                                                {row.TotalPrice}
+                                                            </Text>
+                                                            <Text style={[styles.rightCell, { flex: 1.5 }]}>
+                                                                {row.Status}
                                                             </Text>
                                                         </View>
                                                     ))}
