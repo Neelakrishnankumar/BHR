@@ -47,10 +47,10 @@ export const companySchema = yup.object().shape({
 /***Settings Validation***/
 
 export const Settingsvalidation = yup.object().shape({
-  currentpassword: yup.string().required("Please enter password"),
+  currentpassword: yup.string().required("Please enter Current Password"),
 
   newpassword: yup.string()
-  .required('Please Enter your password')
+  .required('Please Enter New Password')
   .matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
     "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
@@ -66,8 +66,8 @@ export const Settingsvalidation = yup.object().shape({
     // .max(5, "Password cannot be more than 5 characters"),  // Stop validation after 5 characters
   confirmpassword: yup
     .string()
-    .required("Please confirm your password")
-    .oneOf([yup.ref('newpassword')], "Passwords must match")
+    .required("Please enter Confirm Password")
+    .oneOf([yup.ref('newpassword')], "New Password and Confirm Password must match")
 });
 // export const Settingsvalidation = yup.object().shape({
 //   currentpassword: yup.string().required("Please enter password"),

@@ -1,310 +1,310 @@
 {
   "Designation": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Description",
-    "rank": "Please Enter the Rank"
+    "code": "Please enter the Code",
+    "name": "Please enter the Description",
+    "rank": "Please enter the Rank"
   },
   "Department": {
-    "Code": "Please Enter the Code",
-    "Name": "Please Enter the Description",
-    "Loc": "Please Enter the Location"
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Description",
+    "Loc": "Please enter the Location"
   },
   "GeoLoc": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Name"
+    "code": "Please enter the Code",
+    "name": "Please enter the Name"
   },
   "Geogate": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Name"
+    "code": "Please enter the Code",
+    "name": "Please enter the Name"
   },
   "Project": {
-    "Code": "Please Enter the Code",
-    "name": "Please Enter the Description",
-    "incharge": "Please Enter the Owner",
-    "projectOwner": "Please Enter the Project Owner",
-    "CurrentStatus": "Please Enter the Status",
-    "budget": "Please Enter the Budget"
+    "Code": "Please enter the Code",
+    "name": "Please enter the Description",
+    "incharge": "Please enter the Owner",
+    "projectOwner": "Please enter the Project Owner",
+    "CurrentStatus": "Please enter the Status",
+    "budget": "Please enter the Budget"
   },
   "Function": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Description",
-    "categories": "Please Enter the Categories"
+    "code": "Please enter the Code",
+    "name": "Please enter the Description",
+    "categories": "Please enter the Categories"
   },
   "Shift": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Description",
-    "starttime": "Please Enter the Shift Start Time",
-    "endtime": "Please Enter the Shift End Time"
+    "code": "Please enter the Code",
+    "name": "Please enter the Description",
+    "starttime": "Please enter the Shift Start Time",
+    "endtime": "Please enter the Shift End Time"
   },
   "Leavetype": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Description",
-    "leavetypecategories": "Please Enter the Categories"
+    "code": "Please enter the Code",
+    "name": "Please enter the Description",
+    "leavetypecategories": "Please enter the Categories"
   },
   "Overhead": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Overhead",
-    "frequency": "Please Enter the Frequency",
-    "OverheadType": "Please Enter the OverheadType",
+    "code": "Please enter the Code",
+    "name": "Please enter the Overhead",
+    "frequency": "Please enter the Frequency",
+    "OverheadType": "Please enter the OverheadType",
     "Overhead": "Please Select the Overhead"
 
   },
   "Overheadtype": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Name"
+    "code": "Please enter the Code",
+    "name": "Please enter the Name"
   },
   "Holidaylist": {
-    "Date": "Please Enter the Holiday Date",
-    "name": "Please Enter the Description",
-    "oscc": "Please Enter the Occasion"
+    "Date": "Please enter the Holiday Date",
+    "name": "Please enter the Description",
+    "oscc": "Please enter the Occasion"
   },
   "Party": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Name",
-    "mobilenumber": "Please Enter the Contact Mobile Number",
+    "code": "Please enter the Code",
+    "name": "Please enter the Name",
+    "mobilenumber": "Please enter the Contact Mobile Number",
     "Pancardnumber": "Invalid Pan Card Number",
     "gstnumber": "Invalid GST Number",
-    "locality": "Please Enter the Locality"
+    "locality": "Please enter the Locality"
   },
   "BankDetails": {
-    "bankname": "Please Enter the Bank Name",
-    "branchname": "Please Enter the Branch Name",
-    "Accounttype": "Please Enter the Account Type",
-    "ifsc": "Please Enter the IFSC Code",
-    "bankloc": "Please Enter the Bank Location",
-    "accountnumber": "Please Enter the Account Number",
-    "accountholdname": "Please Enter the Account Holder Name",
-    "bankaddress": "Please Enter the Bank Address"
+    "bankname": "Please enter the Bank Name",
+    "branchname": "Please enter the Branch Name",
+    "Accounttype": "Please enter the Account Type",
+    "ifsc": "Please enter the IFSC Code",
+    "bankloc": "Please enter the Bank Location",
+    "accountnumber": "Please enter the Account Number",
+    "accountholdname": "Please enter the Account Holder Name",
+    "bankaddress": "Please enter the Bank Address"
   },
   "Contactdetails": {
-    "emailid1": "Please Enter the Email ID",
-    "name1": "Please Enter the Name",
-    "mobileno1": "Please Enter the Mobile Number",
+    "emailid1": "Please enter the Email ID",
+    "name1": "Please enter the Name",
+    "mobileno1": "Please enter the Mobile Number",
     "aadharcardnumber1": "Aadhar Card Number must be exactly 12 alphanumeric characters",
     "aadharcardnumber2": "Aadhar Card Number must be exactly 12 alphanumeric characters"
   },
   "Employee": {
-    "Code": "Please Enter the Code",
-    "Name": "Please Enter the Name",
-    "Password": "Please Enter the Password",
-    "Department": "Please Enter the Department",
-    "employeetype": "Please Enter the Employee Type"
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name",
+    "Password": "Please enter the Password",
+    "Department": "Please enter the Department",
+    "employeetype": "Please enter the Employee Type"
   },
   "ItemGroup": {
-    "Description": "Please Enter the Item Description"
+    "Description": "Please enter the Item Description"
   },
   "Item": {
-    "Description": "Please Enter the Item Description",
-    "BoxQuantity": "Please Enter the Box Quantity",
-    "PieceQuantity": "Please Enter the Piece Quantity",
-    "PurchaseUOM": "Please Enter the Purchase UOM",
-    "ConsumptionUOM": "Please Enter the Consumption UOM",
-    "ConversionQty": "Please Enter the Conversion Quantity",
-    "GuidelinePrice": "Please Enter the Guideline Price",
-    "MinStock": "Please Enter the Minimum Item Quantity",
+    "Description": "Please enter the Item Description",
+    "BoxQuantity": "Please enter the Box Quantity",
+    "PieceQuantity": "Please enter the Piece Quantity",
+    "PurchaseUOM": "Please enter the Purchase UOM",
+    "ConsumptionUOM": "Please enter the Consumption UOM",
+    "ConversionQty": "Please enter the Conversion Quantity",
+    "GuidelinePrice": "Please enter the Guideline Price",
+    "MinStock": "Please enter the Minimum Item Quantity",
     "supplier": "Please select the supplier",
-    "MinOrderQty": "Please Enter The Minimum Order Qty",
-    "LeadTime": "Please Enter the Lead Time",
-    "AgreedPrice": "Please Enter the Agreed Price"
+    "MinOrderQty": "Please enter The Minimum Order Qty",
+    "LeadTime": "Please enter the Lead Time",
+    "AgreedPrice": "Please enter the Agreed Price"
   },
   "ItemCategory": {
-    "Description": "Please Enter the Item Description",
+    "Description": "Please enter the Item Description",
     "HSNMaster": "Please Select HSN Master",
     "HSNCatgory": "Please Select HSN Category"
   },
   "HSNCatgory": {
-    "CategoryName": "Please Enter the HSN Category Name"
+    "CategoryName": "Please enter the HSN Category Name"
   },
   "HSNMaster": {
-    "Description": "Please Enter the HSN Master Name",
-    "HSNIGST": "Please Enter IGST Amount",
-    "HSNCGST": "Please Enter CGST Amount",
-    "HSNSGST": "Please Enter SGST Amount"
+    "Description": "Please enter the HSN Master Name",
+    "HSNIGST": "Please enter IGST Amount",
+    "HSNCGST": "Please enter CGST Amount",
+    "HSNSGST": "Please enter SGST Amount"
   },
   "Employeecontact": {
-    "email": "Please Enter the Email Id",
+    "email": "Please enter the Email Id",
     "phonenumber": "Phone Number must be exactly 10 digits",
     "aadharcardnumber": "Aadhar Card Number must be exactly 12 alphanumeric characters",
     "pfnumber": "PF Number must be exactly 22 alphanumeric characters",
     "esinumber": "ESI Number must be exactly 17 digits"
   },
   "Skills": {
-    "Skills": "Please Enter the Skills",
-    "Comments": "Please Enter the Comments"
+    "Skills": "Please enter the Skills",
+    "Comments": "Please enter the Comments"
   },
   "EmpFunction": {
-    "function": "Please Enter the Function"
+    "function": "Please enter the Function"
   },
   "Documents": {
-    "category": "Please Enter the Category"
+    "category": "Please enter the Category"
   },
   "Deployment": {
-    "location": "Please Enter the Location",
-    "function": "Please Enter the Function",
-    "gate": "Please Enter the Gate",
-    "Designation": "Please Enter the Designation",
-    "shift": "Please Enter the Shift 1",
-    "costofemployee": "Please Enter the Cost to Budget",
-    "costofcompany": "Please Enter the Cost to Company"
+    "location": "Please enter the Location",
+    "function": "Please enter the Function",
+    "gate": "Please enter the Gate",
+    "Designation": "Please enter the Designation",
+    "shift": "Please enter the Shift 1",
+    "costofemployee": "Please enter the Cost to Budget",
+    "costofcompany": "Please enter the Cost to Company"
   },
   "ContractsIN": {
-    "vendor": "Please Enter the Vendor",
-    "project": "Please Enter the Project",
-    "customer": "Please Enter the Customer",
-    "BillingUnits": "Please Enter the Billing Units",
-    "BillingType": "Please Enter the Billing Type",
-    "UnitRate": "Please Enter the Unit Rate",
-    "Hsn": "Please Enter the HSN Code",
-    "shift": "Please Enter the Shift 1"
+    "vendor": "Please enter the Vendor",
+    "project": "Please enter the Project",
+    "customer": "Please enter the Customer",
+    "BillingUnits": "Please enter the Billing Units",
+    "BillingType": "Please enter the Billing Type",
+    "UnitRate": "Please enter the Unit Rate",
+    "Hsn": "Please enter the HSN Code",
+    "shift": "Please enter the Shift 1"
   },
   "ItemServices": {
-    "items": "Please Enter the Vendor",
-    "vendors": "Please Enter the Customer",
-    "servicedate": "Please Enter the Date",
-    "returndate": "Please Enter the Expected Return Date",
-    "complaints": "Please Enter the Complaints",
-    "tentativecharge": "Please Enter the Charges"
+    "items": "Please enter the Vendor",
+    "vendors": "Please enter the Customer",
+    "servicedate": "Please enter the Date",
+    "returndate": "Please enter the Expected Return Date",
+    "complaints": "Please enter the Complaints",
+    "tentativecharge": "Please enter the Charges"
   },
   "OrderItem": {
-    "discount": "Please Enter the discount",
+    "discount": "Please enter the discount",
     "product": "Please select a product",
-    "quantity": "Please Enter the quantity"
+    "quantity": "Please enter the quantity"
   },
   "AdvancePayment": {
-    "Amount": "Please Enter the amount",
+    "Amount": "Please enter the amount",
     "paymentdate": "Please select a date"
   },
   "Locality": {
-    "code": "Please Enter the Code",
-    "name": "Please Enter the Name",
-    "pincode": "Please Enter the Pincode"
+    "code": "Please enter the Code",
+    "name": "Please enter the Name",
+    "pincode": "Please enter the Pincode"
   },
   "CheckIn": {
-    "location": "Please Enter the Location",
-    "gate": "Please Enter the Gate",
-    "employee": "Please Enter the Employee"
+    "location": "Please enter the Location",
+    "gate": "Please enter the Gate",
+    "employee": "Please enter the Employee"
   },
   "CheckOut": {
-    "Location": "Please Enter the Location",
-    "Gate": "Please Enter the Gate",
-    "Employee": "Please Enter the Employee"
+    "Location": "Please enter the Location",
+    "Gate": "Please enter the Gate",
+    "Employee": "Please enter the Employee"
   },
   "Employeerequest": {
-    "Code": "Please Enter the Code",
-    "employeetype": "Please Enter the Employee Type"
+    "Code": "Please enter the Code",
+    "employeetype": "Please enter the Employee Type"
   },
   "Itemcustody": {
-    "ItemNumber": "Please Enter the Item No",
-    "ItemName": "Please Enter the Item Name",
-    "AssestID": "Please Enter the Assest ID",
-    "PurchaseReference": "Please Enter the Reference",
-    "ItemValue": "Please Enter the Item Value"
+    "ItemNumber": "Please enter the Item No",
+    "ItemName": "Please enter the Item Name",
+    "AssestID": "Please enter the Assest ID",
+    "PurchaseReference": "Please enter the Reference",
+    "ItemValue": "Please enter the Item Value"
   },
   "Permission": {
-    "permissiondate": "Please Enter the Permission Date",
-    "location": "Please Enter the Location",
-    "fromtime": "Please Enter the From Time",
-    "totime": "Please Enter the To Time",
-    "managerComments": "Please Enter the Manager Comments",
-    "Status": "Please Enter the Status"
+    "permissiondate": "Please enter the Permission Date",
+    "location": "Please enter the Location",
+    "fromtime": "Please enter the From Time",
+    "totime": "Please enter the To Time",
+    "managerComments": "Please enter the Manager Comments",
+    "Status": "Please enter the Status"
   },
   "Leave": {
-    "LeavePart": "Please Enter the Leave Part",
-    "leavetype": "Please Enter the Leave Type",
-    "FromDate": "Please Enter the From Date",
-    "ToDate": "Please Enter the To Date",
-    "managerComments": "Please Enter the Manager Comments",
-    "Status": "Please Enter the Status",
-    "comment": "Please Enter the Comments"
+    "LeavePart": "Please enter the Leave Part",
+    "leavetype": "Please enter the Leave Type",
+    "FromDate": "Please enter the From Date",
+    "ToDate": "Please enter the To Date",
+    "managerComments": "Please enter the Manager Comments",
+    "Status": "Please enter the Status",
+    "comment": "Please enter the Comments"
   },
   "Onduty": {
-    "LeavePart": "Please Enter the Reason",
-    "ProName": "Please Enter the Project",
-    "FromDate": "Please Enter the From Date",
-    "ToDate": "Please Enter the To Date",
-    "managerComments": "Please Enter the Manager Comments",
-    "Status": "Please Enter the Status",
-    "comment": "Please Enter the Comments"
+    "LeavePart": "Please enter the Reason",
+    "ProName": "Please enter the Project",
+    "FromDate": "Please enter the From Date",
+    "ToDate": "Please enter the To Date",
+    "managerComments": "Please enter the Manager Comments",
+    "Status": "Please enter the Status",
+    "comment": "Please enter the Comments"
   },
   "Overtime": {
-    "Date": "Please Enter the Date",
-    "NumberOfHours": "Please Enter the Number of Hours",
-    "comments": "Please Enter the Comments",
-    "managerComments": "Please Enter the Manager Comments",
-    "Status": "Please Enter the Status"
+    "Date": "Please enter the Date",
+    "NumberOfHours": "Please enter the Number of Hours",
+    "comments": "Please enter the Comments",
+    "managerComments": "Please enter the Manager Comments",
+    "Status": "Please enter the Status"
   },
   "Regularization": {
-    "CheckInDate": "Please Enter the Check In Date",
-    "appliedStatus": "Please Enter the Applied Status",
-    "remarks": "Please Enter the Remarks",
-    "managerComments": "Please Enter the Manager Comments"
+    "CheckInDate": "Please enter the Check In Date",
+    "appliedStatus": "Please enter the Applied Status",
+    "remarks": "Please enter the Remarks",
+    "managerComments": "Please enter the Manager Comments"
   },
   "Expense": {
-    "date": "Please Enter the Date",
-    "overhead": "Please Enter the Overhead",
-    "ProName": "Please Enter the Project",
-    "amount": "Please Enter the Amount",
-    "managerComments": "Please Enter the Manager Comments",
-    "Status": "Please Enter the Status",
-    "comments": "Please Enter the Comments"
+    "date": "Please enter the Date",
+    "overhead": "Please enter the Overhead",
+    "ProName": "Please enter the Project",
+    "amount": "Please enter the Amount",
+    "managerComments": "Please enter the Manager Comments",
+    "Status": "Please enter the Status",
+    "comments": "Please enter the Comments"
   },
   "Salaryadvance": {
-    "date": "Please Enter the Date",
-    "overhead": "Please Enter the Purpose",
-    "amount": "Please Enter the Amount",
-    "managerComments": "Please Enter the Manager Comments",
-    "Status": "Please Enter the Status",
-    "comments": "Please Enter the Comments"
+    "date": "Please enter the Date",
+    "overhead": "Please enter the Purpose",
+    "amount": "Please enter the Amount",
+    "managerComments": "Please enter the Manager Comments",
+    "Status": "Please enter the Status",
+    "comments": "Please enter the Comments"
   },
   "Leaveconfiguration": {
-    "totaldays": "Please Enter the Eligible Days",
-    "leavetype": "Please Enter the Leave Type"
+    "totaldays": "Please enter the Eligible Days",
+    "leavetype": "Please enter the Leave Type"
   },
   "Manager": {
-    "Level": "Please Enter the Level",
-    "manager": "Please Enter the Manager"
+    "Level": "Please enter the Level",
+    "manager": "Please enter the Manager"
   },
   "SkillGlowCategory": {
-    "Code": "Please Enter the Code",
-    "Name": "Please Enter the Name",
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name",
     "AssessmentType": "Please Select A Type"
   },
   "SkillGlowSession": {
-    "Code": "Please Enter the Code",
-    "Name": "Please Enter the Name"
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name"
   },
   "ListofAssessment": {
-    "Code": "Please Enter the Code",
+    "Code": "Please enter the Code",
     "DesignationID": "Please Select Designation",
     "AppraisalType": "Please Select Appraisal Type",
-    "Name": "Please Enter the Name",
-    "Duration": "Please Enter the Duration (In Days)",
-    "Permittedtimes": "Please Enter the No. Of Attempts Permitted",
-    "Minimumscore": "Please Enter the Mininum Score",
-    "Date": "Please Enter the Date"
+    "Name": "Please enter the Name",
+    "Duration": "Please enter the Duration (In Days)",
+    "Permittedtimes": "Please enter the No. Of Attempts Permitted",
+    "Minimumscore": "Please enter the Mininum Score",
+    "Date": "Please enter the Date"
   },
   "ListofSession": {
-    "Code": "Please Enter the Code",
-    "Name": "Please Enter the Name",
-    "ContentType": "Please Enter the Document Type",
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name",
+    "ContentType": "Please enter the Document Type",
     "AttachmentName": "Choose atleast one Document Type"
   },
   "ListofQuestiongroup": {
-    "Code": "Please Enter the Code",
-    "Name": "Please Enter the Name",
-    "AnswerType": "Please Enter the Answer Type",
-    "NoOfQuestions": "Please Enter the No.Of Questions"
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name",
+    "AnswerType": "Please enter the Answer Type",
+    "NoOfQuestions": "Please enter the No.Of Questions"
   },
   "ListofAssessCat": {
-    "assessment": "Please Enter the Assessment",
-    "SelfRecordID": "Please Enter the Self Assessment",
-    "ManagerRecordID": "Please Enter the Manager Assessment",
-    "PeerRecordID": "Please Enter the Peer Assessment",
-    "SubordinateRecordID": "Please Enter the Subordinate Assessment",
-    "Date": "Please Enter the Date"
+    "assessment": "Please enter the Assessment",
+    "SelfRecordID": "Please enter the Self Assessment",
+    "ManagerRecordID": "Please enter the Manager Assessment",
+    "PeerRecordID": "Please enter the Peer Assessment",
+    "SubordinateRecordID": "Please enter the Subordinate Assessment",
+    "Date": "Please enter the Date"
   },
   "ListofAssessCat1": {
-    "Date": "Please Enter the Date",
+    "Date": "Please enter the Date",
     "EmpName": "Please Select A Employee"
   },
   "ListOfAppraisalSchedule": {

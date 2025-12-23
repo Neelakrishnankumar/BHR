@@ -119,7 +119,7 @@ const Editdesignation = () => {
       Description: values.name,
       DesignationRank: values.rank,
       SortOrder: values.sortorder || 0,
-      HoursRate: values.hoursrate,
+      HoursRate: values.hoursrate || 0,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
       Finyear,
