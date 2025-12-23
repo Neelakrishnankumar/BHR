@@ -102,9 +102,9 @@
     "ConversionQty": "Please Enter the Conversion Quantity",
     "GuidelinePrice": "Please Enter the Guideline Price",
     "MinStock": "Please Enter the Minimum Item Quantity",
-    "supplier": "Please select the supplier",
+    "supplier": "Please select the Supplier",
     "MinOrderQty": "Please Enter The Minimum Order Qty",
-    "LeadTime": "Please Enter the Lead Time",
+    "LeadTime": "Please Enter the Lead Time (In days)",
     "AgreedPrice": "Please Enter the Agreed Price"
   },
   "ItemCategory": {
@@ -171,8 +171,8 @@
     "quantity": "Please Enter the quantity"
   },
   "AdvancePayment": {
-    "Amount": "Please Enter the amount",
-    "paymentdate": "Please select a date"
+    "Amount": "Please enter the Amount",
+    "paymentdate": "Please select the Payment Date"
   },
   "Locality": {
     "code": "Please Enter the Code",

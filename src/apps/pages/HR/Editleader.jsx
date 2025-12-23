@@ -202,7 +202,7 @@ const EditLeader = () => {
     fetchData();
   }, [Type, recID, accessID, dispatch, filtertype]);
   useEffect(() => {
-    if (!data) return;
+    if (!data || (Type === "T" && mode === "A")) return;
 
     setFormData({
       applieddate:

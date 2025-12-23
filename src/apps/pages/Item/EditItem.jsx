@@ -2314,7 +2314,7 @@ setLeadData((prev) => ({
                         //label="Min Order Qty"
                         label={
                           <>
-                            Min Order Qty
+                            Minimum Order Qty
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
