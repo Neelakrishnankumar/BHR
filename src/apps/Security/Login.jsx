@@ -161,6 +161,7 @@ const Login = () => {
       var SubscriptionCode = data.payload.SubscriptionCode
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
+      var CompanyLogo = data.payload.CompanyLogo
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
 
 
@@ -182,6 +183,7 @@ const Login = () => {
       sessionStorage.setItem("Fob", Fob)
       //  sessionStorage.setItem("EmpId",EmpId)
       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
+      sessionStorage.setItem("CompanyLogo", CompanyLogo)
       sessionStorage.setItem("Overhead", Overhead)
       sessionStorage.setItem("YearRecorid", YearRecorid)
       sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))

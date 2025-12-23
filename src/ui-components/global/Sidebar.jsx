@@ -70,7 +70,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 // import LgemsLogo from "../../assets/img/Human_Resources-removebg-preview.png";
 import BackOfficelogo from "../../assets/img/Backoffceimage.png";
 // import BackOfficelogoV1 from "../../assets/img/BackOfficeImg _V1.png";
-import BackOfficelogoV1 from "../../assets/img/BexATM.png";
+import BackOfficelogoV1 from "../../assets/img/B2025-ATM01.png";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -905,21 +905,27 @@ const Sidebars = () => {
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
   const [selected, setSelected] = useState("Product Category");
-  const ATMLogo = 'B2025-ATM01.png' 
+  // const ATMLogo = 'B2025-ATM01.png' 
   const [open, setOpen] = React.useState(false);
+  // const companyLogo = sessionStorage.getItem("CompanyLogo");
+  // console.log(companyLogo, "companyLogo");
   const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
+
   React.useEffect(() => {
     const interval = setInterval(() => {
-      const sessionLogo = sessionStorage.getItem("logoimage");
-      
+      // Always read latest values from sessionStorage
+      const companyLogo = sessionStorage.getItem("CompanyLogo");
+      const sessionLogo = sessionStorage.getItem("logoimage") || companyLogo;
       const newLogo = sessionLogo
         ? store.getState().globalurl.attachmentUrl + sessionLogo
         : BackOfficelogoV1;
 
       setLogoSrc((prev) => (prev !== newLogo ? newLogo : prev));
     }, 500);
+
     return () => clearInterval(interval);
   }, []);
+
   const handleClick = () => {
     setOpen(!open);
   };
