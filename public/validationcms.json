@@ -107,6 +107,9 @@
     "LeadTime": "Please enter the Lead Time (In days)",
     "AgreedPrice": "Please enter the Agreed Price"
   },
+  "Route": {
+    "Description": "Please enter the Route Description"
+  },
   "ItemCategory": {
     "Description": "Please enter the Item Description",
     "HSNMaster": "Please Select HSN Master",

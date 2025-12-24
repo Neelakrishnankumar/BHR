@@ -106,7 +106,8 @@ const Login = () => {
     //   return;
     // }
     if (values.username == "") {
-      toast.error("UserName should not be empty");
+      // toast.error("UserName should not be empty");
+      toast.error("Username should not be empty");
       setLoading(false);
       return;
     }
@@ -116,7 +117,8 @@ const Login = () => {
       return;
     }
     if (values.license == "" || values.license == undefined) {
-      toast.error("Please give LicenseKey");
+      // toast.error("Please give LicenseKey");
+      toast.error("Please provide Subscription Code");
       setLoading(false);
       return;
     }

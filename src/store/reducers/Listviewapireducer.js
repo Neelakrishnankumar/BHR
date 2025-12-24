@@ -92,6 +92,8 @@ import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
+import AltRouteOutlinedIcon from '@mui/icons-material/AltRouteOutlined';
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -1306,6 +1308,7 @@ export const fetchListview =
             AccessID == "TR317" ||
             AccessID == "TR318" ||
             AccessID == "TR310" ||
+            AccessID == "TR323" ||
             AccessID == "TR319"
           ) {
             obj = {
@@ -5671,6 +5674,42 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 }
               >
                 <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR323" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.Route,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Route Area">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Route/Area/EditArea`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.Route,
+                    },
+                  })
+                }
+              >
+                <AltRouteOutlinedIcon />
               </IconButton>
             </Tooltip>
           </>

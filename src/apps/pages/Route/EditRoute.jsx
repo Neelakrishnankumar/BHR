@@ -93,7 +93,7 @@ const EditRoute = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          CategoryName: Yup.string().required(data.HSNCatgory.CategoryName),
+          Description: Yup.string().required(data.Route.Description),
         });
         setValidationSchema(schema);
       })
@@ -125,7 +125,7 @@ const EditRoute = () => {
       RecordID: recID,
       CompanyID: CompanyID,
       Code: values.Code,
-      Description: values.Description || "",
+      Name: values.Description || "",
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
@@ -171,8 +171,8 @@ const EditRoute = () => {
 
   const initialValues = {
     Code: Data.Code || "",
-    Description: Data.Description || "",
-    Sortorder: Data.SortOrder || "",
+    Description: Data.Name || "",
+    Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
@@ -208,7 +208,7 @@ const EditRoute = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR316/HSN%20Category")}
+                    onClick={() => navigate("/Apps/TR323/Route")}
                   >
                     {mode === "E" ? `List Of Route
                     (${state.BreadCrumb1})` : `List Of Route`}
@@ -333,7 +333,7 @@ const EditRoute = () => {
                       id="Description"
                       label={
                         <span>
-                          Description{" "}
+                          Route Description{" "}
                           <span
                             style={{
                               fontSize: "20px",

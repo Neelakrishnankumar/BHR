@@ -208,7 +208,7 @@ const EditArea = () => {
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR316/HSN%20Category")}
+                    onClick={() => navigate("/Apps/TR323/Route")}
                   >
                     {mode === "E" ? `List Of Route
                     (${state.BreadCrumb1})` : `List Of Route`}

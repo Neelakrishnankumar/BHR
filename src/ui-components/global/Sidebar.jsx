@@ -144,6 +144,7 @@ import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import store from "../..";
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 
 const child = {
   data: [
@@ -471,7 +472,7 @@ const child = {
         //   url: "./TR323/Route",
         //   icon: (
         //     <Tooltip title="Route">
-        //       <InventoryOutlinedIcon color="info" />
+        //       <RouteOutlinedIcon color="info" />
         //     </Tooltip>
         //   ),
         //   UGA_ADD: true,

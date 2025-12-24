@@ -87,6 +87,8 @@ import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, OrderItemAutocom
 import OrdEnqProductPDF from "./pdf/OrdEnqProduct";
 import OrdEnqPartyPDF from "./pdf/OrdEnqParty";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import AltRouteOutlinedIcon from '@mui/icons-material/AltRouteOutlined';
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -400,11 +402,13 @@ const Listview = () => {
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
-                    <MoreHorizIcon />
+                    {/* <MoreHorizIcon /> */}
+                    <FilterAltOutlinedIcon />
                   </Tooltip>
                 ) : (
                   <Tooltip title="Open">
-                    <MoreVertIcon />
+                    {/* <MoreVertIcon /> */}
+                    <FilterAltOutlinedIcon />
                   </Tooltip>
                 )}
               </IconButton>
@@ -1912,6 +1916,20 @@ const Listview = () => {
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             /> */}
+          </Box>
+        ): accessID == "TR323" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<AltRouteOutlinedIcon color="primary"/>}
+              label="Route Area"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
           </Box>
         ) : accessID == "TR315" ? (
           <Box display="flex" flexDirection="row" padding="25px">
