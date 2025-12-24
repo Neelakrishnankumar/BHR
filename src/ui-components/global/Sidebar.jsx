@@ -144,6 +144,7 @@ import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import store from "../..";
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 
 const child = {
   data: [
@@ -471,7 +472,7 @@ const child = {
         //   url: "./TR323/Route",
         //   icon: (
         //     <Tooltip title="Route">
-        //       <InventoryOutlinedIcon color="info" />
+        //       <RouteOutlinedIcon color="info" />
         //     </Tooltip>
         //   ),
         //   UGA_ADD: true,
@@ -485,7 +486,8 @@ const child = {
         {
           name: "Party",
           id: 4346895,
-          url: "./TR243/Party",
+          //  url: "./TR243/Party",
+          url: "./TR321/Party",
           icon: (
             <Tooltip title="Party">
               <PersonSearchIcon color="info" />
@@ -497,7 +499,7 @@ const child = {
           UGA_PRINT: true,
           UGA_PROCESS: true,
           UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR243",
+          UGA_ACCESSIDS: "TR321",
         },
         {
           name: "Order Enquiry",

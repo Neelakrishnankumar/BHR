@@ -102,15 +102,26 @@ const EditLeader = () => {
       .then((data) => {
         setErrorMsgData(data);
 
+        // let schemaFields = {
+        //   name: Yup.string().required(data.Overhead.name),
+        //   OverheadType: Yup.object().required(data.Overhead.OverheadType),
+        //   frequency: Yup.string().required(data.Overhead.frequency),
+        // };
         let schemaFields = {
-          name: Yup.string().required(data.Overhead.name),
-          OverheadType: Yup.object().required(data.Overhead.OverheadType),
-          frequency: Yup.string().required(data.Overhead.frequency),
+          leadtitle: Yup.string().required(
+            data.LeadMarketingActivity.leadtitle
+          ),
+          Status: Yup.string().required(data.LeadMarketingActivity.Status),
+          project: Yup.object()
+            .nullable()
+            .shape({
+              RecordID: Yup.string().required(
+                data.LeadMarketingActivity.project
+              ),
+              Name: Yup.string().nullable(), // optional
+            })
+            .required(data.LeadMarketingActivity.project),
         };
-
-        if (CompanyAutoCode === "N") {
-          schemaFields.code = Yup.string().required(data.Overhead.code);
-        }
 
         const schema = Yup.object().shape(schemaFields);
         setValidationSchema(schema);
@@ -298,7 +309,7 @@ const EditLeader = () => {
       //  console.log("LeadTitle:", response.payload.LeadTitle);
       // const stateData = { LeadTitle: response.payload.LeadTitle };
       // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`)
-       if (values.Status === "Opt to Order") {
+      if (values.Status === "Opt to Order") {
         navigate(
           `/Apps/Secondarylistview/TR310/Order/${LeaderID}/Leader/O/EditOrder/-1/A`,
           {
@@ -318,21 +329,18 @@ const EditLeader = () => {
             state: {
               ...state,
               PartyID: data.PartyID || filtertype,
-              PartyName:Name || state.PartyName,
+              PartyName: Name || state.PartyName,
               LeadTitle: values.leadtitle,
               LEStatus: values.Status,
             },
           }
         );
-      } 
-       else if (Type === "T") {
+      } else if (Type === "T") {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}/T`);
         navigate(-1);
-      }
-      else if (Type === "S") {
+      } else if (Type === "S") {
         navigate(-1);
-      }
-      else {
+      } else {
         // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
         navigate(`/Apps/Secondarylistview/TR303/LeaderCardView/${filtertype}`);
       }
@@ -390,7 +398,7 @@ const EditLeader = () => {
     formData.append("type", "MA");
     formData.append("source", "Self");
     formData.append("action", action);
-    formData.append("id", id);
+    formData.append("id", id || "");
     formData.append("purpose", purpose);
     console.log("FormData contents:");
     for (let [key, value] of formData.entries()) {
@@ -450,7 +458,8 @@ const EditLeader = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                   onClick={() => {
-                    navigate("/Apps/TR243/Party");
+                    // navigate("/Apps/TR243/Party");
+                    navigate("/Apps/TR321/Party");
                   }}
                 >
                   {`Party(${state.PartyName || params.Name})`}
@@ -493,8 +502,7 @@ const EditLeader = () => {
               fnSave(values);
               setSubmitting(false);
             }}
-
-            // validationSchema={validationSchema}
+            validationSchema={validationSchema}
           >
             {({
               errors,
@@ -561,7 +569,15 @@ const EditLeader = () => {
                   <CheckinAutocomplete
                     id="project"
                     name="project"
-                    label="Product"
+                    //label="Product"
+                    label={
+                      <>
+                        Product
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     variant="outlined"
                     value={values.project}
                     onChange={(newValue) => {
@@ -572,7 +588,7 @@ const EditLeader = () => {
                     error={!!touched.project && !!errors.project}
                     helperText={touched.project && errors.project}
                     disabled={Type === "T"}
-                     InputLabelProps={{
+                    InputLabelProps={{
                       shrink: true, // ✅ prevents overlap
                     }}
                     //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
@@ -585,7 +601,15 @@ const EditLeader = () => {
                     //         Lead Title<span style={{ color: "red", fontSize: "20px" }}>*</span>
                     //     </>
                     // }
-                    label="Lead Title"
+                    //label="Lead Title"
+                    label={
+                      <>
+                        Lead Title
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     id="leadtitle"
                     type="text"
                     name="leadtitle"
@@ -642,7 +666,15 @@ const EditLeader = () => {
                   />
                   <TextField
                     select
-                    label="Status"
+                    //label="Status"
+                    label={
+                      <>
+                        Status
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     id="Status"
                     name="Status"
                     value={values.Status}
@@ -654,6 +686,8 @@ const EditLeader = () => {
                       handleChange(e); // update form state (Formik)
                       sessionStorage.setItem("Status", e.target.value); // save to sessionStorage
                     }}
+                    error={!!touched.Status && !!errors.Status}
+                    helperText={touched.Status && errors.Status}
                     focused
                     variant="standard"
                   >
@@ -689,20 +723,33 @@ const EditLeader = () => {
                         InputLabelProps={{ shrink: true }}
                       />
 
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <FileUploadIconButton
-                          onFileSelect={(file) => {
-                            fileUpload(
-                              file,
-                              data.PartyID,
-                              "upload",
-                              "",
-                              values.purpose
-                            );
-                            setFieldValue("purpose", "");
-                          }}
-                        />
-                      </Box>
+                      {/* <Box display="flex" alignItems="center" gap={1}> */}
+                      <FileUploadIconButton
+                        onFileSelect={(file) => {
+                          // if (!values.purpose && mode === "IM") {
+                          //   Swal.fire({
+                          //     icon: "warning",
+                          //     title: "Purpose Required",
+                          //     text: "Please enter purpose before uploading the file.",
+                          //     confirmButtonText: "OK",
+                          //   });
+                          //   return;
+                          // }
+                          // const finalPurpose =
+                          //   values.purpose?.trim() ||
+                          //   values.leadtitle?.trim() ||
+                          //   "Attachment Upload";
+                          fileUpload(
+                            file,
+                            data.PartyID,
+                            "upload",
+                            "",
+                            values.purpose
+                          );
+                          //setFieldValue("purpose", "");
+                        }}
+                      />
+                      {/* </Box> */}
                     </>
                   )}
                   <LoadingButton

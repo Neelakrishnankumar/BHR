@@ -82,11 +82,17 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
-import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
-import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, OrderItemAutocomplete } from "../../ui-components/global/Autocomplete";
+import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import {
+  CheckinAutocomplete,
+  MultiFormikOptimizedAutocomplete,
+  OrderItemAutocomplete,
+} from "../../ui-components/global/Autocomplete";
 import OrdEnqProductPDF from "./pdf/OrdEnqProduct";
 import OrdEnqPartyPDF from "./pdf/OrdEnqParty";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -416,15 +422,19 @@ const Listview = () => {
               marginLeft: "auto", // push to right
             }}
           >
-            {accessID === "TR313" || accessID === "TR243" ? (
+            {accessID === "TR313" ||
+            accessID === "TR243" ||
+            accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
-                    <MoreHorizIcon />
+                    {/* <MoreHorizIcon /> */}
+                    <FilterAltOutlinedIcon />
                   </Tooltip>
                 ) : (
                   <Tooltip title="Open">
-                    <MoreVertIcon />
+                    {/* <MoreVertIcon /> */}
+                    <FilterAltOutlinedIcon />
                   </Tooltip>
                 )}
               </IconButton>
@@ -516,7 +526,8 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${
+                          accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -776,7 +787,6 @@ const Listview = () => {
                       values.Delivered ||
                       values.Picked;
                   }}
-
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
                     const statusDateMap = {
@@ -875,7 +885,14 @@ const Listview = () => {
                     setTimeout(() => setSubmitting(false), 100);
                   }}
                 >
-                  {({ values, handleSubmit, handleChange, handleBlur, isSubmitting, setFieldValue }) => (
+                  {({
+                    values,
+                    handleSubmit,
+                    handleChange,
+                    handleBlur,
+                    isSubmitting,
+                    setFieldValue,
+                  }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
                         <TextField
@@ -1589,6 +1606,428 @@ const Listview = () => {
                 </Formik>
               </Box>
             )}
+
+            {showMore && accessID === "TR321" && (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 2,
+                  borderRadius: 1,
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Formik
+                  initialValues={{
+                    fromdate: sessionStorage.getItem("FromDate") || "",
+                    date: sessionStorage.getItem("ToDate") || "",
+                    Created: sessionStorage.getItem("TR321_Created") === "Y",
+                    Process: sessionStorage.getItem("TR321_Process") === "Y",
+                    Paid: sessionStorage.getItem("TR321_Paid") === "Y",
+                    Picked: sessionStorage.getItem("TR321_Picked") === "Y",
+                    ReadyToDeliver:
+                      sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
+                    Delivered:
+                      sessionStorage.getItem("TR321_Delivered") === "Y",
+                    Scheduled:
+                      sessionStorage.getItem("TR321_Scheduled") === "Y",
+                  }}
+                  enableReinitialize
+                  validate={(values) => {
+                    const hasAtLeastOneValue =
+                      values.fromdate ||
+                      values.date ||
+                      values.Created ||
+                      values.Process ||
+                      values.ReadyToDeliver ||
+                      values.Paid ||
+                      values.Scheduled ||
+                      values.Delivered ||
+                      values.Picked;
+                  }}
+                  // onSubmit={(values, { setSubmitting }) => {
+                  //   const conditions = [];
+
+                  //   const fromDate = values.fromdate || "";
+                  //   const toDate = values.date || "";
+
+                  //   sessionStorage.setItem("FromDate", fromDate);
+                  //   sessionStorage.setItem("ToDate", toDate);
+                  //   // sessionStorage.setItem("EmployeeID", empId);
+
+                  //   [
+                  //     "Created",
+                  //     "Process",
+                  //     "Ready To Deliver",
+                  //     "Paid",
+                  //     "Picked",
+                  //     "Deivered",
+                  //     "Scheduled",
+                  //   ].forEach((key) => {
+                  //     sessionStorage.setItem(
+                  //       `TR243_${key}`,
+                  //       values[key] ? "Y" : "N"
+                  //     );
+                  //   });
+
+                  //   sessionStorage.setItem(
+                  //     "TR243_Filters",
+                  //     JSON.stringify(values)
+                  //   );
+
+                  //   // conditions.push(`EmployeesID='${empId}'`);
+
+                  //   if (fromDate && toDate) {
+                  //     conditions.push(
+                  //       `HVLastOrderDate BETWEEN '${fromDate}' AND '${toDate}'`
+                  //     );
+                  //   } else if (fromDate) {
+                  //     conditions.push(`HVLastOrderDate >= '${fromDate}'`);
+                  //   } else if (toDate) {
+                  //     conditions.push(`HVLastOrderDate <= '${toDate}'`);
+                  //   }
+
+                  //   const statusFilters = [];
+
+                  //   if (values.Created) statusFilters.push("'Created'");
+                  //   if (values.Process) statusFilters.push("'Process'");
+                  //   if (values.ReadyToDeliver)
+                  //     statusFilters.push("'Ready To Deliver'");
+                  //   if (values.Picked) statusFilters.push("'Picked'");
+                  //   if (values.Delivered) statusFilters.push("'Delivered'");
+                  //   if (values.Scheduled) statusFilters.push("'Scheduled'");
+                  //   if (values.Paid) statusFilters.push("'Paid'");
+
+                  //   if (statusFilters.length > 0) {
+                  //     conditions.push(
+                  //       `LastOrderStatus IN (${statusFilters.join(", ")})`
+                  //     );
+                  //   }
+
+                  //   //conditions.push(`CompanyID='${compID}'`);
+                  //   //const whereClause = conditions.join(" AND ");
+                  //   const filter = [
+                  //     `CompanyID='${compID}'`,
+                  //     ...conditions,
+                  //   ].join(" AND ");
+                  //   //const whereClause = [`CompanyID='${compID}'`, ...conditions].join(" AND ");
+
+                  //   dispatch(
+                  //     fetchListview(
+                  //       accessID,
+                  //       screenName,
+                  //       filter,
+                  //       "",
+                  //       //whereClause,
+                  //       ""
+                  //     )
+                  //   );
+                  //   setTimeout(() => setSubmitting(false), 100);
+                  // }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    const conditions = [];
+                    const statusDateMap = {
+                      Created: "OROrderDate",
+                      Process: "ORProcessDate",
+                      ReadyToDeliver: "ORTentativeDate",
+                      YetToDeliver: "ORTentativeDate",
+                      Picked: "ORPickedDate",
+                      Scheduled: "ORTentativeDate",
+                      Delivered: "ORDeliveryDate",
+                      Paid: "ORPaidDate",
+                    };
+                    const statusValueMap = {
+                      Created: "Created",
+                      Process: "Process",
+                      ReadyToDeliver: "Ready To Deliver",
+                      YetToDeliver: "Yet To Deliver",
+                      Picked: "Picked",
+                      Scheduled: "Scheduled",
+                      Delivered: "Delivered",
+                      Paid: "Paid",
+                    };
+
+                    const fromDate = values.fromdate || "";
+                    const toDate = values.date || "";
+
+                    sessionStorage.setItem("FromDate", fromDate);
+                    sessionStorage.setItem("ToDate", toDate);
+
+                    // Store checkbox values
+                    Object.keys(statusDateMap).forEach((status) => {
+                      sessionStorage.setItem(
+                        `TR321_${status}`,
+                        values[status] ? "Y" : "N"
+                      );
+                    });
+
+                    sessionStorage.setItem(
+                      "TR321_Filters",
+                      JSON.stringify(values)
+                    );
+
+                    // --------------------------
+                    // 1. STATUS IN ('A','B','C')
+                    // --------------------------
+                    // const selectedStatuses = Object.keys(statusDateMap).filter(
+                    //   (status) => values[status]
+                    // );
+
+                    // if (selectedStatuses.length > 0) {
+                    //   conditions.push(
+                    //     `LastOrderStatus IN (${selectedStatuses
+                    //       .map((s) => `'${s}'`)
+                    //       .join(", ")})`
+                    //   );
+                    // }
+                    const selectedStatuses = Object.keys(statusDateMap).filter(
+                      (status) => values[status]
+                    );
+
+                    if (selectedStatuses.length > 0) {
+                      conditions.push(
+                        `LastOrderStatus IN (${selectedStatuses
+                          .map((s) => `'${statusValueMap[s]}'`)
+                          .join(", ")})`
+                      );
+                    }
+
+                    // -------------------------------------------------
+                    // 2. DATE FIELD CONDITIONS based on selected status
+                    // -------------------------------------------------
+                    const dateConditions = [];
+
+                    selectedStatuses.forEach((status) => {
+                      const field = statusDateMap[status];
+
+                      if (fromDate && toDate) {
+                        dateConditions.push(
+                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                        );
+                      } else if (fromDate) {
+                        dateConditions.push(`(${field} >= '${fromDate}')`);
+                      } else if (toDate) {
+                        dateConditions.push(`(${field} <= '${toDate}')`);
+                      }
+                    });
+
+                    if (dateConditions.length > 0) {
+                      conditions.push(`(${dateConditions.join(" OR ")})`);
+                    }
+
+                    // --------------------------
+                    // FINAL WHERE CLAUSE
+                    // --------------------------
+                    const whereClause = conditions.join(" AND ");
+                    console.log("FINAL FILTER:", whereClause);
+
+                    dispatch(
+                      fetchListview(
+                        accessID,
+                        screenName,
+                        whereClause,
+                        "",
+                        compID
+                      )
+                    );
+
+                    setTimeout(() => setSubmitting(false), 100);
+                  }}
+                >
+                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Box sx={{ height: 600, overflowY: "auto" }}>
+                        <TextField
+                          name="fromdate"
+                          type="date"
+                          id="fromdate"
+                          label="From Date"
+                          variant="standard"
+                          value={values.fromdate || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("fromdate", newDate);
+                            // dispatch(setFromDate(newDate));
+                            sessionStorage.setItem("FromDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <TextField
+                          name="date"
+                          type="date"
+                          id="date"
+                          label="To Date"
+                          variant="standard"
+                          value={values.date || ""}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setFieldValue("date", newDate);
+                            // dispatch(setToDate(newDate));
+                            sessionStorage.setItem("ToDate", newDate);
+                          }}
+                          focused
+                          InputLabelProps={{ shrink: true }}
+                          inputProps={{
+                            max: new Date().toISOString().split("T")[0],
+                          }}
+                          sx={{ width: 250, mt: 2 }}
+                        />
+
+                        <Typography mt={2} fontWeight="bold" color="error">
+                          Status
+                        </Typography>
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Created"
+                              checked={values.Created}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Created", checked);
+                                sessionStorage.setItem(
+                                  "TR321_Created",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Created"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Process"
+                              checked={values.Process}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Process", checked);
+                                sessionStorage.setItem(
+                                  "TR321_Process",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Confirm"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="ReadyToDeliver"
+                              checked={values.ReadyToDeliver}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("ReadyToDeliver", checked);
+                                sessionStorage.setItem(
+                                  "TR321_ReadyToDeliver",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Ready To Deliver"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Scheduled"
+                              checked={values.Scheduled}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Scheduled", checked);
+                                sessionStorage.setItem(
+                                  "TR321_Scheduled",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Scheduled"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Picked"
+                              checked={values.Picked}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Picked", checked);
+                                sessionStorage.setItem(
+                                  "TR321_Picked",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Picked"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Delivered"
+                              checked={values.Delivered}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Delivered", checked);
+                                sessionStorage.setItem(
+                                  "TR321_Delivered",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Delivered"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="Paid"
+                              checked={values.Paid}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("Paid", checked);
+                                sessionStorage.setItem(
+                                  "TR321_Paid",
+                                  checked ? "Y" : "N"
+                                );
+                              }}
+                            />
+                          }
+                          label="Paid"
+                        />
+
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="end"
+                          spacing={1}
+                          mt={2}
+                        >
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                          >
+                            Apply
+                          </Button>
+                        </Stack>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            )}
           </Box>
         </Box>
         {accessID == "TR049" ? (
@@ -1915,6 +2354,39 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
+        ) : accessID == "TR321" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+
+            <Chip
+              icon={<Diversity2Icon color="primary" />}
+              label="Leads"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={<CategoryIcon color="primary" />}
+              label="Order"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={<RequestQuoteOutlinedIcon color="primary" />}
+              label="Quotation"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={<CurrencyRupeeOutlinedIcon color="primary" />}
+              label="Advance Payment"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
+          </Box>
         ) : accessID == "TR313" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             {/* <Chip
@@ -1935,6 +2407,20 @@ const Listview = () => {
               variant="outlined"
               sx={{ marginLeft: "50px" }}
             /> */}
+          </Box>
+        ) : accessID == "TR323" ? (
+          <Box display="flex" flexDirection="row" padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<AltRouteOutlinedIcon color="primary" />}
+              label="Route Area"
+              variant="outlined"
+              sx={{ marginLeft: "50px" }}
+            />
           </Box>
         ) : accessID == "TR315" ? (
           <Box display="flex" flexDirection="row" padding="25px">

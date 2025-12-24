@@ -25,6 +25,11 @@
     "CurrentStatus": "Please enter the Status",
     "budget": "Please enter the Budget"
   },
+  "LeadMarketingActivity": {
+    "project": "Please select the Product",
+    "Status": "Please select the Status",
+    "leadtitle": "Please enter the Lead Title"
+  },
   "Function": {
     "code": "Please enter the Code",
     "name": "Please enter the Description",
@@ -106,6 +111,9 @@
     "MinOrderQty": "Please enter The Minimum Order Qty",
     "LeadTime": "Please enter the Lead Time (In days)",
     "AgreedPrice": "Please enter the Agreed Price"
+  },
+  "Route": {
+    "Description": "Please enter the Route Description"
   },
   "ItemCategory": {
     "Description": "Please enter the Item Description",

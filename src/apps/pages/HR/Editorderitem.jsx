@@ -286,7 +286,8 @@ const EditOrderitem = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR243/Party");
+                  // navigate("/Apps/TR243/Party");
+                  navigate("/Apps/TR321/Party");
                 }}
               >
                 {`Party(${state.PartyName || ""})`}

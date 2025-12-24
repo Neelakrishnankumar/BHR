@@ -433,8 +433,7 @@ function App() {
                   />
                    {/* ROUTE EDIT */}
                   <Route
-                    // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
-                    path="/Route/EditRoute"
+                    path="/:accessID/:screenName/EditRoute/:id/:Mode"
                     element={<EditRoute />}
                   />
                    {/* AREA EDIT */}
