@@ -2303,7 +2303,8 @@ setLeadData((prev) => ({
                         }}
                         error={!!touched.supplier && !!errors.supplier}
                         helperText={touched.supplier && errors.supplier}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth

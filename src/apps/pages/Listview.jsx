@@ -82,13 +82,17 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Formik } from "formik";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined";
-import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
-import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, OrderItemAutocomplete } from "../../ui-components/global/Autocomplete";
+import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import {
+  CheckinAutocomplete,
+  MultiFormikOptimizedAutocomplete,
+  OrderItemAutocomplete,
+} from "../../ui-components/global/Autocomplete";
 import OrdEnqProductPDF from "./pdf/OrdEnqProduct";
 import OrdEnqPartyPDF from "./pdf/OrdEnqParty";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import AltRouteOutlinedIcon from '@mui/icons-material/AltRouteOutlined';
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -398,7 +402,9 @@ const Listview = () => {
               marginLeft: "auto", // push to right
             }}
           >
-            {accessID === "TR313" || accessID === "TR243" || accessID === "TR321" ? (
+            {accessID === "TR313" ||
+            accessID === "TR243" ||
+            accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -500,7 +506,8 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${
+                          accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -740,7 +747,7 @@ const Listview = () => {
                       sessionStorage.getItem("TR313_Delivered") === "Y",
                     Scheduled:
                       sessionStorage.getItem("TR313_Scheduled") === "Y",
-                    Type:"ByProduct"
+                    Type: "ByProduct",
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -756,7 +763,6 @@ const Listview = () => {
                       values.Delivered ||
                       values.Picked;
                   }}
-
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
                     const statusDateMap = {
@@ -828,9 +834,7 @@ const Listview = () => {
                       );
                     }
                     if (values.product?.RecordID) {
-                      conditions.push(
-                        `ProductID='${values.product.RecordID}'`
-                      );
+                      conditions.push(`ProductID='${values.product.RecordID}'`);
                     }
 
                     if (dateConditions.length > 0) {
@@ -856,7 +860,14 @@ const Listview = () => {
                     setTimeout(() => setSubmitting(false), 100);
                   }}
                 >
-                  {({ values, handleSubmit, handleChange, handleBlur, isSubmitting, setFieldValue }) => (
+                  {({
+                    values,
+                    handleSubmit,
+                    handleChange,
+                    handleBlur,
+                    isSubmitting,
+                    setFieldValue,
+                  }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
                         <TextField
@@ -1571,7 +1582,7 @@ const Listview = () => {
               </Box>
             )}
 
-             {showMore && accessID === "TR321" && (
+            {showMore && accessID === "TR321" && (
               <Box
                 sx={{
                   width: 300,
@@ -1699,6 +1710,16 @@ const Listview = () => {
                       Delivered: "ORDeliveryDate",
                       Paid: "ORPaidDate",
                     };
+                    const statusValueMap = {
+                      Created: "Created",
+                      Process: "Process",
+                      ReadyToDeliver: "Ready To Deliver",
+                      YetToDeliver: "Yet To Deliver",
+                      Picked: "Picked",
+                      Scheduled: "Scheduled",
+                      Delivered: "Delivered",
+                      Paid: "Paid",
+                    };
 
                     const fromDate = values.fromdate || "";
                     const toDate = values.date || "";
@@ -1722,6 +1743,17 @@ const Listview = () => {
                     // --------------------------
                     // 1. STATUS IN ('A','B','C')
                     // --------------------------
+                    // const selectedStatuses = Object.keys(statusDateMap).filter(
+                    //   (status) => values[status]
+                    // );
+
+                    // if (selectedStatuses.length > 0) {
+                    //   conditions.push(
+                    //     `LastOrderStatus IN (${selectedStatuses
+                    //       .map((s) => `'${s}'`)
+                    //       .join(", ")})`
+                    //   );
+                    // }
                     const selectedStatuses = Object.keys(statusDateMap).filter(
                       (status) => values[status]
                     );
@@ -1729,7 +1761,7 @@ const Listview = () => {
                     if (selectedStatuses.length > 0) {
                       conditions.push(
                         `LastOrderStatus IN (${selectedStatuses
-                          .map((s) => `'${s}'`)
+                          .map((s) => `'${statusValueMap[s]}'`)
                           .join(", ")})`
                       );
                     }
@@ -1834,7 +1866,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("Created", checked);
                                 sessionStorage.setItem(
-                                  "TR243_Created",
+                                  "TR321_Created",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -1852,7 +1884,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("Process", checked);
                                 sessionStorage.setItem(
-                                  "TR243_Process",
+                                  "TR321_Process",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -1870,7 +1902,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("ReadyToDeliver", checked);
                                 sessionStorage.setItem(
-                                  "TR243_ReadyToDeliver",
+                                  "TR321_ReadyToDeliver",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -1887,7 +1919,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("Scheduled", checked);
                                 sessionStorage.setItem(
-                                  "TR243_Scheduled",
+                                  "TR321_Scheduled",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -1904,7 +1936,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("Picked", checked);
                                 sessionStorage.setItem(
-                                  "TR243_Picked",
+                                  "TR321_Picked",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -1922,7 +1954,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("Delivered", checked);
                                 sessionStorage.setItem(
-                                  "TR243_Delivered",
+                                  "TR321_Delivered",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -1940,7 +1972,7 @@ const Listview = () => {
                                 const checked = e.target.checked;
                                 setFieldValue("Paid", checked);
                                 sessionStorage.setItem(
-                                  "TR243_Paid",
+                                  "TR321_Paid",
                                   checked ? "Y" : "N"
                                 );
                               }}
@@ -2330,7 +2362,7 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ): accessID == "TR313" ? (
+        ) : accessID == "TR313" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             {/* <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -2351,7 +2383,7 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             /> */}
           </Box>
-        ): accessID == "TR323" ? (
+        ) : accessID == "TR323" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
@@ -2359,7 +2391,7 @@ const Listview = () => {
               variant="outlined"
             />
             <Chip
-              icon={<AltRouteOutlinedIcon color="primary"/>}
+              icon={<AltRouteOutlinedIcon color="primary" />}
               label="Route Area"
               variant="outlined"
               sx={{ marginLeft: "50px" }}

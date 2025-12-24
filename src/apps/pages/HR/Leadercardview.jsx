@@ -228,9 +228,11 @@ const LeaderCardView = () => {
     <Box p={3}>
       {/* Top Cancel icon */}
       <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Tooltip title="Close">
         <IconButton color="error" onClick={handleCancel}>
           <CancelIcon />
         </IconButton>
+        </Tooltip>
       </Box>
 
       {/* ✅ Title with Party Name beside "Leader Details" */}

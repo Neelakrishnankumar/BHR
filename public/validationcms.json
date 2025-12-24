@@ -25,6 +25,11 @@
     "CurrentStatus": "Please enter the Status",
     "budget": "Please enter the Budget"
   },
+  "LeadMarketingActivity": {
+    "project": "Please select the Product",
+    "Status": "Please select the Status",
+    "leadtitle": "Please enter the Lead Title"
+  },
   "Function": {
     "code": "Please enter the Code",
     "name": "Please enter the Description",
