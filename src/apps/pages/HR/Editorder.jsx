@@ -306,7 +306,8 @@ const EditOrder = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR243/Party");
+                  // navigate("/Apps/TR243/Party");
+                  navigate("/Apps/TR321/Party");
                 }}
               >
                 {`Party(${state.PartyName || ""})`}
@@ -421,7 +422,8 @@ const EditOrder = () => {
                       name="orderdate"
                       type="date"
                       id="orderdate"
-                      label="Order Date"
+                      //label="Order Date"
+                      label={params.OrderType === "O" ? "Order Date" : "Quotation Date"}
                       variant="standard"
                       focused
                       inputFormat="YYYY-MM-DD"
@@ -554,7 +556,7 @@ const EditOrder = () => {
                         name="tentativedeliverdate"
                         type="date"
                         id="tentativedeliverdate"
-                        label="Tentative Deliver Date"
+                        label={params.OrderType === "O" ? "Tentative Deliver Date" : "Targeted Order Date"}
                         variant="standard"
                         focused
                         inputFormat="YYYY-MM-DD"
@@ -637,7 +639,8 @@ const EditOrder = () => {
                           name="tentativedeliverdate"
                           type="date"
                           id="tentativedeliverdate"
-                          label="Tentative Deliver Date"
+                          //label="Tentative Deliver Date"
+                          label={params.OrderType === "O" ? "Tentative Deliver Date" : "Targeted Order Date"}
                           variant="standard"
                           focused
                           inputFormat="YYYY-MM-DD"

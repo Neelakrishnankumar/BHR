@@ -137,6 +137,12 @@ const styles = StyleSheet.create({
     padding: 6,
     fontSize: 10,
   },
+  headerCellValue1: {
+    width: "70%",
+    padding: 6,
+    fontSize: 10,
+    height:"45px"
+  },
   headerContainer: {
     flexDirection: "column",
     alignItems: "center",
@@ -183,6 +189,8 @@ const OrderHeaderPdf = ({ data, UserName, OrderType }) => {
   const PartyMobile = data?.HeaderData?.MobileNo || "";
   const PartyEmail = data?.HeaderData?.EmailID || "";
   const PartyAdd = data?.HeaderData?.PartyAddress || "";
+  const PartyGST = data?.HeaderData?.PartyGstNo || "";
+  const PartyPAN = data?.HeaderData?.PartyPanNo || "";
   const total = data?.HeaderData?.TotalData?.Total || "";
   const grossTotal = data?.HeaderData?.TotalData?.TotalAmount || "";
   const discount = data?.HeaderData?.TotalData?.Discount || "";
@@ -235,9 +243,9 @@ const OrderHeaderPdf = ({ data, UserName, OrderType }) => {
   //   rows.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage)
   // );
   // PAGE SPLITTING LOGIC
-  const firstPageRows = 15;
-  const otherPageRows = 19;
-  const MIN_ROWS = 15; // how tall table should be on last page
+  const firstPageRows = 13;
+  const otherPageRows = 17;
+  const MIN_ROWS = 13; // how tall table should be on last page
 
   const firstPage = rows.slice(0, firstPageRows);
   const remainingRows = rows.slice(firstPageRows);
@@ -373,8 +381,16 @@ const OrderHeaderPdf = ({ data, UserName, OrderType }) => {
                     <View style={styles.headerCellLabel}>
                       <Text>Party Name</Text>
                     </View>
-                    <View style={styles.headerCellValue}>
+                    <View style={styles.headerCellValue1}>
                       <Text>{PartyName}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.headerRow}>
+                    <View style={styles.headerCellLabel}>
+                      <Text>Gst No.</Text>
+                    </View>
+                    <View style={styles.headerCellValue}>
+                      <Text>{PartyGST}</Text>
                     </View>
                   </View>
                 </View>
@@ -403,8 +419,16 @@ const OrderHeaderPdf = ({ data, UserName, OrderType }) => {
                     <View style={styles.headerCellLabel}>
                       <Text>Party Address</Text>
                     </View>
-                    <View style={styles.headerCellValue}>
+                    <View style={styles.headerCellValue1}>
                       <Text>{PartyAdd}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.headerRow}>
+                    <View style={styles.headerCellLabel}>
+                      <Text>Pan No.</Text>
+                    </View>
+                    <View style={styles.headerCellValue}>
+                      <Text>{PartyPAN}</Text>
                     </View>
                   </View>
                 </View>

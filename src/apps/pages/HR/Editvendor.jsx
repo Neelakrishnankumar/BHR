@@ -233,9 +233,9 @@ const Editvendor = () => {
 
   useEffect(() => {
     if (recID && mode === "E") {
-      dispatch(getFetchData({ accessID, get: "get", recID }));
+      dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
     } else {
-      dispatch(getFetchData({ accessID, get: "get", recID }));
+      dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
     }
   }, [location.key, recID, mode]);
 
@@ -425,9 +425,9 @@ const Editvendor = () => {
       console.log(event.target.value, "--find event.target.value");
 
       if (recID && mode === "E") {
-        dispatch(getFetchData({ accessID, get: "get", recID }));
+        dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID:"TR243", get: "", recID }));
       }
     }
     if (event.target.value == "3") {
@@ -539,11 +539,12 @@ const Editvendor = () => {
     };
 
     try {
-      const response = await dispatch(postData({ accessID, action, idata }));
+      const response = await dispatch(postData({ accessID:"TR243", action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
-        navigate("/Apps/TR243/Party");
+        // navigate("/Apps/TR243/Party");
+        navigate("/Apps/TR321/Party");
       } else {
         toast.error(response.payload.Msg);
       }
@@ -601,7 +602,7 @@ const Editvendor = () => {
 
     try {
       const response = await dispatch(
-        VendorRegisterpostData({ accessID, action, idata })
+        VendorRegisterpostData({ accessID:"TR243", action, idata })
       );
 
       if (response.payload.Status === "Y") {
@@ -660,7 +661,7 @@ const Editvendor = () => {
 
     try {
       const response = await dispatch(
-        VendorDefaultPUTdata({ accessID, action, idata })
+        VendorDefaultPUTdata({ accessID:"TR243", action, idata })
       );
 
       if (response.payload.Status === "Y") {
@@ -797,7 +798,8 @@ const Editvendor = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR243/Party");
+          // navigate("/Apps/TR243/Party");
+          navigate("/Apps/TR321/Party");
         }
       }
     });
@@ -1474,7 +1476,8 @@ const Editvendor = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR243/Party");
+                      // navigate("/Apps/TR243/Party");
+                      navigate("/Apps/TR321/Party");
                     }}
                   >
                     Cancel
@@ -2754,7 +2757,8 @@ const Editvendor = () => {
                         color="warning"
                         variant="contained"
                         onClick={() => {
-                          navigate("/Apps/TR243/Party");
+                          // navigate("/Apps/TR243/Party");
+                          setScreen(0);
                         }}
                       >
                         Cancel
@@ -3001,7 +3005,8 @@ const Editvendor = () => {
                         color="warning"
                         variant="contained"
                         onClick={() => {
-                          navigate("/Apps/TR243/Party");
+                          // navigate("/Apps/TR243/Party");
+                          setScreen(0);
                         }}
                       >
                         Cancel

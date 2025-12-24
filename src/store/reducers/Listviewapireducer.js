@@ -650,6 +650,7 @@ export const fetchListview =
         AccessID != "TR314" &&
         AccessID != "TR313" &&
         AccessID != "TR243" &&
+        AccessID != "TR321" &&
         AccessID != "TR315" &&
         AccessID != "TR316" &&
         AccessID != "TR317" &&
@@ -1687,6 +1688,132 @@ export const fetchListview =
           //   };
           // }
           else if (AccessID === "TR243") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 170,
+              sortable: false,
+              headerAlign: "center",
+              align: "left",
+              disableColumnMenu: true,
+              disableExport: true,
+              filterable: false,
+              renderCell: (params) => {
+                const count = Number(params.row.MarketingCount || 0);
+                const id = params.row.RecordID;
+                const PartyName = params.row.Name;
+
+                // Encode PartyName to make it URL-safe
+                // const encodedName = encodeURIComponent(PartyName);
+
+                return (
+                  <Box>
+                    {/* Edit Button */}
+                    <Link
+                      to={`./Edit${screenName}/${params.row.RecordID}/E`}
+                      state={{
+                        PartyName: params.row.Party,
+                        PName: params.row.Name,
+                        Count: params.row.MarketingCount,
+                      }}
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* Leader Button */}
+                    <Link
+                      to={
+                        count >= 1
+                          ? `/Apps/Secondarylistview/TR303/LeaderCardView/${id}`
+                          : `/Apps/Secondarylistview/TR304/Leader/${id}/${PartyName}/EditLeader/-1/A/F`
+                      }
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Leads">
+                        <IconButton color="info" size="small">
+                          <Diversity2Icon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* ORDER HEADER */}
+                    {/* {params.row.LeaderCount >= 1 ? ( */}
+                    <Link
+                      // to={
+                      //   params.row.OrdHdrCount > 0
+                      //     ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+                      //     : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+                      // }
+                      to={
+                        params.row.OrderCount > 0
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/O`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/O/EditOrder/-1/A`
+                      }
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Order">
+                        <IconButton color="info" size="small">
+                          <CategoryIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    {/* FOR QUOTATION */}
+                    <Link
+                      to={
+                        params.row.QuotationCount > 0
+                          ? `/Apps/Secondarylistview/TR310/Order/${id}/Party/Q`
+                          : `/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/Q/EditOrder/-1/A`
+                      }
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Quotation">
+                        <IconButton color="info" size="small">
+                          <RequestQuoteOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                    {/* ) : null} */}
+
+                    <Link
+                      // to={
+                      //   params.row.OrdHdrCount > 0
+                      //   ? `/Apps/Secondarylistview/TR310/Order/${id}/Party`
+
+                      //   :`/Apps/Secondarylistview/TR310/Order/${params.row.RecordID}/Party/EditOrder/-1/A`
+
+                      //   }
+                      to={`/Apps/Secondarylistview/TR314/AdvancePayment/${id}`}
+                      state={{
+                        PartyID: params.row.RecordID,
+                        PartyName: params.row.Name,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip title="Advance Payment">
+                        <IconButton color="info" size="small">
+                          <CurrencyRupeeOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Box>
+                );
+              },
+            };
+          }
+          else if (AccessID === "TR321") {
             obj = {
               field: "action",
               headerName: "Action",

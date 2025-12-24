@@ -220,7 +220,8 @@ const LeaderCardView = () => {
   };
 
   const handleCancel = () => {
-    navigate("/Apps/TR243/Party");
+    // navigate("/Apps/TR243/Party");
+    navigate("/Apps/TR321/Party");
   };
 
   return (

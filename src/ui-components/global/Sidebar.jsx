@@ -486,7 +486,8 @@ const child = {
         {
           name: "Party",
           id: 4346895,
-          url: "./TR243/Party",
+          //  url: "./TR243/Party",
+          url: "./TR321/Party",
           icon: (
             <Tooltip title="Party">
               <PersonSearchIcon color="info" />
@@ -498,7 +499,7 @@ const child = {
           UGA_PRINT: true,
           UGA_PROCESS: true,
           UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR243",
+          UGA_ACCESSIDS: "TR321",
         },
         {
           name: "Order Enquiry",
