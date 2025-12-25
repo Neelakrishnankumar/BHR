@@ -911,7 +911,7 @@ const Sidebars = () => {
   const [open, setOpen] = React.useState(false);
   // const companyLogo = sessionStorage.getItem("CompanyLogo");
   // console.log(companyLogo, "companyLogo");
-  const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
+  const [logoSrc, setLogoSrc] = useState(null);
 
   React.useEffect(() => {
     const interval = setInterval(() => {

@@ -727,12 +727,12 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
-    else if (AccessID == "TR305" || AccessID == "TR313") {
-      filter = "";
-    }
-    // else if (AccessID == "TR305") {
+    // else if (AccessID == "TR305" || AccessID == "TR313") {
     //   filter = "";
     // }
+    else if (AccessID == "TR305") {
+      filter = "";
+    }
      else {
       filter = `CompanyID=${CompId}`;
     }

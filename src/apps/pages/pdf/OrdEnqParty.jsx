@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontWeight: "bold",
     },
+    
     separator: {
         width: "100%",
         height: 1,

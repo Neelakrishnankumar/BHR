@@ -37,7 +37,7 @@ import store from "..";
 //     }
 //   }, []);
 const Logopage = () => {
-  const [logoSrc, setLogoSrc] = useState(BackOfficelogoV1);
+  const [logoSrc, setLogoSrc] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
