@@ -224,7 +224,7 @@ const EditOrderitem = () => {
       // ⭐ CASE 2 → Edit or Delete → Redirect back to OrderItem list
       if (mode === "E" || del === "harddelete") {
         navigate(
-          `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/TR311/${params.filtertype1}`,
+          `/Apps/Secondarylistview/TR310/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${params.filtertype1}`,
           { state: { ...state } }
         );
       }
