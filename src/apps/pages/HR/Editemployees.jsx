@@ -956,10 +956,10 @@ const Editemployee = () => {
     //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
     // }
     if (event.target.value == "8") {
-
+      dispatch(getDeployment({ HeaderID: recID }));
       const isStudent =
         Data.DesignDesc === "Student" ||
-        deploymentInitialValue.Designation.Name === "Student";
+        deploymentInitialValue?.Designation?.Name === "Student";
 
       const filterCondition = isStudent
         ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
@@ -2176,7 +2176,7 @@ const Editemployee = () => {
     shift2: contractorData.shift2 || null,
   };
   // console.log(contractorData, "--get a contractorData");
-    console.log(Data.DesignDesc ,"--contract idata");
+  console.log(Data.DesignDesc, "--contract idata");
 
   //Contractor Save Function
   const contractSavefn = async (values, resetForm, del) => {
@@ -2248,10 +2248,10 @@ const Editemployee = () => {
       ProjectCode: values?.project?.Code || 0,
       ProjectName: values?.project?.Name || "",
     };
-    console.log(idata ,"--contract idata");
+    console.log(idata, "--contract idata");
     const isStudent =
-      Data.DesignDesc === "Student" ||
-      deploymentInitialValue.Designation.Name === "Student";
+       Data.DesignDesc === "Student" ||
+      deploymentInitialValue?.Designation?.Name === "Student";
 
     const filterCondition = isStudent
       ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
@@ -2488,7 +2488,7 @@ const Editemployee = () => {
     }
   };
   // const [level, setLevel] = useState('2');
-   const deploymentInitialValue = {
+  const deploymentInitialValue = {
     code: Data.Code,
     description: Data.Name,
     Designation: deploymentData.DesignationID
@@ -2512,7 +2512,7 @@ const Editemployee = () => {
         Name: deploymentData.StoregatemasterName,
       }
       : null,
-    project: deploymentData.DefaultProject && deploymentData.DefaultProject !=="0"
+    project: deploymentData.DefaultProject && deploymentData.DefaultProject !== "0"
       ? {
         RecordID: deploymentData.DefaultProject,
         Code: deploymentData.ProjectCode,
@@ -2589,7 +2589,7 @@ const Editemployee = () => {
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
- 
+
   console.log(deploymentInitialValue.Designation, "--deploymentInitialValue");
   const Fndeployment = async (values, resetForm, del) => {
     console.log(values, "--values");
@@ -2598,7 +2598,7 @@ const Editemployee = () => {
       HeaderID: recID,
       CheckInTime: values.shift?.ShiftStartTime || "",
       CheckOutTime: values.shift?.ShiftendTime || "",
-      CheckInTime2 : values.shift2?.ShiftStartTime2 || "",
+      CheckInTime2: values.shift2?.ShiftStartTime2 || "",
       CheckOutTime2: values.shift2?.ShiftendTime2 || "",
       // CheckInTime: values.checkin || "",
       // CheckOutTime: values.checkout || "",
@@ -2620,7 +2620,7 @@ const Editemployee = () => {
       CostOfCompany: values.costofcompany || 0,
       CostOfCompanyHours: values.costofcompanyhour || 0,
       CostOfBudgetHours: values.costofbudgethour,
-      
+
       // Monday: values.monday === true ? "Y" : "N",
       // Tuesday: values.tuesday === true ? "Y" : "N",
       // Wednesday: values.wednesday === true ? "Y" : "N",
@@ -6326,13 +6326,13 @@ const Editemployee = () => {
                           <CheckinAutocomplete
                             id="shift2"
                             name="shift2"
-                            label="Shift 2"   
+                            label="Shift 2"
                             variant="outlined"
                             value={values.shift2}
                             // error={!!touched.shift2 && !!errors.shift2}
                             // helperText={touched.shift2 && errors.shift2}
                             onChange={(newValue) => {
-                              setFieldValue("shift2", newValue);                            
+                              setFieldValue("shift2", newValue);
                             }}
                             url={`${listViewurl}?data={"Query":{"AccessID":"2108","ScreenName":"Shift","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
                           />
@@ -6650,7 +6650,7 @@ const Editemployee = () => {
                       value={values.costofemployee}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                       label="Cost to Budget"
+                      label="Cost to Budget"
                       // label={
                       //   <>
                       //     Cost to Budget
@@ -8645,11 +8645,13 @@ const Editemployee = () => {
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={
-                          (Data.DesignDesc === "Student" ||
-                            deploymentInitialValue.Designation.Name === "Student")
+                          (
+                            Data.DesignDesc === "Student" ||
+                            deploymentInitialValue?.Designation?.Name === "Student")
                             ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
                             : `${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`
                         }
+                        
 
                       //  url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Vendor","Filter":"parentID=${CompanyID}","Any":""}}`}
                       />
@@ -8926,13 +8928,13 @@ const Editemployee = () => {
                         id="shift"
                         name="shift"
                         label={
-                              <span>
-                                Shift 1
-                                <span style={{ color: "red", fontSize: "20px" }}>
-                                  *
-                                </span>
-                              </span>
-                            }                           
+                          <span>
+                            Shift 1
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </span>
+                        }
                         variant="outlined"
                         value={values.shift}
                         error={!!touched.shift && !!errors.shift}

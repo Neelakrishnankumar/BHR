@@ -372,7 +372,7 @@ const Listview = () => {
           justifyContent: "space-between",
         }}
       >
-        {broken && !rtl && (
+        {/* {broken && !rtl && (
           <IconButton
             sx={{ margin: "0 6 0 2" }}
             onClick={() => toggleSidebar()}
@@ -391,6 +391,26 @@ const Listview = () => {
             gap: 2,
             width: "100%",
             alignItems: "center",
+          }}
+        > */}
+        {broken && !rtl && (
+          <IconButton onClick={toggleSidebar}>
+            <MenuOutlinedIcon />
+          </IconButton>
+        )}
+
+        <Typography variant="h3" noWrap>
+          {screenName}
+        </Typography>
+
+        {/* RIGHT SIDE */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            marginLeft: "auto",
+            flexWrap: "nowrap",
           }}
         >
           <Box
@@ -748,12 +768,16 @@ const Listview = () => {
                     Scheduled:
                       sessionStorage.getItem("TR313_Scheduled") === "Y",
                     Type: "ByProduct",
+                    party: [],
+                    product: [],
                   }}
                   enableReinitialize
                   validate={(values) => {
                     const hasAtLeastOneValue =
                       values.fromdate ||
                       values.date ||
+                      values.party ||
+                      values.product ||
                       values.Created ||
                       values.Process ||
                       values.ReadyToDeliver ||
@@ -795,9 +819,6 @@ const Listview = () => {
                       JSON.stringify(values)
                     );
 
-                    // --------------------------
-                    // 1. STATUS IN ('A','B','C')
-                    // --------------------------
                     const selectedStatuses = Object.keys(statusDateMap).filter(
                       (status) => values[status]
                     );
@@ -810,9 +831,6 @@ const Listview = () => {
                       );
                     }
 
-                    // -------------------------------------------------
-                    // 2. DATE FIELD CONDITIONS based on selected status
-                    // -------------------------------------------------
                     const dateConditions = [];
 
                     selectedStatuses.forEach((status) => {
@@ -828,13 +846,20 @@ const Listview = () => {
                         dateConditions.push(`(${field} <= '${toDate}')`);
                       }
                     });
-                    if (values.party?.RecordID) {
-                      conditions.push(
-                        `PartyRecordID='${values.party.RecordID}'`
-                      );
+                    if (values.party?.length > 0) {
+                      const partyIds = values.party
+                        .map((p) => `'${p.RecordID}'`)
+                        .join(", ");
+
+                      conditions.push(`PartyRecordID IN (${partyIds})`);
                     }
-                    if (values.product?.RecordID) {
-                      conditions.push(`ProductID='${values.product.RecordID}'`);
+
+                    if (values.product?.length > 0) {
+                      const productIds = values.product
+                        .map((p) => `'${p.RecordID}'`)
+                        .join(", ");
+
+                      conditions.push(`ProductID IN (${productIds})`);
                     }
 
                     if (dateConditions.length > 0) {
@@ -1111,8 +1136,8 @@ const Listview = () => {
                               document={
                                 <OrdEnqProductPDF
                                   data={listViewData}
-                                // Project={values?.project}
-                                // Overhead={values?.overhead}
+                                  Product={values?.product?.Name}
+                                  Party={values?.party?.Name}
                                 />
                               }
                               fileName={`OrderEnquirySummary_Product}.pdf`}
@@ -1131,8 +1156,8 @@ const Listview = () => {
                               document={
                                 <OrdEnqPartyPDF
                                   data={listViewData}
-                                // Project={values?.project}
-                                // Overhead={values?.overhead}
+                                  Product={values?.product?.Name}
+                                  Party={values?.party?.Name}
                                 />
                               }
                               fileName={`OrderEnquirySummary_Party"}.pdf`}
