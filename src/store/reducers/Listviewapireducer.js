@@ -522,7 +522,6 @@ export const fetchListview =
     const company = sessionStorage.getItem("company");
     var LoggedInUserName = sessionStorage.getItem("UserName");
     const UserName = sessionStorage.getItem("UserName");
-
     //PROJECTPDFGET
 
     // const handlePDFGET = (ProjectID, EmployeeID) => {
@@ -727,12 +726,12 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
-    // else if (AccessID == "TR305" || AccessID == "TR313") {
-    //   filter = "";
-    // }
-    else if (AccessID == "TR305") {
+    else if (AccessID == "TR305" || AccessID == "TR313") {
       filter = "";
     }
+    // else if (AccessID == "TR305") {
+    //   filter = "";
+    // }
      else {
       filter = `CompanyID=${CompId}`;
     }
@@ -5536,6 +5535,19 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         // link.click();
         const blobUrl = URL.createObjectURL(blob);
         window.open(blobUrl, "_blank");
+
+         // 2. TO DOWNLOAD DIRECTLY
+        // const url = URL.createObjectURL(blob);
+
+        // const link = document.createElement("a");
+        // link.href = url;
+        // link.download = "OrderDetails.pdf";
+        // document.body.appendChild(link);
+
+        // link.click();
+
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(url);
       } catch (err) {
         console.error("PDF generation failed", err);
       } finally {

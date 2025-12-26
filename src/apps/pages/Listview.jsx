@@ -68,7 +68,10 @@ import NotStartedOutlinedIcon from "@mui/icons-material/NotStartedOutlined";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import SearchIcon from "@mui/icons-material/Search";
 import EmailIcon from "@mui/icons-material/Email";
-import { searchData } from "../../store/reducers/Formapireducer";
+import {
+  searchData,
+  VendorFilterController,
+} from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { Delete, Psychology, Category } from "@mui/icons-material";
@@ -423,8 +426,8 @@ const Listview = () => {
             }}
           >
             {accessID === "TR313" ||
-              accessID === "TR243" ||
-              accessID === "TR321" ? (
+            accessID === "TR243" ||
+            accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -526,7 +529,8 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${
+                          accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -767,13 +771,15 @@ const Listview = () => {
                     Paid: sessionStorage.getItem("TR313_Paid") === "Y",
                     Scheduled:
                       sessionStorage.getItem("TR313_Scheduled") === "Y",
-                      Delivered:
+                    Delivered:
                       sessionStorage.getItem("TR313_Delivered") === "Y",
                     Type: "ByProduct",
                     // party: [],
                     // product: [],
-                    party: JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
-                    product: JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
+                    party:
+                      JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
+                    product:
+                      JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -898,7 +904,7 @@ const Listview = () => {
                     handleBlur,
                     isSubmitting,
                     setFieldValue,
-                    resetForm
+                    resetForm,
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
@@ -952,7 +958,10 @@ const Listview = () => {
                           value={values.party}
                           onChange={(e, newValue) => {
                             setFieldValue("party", newValue);
-                            sessionStorage.setItem("TR313_Party", JSON.stringify(newValue));
+                            sessionStorage.setItem(
+                              "TR313_Party",
+                              JSON.stringify(newValue)
+                            );
                           }}
                           // error={!!touched.party && !!errors.party}
                           // helperText={touched.party && errors.party}
@@ -967,7 +976,10 @@ const Listview = () => {
                           value={values.product}
                           onChange={(e, newValue) => {
                             setFieldValue("product", newValue);
-                            sessionStorage.setItem("TR313_Product", JSON.stringify(newValue));
+                            sessionStorage.setItem(
+                              "TR313_Product",
+                              JSON.stringify(newValue)
+                            );
                           }}
                           // error={!!touched.product && !!errors.product}
                           // helperText={touched.product && errors.product}
@@ -1134,8 +1146,19 @@ const Listview = () => {
                             Apply
                           </Button>
                         </Stack> */}
-                        <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} marginTop={3}>
-                          <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="end"
+                          spacing={1}
+                          marginTop={3}
+                        >
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                          >
                             Apply
                           </Button>
                           {values.Type === "ByProduct" ? (
@@ -1191,7 +1214,7 @@ const Listview = () => {
                           <Button
                             type="button"
                             variant="contained"
-                            color="error"                          
+                            color="error"
                             onClick={() => {
                               [
                                 "FromDate",
@@ -1207,7 +1230,9 @@ const Listview = () => {
                                 "TR313_Party",
                                 "TR313_Product",
                                 "TR313_Filters",
-                              ].forEach((key) => sessionStorage.removeItem(key));
+                              ].forEach((key) =>
+                                sessionStorage.removeItem(key)
+                              );
 
                               resetForm({
                                 values: {
@@ -1230,7 +1255,6 @@ const Listview = () => {
                           >
                             RESET
                           </Button>
-
                         </Stack>
                       </Box>
                     </form>
@@ -2062,6 +2086,8 @@ const Listview = () => {
                 </Formik>
               </Box>
             )}
+
+           
           </Box>
         </Box>
         {accessID == "TR049" ? (
