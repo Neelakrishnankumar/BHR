@@ -141,8 +141,8 @@ const EditOrder = () => {
         ? "Picked"
         : data.ORStatus === "Delivered"
         ? "Delivered"
-        : data.ORStatus === "Scheduled"
-        ? "Scheduled"
+        : data.ORStatus === "Yet To Deliver"
+        ? "Yet To Deliver"
         : data.ORStatus === "AdjustFromAdvance"
         ? "AdjustFromAdvance"
         : data.ORStatus === "Paid"
@@ -155,6 +155,7 @@ const EditOrder = () => {
     mobilenumber: data.ReceiverMobileNumber,
     DeliveryComments: data.DeliveryComments,
     PaidComments: data.PaidComments,
+    PartyBalance: data.PartyBalance,
     // paid: "Yes",
     // deliverby: "Yes"
   };
@@ -423,7 +424,11 @@ const EditOrder = () => {
                       type="date"
                       id="orderdate"
                       //label="Order Date"
-                      label={params.OrderType === "O" ? "Order Date" : "Quotation Date"}
+                      label={
+                        params.OrderType === "O"
+                          ? "Order Date"
+                          : "Quotation Date"
+                      }
                       variant="standard"
                       focused
                       inputFormat="YYYY-MM-DD"
@@ -556,7 +561,11 @@ const EditOrder = () => {
                         name="tentativedeliverdate"
                         type="date"
                         id="tentativedeliverdate"
-                        label={params.OrderType === "O" ? "Tentative Deliver Date" : "Targeted Order Date"}
+                        label={
+                          params.OrderType === "O"
+                            ? "Tentative Deliver Date"
+                            : "Targeted Order Date"
+                        }
                         variant="standard"
                         focused
                         inputFormat="YYYY-MM-DD"
@@ -640,7 +649,11 @@ const EditOrder = () => {
                           type="date"
                           id="tentativedeliverdate"
                           //label="Tentative Deliver Date"
-                          label={params.OrderType === "O" ? "Tentative Deliver Date" : "Targeted Order Date"}
+                          label={
+                            params.OrderType === "O"
+                              ? "Tentative Deliver Date"
+                              : "Targeted Order Date"
+                          }
                           variant="standard"
                           focused
                           inputFormat="YYYY-MM-DD"
@@ -763,6 +776,38 @@ const EditOrder = () => {
                           autoFocus
                         />
                         <TextField
+                          name="PartyBalance"
+                          // type="number"
+                          type="text"
+                          id="PartyBalance"
+                          label="Balance Amount"
+                          variant="standard"
+                          focused
+                          // value={values.PartyBalance}
+                          value={Math.abs(Number(values.PartyBalance || 0))}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            !!touched.PartyBalance && !!errors.PartyBalance
+                          }
+                          helperText={
+                            touched.PartyBalance && errors.PartyBalance
+                          }
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: { textAlign: "right" ,
+                              color:
+                                Number(values.PartyBalance) < 0
+                                  ? "#d32f2f"
+                                  // ? "#db4f4a"
+                                  : "#2e7d32", // red : green
+                              fontWeight: 600,
+                            }},
+                          }}
+                          autoFocus
+                        />
+                        <TextField
                           name="paidamount"
                           type="number"
                           id="paidamount"
@@ -821,8 +866,8 @@ const EditOrder = () => {
                             Ready for Delivery
                           </MenuItem>
                           <MenuItem value="Picked">Picked</MenuItem>
-                          <MenuItem value="Scheduled">Scheduled</MenuItem>
-
+                          {/* <MenuItem value="Scheduled">Scheduled</MenuItem> */}
+                          <MenuItem value="Yet To Deliver">Scheduled</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
                           <MenuItem value="Paid">Paid</MenuItem>
                           <MenuItem value="AdjustFromAdvance">
@@ -1110,7 +1155,8 @@ const EditOrder = () => {
                     padding={1}
                     gap="20px"
                   >
-                    {YearFlag == "true" && (mode === "A" || params.OrderType === "O") ? (
+                    {YearFlag == "true" &&
+                    (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"
