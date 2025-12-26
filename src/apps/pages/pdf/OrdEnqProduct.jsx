@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     projectName: {
         fontSize: 10,
         marginBottom: 4,
+        fontWeight: "bold",
     },
     table: {
         display: "table",
@@ -68,13 +69,21 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginBottom: 12,
     },
+    projectSummary: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 6,
+        fontSize: 10,
+        fontWeight: "bold",
+    },
+
 });
 
 
 const groupByProduct = (data) => {
     const result = {};
     data.forEach((row) => {
-        const product = row.ProductName || "";
+        const product = row.Product || "";
         if (!result[product]) result[product] = [];
         result[product].push(row);
     });
@@ -84,7 +93,7 @@ const groupByProduct = (data) => {
 const groupByParty = (rows) => {
     const result = {};
     rows.forEach((row) => {
-        const party = row.PartyName || "Unknown Party";
+        const party = row.Party || "";
         if (!result[party]) result[party] = [];
         result[party].push(row);
     });
@@ -93,13 +102,29 @@ const groupByParty = (rows) => {
 
 const OrdEnqProductPDF = ({ data = [], Product = [], Party = [] }) => {
     const productGroups = groupByProduct(data);
+    const statusDateMap = {
+        Created: "OROrderDate",
+        Process: "ORProcessDate",
+        ReadyToDeliver: "ORTentativeDate",
+        YetToDeliver: "ORTentativeDate",
+        Picked: "ORPickedDate",
+        Scheduled: "ORTentativeDate",
+        Delivered: "ORDeliveryDate",
+        Paid: "ORPaidDate",
+    };
+    const getStatusDate = (row) => {
+        const dateField = statusDateMap[row.Status];
+        return dateField ? row[dateField] || "" : "";
+    };
+    const formatDate = (date) =>
+        date ? new Date(date).toLocaleDateString("en-GB") : "";
 
     return (
         <Document>
             <Page size="A4" orientation="landscape" style={styles.page}>
 
                 <Text style={styles.title}>
-                    Order Enquiry Product Based Report
+                    Order Enquiry - Product Based Report
                 </Text>
 
                 {Product?.length > 0 && (
@@ -153,11 +178,17 @@ const OrdEnqProductPDF = ({ data = [], Product = [], Party = [] }) => {
 
                                                     <View style={styles.tableRow}>
                                                         <Text style={[styles.headerCell, { flex: 0.5 }]}>S.No</Text>
-                                                        <Text style={[styles.headerCell, { flex: 4.5 }]}>Name</Text>
-                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Qty</Text>
-                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Rate</Text>
+                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
+                                                        <Text style={[styles.headerCell, { flex: 3.5 }]}>Party</Text>
+                                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Qty</Text>
+                                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Rate</Text>
+                                                        <Text style={[styles.headerCell, { flex: 0.9 }]}>Discount</Text>
                                                         <Text style={[styles.headerCell, { flex: 1 }]}>Value</Text>
-                                                        <Text style={[styles.headerCell, { flex: 2 }]}>Status</Text>
+                                                        {/* <Text style={[styles.headerCell, { flex: 1.5 }]}>Status</Text> */}
+                                                        <Text style={[styles.rightCell, {
+                                                            flex: 1.5, fontWeight: "bold", backgroundColor: "#f0f0f0",
+                                                            textAlign: "center"
+                                                        }]}>Status</Text>
                                                     </View>
 
                                                     {overheadRows.map((row, i) => (
@@ -165,37 +196,81 @@ const OrdEnqProductPDF = ({ data = [], Product = [], Party = [] }) => {
                                                             <Text style={[styles.cell, { flex: 0.5, textAlign: "center" }]}>
                                                                 {i + 1}
                                                             </Text>
-                                                            <Text style={[styles.cell, { flex: 4.5, textAlign: "center" }]}>
+                                                            {/* <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
+                                                                {row.Date}
+                                                            </Text> */}
+                                                            <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
+                                                                {formatDate(getStatusDate(row))}
+                                                            </Text>
+
+                                                            <Text style={[styles.cell, { flex: 3.5, textAlign: "center" }]}>
                                                                 {row.PartyName}
                                                             </Text>
-                                                            <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}>{row.Quantity}</Text>
-                                                            <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}>{row.Price}</Text>
+                                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>{row.Quantity}</Text>
+                                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>{row.Price}</Text>
+                                                            <Text style={[styles.cell, { flex: 0.9, textAlign: "right" }]}>{row.Discount}</Text>
                                                             <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}>{row.Amount}</Text>
-                                                            <Text style={[styles.cell, { flex: 2, textAlign: "center" }]}>
+                                                            {/* <Text style={[styles.cell, { flex: 1.5, textAlign: "center" }]}>
+                                                                {row.Status}
+                                                            </Text> */}
+                                                            <Text style={[styles.rightCell, { flex: 1.5, textAlign: "center" }]}>
                                                                 {row.Status}
                                                             </Text>
                                                         </View>
                                                     ))}
 
-                                                    <View style={styles.tableRow}>
+                                                    {/* <View style={styles.tableRow}>
                                                         <Text style={[styles.cell, { flex: 0.5 }]}></Text>
-                                                        {/* <Text style={[styles.cell, { flex: 1 }]}></Text> */}
                                                         <Text
                                                             style={[
                                                                 styles.cell,
-                                                                { flex: 7.5, fontWeight: "bold", textAlign: "right" },
+                                                                { flex: 7, fontWeight: "bold", textAlign: "right" },
                                                             ]}
                                                         >
                                                             Total
                                                         </Text>
+                                                        <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}> {overheadTotal.toFixed(2)}</Text>
+                                                       
                                                         <Text
                                                             style={[
                                                                 styles.rightCell,
-                                                                { flex: 2, fontWeight: "bold" },
+                                                                { flex: 1.5, fontWeight: "bold" },
+                                                            ]}
+                                                        >                           
+                                                        </Text>
+                                                    </View> */}
+                                                    <View style={[
+                                                        styles.tableRow,
+                                                        { borderBottomWidth: 0}
+                                                    ]}>
+                                                        {/* <View style={styles.tableRow}> */}
+                                                        <Text style={[styles.cell, { flex: 0.5 }]} />
+                                                        <Text style={[styles.cell, { flex: 1 }]} />
+                                                        <Text
+                                                            style={[
+                                                                styles.cell,
+                                                                { flex: 3.5, fontWeight: "bold", textAlign: "right" },
+                                                            ]}
+                                                        >
+                                                            Total
+                                                        </Text>
+
+                                                        {/* <Text style={[styles.cell, { flex: 1 }]} />
+                                                        <Text style={[styles.cell, { flex: 1 }]} />
+                                                        <Text style={[styles.cell, { flex: 0.5 }]} /> */}
+                                                        <Text style={[styles.cell, { flex: 0.8 }]} />
+                                                        <Text style={[styles.cell, { flex: 0.8 }]} />
+                                                        <Text style={[styles.cell, { flex: 0.9 }]} />
+                                                        <Text
+                                                            style={[
+                                                                styles.cell,
+                                                                { flex: 1, fontWeight: "bold", textAlign: "right" },
                                                             ]}
                                                         >
                                                             {overheadTotal.toFixed(2)}
                                                         </Text>
+
+                                                        <Text style={[styles.cell, { flex: 1.5,borderRightWidth:0 }]} />
                                                     </View>
 
                                                 </View>
