@@ -109,7 +109,7 @@ const Listview = () => {
   console.log(params, "-------------");
   const LoginID = sessionStorage.getItem("loginrecordID");
   const fromDate = useSelector((state) => state.listviewApi.fromDate);
-
+  const currentDate = new Date().toISOString().split("T")[0];
   var accessID = params.accessID;
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const [pageSize, setPageSize] = React.useState(20);
@@ -423,8 +423,8 @@ const Listview = () => {
             }}
           >
             {accessID === "TR313" ||
-            accessID === "TR243" ||
-            accessID === "TR321" ? (
+              accessID === "TR243" ||
+              accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -526,8 +526,7 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${
-                          accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -760,16 +759,21 @@ const Listview = () => {
                     date: sessionStorage.getItem("ToDate") || "",
                     Created: sessionStorage.getItem("TR313_Created") === "Y",
                     Process: sessionStorage.getItem("TR313_Process") === "Y",
-                    inprogress: sessionStorage.getItem("TR313_Picked") === "Y",
-                    completed:
-                      sessionStorage.getItem("TR313_Scheduled") === "Y",
-                    Delivered:
-                      sessionStorage.getItem("TR313_Delivered") === "Y",
+                    Picked: sessionStorage.getItem("TR313_Picked") === "Y",
+                    ReadyToDeliver:
+                      sessionStorage.getItem("TR313_ReadyToDeliver") === "Y",
+                    YetToDeliver:
+                      sessionStorage.getItem("TR313_YetToDeliver") === "Y",
+                    Paid: sessionStorage.getItem("TR313_Paid") === "Y",
                     Scheduled:
                       sessionStorage.getItem("TR313_Scheduled") === "Y",
+                      Delivered:
+                      sessionStorage.getItem("TR313_Delivered") === "Y",
                     Type: "ByProduct",
-                    party: [],
-                    product: [],
+                    // party: [],
+                    // product: [],
+                    party: JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
+                    product: JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -861,7 +865,9 @@ const Listview = () => {
 
                       conditions.push(`ProductID IN (${productIds})`);
                     }
-
+                    if (compID) {
+                      conditions.push(`CompanyID = '${compID}'`);
+                    }
                     if (dateConditions.length > 0) {
                       conditions.push(`(${dateConditions.join(" OR ")})`);
                     }
@@ -892,6 +898,7 @@ const Listview = () => {
                     handleBlur,
                     isSubmitting,
                     setFieldValue,
+                    resetForm
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
@@ -936,7 +943,7 @@ const Listview = () => {
                           }}
                           sx={{ width: 250, mt: 2 }}
                         />
-                        {/* <MultiFormikOptimizedAutocomplete
+                        <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="party"
                           name="party"
@@ -945,7 +952,7 @@ const Listview = () => {
                           value={values.party}
                           onChange={(e, newValue) => {
                             setFieldValue("party", newValue);
-
+                            sessionStorage.setItem("TR313_Party", JSON.stringify(newValue));
                           }}
                           // error={!!touched.party && !!errors.party}
                           // helperText={touched.party && errors.party}
@@ -960,7 +967,7 @@ const Listview = () => {
                           value={values.product}
                           onChange={(e, newValue) => {
                             setFieldValue("product", newValue);
-
+                            sessionStorage.setItem("TR313_Product", JSON.stringify(newValue));
                           }}
                           // error={!!touched.product && !!errors.product}
                           // helperText={touched.product && errors.product}
@@ -981,7 +988,7 @@ const Listview = () => {
                         >
                           <MenuItem value="ByParty">By Party</MenuItem>
                           <MenuItem value="ByProduct">By Product</MenuItem>
-                        </TextField> */}
+                        </TextField>
                         <Typography mt={2} fontWeight="bold" color="error">
                           Status
                         </Typography>
@@ -1110,7 +1117,7 @@ const Listview = () => {
                           }
                           label="Paid"
                         />
-
+                        {/* 
                         <Stack
                           direction="row"
                           alignItems="center"
@@ -1126,12 +1133,12 @@ const Listview = () => {
                           >
                             Apply
                           </Button>
-                        </Stack>
-                        {/* <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} marginTop={3}>
+                        </Stack> */}
+                        <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} marginTop={3}>
                           <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
                             Apply
                           </Button>
-                          {values.Type === "ByProduct" ? (
+                          {/* {values.Type === "ByProduct" ? (
                             <PDFDownloadLink
                               document={
                                 <OrdEnqProductPDF
@@ -1171,34 +1178,60 @@ const Listview = () => {
                                 )
                               }
                             </PDFDownloadLink>
-                          )}
+                          )} */}
 
-                          <Button
+                          {/* <Button
                             type="button"
                             variant="contained"
                             color="error"
-                            size="small"
-                          // onClick={() => {
-                          //   sessionStorage.removeItem("TR264_Filters");
-                          //   sessionStorage.removeItem("TR264_useCurrentEmp");
+                            size="small"                         
+                          >
+                            RESET
+                          </Button> */}
+                          <Button
+                            type="button"
+                            variant="contained"
+                            color="error"                          
+                            onClick={() => {
+                              [
+                                "FromDate",
+                                "ToDate",
+                                "TR313_Created",
+                                "TR313_Process",
+                                "TR313_ReadyToDeliver",
+                                "TR313_YetToDeliver",
+                                "TR313_Picked",
+                                "TR313_Scheduled",
+                                "TR313_Delivered",
+                                "TR313_Paid",
+                                "TR313_Party",
+                                "TR313_Product",
+                                "TR313_Filters",
+                              ].forEach((key) => sessionStorage.removeItem(key));
 
-                          //   resetForm({
-                          //     values: {
-                          //       project: [],
-                          //       Employee: null,
-                          //       overhead: [],
-                          //       Status: "",
-                          //       fromDate: defaultFromDate,
-                          //       toDate: defaultToDate,
-                          //       self: true,
-                          //       Type: "ByProject",
-                          //     },
-                          //   });
-                          // }}
+                              resetForm({
+                                values: {
+                                  fromdate: "",
+                                  date: "",
+                                  Created: false,
+                                  Process: false,
+                                  ReadyToDeliver: false,
+                                  YetToDeliver: false,
+                                  Picked: false,
+                                  Scheduled: false,
+                                  Delivered: false,
+                                  Paid: false,
+                                  party: [],
+                                  product: [],
+                                  Type: "ByProduct",
+                                },
+                              });
+                            }}
                           >
                             RESET
                           </Button>
-                        </Stack> */}
+
+                        </Stack>
                       </Box>
                     </form>
                   )}
