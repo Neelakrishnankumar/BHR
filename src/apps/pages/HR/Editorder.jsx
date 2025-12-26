@@ -143,8 +143,8 @@ const EditOrder = () => {
         ? "Delivered"
         : data.ORStatus === "Yet To Deliver"
         ? "Yet To Deliver"
-        : data.ORStatus === "AdjustFromAdvance"
-        ? "AdjustFromAdvance"
+        : data.ORStatus === "Adjust From Advance"
+        ? "Adjust From Advance"
         : data.ORStatus === "Paid"
         ? "Paid"
         : // : ""
@@ -162,6 +162,21 @@ const EditOrder = () => {
 
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
+   const partyBalance = Number(values.PartyBalance || 0);
+  const paidAmount = Number(values.paidamount || 0);
+  const status = override.ORStatus ?? values.status;
+
+  if (status === "Adjust From Advance") {
+    const advanceAmount = Math.abs(partyBalance);
+
+    if (paidAmount > advanceAmount) {
+      toast.error(
+        "Paid amount cannot be greater than available advance."
+      );
+      return;
+    }
+  }
+
     let action =
       mode === "A" && !del
         ? "insert"
@@ -870,7 +885,7 @@ const EditOrder = () => {
                           <MenuItem value="Yet To Deliver">Scheduled</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
                           <MenuItem value="Paid">Paid</MenuItem>
-                          <MenuItem value="AdjustFromAdvance">
+                          <MenuItem value="Adjust From Advance">
                             Adjust From Advance
                           </MenuItem>
                         </TextField>
