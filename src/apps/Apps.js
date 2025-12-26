@@ -175,6 +175,8 @@ import EditItemCategory from "./pages/Item/EditItemCategory";
 import EditItem from "./pages/Item/EditItem";
 import EditRoute from "./pages/Route/EditRoute";
 import EditArea from "./pages/Route/EditArea";
+import ChangeyourPassword from "./Security/Passwordflow";
+import ChangeyourPassword_1 from "./Security/Passwordflow";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -555,7 +557,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:invoiceType/EditLocal Invoice/:id/:Mode"
                     element={<Editlocalinvoce />}
                   />
-                  <Route path="/change Password" element={<Changepass />} />
+                  <Route path="/change%20Password" element={<Changepass />} />
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/configuration" element={<Configuration />} />
@@ -578,6 +580,7 @@ function App() {
                   />
                   {/* <Route path="/Chart" element={<Chartboard />} /> */}
                   <Route path="/HR" element={<Logopage />} />
+                  <Route path="/ChangeyourPassword" element={<ChangeyourPassword_1 />} />
                   <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}

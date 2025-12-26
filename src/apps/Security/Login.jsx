@@ -85,7 +85,7 @@ const Login = () => {
 
   const [company, setCompanycombo] = React.useState();
   const [year, setYearcombo] = React.useState();
-
+var firstLogin = "N";
   const initialValues = {
     username: "",
     password: "",
@@ -104,6 +104,10 @@ const Login = () => {
     //   toast.error("Please select company");
     //   setLoading(false);
     //   return;
+    // }
+    // console.log("firstLogin:", firstLogin);
+    // if (firstLogin == "Y") {
+    //   navigate("/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
     // }
     if (values.username == "") {
       // toast.error("UserName should not be empty");
@@ -139,6 +143,7 @@ const Login = () => {
 
     sessionStorage.setItem("loginRecid", loginrecordID);
     if (data.payload.Status == "Y") {
+      
       var company = data.payload.apiResponse.Company
       var SubscriptionCode = data.payload.SubscriptionCode
       var year = data.payload.apiResponse.Year
@@ -359,7 +364,7 @@ const Login = () => {
                         loading={isLoading}
                         variant="contained"
                       >
-                        Ok
+                        Login
                       </LoadingButton>
                       <Button
                         variant="contained"
