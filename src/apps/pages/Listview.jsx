@@ -1161,7 +1161,7 @@ const Listview = () => {
                           >
                             Apply
                           </Button>
-                          {/* {values.Type === "ByProduct" ? (
+                          {values.Type === "ByProduct" ? (
                             <PDFDownloadLink
                               document={
                                 <OrdEnqProductPDF
@@ -1170,7 +1170,7 @@ const Listview = () => {
                                   Party={values?.party?.Name}
                                 />
                               }
-                              fileName={`OrderEnquirySummary_Product}.pdf`}
+                              fileName={`OrderEnquirySummary_Product.pdf`}
                               style={{ color: "#d32f2f", cursor: "pointer" }}
                             >
                               {({ loading }) =>
@@ -1190,7 +1190,7 @@ const Listview = () => {
                                   Party={values?.party?.Name}
                                 />
                               }
-                              fileName={`OrderEnquirySummary_Party"}.pdf`}
+                              fileName={`OrderEnquirySummary_Party".pdf`}
                               style={{ color: "#d32f2f", cursor: "pointer" }}
                             >
                               {({ loading }) =>
@@ -1201,7 +1201,7 @@ const Listview = () => {
                                 )
                               }
                             </PDFDownloadLink>
-                          )} */}
+                          )}
 
                           {/* <Button
                             type="button"
