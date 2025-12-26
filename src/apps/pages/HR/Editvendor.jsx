@@ -102,6 +102,7 @@ const Editvendor = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+   const LoginID = sessionStorage.getItem("loginrecordID");
   const [panImage, setPanImage] = useState("");
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
@@ -536,10 +537,11 @@ const Editvendor = () => {
       ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
       Source: "Cloud",
+      CreateBy:LoginID,
     };
 
     try {
-      const response = await dispatch(postData({ accessID:"TR243", action, idata }));
+      const response = await dispatch(postData({ accessID:"TR243V1", action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);

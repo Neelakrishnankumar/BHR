@@ -1774,7 +1774,8 @@ const Listview = () => {
                       ReadyToDeliver: "Ready To Deliver",
                       YetToDeliver: "Yet To Deliver",
                       Picked: "Picked",
-                      Scheduled: "Scheduled",
+                      // Scheduled: "Scheduled",
+                      Scheduled: "Yet To Deliver",
                       Delivered: "Delivered",
                       Paid: "Paid",
                     };

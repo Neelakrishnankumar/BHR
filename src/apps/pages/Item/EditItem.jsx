@@ -449,24 +449,12 @@ const EditItem = () => {
       MinimunOrdQty: values.MinOrderQty || "",
       LeadTimeinDays: values.LeadTime || "0",
       AggreedPrice: values.AgreedPrice || "0",
-      LastOrdDate: values.LastOrderDate || "",
-      LastOrdNumber: values.LastOrderNo || "0",
-      LastOrdRating: values.LastOrderRating || "0",
-      LastOrdQty: values.LastOrderQty || "0",
-      LastOrdPrice: values.LastOrderPrice || "0",
       Sortorder: values.Sortorder || "0",
-
-      // LastOrdNumber: 1 || "",
-      // LastOrdQty: 5 || "",
-      // LastOrdPrice: 100 || "",
-      // LastOrdRating: 10 || "",
-      // Sortorder: 1 || "",
-
       Disable: values.Disable || "N",
     };
 
     const response = await dispatch(
-      postData({ accessID: "TR326B", action, idata })
+      postData({ accessID: "TR326V4", action, idata })
     );
 
     if (response.payload.Status === "Y") {
@@ -2387,6 +2375,7 @@ setLeadData((prev) => ({
                           },
                         }}
                       />
+                     
                       <TextField
                         fullWidth
                         focused
@@ -2500,6 +2489,7 @@ setLeadData((prev) => ({
                           },
                         }}
                       />
+                     
                     </FormControl>
                   </Box>
                   <Box
