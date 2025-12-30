@@ -204,9 +204,7 @@ const EditItem = () => {
   const explorelistViewcolumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
   );
-  const exploreLoading = useSelector(
-    (state) => state.exploreApi.loading
-  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
   // **********ScreenChange Function*********
   const [leadData, setLeadData] = useState({
@@ -454,7 +452,7 @@ const EditItem = () => {
     };
 
     const response = await dispatch(
-      postData({ accessID: "TR326V4", action, idata })
+      postData({ accessID: "TR326", action, idata })
     );
 
     if (response.payload.Status === "Y") {
@@ -490,7 +488,10 @@ const EditItem = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(
+            `/Apps/Secondarylistview/Item Group/${params.accessID1}/${params.screenName}/${params.parentID3}/${params.parentID2}/${params.accessID}/${params.parentID1}`,
+            { state: state }
+          );
         }
       } else {
         return;
@@ -632,10 +633,10 @@ const EditItem = () => {
       setFieldValue("LastOrderQty", rowData.LastOrdQty || "");
       setFieldValue("LastOrderPrice", rowData.LastOrdPrice || "");
       setFieldValue("LastOrderRating", rowData.LastOrdRating || "");
-setLeadData((prev) => ({
-  ...prev,
-  recordID: rowData.RecordID,
-}));
+      setLeadData((prev) => ({
+        ...prev,
+        recordID: rowData.RecordID,
+      }));
     }
   };
 
@@ -651,13 +652,42 @@ setLeadData((prev) => ({
       "action",
     ];
   }
+  const columnHeaderMap = {
+    SLNO: "SL#",
+    PartyName: "Party Name",
+    LeadTimeinDays: "Lead Time (In Days)",
+    MinimunOrdQty: "Minimum Order Qty",
+    AgreedPrice: "Agreed Price",
+    action: "Action",
+  };
+  const rightAlignedFields = ["AgreedPrice", "MinimunOrdQty", "LeadTimeinDays"];
   const newcolumn = React.useMemo(
     () =>
-      explorelistViewcolumn.filter((column) =>
-        VISIBLE_FIELDS.includes(column.field)
-      ),
+      explorelistViewcolumn
+        .filter((column) => VISIBLE_FIELDS.includes(column.field))
+        .map((column) => ({
+          ...column,
+          headerName: columnHeaderMap[column.field] || column.field,
+          width:
+            column.field === "PartyName"
+              ? 190
+              : column.field === "AgreedPrice"
+              ? 110
+              : column.field === "action"
+              ? 80
+              : 130,
+          align: rightAlignedFields.includes(column.field) ? "right" : "left",
+        })),
     [explorelistViewcolumn]
   );
+
+  // const newcolumn = React.useMemo(
+  //   () =>
+  //     explorelistViewcolumn.filter((column) =>
+  //       VISIBLE_FIELDS.includes(column.field)
+  //     ),
+  //   [explorelistViewcolumn]
+  // );
 
   function Employee() {
     return (
@@ -787,7 +817,7 @@ setLeadData((prev) => ({
                     <MenuItem value={0}>Main</MenuItem>
                     <MenuItem value={1}>Flag</MenuItem>
                     <MenuItem value={2}>Stock</MenuItem>
-                    {/* <MenuItem value={3}>Lead Time</MenuItem> */}
+                    <MenuItem value={3}>Lead Time</MenuItem>
                   </Select>
                 </FormControl>
               ) : (
@@ -2113,8 +2143,8 @@ setLeadData((prev) => ({
                     });
                     resetForm({
                       values: {
-                        Description: "",
-                        Code: "",
+                        Code: state.ItemCode || "",
+                        Description: state.BreadCrumb3 || "",
                         supplier: null,
                         MinOrderQty: "",
                         LeadTime: "",
@@ -2292,7 +2322,7 @@ setLeadData((prev) => ({
                         error={!!touched.supplier && !!errors.supplier}
                         helperText={touched.supplier && errors.supplier}
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2141","ScreenName":"Item Lead Time","Filter":"CompanyID=${CompanyID} AND ItemID=${recID}","Any":""}}`}
                       />
                       <TextField
                         fullWidth
@@ -2375,121 +2405,133 @@ setLeadData((prev) => ({
                           },
                         }}
                       />
-                     
-                      <TextField
-                        fullWidth
-                        focused
-                        type="date"
-                        variant="standard"
-                        id="LastOrderDate"
-                        name="LastOrderDate"
-                        label="Last Order Date"
-                        inputFormat="YYYY-MM-DD"
-                        value={values.LastOrderDate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={
-                          !!touched.LastOrderDate && !!errors.LastOrderDate
-                        }
-                        helperText={
-                          touched.LastOrderDate && errors.LastOrderDate
-                        }
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            readOnly: true,
-                          },
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        type="text"
-                        variant="standard"
-                        id="LastOrderNo"
-                        name="LastOrderNo"
-                        label="Last Order No."
-                        value={values.LastOrderNo}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        focused
-                        error={!!touched.LastOrderNo && !!errors.LastOrderNo}
-                        helperText={touched.LastOrderNo && errors.LastOrderNo}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            readOnly: true,
-                          },
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        type="number"
-                        variant="standard"
-                        id="LastOrderQty"
-                        name="LastOrderQty"
-                        label="Last Order Qty"
-                        value={values.LastOrderQty}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        focused
-                        error={!!touched.LastOrderQty && !!errors.LastOrderQty}
-                        helperText={touched.LastOrderQty && errors.LastOrderQty}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            readOnly: true,
-                          },
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        type="number"
-                        variant="standard"
-                        id="LastOrderPrice"
-                        name="LastOrderPrice"
-                        label="Last Order Price"
-                        value={values.LastOrderPrice}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        focused
-                        error={
-                          !!touched.LastOrderPrice && !!errors.LastOrderPrice
-                        }
-                        helperText={
-                          touched.LastOrderPrice && errors.LastOrderPrice
-                        }
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            readOnly: true,
-                          },
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        type="text"
-                        variant="standard"
-                        id="LastOrderRating"
-                        name="LastOrderRating"
-                        label="Last Order Rating"
-                        value={values.LastOrderRating}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        focused
-                        error={
-                          !!touched.LastOrderRating && !!errors.LastOrderRating
-                        }
-                        helperText={
-                          touched.LastOrderRating && errors.LastOrderRating
-                        }
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                            readOnly: true,
-                          },
-                        }}
-                      />
-                     
+                      {funMode === "E" && (
+                        <>
+                          <TextField
+                            fullWidth
+                            focused
+                            //type="date"
+                            variant="standard"
+                            id="LastOrderDate"
+                            name="LastOrderDate"
+                            label="Last Order Date"
+                            //inputFormat="DD-MM-YYYY"
+                            value={values.LastOrderDate}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={
+                              !!touched.LastOrderDate && !!errors.LastOrderDate
+                            }
+                            helperText={
+                              touched.LastOrderDate && errors.LastOrderDate
+                            }
+                            InputProps={{
+                              inputProps: {
+                                //style: { textAlign: "right" },
+                                readOnly: true,
+                              },
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            type="text"
+                            variant="standard"
+                            id="LastOrderNo"
+                            name="LastOrderNo"
+                            label="Last Order No."
+                            value={values.LastOrderNo}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            focused
+                            error={
+                              !!touched.LastOrderNo && !!errors.LastOrderNo
+                            }
+                            helperText={
+                              touched.LastOrderNo && errors.LastOrderNo
+                            }
+                            InputProps={{
+                              inputProps: {
+                                //style: { textAlign: "right" },
+                                readOnly: true,
+                              },
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            type="number"
+                            variant="standard"
+                            id="LastOrderQty"
+                            name="LastOrderQty"
+                            label="Last Order Qty"
+                            value={values.LastOrderQty}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            focused
+                            error={
+                              !!touched.LastOrderQty && !!errors.LastOrderQty
+                            }
+                            helperText={
+                              touched.LastOrderQty && errors.LastOrderQty
+                            }
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                                readOnly: true,
+                              },
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            type="number"
+                            variant="standard"
+                            id="LastOrderPrice"
+                            name="LastOrderPrice"
+                            label="Last Order Price"
+                            value={values.LastOrderPrice}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            focused
+                            error={
+                              !!touched.LastOrderPrice &&
+                              !!errors.LastOrderPrice
+                            }
+                            helperText={
+                              touched.LastOrderPrice && errors.LastOrderPrice
+                            }
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                                readOnly: true,
+                              },
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            type="text"
+                            variant="standard"
+                            id="LastOrderRating"
+                            name="LastOrderRating"
+                            label="Last Order Rating"
+                            value={values.LastOrderRating}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            focused
+                            error={
+                              !!touched.LastOrderRating &&
+                              !!errors.LastOrderRating
+                            }
+                            helperText={
+                              touched.LastOrderRating && errors.LastOrderRating
+                            }
+                            InputProps={{
+                              inputProps: {
+                                style: { textAlign: "right" },
+                                readOnly: true,
+                              },
+                            }}
+                          />
+                        </>
+                      )}
                     </FormControl>
                   </Box>
                   <Box

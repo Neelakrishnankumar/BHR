@@ -161,7 +161,7 @@ const EditItemGroup = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate("/Apps/TR315/Item%20Group");
         }
       } else {
         return;

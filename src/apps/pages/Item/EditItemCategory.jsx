@@ -176,7 +176,9 @@ const EditItemCategory = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(`/Apps/Secondarylistview/Item Group/${params.accessID}/${params.screenName}/${params.parentID2}/${params.parentID1}`,
+            {state:state}
+          );
         }
       } else {
         return;
