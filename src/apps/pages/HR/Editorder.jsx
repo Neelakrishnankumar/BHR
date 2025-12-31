@@ -653,6 +653,7 @@ const EditOrder = () => {
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
+                              readOnly: true,
                             },
                           }}
                           autoFocus
@@ -751,6 +752,11 @@ const EditOrder = () => {
                           onChange={handleChange}
                           error={!!touched.processdate && !!errors.processdate}
                           helperText={touched.processdate && errors.processdate}
+                          InputProps={{
+                            inputProps: {
+                              readOnly:true
+                            }
+                          }}
                         />
                         <TextField
                           name="paiddate"
@@ -783,6 +789,11 @@ const EditOrder = () => {
                           helperText={
                             touched.deliverydate && errors.deliverydate
                           }
+                          InputProps={{
+                            inputProps: {
+                              readOnly:true
+                            }
+                          }}
                         />
                         <TextField
                           name="deliveredby"

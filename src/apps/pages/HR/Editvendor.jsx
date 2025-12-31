@@ -1085,6 +1085,11 @@ const Editvendor = () => {
                     helperText={touched.mobilenumber && errors.mobilenumber}
                     inputProps={{ maxLength: 10 }}
                     sx={{ backgroundColor: "#ffffff" }}
+                    InputProps={{ 
+                      inputProps: {
+                        style:{textAlign: 'right'}
+                      } 
+                    }}
                   />
                   <TextField
                     name="emailid"
