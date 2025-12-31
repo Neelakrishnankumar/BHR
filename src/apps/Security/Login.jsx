@@ -85,7 +85,7 @@ const Login = () => {
 
   const [company, setCompanycombo] = React.useState();
   const [year, setYearcombo] = React.useState();
-var firstLogin = "N";
+  var firstLogin = "Y";
   const initialValues = {
     username: "",
     password: "",
@@ -107,8 +107,11 @@ var firstLogin = "N";
     // }
     // console.log("firstLogin:", firstLogin);
     // if (firstLogin == "Y") {
-    //   navigate("/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
+      // navigate("/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
     // }
+    // else{
+    //   navigate("/Apps/HR")
+    // } 
     if (values.username == "") {
       // toast.error("UserName should not be empty");
       toast.error("Username should not be empty");
@@ -143,7 +146,7 @@ var firstLogin = "N";
 
     sessionStorage.setItem("loginRecid", loginrecordID);
     if (data.payload.Status == "Y") {
-      
+
       var company = data.payload.apiResponse.Company
       var SubscriptionCode = data.payload.SubscriptionCode
       var year = data.payload.apiResponse.Year
@@ -169,6 +172,7 @@ var firstLogin = "N";
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyLogo = data.payload.CompanyLogo
+      var firstLogin = data.payload.firstLogin
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
 
 
@@ -188,15 +192,21 @@ var firstLogin = "N";
       sessionStorage.setItem("Cifbysea", Cifbysea)
       sessionStorage.setItem("Cifbyair", Cifbyair)
       sessionStorage.setItem("Fob", Fob)
-      //  sessionStorage.setItem("EmpId",EmpId)
+      sessionStorage.setItem("firstLogin",firstLogin)
       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
       sessionStorage.setItem("CompanyLogo", CompanyLogo)
       sessionStorage.setItem("Overhead", Overhead)
       sessionStorage.setItem("YearRecorid", YearRecorid)
       sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))
       sessionStorage.setItem("Modules", JSON.stringify(Modules))
-      //navigate("/Apps/Chart");
-      navigate("/Apps/HR");
+      //  navigate("/Apps/HR");
+      console.log("firstLogin:", firstLogin);
+    if (firstLogin == "Y") {
+       navigate("/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
+    }
+    else{
+      navigate("/Apps/HR")
+    } 
     }
     else {
       if (data.payload.subscription == 0) {
@@ -276,9 +286,9 @@ var firstLogin = "N";
                       variant="h6"
                       sx={{
 
-                         marginBottom:8,
+                        marginBottom: 8,
                         // marginRight: 2,
-                        textAlign: "center", 
+                        textAlign: "center",
                       }}
                     >
                       {/* ATM<br /> */}
@@ -356,6 +366,14 @@ var firstLogin = "N";
                     />
                     {/* <Box sx={{ flexGrow: 1 }} /> */}
                     <Stack direction={"row"} justifyContent="end" gap={"10px"} sx={{ marginTop: "50px" }}>
+                      {/* <Typography
+                        variant="body2"
+                        color="primary"
+                        sx={{ cursor: "pointer", textDecoration: "underline", marginTop: "5px",marginRight:"25px" }}
+                        onClick={() => navigate("/Forgotpassword")}
+                      >
+                        Forgot Password?
+                      </Typography> */}
                       <LoadingButton
                         onClick={() => {
                           fnLogin(values);

@@ -557,7 +557,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:invoiceType/EditLocal Invoice/:id/:Mode"
                     element={<Editlocalinvoce />}
                   />
-                  <Route path="/change%20Password" element={<Changepass />} />
+                  <Route path="/change Password" element={<Changepass />} />
                   {/* Settings */}
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/configuration" element={<Configuration />} />

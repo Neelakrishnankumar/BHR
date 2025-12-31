@@ -131,7 +131,9 @@ const Changepass = () => {
       UserName: Username,
       OldPassword: values.currentpassword,
       NewPassword: values.newpassword,
-      UserRecid:UserId
+      UserRecid:UserId,
+      // firsttime:"N",
+      // Termsandconditions:"Y"
 
     };
 

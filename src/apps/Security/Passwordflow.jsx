@@ -12,14 +12,26 @@ const ChangeyourPassword_1 = () => {
   const navigate = useNavigate();
 
   return (
+    // <Box
+    //   sx={{
+    //     height: "100vh",
+    //     position: "relative",
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //     flexDirection: "column",
+    //     marginTop: "-75px",
+    //   }}
+    // >
     <Box
       sx={{
-        height: "100vh",
+        height: "90vh",
         position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        overflow: "hidden", // ✅ important
       }}
     >
       <img
@@ -32,7 +44,7 @@ const ChangeyourPassword_1 = () => {
         }}
       />
 
-      <Box
+      {/* <Box
         sx={{
           position: "absolute",
           bottom: 75,
@@ -41,6 +53,20 @@ const ChangeyourPassword_1 = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          marginBottom: "7px",
+        }}
+      > */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 75,
+          left: 0,
+          right: 0,
+          px: 3,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginTop: "10px",
         }}
       >
         <FormControlLabel
@@ -52,17 +78,29 @@ const ChangeyourPassword_1 = () => {
           }
           label="I agree to Terms & Conditions"
         />
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!agreed}
+        <Box gap={2} display="flex">
+          <Button
+            variant="contained"
+            color="success"
+            disabled={!agreed}
             onClick={() => {
-                navigate("/ChangeyourPassword_2")
+              // navigate("/ChangeyourPassword_3")
+              navigate("/ChangeyourPassword_2")
             }
-        }
-        >
-          Agree
-        </Button>
+            }
+          >
+            Agree
+          </Button>
+          <Button
+            color={"warning"}
+            variant="contained"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Cancel
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

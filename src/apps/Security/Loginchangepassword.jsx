@@ -138,7 +138,8 @@ const LoginChangepass = () => {
     const response = await dispatch(SettingspostData({ idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/change Password");
+      // navigate("/Apps/change Password");
+      navigate("/#");
     } else {
       toast.error(response.payload.Msg);
     }
@@ -319,7 +320,8 @@ const LoginChangepass = () => {
                 gap="20px"
               >
                 <Button
-                  color="secondary"
+                  // color="#4ccfac" 
+                  color = "success"                
                   variant="contained"
                   //   disabled={true}
                   type="submit" // This will trigger the onSubmit method of Formik
@@ -332,10 +334,10 @@ const LoginChangepass = () => {
                 <Button
                   color="warning"
                   variant="contained"
-                  onClick={() => resetForm()}
-                // onClick={() => {
-                //   navigate("/Apps/TR213/LeaveType");
-                // }}
+                  // onClick={() => resetForm()}
+                onClick={() => {
+                  navigate(-1);
+                }}
                 >
                   Cancel
                 </Button>
