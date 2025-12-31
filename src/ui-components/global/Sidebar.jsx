@@ -145,7 +145,7 @@ import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import store from "../..";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
-
+import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 const child = {
   data: [
     {
@@ -535,6 +535,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR313",
+        },
+        {
+          name: "Lead Enquiry",
+          id: 4346899,
+          url: "./TR328/Lead Enquiry",
+          icon: (
+            <Tooltip title="Lead Enquiry">
+              <QueryBuilderIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR328",
         },
 
       ],
