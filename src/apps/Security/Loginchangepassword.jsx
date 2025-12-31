@@ -50,7 +50,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useProSidebar } from "react-pro-sidebar";
 import { useState } from "react";
-const Changepass = () => {
+const LoginChangepass = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const colors = tokens(theme.palette.mode);
@@ -60,7 +60,7 @@ const Changepass = () => {
   var recID = params.id;
   var mode = params.Mode;
   var accessID = params.accessID;
-  const { toggleSidebar, broken, rtl } = useProSidebar();
+//   const { toggleSidebar, broken, rtl } = useProSidebar();
   const Subscriptioncode = sessionStorage.getItem("SubscriptionCode");
   const Username = sessionStorage.getItem("UserName");
  const FirstLogin = "Y";
@@ -131,16 +131,15 @@ const Changepass = () => {
       UserName: Username,
       OldPassword: values.currentpassword,
       NewPassword: values.newpassword,
-      UserRecid:UserId,
-      // firsttime:"N",
-      // Termsandconditions:"Y"
+      UserRecid:UserId
 
     };
 
     const response = await dispatch(SettingspostData({ idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate("/Apps/change Password");
+      // navigate("/Apps/change Password");
+      navigate("/#");
     } else {
       toast.error(response.payload.Msg);
     }
@@ -187,11 +186,11 @@ const Changepass = () => {
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
+            {/* {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
                 <MenuOutlinedIcon />
               </IconButton>
-            )}
+            )} */}
             <Breadcrumbs
               maxItems={3}
               aria-label="breadcrumb"
@@ -201,7 +200,7 @@ const Changepass = () => {
               <Typography
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                variant="h5"
+                variant="h7"
 
               >
                 Change Password
@@ -210,7 +209,7 @@ const Changepass = () => {
             </Breadcrumbs>
           </Box>
 
-          <Box display="flex">
+          {/* <Box display="flex">
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -221,7 +220,7 @@ const Changepass = () => {
                 <LogoutOutlinedIcon />
               </IconButton>
             </Tooltip>
-          </Box>
+          </Box> */}
         </Box>
       </Paper>
       <Paper elevation={3} sx={{ margin: "10px" }}>
@@ -321,7 +320,8 @@ const Changepass = () => {
                 gap="20px"
               >
                 <Button
-                  color={"secondary"}
+                  // color="#4ccfac" 
+                  color = "success"                
                   variant="contained"
                   //   disabled={true}
                   type="submit" // This will trigger the onSubmit method of Formik
@@ -332,12 +332,12 @@ const Changepass = () => {
                 </Button>
 
                 <Button
-                  color={"warning"}
+                  color="warning"
                   variant="contained"
-                  onClick={() => resetForm()}
-                // onClick={() => {
-                //   navigate("/Apps/TR213/LeaveType");
-                // }}
+                  // onClick={() => resetForm()}
+                onClick={() => {
+                  navigate(-1);
+                }}
                 >
                   Cancel
                 </Button>
@@ -351,4 +351,4 @@ const Changepass = () => {
     </React.Fragment>
   );
 };
-export default Changepass;
+export default LoginChangepass;

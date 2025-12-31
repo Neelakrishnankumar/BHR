@@ -501,6 +501,24 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR321",
         },
+        //  {
+        //   name: "Lead",
+        //   id: 4346895,
+        //   //  url: "./TR243/Lead",
+        //   url: "./TR321/Lead",
+        //   icon: (
+        //     <Tooltip title="Lead">
+        //       <PersonSearchIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR321",
+        // },
         {
           name: "Order Enquiry",
           id: 4346899,

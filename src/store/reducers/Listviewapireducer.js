@@ -732,7 +732,7 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
-    else if (AccessID == "TR305" || AccessID == "TR313") {
+    else if (AccessID == "TR305") {
       filter = "";
     } else if (AccessID == "TR328") {
       filter = `HrLoginUserID='${LoginID}' AND CompanyID=${CompId}`;

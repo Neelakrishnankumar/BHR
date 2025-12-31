@@ -274,7 +274,7 @@ const ListviewSecondary = () => {
     // filter =`PartyID='${leaderID}'`;
   }
   else if (accessID === "TR310") {
-      const orderTypeFilter = `OrderType='${OrderType}'`; // "O" or "Q"
+    const orderTypeFilter = `OrderType='${OrderType}'`; // "O" or "Q"
 
 
     //filter = `LeaderID='${leaderID}'`;
@@ -2121,7 +2121,7 @@ const ListviewSecondary = () => {
                   color="#0000D1"
                   sx={{ cursor: "default" }}
                 >
-                 {params.OrderType === "O" ? "Order" : "Quotation"}{" "}Item
+                  {params.OrderType === "O" ? "Order" : "Quotation"}{" "}Item
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -3859,6 +3859,12 @@ const ListviewSecondary = () => {
             }
           />
         </Box>
+        <Box display="flex" alignItems="center" marginLeft={3}  >
+          <Typography fontWeight={400} fontSize={15} lineHeight={1}
+            mb={-2} >
+            Label
+          </Typography>
+          </Box>
         {accessID == "TR001" ? (
           <Box
             display="flex"
@@ -3920,12 +3926,12 @@ const ListviewSecondary = () => {
                   variant="outlined"
                 />
                 {params.OrderType === "Q" &&
-                 <Chip
-                  icon={< CurrencyExchangeOutlinedIcon color="primary" />}
-                  label="Convert to Order"
-                  variant="outlined"
-                  sx={{ marginLeft: "50px" }}
-                />}
+                  <Chip
+                    icon={< CurrencyExchangeOutlinedIcon color="primary" />}
+                    label="Convert to Order"
+                    variant="outlined"
+                    sx={{ marginLeft: "50px" }}
+                  />}
                 <Chip
                   icon={< GridViewIcon color="primary" />}
                   label="Order Item"
@@ -3938,7 +3944,7 @@ const ListviewSecondary = () => {
                   variant="outlined"
                   sx={{ marginLeft: "50px" }}
                 />
-               
+
               </Box>
             )
               : (accessID == "TR294" && params.parentID1 === "AP") ? (
