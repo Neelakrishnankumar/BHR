@@ -175,6 +175,7 @@ import EditItemCategory from "./pages/Item/EditItemCategory";
 import EditItem from "./pages/Item/EditItem";
 import EditRoute from "./pages/Route/EditRoute";
 import EditArea from "./pages/Route/EditArea";
+import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -1072,6 +1073,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/LeaderCardView/:partyID"
                     element={<LeaderCardView />}
+                  />
+                  <Route
+                    path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:LeadId"
+                    element={<ViewLeadEnquiry />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/:OrderType/EditOrder/:id/:Mode"
