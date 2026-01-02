@@ -107,6 +107,9 @@ const initialState = {
   itemMainGetData: {},
   itemMainGetDatastatus: "",
   itemMainGetDataloading: false,
+  leaderEnquiryGetData: {},
+  leaderEnquiryGetDatastatus: "",
+  leaderEnquiryGetDataloading: false,
   DefaultProductDeliveryChargeGetData: {},
   DefaultProductDeliveryChargeGetDatastatus: "",
   DefaultProductDeliveryChargeGetDataloading: false,
@@ -1204,6 +1207,33 @@ export const ItemMainMenuFetchData = createAsyncThunk(
     return response.data;
   }
 );
+export const LeadEnquiryFilterGet = createAsyncThunk(
+  "LeadEnquiryFilterGet/Header",
+  async ({recID }) => {
+    var url = store.getState().globalurl.LeadEnquiryFilterGet;
+    const data = {
+        LeaderID: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data)
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response
+    );
+    return response.data;
+  }
+);
+
 export const DefaultProductDeliveryChargeGet = createAsyncThunk(
   "DefaultProductDeliveryChargeGet/Header",
   async ({ PartyRecordID }) => {
@@ -3337,6 +3367,24 @@ export const getApiSlice = createSlice({
       .addCase(ItemMainMenuFetchData.rejected, (state, action) => {
         state.itemMainGetData = {};
         state.itemMainGetDataloading = false;
+        state.error = action.error.message;
+      })
+
+      //LEADER GET
+      .addCase(LeadEnquiryFilterGet.pending, (state) => {
+        state.leaderEnquiryGetData = {};
+        state.leaderEnquiryGetDataloading = true;
+        state.error = null;
+      })
+      .addCase(LeadEnquiryFilterGet.fulfilled, (state, action) => {
+        // state.leaderEnquiryGetData = action.payload;
+        state.leaderEnquiryGetData = action.payload.Data || {};
+        state.leaderEnquiryGetDataloading = false;
+        state.error = null;
+      })
+      .addCase(LeadEnquiryFilterGet.rejected, (state, action) => {
+        state.leaderEnquiryGetData = {};
+        state.leaderEnquiryGetDataloading = false;
         state.error = action.error.message;
       })
       //DefaultProductDeliveryChargeGet

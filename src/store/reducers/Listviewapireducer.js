@@ -6403,12 +6403,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
         {accessID === "TR328" && (
           <Box>
-            {/* <Tooltip title="View">
+            <Tooltip title="View">
               <IconButton
                 onClick={() =>
                   navigate(
-                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
-                    { state: { ...state } }
+                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.PartyID}/${params.row.RecordID}`,
+                    { state: { ...state,
+                      Breadcrumb2: params.row.LeadTitle,
+                      Breadcrumb1: params.row.Party,
+                     } }
                   )
                 }
                 color="primary"
@@ -6416,7 +6419,22 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               >
                 <Visibility />
               </IconButton>
-            </Tooltip> */}
+              {/* <IconButton
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
+                    { state: { ...state,
+                      Breadcrumb2: params.row.LeadTitle,
+                      Breadcrumb1: params.row.Party,
+                     } }
+                  )
+                }
+                color="primary"
+                size="small"
+              >
+                <Visibility />
+              </IconButton> */}
+            </Tooltip>
           </Box>
         )}
       </div>

@@ -141,6 +141,7 @@ const initialState = {
   ItemStockMenuGet: APIurl + "ItemStockMenuGet.php",
   ItemStockMenuPut: APIurl + "ItemStockMenu.php",
   // VendorFilterController: APIurl + "VendorFilterController.php",
+LeadEnquiryFilterGet: APIurl + "LeadEnquiryFilterGet.php",
 };
 
 export const getUrlSlice = createSlice({
