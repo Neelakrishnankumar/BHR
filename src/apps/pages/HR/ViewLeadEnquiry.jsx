@@ -1,483 +1,450 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
-  TextField,
   Box,
+  Card,
+  CardContent,
   Typography,
-  FormControl,
-  FormLabel,
-  Button,
+  Grid,
+  CircularProgress,
   IconButton,
-  Select,
-  InputLabel,
-  MenuItem,
-  LinearProgress,
-  Paper,
-  Breadcrumbs,
+  Button,
   Tooltip,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
 } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { Formik, Field } from "formik";
-import ResetTvIcon from "@mui/icons-material/ResetTv";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchApidata,
-  getFetchData,
-  LeaderData,
-  postApidata,
-  postData,
-} from "../../../store/reducers/Formapireducer";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
-import Swal from "sweetalert2";
-import { LoadingButton } from "@mui/lab";
-import { useProSidebar } from "react-pro-sidebar";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { OverheadSchema } from "../../Security/validation";
-import { formGap } from "../../../ui-components/utils";
-import * as Yup from "yup";
-import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
-import FileUploadIconButton from "../../../ui-components/global/Fileuploadbutton";
-import { attachmentPost } from "../../../store/reducers/LoginReducer";
-import store from "../../..";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { AddCircle } from "@mui/icons-material";
+// import AssistantIcon from "@mui/icons-material/Assistant";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import axios from "axios";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import MicIcon from "@mui/icons-material/Mic";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { useSelector } from "react-redux";
+import CategoryIcon from "@mui/icons-material/Category";
+import GridViewIcon from "@mui/icons-material/GridView";
+import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
 
-const ViewLeadEnquiry = () => {
-  const dispatch = useDispatch();
-  const params = useParams();
-  // const accessID = params.accessID;
-  const accessID = "TR304";
-  const recID = params.LeadId;
-  const mode = params.Mode;
-  const Type = params.Type;
-  console.log(Type, "Type");
-  const filtertype = params.filtertype;
-  const filtertype2 = params.filtertype2;
-  const Name = params.Name;
+const LeaderCardView = () => {
+  // const { id } = useParams();
   const location = useLocation();
+  const  params  = useParams();
+  const partyID  = params.partyID;
+  const LeadId  = params.LeadId;
   const navigate = useNavigate();
-  const data = useSelector((state) => state.formApi.Data);
-  const leader = useSelector((state) => state.formApi.leaderDetails);
-  console.log(leader, "leader");
-  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const Finyear = sessionStorage.getItem("YearRecorid");
-  const CompanyID = sessionStorage.getItem("compID");
-  const LoginID = sessionStorage.getItem("loginrecordID");
-  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
-  const { toggleSidebar, broken, rtl } = useProSidebar();
-  // console.log("🚀 ~ file: Editoverhead.jsx:20 ~ Editoverhead ~ data:", data);
-  const [errorMsgData, setErrorMsgData] = useState(null);
-  const [validationSchema, setValidationSchema] = useState(null);
-  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-  const YearFlag = sessionStorage.getItem("YearFlag");
-  const [leaderDetails, setLeaderDetails] = useState(null);
-  const [files, setFiles] = useState([]);
-  const [error, setError] = useState("");
-  const rowSx = { height: 36, "& td, & th": { py: 0.5 } };
+  const [partyName, setPartyName] = useState(""); // ✅ new state for party name
+  const listViewUrl = useSelector((store) => store.globalurl.listViewurl);
   const state = location.state || {};
   console.log(state, "state");
-  const { id, name } = useParams();
-  console.log("Received Name:", decodeURIComponent(name));
-  console.log(location, "location");
-  const OrderType = params.OrderType;
 
   useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/validationcms.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-        return res.json();
-      })
-      .then((data) => {
-        setErrorMsgData(data);
-
-        // let schemaFields = {
-        //   name: Yup.string().required(data.Overhead.name),
-        //   OverheadType: Yup.object().required(data.Overhead.OverheadType),
-        //   frequency: Yup.string().required(data.Overhead.frequency),
-        // };
-        let schemaFields = {
-          leadtitle: Yup.string().required(
-            data.LeadMarketingActivity.leadtitle
-          ),
-          Status: Yup.string().required(data.LeadMarketingActivity.Status),
-          project: Yup.object()
-            .nullable()
-            .shape({
-              RecordID: Yup.string().required(
-                data.LeadMarketingActivity.project
-              ),
-              Name: Yup.string().nullable(), // optional
-            })
-            .required(data.LeadMarketingActivity.project),
+    const fetchLeaderData = async () => {
+      setLoading(true);
+      try {
+        const payload = {
+          Query: {
+            AccessID: "TR303",
+            ScreenName: "Leader",
+            Filter: `PartyID='${partyID}' AND RecordID='${LeadId}'`,
+            Any: "",
+          },
         };
 
-        const schema = Yup.object().shape(schemaFields);
-        setValidationSchema(schema);
-      })
-      .catch((err) => console.error("Error loading validationcms.json:", err));
-  }, [CompanyAutoCode]);
-
-  useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID })).then((res) => {
-      console.log(res, "response");
-      console.log(res.payload.Data.PartyID, "response");
-      var url = store.getState().globalurl.empGetAttachmentUrl;
-      axios
-        .get(url, {
-          params: {
-            empId: res.payload.Data.PartyID,
-            appId: recID,
+        const url = `${listViewUrl}?data=${encodeURIComponent(
+          JSON.stringify(payload)
+        )}`;
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
-        })
-        .then((response) => {
-          setFiles(response.data);
-        })
-        .catch((err) => {
-          setError("Failed to fetch attachments.");
-          console.error(err);
-        })
-        .finally(() => setLoading(false));
-    });
-  }, []);
+        });
 
-  const curdate = new Date().toISOString().split("T")[0];
-  const initialValues = {
-    applieddate: data.OMDate || curdate,
-    leadtitle: data.LeadTitle || "",
-    comments: data.Comments || "",
-    visitdate: data.NextVisitDate || "",
-    Status: data.OMStatus || "",
-    project: data.ProjectID
-      ? {
-          RecordID: data.ProjectID,
-          Name: data.ProjectName || "",
+        if (response.data.Status === "Y" && response.data.Data?.rows) {
+          const rows = response.data.Data.rows;
+          setData(rows);
+
+          //  Set the Party Name (assuming it’s the same for all rows)
+          if (rows.length > 0 && rows[0].PartyName) {
+            setPartyName(rows[0].PartyName);
+          }
+        } else {
+          setData([]);
         }
-      : null,
-  }; // ✅ FIXED: Added missing closing brace here
-
-  useEffect(() => {
-    dispatch(getFetchData({ accessID: "TR304", get: "get", recID }));
-  }, [location.key]); // ✅ Added missing deps
-
-  const isNonMobile = useMediaQuery("(min-width:600px)");
-
-  const style = {
-    height: "55px",
-    border: "2px solid #1769aa ",
-    borderRadius: "6px",
-    backgroundColor: "#EDEDED",
-  };
-  const ref = useRef(null);
-
-  const fnLogOut = (props) => {
-    Swal.fire({
-      title: errorMsgData.Warningmsg[props],
-      // text:data.payload.Msg,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: props,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (props === "Logout") {
-          navigate("/");
-        }
-        if (props === "Close") {
-          navigate(`/Apps/TR328/Lead%20Enquiry`);
-        }
-      } else {
-        return;
+      } catch (error) {
+        console.error("Error fetching leader data:", error);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    fetchLeaderData();
+  }, [partyID, listViewUrl]);
+
+  const handleAdd = () => {
+    navigate(
+      `/Apps/Secondarylistview/TR304/Leader/${partyID}/${partyName}/EditLeader/-1/A/S`,
+      {
+        state: { ...state },
+      }
+    );
+  };
+
+  // const handleactivitylistview = () => {
+  //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}`);
+  // };
+  // const handleactivitylistview = (recordID, partyID) => {
+  //     // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${partyID}/${recordID}`);
+  //     navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`);
+  // };
+
+  const handleactivitylistview = (
+    recordID,
+    partyID,
+    leadTitle,
+    PartyName,
+    LEStatus
+  ) => {
+    navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${recordID}/T`, {
+      state: {
+        PartyID: partyID,
+        LeadTitle: leadTitle,
+        PartyName: PartyName,
+        LEStatus: LEStatus,
+      },
     });
+  };
+
+//  const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
+//         // if (OrdHdrCount == 0) {
+//             // Case 1: No order yet → go to Add Order
+//             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
+//                 state: {
+//                     PartyID: partyID,
+//                     LeadTitle: leadTitle,
+//                     PartyName: PartyName,
+//                     LEStatus: LEStatus,
+//                     OrderCount: OrdHdrCount,
+//                 },
+//             // });
+ 
+//         }
+//     )
+  
+  const handleorderscreen = (
+    recordID,
+    partyID,
+    leadTitle,
+    PartyName,
+    LEStatus,
+    OrdHdrCount,
+    OrderCount,
+  ) => {
+    if (OrderCount == 0) {
+      // Case 1: No order yet → go to Add Order
+      navigate(
+        `/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/O/EditOrder/-1/A`,
+        {
+          state: {
+            PartyID: partyID,
+            LeadTitle: leadTitle,
+            PartyName: PartyName,
+            LEStatus: LEStatus,
+            OrderCount: OrderCount,
+          },
+        }
+      );
+    } else if (OrderCount >= 1) {
+      // Case 2: Existing order(s) → go to Order List or Edit
+      navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/O`, {
+        state: {
+          PartyID: partyID,
+          LeadTitle: leadTitle,
+          PartyName: PartyName,
+          LEStatus: LEStatus,
+          OrderCount: OrderCount,
+        },
+      });
+    }
+  };
+  const handleorderscreen1 = (
+    recordID,
+    partyID,
+    leadTitle,
+    PartyName,
+    LEStatus,
+    OrdHdrCount,
+    QuotationCount
+  ) => {
+    if (QuotationCount == 0) {
+      // Case 1: No order yet → go to Add Order
+      navigate(
+        `/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/Q/EditOrder/-1/A`,
+        {
+          state: {
+            PartyID: partyID,
+            LeadTitle: leadTitle,
+            PartyName: PartyName,
+            LEStatus: LEStatus,
+            OrderCount: QuotationCount,
+          },
+        }
+      );
+    } else if (QuotationCount >= 1) {
+      // Case 2: Existing order(s) → go to Order List or Edit
+      navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/Q`, {
+        state: {
+          PartyID: partyID,
+          LeadTitle: leadTitle,
+          PartyName: PartyName,
+          LEStatus: LEStatus,
+          OrderCount: QuotationCount,
+        },
+      });
+    }
+  };
+  const handleorderitemscreen = (
+    recordID,
+    partyID,
+    leadTitle,
+    PartyName,
+    LEStatus
+  ) => {
+    navigate(
+      `/Apps/Secondarylistview/TR306/Orderitem/${recordID}/EditOrderitem/-1/A`,
+      {
+        state: {
+          PartyID: partyID,
+          LeadTitle: leadTitle,
+          PartyName: PartyName,
+          LEStatus: LEStatus,
+        },
+      }
+    );
+  };
+
+  const handleCancel = () => {
+    // navigate("/Apps/TR243/Party");
+    navigate("/Apps/TR328/Lead%20Enquiry");
   };
 
   return (
-    <React.Fragment>
-      {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-              >
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                  onClick={() => {
-                    // navigate("/Apps/TR243/Party");
-                    navigate("/Apps/TR328//Lead%20Enquiry");
-                  }}
-                >
-                  {/* {`Party(${state.PartyName || params.Name})`} */}
-                  Lead Enquiry
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="#0000D1"
-                  sx={{ cursor: "default" }}
-                >
-                  {/* {`Marketing Activity(${state.PartyName || params.Name})`} */}
-                  View Lead Enquiry
-                </Typography>
-              </Breadcrumbs>
-            </Box>
-          </Box>
+    <Box p={3}>
+      {/* Top Cancel icon */}
+      {/* <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Tooltip title="Close">
+        <IconButton color="error" onClick={handleCancel}>
+          <CancelIcon />
+        </IconButton>
+        </Tooltip>
+      </Box> */}
 
-          <Box display="flex">
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
+      {/* ✅ Title with Party Name beside "Leader Details" */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={2}
+      >
+        <Box display="flex" alignItems="center" gap={2}>
+          <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            Leads
+          </Typography>
+          {partyName && (
+            <Typography variant="h5" sx={{ color: "#1976d2", fontWeight: 700 }}>
+              ({partyName})
+            </Typography>
+          )}
         </Box>
-      </Paper>
 
-      {!getLoading ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={initialValues}
-            enableReinitialize={true}
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(true);
-              sessionStorage.setItem("Status", values.Status);
-              //fnSave(values);
-              setSubmitting(false);
-            }}
-            //validationSchema={validationSchema}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  <TextField
-                    name="applieddate"
-                    type="date"
-                    id="applieddate"
-                    label="Applied Date"
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.applieddate}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.applieddate && !!errors.applieddate}
-                    helperText={touched.applieddate && errors.applieddate}
-                    inputProps={{
-                      max: new Date().toISOString().split("T")[0],
-                      // readOnly: true,
-                    }}
-                    InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
-                    }}
-                    disabled
-                  />
-                  <CheckinAutocomplete
-                    id="project"
-                    name="project"
-                    //label="Product"
-                    label={
-                      <>
-                        Product
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="outlined"
-                    value={values.project}
-                    onChange={(newValue) => {
-                      setFieldValue("project", newValue);
-                      console.log(newValue, "--newvalue project");
-                      console.log(newValue.RecordID, "project RecordID");
-                    }}
-                    error={!!touched.project && !!errors.project}
-                    helperText={touched.project && errors.project}
-                    disabled
-                    InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
-                    }}
-                    //url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Project","Filter":"CompanyID='${CompanyID}' AND ItemsDesc ='Product'","Any":""}}`}
-                  />
+        {/* <Box>
+          <Tooltip title="Add Activity">
+            <IconButton color="primary" onClick={handleAdd} size="small">
+              <AddCircle sx={{ fontSize: 32 }} />
+            </IconButton>
+          </Tooltip>
+        </Box> */}
+      </Box>
 
-                  <TextField
-                    label={
-                      <>
-                        Lead Title
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    id="leadtitle"
-                    type="text"
-                    name="leadtitle"
-                    focused
-                    variant="standard"
-                    value={values.leadtitle}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.leadtitle && !!errors.leadtitle}
-                    helperText={touched.leadtitle && errors.leadtitle}
-                    InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
-                    }}
-                    disabled
-                  />
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="text"
-                    id="comments"
-                    name="comments"
-                    value={values.comments}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    label="Comments"
-                    focused
-                    disabled
-                    // inputProps={{ readOnly: true }}
-                    InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
-                    }}
-                  />
-                  <TextField
-                    name="visitdate"
-                    type="date"
-                    id="visitdate"
-                    label="Next Visit Date"
-                    variant="standard"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.visitdate}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.visitdate && !!errors.visitdate}
-                    helperText={touched.visitdate && errors.visitdate}
-                    disabled
-                    // inputProps={{
-                    //     max: new Date().toISOString().split("T")[0],
-                    //     // readOnly: true,
-                    // }}
-                    InputLabelProps={{
-                      shrink: true, // ✅ prevents overlap
-                    }}
-                  />
-                  <TextField
-                    select
-                    //label="Status"
-                    label={
-                      <>
-                        Status
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    id="Status"
-                    name="Status"
-                    value={values.Status}
-                    onBlur={handleBlur}
-                    // onChange={handleChange}
-                    disabled
-                    // required
-                    onChange={(e) => {
-                      handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Status", e.target.value); // save to sessionStorage
-                    }}
-                    error={!!touched.Status && !!errors.Status}
-                    helperText={touched.Status && errors.Status}
-                    focused
-                    variant="standard"
-                  >
-                    <MenuItem value="Cool">Cool</MenuItem>
-                    <MenuItem value="Warm">Warm</MenuItem>
-                    <MenuItem value="Hot">Hot</MenuItem>
-                    <MenuItem value="Opt to Order">Opt to Order</MenuItem>
-                    <MenuItem value="Opt to Quote">Opt to Quote</MenuItem>
-                    <MenuItem value="Close">Close</MenuItem>
-                  </TextField>
-                </Box>
-                <Box
-                  display="flex"
-                  justifyContent="end"
-                  padding={1}
-                  gap={formGap}
-                >
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => {
-                      // navigate(`/Apps/Secondarylistview/TR304/Marketing Activity/${filtertype}`);
-                      navigate(-1);
-                    }}
-                  >
-                    CANCEL
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
+      {/* Data Section */}
+      {loading ? (
+        <Box display="flex" justifyContent="center" mt={4}>
+          <CircularProgress />
+        </Box>
+      ) : data.length === 0 ? (
+        <Typography>No data available.</Typography>
       ) : (
-        false
+        <Grid container spacing={2}>
+          {data.map((row, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Card
+                sx={{
+                  p: 2,
+                  borderRadius: 3,
+                  boxShadow: 4,
+                  background: index % 2 === 0 ? "#E3F2FD" : "#FCE4EC",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.03)",
+                    boxShadow: 6,
+                    background: index % 2 === 0 ? "#BBDEFB" : "#F8BBD0",
+                  },
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}
+                  >
+                    #SL: {index + 1} {row.LeadTitle || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>Product Name:</strong> {row.ProjectName || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>First Call Date:</strong> {row.FirstCallDate || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>First Call Comments:</strong>{" "}
+                    {row.FirstCallComments || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>Last Call Date:</strong> {row.LastCallDate || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>Last Call Comments:</strong>{" "}
+                    {row.LastCallComments || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>Status:</strong> {row.LEStatus || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>No of Visits:</strong> {row.NoOfVisits || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
+                  </Typography>
+                </CardContent>
+                {/* <Box display="flex" justifyContent="flex-end" mt={-4}>
+                  <Tooltip title="Marketing Activity">
+                    <IconButton
+                      color="primary"
+                      onClick={() =>
+                        handleactivitylistview(
+                          row.RecordID,
+                          row.PartyID,
+                          row.LeadTitle,
+                          row.PartyName,
+                          row.LEStatus
+                        )
+                      }
+                      size="small"
+                      //disabled={row.LEStatus === "Close"}
+                    >
+                      <ListAltOutlinedIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  </Tooltip>
+                  {row.LEStatus === "Close" && (
+                    <>
+                      <Tooltip title="Order">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleorderscreen(
+                              row.RecordID,
+                              row.PartyID,
+                              row.LeadTitle,
+                              row.PartyName,
+                              row.LEStatus,
+                              row.OrdHdrCount,
+                              row.OrderCount,
+                            )
+                          }
+                          size="small"
+                        >
+                          <CategoryIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Quotation">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleorderscreen1(
+                              row.RecordID,
+                              row.PartyID,
+                              row.LeadTitle,
+                              row.PartyName,
+                              row.LEStatus,
+                              row.OrdHdrCount,
+                              row.QuotationCount
+                            )
+                          }
+                          size="small"
+                        >
+                          <RequestQuoteOutlinedIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </>
+                  )}
+                  {row.LEStatus === "Opt to Order" && (
+                    
+                      <Tooltip title="Order">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleorderscreen(
+                              row.RecordID,
+                              row.PartyID,
+                              row.LeadTitle,
+                              row.PartyName,
+                              row.LEStatus,
+                              row.OrdHdrCount,
+                              row.OrderCount,
+                            )
+                          }
+                          size="small"
+                        >
+                          <CategoryIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                    
+                  )}
+                  {row.LEStatus === "Opt to Quote" && (
+                    
+                       <Tooltip title="Quotation">
+                        <IconButton
+                          color="primary"
+                          onClick={() =>
+                            handleorderscreen1(
+                              row.RecordID,
+                              row.PartyID,
+                              row.LeadTitle,
+                              row.PartyName,
+                              row.LEStatus,
+                              row.OrdHdrCount,
+                              row.QuotationCount
+                            )
+                          }
+                          size="small"
+                        >
+                          <RequestQuoteOutlinedIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                    
+                  )}
+                </Box> */}
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       )}
-    </React.Fragment>
+
+      {/* Bottom Cancel button */}
+      <Box display="flex" justifyContent="flex-end" mt={4}>
+        <Button variant="contained" color="warning" onClick={handleCancel}>
+          Cancel
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
-export default ViewLeadEnquiry;
+export default LeaderCardView;

@@ -6405,17 +6405,35 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           <Box>
             <Tooltip title="View">
               <IconButton
-                // onClick={() =>
-                //   navigate(
-                //     `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
-                //     { state: { ...state } }
-                //   )
-                // }
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.PartyID}/${params.row.RecordID}`,
+                    { state: { ...state,
+                      Breadcrumb2: params.row.LeadTitle,
+                      Breadcrumb1: params.row.Party,
+                     } }
+                  )
+                }
                 color="primary"
                 size="small"
               >
                 <Visibility />
               </IconButton>
+              {/* <IconButton
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
+                    { state: { ...state,
+                      Breadcrumb2: params.row.LeadTitle,
+                      Breadcrumb1: params.row.Party,
+                     } }
+                  )
+                }
+                color="primary"
+                size="small"
+              >
+                <Visibility />
+              </IconButton> */}
             </Tooltip>
           </Box>
         )}

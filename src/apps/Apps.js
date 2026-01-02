@@ -1084,7 +1084,7 @@ function App() {
                     element={<LeaderCardView />}
                   />
                   <Route
-                    path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:LeadId"
+                    path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:partyID/:LeadId"
                     element={<ViewLeadEnquiry />}
                   />
                   <Route
