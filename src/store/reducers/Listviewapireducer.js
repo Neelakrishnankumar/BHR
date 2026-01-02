@@ -6403,20 +6403,20 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
         {accessID === "TR328" && (
           <Box>
-            {/* <Tooltip title="View">
+            <Tooltip title="View">
               <IconButton
-                onClick={() =>
-                  navigate(
-                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
-                    { state: { ...state } }
-                  )
-                }
+                // onClick={() =>
+                //   navigate(
+                //     `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
+                //     { state: { ...state } }
+                //   )
+                // }
                 color="primary"
                 size="small"
               >
                 <Visibility />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
           </Box>
         )}
       </div>

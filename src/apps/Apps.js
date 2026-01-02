@@ -175,8 +175,12 @@ import EditItemCategory from "./pages/Item/EditItemCategory";
 import EditItem from "./pages/Item/EditItem";
 import EditRoute from "./pages/Route/EditRoute";
 import EditArea from "./pages/Route/EditArea";
-import ChangeyourPassword from "./Security/Passwordflow";
-import ChangeyourPassword_1 from "./Security/Passwordflow";
+//import ChangeyourPassword from "./Security/Passwordflow";
+// import ChangeyourPassword_1 from "./Security/Passwordflow";
+// import Logochange from "./Security/Changelogo";
+//  import LoginChangepass from "./Security/Loginchangepassword";
+
+
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 
 function App() {
@@ -581,8 +585,10 @@ function App() {
                   />
                   {/* <Route path="/Chart" element={<Chartboard />} /> */}
                   <Route path="/HR" element={<Logopage />} />
-                  <Route path="/ChangeyourPassword" element={<ChangeyourPassword_1 />} />
-                  <Route
+                  {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
+                  <Route path="/ChangeyourPassword_2" element={<Logochange />} />
+                  <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} /> */}
+      <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}
                   />
@@ -1111,6 +1117,7 @@ function App() {
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
                   />
+                  {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}
                   {/* <Route

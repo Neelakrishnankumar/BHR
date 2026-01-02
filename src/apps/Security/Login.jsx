@@ -85,7 +85,7 @@ const Login = () => {
 
   const [company, setCompanycombo] = React.useState();
   const [year, setYearcombo] = React.useState();
-  var firstLogin = "Y";
+  // var firstLogin = "Y";
   const initialValues = {
     username: "",
     password: "",
@@ -199,7 +199,7 @@ const Login = () => {
       sessionStorage.setItem("YearRecorid", YearRecorid)
       sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))
       sessionStorage.setItem("Modules", JSON.stringify(Modules))
-      //  navigate("/Apps/HR");
+      navigate("/Apps/HR");
       console.log("firstLogin:", firstLogin);
     if (firstLogin == "Y") {
        navigate("/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });

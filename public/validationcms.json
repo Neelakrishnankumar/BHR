@@ -51,7 +51,7 @@
     "name": "Please enter the Overhead",
     "frequency": "Please enter the Frequency",
     "OverheadType": "Please enter the OverheadType",
-    "Overhead": "Please Select the Overhead"
+    "Overhead": "Please select the Overhead"
 
   },
   "Overheadtype": {
@@ -117,8 +117,8 @@
   },
   "ItemCategory": {
     "Description": "Please enter the Item Description",
-    "HSNMaster": "Please Select HSN Master",
-    "HSNCatgory": "Please Select HSN Category"
+    "HSNMaster": "Please select HSN Master",
+    "HSNCatgory": "Please select HSN Category"
   },
   "HSNCatgory": {
     "CategoryName": "Please enter the HSN Category Name"
@@ -275,7 +275,7 @@
   "SkillGlowCategory": {
     "Code": "Please enter the Code",
     "Name": "Please enter the Name",
-    "AssessmentType": "Please Select A Type"
+    "AssessmentType": "Please select A Type"
   },
   "SkillGlowSession": {
     "Code": "Please enter the Code",
@@ -283,8 +283,8 @@
   },
   "ListofAssessment": {
     "Code": "Please enter the Code",
-    "DesignationID": "Please Select Designation",
-    "AppraisalType": "Please Select Appraisal Type",
+    "DesignationID": "Please select Designation",
+    "AppraisalType": "Please select Appraisal Type",
     "Name": "Please enter the Name",
     "Duration": "Please enter the Duration (In Days)",
     "Permittedtimes": "Please enter the No. Of Attempts Permitted",
@@ -313,10 +313,10 @@
   },
   "ListofAssessCat1": {
     "Date": "Please enter the Date",
-    "EmpName": "Please Select A Employee"
+    "EmpName": "Please select A Employee"
   },
   "ListOfAppraisalSchedule": {
-    "SelfRecordID": "Please Select A Self Appraisal"
+    "SelfRecordID": "Please select A Self Appraisal"
   },
   "Warningmsg": {
     "Logout": "Do you really want to Log Out?",
