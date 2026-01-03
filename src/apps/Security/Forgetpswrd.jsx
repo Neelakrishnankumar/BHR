@@ -34,6 +34,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     authentication,
     fetchApidata,
+    ForgotPasswordRequest,
 } from "../../store/reducers/LoginReducer";
 import { fetchComboData1 } from "../../store/reducers/Comboreducer";
 import { fetchyearComboData } from "../../store/reducers/LoginReducer";
@@ -89,6 +90,7 @@ const Forgetpassword_1 = () => {
     const initialValues = {
         username: "",
         password: "",
+        mailid: "",
         company: company,
         year: year,
         license: ""
@@ -101,11 +103,11 @@ const Forgetpassword_1 = () => {
         setLoading(true);
         // try {
         //   const requestData = {
-        //     EmployeeCode: values.usercode,
-        //     EmployeeEmailID: values.mailid,
+        //     UserName: values.username,
+        //     UserEmailID: values.mailid,
         //     LicenseKey: values.license,
         //   };
-        //    const result = await ForgotPasswordRequest(requestData);
+        //    const result = await ForgotPasswordRequest(requestData)
 
         //   if (result?.Status === "Y") {
         //     toast.success(result.Msg || "OTP sent successfully!");
