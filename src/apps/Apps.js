@@ -176,9 +176,9 @@ import EditItem from "./pages/Item/EditItem";
 import EditRoute from "./pages/Route/EditRoute";
 import EditArea from "./pages/Route/EditArea";
 //import ChangeyourPassword from "./Security/Passwordflow";
-// import ChangeyourPassword_1 from "./Security/Passwordflow";
-// import Logochange from "./Security/Changelogo";
-//  import LoginChangepass from "./Security/Loginchangepassword";
+import ChangeyourPassword_1 from "./Security/Passwordflow";
+import Logochange from "./Security/Changelogo";
+ import LoginChangepass from "./Security/Loginchangepassword";
 
 
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
@@ -585,9 +585,9 @@ function App() {
                   />
                   {/* <Route path="/Chart" element={<Chartboard />} /> */}
                   <Route path="/HR" element={<Logopage />} />
-                  {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
+                  <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
                   <Route path="/ChangeyourPassword_2" element={<Logochange />} />
-                  <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} /> */}
+                  <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
       <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}
@@ -1084,7 +1084,7 @@ function App() {
                     element={<LeaderCardView />}
                   />
                   <Route
-                    path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:partyID/:LeadId"
+                    path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:LeadId"
                     element={<ViewLeadEnquiry />}
                   />
                   <Route

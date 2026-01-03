@@ -202,7 +202,7 @@ const Login = () => {
       navigate("/Apps/HR");
       console.log("firstLogin:", firstLogin);
     if (firstLogin == "Y") {
-       navigate("/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
+       navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
     }
     else{
       navigate("/Apps/HR")

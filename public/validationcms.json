@@ -249,8 +249,8 @@
   },
   "Expense": {
     "date": "Please enter the Date",
-    "overhead": "Please enter the Overhead",
-    "ProName": "Please enter the Project",
+    "overhead": "Please select the Overhead",
+    "ProName": "Please select the Project",
     "amount": "Please enter the Amount",
     "managerComments": "Please enter the Manager Comments",
     "Status": "Please enter the Status",

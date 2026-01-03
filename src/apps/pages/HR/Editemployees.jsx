@@ -195,6 +195,17 @@ const Editemployee = () => {
   ];
 
 
+    const baseUrl = store.getState().globalurl.imageUrl;
+    const [viewImage, setViewImage] = React.useState(
+      baseUrl + "Defaultimg.jpg"
+    );
+
+    useEffect(() => {
+      if (Data?.ImageName) {
+        setViewImage(baseUrl + Data.ImageName);
+      }
+    }, [Data?.ImageName]);
+
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -1059,26 +1070,7 @@ const Editemployee = () => {
 
   /******************************save  Function********** */
   const fnProcess = async (values, resetForm, types) => {
-    // setIniProcess(false);
-    // if (types == "harddelete") {
-    //   if (supprodata.RecordID == "") {
-    //     toast.error("Please select the data");
-    //     return;
-    //   }
-    // }
-    // if (selectproLookupData.PROlookupCode == "") {
-    //   toast.error("Please Choose Process Lookup");
-    //   return;
-    // }
-
-    // if (values.Comments == "") {
-    //   toast.error("Please enter the Comments");
-    //   return;
-    // }
-    // if (values.Skills == "") {
-    //   toast.error("Please enter the Skills");
-    //   return;
-    // }
+   
 
     console.log(values);
     var saveData = "";
@@ -1139,13 +1131,15 @@ const Editemployee = () => {
     }
   };
   //*********************Contact******************/
+
+
+
+
   const contactInitialvalues = {
     Code: Data.Code,
     Name: Data.Name,
-    imageurl: Data.ImageName
-      ? store.getState().globalurl.imageUrl + Data.ImageName
-      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
     phonenumber: DataExplore.PhoneNumber,
+    imageurl:viewImage,
     email: DataExplore.Email,
     aadharcardnumber: DataExplore.AadharCardNo,
     pfnumber: DataExplore.PfNo,
@@ -1153,7 +1147,9 @@ const Editemployee = () => {
     permanentaddress: DataExplore.PermanentAddress,
     localaddress: DataExplore.LocalAddress,
   };
-  const fncontact = async (values, types) => {
+
+
+  const fncontact = async (values,resetForm) => {
     console.log(values);
 
     var saveData = "";
@@ -1181,6 +1177,17 @@ const Editemployee = () => {
       toast.success(data.payload.Msg);
       setLoading(false);
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
+      selectCellRowData({
+        rowData: DataExplore,
+        mode: "E",
+        field: "",
+      });
+
+      resetForm({
+      values: {
+        ...contactInitialvalues,
+      },
+    });
 
       // dispatch(fetchExplorelitview("TR038", "Skills", recID, ""));
       // resetForm();
@@ -1192,6 +1199,7 @@ const Editemployee = () => {
       setLoading(false);
     }
   };
+  
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -2001,6 +2009,7 @@ const Editemployee = () => {
     ItemValue: itemCustodyData.itemValue || "",
     PurchaseReference: itemCustodyData.reference || "",
   }), [Data, itemCustodyData]);
+  
   const empItemCustodyFn = async (values, resetForm, del) => {
     setLoading(true);
     let action =
@@ -3880,13 +3889,12 @@ const Editemployee = () => {
                         right: "0px",
                       }}
                     >
-                      <Avatar
-                        variant="rounded"
-                        src={userimg}
-                        sx={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack>
-
+                    <Avatar
+                      variant="rounded"
+                      src={viewImage}
+                      sx={{ width: "200px", height: "120px" }}
+                    />
+                  </Stack>
                     <TextField
                       fullWidth
                       variant="standard"
@@ -4166,6 +4174,7 @@ const Editemployee = () => {
                       },
                     }}
                   >
+                     
                     <FormControl sx={{ gap: formGap }}>
                       <TextField
                         fullWidth
@@ -4854,7 +4863,7 @@ const Editemployee = () => {
                               >
                                 <Avatar
                                   variant="rounded"
-                                  src={userimg}
+                                  src={viewImage}
                                   sx={{ width: "200px", height: "120px" }}
                                 />
                               </Stack>
@@ -6890,6 +6899,7 @@ const Editemployee = () => {
                         },
                       }}
                     >
+
                       <FormControl sx={{ gap: formGap }}>
                         <TextField
                           fullWidth
@@ -10125,7 +10135,7 @@ const Editemployee = () => {
                     >
                       <Avatar
                         variant="rounded"
-                        src={userimg}
+                        src={viewImage}
                         sx={{ width: "200px", height: "120px" }}
                       />
                     </Stack>
@@ -10625,7 +10635,7 @@ const Editemployee = () => {
                           fullWidth
                           variant="standard"
                           type="number"
-                          label="Availed Days"
+                          label="Avail Days"
                           id="availableleave"
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -10826,6 +10836,28 @@ const Editemployee = () => {
                         },
                       }}
                     >
+                      
+                       {!isNonMobile && (
+                      <Stack
+                        sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "150px" }}
+                        />
+                      </Stack>
+                    )}
+                   
+                   
                       <FormControl sx={{ gap: formGap }}>
                         <TextField
                           fullWidth
