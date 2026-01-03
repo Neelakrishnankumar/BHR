@@ -124,9 +124,18 @@ const EditOrder = () => {
         : data.OrderType || "",
 
     paid: mode == "A" ? "Yes" : data.PaidYesorNo === "Yes" ? "Yes" : "No",
-    processdate: data.ProcessDate,
-    paiddate: data.PaidDate,
-    deliverydate: data.DeliveryDate,
+    // processdate: data.ProcessDate,
+    // paiddate: data.PaidDate,
+    // deliverydate: data.DeliveryDate,
+    deliverydate: data.DeliveryDate
+      ? data.DeliveryDate.split(" ")[0] // keeps YYYY-MM-DD
+      : "",
+    processdate: data.ProcessDate
+      ? data.ProcessDate.split(" ")[0] // keeps YYYY-MM-DD
+      : "",
+    paiddate: data.PaidDate
+      ? data.PaidDate.split(" ")[0] // keeps YYYY-MM-DD
+      : "",
     paidamount: data.PaidAmount || 0,
     // Tobepaid: 0,
     status:
@@ -162,20 +171,20 @@ const EditOrder = () => {
 
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
-   const partyBalance = Number(values.PartyBalance || 0);
-  const paidAmount = Number(values.paidamount || 0);
-  const status = override.ORStatus ?? values.status;
+    const partyBalance = Number(values.PartyBalance || 0);
+    const paidAmount = Number(values.paidamount || 0);
+    const status = override.ORStatus ?? values.status;
+    const finalPaidAmount =
+      status === "Adjust From Advance" ? 0 : values.paidamount || 0;
 
-  if (status === "Adjust From Advance") {
-    const advanceAmount = Math.abs(partyBalance);
+    if (status === "Adjust From Advance") {
+      const advanceAmount = Math.abs(partyBalance);
 
-    if (paidAmount > advanceAmount) {
-      toast.error(
-        "Paid amount cannot be greater than available advance."
-      );
-      return;
+      if (paidAmount > advanceAmount) {
+        toast.error("Paid amount cannot be greater than available advance.");
+        return;
+      }
     }
-  }
 
     let action =
       mode === "A" && !del
@@ -210,7 +219,8 @@ const EditOrder = () => {
       ProcessDate: values.processdate || "",
       PaidDate: values.paiddate || "",
       DeliveryDate: values.deliverydate || "",
-      PaidAmount: values.paidamount || 0,
+      // PaidAmount: values.paidamount || 0,
+      PaidAmount: finalPaidAmount || 0,
       // PaidAmount: values.Tobepaid || 0,
       // ORStatus: values.status || "",
       PaymentMode: values.paymentmode || "",
@@ -252,6 +262,8 @@ const EditOrder = () => {
       return;
     } else {
       toast.error(response.payload.Msg);
+
+      dispatch(getFetchData({ accessID, get: "get", recID }));
     }
   };
 
@@ -415,6 +427,7 @@ const EditOrder = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue,
             }) => {
               const netPayables =
                 Number(values.delivercharges || 0) +
@@ -640,6 +653,7 @@ const EditOrder = () => {
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
+                              readOnly: true,
                             },
                           }}
                           autoFocus
@@ -738,6 +752,11 @@ const EditOrder = () => {
                           onChange={handleChange}
                           error={!!touched.processdate && !!errors.processdate}
                           helperText={touched.processdate && errors.processdate}
+                          InputProps={{
+                            inputProps: {
+                              readOnly:true
+                            }
+                          }}
                         />
                         <TextField
                           name="paiddate"
@@ -770,6 +789,11 @@ const EditOrder = () => {
                           helperText={
                             touched.deliverydate && errors.deliverydate
                           }
+                          InputProps={{
+                            inputProps: {
+                              readOnly:true
+                            }
+                          }}
                         />
                         <TextField
                           name="deliveredby"
@@ -811,14 +835,16 @@ const EditOrder = () => {
                           InputProps={{
                             readOnly: true,
                             inputProps: {
-                              style: { textAlign: "right" ,
-                              color:
-                                Number(values.PartyBalance) < 0
-                                  ? "#d32f2f"
-                                  // ? "#db4f4a"
-                                  : "#2e7d32", // red : green
-                              fontWeight: 600,
-                            }},
+                              style: {
+                                textAlign: "right",
+                                color:
+                                  Number(values.PartyBalance) < 0
+                                    ? "#d32f2f"
+                                    : // ? "#db4f4a"
+                                      "#2e7d32", // red : green
+                                fontWeight: 600,
+                              },
+                            },
                           }}
                           autoFocus
                         />
@@ -868,9 +894,21 @@ const EditOrder = () => {
                           name="status"
                           value={values.status}
                           onBlur={handleBlur}
+                          // onChange={(e) => {
+                          //   handleChange(e);
+                          //   sessionStorage.setItem("status", e.target.value); // save to sessionStorage
+                          // }}
                           onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem("status", e.target.value); // save to sessionStorage
+                            const selectedStatus = e.target.value;
+
+                            // Update status
+                            handleChange(e);
+                            sessionStorage.setItem("status", selectedStatus);
+
+                            // ✅ ONLY when Adjust From Advance → reset paid amount
+                            if (selectedStatus === "Adjust From Advance") {
+                              setFieldValue("paidamount", 0);
+                            }
                           }}
                           focused
                           variant="standard"

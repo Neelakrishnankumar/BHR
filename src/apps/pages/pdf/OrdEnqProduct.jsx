@@ -143,9 +143,6 @@ const OrdEnqProductPDF = ({ data = [], Product = [], Party = [] }) => {
                 {Object.entries(productGroups).map(
                     ([productName, productRows], productIndex) => {
 
-                        const overheadGroups = groupByParty(productRows);
-
-                        // ✅ PRODUCT LEVEL TOTALS
                         const totalTransactions = productRows.length;
                         const totalAmount = productRows.reduce(
                             (sum, r) => sum + Number(r.Amount || 0),
@@ -153,132 +150,99 @@ const OrdEnqProductPDF = ({ data = [], Product = [], Party = [] }) => {
                         );
 
                         return (
-                            <View key={productIndex} style={{ marginBottom: 10 }}>
+                            <View key={productIndex} style={{ marginBottom: 12 }}>
 
                                 <Text style={styles.overheadTitle}>
                                     Product Name : {productName}
                                 </Text>
 
-                                {Object.entries(overheadGroups).map(
-                                    ([overheadName, overheadRows], ohIndex) => {
+                                {/* SINGLE TABLE FOR ALL PARTIES */}
+                                <View style={styles.table}>
 
-                                        const overheadTotal = overheadRows.reduce(
-                                            (sum, r) => sum + Number(r.Amount || 0),
-                                            0
-                                        );
+                                    {/* HEADER */}
+                                    <View style={styles.tableRow}>
+                                        <Text style={[styles.headerCell, { flex: 0.5 }]}>S.No</Text>
+                                        <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
+                                        <Text style={[styles.headerCell, { flex: 3.5 }]}>Party</Text>
+                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Qty</Text>
+                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Rate</Text>
+                                        <Text style={[styles.headerCell, { flex: 0.9 }]}>Discount</Text>
+                                        <Text style={[styles.headerCell, { flex: 1 }]}>Value</Text>
+                                        <Text
+                                            style={[
+                                                styles.headerCell,
+                                                { flex: 1.5, textAlign: "center" },
+                                            ]}
+                                        >
+                                            Status
+                                        </Text>
+                                    </View>
 
-                                        return (
-                                            <View key={ohIndex} style={{ marginBottom: 10 }}>
+                                    {/* ROWS (ALL PARTIES TOGETHER) */}
+                                    {productRows.map((row, i) => (
+                                        <View key={i} style={styles.tableRow}>
+                                            <Text style={[styles.cell, { flex: 0.5, textAlign: "center" }]}>
+                                                {i + 1}
+                                            </Text>
 
-                                                <Text style={styles.projectName}>
-                                                    Party Name : {overheadName}
-                                                </Text>
+                                            <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
+                                                {formatDate(getStatusDate(row))}
+                                            </Text>
 
-                                                <View style={styles.table}>
+                                            <Text style={[styles.cell, { flex: 3.5, textAlign: "left" }]}>
+                                                {row.Party}
+                                            </Text>
 
-                                                    <View style={styles.tableRow}>
-                                                        <Text style={[styles.headerCell, { flex: 0.5 }]}>S.No</Text>
-                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
-                                                        <Text style={[styles.headerCell, { flex: 3.5 }]}>Party</Text>
-                                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Qty</Text>
-                                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Rate</Text>
-                                                        <Text style={[styles.headerCell, { flex: 0.9 }]}>Discount</Text>
-                                                        <Text style={[styles.headerCell, { flex: 1 }]}>Value</Text>
-                                                        {/* <Text style={[styles.headerCell, { flex: 1.5 }]}>Status</Text> */}
-                                                        <Text style={[styles.rightCell, {
-                                                            flex: 1.5, fontWeight: "bold", backgroundColor: "#f0f0f0",
-                                                            textAlign: "center"
-                                                        }]}>Status</Text>
-                                                    </View>
+                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>
+                                                {row.Quantity}
+                                            </Text>
 
-                                                    {overheadRows.map((row, i) => (
-                                                        <View key={i} style={styles.tableRow}>
-                                                            <Text style={[styles.cell, { flex: 0.5, textAlign: "center" }]}>
-                                                                {i + 1}
-                                                            </Text>
-                                                            {/* <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
-                                                                {row.Date}
-                                                            </Text> */}
-                                                            <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
-                                                                {formatDate(getStatusDate(row))}
-                                                            </Text>
+                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>
+                                                {row.Price}
+                                            </Text>
 
-                                                            <Text style={[styles.cell, { flex: 3.5, textAlign: "center" }]}>
-                                                                {row.PartyName}
-                                                            </Text>
-                                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>{row.Quantity}</Text>
-                                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>{row.Price}</Text>
-                                                            <Text style={[styles.cell, { flex: 0.9, textAlign: "right" }]}>{row.Discount}</Text>
-                                                            <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}>{row.Amount}</Text>
-                                                            {/* <Text style={[styles.cell, { flex: 1.5, textAlign: "center" }]}>
-                                                                {row.Status}
-                                                            </Text> */}
-                                                            <Text style={[styles.rightCell, { flex: 1.5, textAlign: "center" }]}>
-                                                                {row.Status}
-                                                            </Text>
-                                                        </View>
-                                                    ))}
+                                            <Text style={[styles.cell, { flex: 0.9, textAlign: "right" }]}>
+                                                {row.Discount}
+                                            </Text>
 
-                                                    {/* <View style={styles.tableRow}>
-                                                        <Text style={[styles.cell, { flex: 0.5 }]}></Text>
-                                                        <Text
-                                                            style={[
-                                                                styles.cell,
-                                                                { flex: 7, fontWeight: "bold", textAlign: "right" },
-                                                            ]}
-                                                        >
-                                                            Total
-                                                        </Text>
-                                                        <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}> {overheadTotal.toFixed(2)}</Text>
-                                                       
-                                                        <Text
-                                                            style={[
-                                                                styles.rightCell,
-                                                                { flex: 1.5, fontWeight: "bold" },
-                                                            ]}
-                                                        >                           
-                                                        </Text>
-                                                    </View> */}
-                                                    <View style={[
-                                                        styles.tableRow,
-                                                        { borderBottomWidth: 0}
-                                                    ]}>
-                                                        {/* <View style={styles.tableRow}> */}
-                                                        <Text style={[styles.cell, { flex: 0.5 }]} />
-                                                        <Text style={[styles.cell, { flex: 1 }]} />
-                                                        <Text
-                                                            style={[
-                                                                styles.cell,
-                                                                { flex: 3.5, fontWeight: "bold", textAlign: "right" },
-                                                            ]}
-                                                        >
-                                                            Total
-                                                        </Text>
+                                            <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}>
+                                                {row.Amount}
+                                            </Text>
 
-                                                        {/* <Text style={[styles.cell, { flex: 1 }]} />
-                                                        <Text style={[styles.cell, { flex: 1 }]} />
-                                                        <Text style={[styles.cell, { flex: 0.5 }]} /> */}
-                                                        <Text style={[styles.cell, { flex: 0.8 }]} />
-                                                        <Text style={[styles.cell, { flex: 0.8 }]} />
-                                                        <Text style={[styles.cell, { flex: 0.9 }]} />
-                                                        <Text
-                                                            style={[
-                                                                styles.cell,
-                                                                { flex: 1, fontWeight: "bold", textAlign: "right" },
-                                                            ]}
-                                                        >
-                                                            {overheadTotal.toFixed(2)}
-                                                        </Text>
+                                            <Text style={[styles.cell, { flex: 1.5, textAlign: "left", borderRightWidth: 0 }]}>
+                                                {row.Status}
+                                            </Text>
+                                        </View>
+                                    ))}
 
-                                                        <Text style={[styles.cell, { flex: 1.5,borderRightWidth:0 }]} />
-                                                    </View>
+                                    {/* PRODUCT TOTAL */}
+                                    <View style={[styles.tableRow, { borderBottomWidth: 0 }]}>
+                                        <Text style={[styles.cell, { flex: 0.5 }]} />
+                                        <Text style={[styles.cell, { flex: 1 }]} />
+                                        <Text
+                                            style={[
+                                                styles.cell,
+                                                { flex: 3.5, fontWeight: "bold", textAlign: "right" },
+                                            ]}
+                                        >
+                                            Total
+                                        </Text>
+                                        <Text style={[styles.cell, { flex: 0.8 }]} />
+                                        <Text style={[styles.cell, { flex: 0.8 }]} />
+                                        <Text style={[styles.cell, { flex: 0.9 }]} />
+                                        <Text
+                                            style={[
+                                                styles.cell,
+                                                { flex: 1, fontWeight: "bold", textAlign: "right" },
+                                            ]}
+                                        >
+                                            {totalAmount.toFixed(2)}
+                                        </Text>
+                                        <Text style={[styles.cell, { flex: 1.5, borderRightWidth: 0 }]} />
+                                    </View>
+                                </View>
 
-                                                </View>
-
-                                            </View>
-                                        );
-                                    }
-                                )}
+                                {/* PRODUCT SUMMARY */}
                                 <View style={styles.projectSummary}>
                                     <Text>Product Name : {productName}</Text>
                                     <Text>Transaction Count : {totalTransactions}</Text>
@@ -290,6 +254,7 @@ const OrdEnqProductPDF = ({ data = [], Product = [], Party = [] }) => {
                         );
                     }
                 )}
+
 
             </Page>
         </Document>

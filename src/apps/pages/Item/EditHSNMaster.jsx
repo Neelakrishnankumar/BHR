@@ -163,7 +163,9 @@ const EditHSNMaster = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(`/Apps/Secondarylistview/HSN/${params.accessID}/${screenName}/${params.parentID2}/${params.parentID1}`,
+            {state :state}
+          );
         }
       } else {
         return;

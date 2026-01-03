@@ -92,7 +92,7 @@ import QrCodeScannerOutlinedIcon from "@mui/icons-material/QrCodeScannerOutlined
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
-import AltRouteOutlinedIcon from '@mui/icons-material/AltRouteOutlined';
+import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 
 const initialState = {
   rowData: [],
@@ -517,6 +517,7 @@ export const fetchListview =
   (AccessID, screenName, filter, any, CompId) => async (dispatch, getState) => {
     var url = store.getState().globalurl.listViewurl;
     var CompId = sessionStorage.getItem("compID");
+    const LoginID = sessionStorage.getItem("loginrecordID");
 
     const year = sessionStorage.getItem("year");
     const company = sessionStorage.getItem("company");
@@ -648,6 +649,7 @@ export const fetchListview =
         AccessID != "TR311" &&
         AccessID != "TR314" &&
         AccessID != "TR313" &&
+        AccessID != "TR328" &&
         AccessID != "TR243" &&
         AccessID != "TR321" &&
         AccessID != "TR315" &&
@@ -700,6 +702,10 @@ export const fetchListview =
       //         const EmployeeID = sessionStorage.getItem("RecordID");
       // filter = EmployeeID ? `EmployeeID='${EmployeeID}' AND CompanyID=${CompId}` : "";
       //     }
+      // if (AccessID === "TR321" ) {
+      //   filter = "CompanyID=" + `'${CompId}'`;
+
+      // }
     } else if (
       AccessID == "TR280" ||
       AccessID == "TR300" ||
@@ -726,13 +732,462 @@ export const fetchListview =
     // else if (AccessID == "TR283") {
     //   filter;
     // }
-    else if (AccessID == "TR305" || AccessID == "TR313") {
+    else if (AccessID == "TR305") {
       filter = "";
+    } else if (AccessID == "TR328") {
+      filter = `HrLoginUserID='${LoginID}' AND CompanyID=${CompId}`;
     }
     // else if (AccessID == "TR305") {
     //   filter = "";
     // }
-     else {
+    //     else if (AccessID === "TR321") {
+    //   if (!filter || filter.trim() === "") {
+
+    //     const hasProspect =
+    //       sessionStorage.getItem("TR321_Prospect") === "Y";
+    //     const hasBalance =
+    //       sessionStorage.getItem("TR321_Balance") === "Y";
+
+    //     /* =================================================
+    //        CASE 1️⃣ : PROSPECT / BALANCE (simple Party query)
+    //     =================================================== */
+    //     if (hasProspect || hasBalance) {
+    //       const conditions = [];
+    //       conditions.push(`CompanyID='${CompId}'`);
+
+    //       if (hasProspect) {
+    //         conditions.push(`Prospects='Y'`);
+    //       }
+
+    //       if (hasBalance) {
+    //         conditions.push(`Balance < 0`);
+    //       }
+
+    //       filter = conditions.join(" AND ");
+    //       return; // 🔴 VERY IMPORTANT
+    //     }
+
+    //     /* =================================================
+    //        CASE 2️⃣ : STATUS / DAYS (ORDHDR subquery logic)
+    //     =================================================== */
+    //     const conditions = [];
+    //     conditions.push(`CompanyID='${CompId}'`);
+
+    //     const statusDateMap = {
+    //       Created: "OR_ORDERDATE",
+    //       Process: "OR_PROCESSDATE",
+    //       Paid: "OR_PAIDDATE",
+    //       ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+    //       Scheduled: "OR_TENTATIVEDELIVERYDATE",
+    //       NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+    //       Picked: "OR_PICKEDDATETIME",
+    //       Delivered: "OR_DELIVERYDATE",
+    //     };
+
+    //     const days = sessionStorage.getItem("TR321_Days");
+    //     const type = sessionStorage.getItem("TR321_type");
+
+    //     if (days && type) {
+    //       const today = new Date();
+    //       const dToday = today.toISOString().split("T")[0];
+    //       const shifted = new Date(today);
+
+    //       let fromdate = "";
+    //       let todate = "";
+
+    //       if (type === "A") {
+    //         shifted.setDate(today.getDate() - Number(days));
+    //         fromdate = shifted.toISOString().split("T")[0];
+    //       }
+
+    //       if (type === "L") {
+    //         shifted.setDate(today.getDate() - Number(days));
+    //         fromdate = shifted.toISOString().split("T")[0];
+    //         todate = dToday;
+    //       }
+
+    //       if (type === "N") {
+    //         shifted.setDate(today.getDate() + Number(days));
+    //         fromdate = dToday;
+    //         todate = shifted.toISOString().split("T")[0];
+    //       }
+
+    //       const dateConditions = [];
+
+    //       Object.keys(statusDateMap).forEach((status) => {
+    //         if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
+    //           const col = statusDateMap[status];
+
+    //           if (type === "A") {
+    //             dateConditions.push(`${col} < '${fromdate}'`);
+    //           } else {
+    //             dateConditions.push(
+    //               `${col} BETWEEN '${fromdate}' AND '${todate}'`
+    //             );
+    //           }
+    //         }
+    //       });
+
+    //       if (dateConditions.length > 0) {
+    //         conditions.push(`(${dateConditions.join(" OR ")})`);
+    //       }
+    //     }
+
+    //     // 🔵 Final ORDHDR-based filter
+    //     const dynamicWhere = conditions.join(" AND ");
+    //     const innerWhere = dynamicWhere.replace(
+    //       `CompanyID='${CompId}' AND `,
+    //       ""
+    //     );
+
+    //     filter =
+    //       `CompanyID='${CompId}'` +
+    //       ` AND HV_RECID IN (` +
+    //       ` SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere}` +
+    //       ` ) GROUP BY RecordID`;
+    //   }
+    // }
+
+    // else if (AccessID === "TR321") {
+    //   if (!filter || filter.trim() === "") {
+    //     // CASE 1: Prospect/Balance
+    //     const hasProspect = sessionStorage.getItem("TR321_Prospect") === "Y";
+    //     const hasBalance = sessionStorage.getItem("TR321_Balance") === "Y";
+
+    //     if (hasProspect || hasBalance) {
+    //       const conditions = [];
+    //       conditions.push(`CompanyID='${CompId}'`);
+    //       if (hasProspect) conditions.push(`Prospects='Y'`);
+    //       if (hasBalance) conditions.push(`Balance < 0`);
+    //       filter = conditions.join(" AND ");
+    //       return;
+    //     }
+
+    //     // CASE 2: Status/Days
+    //     const days = sessionStorage.getItem("TR321_Days");
+    //     const type = sessionStorage.getItem("TR321_type");
+
+    //     const statusDateMap = {
+    //       Created: "OR_ORDERDATE",
+    //       Process: "OR_PROCESSDATE",
+    //       Paid: "OR_PAIDDATE",
+    //       ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+    //       Scheduled: "OR_TENTATIVEDELIVERYDATE",
+    //       NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+    //       Picked: "OR_PICKEDDATETIME",
+    //       Delivered: "OR_DELIVERYDATE",
+    //     };
+
+    //     if (days && type) {
+    //       // Check if ANY status is selected
+    //       const hasStatusFilter = Object.keys(statusDateMap).some(status =>
+    //         sessionStorage.getItem(`TR321_${status}`) === "Y"
+    //       );
+
+    //       if (!hasStatusFilter) {
+    //         filter = `CompanyID='${CompId}'`;
+    //         return;
+    //       }
+
+    //       // Build ORDHDR query
+    //       const today = new Date();
+    //       const dToday = today.toISOString().split("T")[0];
+    //       const shifted = new Date(today);
+
+    //       let fromdate = "";
+    //       let todate = "";
+
+    //       if (type === "A") {
+    //         shifted.setDate(today.getDate() - Number(days));
+    //         fromdate = shifted.toISOString().split("T")[0];
+    //       } else if (type === "L") {
+    //         shifted.setDate(today.getDate() - Number(days));
+    //         fromdate = shifted.toISOString().split("T")[0];
+    //         todate = dToday;
+    //       } else if (type === "N") {
+    //         shifted.setDate(today.getDate() + Number(days));
+    //         fromdate = dToday;
+    //         todate = shifted.toISOString().split("T")[0];
+    //       }
+
+    //       const dateConditions = [];
+    //       Object.keys(statusDateMap).forEach((status) => {
+    //         if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
+    //           const col = statusDateMap[status];
+    //           if (type === "A") {
+    //             dateConditions.push(`${col} < '${fromdate}'`);
+    //           } else {
+    //             dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+    //           }
+    //         }
+    //       });
+
+    //       if (dateConditions.length > 0) {
+    //         const conditions = [];
+    //         conditions.push(`CompanyID='${CompId}'`);
+    //         conditions.push(`(${dateConditions.join(" OR ")})`);
+
+    //         const dynamicWhere = conditions.join(" AND ");
+    //         const innerWhere = dynamicWhere.replace(`CompanyID='${CompId}' AND `, "");
+
+    //         filter = `CompanyID='${CompId}' AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere}) GROUP BY RecordID`;
+    //         return;
+    //       }
+    //     }
+
+    //     // 🟢 FINAL FALLBACK: Always show CompanyID data initially
+    //     filter = `CompanyID='${CompId}'`;
+    //     return;
+    //   }
+    // }
+
+    // else if (AccessID === 'TR321') {
+    //   console.log('🔍 TR321 DEBUG - filter:', filter);
+    //   console.log('🔍 TR321 DEBUG - TR321_Balance:', sessionStorage.getItem('TR321_Balance'));
+    //   console.log('🔍 TR321 DEBUG - TR321_RESET:', sessionStorage.getItem('TR321_RESET'));
+
+    //   // 🔥 CHECK RESET STATE FIRST
+    //   const isResetState = sessionStorage.getItem('TR321_RESET') === 'Y';
+
+    //   if (isResetState) {
+    //     console.log('🔍 TR321 - RESET STATE: CompanyID only');
+    //     sessionStorage.removeItem('TR321_RESET'); // Clear flag once
+    //     dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
+    //     return;
+    //   }
+
+    //   // Normal filter checks
+    //   const hasProspect = sessionStorage.getItem('TR321_Prospect') === 'Y';
+    //   const hasBalance = sessionStorage.getItem('TR321_Balance') === 'Y';
+    //   const hasStatusFilter = sessionStorage.getItem('TR321_Days') ||
+    //                          ['Created','Process','Paid','Picked','ReadyToDeliver','Delivered','Scheduled','NextVisitDate']
+    //                          .some(status => sessionStorage.getItem(`TR321_${status}`) === 'Y');
+
+    //   console.log('🔍 TR321 DEBUG - hasProspect:', hasProspect, 'hasBalance:', hasBalance, 'hasStatusFilter:', hasStatusFilter);
+
+    //   // CASE 1: PROSPECT/BALANCE - PRIORITY 1
+    //   if (hasProspect || hasBalance) {
+    //     console.log('🔍 TR321 - Using CASE 1 (Prospect/Balance)');
+    //     const conditions = [`CompanyID=${CompId}`];
+    //     if (hasProspect) conditions.push(`Prospects = 'Y'`);
+    //     if (hasBalance) conditions.push(`Balance < 0`);
+    //     const filterClause = conditions.join(' AND ');
+    //     console.log('🔍 TR321 - CASE 1 filter:', filterClause);
+    //     dispatch(fetchListview(AccessID, 'Party', filterClause, '', CompId));
+    //     return;
+    //   }
+
+    //   // CASE 2: STATUS + DAYS - PRIORITY 2
+    //   if (hasStatusFilter) {
+    //     console.log('🔍 TR321 - Using CASE 2 (Status+Days)');
+    //     const statusDateMap = {
+    //       Created: 'OR_ORDERDATE',
+    //       Process: 'OR_PROCESSDATE',
+    //       Paid: 'OR_PAIDDATE',
+    //       ReadyToDeliver: 'OR_TENTATIVEDELIVERYDATE',
+    //       Scheduled: 'OR_TENTATIVEDELIVERYDATE',
+    //       NextVisitDate: 'OR_TENTATIVEDELIVERYDATE',
+    //       Picked: 'OR_PICKEDDATETIME',
+    //       Delivered: 'OR_DELIVERYDATE'
+    //     };
+
+    //     const conditions = [`CompanyID=${CompId}`];
+    //     const days = sessionStorage.getItem('TR321_Days');
+    //     const type = sessionStorage.getItem('TR321_type');
+
+    //     console.log('🔍 TR321 CASE 2 - days:', days, 'type:', type);
+
+    //     if (days && type) {
+    //       const today = new Date();
+    //       const dToday = today.toISOString().split('T')[0];
+    //       const shifted = new Date(today);
+    //       let fromdate, todate;
+
+    //       if (type === 'A') {
+    //         shifted.setDate(today.getDate() - Number(days));
+    //         fromdate = shifted.toISOString().split('T')[0];
+    //       } else if (type === 'L') {
+    //         shifted.setDate(today.getDate() - Number(days));
+    //         fromdate = shifted.toISOString().split('T')[0];
+    //         todate = dToday;
+    //       } else if (type === 'N') {
+    //         shifted.setDate(today.getDate() + Number(days));
+    //         fromdate = dToday;
+    //         todate = shifted.toISOString().split('T')[0];
+    //       }
+
+    //       console.log('🔍 TR321 CASE 2 - fromdate:', fromdate, 'todate:', todate);
+
+    //       const dateConditions = [];
+    //       Object.keys(statusDateMap).forEach(status => {
+    //         if (sessionStorage.getItem(`TR321_${status}`) === 'Y') {
+    //           const col = statusDateMap[status];
+    //           if (type === 'A') {
+    //             dateConditions.push(`${col}='${fromdate}'`);
+    //           } else {
+    //             dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+    //           }
+    //           console.log('🔍 TR321 CASE 2 - Added condition for', status, col);
+    //         }
+    //       });
+
+    //       if (dateConditions.length > 0) {
+    //         conditions.push(`(${dateConditions.join(' OR ')})`);
+    //         console.log('🔍 TR321 CASE 2 - dateConditions:', dateConditions);
+    //       }
+    //     }
+
+    //     const dynamicWhere = conditions.join(' AND');
+    //     const innerWhere = dynamicWhere.replace(`CompanyID=${CompId} AND `, '');
+    //     const finalFilter = `CompanyID=${CompId} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+
+    //     console.log('🔍 TR321 - CASE 2 finalFilter:', finalFilter);
+    //     dispatch(fetchListview(AccessID, 'Party', finalFilter, '', CompId));
+    //     return;
+    //   }
+
+    //   // CASE 3: TRUE NO FILTERS (not reset state)
+    //   console.log('🔍 TR321 - TRUE NO FILTERS: CompanyID only');
+    //   dispatch(fetchListview(AccessID, 'Party', `CompanyID=${CompId}`, '', CompId));
+    // }
+    else if (AccessID === "TR321") {
+      console.log("🔍 TR321 DEBUG - filter:", filter);
+      console.log(
+        "🔍 TR321 DEBUG - TR321_RESET:",
+        sessionStorage.getItem("TR321_RESET")
+      );
+      console.log(
+        "🔍 TR321 DEBUG - TR321_HASFILTER:",
+        sessionStorage.getItem("TR321_HASFILTER")
+      );
+
+      // 🔥 ONE-TIME RESET: Clear immediately + CompanyID
+      if (sessionStorage.getItem("TR321_RESET") === "Y") {
+        console.log("🔍 TR321 - ONE-TIME RESET: CompanyID");
+        sessionStorage.removeItem("TR321_RESET");
+        dispatch(
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+        );
+        return;
+      }
+
+      // 🔥 NO FILTERS (null/undefined/N) → CompanyID
+      const hasFilter = sessionStorage.getItem("TR321_HASFILTER");
+      if (hasFilter !== "Y") {
+        console.log("🔍 TR321 - NO FILTERS (null/N): CompanyID");
+        dispatch(
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+        );
+        return;
+      }
+
+      // 🔥 NORMAL FILTERS: Check actual data
+      const hasProspect = sessionStorage.getItem("TR321_Prospect") === "Y";
+      const hasBalance = sessionStorage.getItem("TR321_Balance") === "Y";
+      const hasStatusFilter =
+        sessionStorage.getItem("TR321_Days") ||
+        [
+          "Created",
+          "Process",
+          "Paid",
+          "Picked",
+          "ReadyToDeliver",
+          "Delivered",
+          "Scheduled",
+          "NextVisitDate",
+        ].some((status) => sessionStorage.getItem(`TR321_${status}`) === "Y");
+
+      console.log(
+        "🔍 TR321 DEBUG - hasProspect:",
+        hasProspect,
+        "hasBalance:",
+        hasBalance,
+        "hasStatusFilter:",
+        hasStatusFilter
+      );
+
+      // CASE 1: PROSPECT/BALANCE
+      if (hasProspect || hasBalance) {
+        const conditions = [`CompanyID=${CompId}`];
+        if (hasProspect) conditions.push(`Prospects = 'Y'`);
+        if (hasBalance) conditions.push(`Balance < 0`);
+        const filterClause = conditions.join(" AND ");
+        console.log("🔍 TR321 - CASE 1:", filterClause);
+        dispatch(fetchListview(AccessID, "Party", filterClause, "", CompId));
+        return;
+      }
+
+      // CASE 2: STATUS + DAYS
+      if (hasStatusFilter) {
+        console.log("🔍 TR321 - CASE 2 (Status+Days)");
+        const statusDateMap = {
+          Created: "OR_ORDERDATE",
+          Process: "OR_PROCESSDATE",
+          Paid: "OR_PAIDDATE",
+          ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+          Scheduled: "OR_TENTATIVEDELIVERYDATE",
+          NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+          Picked: "OR_PICKEDDATETIME",
+          Delivered: "OR_DELIVERYDATE",
+        };
+
+        const conditions = [`CompanyID=${CompId}`];
+        const days = sessionStorage.getItem("TR321_Days");
+        const type = sessionStorage.getItem("TR321_type");
+
+        if (days && type) {
+          const today = new Date();
+          const dToday = today.toISOString().split("T")[0];
+          const shifted = new Date(today);
+          let fromdate, todate;
+
+          if (type === "A") {
+            shifted.setDate(today.getDate() - Number(days));
+            fromdate = shifted.toISOString().split("T")[0];
+          } else if (type === "L") {
+            shifted.setDate(today.getDate() - Number(days));
+            fromdate = shifted.toISOString().split("T")[0];
+            todate = dToday;
+          } else if (type === "N") {
+            shifted.setDate(today.getDate() + Number(days));
+            fromdate = dToday;
+            todate = shifted.toISOString().split("T")[0];
+          }
+
+          const dateConditions = [];
+          Object.keys(statusDateMap).forEach((status) => {
+            if (sessionStorage.getItem(`TR321_${status}`) === "Y") {
+              const col = statusDateMap[status];
+              if (type === "A") {
+                dateConditions.push(`${col}='${fromdate}'`);
+              } else {
+                dateConditions.push(
+                  `${col} BETWEEN '${fromdate}' AND '${todate}'`
+                );
+              }
+            }
+          });
+
+          if (dateConditions.length > 0) {
+            conditions.push(`(${dateConditions.join(" OR ")})`);
+          }
+        }
+
+        const dynamicWhere = conditions.join(" AND");
+        const innerWhere = dynamicWhere.replace(`CompanyID=${CompId} AND `, "");
+        const finalFilter = `CompanyID=${CompId} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+
+        console.log("🔍 TR321 - CASE 2 finalFilter:", finalFilter);
+        dispatch(fetchListview(AccessID, "Party", finalFilter, "", CompId));
+        return;
+      }
+
+      // CASE 3: FALLBACK
+      console.log("🔍 TR321 - FALLBACK: CompanyID");
+      dispatch(
+        fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+      );
+    } else {
       filter = `CompanyID=${CompId}`;
     }
     var idata = {
@@ -1313,6 +1768,8 @@ export const fetchListview =
             AccessID == "TR318" ||
             AccessID == "TR310" ||
             AccessID == "TR323" ||
+            AccessID == "TR323" ||
+            AccessID == "TR328" ||
             AccessID == "TR319"
           ) {
             obj = {
@@ -1815,8 +2272,7 @@ export const fetchListview =
                 );
               },
             };
-          }
-          else if (AccessID === "TR321") {
+          } else if (AccessID === "TR321") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -5506,7 +5962,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
   const PartyName = params.row.Name;
 
-  const PDFButton = ({ PartyID, OrderHdrID, CompanyID,OrderType }) => {
+  const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
     const dispatch = store.dispatch;
     const [loading, setLoading] = React.useState(false);
 
@@ -5526,7 +5982,11 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
         // Generate and download PDF
         const blob = await pdf(
-          <OrderHeaderPdf data={data} UserName={UserName} OrderType={OrderType}/>
+          <OrderHeaderPdf
+            data={data}
+            UserName={UserName}
+            OrderType={OrderType}
+          />
         ).toBlob();
         // const link = document.createElement("a");
         // link.href = URL.createObjectURL(blob);
@@ -5536,7 +5996,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         const blobUrl = URL.createObjectURL(blob);
         window.open(blobUrl, "_blank");
 
-         // 2. TO DOWNLOAD DIRECTLY
+        // 2. TO DOWNLOAD DIRECTLY
         // const url = URL.createObjectURL(blob);
 
         // const link = document.createElement("a");
@@ -5885,7 +6345,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   size="small"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleConvert(params.row)}}
+                    handleConvert(params.row);
+                  }}
                 >
                   <CurrencyExchangeOutlinedIcon />
                 </IconButton>
@@ -5937,6 +6398,25 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 OrderType={params.row.OrderType}
               />
             </Link>
+          </Box>
+        )}
+
+        {accessID === "TR328" && (
+          <Box>
+            {/* <Tooltip title="View">
+              <IconButton
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/${params.row.RecordID}`,
+                    { state: { ...state } }
+                  )
+                }
+                color="primary"
+                size="small"
+              >
+                <Visibility />
+              </IconButton>
+            </Tooltip> */}
           </Box>
         )}
       </div>

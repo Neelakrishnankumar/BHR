@@ -175,6 +175,9 @@ import EditItemCategory from "./pages/Item/EditItemCategory";
 import EditItem from "./pages/Item/EditItem";
 import EditRoute from "./pages/Route/EditRoute";
 import EditArea from "./pages/Route/EditArea";
+import ChangeyourPassword from "./Security/Passwordflow";
+import ChangeyourPassword_1 from "./Security/Passwordflow";
+import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -578,6 +581,7 @@ function App() {
                   />
                   {/* <Route path="/Chart" element={<Chartboard />} /> */}
                   <Route path="/HR" element={<Logopage />} />
+                  <Route path="/ChangeyourPassword" element={<ChangeyourPassword_1 />} />
                   <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}
@@ -1072,6 +1076,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID/LeaderCardView/:partyID"
                     element={<LeaderCardView />}
+                  />
+                  <Route
+                    path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:LeadId"
+                    element={<ViewLeadEnquiry />}
                   />
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/:OrderType/EditOrder/:id/:Mode"

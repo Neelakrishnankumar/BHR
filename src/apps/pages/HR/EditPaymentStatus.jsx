@@ -106,7 +106,7 @@ const EditAdvancePayment = () => {
   const InitialValue = {
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
-    paymentdate: data.Date || "",
+    paymentdate: data.Date ? data.Date.split(" ")[0] : "" || "",
     Amount: data.Amount || "",
     paymentComments: data.Comments || "",
   };
@@ -158,7 +158,9 @@ const EditAdvancePayment = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR232/Role");
+          navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.partyID}`,{
+            state: state,
+          });
         }
       } else {
         return;

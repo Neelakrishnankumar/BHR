@@ -1063,6 +1063,9 @@ const Editemployee = () => {
     Comments: supprodata.Comments,
     SortOrder: supprodata.SortOrder,
     Skills: supprodata.Skills,
+     imageurl: Data.ImageName
+      ? store.getState().globalurl.imageUrl + Data.ImageName
+      : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
   };
 
   /******************************save  Function********** */
@@ -2178,7 +2181,7 @@ const Editemployee = () => {
     TDS: contractorData.tds,
     UnitRate: contractorData.unitrate,
     NotificationAlertDate: contractorData.alertdate,
-    RenewableNotification: contractorData.renewalperiod,
+    RenewableNotification: contractorData.renewalperiod || "",
     Description: contractorData.Description,
     project: contractorData.project || null,
     shift: contractorData.shift || null,
@@ -2236,10 +2239,10 @@ const Editemployee = () => {
             : "",
       Description: values.Description,
       Hsn: values.Hsn || "000000",
-      Gst: values.Gst,
-      Sgst: values.Sgst,
-      Igst: values.Igst,
-      Tds: values.TDS,
+      Gst: values.Gst || 0,
+      Sgst: values.Sgst || 0,
+      Igst: values.Igst || 0,
+      Tds: values.TDS || 0,
       // Vendors: show == "8" ? "Y" : "N",
       // Customer: show == "11" ? "Y" : "N",     
       FromPeriod: values.FromPeriod,
@@ -2248,7 +2251,7 @@ const Editemployee = () => {
       BillingType: values.BillingType,
       UnitRate: values.UnitRate,
       NotificationAlertDate: values.NotificationAlertDate,
-      RenewableNotification: values.RenewableNotification,
+      RenewableNotification: values.RenewableNotification || 0,
       ShiftID: values?.shift?.RecordID || 0,
       // ShiftCode: values?.shift?.Code || "",
       // ShiftName: values?.shift?.Name || "",
@@ -2304,9 +2307,9 @@ const Editemployee = () => {
   const geolocationinitialvlues = {
     Code: Data.Code,
     Name: Data.Name,
-    longitude: gelocData.EMP_LONGITUDE,
-    latitude: gelocData.EMP_LATITUDE,
-    radius: gelocData.EMP_RADIUS,
+    longitude: gelocData.EMP_LONGITUDE == null ? "" : gelocData.EMP_LONGITUDE,
+    latitude: gelocData.EMP_LATITUDE == null ? "" : gelocData.EMP_LATITUDE,
+    radius: gelocData.EMP_RADIUS == null ? "" : gelocData.EMP_RADIUS,
   };
   const geolocSavefn = async (values, resetForm, del) => {
     setLoading(true);

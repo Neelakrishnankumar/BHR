@@ -156,7 +156,7 @@ const EditHSNCategory = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate("/Apps/TR316/HSN%20Category");
         }
       } else {
         return;
