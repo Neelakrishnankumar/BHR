@@ -428,9 +428,9 @@ const Listview = () => {
             }}
           >
             {accessID === "TR313" ||
-              accessID === "TR243" ||
-              accessID === "TR328" ||
-              accessID === "TR321" ? (
+            accessID === "TR243" ||
+            accessID === "TR328" ||
+            accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -524,7 +524,7 @@ const Listview = () => {
               false
             ) : accessID == "TR328" ? (
               false
-            ): accessID == "TR315" ? (
+            ) : accessID == "TR315" ? (
               false
             ) : YearFlag == "true" ? (
               // UGA_ADD ? (
@@ -534,7 +534,8 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${
+                          accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -2017,7 +2018,7 @@ const Listview = () => {
             )} */}
 
             {/* WORKING CODE BELOW ----- */}
-{/* {showMore && accessID === "TR321" && (
+            {/* {showMore && accessID === "TR321" && (
   <Box sx={{ width: 300, p: 2, borderRadius: 1, backgroundColor: "#fff" }}>
     <Formik
       initialValues={{
@@ -2310,386 +2311,532 @@ const Listview = () => {
   </Box>
 )} */}
 
-{showMore && accessID === "TR321" && (
-  <Box sx={{ width: 300, p: 2, borderRadius: 1, backgroundColor: "#fff" }}>
-    <Formik
-      initialValues={{
-        days: sessionStorage.getItem("TR321_Days") || "",
-        type: sessionStorage.getItem("TR321_type") || "",
-        Created: sessionStorage.getItem("TR321_Created") === "Y",
-        Process: sessionStorage.getItem("TR321_Process") === "Y",
-        Paid: sessionStorage.getItem("TR321_Paid") === "Y",
-        Picked: sessionStorage.getItem("TR321_Picked") === "Y",
-        ReadyToDeliver: sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
-        Delivered: sessionStorage.getItem("TR321_Delivered") === "Y",
-        Scheduled: sessionStorage.getItem("TR321_Scheduled") === "Y",
-        NextVisitDate: sessionStorage.getItem("TR321_NextVisitDate") === "Y",
-        Prospect: sessionStorage.getItem("TR321_Prospect") === "Y",
-        Balance: sessionStorage.getItem("TR321_Balance") === "Y",
-      }}
-      enableReinitialize
-      // onSubmit={(values, { setSubmitting }) => {
-      //   // SAVE ALL TO SESSIONSTORAGE
-      //   sessionStorage.setItem("TR321_Days", values.days || "");
-      //   sessionStorage.setItem("TR321_type", values.type || "");
-      //   sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
-      //   sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-      //   sessionStorage.setItem("TR321_HASFILTER", 'Y'); 
-
-      //   const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
-      //   statusKeys.forEach(status => {
-      //     sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
-      //   });
-
-      //   // CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
-      //   if (values.Prospect || values.Balance) {
-      //     let simpleWhere = `CompanyID=${compID}`;
-      //     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
-      //     if (values.Balance) simpleWhere += ` AND Balance < 0`;
-      //     console.log('🔥 APPLY - CASE 1:', simpleWhere);
-      //     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
-      //     setTimeout(() => setSubmitting(false), 100);
-      //     return;
-      //   }
-
-      //   // CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
-      //   const statusDateMap = {
-      //     Created: "OR_ORDERDATE",
-      //     Process: "OR_PROCESSDATE",
-      //     Paid: "OR_PAIDDATE",
-      //     ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-      //     Scheduled: "OR_TENTATIVEDELIVERYDATE",
-      //     NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-      //     Picked: "OR_PICKEDDATETIME",
-      //     Delivered: "OR_DELIVERYDATE",
-      //   };
-
-      //   const whereParts = [`CompanyID=${compID}`];
-      //   let fromdate = "", todate = "";
-
-      //   if (values.days && values.type) {
-      //     const today = new Date();
-      //     const dToday = today.toISOString().split("T")[0];
-      //     const shifted = new Date(today);
-
-      //     if (values.type === "A") {
-      //       shifted.setDate(today.getDate() - Number(values.days));
-      //       fromdate = shifted.toISOString().split("T")[0];
-      //     } else if (values.type === "L") {
-      //       shifted.setDate(today.getDate() - Number(values.days));
-      //       fromdate = shifted.toISOString().split("T")[0];
-      //       todate = dToday;
-      //     } else if (values.type === "N") {
-      //       shifted.setDate(today.getDate() + Number(values.days));
-      //       fromdate = dToday;
-      //       todate = shifted.toISOString().split("T")[0];
-      //     }
-
-      //     const dateConditions = [];
-      //     Object.keys(statusDateMap).forEach((status) => {
-      //       if (values[status]) {
-      //         const col = statusDateMap[status];
-      //         if (values.type === "A") {
-      //           dateConditions.push(`${col}='${fromdate}'`);
-      //         } else {
-      //           dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
-      //         }
-      //       }
-      //     });
-
-      //     if (dateConditions.length > 0) {
-      //       whereParts.push(`(${dateConditions.join(" OR ")})`);
-      //     }
-      //   }
-
-      //   const dynamicWhere = whereParts.join(" AND ");
-      //   const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
-      //   const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-      //   console.log('🔥 APPLY - CASE 2:', finalWhereClause);
-      //   dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
-      //   setTimeout(() => setSubmitting(false), 100);
-      // }}
-
-
-      onSubmit={(values, { setSubmitting }) => {
-  // 🔥 CHECK IF ANY ACTUAL FILTER SELECTED
-  const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
-  const hasStatusFilter = statusKeys.some(status => values[status]);
-  const hasDateFilter = values.days && values.type;
-  const hasProspectFilter = values.Prospect;
-  const hasBalanceFilter = values.Balance;
-  
-  console.log('🔥 APPLY DEBUG - hasStatus:', hasStatusFilter, 'hasDate:', hasDateFilter, 'Prospect:', hasProspectFilter, 'Balance:', hasBalanceFilter);
-  
-  // 🔥 NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
-  if (!hasStatusFilter && !hasDateFilter && !hasProspectFilter && !hasBalanceFilter) {
-    console.log('🔥 APPLY - NO FILTERS: CompanyID only');
-    sessionStorage.setItem('TR321_HASFILTER', 'N');
-    ['Days', 'type', 'Created', 'Process', 'Paid', 'Picked', 'ReadyToDeliver', 'Delivered', 'Scheduled', 'NextVisitDate', 'Prospect', 'Balance']
-      .forEach(k => sessionStorage.removeItem(`TR321_${k}`));
-    dispatch(fetchListview(accessID, "Party", `CompanyID=${compID}`, "", compID));
-    setTimeout(() => setSubmitting(false), 100);
-    return;
-  }
-  
-  // 🔥 HAS FILTERS → Save to sessionStorage + HASFILTER=Y
-  sessionStorage.setItem("TR321_HASFILTER", 'Y');
-  sessionStorage.setItem("TR321_Days", values.days || "");
-  sessionStorage.setItem("TR321_type", values.type || "");
-  sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
-  sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-  statusKeys.forEach(status => {
-    sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
-  });
-
-  // CASE 1: PROSPECT/BALANCE
-  if (values.Prospect || values.Balance) {
-    let simpleWhere = `CompanyID=${compID}`;
-    if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
-    if (values.Balance) simpleWhere += ` AND Balance < 0`;
-    console.log('🔥 APPLY - CASE 1:', simpleWhere);
-    dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
-    setTimeout(() => setSubmitting(false), 100);
-    return;
-  }
-
-  // CASE 2: STATUS + DAYS (ONLY if actual status selected)
-  if (hasStatusFilter && hasDateFilter) {
-    const statusDateMap = {
-      Created: "OR_ORDERDATE",
-      Process: "OR_PROCESSDATE",
-      Paid: "OR_PAIDDATE",
-      ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
-      Scheduled: "OR_TENTATIVEDELIVERYDATE",
-      NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
-      Picked: "OR_PICKEDDATETIME",
-      Delivered: "OR_DELIVERYDATE",
-    };
-
-    const whereParts = [`CompanyID=${compID}`];
-    const today = new Date();
-    const dToday = today.toISOString().split("T")[0];
-    const shifted = new Date(today);
-    let fromdate, todate;
-
-    if (values.type === "A") {
-      shifted.setDate(today.getDate() - Number(values.days));
-      fromdate = shifted.toISOString().split("T")[0];
-    } else if (values.type === "L") {
-      shifted.setDate(today.getDate() - Number(values.days));
-      fromdate = shifted.toISOString().split("T")[0];
-      todate = dToday;
-    } else if (values.type === "N") {
-      shifted.setDate(today.getDate() + Number(values.days));
-      fromdate = dToday;
-      todate = shifted.toISOString().split("T")[0];
-    }
-
-    const dateConditions = [];
-    Object.keys(statusDateMap).forEach((status) => {
-      if (values[status]) {
-        const col = statusDateMap[status];
-        if (values.type === "A") {
-          dateConditions.push(`${col}='${fromdate}'`);
-        } else {
-          dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
-        }
-      }
-    });
-
-    if (dateConditions.length > 0) {
-      whereParts.push(`(${dateConditions.join(" OR ")})`);
-    }
-
-    const dynamicWhere = whereParts.join(" AND ");
-    const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
-    const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
-
-    console.log('🔥 APPLY - CASE 2:', finalWhereClause);
-    dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
-  } else {
-    // Days/Type but no status → CompanyID only
-    console.log('🔥 APPLY - Days/Type but no status: CompanyID');
-    dispatch(fetchListview(accessID, "Party", `CompanyID=${compID}`, "", compID));
-  }
-  
-  setTimeout(() => setSubmitting(false), 100);
-}}
-
-    >
-      {({
-        values,
-        handleSubmit,
-        isSubmitting,
-        setFieldValue,
-      }) => {
-        const statusKeys = [
-          "Created", "Process", "Paid", "Picked", 
-          "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"
-        ];
-        const statusLabelMap = {
-          ReadyToDeliver: "Ready For Delivery",
-          NextVisitDate: "Next Visit Date",
-        };
-        const isStatusSelected = statusKeys.some((k) => values[k]);
-        const isDateSelected = Boolean(values.days && values.type);
-        const isStatusGroupActive = isStatusSelected || isDateSelected;
-        const isProspectGroupActive = values.Prospect || values.Balance;
-
-        // 🔥 FIXED RESET with RESET FLAG
-       const handleResetFilters = () => {
-  setFieldValue('days', '');
-  setFieldValue('type', '');
-  setFieldValue('Prospect', false);
-  setFieldValue('Balance', false);
-  statusKeys.forEach(k => setFieldValue(k, false));
-  
-  // Clear ALL filters
-  ['Days', 'type', 'Created', 'Process', 'Paid', 'Picked', 
-   'ReadyToDeliver', 'Delivered', 'Scheduled', 'NextVisitDate', 
-   'Prospect', 'Balance'].forEach(k => {
-    sessionStorage.removeItem(`TR321_${k}`);
-  });
-  
-  // 🔥 SET NO-FILTER STATE
-sessionStorage.setItem('TR321_RESET', 'Y');
-          sessionStorage.setItem('TR321_HASFILTER', 'N');  
-  // NO DISPATCH → Initial load handles single CompanyID call
-};
-
-
-
-        return (
-          <form onSubmit={handleSubmit}>
-            <Box sx={{ height: 600, overflowY: "auto" }}>
-              <Typography mt={2} fontWeight="bold" color="error">Status</Typography>
-              
-              {statusKeys.map((key) => (
-                <FormControlLabel
-                  key={key}
-                  control={
-                    <Checkbox
-                      checked={values[key]}
-                      disabled={isProspectGroupActive}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        if (checked) {
-                          setFieldValue("Prospect", false);
-                          setFieldValue("Balance", false);
-                          sessionStorage.setItem("TR321_Prospect", "N");
-                          sessionStorage.setItem("TR321_Balance", "N");
-                        }
-                        setFieldValue(key, checked);
-                        sessionStorage.setItem(`TR321_${key}`, checked ? "Y" : "N");
-                      }}
-                    />
-                  }
-                  label={statusLabelMap[key] || key}
-                />
-              ))}
-
-              <TextField
-                name="days"
-                type="number"
-                label="Days"
-                variant="standard"
-                value={values.days}
-                disabled={isProspectGroupActive}
-                onChange={(e) => {
-                  setFieldValue("days", e.target.value);
-                  sessionStorage.setItem("TR321_Days", e.target.value);
+            {showMore && accessID === "TR321" && (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 2,
+                  borderRadius: 1,
+                  backgroundColor: "#fff",
                 }}
-                sx={{ mt: 2 }}
-                fullWidth
-              />
-
-              <TextField
-                select
-                name="type"
-                label="Type"
-                variant="standard"
-                value={values.type}
-                disabled={isProspectGroupActive}
-                onChange={(e) => {
-                  setFieldValue("type", e.target.value);
-                  sessionStorage.setItem("TR321_type", e.target.value);
-                }}
-                sx={{ mt: 2}}
-                fullWidth
               >
-                <MenuItem value="A">Ago</MenuItem>
-                <MenuItem value="L">Latest</MenuItem>
-                <MenuItem value="N">Next</MenuItem>
-              </TextField>
+                <Formik
+                  initialValues={{
+                    days: sessionStorage.getItem("TR321_Days") || "",
+                    type: sessionStorage.getItem("TR321_type") || "",
+                    Created: sessionStorage.getItem("TR321_Created") === "Y",
+                    Process: sessionStorage.getItem("TR321_Process") === "Y",
+                    Paid: sessionStorage.getItem("TR321_Paid") === "Y",
+                    Picked: sessionStorage.getItem("TR321_Picked") === "Y",
+                    ReadyToDeliver:
+                      sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
+                    Delivered:
+                      sessionStorage.getItem("TR321_Delivered") === "Y",
+                    Scheduled:
+                      sessionStorage.getItem("TR321_Scheduled") === "Y",
+                    NextVisitDate:
+                      sessionStorage.getItem("TR321_NextVisitDate") === "Y",
+                    Prospect: sessionStorage.getItem("TR321_Prospect") === "Y",
+                    Balance: sessionStorage.getItem("TR321_Balance") === "Y",
+                  }}
+                  enableReinitialize
+                  // onSubmit={(values, { setSubmitting }) => {
+                  //   // SAVE ALL TO SESSIONSTORAGE
+                  //   sessionStorage.setItem("TR321_Days", values.days || "");
+                  //   sessionStorage.setItem("TR321_type", values.type || "");
+                  //   sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
+                  //   sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
+                  //   sessionStorage.setItem("TR321_HASFILTER", 'Y');
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.Prospect}
-                    disabled={isStatusGroupActive}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      if (checked) {
-                        statusKeys.forEach((k) => {
-                          setFieldValue(k, false);
-                          sessionStorage.setItem(`TR321_${k}`, "N");
-                        });
-                        setFieldValue("days", "");
-                        setFieldValue("type", "");
-                        sessionStorage.setItem("TR321_Days", "");
-                        sessionStorage.setItem("TR321_type", "");
+                  //   const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
+                  //   statusKeys.forEach(status => {
+                  //     sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
+                  //   });
+
+                  //   // CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
+                  //   if (values.Prospect || values.Balance) {
+                  //     let simpleWhere = `CompanyID=${compID}`;
+                  //     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
+                  //     if (values.Balance) simpleWhere += ` AND Balance < 0`;
+                  //     console.log('🔥 APPLY - CASE 1:', simpleWhere);
+                  //     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
+                  //     setTimeout(() => setSubmitting(false), 100);
+                  //     return;
+                  //   }
+
+                  //   // CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
+                  //   const statusDateMap = {
+                  //     Created: "OR_ORDERDATE",
+                  //     Process: "OR_PROCESSDATE",
+                  //     Paid: "OR_PAIDDATE",
+                  //     ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+                  //     Scheduled: "OR_TENTATIVEDELIVERYDATE",
+                  //     NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+                  //     Picked: "OR_PICKEDDATETIME",
+                  //     Delivered: "OR_DELIVERYDATE",
+                  //   };
+
+                  //   const whereParts = [`CompanyID=${compID}`];
+                  //   let fromdate = "", todate = "";
+
+                  //   if (values.days && values.type) {
+                  //     const today = new Date();
+                  //     const dToday = today.toISOString().split("T")[0];
+                  //     const shifted = new Date(today);
+
+                  //     if (values.type === "A") {
+                  //       shifted.setDate(today.getDate() - Number(values.days));
+                  //       fromdate = shifted.toISOString().split("T")[0];
+                  //     } else if (values.type === "L") {
+                  //       shifted.setDate(today.getDate() - Number(values.days));
+                  //       fromdate = shifted.toISOString().split("T")[0];
+                  //       todate = dToday;
+                  //     } else if (values.type === "N") {
+                  //       shifted.setDate(today.getDate() + Number(values.days));
+                  //       fromdate = dToday;
+                  //       todate = shifted.toISOString().split("T")[0];
+                  //     }
+
+                  //     const dateConditions = [];
+                  //     Object.keys(statusDateMap).forEach((status) => {
+                  //       if (values[status]) {
+                  //         const col = statusDateMap[status];
+                  //         if (values.type === "A") {
+                  //           dateConditions.push(`${col}='${fromdate}'`);
+                  //         } else {
+                  //           dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+                  //         }
+                  //       }
+                  //     });
+
+                  //     if (dateConditions.length > 0) {
+                  //       whereParts.push(`(${dateConditions.join(" OR ")})`);
+                  //     }
+                  //   }
+
+                  //   const dynamicWhere = whereParts.join(" AND ");
+                  //   const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
+                  //   const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
+
+                  //   console.log('🔥 APPLY - CASE 2:', finalWhereClause);
+                  //   dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
+                  //   setTimeout(() => setSubmitting(false), 100);
+                  // }}
+
+                  onSubmit={(values, { setSubmitting }) => {
+                    // 🔥 CHECK IF ANY ACTUAL FILTER SELECTED
+                    const statusKeys = [
+                      "Created",
+                      "Process",
+                      "Paid",
+                      "Picked",
+                      "ReadyToDeliver",
+                      "Delivered",
+                      "Scheduled",
+                      "NextVisitDate",
+                    ];
+                    const hasStatusFilter = statusKeys.some(
+                      (status) => values[status]
+                    );
+                    const hasDateFilter = values.days && values.type;
+                    const hasProspectFilter = values.Prospect;
+                    const hasBalanceFilter = values.Balance;
+
+                    console.log(
+                      "🔥 APPLY DEBUG - hasStatus:",
+                      hasStatusFilter,
+                      "hasDate:",
+                      hasDateFilter,
+                      "Prospect:",
+                      hasProspectFilter,
+                      "Balance:",
+                      hasBalanceFilter
+                    );
+
+                    // 🔥 NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
+                    if (
+                      !hasStatusFilter &&
+                      !hasDateFilter &&
+                      !hasProspectFilter &&
+                      !hasBalanceFilter
+                    ) {
+                      console.log("🔥 APPLY - NO FILTERS: CompanyID only");
+                      sessionStorage.setItem("TR321_HASFILTER", "N");
+                      [
+                        "Days",
+                        "type",
+                        "Created",
+                        "Process",
+                        "Paid",
+                        "Picked",
+                        "ReadyToDeliver",
+                        "Delivered",
+                        "Scheduled",
+                        "NextVisitDate",
+                        "Prospect",
+                        "Balance",
+                      ].forEach((k) => sessionStorage.removeItem(`TR321_${k}`));
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          `CompanyID=${compID}`,
+                          "",
+                          compID
+                        )
+                      );
+                      setTimeout(() => setSubmitting(false), 100);
+                      return;
+                    }
+
+                    // 🔥 HAS FILTERS → Save to sessionStorage + HASFILTER=Y
+                    sessionStorage.setItem("TR321_HASFILTER", "Y");
+                    sessionStorage.setItem("TR321_Days", values.days || "");
+                    sessionStorage.setItem("TR321_type", values.type || "");
+                    sessionStorage.setItem(
+                      "TR321_Prospect",
+                      values.Prospect ? "Y" : "N"
+                    );
+                    sessionStorage.setItem(
+                      "TR321_Balance",
+                      values.Balance ? "Y" : "N"
+                    );
+                    statusKeys.forEach((status) => {
+                      sessionStorage.setItem(
+                        `TR321_${status}`,
+                        values[status] ? "Y" : "N"
+                      );
+                    });
+
+                    // CASE 1: PROSPECT/BALANCE
+                    if (values.Prospect || values.Balance) {
+                      let simpleWhere = `CompanyID=${compID}`;
+                      if (values.Prospect)
+                        simpleWhere += ` AND Prospects = 'Y'`;
+                      if (values.Balance) simpleWhere += ` AND Balance < 0`;
+                      console.log("🔥 APPLY - CASE 1:", simpleWhere);
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          simpleWhere,
+                          "",
+                          compID
+                        )
+                      );
+                      setTimeout(() => setSubmitting(false), 100);
+                      return;
+                    }
+
+                    // CASE 2: STATUS + DAYS (ONLY if actual status selected)
+                    if (hasStatusFilter && hasDateFilter) {
+                      const statusDateMap = {
+                        Created: "OR_ORDERDATE",
+                        Process: "OR_PROCESSDATE",
+                        Paid: "OR_PAIDDATE",
+                        ReadyToDeliver: "OR_TENTATIVEDELIVERYDATE",
+                        Scheduled: "OR_TENTATIVEDELIVERYDATE",
+                        NextVisitDate: "OR_TENTATIVEDELIVERYDATE",
+                        Picked: "OR_PICKEDDATETIME",
+                        Delivered: "OR_DELIVERYDATE",
+                      };
+
+                      const whereParts = [`CompanyID=${compID}`];
+                      const today = new Date();
+                      const dToday = today.toISOString().split("T")[0];
+                      const shifted = new Date(today);
+                      let fromdate, todate;
+
+                      if (values.type === "A") {
+                        shifted.setDate(today.getDate() - Number(values.days));
+                        fromdate = shifted.toISOString().split("T")[0];
+                      } else if (values.type === "L") {
+                        shifted.setDate(today.getDate() - Number(values.days));
+                        fromdate = shifted.toISOString().split("T")[0];
+                        todate = dToday;
+                      } else if (values.type === "N") {
+                        shifted.setDate(today.getDate() + Number(values.days));
+                        fromdate = dToday;
+                        todate = shifted.toISOString().split("T")[0];
                       }
-                      setFieldValue("Prospect", checked);
-                      sessionStorage.setItem("TR321_Prospect", checked ? "Y" : "N");
-                    }}
-                  />
-                }
-                label="Prospects"
-              />
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.Balance}
-                    disabled={isStatusGroupActive}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      if (checked) {
-                        statusKeys.forEach((k) => {
-                          setFieldValue(k, false);
-                          sessionStorage.setItem(`TR321_${k}`, "N");
-                        });
-                        setFieldValue("days", "");
-                        setFieldValue("type", "");
-                        sessionStorage.setItem("TR321_Days", "");
-                        sessionStorage.setItem("TR321_type", "");
+                      const dateConditions = [];
+                      Object.keys(statusDateMap).forEach((status) => {
+                        if (values[status]) {
+                          const col = statusDateMap[status];
+                          if (values.type === "A") {
+                            dateConditions.push(`${col}='${fromdate}'`);
+                          } else {
+                            dateConditions.push(
+                              `${col} BETWEEN '${fromdate}' AND '${todate}'`
+                            );
+                          }
+                        }
+                      });
+
+                      if (dateConditions.length > 0) {
+                        whereParts.push(`(${dateConditions.join(" OR ")})`);
                       }
-                      setFieldValue("Balance", checked);
-                      sessionStorage.setItem("TR321_Balance", checked ? "Y" : "N");
-                    }}
-                  />
-                }
-                label="Due"
-              />
 
-              <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} mt={2}>
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
-                  Apply
-                </Button>
-                <Button variant="contained" color="error" onClick={handleResetFilters} disabled={isSubmitting}>
-                  Reset
-                </Button>
-              </Stack>
-            </Box>
-          </form>
-        );
-      }}
-    </Formik>
-  </Box>
-)}
+                      const dynamicWhere = whereParts.join(" AND ");
+                      const innerWhere = dynamicWhere.replace(
+                        `CompanyID=${compID} AND `,
+                        ""
+                      );
+                      const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
 
-{/* {showMore && accessID === "TR328" && (
+                      console.log("🔥 APPLY - CASE 2:", finalWhereClause);
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          finalWhereClause,
+                          "",
+                          compID
+                        )
+                      );
+                    } else {
+                      // Days/Type but no status → CompanyID only
+                      console.log(
+                        "🔥 APPLY - Days/Type but no status: CompanyID"
+                      );
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          `CompanyID=${compID}`,
+                          "",
+                          compID
+                        )
+                      );
+                    }
+
+                    setTimeout(() => setSubmitting(false), 100);
+                  }}
+                >
+                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => {
+                    const statusKeys = [
+                      "Created",
+                      "Process",
+                      "Paid",
+                      "Picked",
+                      "ReadyToDeliver",
+                      "Delivered",
+                      "Scheduled",
+                      "NextVisitDate",
+                    ];
+                    const statusLabelMap = {
+                      ReadyToDeliver: "Ready For Delivery",
+                      NextVisitDate: "Next Visit Date",
+                    };
+                    const isStatusSelected = statusKeys.some((k) => values[k]);
+                    const isDateSelected = Boolean(values.days && values.type);
+                    const isStatusGroupActive =
+                      isStatusSelected || isDateSelected;
+                    const isProspectGroupActive =
+                      values.Prospect || values.Balance;
+
+                    // 🔥 FIXED RESET with RESET FLAG
+                    const handleResetFilters = () => {
+                      setFieldValue("days", "");
+                      setFieldValue("type", "");
+                      setFieldValue("Prospect", false);
+                      setFieldValue("Balance", false);
+                      statusKeys.forEach((k) => setFieldValue(k, false));
+
+                      // Clear ALL filters
+                      [
+                        "Days",
+                        "type",
+                        "Created",
+                        "Process",
+                        "Paid",
+                        "Picked",
+                        "ReadyToDeliver",
+                        "Delivered",
+                        "Scheduled",
+                        "NextVisitDate",
+                        "Prospect",
+                        "Balance",
+                      ].forEach((k) => {
+                        sessionStorage.removeItem(`TR321_${k}`);
+                      });
+
+                      // 🔥 SET NO-FILTER STATE
+                      sessionStorage.setItem("TR321_RESET", "Y");
+                      sessionStorage.setItem("TR321_HASFILTER", "N");
+                      // NO DISPATCH → Initial load handles single CompanyID call
+                    };
+
+                    return (
+                      <form onSubmit={handleSubmit}>
+                        <Box sx={{ height: 600, overflowY: "auto" }}>
+                          <Typography mt={2} fontWeight="bold" color="error">
+                            Status
+                          </Typography>
+
+                          {statusKeys.map((key) => (
+                            <FormControlLabel
+                              key={key}
+                              control={
+                                <Checkbox
+                                  checked={values[key]}
+                                  disabled={isProspectGroupActive}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    if (checked) {
+                                      setFieldValue("Prospect", false);
+                                      setFieldValue("Balance", false);
+                                      sessionStorage.setItem(
+                                        "TR321_Prospect",
+                                        "N"
+                                      );
+                                      sessionStorage.setItem(
+                                        "TR321_Balance",
+                                        "N"
+                                      );
+                                    }
+                                    setFieldValue(key, checked);
+                                    sessionStorage.setItem(
+                                      `TR321_${key}`,
+                                      checked ? "Y" : "N"
+                                    );
+                                  }}
+                                />
+                              }
+                              label={statusLabelMap[key] || key}
+                            />
+                          ))}
+
+                          <TextField
+                            name="days"
+                            type="number"
+                            label="Days"
+                            variant="standard"
+                            value={values.days}
+                            disabled={isProspectGroupActive}
+                            onChange={(e) => {
+                              setFieldValue("days", e.target.value);
+                              sessionStorage.setItem(
+                                "TR321_Days",
+                                e.target.value
+                              );
+                            }}
+                            sx={{ mt: 2 }}
+                            fullWidth
+                          />
+
+                          <TextField
+                            select
+                            name="type"
+                            label="Type"
+                            variant="standard"
+                            value={values.type}
+                            disabled={isProspectGroupActive}
+                            onChange={(e) => {
+                              setFieldValue("type", e.target.value);
+                              sessionStorage.setItem(
+                                "TR321_type",
+                                e.target.value
+                              );
+                            }}
+                            sx={{ mt: 2 }}
+                            fullWidth
+                          >
+                            <MenuItem value="A">Ago</MenuItem>
+                            <MenuItem value="L">Latest</MenuItem>
+                            <MenuItem value="N">Next</MenuItem>
+                          </TextField>
+
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.Prospect}
+                                disabled={isStatusGroupActive}
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  if (checked) {
+                                    statusKeys.forEach((k) => {
+                                      setFieldValue(k, false);
+                                      sessionStorage.setItem(`TR321_${k}`, "N");
+                                    });
+                                    setFieldValue("days", "");
+                                    setFieldValue("type", "");
+                                    sessionStorage.setItem("TR321_Days", "");
+                                    sessionStorage.setItem("TR321_type", "");
+                                  }
+                                  setFieldValue("Prospect", checked);
+                                  sessionStorage.setItem(
+                                    "TR321_Prospect",
+                                    checked ? "Y" : "N"
+                                  );
+                                }}
+                              />
+                            }
+                            label="Prospects"
+                          />
+
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.Balance}
+                                disabled={isStatusGroupActive}
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  if (checked) {
+                                    statusKeys.forEach((k) => {
+                                      setFieldValue(k, false);
+                                      sessionStorage.setItem(`TR321_${k}`, "N");
+                                    });
+                                    setFieldValue("days", "");
+                                    setFieldValue("type", "");
+                                    sessionStorage.setItem("TR321_Days", "");
+                                    sessionStorage.setItem("TR321_type", "");
+                                  }
+                                  setFieldValue("Balance", checked);
+                                  sessionStorage.setItem(
+                                    "TR321_Balance",
+                                    checked ? "Y" : "N"
+                                  );
+                                }}
+                              />
+                            }
+                            label="Due"
+                          />
+
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="end"
+                            spacing={1}
+                            mt={2}
+                          >
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              disabled={isSubmitting}
+                            >
+                              Apply
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={handleResetFilters}
+                              disabled={isSubmitting}
+                            >
+                              Reset
+                            </Button>
+                          </Stack>
+                        </Box>
+                      </form>
+                    );
+                  }}
+                </Formik>
+              </Box>
+            )}
+
+            {showMore && accessID === "TR328" && (
               <Box
                 sx={{
                   width: 300,
@@ -2713,9 +2860,10 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                       values.fromdate ||
                       values.date ||
                       values.party ||
-                      values.product
+                      values.product;
                   }}
                   onSubmit={(values, { setSubmitting }) => {
+
                     const conditions = [];
 
                     const fromDate = values.fromdate || "";
@@ -2729,28 +2877,27 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                       JSON.stringify(values)
                     );
 
-                    const selectedStatuses = [];
                     const dateConditions = [];
 
-                    selectedStatuses.forEach((status) => {
-                      const field = "FilterLastCallDate";
+                    const field = "FilterLastCallDate";
 
-                      if (fromDate && toDate) {
-                        dateConditions.push(
-                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                        );
-                      } else if (fromDate) {
-                        dateConditions.push(`(${field} >= '${fromDate}')`);
-                      } else if (toDate) {
-                        dateConditions.push(`(${field} <= '${toDate}')`);
-                      }
-                    });
+                    if (fromDate && toDate) {
+                      dateConditions.push(
+                        `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                      );
+                    } else if (fromDate) {
+                      dateConditions.push(`(${field} >= '${fromDate}')`);
+                    } else if (toDate) {
+                      dateConditions.push(`(${field} <= '${toDate}')`);
+                    }
+
                     if (values.party?.length > 0) {
                       const partyIds = values.party
                         .map((p) => `'${p.RecordID}'`)
                         .join(", ");
 
-                      conditions.push(`PartyRecordID IN (${partyIds})`);
+                      // conditions.push(`PartyID = ${partyIds}`);
+                      conditions.push(`PartyID IN (${partyIds})`);
                     }
 
                     if (values.product?.length > 0) {
@@ -2758,10 +2905,13 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                         .map((p) => `'${p.RecordID}'`)
                         .join(", ");
 
-                      conditions.push(`ProductID IN (${productIds})`);
+                      // conditions.push(`ProjectID = ${productIds}`);
+                      conditions.push(`ProjectID IN (${productIds})`);
                     }
                     if (compID) {
-                      conditions.push(`CompanyID = '${compID}'`);
+                      conditions.push(
+                        `HrLoginUserID='${LoginID}' AND CompanyID = '${compID}'`
+                      );
                     }
                     if (dateConditions.length > 0) {
                       conditions.push(`(${dateConditions.join(" OR ")})`);
@@ -2771,6 +2921,8 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                     // FINAL WHERE CLAUSE
                     // --------------------------
                     const whereClause = conditions.join(" AND ");
+                    sessionStorage.setItem("TR328_WHERE", whereClause);
+
                     console.log("FINAL FILTER:", whereClause);
 
                     dispatch(
@@ -2796,7 +2948,13 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                     resetForm,
                   }) => (
                     <form onSubmit={handleSubmit}>
-                      <Box sx={{ height: 600, overflowY: "auto" }}>
+                      <Box
+                        sx={{
+                          height: 600,
+                          overflowY: "auto",
+                          marginTop: "20px",
+                        }}
+                      >
                         <TextField
                           name="fromdate"
                           type="date"
@@ -2848,9 +3006,15 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                           onChange={(e, newValue) => {
                             setFieldValue("party", newValue);
                             sessionStorage.setItem(
-                              "TR313_Party",
+                              "TR328_Party",
                               JSON.stringify(newValue)
                             );
+                          }}
+                          disablePortal={false}
+                          PopperProps={{
+                            sx: {
+                              zIndex: 1500,
+                            },
                           }}
                           // error={!!touched.party && !!errors.party}
                           // helperText={touched.party && errors.party}
@@ -2866,7 +3030,7 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                           onChange={(e, newValue) => {
                             setFieldValue("product", newValue);
                             sessionStorage.setItem(
-                              "TR313_Product",
+                              "TR328_Product",
                               JSON.stringify(newValue)
                             );
                           }}
@@ -2897,10 +3061,11 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                               [
                                 "FromDate",
                                 "ToDate",
-                               
+
                                 "TR328_Party",
                                 "TR328_Product",
                                 "TR328_Filters",
+                                "TR328_WHERE",  
                               ].forEach((key) =>
                                 sessionStorage.removeItem(key)
                               );
@@ -2923,15 +3088,13 @@ sessionStorage.setItem('TR321_RESET', 'Y');
                   )}
                 </Formik>
               </Box>
-            )} */}
-
-
+            )}
           </Box>
-          <Box display="flex" alignItems="center" marginLeft={3}  >
-            <Typography fontWeight={400} fontSize={15} lineHeight={1}
-              mb={-2} >
+          <Box display="flex" alignItems="center" marginLeft={3}>
+            <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
               Label
-            </Typography></Box>
+            </Typography>
+          </Box>
         </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
@@ -3319,7 +3482,7 @@ sessionStorage.setItem('TR321_RESET', 'Y');
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR323" ? (
+        ) : accessID == "TR323" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}

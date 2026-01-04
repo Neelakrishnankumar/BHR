@@ -278,7 +278,9 @@ const SkillCreate = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID1}/${params.screenName}/${params.parentID2}/${params.accessID}/${params.parentID1}`,{
+            state: { ...state },
+          });
         }
       } else {
         return;

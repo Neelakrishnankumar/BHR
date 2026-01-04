@@ -166,17 +166,17 @@
     "shift": "Please enter the Shift 1"
   },
   "ItemServices": {
-    "items": "Please enter the Vendor",
-    "vendors": "Please enter the Customer",
+    "items": "Please select an Item",
+    "vendors": "Please select a Vendor",
     "servicedate": "Please enter the Date",
     "returndate": "Please enter the Expected Return Date",
     "complaints": "Please enter the Complaints",
-    "tentativecharge": "Please enter the Charges"
+    "tentativecharge": "Please enter the Tentative Charges"
   },
   "OrderItem": {
-    "discount": "Please enter the discount",
-    "product": "Please select a product",
-    "quantity": "Please enter the quantity"
+    "discount": "Please enter the Discount (In Percentage)",
+    "product": "Please select the Product",
+    "quantity": "Please enter the Quantity"
   },
   "AdvancePayment": {
     "Amount": "Please enter the Amount",
@@ -283,8 +283,8 @@
   },
   "ListofAssessment": {
     "Code": "Please enter the Code",
-    "DesignationID": "Please Select Designation",
-    "AppraisalType": "Please Select Appraisal Type",
+    "DesignationID": "Please select the Designation",
+    "AppraisalType": "Please select Appraisal Type",
     "Name": "Please enter the Name",
     "Duration": "Please enter the Duration (In Days)",
     "Permittedtimes": "Please enter the No. Of Attempts Permitted",

@@ -10,7 +10,8 @@ import {
   Tooltip,
   Checkbox,
   LinearProgress,
-  Paper, Breadcrumbs
+  Paper,
+  Breadcrumbs,
 } from "@mui/material";
 import { Field, Formik } from "formik";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -36,7 +37,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { HsnSchema } from "../../Security/validation";
 import { DesignationSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
-import * as Yup from "yup"
+import * as Yup from "yup";
 // import CryptoJS from "crypto-js";
 const Editdesignation = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -94,10 +95,10 @@ const Editdesignation = () => {
     code: data.Code,
     name: data.Description,
     rank: data.DesignationRank,
-    hoursrate:data.HoursRate,
+    hoursrate: data.HoursRate,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
-    delete: data.DeleteFlag === "Y" ? true : false
+    delete: data.DeleteFlag === "Y" ? true : false,
   };
 
   const Fnsave = async (values, del) => {
@@ -106,8 +107,8 @@ const Editdesignation = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-          ? "harddelete"
-          : "update";
+        ? "harddelete"
+        : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -190,11 +191,9 @@ const Editdesignation = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-
                 >
                   Designation
                 </Typography>
-
               </Breadcrumbs>
             </Box>
           </Box>
@@ -264,14 +263,13 @@ const Editdesignation = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
+                        },
                       }}
                       InputProps={{ readOnly: true }}
-                    // autoFocus
+                      // autoFocus
                     />
                   ) : (
                     <TextField
@@ -280,7 +278,10 @@ const Editdesignation = () => {
                       id="code"
                       label={
                         <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
                         </>
                       }
                       variant="standard"
@@ -292,37 +293,45 @@ const Editdesignation = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       sx={{
-
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
                           backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
+                        },
                       }}
-
                       autoFocus
-                    />)}
+                    />
+                  )}
                   <TextField
                     name="name"
                     type="text"
                     id="name"
                     label={
                       <>
-                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Name
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
                     focused
                     value={values.name}
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    //onChange={handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // allow only letters and spaces
+                      if (/^[a-zA-Z\s]*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
                     error={!!touched.name && !!errors.name}
                     helperText={touched.name && errors.name}
                     sx={{
-
                       backgroundColor: "#ffffff", // Set the background to white
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
+                      },
                     }}
                     // required
                     autoFocus={CompanyAutoCode == "Y"}
@@ -333,7 +342,10 @@ const Editdesignation = () => {
                     id="rank"
                     label={
                       <>
-                        Rank<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        Rank
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
                       </>
                     }
                     variant="standard"
@@ -341,7 +353,6 @@ const Editdesignation = () => {
                     value={values.rank}
                     onBlur={handleBlur}
                     onChange={handleChange}
-
                     onWheel={(e) => e.target.blur()}
                     InputProps={{
                       inputProps: {
@@ -351,7 +362,6 @@ const Editdesignation = () => {
                     // required
                     error={!!touched.rank && !!errors.rank}
                     helperText={touched.rank && errors.rank}
-
                   />
                   <TextField
                     name="hoursrate"
@@ -368,7 +378,6 @@ const Editdesignation = () => {
                     value={values.hoursrate}
                     onBlur={handleBlur}
                     onChange={handleChange}
-
                     onWheel={(e) => e.target.blur()}
                     InputProps={{
                       inputProps: {
@@ -378,7 +387,6 @@ const Editdesignation = () => {
                     // required
                     error={!!touched.hoursrate && !!errors.hoursrate}
                     helperText={touched.hoursrate && errors.hoursrate}
-
                   />
                   <TextField
                     name="sortorder"
@@ -431,7 +439,6 @@ const Editdesignation = () => {
 
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box>
-
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
