@@ -35,6 +35,7 @@ import basicSchema from "./validation";
 import { useDispatch, useSelector } from "react-redux";
 import {
     authentication,
+    ChangePasswordRequest,
     fetchApidata,
 } from "../../store/reducers/LoginReducer";
 import { fetchComboData1 } from "../../store/reducers/Comboreducer";
@@ -46,6 +47,7 @@ import { Field, Form, Formik, ErrorMessage } from "formik";
 // import background from "../../assets/img/bexlogo.jpg";
 import background from "../../assets/img/BexATM.png";
 import { LoadingButton } from "@mui/lab";
+import { useLocation } from 'react-router-dom';
 
 
 const Forgetpassword_2 = () => {
@@ -61,29 +63,41 @@ const Forgetpassword_2 = () => {
         }));
     };
     const [showPassword, setShowPassword] = useState({ old: false, new: false, confirm: false });
+
+   // const userRecid = sessionStorage.getItem("UserRecid");
+    // const userName = sessionStorage.getItem("UserName");
+
+
+    const location = useLocation();
+    const { userName, userRecid } = location.state || {};
+
+    console.log(userName, userRecid);
+    
+    
+
     const handleSave = async (values, resetForm) => {
         setLoading(true);
-        // try {
-        //     const { oldpassword, newpassword } = values;
-        //     const result = await ChangePasswordRequest({
-        //         RecordID: recID,
-        //         Oldpassword: oldpassword,
-        //         Newpassword: newpassword,
-        //     });
+        try {
+            const result = await ChangePasswordRequest({
+                UserRecid: userRecid,     
+                UserName: userName,      
+                OldPassword: values.oldpassword,
+                NewPassword: values.newpassword
+            });
 
-        //     if (result?.Status === "Y") {
-        //         toast.success(result.Msg);
-        //         resetForm();
-        //         navigate('/');
-        //     } else {
-        //         toast.error(result?.Msg || "Change password failed");
-        //     }
-        // } catch (error) {
-        //     console.error('Error:', error);
-        //     toast.error("Something went wrong. Please try again.");
-        // } finally {
-        //     setLoading(false);
-        // }
+            if (result?.Status === "Y") {
+                toast.success(result.Msg);
+                resetForm();
+                //navigate('/');
+            } else {
+                toast.error(result?.Msg || "Change password failed");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error("Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
+        }
         navigate('/#');
     };
     return (
@@ -257,8 +271,8 @@ const Forgetpassword_2 = () => {
                         }) => (
                             <form onSubmit={handleSubmit}>
                                 <Stack
-                                    component="form"
-                                    height={{ sm: "450px", md: "343px" }}
+                                    
+                                    height={{ sm: "450px", md: "100%" }}
                                     width={{ sm: "291px", md: "700px" }}
                                     sx={{
                                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",

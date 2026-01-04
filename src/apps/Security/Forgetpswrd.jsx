@@ -101,28 +101,33 @@ const Forgetpassword_1 = () => {
     };
     const handleForgotPasswordRequest = async (values, resetForm) => {
         setLoading(true);
-        // try {
-        //   const requestData = {
-        //     UserName: values.username,
-        //     UserEmailID: values.mailid,
-        //     LicenseKey: values.license,
-        //   };
-        //    const result = await ForgotPasswordRequest(requestData)
+        try {
+          const requestData = {
+            UserName: values.username,
+            UserEmailID: values.mailid,
+            LicenseKey: values.license,
+          };
+           const result = await ForgotPasswordRequest(requestData)
 
-        //   if (result?.Status === "Y") {
-        //     toast.success(result.Msg || "OTP sent successfully!");
-        //     resetForm();
-        //     navigate('/#');
-        //   } else {
-        //     toast.error(result?.Msg || "Failed to send OTP.");
-        //   }
-        // } catch (error) {
-        //   console.error('Error:', error);
-        //   toast.error("Something went wrong. Please try again.");
-        // } finally {
-        //   setLoading(false);
-        // }
-        navigate('/Changepassword');
+          if (result?.Status === "Y") {
+            toast.success(result.Msg || "OTP sent successfully!");
+            resetForm();
+            navigate('/Changepassword',{
+            state: {
+                userName: values.username,
+                userRecid: result.UserRecid, 
+            },
+        });
+          } else {
+            toast.error(result?.Msg || "Failed to send OTP.");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          toast.error("Something went wrong. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+        
     };
     return (
         <div className="wrapper">
@@ -154,7 +159,7 @@ const Forgetpassword_1 = () => {
                             <form onSubmit={handleSubmit}>
                                 <Stack
                                     component="form"
-                                    height={{ sm: "450px", md: "343px" }}
+                                    height={{ sm: "450px", md: "100%" }}
                                     width={{ sm: "291px", md: "700px" }}
                                     sx={{
                                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
@@ -266,7 +271,7 @@ const Forgetpassword_1 = () => {
 
                                             <LoadingButton
                                                 onClick={() => {
-                                                    handleForgotPasswordRequest(values);
+                                                    handleForgotPasswordRequest(values, resetForm);
                                                 }}
                                                 color="success"
                                                 loading={isLoading}
