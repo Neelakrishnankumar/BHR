@@ -21,6 +21,8 @@ const initialState = {
   listViewurl: APIurl + 'wslistview_mysql.php',
   loginUrl: APIurl + 'LController.php',
   authUrl: APIurl + 'auth.php',
+  forgotPasswordUrl: APIurl + 'BOSForgetPasswordController.php',
+  
   comboUrl: APIurl + 'APIController.php',
   apiUrl: APIurl + 'APIController.php',
   imgUploadUrl: baseurl + 'imgup.php',
@@ -88,7 +90,7 @@ const initialState = {
   attendanceprocessUrl: APIurl + "EmpAttendanceHistoryController.php",
   regularizationUrl: APIurl + "APIController.php?",
   settingsgetUrl: APIurl + "HRSubscriptionCodeGetController.php",
-  settingsPostUrl: APIurl + "HRChangePasswordController.php?",
+  settingsPostUrl: APIurl + "HRChangePasswordController.php",
   //sprintget
   SprintgetUrl: APIurl + "SprintHeaderandDetailController.php",
   SprintPPGetUrl: APIurl + "SprintProjectPlanGetController.php",

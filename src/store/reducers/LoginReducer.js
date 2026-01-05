@@ -39,6 +39,49 @@ export const authentication = createAsyncThunk(
 );
 
 
+//API Forgot Password
+
+export const ForgotPasswordRequest = async (requestData) => {
+  const url = store.getState().globalurl.forgotPasswordUrl;
+  console.log('find the url', url);
+  
+  if (!url) {
+    console.error("Forgot password URL not found in Redux store");
+    throw new Error("API URL missing");
+  }
+  try {
+    const response = await axios.post(url, requestData, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    return response.data; // Return the API response data
+  } catch (error) {
+    console.error("Error in ForgotPasswordRequest:", error);
+    throw error;
+  }
+};
+
+
+//Change Password
+
+export const ChangePasswordRequest = async (requestData) => {
+  const url = store.getState().globalurl.settingsPostUrl; // URL from the store
+  try {
+    const response = await axios.post(url, requestData, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    return response.data; // Return the API response data
+  } catch (error) {
+    console.error("Error in ForgotPasswordRequest:", error);
+    throw error;
+  }
+};
+
 
 export const getApiSlice = createSlice({
   name: "loginApi",
