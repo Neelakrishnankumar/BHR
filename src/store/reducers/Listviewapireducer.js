@@ -734,9 +734,20 @@ export const fetchListview =
     // }
     else if (AccessID == "TR305") {
       filter = "";
-    } else if (AccessID == "TR328") {
-      filter = `HrLoginUserID='${LoginID}' AND CompanyID=${CompId}`;
-    }
+    } 
+    
+    // else if (AccessID == "TR328") {
+    //   filter = `HrLoginUserID='${LoginID}' AND CompanyID=${CompId}`;
+    // }
+
+    else if (AccessID === "TR328") {
+  const savedFilter = sessionStorage.getItem("TR328_WHERE");
+
+  filter = savedFilter
+    ? savedFilter
+    : `HrLoginUserID='${LoginID}' AND CompanyID='${CompId}'`;
+}
+
     // else if (AccessID == "TR305") {
     //   filter = "";
     // }

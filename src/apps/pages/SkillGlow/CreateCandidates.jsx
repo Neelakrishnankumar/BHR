@@ -225,7 +225,9 @@ const CreateCandidates = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID}/${params.screenName}/${params.parentID1}`,{
+            state: { ...state },
+          });
         }
       } else {
         return;

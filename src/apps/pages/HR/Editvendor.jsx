@@ -1087,7 +1087,7 @@ const Editvendor = () => {
                     sx={{ backgroundColor: "#ffffff" }}
                     InputProps={{ 
                       inputProps: {
-                        style:{textAlign: 'right'}
+                        style:{textAlign: 'left'}
                       } 
                     }}
                   />

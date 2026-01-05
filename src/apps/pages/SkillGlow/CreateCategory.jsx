@@ -178,7 +178,9 @@ const CreateCategory = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(`/Apps/Secondarylistview/skillglow/${params.accessID2}/${params.screenName}/${params.parentID3}/${params.accessID1}/${params.parentID2}/${params.accessID}/${params.parentID1}`,{
+            state: { ...state },
+          });
         }
       } else {
         return;

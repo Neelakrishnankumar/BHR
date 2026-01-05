@@ -428,9 +428,9 @@ const Listview = () => {
             }}
           >
             {accessID === "TR313" ||
-              accessID === "TR243" ||
-              // accessID === "TR328" ||
-              accessID === "TR321" ? (
+            accessID === "TR243" ||
+            accessID === "TR328" ||
+            accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -534,7 +534,8 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${
+                          accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -2311,7 +2312,14 @@ const Listview = () => {
 )} */}
 
             {showMore && accessID === "TR321" && (
-              <Box sx={{ width: 300, p: 2, borderRadius: 1, backgroundColor: "#fff" }}>
+              <Box
+                sx={{
+                  width: 300,
+                  p: 2,
+                  borderRadius: 1,
+                  backgroundColor: "#fff",
+                }}
+              >
                 <Formik
                   initialValues={{
                     days: sessionStorage.getItem("TR321_Days") || "",
@@ -2320,10 +2328,14 @@ const Listview = () => {
                     Process: sessionStorage.getItem("TR321_Process") === "Y",
                     Paid: sessionStorage.getItem("TR321_Paid") === "Y",
                     Picked: sessionStorage.getItem("TR321_Picked") === "Y",
-                    ReadyToDeliver: sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
-                    Delivered: sessionStorage.getItem("TR321_Delivered") === "Y",
-                    Scheduled: sessionStorage.getItem("TR321_Scheduled") === "Y",
-                    NextVisitDate: sessionStorage.getItem("TR321_NextVisitDate") === "Y",
+                    ReadyToDeliver:
+                      sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
+                    Delivered:
+                      sessionStorage.getItem("TR321_Delivered") === "Y",
+                    Scheduled:
+                      sessionStorage.getItem("TR321_Scheduled") === "Y",
+                    NextVisitDate:
+                      sessionStorage.getItem("TR321_NextVisitDate") === "Y",
                     Prospect: sessionStorage.getItem("TR321_Prospect") === "Y",
                     Balance: sessionStorage.getItem("TR321_Balance") === "Y",
                   }}
@@ -2334,7 +2346,7 @@ const Listview = () => {
                   //   sessionStorage.setItem("TR321_type", values.type || "");
                   //   sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
                   //   sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-                  //   sessionStorage.setItem("TR321_HASFILTER", 'Y'); 
+                  //   sessionStorage.setItem("TR321_HASFILTER", 'Y');
 
                   //   const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
                   //   statusKeys.forEach(status => {
@@ -2411,45 +2423,107 @@ const Listview = () => {
                   //   setTimeout(() => setSubmitting(false), 100);
                   // }}
 
-
                   onSubmit={(values, { setSubmitting }) => {
                     // 🔥 CHECK IF ANY ACTUAL FILTER SELECTED
-                    const statusKeys = ["Created", "Process", "Paid", "Picked", "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"];
-                    const hasStatusFilter = statusKeys.some(status => values[status]);
+                    const statusKeys = [
+                      "Created",
+                      "Process",
+                      "Paid",
+                      "Picked",
+                      "ReadyToDeliver",
+                      "Delivered",
+                      "Scheduled",
+                      "NextVisitDate",
+                    ];
+                    const hasStatusFilter = statusKeys.some(
+                      (status) => values[status]
+                    );
                     const hasDateFilter = values.days && values.type;
                     const hasProspectFilter = values.Prospect;
                     const hasBalanceFilter = values.Balance;
 
-                    console.log('🔥 APPLY DEBUG - hasStatus:', hasStatusFilter, 'hasDate:', hasDateFilter, 'Prospect:', hasProspectFilter, 'Balance:', hasBalanceFilter);
+                    console.log(
+                      "🔥 APPLY DEBUG - hasStatus:",
+                      hasStatusFilter,
+                      "hasDate:",
+                      hasDateFilter,
+                      "Prospect:",
+                      hasProspectFilter,
+                      "Balance:",
+                      hasBalanceFilter
+                    );
 
                     // 🔥 NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
-                    if (!hasStatusFilter && !hasDateFilter && !hasProspectFilter && !hasBalanceFilter) {
-                      console.log('🔥 APPLY - NO FILTERS: CompanyID only');
-                      sessionStorage.setItem('TR321_HASFILTER', 'N');
-                      ['Days', 'type', 'Created', 'Process', 'Paid', 'Picked', 'ReadyToDeliver', 'Delivered', 'Scheduled', 'NextVisitDate', 'Prospect', 'Balance']
-                        .forEach(k => sessionStorage.removeItem(`TR321_${k}`));
-                      dispatch(fetchListview(accessID, "Party", `CompanyID=${compID}`, "", compID));
+                    if (
+                      !hasStatusFilter &&
+                      !hasDateFilter &&
+                      !hasProspectFilter &&
+                      !hasBalanceFilter
+                    ) {
+                      console.log("🔥 APPLY - NO FILTERS: CompanyID only");
+                      sessionStorage.setItem("TR321_HASFILTER", "N");
+                      [
+                        "Days",
+                        "type",
+                        "Created",
+                        "Process",
+                        "Paid",
+                        "Picked",
+                        "ReadyToDeliver",
+                        "Delivered",
+                        "Scheduled",
+                        "NextVisitDate",
+                        "Prospect",
+                        "Balance",
+                      ].forEach((k) => sessionStorage.removeItem(`TR321_${k}`));
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          `CompanyID=${compID}`,
+                          "",
+                          compID
+                        )
+                      );
                       setTimeout(() => setSubmitting(false), 100);
                       return;
                     }
 
                     // 🔥 HAS FILTERS → Save to sessionStorage + HASFILTER=Y
-                    sessionStorage.setItem("TR321_HASFILTER", 'Y');
+                    sessionStorage.setItem("TR321_HASFILTER", "Y");
                     sessionStorage.setItem("TR321_Days", values.days || "");
                     sessionStorage.setItem("TR321_type", values.type || "");
-                    sessionStorage.setItem("TR321_Prospect", values.Prospect ? "Y" : "N");
-                    sessionStorage.setItem("TR321_Balance", values.Balance ? "Y" : "N");
-                    statusKeys.forEach(status => {
-                      sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
+                    sessionStorage.setItem(
+                      "TR321_Prospect",
+                      values.Prospect ? "Y" : "N"
+                    );
+                    sessionStorage.setItem(
+                      "TR321_Balance",
+                      values.Balance ? "Y" : "N"
+                    );
+                    statusKeys.forEach((status) => {
+                      sessionStorage.setItem(
+                        `TR321_${status}`,
+                        values[status] ? "Y" : "N"
+                      );
                     });
 
                     // CASE 1: PROSPECT/BALANCE
                     if (values.Prospect || values.Balance) {
                       let simpleWhere = `CompanyID=${compID}`;
-                      if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
+                      if (values.Prospect)
+                        simpleWhere += ` AND Prospects = 'Y'`;
                       if (values.Balance) simpleWhere += ` AND Balance < 0`;
-                      console.log('🔥 APPLY - CASE 1:', simpleWhere);
-                      dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
+                      console.log("🔥 APPLY - CASE 1:", simpleWhere);
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          simpleWhere,
+                          "",
+                          compID
+                        )
+                      );
                       setTimeout(() => setSubmitting(false), 100);
                       return;
                     }
@@ -2493,7 +2567,9 @@ const Listview = () => {
                           if (values.type === "A") {
                             dateConditions.push(`${col}='${fromdate}'`);
                           } else {
-                            dateConditions.push(`${col} BETWEEN '${fromdate}' AND '${todate}'`);
+                            dateConditions.push(
+                              `${col} BETWEEN '${fromdate}' AND '${todate}'`
+                            );
                           }
                         }
                       });
@@ -2503,30 +2579,51 @@ const Listview = () => {
                       }
 
                       const dynamicWhere = whereParts.join(" AND ");
-                      const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
+                      const innerWhere = dynamicWhere.replace(
+                        `CompanyID=${compID} AND `,
+                        ""
+                      );
                       const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
 
-                      console.log('🔥 APPLY - CASE 2:', finalWhereClause);
-                      dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
+                      console.log("🔥 APPLY - CASE 2:", finalWhereClause);
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          finalWhereClause,
+                          "",
+                          compID
+                        )
+                      );
                     } else {
                       // Days/Type but no status → CompanyID only
-                      console.log('🔥 APPLY - Days/Type but no status: CompanyID');
-                      dispatch(fetchListview(accessID, "Party", `CompanyID=${compID}`, "", compID));
+                      console.log(
+                        "🔥 APPLY - Days/Type but no status: CompanyID"
+                      );
+                      dispatch(
+                        fetchListview(
+                          accessID,
+                          "Party",
+                          `CompanyID=${compID}`,
+                          "",
+                          compID
+                        )
+                      );
                     }
 
                     setTimeout(() => setSubmitting(false), 100);
                   }}
-
                 >
-                  {({
-                    values,
-                    handleSubmit,
-                    isSubmitting,
-                    setFieldValue,
-                  }) => {
+                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => {
                     const statusKeys = [
-                      "Created", "Process", "Paid", "Picked",
-                      "ReadyToDeliver", "Delivered", "Scheduled", "NextVisitDate"
+                      "Created",
+                      "Process",
+                      "Paid",
+                      "Picked",
+                      "ReadyToDeliver",
+                      "Delivered",
+                      "Scheduled",
+                      "NextVisitDate",
                     ];
                     const statusLabelMap = {
                       ReadyToDeliver: "Ready For Delivery",
@@ -2534,36 +2631,49 @@ const Listview = () => {
                     };
                     const isStatusSelected = statusKeys.some((k) => values[k]);
                     const isDateSelected = Boolean(values.days && values.type);
-                    const isStatusGroupActive = isStatusSelected || isDateSelected;
-                    const isProspectGroupActive = values.Prospect || values.Balance;
+                    const isStatusGroupActive =
+                      isStatusSelected || isDateSelected;
+                    const isProspectGroupActive =
+                      values.Prospect || values.Balance;
 
                     // 🔥 FIXED RESET with RESET FLAG
                     const handleResetFilters = () => {
-                      setFieldValue('days', '');
-                      setFieldValue('type', '');
-                      setFieldValue('Prospect', false);
-                      setFieldValue('Balance', false);
-                      statusKeys.forEach(k => setFieldValue(k, false));
+                      setFieldValue("days", "");
+                      setFieldValue("type", "");
+                      setFieldValue("Prospect", false);
+                      setFieldValue("Balance", false);
+                      statusKeys.forEach((k) => setFieldValue(k, false));
 
                       // Clear ALL filters
-                      ['Days', 'type', 'Created', 'Process', 'Paid', 'Picked',
-                        'ReadyToDeliver', 'Delivered', 'Scheduled', 'NextVisitDate',
-                        'Prospect', 'Balance'].forEach(k => {
-                          sessionStorage.removeItem(`TR321_${k}`);
-                        });
+                      [
+                        "Days",
+                        "type",
+                        "Created",
+                        "Process",
+                        "Paid",
+                        "Picked",
+                        "ReadyToDeliver",
+                        "Delivered",
+                        "Scheduled",
+                        "NextVisitDate",
+                        "Prospect",
+                        "Balance",
+                      ].forEach((k) => {
+                        sessionStorage.removeItem(`TR321_${k}`);
+                      });
 
                       // 🔥 SET NO-FILTER STATE
-                      sessionStorage.setItem('TR321_RESET', 'Y');
-                      sessionStorage.setItem('TR321_HASFILTER', 'N');
+                      sessionStorage.setItem("TR321_RESET", "Y");
+                      sessionStorage.setItem("TR321_HASFILTER", "N");
                       // NO DISPATCH → Initial load handles single CompanyID call
                     };
-
-
 
                     return (
                       <form onSubmit={handleSubmit}>
                         <Box sx={{ height: 600, overflowY: "auto" }}>
-                          <Typography mt={2} fontWeight="bold" color="error">Status</Typography>
+                          <Typography mt={2} fontWeight="bold" color="error">
+                            Status
+                          </Typography>
 
                           {statusKeys.map((key) => (
                             <FormControlLabel
@@ -2577,11 +2687,20 @@ const Listview = () => {
                                     if (checked) {
                                       setFieldValue("Prospect", false);
                                       setFieldValue("Balance", false);
-                                      sessionStorage.setItem("TR321_Prospect", "N");
-                                      sessionStorage.setItem("TR321_Balance", "N");
+                                      sessionStorage.setItem(
+                                        "TR321_Prospect",
+                                        "N"
+                                      );
+                                      sessionStorage.setItem(
+                                        "TR321_Balance",
+                                        "N"
+                                      );
                                     }
                                     setFieldValue(key, checked);
-                                    sessionStorage.setItem(`TR321_${key}`, checked ? "Y" : "N");
+                                    sessionStorage.setItem(
+                                      `TR321_${key}`,
+                                      checked ? "Y" : "N"
+                                    );
                                   }}
                                 />
                               }
@@ -2598,7 +2717,10 @@ const Listview = () => {
                             disabled={isProspectGroupActive}
                             onChange={(e) => {
                               setFieldValue("days", e.target.value);
-                              sessionStorage.setItem("TR321_Days", e.target.value);
+                              sessionStorage.setItem(
+                                "TR321_Days",
+                                e.target.value
+                              );
                             }}
                             sx={{ mt: 2 }}
                             fullWidth
@@ -2613,7 +2735,10 @@ const Listview = () => {
                             disabled={isProspectGroupActive}
                             onChange={(e) => {
                               setFieldValue("type", e.target.value);
-                              sessionStorage.setItem("TR321_type", e.target.value);
+                              sessionStorage.setItem(
+                                "TR321_type",
+                                e.target.value
+                              );
                             }}
                             sx={{ mt: 2 }}
                             fullWidth
@@ -2641,7 +2766,10 @@ const Listview = () => {
                                     sessionStorage.setItem("TR321_type", "");
                                   }
                                   setFieldValue("Prospect", checked);
-                                  sessionStorage.setItem("TR321_Prospect", checked ? "Y" : "N");
+                                  sessionStorage.setItem(
+                                    "TR321_Prospect",
+                                    checked ? "Y" : "N"
+                                  );
                                 }}
                               />
                             }
@@ -2666,18 +2794,37 @@ const Listview = () => {
                                     sessionStorage.setItem("TR321_type", "");
                                   }
                                   setFieldValue("Balance", checked);
-                                  sessionStorage.setItem("TR321_Balance", checked ? "Y" : "N");
+                                  sessionStorage.setItem(
+                                    "TR321_Balance",
+                                    checked ? "Y" : "N"
+                                  );
                                 }}
                               />
                             }
                             label="Due"
                           />
 
-                          <Stack direction="row" alignItems="center" justifyContent="end" spacing={1} mt={2}>
-                            <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="end"
+                            spacing={1}
+                            mt={2}
+                          >
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              disabled={isSubmitting}
+                            >
                               Apply
                             </Button>
-                            <Button variant="contained" color="error" onClick={handleResetFilters} disabled={isSubmitting}>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={handleResetFilters}
+                              disabled={isSubmitting}
+                            >
                               Reset
                             </Button>
                           </Stack>
@@ -2689,7 +2836,7 @@ const Listview = () => {
               </Box>
             )}
 
-{/* {showMore && accessID === "TR328" && (
+            {showMore && accessID === "TR328" && (
               <Box
                 sx={{
                   width: 300,
@@ -2713,9 +2860,10 @@ const Listview = () => {
                       values.fromdate ||
                       values.date ||
                       values.party ||
-                      values.product
+                      values.product;
                   }}
                   onSubmit={(values, { setSubmitting }) => {
+
                     const conditions = [];
 
                     const fromDate = values.fromdate || "";
@@ -2729,28 +2877,27 @@ const Listview = () => {
                       JSON.stringify(values)
                     );
 
-                    const selectedStatuses = [];
                     const dateConditions = [];
 
-                    selectedStatuses.forEach((status) => {
-                      const field = "FilterLastCallDate";
+                    const field = "FilterLastCallDate";
 
-                      if (fromDate && toDate) {
-                        dateConditions.push(
-                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                        );
-                      } else if (fromDate) {
-                        dateConditions.push(`(${field} >= '${fromDate}')`);
-                      } else if (toDate) {
-                        dateConditions.push(`(${field} <= '${toDate}')`);
-                      }
-                    });
+                    if (fromDate && toDate) {
+                      dateConditions.push(
+                        `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                      );
+                    } else if (fromDate) {
+                      dateConditions.push(`(${field} >= '${fromDate}')`);
+                    } else if (toDate) {
+                      dateConditions.push(`(${field} <= '${toDate}')`);
+                    }
+
                     if (values.party?.length > 0) {
                       const partyIds = values.party
                         .map((p) => `'${p.RecordID}'`)
                         .join(", ");
 
-                      conditions.push(`PartyRecordID IN (${partyIds})`);
+                      // conditions.push(`PartyID = ${partyIds}`);
+                      conditions.push(`PartyID IN (${partyIds})`);
                     }
 
                     if (values.product?.length > 0) {
@@ -2758,10 +2905,13 @@ const Listview = () => {
                         .map((p) => `'${p.RecordID}'`)
                         .join(", ");
 
-                      conditions.push(`ProductID IN (${productIds})`);
+                      // conditions.push(`ProjectID = ${productIds}`);
+                      conditions.push(`ProjectID IN (${productIds})`);
                     }
                     if (compID) {
-                      conditions.push(`CompanyID = '${compID}'`);
+                      conditions.push(
+                        `HrLoginUserID='${LoginID}' AND CompanyID = '${compID}'`
+                      );
                     }
                     if (dateConditions.length > 0) {
                       conditions.push(`(${dateConditions.join(" OR ")})`);
@@ -2771,6 +2921,8 @@ const Listview = () => {
                     // FINAL WHERE CLAUSE
                     // --------------------------
                     const whereClause = conditions.join(" AND ");
+                    sessionStorage.setItem("TR328_WHERE", whereClause);
+
                     console.log("FINAL FILTER:", whereClause);
 
                     dispatch(
@@ -2796,7 +2948,13 @@ const Listview = () => {
                     resetForm,
                   }) => (
                     <form onSubmit={handleSubmit}>
-                      <Box sx={{ height: 600, overflowY: "auto" }}>
+                      <Box
+                        sx={{
+                          height: 600,
+                          overflowY: "auto",
+                          marginTop: "20px",
+                        }}
+                      >
                         <TextField
                           name="fromdate"
                           type="date"
@@ -2848,9 +3006,15 @@ const Listview = () => {
                           onChange={(e, newValue) => {
                             setFieldValue("party", newValue);
                             sessionStorage.setItem(
-                              "TR313_Party",
+                              "TR328_Party",
                               JSON.stringify(newValue)
                             );
+                          }}
+                          disablePortal={false}
+                          PopperProps={{
+                            sx: {
+                              zIndex: 1500,
+                            },
                           }}
                           // error={!!touched.party && !!errors.party}
                           // helperText={touched.party && errors.party}
@@ -2866,7 +3030,7 @@ const Listview = () => {
                           onChange={(e, newValue) => {
                             setFieldValue("product", newValue);
                             sessionStorage.setItem(
-                              "TR313_Product",
+                              "TR328_Product",
                               JSON.stringify(newValue)
                             );
                           }}
@@ -2897,10 +3061,11 @@ const Listview = () => {
                               [
                                 "FromDate",
                                 "ToDate",
-                               
+
                                 "TR328_Party",
                                 "TR328_Product",
                                 "TR328_Filters",
+                                "TR328_WHERE",  
                               ].forEach((key) =>
                                 sessionStorage.removeItem(key)
                               );
@@ -2923,17 +3088,13 @@ const Listview = () => {
                   )}
                 </Formik>
               </Box>
-            )} */}
-
-
+            )}
           </Box>
-          {accessID !== "TR313" && (
-          <Box display="flex" alignItems="center" marginLeft={3}  >
-            <Typography fontWeight={400} fontSize={15} lineHeight={1}
-              mb={-2} >
+          <Box display="flex" alignItems="center" marginLeft={3}>
+            <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
               Legend
-            </Typography></Box>
-          )}
+            </Typography>
+          </Box>
         </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
