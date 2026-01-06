@@ -961,7 +961,7 @@ const child = {
         {
           name: "Logo & GST Upload",
           id: 58467,
-          url: "./ChangeyourPassword_2",
+          url: "./ChangeyourPassword_4",
           icon: (
             <Tooltip title="Logo & GST Upload">
               <PermMediaIcon color="info" />
@@ -978,7 +978,7 @@ const child = {
            {
           name: "Header & Footer Setup",
           id: 56667,
-          url: "./ChangeyourPassword_2",
+          url: "./ChangeyourPassword_5",
           icon: (
             <Tooltip title="Header & Footer Setup">
               <SettingsOverscanIcon color="info" />

@@ -11,7 +11,7 @@ export const valid = Yup.object().shape({
 export const companySchema = yup.object().shape({
   // code:yup.string().matches(/^[-_ a-zA-Z0-9]+$/, "Only Numeric and Alphabets ").min(3).max(5),
   address: yup.string().max(500, "Address must be 500 character "),
-   phone: yup.string().max(10, "Not Valid Phone Number"),
+  phone: yup.string().max(10, "Not Valid Phone Number"),
   // phone:yup.number().min(10),
   pincode: yup
     .number()
@@ -49,26 +49,40 @@ export const companySchema = yup.object().shape({
 export const Settingsvalidation = yup.object().shape({
   currentpassword: yup.string().required("Please enter Current Password"),
 
-  newpassword: yup.string()
-  .required('Please Enter New Password')
-  .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-    "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-  ),
-  
-    // .string()
-    // .required("Please enter your new password")
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/,
-    //   "Password must contain at least 6 characters, one uppercase letter, one lowercase letter, one number, and one special character."
-    // )
-    // .min(6, "Password must be at least 6 characters"),
-    // .max(5, "Password cannot be more than 5 characters"),  // Stop validation after 5 characters
+  // newpassword: yup.string()
+  //   .required('Please Enter New Password')
+  //   .matches(
+  //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+  //     "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+  //   ),
+  newpassword: yup
+    .string()
+    .required("Please Enter New Password")
+    .min(8, "Password must be at least 8 characters")
+    .max(12, "Password must not exceed 12 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
+      "Must contain one uppercase, one lowercase, one number, and one special character"
+    ),
+
   confirmpassword: yup
     .string()
     .required("Please enter Confirm Password")
     .oneOf([yup.ref('newpassword')], "New Password and Confirm Password must match")
 });
+export const CompanySettingsValidation = yup.object({
+  gstnumber: yup
+    .string()
+    .notRequired()
+    .test(
+      "gst-optional",
+      "Invalid GST number",
+      (value) =>
+        !value ||
+        /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value)
+    ),
+});
+
 // export const Settingsvalidation = yup.object().shape({
 //   currentpassword: yup.string().required("Please enter password"),
 //   newpassword: yup.string()
@@ -82,7 +96,7 @@ export const Settingsvalidation = yup.object().shape({
 //   .string()
 //   .required("Please confirm your password")
 //   .oneOf([yup.ref('newpassword')], "Passwords must match"),
- 
+
 // });
 
 /********************* BANK MASTER SCREEN*************************/
@@ -452,8 +466,8 @@ export const productcategoriesSchema = yup.object().shape({
   HsnCode: yup
     .string()
     .matches(/^[-_ 0-9]+$/, "Only Numeric")
-    .min(4,"Minimum Length is Four")
-  .max(8, "Maximum Length is Eight"),
+    .min(4, "Minimum Length is Four")
+    .max(8, "Maximum Length is Eight"),
   Code: yup
     .string()
     .matches(/^[-_ 0-9]+$/, "Only Numeric")
@@ -731,7 +745,7 @@ export const proformatrailerSchema = yup.object().shape({
       "Numeric and maximum of 3 decimal places"
     )
     .max(10, "Maximum Length is Ten"),
- 
+
 });
 
 /************************* PROFORMA ACCOUNT SCREEN *********************/
@@ -808,15 +822,15 @@ export const OpeningstockSchema = yup.object().shape({
 });
 /************************* Hsn SCREEN *********************/
 export const HsnSchema = yup.object().shape({
-  hsnCode:yup.string().matches(/^[0-9\s]+$/, "Only Numeric")
-  .min(4,"Minimum Length is Four")
-  .max(8, "Maximum Length is Eight"),
-  sgst: yup.string().matches(/^[0-9]+(\.[0-9][0-9]?)?$/,"Numeric and maximum of 2 decimal places")
-  .max(8, "Maximum Length is Two"),
-  cgst: yup.string().matches(/^[0-9]+(\.[0-9][0-9]?)?$/,"Numeric and maximum of 2 decimal places")
-  .max(8, "Maximum Length is Two"),
-  igst: yup.string().matches(/^[0-9]+(\.[0-9][0-9]?)?$/,"Numeric and maximum of 2 decimal places")
-  .max(8, "Maximum Length is Two"),
+  hsnCode: yup.string().matches(/^[0-9\s]+$/, "Only Numeric")
+    .min(4, "Minimum Length is Four")
+    .max(8, "Maximum Length is Eight"),
+  sgst: yup.string().matches(/^[0-9]+(\.[0-9][0-9]?)?$/, "Numeric and maximum of 2 decimal places")
+    .max(8, "Maximum Length is Two"),
+  cgst: yup.string().matches(/^[0-9]+(\.[0-9][0-9]?)?$/, "Numeric and maximum of 2 decimal places")
+    .max(8, "Maximum Length is Two"),
+  igst: yup.string().matches(/^[0-9]+(\.[0-9][0-9]?)?$/, "Numeric and maximum of 2 decimal places")
+    .max(8, "Maximum Length is Two"),
   sortOrder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
 });
 /************************* Hsn Location *********************/
@@ -947,52 +961,52 @@ export const DailyHoursTaskSchema = yup.object().shape({
 //     SortOrder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
 // });
 
-export const deptSchema=yup.object().shape({
+export const deptSchema = yup.object().shape({
   Code: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only alphanumeric character"),
-    Loc: yup
+  Loc: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only Numeric and Alphabets"),
   Name: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only Numeric and Alphabets"),
-    SortOrder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
+  SortOrder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
 });
 // fixed asset catagory
 
-export const fixedassetSchema=yup.object().shape({
+export const fixedassetSchema = yup.object().shape({
   code: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only alphanumeric character"),
-    name: yup
+  name: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only Numeric and Alphabets"),
-    comment: yup
+  comment: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only Numeric and Alphabets"),
-    sortorder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
-    
+  sortorder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
+
 });
 
 //Finance Entry
-export const financeentrySchema=yup.object().shape({
+export const financeentrySchema = yup.object().shape({
   referenceifany: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only alphanumeric character"),
-    amount: yup
+  amount: yup
     .string()
     .matches(/[0-9\s]+$/, "Only Numeric"),
-    comments: yup
+  comments: yup
     .string()
     .matches(/[a-zA-Z0-9\s]+$/, "Only Numeric and Alphabets"),
-    // sortorder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
-    
+  // sortorder: yup.string().matches(/^[0-9\s]+$/, "Only Numeric"),
+
 });
 
 /***********************Edit Purchase order*******************************************/
 export const PurchaseOrderNoSchema = yup.object().shape({
- 
+
   purchaseorderno: yup
     .string()
     .matches(/^(?!\d+\b)[a-zA-Z\d\s/]+$/, "Only alphanumeric character"),
@@ -1001,9 +1015,9 @@ export const PurchaseOrderNoSchema = yup.object().shape({
 });
 
 
- /******************* Login screen ************************** */
+/******************* Login screen ************************** */
 export const basicSchema = yup.object().shape({
- 
+
   username: yup.string().required("Please enter username"),
   password: yup.string().required("Please enter password"),
   company: yup.string().required("Please choose company"),

@@ -43,11 +43,11 @@ import Header from "../../ui-components/Header";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import Footer from "../../ui-components/Footer";
 import ChGPassWord from "../../assets/img/ChGPassWord.png";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { json, useLocation, useNavigate, useParams } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Formik, Field } from "formik";
 import { formGap } from "../../ui-components/utils";
-import { Settingsvalidation } from "./validation";
+import { CompanySettingsValidation, Settingsvalidation } from "./validation";
 import { CompanydetailpostData, getSettingsData, SettingspostData } from "../../store/reducers/Formapireducer";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -76,6 +76,8 @@ const Logochange = () => {
     const company = sessionStorage.getItem("company");
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
+    const [headerImage, setheaderImage] = useState("");
+    const [footerImage, setfooterImage] = useState("")
     const [gst, setGst] = useState("");
     const [autocode, setAutocode] = useState(data?.CM_AUTOCODE === "Y");
     // const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -103,6 +105,8 @@ const Logochange = () => {
             setlogoimage(data.CM_IMAGE || "");
             setGstImage(data.CM_GSTIMAGE || "");
             setAutocode(data.CM_AUTOCODE === "Y");
+            setheaderImage(data.CM_HEADER || "")
+            setfooterImage(data.CM_FOOTER || "")
         }
     }, [data]);
 
@@ -299,11 +303,12 @@ const Logochange = () => {
         noofusers: data.CM_NOOFUSER,
         noofemployee: data.CM_NOOFEMP,
         address: data.CM_ADDRESS,
-        gstnumber: data.CM_GST,
+        gstnumber: data.CM_GST || "",
         // address: data?.address || "", // Set default value if data.address is undefined
         // gstnumber: data?.gstnumber || "",
         logoimage: data.CM_IMAGE,
         GstImg: data.CM_GSTIMAGE,
+        Name: data.CM_NAME
         // checkbox: data.CM_AUTOCODE === "Y" ? "Y" : "N",
 
     };
@@ -334,11 +339,14 @@ const Logochange = () => {
         const idata = {
             action: "update",
             CompanyRecordID: compID,
-            Address: offaddress,
-            GstNo: gst,
+            Address: values.address,
+            GstNo: values.gstnumber || "",
             Image: logoimage,
             GstImage: gstImage,
-            AutoCode: autocode ? "Y" : "N"
+            AutoCode: autocode ? "Y" : "N",
+            HeaderImg: headerImage,
+            FooterImg: footerImage,
+            CompanyName: values.Name ? values.Name : company
 
         };
         console.log(offaddress, "Address");
@@ -346,7 +354,7 @@ const Logochange = () => {
         const response = await dispatch(CompanydetailpostData({ idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            navigate("/ChangeyourPassword_3")
+            navigate("/Apps/ChangeyourPassword_3")
         } else {
             toast.error(response.payload.Msg);
         }
@@ -394,8 +402,12 @@ const Logochange = () => {
             <Paper elevation={3} sx={{ margin: "10px" }}>
                 <Formik
                     initialValues={initialvalues}
-                    validationSchema={Settingsvalidation}
+                    validationSchema={CompanySettingsValidation}
                     enableReinitialize={true}
+                    onSubmit={(values) => {
+
+                        fnSave(values);
+                    }}
                 >
                     {({
                         errors,
@@ -408,62 +420,9 @@ const Logochange = () => {
                         setFieldTouched,
                         resetForm
                     }) => (
+
                         <form onSubmit={handleSubmit}>
-                            {/* <Box
-                                display="grid"
-                                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                                gap={formGap}
-                                padding={1}
-                                sx={{
-                                    "& > div": {
-                                        gridColumn: isNonMobile ? undefined : "span 4",
-                                    },
-                                }}
-                            >
-                                <FormControl fullWidth sx={{ gridColumn: "span 2", gap: formGap }}>
-                                    
-                                    <TextField
-                                        name="address"
-                                        type="text"
-                                        id="address"
-                                        label="Office Address"
-                                        variant="standard"
-                                        multiline
-                                        rows={3}
-                                        focused
-                                        value={offaddress}
-                                        onChange={(e) => setOffaddress(e.target.value)}
-                                        autoFocus
-                                    />
-                                    <TextField
-                                        name="gstnumber"
-                                        label="GST Number"
-                                        variant="standard"
-                                        focused
-                                        value={gst}
-                                        onChange={(e) => {
-                                            const input = e.target.value.toUpperCase();
-                                            if (/^[0-9A-Z]*$/.test(input) || input === "") {
-                                                setGst(input);
-                                            }
-                                        }}
-                                        sx={{ backgroundColor: "#ffffff" }}
-                                    />
 
-                                </FormControl>
-                                <Box>                                   
-                                    <Checkbox
-                                        checked={autocode}
-                                        onChange={handleAutocodeChange}
-                                        id="checkbox"
-                                        name="checkbox"
-                                    />
-                                    <FormLabel htmlFor="checkbox" focused={false}>
-                                        Autocode
-                                    </FormLabel>
-
-                                </Box>
-                            </Box> */}
                             <Box
                                 display="grid"
                                 gridTemplateColumns="repeat(4, minmax(0, 1fr))"
@@ -480,7 +439,7 @@ const Logochange = () => {
                                 <FormControl
                                     fullWidth
                                     gap={formGap}
-                                    padding={1}                                   
+                                    padding={1}
                                     sx={{ gridColumn: "span 2" }}
                                 >
                                     <TextField
@@ -488,7 +447,7 @@ const Logochange = () => {
                                         variant="standard"
                                         type="text"
                                         label="Company Name"
-                                        value={company}
+                                        value={values.Name}
                                         id="Name"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
@@ -503,6 +462,7 @@ const Logochange = () => {
                                         }}
                                         focused
                                         inputProps={{ maxLength: 90 }}
+
                                     />
                                     <TextField
                                         name="address"
@@ -513,9 +473,10 @@ const Logochange = () => {
                                         multiline
                                         rows={3}
                                         focused
-                                        value={offaddress}
-                                        onChange={(e) => setOffaddress(e.target.value)}
-                                        sx={{marginTop:"5px"}}
+                                        value={values.address}
+                                        // onChange={(e) => setOffaddress(e.target.value)}
+                                        onChange={handleChange}
+                                        sx={{ marginTop: "5px" }}
                                     />
                                 </FormControl>
 
@@ -530,7 +491,7 @@ const Logochange = () => {
                                         justifyContent: "flex-start",
                                     }}
                                 >
-                                    <TextField
+                                    {/* <TextField
                                         name="gstnumber"
                                         label="GST Number"
                                         variant="standard"
@@ -543,6 +504,17 @@ const Logochange = () => {
                                             }
                                         }}
                                         sx={{ backgroundColor: "#ffffff" }}
+                                    /> */}
+                                    <TextField
+                                        name="gstnumber"
+                                        label="GST Number"
+                                        variant="standard"
+                                        focused
+                                        value={values.gstnumber}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.gstnumber && Boolean(errors.gstnumber)}
+                                        helperText={touched.gstnumber && errors.gstnumber}
                                     />
 
                                     <FormControlLabel
@@ -564,86 +536,25 @@ const Logochange = () => {
                                 mt="20px"
                                 gap="20px"
                             >
-                                {/* <Tooltip title="Upload Logo">
-                                    <IconButton
-                                        size="small"
-                                        color="warning"
-                                        aria-label="upload picture"
-                                        component="label"
-                                    >
-                                        <input
-                                            hidden
-                                            accept="all/*"
-                                            type="file"
-                                            onChange={getFilepanChange}
-                                        />
-                                        <PictureAsPdfOutlinedIcon />
-                                    </IconButton>
-                                </Tooltip>
                                 <Button
-                                    size="small"
-                                    variant="contained"
-                                    component={"a"}
-                                    onClick={() => {
-                                        data.logoimage || logoimage
-                                            ? window.open(
-                                                logoimage
-                                                    ? store.getState().globalurl.attachmentUrl +
-                                                    logoimage
-                                                    : store.getState().globalurl.attachmentUrl +
-                                                    data.logoimage,
-                                                "_blank"
-                                            )
-                                            : toast.error("Please Upload File");
-                                    }}
-                                >
-                                    View Logo
-                                </Button>
-                                <Tooltip title="Upload GST">
-                                    <IconButton
-                                        size="small"
-                                        color="warning"
-                                        aria-label="upload picture"
-                                        component="label"
-                                    >
-                                        <input
-                                            hidden
-                                            accept="all/*"
-                                            type="file"
-                                            onChange={getFilegstChange}
-                                        />
-                                        <PictureAsPdfOutlinedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    component={"a"}
-                                    onClick={() => {
-                                        data.GstImg || gstImage
-                                            ? window.open(
-                                                gstImage
-                                                    ? store.getState().globalurl.attachmentUrl +
-                                                    gstImage
-                                                    : store.getState().globalurl.attachmentUrl +
-                                                    data.GstImg,
-                                                "_blank"
-                                            )
-                                            : toast.error("Please Upload File");
-                                    }}
-                                >
-                                    View GST
-                                </Button> */}
-
-                                <LoadingButton
                                     color="success"
                                     variant="contained"
+                                    // onClick={() => resetForm()}
+                                    onClick={() => {
+                                        navigate("/Apps/ChangeyourPassword_3");
+                                    }}
+                                >
+                                    Skip
+                                </Button>
+                                <LoadingButton
                                     type="submit"
                                     loading={isLoading}
-                                    onClick={fnSave}
+                                    color="secondary"
+                                    variant="contained"
                                 >
                                     Save
                                 </LoadingButton>
+
                                 <Button
                                     color="warning"
                                     variant="contained"

@@ -202,8 +202,8 @@ const Login = () => {
       navigate("/Apps/HR");
       console.log("firstLogin:", firstLogin);
       if (firstLogin == "Y") {
-        //  navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
-        navigate("/Apps/HR")
+         navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
+        // navigate("/Apps/HR")
       }
       else {
         navigate("/Apps/HR")
@@ -367,14 +367,14 @@ const Login = () => {
                     />
                     {/* <Box sx={{ flexGrow: 1 }} /> */}
                     <Stack direction={"row"} justifyContent="end" gap={"10px"} sx={{ marginTop: "50px" }}>
-                      {/* <Typography
+                      <Typography
                         variant="body2"
                         color="primary"
                         sx={{ cursor: "pointer", textDecoration: "underline", marginTop: "5px", marginRight: "25px" }}
                         onClick={() => navigate("/Forgotpassword")}
                       >
                         Forgot Password?
-                      </Typography> */}
+                      </Typography>
                       <LoadingButton
                         onClick={() => {
                           fnLogin(values);

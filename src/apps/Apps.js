@@ -182,6 +182,8 @@ import Logochange from "./Security/Changelogo";
 
 
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
+import Companychange from "./Security/Changecompany";
+import Changehdrftr from "./Security/ChangeHdrftr";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -588,6 +590,9 @@ function App() {
                   <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
                   <Route path="/ChangeyourPassword_2" element={<Logochange />} />
                   <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
+                   <Route path="/ChangeyourPassword_4" element={<Companychange />} />
+                      <Route path="/ChangeyourPassword_5" element={<Changehdrftr />} />
+
       <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}
