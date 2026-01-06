@@ -257,7 +257,7 @@ const Editoverhead = () => {
 
         let schemaFields = {
           name: Yup.string().required(data.Overhead.name),
-          OverheadType: Yup.object().required(data.Overhead.OverheadType),
+          OverheadType: Yup.object().required(data.Overhead.OverheadType).nullable(),
           frequency: Yup.string().required(data.Overhead.frequency),
         };
 
@@ -349,7 +349,7 @@ const Editoverhead = () => {
       toast.success(response.payload.Msg);
       // setIni(true)
       setLoading(false);
-      navigate(-1);
+      navigate(`/Apps/TR085/Overhead/EditOverhead/${response.payload.OverheadsRecid}/E`);
     } else {
       toast.error(response.payload.Msg);
       setLoading(false);
@@ -673,11 +673,12 @@ const Editoverhead = () => {
                     url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                   />
                   <TextField
-                    label={
-                      <>
-                        Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
+                    label="Account Type"
+                    // {
+                    //   <>
+                    //     Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                    //   </>
+                    // }
                     select
                     id="accounttype"
                     name="accounttype"

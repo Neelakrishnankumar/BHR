@@ -7493,7 +7493,7 @@ const Editemployee = () => {
                       <TextField
                         fullWidth
                         variant="standard"
-                        type="text"
+                        type="number"
                         value={values.ItemNumber}
                         id="ItemNumber"
                         name="ItemNumber"
@@ -7519,8 +7519,13 @@ const Editemployee = () => {
                         }}
                         focused
                         onWheel={(e) => e.target.blur()}
-                        multiline
-                        inputProps={{ maxLength: 90 }}
+                        // multiline
+                        // inputProps={{ maxLength: 90 }}
+                         InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
                       <TextField
                         fullWidth
@@ -7552,6 +7557,7 @@ const Editemployee = () => {
                         focused
                         multiline
                         inputProps={{ maxLength: 90 }}
+                        
                       />
 
                      
@@ -7559,7 +7565,7 @@ const Editemployee = () => {
                       <TextField
                         fullWidth
                         variant="standard"
-                        type="text"
+                        type="number"
                         value={values.ItemValue}
                         id="ItemValue"
                         name="ItemValue"
@@ -7584,7 +7590,7 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                        multiline
+                        // multiline
                         inputProps={{ maxLength: 90 }}
                         InputProps={{
                           inputProps: {
@@ -7665,7 +7671,7 @@ const Editemployee = () => {
                         inputProps={{ maxLength: 90 }}
                         InputProps={{
                           inputProps: {
-                            style: { textAlign: "right" },
+                            style: { textAlign: "left" },
                           },
                         }}
                       />
@@ -10664,7 +10670,7 @@ const Editemployee = () => {
                           fullWidth
                           variant="standard"
                           type="number"
-                          label="Availed Days"
+                          label="Avail Days"
                           id="availableleave"
                           onBlur={handleBlur}
                           onChange={handleChange}
