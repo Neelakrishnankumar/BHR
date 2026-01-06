@@ -3092,7 +3092,7 @@ const Listview = () => {
           </Box>
           <Box display="flex" alignItems="center" marginLeft={3}>
             <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
-              Label
+              Legend
             </Typography>
           </Box>
         </Box>

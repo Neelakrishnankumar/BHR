@@ -73,7 +73,7 @@ const Logochange = () => {
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const [logoimage, setlogoimage] = useState("");
     console.log("Nowlogo", logoimage);
-
+    const company = sessionStorage.getItem("company");
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
     const [gst, setGst] = useState("");
@@ -475,11 +475,35 @@ const Logochange = () => {
                                     },
                                 }}
                             >
+
                                 {/* LEFT: Address */}
                                 <FormControl
                                     fullWidth
+                                    gap={formGap}
+                                    padding={1}                                   
                                     sx={{ gridColumn: "span 2" }}
                                 >
+                                    <TextField
+                                        fullWidth
+                                        variant="standard"
+                                        type="text"
+                                        label="Company Name"
+                                        value={company}
+                                        id="Name"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        name="Name"
+                                        error={!!touched.Name && !!errors.Name}
+                                        helperText={touched.Name && errors.Name}
+                                        sx={{
+                                            backgroundColor: "#ffffff",
+                                            "& .MuiFilledInput-root": {
+                                                backgroundColor: "",
+                                            },
+                                        }}
+                                        focused
+                                        inputProps={{ maxLength: 90 }}
+                                    />
                                     <TextField
                                         name="address"
                                         type="text"
@@ -491,8 +515,10 @@ const Logochange = () => {
                                         focused
                                         value={offaddress}
                                         onChange={(e) => setOffaddress(e.target.value)}
+                                        sx={{marginTop:"5px"}}
                                     />
                                 </FormControl>
+
 
                                 {/* RIGHT: GST + Autocode (stacked vertically) */}
                                 <Box
@@ -538,7 +564,7 @@ const Logochange = () => {
                                 mt="20px"
                                 gap="20px"
                             >
-                                <Tooltip title="Upload Logo">
+                                {/* <Tooltip title="Upload Logo">
                                     <IconButton
                                         size="small"
                                         color="warning"
@@ -607,7 +633,7 @@ const Logochange = () => {
                                     }}
                                 >
                                     View GST
-                                </Button>
+                                </Button> */}
 
                                 <LoadingButton
                                     color="success"

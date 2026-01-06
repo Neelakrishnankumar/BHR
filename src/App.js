@@ -26,9 +26,9 @@ const App = () => {
         <Route path="/*" element={<Login />} />
         <Route path="/Apps/*" element={<Apps />} />
         {/* <Route path="/Forgotpassword" element={<Forgotlogin />} /> */}
-          <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
+          {/* <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
           <Route path="/ChangeyourPassword_2" element={<Logochange />} />
-         <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
+         <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
         <Route path="/SubscriptionScreen" element={<SubscriptionScreen/>} />
         <Route path="/Forgotpassword" element={<Forgetpassword_1/>} />
         <Route path="/Changepassword" element={<Forgetpassword_2/>} />

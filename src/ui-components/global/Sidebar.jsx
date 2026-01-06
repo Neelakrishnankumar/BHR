@@ -146,6 +146,10 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import store from "../..";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
+import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 const child = {
   data: [
     {
@@ -909,6 +913,88 @@ const child = {
         },
       ],
     },
+      {
+      name: "Company",
+      id: 95689,
+      MenuID: "ST1600",
+      Tooltipname: "Company",
+      icon: (
+        <Tooltip title="Company">
+          <AssuredWorkloadIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+         {
+          name: "Company Details",
+          id: 5846,
+          url: "./ChangeyourPassword_2",
+          icon: (
+            <Tooltip title="Company Details">
+              <DisplaySettingsIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR252",
+        },
+        {
+          name: "Activate My Subscription",
+          id: 5846,
+          url: "./ChangeyourPassword_3",
+          icon: (
+            <Tooltip title="Activate My Subscription">
+              <UnsubscribeIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR252",
+        },
+        {
+          name: "Logo & GST Upload",
+          id: 58467,
+          url: "./ChangeyourPassword_2",
+          icon: (
+            <Tooltip title="Logo & GST Upload">
+              <PermMediaIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR258",
+        },
+           {
+          name: "Header & Footer Setup",
+          id: 56667,
+          url: "./ChangeyourPassword_2",
+          icon: (
+            <Tooltip title="Header & Footer Setup">
+              <SettingsOverscanIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR258",
+        },
+        
+      ],
+    },
   ],
 };
 
@@ -946,6 +1032,9 @@ const Sidebars = () => {
   const [open, setOpen] = React.useState(false);
   // const companyLogo = sessionStorage.getItem("CompanyLogo");
   // console.log(companyLogo, "companyLogo");
+  const firstLogin = sessionStorage.getItem("firstLogin");
+  // const firstLogin = "Y";
+  console.log(firstLogin, "firstLogin");
   const [logoSrc, setLogoSrc] = useState(null);
 
   React.useEffect(() => {
@@ -979,6 +1068,12 @@ const Sidebars = () => {
     setMenu(newData);
   };
   const [menu, setMenu] = useState({});
+  const filteredMenuData =
+  firstLogin === "Y"
+    ? child.data.filter((menu) => menu.name === "Company")
+    : child.data.filter((menu) => menu.name !== "Company");
+
+
   const handleMenu = (children, accessRow, isChild) => {
     return children.map(
       ({
@@ -1149,31 +1244,13 @@ const Sidebars = () => {
                 alignItems="center"
               // ml="15px"
               >
-                {/* <img
-                 
-                  src={BackOfficelogoV1}
-                  // sx={{ width: "100px" }}
-                  style={{ height: "60px", width: "180px" }}
-                  onClick={() => {
-                    // navigate("./Chart");
-                    navigate("./HR");
-                  }}
-                ></img> */}
+
                 <img
                   src={logoSrc}
                   style={{ height: "60px", width: "180px", objectFit: "contain" }}
                   onClick={() => navigate("./HR")}
                 />
 
-                {/* <Typography variant='h2' text-align= 'center' marginLeft='50px' >HR</Typography> */}
-
-                {/* <IconButton
-                  onClick={
-                    broken ? () => toggleSidebar() : () => collapseSidebar()
-                  }
-                >
-                  <CloseOutlinedIcon />
-                </IconButton> */}
                 <IconButton
                   onClick={
                     broken ? () => toggleSidebar() : () => collapseSidebar()
@@ -1207,7 +1284,8 @@ const Sidebars = () => {
           )}
           <Box></Box>
           <Box paddingBottom={3}>
-            {handleMenu(child.data, Groupaccess, true)}
+            {/* {handleMenu(child.data, Groupaccess, true)} */}
+            {handleMenu(filteredMenuData, Groupaccess, true)}
 
             <Tooltip title="Logout">
               <ListItemButton
@@ -1223,16 +1301,6 @@ const Sidebars = () => {
               </ListItemButton>
             </Tooltip>
 
-            {/* <Tooltip title="Logout">
-              <ListItemButton
-                onClick={() => {
-                  navigate("/Apps/changepassword");
-                }}
-              >
-
-                {!collapsed && <ListItemText primary="Change Password" />}
-              </ListItemButton>
-            </Tooltip> */}
             <Divider sx={{ mt: 1 }} variant="middle" />
 
             <Grid mt={1} p={1} container direction={"column"} spacing={2}>
@@ -1256,43 +1324,6 @@ const Sidebars = () => {
                   </Box>
                 </Paper>
               ) : null}
-
-              {/* <Grid item>
-    <Chip
-      color="primary"
-      variant="outlined"
-      sx={{ width: "100%", background: "#f5f5f5" }}
-      size="medium"
-      label="Text"
-    />
-  </Grid>
-  <Grid item>
-    <Chip
-      color="primary"
-      size="medium"
-      variant="outlined"
-      sx={{ width: "100%", background: "#F0E8B8" }}
-      label="Numeric"
-    />
-  </Grid>
-  <Grid item>
-    <Chip
-      color="primary"
-      size="medium"
-      variant="outlined"
-      sx={{ width: "100%", background: "#F0CDB5" }}
-      label="Calculation"
-    />
-  </Grid>
-  <Grid item>
-    <Chip
-      color="primary"
-      size="medium"
-      variant="outlined"
-      sx={{ width: "100%", background: "#DFDDDD" }}
-      label="Read Only"
-    />
-  </Grid> */}
             </Grid>
           </Box>
         </Menu>
