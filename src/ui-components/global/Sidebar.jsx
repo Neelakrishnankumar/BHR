@@ -1250,7 +1250,7 @@ const Sidebars = () => {
                   style={{ height: "60px", width: "180px", objectFit: "contain" }}
                   // onClick={() => navigate("./HR")}
                   onClick={() =>
-                    firstLogin === "N"
+                    firstLogin === "Y"
                       ? navigate("/Apps/ChangeyourPassword_1")
                       : navigate("./HR")
                   }
