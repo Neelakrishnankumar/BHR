@@ -657,6 +657,7 @@ export const fetchListview =
         AccessID != "TR317" &&
         AccessID != "TR318" &&
         AccessID != "TR319" &&
+        AccessID != "TR324" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -1779,7 +1780,7 @@ export const fetchListview =
             AccessID == "TR318" ||
             AccessID == "TR310" ||
             AccessID == "TR323" ||
-            AccessID == "TR323" ||
+            AccessID == "TR324" ||
             AccessID == "TR328" ||
             AccessID == "TR319"
           ) {
@@ -6091,6 +6092,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
       OrderType: "O",
       ORStatus: "Process",
+      PurchaseCheckbox:row.PurchaseCheckbox || "N",
     };
 
     const response = await dispatch(
@@ -6311,7 +6313,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Route Area">
-              <IconButton
+              {/* <IconButton
                 color="info"
                 size="small"
                 onClick={() =>
@@ -6324,6 +6326,40 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 }
               >
                 <AltRouteOutlinedIcon />
+              </IconButton> */}
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/Route/TR324/RouteArea/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.Route,
+                    },
+                  })
+                }
+              >
+                <AltRouteOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+         {accessID === "TR324" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.RouteArea,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
               </IconButton>
             </Tooltip>
           </>

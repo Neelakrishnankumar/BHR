@@ -448,8 +448,14 @@ function App() {
                    {/* AREA EDIT */}
                   <Route
                     // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
-                    path="/Route/Area/EditArea"
+                    path="/Secondarylistview/Route/:accessID/:screenName/:parentID1/EditRouteArea/:id/:Mode"
                     element={<EditArea />}
+                  />
+                  {/* AREA EDIT */}
+                  <Route
+                    // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
+                    path="/Secondarylistview/Route/:accessID/:screenName/:parentID1"
+                    element={<ListviewSecondary />}
                   />
                   <Route
                     path="SkillGlow/CandidateMain"
