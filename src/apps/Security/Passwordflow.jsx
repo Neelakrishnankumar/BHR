@@ -157,11 +157,21 @@ const ChangeyourPassword_1 = () => {
                 {section.heading}
               </Typography>
 
-              {section.points.map((point, i) => (
+              {/* {section.points.map((point, i) => (
                 <Typography key={i} variant="body2" sx={{ ml: 2, mt: 0.5 }}>
                   • {point}
                 </Typography>
+              ))} */}
+              {section.points.map((point, i) => (
+                <Typography
+                  key={i}
+                  variant="body2"
+                  sx={{ ml: 2, mt: 0.5, fontWeight: point.bold ? "bold" : "normal" }}
+                >
+                  • {point.text}
+                </Typography>
               ))}
+
             </Box>
           ))}
           <FormControlLabel
@@ -197,28 +207,28 @@ const ChangeyourPassword_1 = () => {
           label="I agree to Terms & Conditions"
         /> */}
 
-        <Box display="flex" gap={2}
-          justifyContent= "flex-end"
-          alignItems= "center"
-          padding={2}
-          >
-          <Button
-            variant="contained"
-            color="success"
-            disabled={!agreed}
-            onClick={() => navigate("/Apps/ChangeyourPassword_2")}
-          >
-            Agree
-          </Button>
+      <Box display="flex" gap={2}
+        justifyContent="flex-end"
+        alignItems="center"
+        padding={2}
+      >
+        <Button
+          variant="contained"
+          color="success"
+          disabled={!agreed}
+          onClick={() => navigate("/Apps/ChangeyourPassword_2")}
+        >
+          Agree
+        </Button>
 
-          <Button
-            variant="contained"
-            color="warning"
-            onClick={() => navigate(-1)}
-          >
-            Cancel
-          </Button>
-        </Box>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={() => navigate(-1)}
+        >
+          Cancel
+        </Button>
+      </Box>
       {/* </Box> */}
     </Box>
   );
