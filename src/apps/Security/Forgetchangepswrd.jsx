@@ -64,7 +64,7 @@ const Forgetpassword_2 = () => {
     };
     const [showPassword, setShowPassword] = useState({ old: false, new: false, confirm: false });
 
-   // const userRecid = sessionStorage.getItem("UserRecid");
+    // const userRecid = sessionStorage.getItem("UserRecid");
     // const userName = sessionStorage.getItem("UserName");
 
 
@@ -72,15 +72,15 @@ const Forgetpassword_2 = () => {
     const { userName, userRecid } = location.state || {};
 
     console.log(userName, userRecid);
-    
-    
+
+
 
     const handleSave = async (values, resetForm) => {
         setLoading(true);
         try {
             const result = await ChangePasswordRequest({
-                UserRecid: userRecid,     
-                UserName: userName,      
+                UserRecid: userRecid,
+                UserName: userName,
                 OldPassword: values.oldpassword,
                 NewPassword: values.newpassword
             });
@@ -88,7 +88,7 @@ const Forgetpassword_2 = () => {
             if (result?.Status === "Y") {
                 toast.success(result.Msg);
                 resetForm();
-                //navigate('/');
+                navigate('/');
             } else {
                 toast.error(result?.Msg || "Change password failed");
             }
@@ -271,7 +271,7 @@ const Forgetpassword_2 = () => {
                         }) => (
                             <form onSubmit={handleSubmit}>
                                 <Stack
-                                    
+
                                     height={{ sm: "450px", md: "100%" }}
                                     width={{ sm: "291px", md: "700px" }}
                                     sx={{
@@ -306,12 +306,10 @@ const Forgetpassword_2 = () => {
                                             flexDirection: "column-reverse",
                                         }}
                                         spacing={2}
-
                                     >
                                         <Typography
                                             variant="h6"
                                             sx={{
-
                                                 marginBottom: 8,
                                                 // marginRight: 2,
                                                 textAlign: "center",
@@ -321,7 +319,6 @@ const Forgetpassword_2 = () => {
                                             Back Office System
                                         </Typography>
                                     </Stack>
-
 
                                     <Stack sx={{
                                         width: { sm: "100%", md: "100%", lg: "100%" },
@@ -339,27 +336,80 @@ const Forgetpassword_2 = () => {
                                             };
                                             return (
                                                 <FormControl key={field} fullWidth variant="outlined" required>
-                                                    <InputLabel htmlFor={field}>{labelMap[field]}</InputLabel>
+                                                    <InputLabel
+                                                        shrink
+                                                        htmlFor={field}
+                                                        sx={{
+                                                            backgroundColor: "#fff",
+                                                            px: 0.5,
+                                                            color: "#1976d2",            // label text blue
+                                                            "&.Mui-focused": {
+                                                                color: "#1976d2",
+                                                            },
+                                                        }}
+                                                    >
+                                                        {labelMap[field]}
+                                                    </InputLabel>
+
+
                                                     <OutlinedInput
                                                         id={field}
                                                         name={field}
-                                                        type={showPassword[field === 'oldpassword' ? 'old' : field === 'newpassword' ? 'new' : 'confirm'] ? 'text' : 'password'}
+                                                        focused
+                                                        type={
+                                                            showPassword[
+                                                                field === 'oldpassword'
+                                                                    ? 'old'
+                                                                    : field === 'newpassword'
+                                                                        ? 'new'
+                                                                        : 'confirm'
+                                                            ] ? 'text' : 'password'
+                                                        }
                                                         value={values[field]}
                                                         onBlur={handleBlur}
                                                         onChange={handleChange}
                                                         error={touched[field] && Boolean(errors[field])}
+                                                        sx={{
+                                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#1976d2",
+                                                                borderWidth: "2px",
+                                                            },
+                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#1976d2",
+                                                            },
+                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#1976d2",
+                                                            },
+                                                        }}
                                                         endAdornment={
                                                             <InputAdornment position="end">
-                                                                <IconButton onClick={() =>
-                                                                    toggleShowPassword(field === 'oldpassword' ? 'old' : field === 'newpassword' ? 'new' : 'confirm')
-                                                                } edge="end">
-                                                                    {showPassword[field === 'oldpassword' ? 'old' : field === 'newpassword' ? 'new' : 'confirm']
-                                                                        ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                                                <IconButton
+                                                                    onClick={() =>
+                                                                        toggleShowPassword(
+                                                                            field === 'oldpassword'
+                                                                                ? 'old'
+                                                                                : field === 'newpassword'
+                                                                                    ? 'new'
+                                                                                    : 'confirm'
+                                                                        )
+                                                                    }
+                                                                    edge="end"
+                                                                >
+                                                                    {showPassword[
+                                                                        field === 'oldpassword'
+                                                                            ? 'old'
+                                                                            : field === 'newpassword'
+                                                                                ? 'new'
+                                                                                : 'confirm'
+                                                                    ]
+                                                                        ? <VisibilityOffIcon />
+                                                                        : <VisibilityIcon />}
                                                                 </IconButton>
                                                             </InputAdornment>
                                                         }
                                                         label={labelMap[field]}
                                                     />
+
                                                     {touched[field] && errors[field] && (
                                                         <Typography color="error" fontSize="0.75rem" mt={0.5}>
                                                             {errors[field]}
