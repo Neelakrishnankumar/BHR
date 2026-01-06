@@ -154,7 +154,7 @@ const EditRoute = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate("/Apps/TR323/Route");
         }
       } else {
         return;

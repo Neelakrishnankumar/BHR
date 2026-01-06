@@ -466,23 +466,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR315",
         },
-        // {
-        //   name: "Route",
-        //   id: 43468,
-        //   url: "./TR323/Route",
-        //   icon: (
-        //     <Tooltip title="Route">
-        //       <RouteOutlinedIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR323",
-        // },
+        {
+          name: "Route",
+          id: 43468,
+          url: "./TR323/Route",
+          icon: (
+            <Tooltip title="Route">
+              <RouteOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR323",
+        },
         {
           name: "Party",
           id: 4346895,

@@ -165,6 +165,7 @@ const EditOrder = () => {
     DeliveryComments: data.DeliveryComments,
     PaidComments: data.PaidComments,
     PartyBalance: data.PartyBalance,
+    PurchaseCheckbox: data.PurchaseCheckbox === "Y" ? true : false,
     // paid: "Yes",
     // deliverby: "Yes"
   };
@@ -237,6 +238,7 @@ const EditOrder = () => {
       // OrderType: values.OrderType || "",
       ORStatus: override.ORStatus ?? values.status ?? "",
       OrderType: override.OrderType ?? values.OrderType ?? "",
+      PurchaseCheckbox: values.PurchaseCheckbox === true ? "Y" : "N",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -585,6 +587,7 @@ const EditOrder = () => {
                       <MenuItem value="Q">Quotation</MenuItem>
                     </TextField>
                     {mode === "A" ? (
+                      <>
                       <TextField
                         name="tentativedeliverdate"
                         type="date"
@@ -609,6 +612,23 @@ const EditOrder = () => {
                           errors.tentativedeliverdate
                         }
                       />
+
+                       <Box sx={{ marginTop: "20px" }}>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="PurchaseCheckbox"
+                          id="PurchaseCheckbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Purchase"
+                        
+                        />
+
+                        <FormLabel focused={false}>Purchase</FormLabel>
+                        </Box>
+                        </>
                     ) : (
                       false
                     )}
@@ -754,8 +774,8 @@ const EditOrder = () => {
                           helperText={touched.processdate && errors.processdate}
                           InputProps={{
                             inputProps: {
-                              readOnly:true
-                            }
+                              readOnly: true,
+                            },
                           }}
                         />
                         <TextField
@@ -791,8 +811,8 @@ const EditOrder = () => {
                           }
                           InputProps={{
                             inputProps: {
-                              readOnly:true
-                            }
+                              readOnly: true,
+                            },
                           }}
                         />
                         <TextField
@@ -1050,6 +1070,20 @@ const EditOrder = () => {
                           autoFocus
                           // disabled
                         />
+                        <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="PurchaseCheckbox"
+                          id="PurchaseCheckbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Purchase"
+                        />
+
+                        <FormLabel focused={false}>Purchase</FormLabel>
+                        </Box>
                       </>
                     )}
 
@@ -1160,6 +1194,20 @@ const EditOrder = () => {
                             Adjust From Advance
                           </MenuItem>
                         </TextField> */}
+                              <Box>
+                        <Field
+                          //  size="small"
+                          type="checkbox"
+                          name="PurchaseCheckbox"
+                          id="PurchaseCheckbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Purchase"
+                        />
+
+                        <FormLabel focused={false}>Purchase</FormLabel>
+                        </Box>
                       </>
                     )}
                     {/* <TextField
@@ -1201,6 +1249,7 @@ const EditOrder = () => {
 
                                         <FormLabel focused={false}>Disable</FormLabel>
                                     </Box> */}
+                               
                   </Box>
                   <Box
                     display="flex"

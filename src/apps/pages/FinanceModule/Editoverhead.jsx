@@ -990,7 +990,7 @@ const Editoverhead = () => {
                       name="overhead"
                       label={
                         <>
-                          OverHead
+                          Overhead
                           <span style={{ color: "red", fontSize: "20px" }}> * </span>
                         </>
                       }
