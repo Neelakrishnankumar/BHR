@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-var APIurl = "https://bos.beyondexs.com/api/"
-var baseurl = "https://bos.beyondexs.com/"
-var baseurlUAAM = "https://uaam.beyondexs.com/"
+// var APIurl = "https://bos.beyondexs.com/api/"
+// var baseurl = "https://bos.beyondexs.com/"
+// var baseurlUAAM = "https://uaam.beyondexs.com/"
 
-// var APIurl = "https://bosuat.beyondexs.com/api/"
-// var baseurl = "https://bosuat.beyondexs.com/"
-// var baseurlUAAM = "https://uaamuat.beyondexs.com/"
+var APIurl = "https://bosuat.beyondexs.com/api/"
+var baseurl = "https://bosuat.beyondexs.com/"
+var baseurlUAAM = "https://uaamuat.beyondexs.com/"
 
 // var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 // var baseurl = "https://dvmtapi.bexatm.com/"
@@ -111,8 +111,8 @@ const initialState = {
   timesheetattendanceUrl: APIurl + "DailyTaskgetController.php",
   timesheetreportattendanceUrl: APIurl + "Dailytask_getController.php",
   timesheetdtUrl: APIurl + "DailyTaskpostController.php",
-  //empAttachmentUrl: baseurl + "EmployeeAttachmentsController.php",
-  empAttachmentUrl: baseurl + "EmployeeAttachmentsControllerV1.php",
+  empAttachmentUrl: baseurl + "EmployeeAttachmentsController.php",
+  // empAttachmentUrl: baseurl + "EmployeeAttachmentsControllerV1.php",
   empGetAttachmentUrl: APIurl + "getAttachmentsController.php",
   getLeaveentryDataUrl: APIurl + "EmpLeaveConfigurationGetController.php",
   geolocationgetUrl: APIurl + "EmpGeoLocationGet.php",

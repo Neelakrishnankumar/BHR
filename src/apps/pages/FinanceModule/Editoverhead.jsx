@@ -160,9 +160,9 @@ const Editoverhead = () => {
 
   if (show == "1") {
     VISIBLE_FIELDS = [
-      "slno", 
+      "slno",
       "OverHeadsChild",
-      "Sortorder",  
+      "Sortorder",
       "action",
     ];
   }
@@ -192,7 +192,7 @@ const Editoverhead = () => {
     return visibleColumns;
   }, [explorelistViewcolumn, show, page, pageSize]);
   console.log("🚀 ~ Editoverhead ~ columns:", columns)
-  
+
   const newcolumn = React.useMemo(
     () =>
       explorelistViewcolumn.filter((column) =>
@@ -234,7 +234,7 @@ const Editoverhead = () => {
               Name: rowData.ChildName,
             }
             : null,
-         
+
         });
         setFieldValue("overhead", {
           RecordID: rowData.ChildID,
@@ -266,8 +266,8 @@ const Editoverhead = () => {
         }
 
         const schema = Yup.object().shape(schemaFields);
-          const schema1 = Yup.object().shape({
-          overhead: Yup.object().required(data.Overhead.Overhead).nullable(),       
+        const schema1 = Yup.object().shape({
+          overhead: Yup.object().required(data.Overhead.Overhead).nullable(),
         });
         setValidationSchema(schema);
         setValidationSchema1(schema1);
@@ -364,44 +364,44 @@ const Editoverhead = () => {
     // delete: data.DeleteFlag === "Y" ? true : false
 
   };
-    const AddexpFnsave = async (values, resetForm, del) => {
-      setLoading(true);
-      let action =
-        funMode === "A" && !del
-          ? "insert"
-          : funMode === "E" && del
-            ? "harddelete"
-            : "update";
-      const idata = {
-        RecordID: LeaveCondata.recordID,       
-        OverHeadsID: recID,
-        // values.overhead.RecordID || 0,
-        Code: values.overhead.Code || "",
-        Name: values.overhead.Name || "",
-        Sortorder: values.sortorder || 0,
-        Disable: values.checkbox == true ? "Y" : "N",
-        CompanyID,
-      };
-      // console.log("save" + JSON.stringify(saveData));
-  
-      const response = await dispatch(
-        explorePostData({ accessID: "TR325", action, idata })
-      );
-      if (response.payload.Status == "Y") {
-        setLoading(false);
-        dispatch(
-          fetchExplorelitview("TR325", "Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
-        );
-  
-        toast.success(response.payload.Msg);
-  
-        selectCellRowData({ rowData: {}, mode: "A", field: "" });
-        resetForm();
-      } else {
-        setLoading(false);
-        toast.error(response.payload.Msg);
-      }
+  const AddexpFnsave = async (values, resetForm, del) => {
+    setLoading(true);
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+    const idata = {
+      RecordID: LeaveCondata.recordID,
+      OverHeadsID: recID,
+      // values.overhead.RecordID || 0,
+      Code: values.overhead.Code || "",
+      Name: values.overhead.Name || "",
+      Sortorder: values.sortorder || 0,
+      Disable: values.checkbox == true ? "Y" : "N",
+      CompanyID,
     };
+    // console.log("save" + JSON.stringify(saveData));
+
+    const response = await dispatch(
+      explorePostData({ accessID: "TR325", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      dispatch(
+        fetchExplorelitview("TR325", "Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
+      );
+
+      toast.success(response.payload.Msg);
+
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -465,7 +465,9 @@ const Editoverhead = () => {
                   variant="h5"
                   color="#0000D1"
                   sx={{ cursor: "default" }}
-
+                  onClick={() => {
+                    setScreen(0);
+                  }}
                 >
                   Overhead
                 </Typography>
@@ -818,12 +820,12 @@ const Editoverhead = () => {
           <Formik
             initialValues={initialValue2}
             enableReinitialize={true}
-           validationSchema={validationSchema1}
-          onSubmit={(values, { resetForm }) => {
-            setTimeout(() => {
-              AddexpFnsave(values, resetForm, false);
-            }, 100);
-          }}
+            validationSchema={validationSchema1}
+            onSubmit={(values, { resetForm }) => {
+              setTimeout(() => {
+                AddexpFnsave(values, resetForm, false);
+              }, 100);
+            }}
           >
             {({
               errors,
@@ -1018,10 +1020,10 @@ const Editoverhead = () => {
                       helperText={touched.sortorder && errors.sortorder}
                       focused
                       InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
                     />
                     <Box>
                       <Field
@@ -1067,7 +1069,7 @@ const Editoverhead = () => {
                         confirmButtonText: "Confirm",
                       }).then((result) => {
                         if (result.isConfirmed) {
-                           AddexpFnsave(values, resetForm, "harddelete");
+                          AddexpFnsave(values, resetForm, "harddelete");
                         } else {
                           return;
                         }

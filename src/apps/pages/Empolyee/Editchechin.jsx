@@ -82,6 +82,7 @@ const Editcheckin = () => {
           location: Yup.object().required(data.CheckIn.location).nullable(),
           gate: Yup.object().required(data.CheckIn.gate).nullable(),
           employee: Yup.object().nullable().required(data.CheckIn.employee),
+          checkintime: Yup.string().nullable().required(data.CheckIn.checkintime)
         });
 
         setValidationSchema(schema);
@@ -117,7 +118,7 @@ const Editcheckin = () => {
     date: mode == "A" ? currentDate : data.HiddenDate,
     comment: data.CheckInComment,
     checkintime: data.CheckInTime,
-    disable: data.WorkAtHome === "Y" ? false : true,
+    disable: data.WorkAtHome === "Y" ? true : false,
     location: data.LocationRecID
       ? { RecordID: data.LocationRecID, Name: data.LocationName }
       : null,
@@ -527,14 +528,19 @@ const Editcheckin = () => {
                     name="checkintime"
                     type="time"
                     id="checkintime"
-                    label="Check In Time"
+                    label={
+                        <span>
+                          Check In Time <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        </span>
+                      }
                     inputFormat="HH:mm:aa"
                     variant="standard"
                     value={values.checkintime}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
-
+                    error={!!touched.checkintime && !!errors.checkintime}
+                    helperText={touched.checkintime && errors.checkintime}
                     sx={{ background: "#f5f5f5" }}
                   />
                   <TextField

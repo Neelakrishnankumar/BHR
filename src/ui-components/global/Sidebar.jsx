@@ -913,7 +913,7 @@ const child = {
         },
       ],
     },
-      {
+    {
       name: "Company",
       id: 95689,
       MenuID: "ST1600",
@@ -924,7 +924,7 @@ const child = {
         </Tooltip>
       ),
       children: [
-         {
+        {
           name: "Company Details",
           id: 5846,
           url: "./ChangeyourPassword_2",
@@ -975,7 +975,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR258",
         },
-           {
+        {
           name: "Header & Footer Setup",
           id: 56667,
           url: "./ChangeyourPassword_5",
@@ -992,7 +992,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR258",
         },
-        
+
       ],
     },
   ],
@@ -1069,9 +1069,9 @@ const Sidebars = () => {
   };
   const [menu, setMenu] = useState({});
   const filteredMenuData =
-  firstLogin === "Y"
-    ? child.data.filter((menu) => menu.name === "Company")
-    : child.data.filter((menu) => menu.name !== "Company");
+    firstLogin === "Y"
+      ? child.data.filter((menu) => menu.name === "Company")
+      : child.data.filter((menu) => menu.name !== "Company");
 
 
   const handleMenu = (children, accessRow, isChild) => {
@@ -1248,7 +1248,12 @@ const Sidebars = () => {
                 <img
                   src={logoSrc}
                   style={{ height: "60px", width: "180px", objectFit: "contain" }}
-                  onClick={() => navigate("./HR")}
+                  // onClick={() => navigate("./HR")}
+                  onClick={() =>
+                    firstLogin === "N"
+                      ? navigate("/Apps/ChangeyourPassword_1")
+                      : navigate("./HR")
+                  }
                 />
 
                 <IconButton

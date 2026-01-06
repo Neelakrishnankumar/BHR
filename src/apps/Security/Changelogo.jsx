@@ -536,16 +536,7 @@ const Logochange = () => {
                                 mt="20px"
                                 gap="20px"
                             >
-                                <Button
-                                    color="success"
-                                    variant="contained"
-                                    // onClick={() => resetForm()}
-                                    onClick={() => {
-                                        navigate("/Apps/ChangeyourPassword_3");
-                                    }}
-                                >
-                                    Skip
-                                </Button>
+                               
                                 <LoadingButton
                                     type="submit"
                                     loading={isLoading}
@@ -564,6 +555,16 @@ const Logochange = () => {
                                     }}
                                 >
                                     Cancel
+                                </Button>
+                                 <Button
+                                    color="success"
+                                    variant="contained"
+                                    // onClick={() => resetForm()}
+                                    onClick={() => {
+                                        navigate("/Apps/ChangeyourPassword_3");
+                                    }}
+                                >
+                                    Skip
                                 </Button>
                             </Box>
 
