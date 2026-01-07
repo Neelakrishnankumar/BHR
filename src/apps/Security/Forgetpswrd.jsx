@@ -102,32 +102,32 @@ const Forgetpassword_1 = () => {
     const handleForgotPasswordRequest = async (values, resetForm) => {
         setLoading(true);
         try {
-          const requestData = {
-            UserName: values.username,
-            UserEmailID: values.mailid,
-            LicenseKey: values.license,
-          };
-           const result = await ForgotPasswordRequest(requestData)
+            const requestData = {
+                UserName: values.username,
+                UserEmailID: values.mailid,
+                LicenseKey: values.license,
+            };
+            const result = await ForgotPasswordRequest(requestData)
 
-          if (result?.Status === "Y") {
-            toast.success(result.Msg || "OTP sent successfully!");
-            resetForm();
-            navigate('/Changepassword',{
-            state: {
-                userName: values.username,
-                userRecid: result.UserRecid, 
-            },
-        });
-          } else {
-            toast.error(result?.Msg || "Failed to send OTP.");
-          }
+            if (result?.Status === "Y") {
+                toast.success(result.Msg || "OTP sent successfully!");
+                resetForm();
+                navigate('/Changepassword', {
+                    state: {
+                        userName: values.username,
+                        userRecid: result.UserRecid,
+                    },
+                });
+            } else {
+                toast.error(result?.Msg || "Failed to send OTP.");
+            }
         } catch (error) {
-          console.error('Error:', error);
-          toast.error("Something went wrong. Please try again.");
+            console.error('Error:', error);
+            toast.error("Something went wrong. Please try again.");
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-        
+
     };
     return (
         <div className="wrapper">
@@ -142,10 +142,32 @@ const Forgetpassword_1 = () => {
                     columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                 >
                     <Formik
-                        // onSubmit={handleFormSubmit}
-                        initialValues={initialValues}
-                        enableReinitialize={true}
-                        validationSchema={basicSchema}
+                        initialValues={{
+                            username: "",
+                            mailid: "",
+                            license: "",
+                        }}
+                        validate={(values) => {
+                            const errors = {};
+
+                            if (!values.username) {
+                                errors.username = "Please Enter Username";
+                            }
+                            if (!values.mailid) {
+                                errors.mailid = "Please Enter Mailid";
+                            } else if (
+                                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.mailid)
+                            ) {
+                                errors.mailid = "Please enter valid Email ID";
+                            }
+                            if (!values.license) {
+                                errors.license = "Please Enter Subscription Code";
+                            }
+                            return errors;
+                        }}
+                        onSubmit={(values, { resetForm }) => {
+                            handleForgotPasswordRequest(values, resetForm);
+                        }}
                     >
                         {({
                             values,
@@ -158,7 +180,7 @@ const Forgetpassword_1 = () => {
                         }) => (
                             <form onSubmit={handleSubmit}>
                                 <Stack
-                                    component="form"
+
                                     height={{ sm: "450px", md: "100%" }}
                                     width={{ sm: "291px", md: "700px" }}
                                     sx={{
@@ -172,7 +194,6 @@ const Forgetpassword_1 = () => {
                                     autoComplete="off"
                                     direction={{ sm: "column", md: "row" }}
                                 >
-
                                     <Stack
                                         sx={{
                                             width: { sm: "100%", md: "100%", lg: "100%" },
@@ -194,12 +215,10 @@ const Forgetpassword_1 = () => {
                                             flexDirection: "column-reverse",
                                         }}
                                         spacing={2}
-
                                     >
                                         <Typography
                                             variant="h6"
                                             sx={{
-
                                                 marginBottom: 8,
                                                 // marginRight: 2,
                                                 textAlign: "center",
@@ -209,7 +228,6 @@ const Forgetpassword_1 = () => {
                                             Back Office System
                                         </Typography>
                                     </Stack>
-
 
                                     <Stack
                                         sx={{
@@ -222,63 +240,51 @@ const Forgetpassword_1 = () => {
                                         </Typography>
                                         <FormControl sx={{ marginTop: "30px" }}>
                                             <TextField
-                                                margin="normal"
-                                                focused
+                                                name="username"
                                                 label="Username"
-                                                id="username"
                                                 value={values.username}
-                                                onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                onSubmit={handleSubmit}
-                                                //  placeholder='Enter username'
-                                                fullWidth
-                                                required
-                                                error={!!touched.username && !!errors.username}
+                                                onBlur={handleBlur}
+                                                error={touched.username && Boolean(errors.username)}
                                                 helperText={touched.username && errors.username}
+                                                fullWidth
                                             />
                                         </FormControl>
 
                                         <TextField
-                                            label="Email ID"
-                                            id="mailid"
                                             name="mailid"
+                                            label="Email ID"
                                             value={values.mailid}
-                                            onBlur={handleBlur}
                                             onChange={handleChange}
-                                            error={!!touched.mailid && !!errors.mailid}
+                                            onBlur={handleBlur}
+                                            error={touched.mailid && Boolean(errors.mailid)}
                                             helperText={touched.mailid && errors.mailid}
                                             fullWidth
-                                            required
-                                            focused
                                         />
+
                                         <TextField
-                                            margin="normal"
-                                            focused
+                                            name="license"
                                             label="Subscription Code"
-                                            id="license"
                                             value={values.license}
-                                            onBlur={handleBlur}
                                             onChange={handleChange}
-                                            onSubmit={handleSubmit}
-                                            //  placeholder='Enter license'
-                                            fullWidth
-                                            required
-                                            error={!!touched.license && !!errors.license}
+                                            onBlur={handleBlur}
+                                            error={touched.license && Boolean(errors.license)}
                                             helperText={touched.license && errors.license}
+                                            fullWidth
                                         />
+
                                         {/* <Box sx={{ flexGrow: 1 }} /> */}
                                         <Stack direction={"row"} justifyContent="end" gap={"10px"} sx={{ marginTop: "50px" }}>
 
                                             <LoadingButton
-                                                onClick={() => {
-                                                    handleForgotPasswordRequest(values, resetForm);
-                                                }}
+                                                type="submit"
                                                 color="success"
                                                 loading={isLoading}
                                                 variant="contained"
                                             >
                                                 SEND OTP
                                             </LoadingButton>
+
                                             <Button
                                                 variant="contained"
                                                 color={"warning"}

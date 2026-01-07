@@ -367,14 +367,14 @@ const Login = () => {
                     />
                     {/* <Box sx={{ flexGrow: 1 }} /> */}
                     <Stack direction={"row"} justifyContent="end" gap={"10px"} sx={{ marginTop: "50px" }}>
-                      {/* <Typography
+                      <Typography
                         variant="body2"
                         color="primary"
                         sx={{ cursor: "pointer", textDecoration: "underline", marginTop: "5px", marginRight: "25px" }}
                         onClick={() => navigate("/Forgotpassword")}
                       >
                         Forgot Password?
-                      </Typography> */}
+                      </Typography>
                       <LoadingButton
                         onClick={() => {
                           fnLogin(values);
