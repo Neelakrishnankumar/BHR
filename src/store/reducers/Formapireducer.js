@@ -1010,6 +1010,7 @@ export const getFetchData = createAsyncThunk(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
       response
     );
+
     return response.data;
   }
 );
@@ -4587,6 +4588,34 @@ export const timeSheetreport = createAsyncThunk(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
       response
     );
+    return response.data;
+  }
+);
+
+
+
+export const userActivityLog = createAsyncThunk(
+  "activity/log",
+  async ({ RecordID, UserID, CompanyID, AccessID, Activity }) => {
+    const url = store.getState().globalurl.UserActivityUrl;
+    // OR hardcode:
+    // const url = "https://essuat.beyondexs.com/api/UserActivityController.php";
+
+    const payload = {
+      RecordID,
+      UserID,
+      CompanyID,
+      AccessID,
+      Activity,
+    };
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ...",
+      },
+    });
+
     return response.data;
   }
 );
