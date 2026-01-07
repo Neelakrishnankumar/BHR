@@ -164,12 +164,20 @@ const ChangeyourPassword_1 = () => {
               ))}
             </Box>
           ))}
-
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+              />
+            }
+            label="I Agree to Terms & Conditions"
+          />
         </Box>
       </Box>
 
       {/* 🔹 Bottom Actions */}
-      <Box
+      {/* <Box
         sx={{
           borderTop: "1px solid #e0e0e0",
           px: 3,
@@ -187,9 +195,13 @@ const ChangeyourPassword_1 = () => {
             />
           }
           label="I agree to Terms & Conditions"
-        />
+        /> */}
 
-        <Box display="flex" gap={2}>
+        <Box display="flex" gap={2}
+          justifyContent= "flex-end"
+          alignItems= "center"
+          padding={2}
+          >
           <Button
             variant="contained"
             color="success"
@@ -207,7 +219,7 @@ const ChangeyourPassword_1 = () => {
             Cancel
           </Button>
         </Box>
-      </Box>
+      {/* </Box> */}
     </Box>
   );
 };

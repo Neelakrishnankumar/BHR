@@ -2,35 +2,35 @@
   "title": "Terms & Conditions",
   "sections": [
     {
-      "heading": "Free Plan",
+      "heading": "1. Free Plan",
       "points": [
-        "The free version includes 1 Admin User, 5 Employees, and 1 Project by default.",
+        "The free version includes 1 Admin User, 5 Employees and 1 Project by default.",
         "Default login credentials will be provided for initial access."
       ]
     },
     {
-      "heading": "Communication",
+      "heading": "2. Communication",
       "points": [
         "We will send important updates and notifications periodically through Email and WhatsApp.",
         "By using this application, you agree to receive these communications."
       ]
     },
     {
-      "heading": "Account Security",
+      "heading": "3. Account Security",
       "points": [
         "To activate your company account, you must change the default password and log in again.",
         "Users are responsible for maintaining the confidentiality of their login credentials."
       ]
     },
     {
-      "heading": "Reports & Branding",
+      "heading": "4. Reports & Branding",
       "points": [
         "Reports will be fully enabled only after uploading the Company Logo, Header, and Footer images.",
         "Until then, the system will display Default Company branding and logo in reports and screens."
       ]
     },
     {
-      "heading": "General Terms",
+      "heading": "5. General Terms",
       "points": [
         "The company reserves the right to update or modify these Terms & Conditions at any time.",
         "Continued use of the application indicates acceptance of the updated terms."

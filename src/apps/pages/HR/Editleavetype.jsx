@@ -67,7 +67,8 @@ const LeaveType = () => {
   const theme = useTheme();
   var recID = params.id;
   var mode = params.Mode;
-  var accessID = params.accessID;
+   var accessID = params.accessID;
+  // var accessID ="tr213AC";
   const data = useSelector((state) => state.formApi.Data) || {};
   const Status = useSelector((state) => state.formApi.Status);
   const Msg = useSelector((state) => state.formApi.msg);

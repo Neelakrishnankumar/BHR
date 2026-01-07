@@ -87,6 +87,7 @@ const Editcheckout = () => {
           Location: Yup.object().required(data.CheckOut.Location).nullable(),
           Gate: Yup.object().required(data.CheckOut.Gate).nullable(),
           Employee: Yup.object().nullable().required(data.CheckOut.Employee),
+          checkouttime: Yup.string().required(data.CheckOut.checkouttime).nullable()
         });
 
         setValidationSchema(schema);
@@ -607,7 +608,12 @@ const Editcheckout = () => {
                     name="checkouttime"
                     type="time"
                     id="checkouttime"
-                    label="Check Out Time"
+                    label={
+                        <span>
+                          Check Out Time
+                          <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </span>
+                      }
                     inputFormat="HH:mm:aa"
                     value={values.checkouttime}
                     onBlur={handleBlur}
@@ -615,6 +621,8 @@ const Editcheckout = () => {
                     focused
                     sx={{ gridColumn: "span 2", background: "" }}
                     variant="standard"
+                     error={!!touched.checkouttime && !!errors.checkouttime}
+                      helperText={touched.checkouttime && errors.checkouttime}
                   />
                   <TextField
                     name="comment"

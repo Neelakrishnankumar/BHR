@@ -190,12 +190,14 @@
   "CheckIn": {
     "location": "Please enter the Location",
     "gate": "Please enter the Gate",
-    "employee": "Please enter the Employee"
+    "employee": "Please enter the Employee",
+    "checkintime": "Please enter the Check In Time"
   },
   "CheckOut": {
     "Location": "Please enter the Location",
     "Gate": "Please enter the Gate",
-    "Employee": "Please enter the Employee"
+    "Employee": "Please enter the Employee",
+    "checkouttime": "Please enter the Check Out Time"
   },
   "Employeerequest": {
     "Code": "Please enter the Code",
@@ -280,6 +282,9 @@
   "SkillGlowSession": {
     "Code": "Please enter the Code",
     "Name": "Please enter the Name"
+  },
+  "RouteArea": {
+    "Name": "Please enter the Route Area"
   },
   "ListofAssessment": {
     "Code": "Please enter the Code",

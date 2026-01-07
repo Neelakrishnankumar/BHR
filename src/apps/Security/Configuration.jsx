@@ -338,7 +338,10 @@ const Configuration = () => {
             GstNo: gst,
             Image: logoimage,
             GstImage: gstImage,
-            AutoCode: autocode ? "Y" : "N"
+            AutoCode: autocode ? "Y" : "N",
+            HeaderImg: data.CM_HEADER,
+            FooterImg:data.CM_FOOTER,
+            CompanyName: data.CM_NAME
 
         };
         console.log(offaddress, "Address");

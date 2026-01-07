@@ -182,6 +182,8 @@ import Logochange from "./Security/Changelogo";
 
 
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
+import Companychange from "./Security/Changecompany";
+import Changehdrftr from "./Security/ChangeHdrftr";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -446,8 +448,14 @@ function App() {
                    {/* AREA EDIT */}
                   <Route
                     // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
-                    path="/Route/Area/EditArea"
+                    path="/Secondarylistview/Route/:accessID/:screenName/:parentID1/EditRouteArea/:id/:Mode"
                     element={<EditArea />}
+                  />
+                  {/* AREA EDIT */}
+                  <Route
+                    // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
+                    path="/Secondarylistview/Route/:accessID/:screenName/:parentID1"
+                    element={<ListviewSecondary />}
                   />
                   <Route
                     path="SkillGlow/CandidateMain"
@@ -588,6 +596,9 @@ function App() {
                   <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
                   <Route path="/ChangeyourPassword_2" element={<Logochange />} />
                   <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
+                   <Route path="/ChangeyourPassword_4" element={<Companychange />} />
+                      <Route path="/ChangeyourPassword_5" element={<Changehdrftr />} />
+
       <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}

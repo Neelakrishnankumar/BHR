@@ -20,7 +20,7 @@ import {
 import React, { useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { styled } from "@mui/material/styles";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Description } from "@mui/icons-material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -64,7 +64,7 @@ const EditArea = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
   const EmpId = params.parentID3;
-  const QuestionID = params.parentID1;
+  const RouteHdrID = params.parentID1;
 
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
@@ -93,7 +93,7 @@ const EditArea = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          CategoryName: Yup.string().required(data.HSNCatgory.CategoryName),
+          Description: Yup.string().required(data.RouteArea.Name),
         });
         setValidationSchema(schema);
       })
@@ -104,7 +104,7 @@ const EditArea = () => {
   }, []);
 
   const curDate = new Date().toISOString().split("T")[0];
-  const RouteSaveFn = async (values, delAction) => {
+  const RouteAreaSaveFn = async (values, delAction) => {
     // let action =
     //   mode === "A" ? "insert" : mode === "D" ? "harddelete" : "update";
     let action = "";
@@ -124,8 +124,9 @@ const EditArea = () => {
     const idata = {
       RecordID: recID,
       CompanyID: CompanyID,
+      RouteHdrID: RouteHdrID,
       Code: values.Code,
-      Description: values.Description || "",
+      Name: values.Description || "",
       Sortorder: values.Sortorder || "0",
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
@@ -154,7 +155,14 @@ const EditArea = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR026/Department");
+          navigate(
+            `/Apps/Secondarylistview/Route/${params.accessID}/${params.screenName}/${params.parentID1}`,
+            {
+              state: {
+                ...state,
+              },
+            }
+          );
         }
       } else {
         return;
@@ -171,8 +179,8 @@ const EditArea = () => {
 
   const initialValues = {
     Code: Data.Code || "",
-    Description: Data.Description || "",
-    Sortorder: Data.SortOrder || "",
+    Description: Data.Name || "",
+    Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
   };
@@ -210,17 +218,27 @@ const EditArea = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate("/Apps/TR323/Route")}
                   >
-                    {mode === "E" ? `List Of Route
-                    (${state.BreadCrumb1})` : `List Of Route`}
+                    List Of Route ({state.BreadCrumb1})
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
-                    onClick={() => navigate("/Apps/TR316/HSN%20Category")}
+                    onClick={() =>
+                      navigate(
+                        `/Apps/Secondarylistview/Route/${params.accessID}/${params.screenName}/${params.parentID1}`,
+                        {
+                          state: {
+                            ...state,
+                          },
+                        }
+                      )
+                    }
                   >
-                    {mode === "E" ? `List Of Area
-                    (${state.BreadCrumb2})` : `List Of Area`}
+                    {mode === "E"
+                      ? `List Of Route Area
+                    (${state.BreadCrumb2})`
+                      : `List Of Route Area`}
                   </Typography>
                   <Typography
                     variant="h5"
@@ -254,7 +272,7 @@ const EditArea = () => {
               initialValues={initialValues}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
-                  RouteSaveFn(values, resetForm);
+                  RouteAreaSaveFn(values, resetForm);
                 }, 100);
               }}
               enableReinitialize={true}
@@ -304,7 +322,7 @@ const EditArea = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                      // autoFocus
+                        // autoFocus
                       />
                     ) : (
                       <TextField
@@ -342,7 +360,7 @@ const EditArea = () => {
                       id="Description"
                       label={
                         <span>
-                          Description{" "}
+                          Route Area{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -409,7 +427,7 @@ const EditArea = () => {
                             marginTop: 0,
                           },
                         }}
-                      //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -426,7 +444,7 @@ const EditArea = () => {
                             marginTop: 0,
                           },
                         }}
-                      //inputProps={{ readOnly: mode == "V" }}
+                        //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -442,7 +460,7 @@ const EditArea = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                    //disabled={mode == "V" ? true : false}
+                      //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>

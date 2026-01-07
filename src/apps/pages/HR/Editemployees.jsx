@@ -2327,7 +2327,9 @@ const Editemployee = () => {
       // );
       toast.success(response.payload.Msg);
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
-      resetForm();
+      //resetForm();
+      setScreen("9");
+      dispatch(geolocationData({ empID: recID }));
     } else {
       setLoading(false);
       toast.error(response.payload.Msg);
@@ -2806,7 +2808,7 @@ const Editemployee = () => {
       EmployeeID: recID,
       Description: values.LoaDescription,
       //  ImageName: ImageName ? ImageName:Data.ImageName,
-      Attachment: ImageName ? ImageName : Data.ImageName,
+      Attachment: ImageName,
       Personal: values.personal === true ? "Y" : "N",
       RenewalRequired: values.renewal === true ? "Y" : "N",
       Category: values.category,
@@ -7706,6 +7708,7 @@ const Editemployee = () => {
                     <Button
                       color="error"
                       variant="contained"
+                      disabled={funMode == "A"}
                       onClick={() => {
                         Swal.fire({
                           title: errorMsgData.Warningmsg.Delete,
@@ -8338,6 +8341,7 @@ const Editemployee = () => {
                     <Button
                       color="error"
                       variant="contained"
+                      disabled={funMode === "A" ? true : false}
                       onClick={() => {
                         Swal.fire({
                           title: errorMsgData.Warningmsg.Delete,
