@@ -143,7 +143,9 @@ const initialState = {
   ItemStockMenuGet: APIurl + "ItemStockMenuGet.php",
   ItemStockMenuPut: APIurl + "ItemStockMenu.php",
   // VendorFilterController: APIurl + "VendorFilterController.php",
-  csvUploadUrl:APIurl + 'csvupload.php',
+  VendorFilterController: APIurl + "VendorFilterController.php",
+  // UserActivityUrl : essURL + "UserActivityController.php",
+  UserActivityUrl : APIurl + "UserActivityController.php",
 };
 
 export const getUrlSlice = createSlice({
