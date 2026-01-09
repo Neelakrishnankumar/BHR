@@ -233,7 +233,7 @@ const Login = () => {
             // onSubmit={handleFormSubmit}
             initialValues={initialValues}
             enableReinitialize={true}
-            validationSchema={basicSchema}
+            // validationSchema={basicSchema}
           >
             {({
               values,

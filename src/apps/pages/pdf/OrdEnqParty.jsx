@@ -8,7 +8,14 @@ import {
 } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
-    page: { padding: 20, fontSize: 9 },
+    page: {
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingBottom: 40,
+        fontSize: 9,
+    },
+
     title: {
         textAlign: "center",
         fontSize: 14,
@@ -80,6 +87,15 @@ const styles = StyleSheet.create({
         fontWeight: 2000,
         color: "#000",
     },
+    footer: {
+        position: "absolute",
+        bottom: 15,
+        left: 0,
+        right: 0,
+        textAlign: "center",
+        fontSize: 9,
+        color: "grey",
+    },
 
 });
 
@@ -104,8 +120,34 @@ const groupByParty = (data) => {
     return result;
 };
 
+const mergePartyRows = (rows) => {
+    const map = {};
 
-const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
+    rows.forEach((row) => {
+        const key = [
+            row.Party,
+            row.OROrderDate,
+            row.Price,          // Rate
+            row.Discount,
+            row.Status,
+        ].join("|");
+
+        if (!map[key]) {
+            map[key] = {
+                ...row,
+                Quantity: Number(row.Quantity || 0),
+                Amount: Number(row.Amount || 0),
+            };
+        } else {
+            map[key].Quantity += Number(row.Quantity || 0);
+            map[key].Amount += Number(row.Amount || 0);
+        }
+    });
+
+    return Object.values(map);
+};
+
+const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) => {
     // const productGroups = groupByProduct(data);
     const partyGroups = groupByParty(data);
     const statusDateMap = {
@@ -129,7 +171,9 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
             <Page size="A4" orientation="landscape" style={styles.page}>
 
                 <Text style={styles.title}>
-                    Order Enquiry - Party Based Report
+                    {/* Order Enquiry - Party Based Report */}
+                    {`Order Enquiry - Party Based Report (${formatDate(filters?.fromdate || "")} - ${formatDate(filters?.todate || "")})`}
+
                 </Text>
 
                 {Party?.length > 0 && (
@@ -148,9 +192,11 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                 {/* ================= PARTY LOOP ================= */}
                 {Object.entries(partyGroups).map(
                     ([partyName, partyRows], partyIndex) => {
+                        const mergedRows = mergePartyRows(partyRows);
+                        const partyTransactions = mergedRows.length;
 
                         // PARTY LEVEL TOTALS
-                        const partyTransactions = partyRows.length;
+                        // const partyTransactions = partyRows.length;
                         const partyTotalAmount = partyRows.reduce(
                             (sum, r) => sum + Number(r.Amount || 0),
                             0
@@ -171,10 +217,12 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                                         <Text style={[styles.headerCell, { flex: 0.5 }]}>S.No</Text>
                                         <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
                                         <Text style={[styles.headerCell, { flex: 3.5 }]}>Product</Text>
-                                        <Text style={[styles.headerCell, { flex: 0.8 }]}>Qty</Text>
+                                        <Text style={[styles.headerCell, { flex: 0.4 }]}>Qty</Text>
                                         <Text style={[styles.headerCell, { flex: 0.8 }]}>Rate</Text>
                                         <Text style={[styles.headerCell, { flex: 0.9 }]}>Discount</Text>
-                                        <Text style={[styles.headerCell, { flex: 1 }]}>Value</Text>
+                                        <Text style={[styles.headerCell, { flex: 0.7 }]}>Value</Text>
+                                        {filters.ordertype == "" ? (<Text style={[styles.headerCell, { flex: 0.7 }]}>Order Type</Text>) : null}
+
                                         <Text
                                             style={[styles.headerCell, { flex: 1.5, textAlign: "center" }]}
                                         >
@@ -182,22 +230,22 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                                         </Text>
                                     </View>
 
-                                    {/* TABLE ROWS */}
-                                    {partyRows.map((row, i) => (
+                                    {/* {partyRows.map((row, i) => (
                                         <View key={i} style={styles.tableRow}>
                                             <Text style={[styles.cell, { flex: 0.5, textAlign: "center" }]}>
                                                 {i + 1}
                                             </Text>
 
                                             <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
-                                                {formatDate(getStatusDate(row))}
+                                                
+                                                {formatDate(row.OROrderDate)}
                                             </Text>
 
                                             <Text style={[styles.cell, { flex: 3.5, textAlign: "left" }]}>
                                                 {row.Product}
                                             </Text>
 
-                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>
+                                            <Text style={[styles.cell, { flex: 0.4, textAlign: "right" }]}>
                                                 {row.Quantity}
                                             </Text>
 
@@ -212,7 +260,9 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                                             <Text style={[styles.cell, { flex: 1, textAlign: "right" }]}>
                                                 {row.Amount}
                                             </Text>
-
+                                            {filters.ordertype == "" ? (<Text style={[styles.cell, { flex: 0.4, textAlign: "right" }]}>
+                                                {row.TypeOQ}
+                                            </Text>) : null}
                                             <Text
                                                 style={[
                                                     styles.cell,
@@ -222,7 +272,50 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                                                 {row.Status}
                                             </Text>
                                         </View>
+                                    ))} */}
+                                    {mergedRows.map((row, i) => (
+                                        <View key={i} style={styles.tableRow}>
+                                            <Text style={[styles.cell, { flex: 0.5, textAlign: "center" }]}>
+                                                {i + 1}
+                                            </Text>
+
+                                            <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
+                                                {/* {formatDate(getStatusDate(row))} */}                                                
+                                                {formatDate(row.OROrderDate)}
+                                            </Text>
+
+                                            <Text style={[styles.cell, { flex: 3.5, textAlign: "left" }]}>
+                                                {row.Product}
+                                            </Text>
+
+                                            <Text style={[styles.cell, { flex: 0.4, textAlign: "right" }]}>
+                                                {row.Quantity}
+                                            </Text>
+
+                                            <Text style={[styles.cell, { flex: 0.8, textAlign: "right" }]}>
+                                                {row.Price}
+                                            </Text>
+
+                                            <Text style={[styles.cell, { flex: 0.9, textAlign: "right" }]}>
+                                                {row.Discount}
+                                            </Text>
+
+                                            <Text style={[styles.cell, { flex: 0.7, textAlign: "right" }]}>
+                                                {row.Amount}
+                                            </Text>
+
+                                            {filters.ordertype === "" && (
+                                                <Text style={[styles.cell, { flex: 0.7, textAlign: "left" }]}>
+                                                    {row.TypeOQ}
+                                                </Text>
+                                            )}
+
+                                            <Text style={[styles.cell, { flex: 1.5, borderRightWidth: 0 }]}>
+                                                {row.Status}
+                                            </Text>
+                                        </View>
                                     ))}
+
 
                                     {/* PARTY TOTAL */}
                                     <View style={[styles.tableRow, { borderBottomWidth: 0 }]}>
@@ -236,17 +329,18 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                                         >
                                             Total
                                         </Text>
-                                        <Text style={[styles.cell, { flex: 0.8 }]} />
+                                        <Text style={[styles.cell, { flex: 0.4 }]} />
                                         <Text style={[styles.cell, { flex: 0.8 }]} />
                                         <Text style={[styles.cell, { flex: 0.9 }]} />
                                         <Text
                                             style={[
                                                 styles.cell,
-                                                { flex: 1, fontWeight: "bold", textAlign: "right" },
+                                                { flex: 0.7, fontWeight: "bold", textAlign: "right" },
                                             ]}
                                         >
                                             {partyTotalAmount.toFixed(2)}
                                         </Text>
+                                        {filters.ordertype == "" ? (<Text style={[styles.cell, { flex: 0.7 }]} />) : null}
                                         <Text style={[styles.cell, { flex: 1.5, borderRightWidth: 0 }]} />
                                     </View>
                                 </View>
@@ -264,7 +358,13 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [] }) => {
                     }
                 )}
 
-
+                <Text
+                    style={styles.footer}
+                    fixed
+                    render={({ pageNumber, totalPages }) =>
+                        `Page ${pageNumber} of ${totalPages}`
+                    }
+                />
             </Page>
         </Document>
     );
