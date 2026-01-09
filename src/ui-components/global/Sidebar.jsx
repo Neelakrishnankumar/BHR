@@ -150,6 +150,8 @@ import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+import { logout } from "../../store/reducers/LoginReducer";
+import { useDispatch } from "react-redux";
 const child = {
   data: [
     {
@@ -1027,6 +1029,7 @@ const Sidebars = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
+  const dispatch = useDispatch();   
   const [selected, setSelected] = useState("Product Category");
   // const ATMLogo = 'B2025-ATM01.png' 
   const [open, setOpen] = React.useState(false);
@@ -1296,6 +1299,7 @@ const Sidebars = () => {
               <ListItemButton
                 onClick={() => {
                   navigate("/");
+                  dispatch(logout());
                 }}
               >
                 <ListItemIcon>

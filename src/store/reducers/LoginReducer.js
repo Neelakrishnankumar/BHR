@@ -7,6 +7,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../index";
 import { toast } from "react-toastify";
+import { createAction } from "@reduxjs/toolkit";
+
 const initialState = {
   loginData: {},
   Status: "N",
@@ -14,7 +16,6 @@ const initialState = {
   loading: false,
   error: "",
 };
-
 
 export const authentication = createAsyncThunk(
   "lgems/authentication",
@@ -221,3 +222,5 @@ export const attachmentPost = createAsyncThunk(
     }
   }
 );
+
+export const logout = createAction("loginApi/logout");

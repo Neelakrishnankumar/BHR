@@ -1290,7 +1290,7 @@ export const PartyBankget = createAsyncThunk(
 );
 //partyBank Post
 export const partyBankpostData = createAsyncThunk(
-  "Party/partyBankpostData",
+  "partyBankpostData/partyBankpostData",
   async ({ action, idata }) => {
     const url = store.getState().globalurl.partyBankPostUrl;
 
@@ -1316,7 +1316,7 @@ export const partyBankpostData = createAsyncThunk(
 
 //partyContact Get
 export const PartyContactget = createAsyncThunk(
-  "partycontact/Get",
+  "PartyContactget/Get",
   async ({ VendorID }) => {
     var url = store.getState().globalurl.partyContactgetUrl;
     const data = {
@@ -1343,7 +1343,7 @@ export const PartyContactget = createAsyncThunk(
 );
 //partyContact Post
 export const partyContactData = createAsyncThunk(
-  "Party/partycontact",
+  "partyContactData/partycontact",
   async ({ action, idata }) => {
     const url = store.getState().globalurl.partyContactPostUrl;
 
@@ -1633,7 +1633,7 @@ export const getBiometricData = createAsyncThunk(
 
 // Settings -- Approvals Checkbox
 export const setttingsApprovalsData = createAsyncThunk(
-  "Settings/Approvals get",
+  "setttingsApprovalsData/Approvals get",
   async ({ CompanyID }) => {
     // Destructure the CompanyID here
     const url = store.getState().globalurl.settingsapprovalGetUrl;
@@ -1961,7 +1961,7 @@ export const BiometricpostData = createAsyncThunk(
 
 //settings Approvals
 export const ApprovalsettingspostData = createAsyncThunk(
-  "settings/Approvals Post",
+  "ApprovalsettingspostData/Approvals Post",
   async ({ idata }) => {
     const url = store.getState().globalurl.settingsapprovalPOSTtUrl;
 
@@ -3627,6 +3627,8 @@ export const fetchApidata =
               Status: apidata.Status,
               apiResponse: apidata.Data,
               Msg: "",
+
+              accessID: AccessID,
             })
           );
         } else {
@@ -3634,6 +3636,8 @@ export const fetchApidata =
             Success({
               action: Action,
               Status: apidata.Status,
+
+              accessID: AccessID,
             })
           );
         }

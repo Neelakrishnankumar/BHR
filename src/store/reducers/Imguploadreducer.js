@@ -113,11 +113,11 @@ export const fnFetchImage = (AccessID, recID) => (dispatch, getState) => {
           apidata.Imgname = "Defaultimg.jpg";
         }
         dispatch(
-          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "" })
+          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "",accessid:AccessID,action:"get" })
         );
       } else {
         dispatch(
-          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "" })
+          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "",accessid:AccessID,action:"get" })
         );
       }
     })
@@ -150,6 +150,7 @@ export const fnImageUpload =
             Status: "Y",
             apiResponse: response.data.name,
             Msg: response.data.Msg,
+            accessid:accessid
           })
         );
 
@@ -192,6 +193,7 @@ export function fnFileUpload(formData, id, accessid) {
           Status: "Y",
           apiResponse: success.data.name,
           Msg: success.data.Msg,
+          accessid:accessid
         })
       );
       var uploadImgurl = store.getState().globalurl.imageNameUpdateUrl;

@@ -7,7 +7,9 @@ import { createSlice } from "@reduxjs/toolkit";
 var APIurl = "https://bosuat.beyondexs.com/api/"
 var baseurl = "https://bosuat.beyondexs.com/"
 var baseurlUAAM = "https://uaamuat.beyondexs.com/"
-var essURL = "https://essuat.beyondexs.com/api/"
+// var essURL = "https://essuat.beyondexs.com/api/"
+
+
 // var APIurl ="https://dvmtapi.bexatm.com/hr/api/"
 // var baseurl = "https://dvmtapi.bexatm.com/"
 
@@ -144,7 +146,8 @@ const initialState = {
   ItemStockMenuPut: APIurl + "ItemStockMenu.php",
   // VendorFilterController: APIurl + "VendorFilterController.php",
   VendorFilterController: APIurl + "VendorFilterController.php",
-  UserActivityUrl : essURL + "UserActivityController.php",
+  // UserActivityUrl : essURL + "UserActivityController.php",
+  UserActivityUrl : APIurl + "UserActivityController.php",
 };
 
 export const getUrlSlice = createSlice({
