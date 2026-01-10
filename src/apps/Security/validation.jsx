@@ -1018,8 +1018,8 @@ export const PurchaseOrderNoSchema = yup.object().shape({
 /******************* Login screen ************************** */
 export const basicSchema = yup.object().shape({
 
-  username: yup.string().required("Please enter username"),
-  password: yup.string().required("Please enter password"),
+  username: yup.string().required("Please enter the Username"),
+  password: yup.string().required("Please enter the Password"),
   company: yup.string().required("Please choose company"),
   year: yup.string().required("Please choose year"),
 

@@ -113,7 +113,7 @@ const Editproject = () => {
     name: data.Name,
     sortorder: data.SortOrder,
     disable: data.Disable === "Y" ? true : false,
-    incharge: data.ProjectIncharge
+    incharge: data.ProjectIncharge && data.ProjectIncharge !== "0"
       ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
@@ -279,6 +279,7 @@ const Editproject = () => {
                 >
                   {CompanyAutoCode == "Y" ? (
                     <TextField
+                      disabled={mode=="V"}
                       name="code"
                       type="text"
                       id="code"
@@ -293,10 +294,12 @@ const Editproject = () => {
                       error={!!touched.code && !!errors.code}
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
+
                       // autoFocus
                     />
                   ) : (
                     <TextField
+                      disabled={mode=="V"}
                       name="code"
                       type="text"
                       id="code"
@@ -321,6 +324,7 @@ const Editproject = () => {
                   )}
 
                   <TextField
+                    disabled={mode=="V"}
                     name="name"
                     type="text"
                     id="name"
@@ -344,6 +348,7 @@ const Editproject = () => {
                   />
 
                   <CheckinAutocomplete
+                    disabled={mode=="V"}
                     name="incharge"
                     label={
                       <>
@@ -366,6 +371,7 @@ const Editproject = () => {
                   />
 
                   <CheckinAutocomplete
+                    disabled={mode=="V"}
                     name="projectOwner"
                     label="Project Owner"
                     // label={
@@ -426,19 +432,21 @@ const Editproject = () => {
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
                   <TextField
+                    disabled={mode=="V"}
                     labelId="demo"
                     id="CurrentStatus"
                     name="CurrentStatus"
                     type="text"
-                    label={
-                      <>
-                        Status
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          {" "}
-                          *{" "}
-                        </span>
-                      </>
-                    }
+                    label = "Status"
+                    // label={
+                    //   <>
+                    //     Status
+                    //     <span style={{ color: "red", fontSize: "20px" }}>
+                    //       {" "}
+                    //       *{" "}
+                    //     </span>
+                    //   </>
+                    // }
                     // required
                     focused
                     select
@@ -464,6 +472,7 @@ const Editproject = () => {
                  
 
                   <TextField
+                    disabled={mode=="V"}
                     name="sortorder"
                     type="number"
                     id="sortorder"
@@ -493,6 +502,7 @@ const Editproject = () => {
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
+                      disabled={mode=="V"}
                       type="checkbox"
                       name="Routine"
                       id="Routine"
@@ -522,6 +532,7 @@ const Editproject = () => {
                       Service & Maintenance
                     </FormLabel> */}
                     <Field
+                      disabled={mode=="V"}
                       type="checkbox"
                       name="ByProduct"
                       id="ByProduct"
@@ -539,6 +550,7 @@ const Editproject = () => {
 
                     <Field
                       //  size="small"
+                      disabled={mode=="V"}
                       type="checkbox"
                       name="delete"
                       id="delete"
@@ -551,6 +563,7 @@ const Editproject = () => {
                     <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
+                      disabled={mode=="V"}
                       type="checkbox"
                       name="disable"
                       id="disable"
@@ -582,6 +595,7 @@ const Editproject = () => {
                   >
                     <TextField
                       //fullWidth
+                      disabled={mode=="V"}
                       variant="standard"
                       type="number"
                       id="price"
@@ -621,6 +635,7 @@ const Editproject = () => {
                     }}
                   >
                     <TextField
+                      disabled={mode=="V"}
                       fullWidth
                       variant="standard"
                       type="number"
@@ -659,6 +674,7 @@ const Editproject = () => {
                     />
                     <TextField
                       fullWidth
+                      disabled={mode=="V"}
                       variant="standard"
                       type="number"
                       id="scheduled"
@@ -685,6 +701,7 @@ const Editproject = () => {
                       }}
                     />
                     <TextField
+                      disabled={mode=="V"}
                       fullWidth
                       variant="standard"
                       type="number"
@@ -712,6 +729,7 @@ const Editproject = () => {
                       }}
                     />
                     <TextField
+                      disabled={mode=="V"}
                       fullWidth
                       variant="standard"
                       type="number"

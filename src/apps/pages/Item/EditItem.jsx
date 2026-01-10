@@ -150,8 +150,8 @@ const EditItem = () => {
         const schema2 = Yup.object().shape({
           PurchaseUOM: Yup.string().required(data.Item.PurchaseUOM),
           ConsumptionUOM: Yup.string().required(data.Item.ConsumptionUOM),
-          BoxQuantity: Yup.string().required(data.Item.BoxQuantity),
-          PieceQuantity: Yup.string().required(data.Item.PieceQuantity),
+          // BoxQuantity: Yup.string().required(data.Item.BoxQuantity),
+          // PieceQuantity: Yup.string().required(data.Item.PieceQuantity),
           ConversionQty: Yup.string().required(data.Item.ConversionQty),
           GuidelinePrice: Yup.string().required(data.Item.GuidelinePrice),
           MinStock: Yup.string().required(data.Item.MinStock),
@@ -412,10 +412,10 @@ const EditItem = () => {
         values.ExtendedWarrentyApplicable == true ? "Y" : "N",
       OnDemand: values.OnDemand == true ? "Y" : "N",
       ScheduledService: values.ScheduledService == true ? "Y" : "N",
-      ExtendedWarrentyPeriod: values.ExtendedWarranty || "",
-      ExtendedWarrentyEndPeriod: values.ExtendedWarrantyEnd || "",
-      ToatalWarretyPeriod: values.WarrantyPeriod || "",
-      WarretyEndPeriod: values.WarrantyEndPeriod || "",
+      ExtendedWarrentyPeriod: values.ExtendedWarranty || 0,
+      ExtendedWarrentyEndPeriod: values.ExtendedWarrantyEnd || 0,
+      ToatalWarretyPeriod: values.WarrantyPeriod || 0,
+      WarretyEndPeriod: values.WarrantyEndPeriod || 0,
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
     };
@@ -980,6 +980,11 @@ const EditItem = () => {
                       onChange={handleChange}
                       error={!!touched.HSNCode && !!errors.HSNCode}
                       helperText={touched.HSNCode && errors.HSNCode}
+                       InputProps={{
+                        inputProps: {
+                          readOnly: true,                        
+                        },
+                      }}
                       autoFocus
                     />
                     <TextField
@@ -1009,8 +1014,9 @@ const EditItem = () => {
                       variant="standard"
                       focused
                       value={values.HSNCGST}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                      
                       error={!!touched.HSNCGST && !!errors.HSNCGST}
                       helperText={touched.HSNCGST && errors.HSNCGST}
                       InputProps={{
@@ -1284,7 +1290,7 @@ const EditItem = () => {
                             onChange={handleChange}
                           />
                         }
-                        label="ByProduct (Job Work Component)"
+                        label="By-Product (Job Work Component)"
                         sx={{
                           marginTop: "20px",
                           "@media (max-width:500px)": {
@@ -1292,7 +1298,12 @@ const EditItem = () => {
                           },
                         }}
                       />
-                      <FormControlLabel
+                      
+                    </Box>
+
+                    {/* CHECKBOX */}
+                     <Box>
+                    <FormControlLabel
                         control={
                           <Checkbox
                             name="ExpiryApplicable"
@@ -1346,11 +1357,7 @@ const EditItem = () => {
                           },
                         }}
                       />
-                    </Box>
-
-                    {/* CHECKBOX */}
-                    <Box>
-                      <FormControlLabel
+                      {/* <FormControlLabel
                         control={
                           <Checkbox
                             name="DeleteFlag"
@@ -1366,8 +1373,8 @@ const EditItem = () => {
                           },
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
-                      />
-                      <FormControlLabel
+                      /> */}
+                      {/* <FormControlLabel
                         control={
                           <Checkbox
                             name="Disable"
@@ -1383,9 +1390,9 @@ const EditItem = () => {
                           },
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
-                      />
-                    </Box>
-                    {values.ServiceAndMaintenance && (
+                      /> */}
+                    </Box> 
+                    {/* {values.ServiceAndMaintenance && (
                       <>
                         <TextField
                           name="WarrantyPeriod"
@@ -1528,7 +1535,7 @@ const EditItem = () => {
                           />
                         </Box>
                       </>
-                    )}
+                    )} */}
                   </Box>
                   {/* BUTTONS */}
                   <Box

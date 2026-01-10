@@ -51,7 +51,7 @@ import { useContext } from "react";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useState } from "react";
-import { fnCsvFileUpload } from "../../store/reducers/Imguploadreducer";
+import { fnCsvFileUpload, fnCsvFileUploadnew } from "../../store/reducers/Imguploadreducer";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { screenRightsData } from "../../store/reducers/screenRightsreducer";
 import EditIcon from "@mui/icons-material/Edit";
@@ -97,6 +97,8 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import { Visibility } from "@mui/icons-material";
+import ClearIcon from "@mui/icons-material/Clear";
+import InputAdornment from "@mui/material/InputAdornment";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -146,7 +148,68 @@ const Listview = () => {
   const YearRecorid = sessionStorage.getItem("YearRecorid");
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [showMore, setShowMore] = React.useState(false);
+  const [ImageName,setImgName] = useState({ name: "Choose File" });
+  const [saveSuccess, setSaveSuccess] = useState(false);
+   const [fileName,setFileName]=useState();
+     const [assignrecid, setAssignrecid] = useState("");
+   const handleFileChange = async (event) => {
+    try {
+      const selectedFile = event.target.files[0];
+      const fileObject = {
+        name: selectedFile.name,
+        lastModified: selectedFile.lastModified,
+        lastModifiedDate: selectedFile.lastModifiedDate,
+        webkitRelativePath: selectedFile.webkitRelativePath,
+        size: selectedFile.size,
+    };
+    
+  //     console.log(file);
+  
+    setImgName(fileObject);
+      if (!selectedFile) {
+        console.error("No file selected");
+        return;
+      }
+  setFileName(fileObject.name);
+  
+  console.log(fileObject.name,'===============');
+      setSelectedFile(selectedFile);
+      console.log("Selected File:", selectedFile);
+      console.log("RecordID :", assignrecid);
+      // console.log("RecordID before appending to FormData:", Data.RecordID);
+     const formData = new FormData();
+       formData.append("file", selectedFile);
+      formData.append("type", "POS");
+     formData.append("recordid",assignrecid);
+   
+   
 
+      const fileData = await dispatch(fnCsvFileUploadnew(formData));
+  
+      console.log("fileData:", JSON.stringify(fileData));
+  
+    //   if (fileData.payload) {
+    //     //setImgName(fileData.payload.apiResponse);
+    //     toast.success("File uploaded successfully!");
+    //   } else {
+    //     console.error("Unexpected response structure:", fileData);
+    //   }
+    // } catch (error) {
+    //   console.error("File upload failed:", error);
+    // }
+    if (fileData.payload && fileData.payload.Status === "Y") {
+      // Extract the Data field and show it in the toast
+      toast.success(fileData.payload.Data || "Process completed successfully");
+      } else {
+          console.error("Unexpected response structure:", fileData);
+          toast.error("File upload failed!");
+      }
+    } catch (error) {
+      console.error("File upload failed:", error);
+      toast.error("Error uploading file!");
+    }
+  
+  };
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -428,9 +491,9 @@ const Listview = () => {
             }}
           >
             {accessID === "TR313" ||
-            accessID === "TR243" ||
-            accessID === "TR328" ||
-            accessID === "TR321" ? (
+              accessID === "TR243" ||
+              accessID === "TR328" ||
+              accessID === "TR321" ? (
               <IconButton onClick={() => setShowMore((prev) => !prev)}>
                 {showMore ? (
                   <Tooltip title="Close">
@@ -534,8 +597,7 @@ const Listview = () => {
                   <AddOutlinedIcon
                     onClick={() => {
                       navigate(
-                        `./Edit${screenName}/-1/A${
-                          accessID === "TR010" ? "/0" : ""
+                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
                         }`,
                         {
                           state: {
@@ -601,7 +663,31 @@ const Listview = () => {
                 fileName: `${screenName}`,
               }}
             />
+            {/* {accessID == "TR122" && (
+              <Box display="flex" alignItems="center" gap={2} mt={3}>
+                <TextField
+                  value={ImageName?.name || ""}
+                  size="small"
+                  sx={{ width: "200px", borderRadius: "10px" }}
+                />
+                <input
+                  type="file"
+                  name="csv"
+                  id="file-input"
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                  // disabled={!saveSuccess}
+                />
 
+                <Button
+                  variant="contained"
+                  color="primary"
+                  // disabled={!saveSuccess}
+                  onClick={() => document.getElementById("file-input").click()}
+                >
+                  Upload
+                </Button>
+              </Box>)} */}
             <Tooltip arrow title="Logout">
               <IconButton onClick={() => fnLogOut("Logout")} color="error">
                 <LogoutOutlinedIcon />
@@ -785,6 +871,7 @@ const Listview = () => {
                       JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
                     product:
                       JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
+                    ordertype: sessionStorage.getItem("ordertype") || "",
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -793,6 +880,7 @@ const Listview = () => {
                       values.date ||
                       values.party ||
                       values.product ||
+                      values.ordertype ||
                       values.Created ||
                       values.Process ||
                       values.ReadyToDeliver ||
@@ -802,39 +890,155 @@ const Listview = () => {
                       values.Delivered ||
                       values.Picked;
                   }}
+                  // onSubmit={(values, { setSubmitting }) => {
+                  //   const conditions = [];
+                  //   const statusDateMap = {
+                  //     Created: "OROrderDate",
+                  //     Process: "ORProcessDate",
+                  //     ReadyToDeliver: "ORTentativeDate",
+                  //     YetToDeliver: "ORTentativeDate",
+                  //     Picked: "ORPickedDate",
+                  //     Scheduled: "ORTentativeDate",
+                  //     Delivered: "ORDeliveryDate",
+                  //     Paid: "ORPaidDate",
+                  //   };
+
+                  //   const fromDate = values.fromdate || "";
+                  //   const toDate = values.date || "";
+
+
+                  //   sessionStorage.setItem("FromDate", fromDate);
+                  //   sessionStorage.setItem("ToDate", toDate);
+                  //   sessionStorage.setItem("ordertype", values.ordertype);
+                  //   // Store checkbox values
+                  //   Object.keys(statusDateMap).forEach((status) => {
+                  //     sessionStorage.setItem(
+                  //       `TR313_${status}`,
+                  //       values[status] ? "Y" : "N"
+                  //     );
+                  //   });
+
+                  //   sessionStorage.setItem(
+                  //     "TR313_Filters",
+                  //     JSON.stringify(values)
+                  //   );
+
+                  //   const selectedStatuses = Object.keys(statusDateMap).filter(
+                  //     (status) => values[status]
+                  //   );
+
+                  //   if (selectedStatuses.length > 0) {
+                  //     conditions.push(
+                  //       `Status IN (${selectedStatuses
+                  //         .map((s) => `'${s}'`)
+                  //         .join(", ")})`
+                  //     );
+                  //   }
+
+                  //   const dateConditions = [];
+
+                  //   selectedStatuses.forEach((status) => {
+                  //     const field = statusDateMap[status];
+
+                  //     if (fromDate && toDate) {
+                  //       dateConditions.push(
+                  //         `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                  //       );
+                  //     } else if (fromDate) {
+                  //       dateConditions.push(`(${field} >= '${fromDate}')`);
+                  //     } else if (toDate) {
+                  //       dateConditions.push(`(${field} <= '${toDate}')`);
+                  //     }
+                  //   });
+                  //   if (values.party?.length > 0) {
+                  //     const partyIds = values.party
+                  //       .map((p) => `'${p.RecordID}'`)
+                  //       .join(", ");
+
+                  //     conditions.push(`PartyRecordID IN (${partyIds})`);
+                  //   }
+
+                  //   if (values.product?.length > 0) {
+                  //     const productIds = values.product
+                  //       .map((p) => `'${p.RecordID}'`)
+                  //       .join(", ");
+
+                  //     conditions.push(`ProductID IN (${productIds})`);
+                  //   }
+                  //   if (values.ordertype?.length > 0) {
+                  //     // const ordertype = values.ordertype.map(t => t).join("','");
+                  //     conditions.push(`OrderType IN ('${values.ordertype}')`);
+                  //   }
+                  //   if (compID) {
+                  //     conditions.push(`CompanyID = '${compID}'`);
+                  //   }
+                  //   if (dateConditions.length > 0) {
+                  //     conditions.push(`(${dateConditions.join(" OR ")})`);
+                  //   }
+
+                  //   // --------------------------
+                  //   // FINAL WHERE CLAUSE
+                  //   // --------------------------
+                  //   const whereClause = conditions.join(" AND ");
+                  //   console.log("FINAL FILTER:", whereClause);
+
+                  //   dispatch(
+                  //     fetchListview(
+                  //       accessID,
+                  //       screenName,
+                  //       whereClause,
+                  //       "",
+                  //       compID
+                  //     )
+                  //   );
+
+                  //   setTimeout(() => setSubmitting(false), 100);
+                  // }}
                   onSubmit={(values, { setSubmitting }) => {
                     const conditions = [];
-                    const statusDateMap = {
-                      Created: "OROrderDate",
-                      Process: "ORProcessDate",
-                      ReadyToDeliver: "ORTentativeDate",
-                      YetToDeliver: "ORTentativeDate",
-                      Picked: "ORPickedDate",
-                      Scheduled: "ORTentativeDate",
-                      Delivered: "ORDeliveryDate",
-                      Paid: "ORPaidDate",
-                    };
 
+                    // --------------------------
+                    // DATE VALUES (ALWAYS OROrderDate)
+                    // --------------------------
                     const fromDate = values.fromdate || "";
                     const toDate = values.date || "";
 
                     sessionStorage.setItem("FromDate", fromDate);
                     sessionStorage.setItem("ToDate", toDate);
+                    sessionStorage.setItem("ordertype", values.ordertype || "");
 
-                    // Store checkbox values
-                    Object.keys(statusDateMap).forEach((status) => {
+                    if (fromDate && toDate) {
+                      conditions.push(
+                        `(OROrderDate BETWEEN '${fromDate}' AND '${toDate}')`
+                      );
+                    } else if (fromDate) {
+                      conditions.push(`(OROrderDate >= '${fromDate}')`);
+                    } else if (toDate) {
+                      conditions.push(`(OROrderDate <= '${toDate}')`);
+                    }
+
+                    // --------------------------
+                    // STATUS FILTER
+                    // --------------------------
+                    const allStatuses = [
+                      "Created",
+                      "Process",
+                      "ReadyToDeliver",
+                      "YetToDeliver",
+                      "Picked",
+                      "Scheduled",
+                      "Delivered",
+                      "Paid",
+                    ];
+
+                    allStatuses.forEach((status) => {
                       sessionStorage.setItem(
                         `TR313_${status}`,
                         values[status] ? "Y" : "N"
                       );
                     });
 
-                    sessionStorage.setItem(
-                      "TR313_Filters",
-                      JSON.stringify(values)
-                    );
-
-                    const selectedStatuses = Object.keys(statusDateMap).filter(
+                    const selectedStatuses = allStatuses.filter(
                       (status) => values[status]
                     );
 
@@ -846,21 +1050,9 @@ const Listview = () => {
                       );
                     }
 
-                    const dateConditions = [];
-
-                    selectedStatuses.forEach((status) => {
-                      const field = statusDateMap[status];
-
-                      if (fromDate && toDate) {
-                        dateConditions.push(
-                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                        );
-                      } else if (fromDate) {
-                        dateConditions.push(`(${field} >= '${fromDate}')`);
-                      } else if (toDate) {
-                        dateConditions.push(`(${field} <= '${toDate}')`);
-                      }
-                    });
+                    // --------------------------
+                    // PARTY FILTER
+                    // --------------------------
                     if (values.party?.length > 0) {
                       const partyIds = values.party
                         .map((p) => `'${p.RecordID}'`)
@@ -869,6 +1061,9 @@ const Listview = () => {
                       conditions.push(`PartyRecordID IN (${partyIds})`);
                     }
 
+                    // --------------------------
+                    // PRODUCT FILTER
+                    // --------------------------
                     if (values.product?.length > 0) {
                       const productIds = values.product
                         .map((p) => `'${p.RecordID}'`)
@@ -876,12 +1071,25 @@ const Listview = () => {
 
                       conditions.push(`ProductID IN (${productIds})`);
                     }
+
+                    // --------------------------
+                    // ORDER TYPE FILTER
+                    // --------------------------
+                    if (values.ordertype) {
+                      conditions.push(`OrderType = '${values.ordertype}'`);
+                    }
+
+                    // --------------------------
+                    // COMPANY FILTER
+                    // --------------------------
                     if (compID) {
                       conditions.push(`CompanyID = '${compID}'`);
                     }
-                    if (dateConditions.length > 0) {
-                      conditions.push(`(${dateConditions.join(" OR ")})`);
-                    }
+
+                    sessionStorage.setItem(
+                      "TR313_Filters",
+                      JSON.stringify(values)
+                    );
 
                     // --------------------------
                     // FINAL WHERE CLAUSE
@@ -901,6 +1109,7 @@ const Listview = () => {
 
                     setTimeout(() => setSubmitting(false), 100);
                   }}
+
                 >
                   {({
                     values,
@@ -990,6 +1199,39 @@ const Listview = () => {
                           // helperText={touched.product && errors.product}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
                         />
+                        <TextField
+                          select
+                          sx={{ width: 250, mt: 1 }}
+                          focused
+                          label="Order Type"
+                          value={values.ordertype || ""}
+                          onChange={(e) => {
+                            const ordertype = e.target.value;
+                            setFieldValue("ordertype", ordertype);
+                            sessionStorage.setItem("ordertype", ordertype);
+                          }}
+                          InputProps={{
+                            endAdornment: values.ordertype && (
+                              <InputAdornment position="end">
+                                <ClearIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setFieldValue("ordertype", "");
+                                    sessionStorage.removeItem("ordertype");
+                                  }}
+                                />
+                              </InputAdornment>
+                            ),
+                          }}
+                          variant="standard"
+                        >
+                          {/* <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem> */}
+                          <MenuItem value="O">Order</MenuItem>
+                          <MenuItem value="Q">Quotation</MenuItem>
+                        </TextField>
+
                         <TextField
                           select
                           fullWidth
@@ -1173,6 +1415,11 @@ const Listview = () => {
                                   data={listViewData}
                                   Product={values?.product?.Name}
                                   Party={values?.party?.Name}
+                                  filters={{
+                                    fromdate: values?.fromdate,
+                                    todate: values?.date,
+                                    ordertype: values.ordertype
+                                  }}
                                 />
                               }
                               fileName={`OrderEnquirySummary_Product.pdf`}
@@ -1195,6 +1442,11 @@ const Listview = () => {
                                   data={listViewData}
                                   Product={values?.product?.Name}
                                   Party={values?.party?.Name}
+                                  filters={{
+                                    fromdate: values?.fromdate,
+                                    todate: values?.date,
+                                    ordertype: values.ordertype
+                                  }}
                                 />
                               }
                               fileName={`OrderEnquirySummary_Party".pdf`}
@@ -1228,6 +1480,7 @@ const Listview = () => {
                               [
                                 "FromDate",
                                 "ToDate",
+                                "ordertype",
                                 "TR313_Created",
                                 "TR313_Process",
                                 "TR313_ReadyToDeliver",
@@ -1258,6 +1511,7 @@ const Listview = () => {
                                   party: [],
                                   product: [],
                                   Type: "ByProduct",
+                                  ordertype: ""
                                 },
                               });
                             }}
@@ -2073,18 +2327,18 @@ const Listview = () => {
     sessionStorage.setItem(`TR321_${status}`, values[status] ? "Y" : "N");
   });
 
-  // 🔥 CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
+  //  CASE 1: PROSPECT/BALANCE - IMMEDIATE DISPATCH
   if (values.Prospect || values.Balance) {
     let simpleWhere = `CompanyID=${compID}`;
     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
     if (values.Balance) simpleWhere += ` AND Balance < 0`;
-    console.log('🔥 APPLY - CASE 1:', simpleWhere);
+    console.log(' APPLY - CASE 1:', simpleWhere);
     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
     setTimeout(() => setSubmitting(false), 100);
     return;
   }
 
-  // 🔥 CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
+  //  CASE 2: STATUS + DAYS - COMPLETE SUBQUERY LOGIC
   const statusDateMap = {
     Created: "OR_ORDERDATE",
     Process: "OR_PROCESSDATE",
@@ -2138,7 +2392,7 @@ const Listview = () => {
   const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
   const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
 
-  console.log('🔥 APPLY - CASE 2:', finalWhereClause);
+  console.log(' APPLY - CASE 2:', finalWhereClause);
   dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
   setTimeout(() => setSubmitting(false), 100);
 }}
@@ -2163,7 +2417,7 @@ const Listview = () => {
         const isStatusGroupActive = isStatusSelected || isDateSelected;
         const isProspectGroupActive = values.Prospect || values.Balance;
 
-        // 🔥 FIXED: Proper Reset function with ALL variables in scope
+        //  FIXED: Proper Reset function with ALL variables in scope
         const handleResetFilters = () => {
           setFieldValue('days', '');
           setFieldValue('type', '');
@@ -2358,7 +2612,7 @@ const Listview = () => {
                   //     let simpleWhere = `CompanyID=${compID}`;
                   //     if (values.Prospect) simpleWhere += ` AND Prospects = 'Y'`;
                   //     if (values.Balance) simpleWhere += ` AND Balance < 0`;
-                  //     console.log('🔥 APPLY - CASE 1:', simpleWhere);
+                  //     console.log(' APPLY - CASE 1:', simpleWhere);
                   //     dispatch(fetchListview(accessID, "Party", simpleWhere, "", compID));
                   //     setTimeout(() => setSubmitting(false), 100);
                   //     return;
@@ -2418,13 +2672,13 @@ const Listview = () => {
                   //   const innerWhere = dynamicWhere.replace(`CompanyID=${compID} AND `, "");
                   //   const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
 
-                  //   console.log('🔥 APPLY - CASE 2:', finalWhereClause);
+                  //   console.log(' APPLY - CASE 2:', finalWhereClause);
                   //   dispatch(fetchListview(accessID, "Party", finalWhereClause, "", compID));
                   //   setTimeout(() => setSubmitting(false), 100);
                   // }}
 
                   onSubmit={(values, { setSubmitting }) => {
-                    // 🔥 CHECK IF ANY ACTUAL FILTER SELECTED
+                    //  CHECK IF ANY ACTUAL FILTER SELECTED
                     const statusKeys = [
                       "Created",
                       "Process",
@@ -2443,7 +2697,7 @@ const Listview = () => {
                     const hasBalanceFilter = values.Balance;
 
                     console.log(
-                      "🔥 APPLY DEBUG - hasStatus:",
+                      " APPLY DEBUG - hasStatus:",
                       hasStatusFilter,
                       "hasDate:",
                       hasDateFilter,
@@ -2453,14 +2707,14 @@ const Listview = () => {
                       hasBalanceFilter
                     );
 
-                    // 🔥 NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
+                    //  NO FILTERS SELECTED → Just CompanyID + HASFILTER=N
                     if (
                       !hasStatusFilter &&
                       !hasDateFilter &&
                       !hasProspectFilter &&
                       !hasBalanceFilter
                     ) {
-                      console.log("🔥 APPLY - NO FILTERS: CompanyID only");
+                      console.log(" APPLY - NO FILTERS: CompanyID only");
                       sessionStorage.setItem("TR321_HASFILTER", "N");
                       [
                         "Days",
@@ -2489,7 +2743,7 @@ const Listview = () => {
                       return;
                     }
 
-                    // 🔥 HAS FILTERS → Save to sessionStorage + HASFILTER=Y
+                    // HAS FILTERS → Save to sessionStorage + HASFILTER=Y
                     sessionStorage.setItem("TR321_HASFILTER", "Y");
                     sessionStorage.setItem("TR321_Days", values.days || "");
                     sessionStorage.setItem("TR321_type", values.type || "");
@@ -2514,7 +2768,7 @@ const Listview = () => {
                       if (values.Prospect)
                         simpleWhere += ` AND Prospects = 'Y'`;
                       if (values.Balance) simpleWhere += ` AND Balance < 0`;
-                      console.log("🔥 APPLY - CASE 1:", simpleWhere);
+                      console.log("APPLY - CASE 1:", simpleWhere);
                       dispatch(
                         fetchListview(
                           accessID,
@@ -2585,7 +2839,7 @@ const Listview = () => {
                       );
                       const finalWhereClause = `CompanyID=${compID} AND HV_RECID IN (SELECT OR_HVRECID FROM ORDHDR WHERE ${innerWhere} GROUP BY RecordID)`;
 
-                      console.log("🔥 APPLY - CASE 2:", finalWhereClause);
+                      console.log("APPLY - CASE 2:", finalWhereClause);
                       dispatch(
                         fetchListview(
                           accessID,
@@ -2598,7 +2852,7 @@ const Listview = () => {
                     } else {
                       // Days/Type but no status → CompanyID only
                       console.log(
-                        "🔥 APPLY - Days/Type but no status: CompanyID"
+                        "APPLY - Days/Type but no status: CompanyID"
                       );
                       dispatch(
                         fetchListview(
@@ -2636,7 +2890,7 @@ const Listview = () => {
                     const isProspectGroupActive =
                       values.Prospect || values.Balance;
 
-                    // 🔥 FIXED RESET with RESET FLAG
+                    //  FIXED RESET with RESET FLAG
                     const handleResetFilters = () => {
                       setFieldValue("days", "");
                       setFieldValue("type", "");
@@ -2662,7 +2916,7 @@ const Listview = () => {
                         sessionStorage.removeItem(`TR321_${k}`);
                       });
 
-                      // 🔥 SET NO-FILTER STATE
+                      // SET NO-FILTER STATE
                       sessionStorage.setItem("TR321_RESET", "Y");
                       sessionStorage.setItem("TR321_HASFILTER", "N");
                       // NO DISPATCH → Initial load handles single CompanyID call
@@ -3065,7 +3319,7 @@ const Listview = () => {
                                 "TR328_Party",
                                 "TR328_Product",
                                 "TR328_Filters",
-                                "TR328_WHERE",  
+                                "TR328_WHERE",
                               ].forEach((key) =>
                                 sessionStorage.removeItem(key)
                               );
@@ -3090,11 +3344,12 @@ const Listview = () => {
               </Box>
             )}
           </Box>
-          <Box display="flex" alignItems="center" marginLeft={3}>
-            <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
-              Legend
-            </Typography>
-          </Box>
+          {accessID !== "TR313" && (
+            <Box display="flex" alignItems="center" marginLeft={3}>
+              <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
+                Legend
+              </Typography>
+            </Box>)}
         </Box>
         {accessID == "TR049" ? (
           <Box display="flex" flexDirection="row" padding="25px">
@@ -3544,6 +3799,11 @@ const Listview = () => {
               label="Edit"
               variant="outlined"
             />
+             <Chip
+              icon={<Visibility color="primary" />}
+              label="View"
+              variant="outlined"
+            /> 
             <Chip
               icon={<PictureAsPdfIcon color="error" />}
               label="Download PDF"

@@ -4,36 +4,66 @@
     {
       "heading": "1. Free Plan",
       "points": [
-        "The free version includes 1 Admin User, 5 Employees and 1 Project by default.",
-        "Default login credentials will be provided for initial access."
+        {
+          "text": "The free version includes 1 Admin User, 5 Employees and 1 Project by default.",
+          "bold": false
+        },
+        {
+          "text": "Default login credentials will be provided for initial access.",
+          "bold": false
+        }
       ]
     },
     {
       "heading": "2. Communication",
       "points": [
-        "We will send important updates and notifications periodically through Email and WhatsApp.",
-        "By using this application, you agree to receive these communications."
+        {
+          "text": "We will send important updates and notifications periodically through Email and WhatsApp.",
+          "bold": false
+        },
+        {
+          "text": "By using this application, you agree to receive these communications.",
+          "bold": false
+        }
       ]
     },
     {
       "heading": "3. Account Security",
       "points": [
-        "To activate your company account, you must change the default password and log in again.",
-        "Users are responsible for maintaining the confidentiality of their login credentials."
+        {
+          "text": "To activate your company account, you must change the default password and log in again.",
+          "bold": true
+        },
+        {
+          "text": "Users are responsible for maintaining the confidentiality of their login credentials.",
+          "bold": false
+        }
       ]
     },
     {
       "heading": "4. Reports & Branding",
       "points": [
-        "Reports will be fully enabled only after uploading the Company Logo, Header, and Footer images.",
-        "Until then, the system will display Default Company branding and logo in reports and screens."
+        {
+          "text": "Reports will be fully enabled only after uploading the Company Logo, Header, and Footer images.",
+          "bold": false
+        },
+        {
+          "text": "Until then, the system will display Default Company branding and logo in reports and screens.",
+          "bold": false
+        }
       ]
     },
     {
       "heading": "5. General Terms",
       "points": [
-        "The company reserves the right to update or modify these Terms & Conditions at any time.",
-        "Continued use of the application indicates acceptance of the updated terms."
+        {
+          "text": "The company reserves the right to update or modify these Terms & Conditions at any time.",
+          "bold": false
+        },
+        {
+          "text": "Continued use of the application indicates acceptance of the updated terms.",
+          "bold": false
+        }
       ]
     }
   ]
