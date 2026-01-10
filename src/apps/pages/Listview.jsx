@@ -3555,7 +3555,22 @@ const Listview = () => {
               variant="outlined"
             /> */}
           </Box>
-        ) : (
+        ) : accessID == "TR128" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+           
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<ListAltOutlinedIcon color="primary" />}
+              label="Gate"
+              variant="outlined"
+            />
+           
+          </Box>
+        ): (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}

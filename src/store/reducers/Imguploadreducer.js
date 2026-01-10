@@ -201,6 +201,7 @@ export function fnFileUpload(formData, id, accessid) {
         Recordid: id,
         ImageName: success.data.name,
         accessid: accessid,
+        Action: "post", //AS PER BACKEND TEAM REQUEST - ADDED "post" STRING FOR FILE UPLOAD TOO (PARKAVI AKKA - 09/01/2025)
       };
 
       axios

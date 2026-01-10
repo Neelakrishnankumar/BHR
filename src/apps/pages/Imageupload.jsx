@@ -212,7 +212,7 @@ const Imageupload = () => {
               {/* <Button type="submit" color="secondary" variant="contained" >
                 Save
               </Button> */}
-              <Button  color="error" variant="contained" onClick={fnCancel}>
+              <Button  color="warning" variant="contained" onClick={fnCancel}>
                 Cancel
               </Button>
             </Box>
