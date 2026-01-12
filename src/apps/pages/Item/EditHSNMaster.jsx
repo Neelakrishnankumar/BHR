@@ -358,7 +358,7 @@ const EditHSNMaster = () => {
                       id="Description"
                       label={
                         <span>
-                          Description{" "}
+                          HSN Master Description{" "}
                           <span
                             style={{
                               fontSize: "20px",
