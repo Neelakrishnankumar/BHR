@@ -1,7 +1,7 @@
 {
   "Designation": {
     "code": "Please enter the Code",
-    "name": "Please enter the Description",
+    "name": "Please enter the Name",
     "rank": "Please enter the Rank"
   },
   "Department": {

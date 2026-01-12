@@ -340,7 +340,7 @@ const LoginChangepass = () => {
                             onClick={() => handleToggle("current")}
                             edge="end"
                           >
-                            {showPassword.current ? <VisibilityOff /> : <Visibility />}
+                            {showPassword.current ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -365,7 +365,7 @@ const LoginChangepass = () => {
                             onClick={() => handleToggle("new")}
                             edge="end"
                           >
-                            {showPassword.new ? <VisibilityOff /> : <Visibility />}
+                            {showPassword.new ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -390,7 +390,7 @@ const LoginChangepass = () => {
                             onClick={() => handleToggle("confirm")}
                             edge="end"
                           >
-                            {showPassword.confirm ? <VisibilityOff /> : <Visibility />}
+                            {showPassword.confirm ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
                         </InputAdornment>
                       ),

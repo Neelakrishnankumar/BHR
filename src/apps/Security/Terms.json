@@ -2,67 +2,73 @@
   "title": "Terms & Conditions",
   "sections": [
     {
-      "heading": "1. Free Plan",
+      "heading": "Free Plan",
       "points": [
         {
-          "text": "The free version includes 1 Admin User, 5 Employees and 1 Project by default.",
-          "bold": false
+          "textParts": [
+            { "text": "The Free Plan includes access to ", "bold": false },
+            { "text": "1 Admin User, 5 Employees, and 1 Project", "bold": true },
+            { "text": " by default.", "bold": false }
+          ]
         },
         {
-          "text": "Default login credentials will be provided for initial access.",
-          "bold": false
+          "text": "Default login credentials will be provided for initial access to the application."
         }
       ]
     },
     {
-      "heading": "2. Communication",
+      "heading": "Communication",
       "points": [
         {
-          "text": "We will send important updates and notifications periodically through Email and WhatsApp.",
-          "bold": false
+          "textParts": [
+            { "text": "We may send important updates, alerts, and notifications from time to time via ", "bold": false },
+            { "text": "Email and WhatsApp", "bold": true },
+            { "text": ".", "bold": false }
+          ]
         },
         {
-          "text": "By using this application, you agree to receive these communications.",
-          "bold": false
+          "text": "By using this application, you consent to receive such communications."
         }
       ]
     },
     {
-      "heading": "3. Account Security",
+      "heading": "Account Security",
       "points": [
         {
-          "text": "To activate your company account, you must change the default password and log in again.",
-          "bold": true
+          "text": "To activate your company account, you must change the default password and log in again."
         },
         {
-          "text": "Users are responsible for maintaining the confidentiality of their login credentials.",
-          "bold": false
+          "text": "Users are solely responsible for maintaining the confidentiality of their login credentials and for all activities conducted under their account."
         }
       ]
     },
     {
-      "heading": "4. Reports & Branding",
+      "heading": "Reports & Branding",
       "points": [
         {
-          "text": "Reports will be fully enabled only after uploading the Company Logo, Header, and Footer images.",
-          "bold": false
+          "textParts": [
+            { "text": "Reports will be fully enabled only after the ", "bold": false },
+            { "text": "Company Logo, Header, and Footer", "bold": true },
+            { "text": " images are uploaded.", "bold": false }
+          ]
         },
         {
-          "text": "Until then, the system will display Default Company branding and logo in reports and screens.",
-          "bold": false
+          "textParts": [
+            { "text": "Until then, the system will display ", "bold": false },
+            { "text": "default company branding and logos", "bold": true },
+            { "text": " across reports and screens.", "bold": false }
+          ]
         }
       ]
     },
     {
-      "heading": "5. General Terms",
+      "heading": "General Terms",
       "points": [
         {
-          "text": "The company reserves the right to update or modify these Terms & Conditions at any time.",
-          "bold": false
+          "text": "The company reserves the right to update or modify these Terms & Conditions at any time without prior notice."
         },
         {
-          "text": "Continued use of the application indicates acceptance of the updated terms.",
-          "bold": false
+          "text": "Continued use of the application after such changes constitutes acceptance of the updated terms."
         }
       ]
     }

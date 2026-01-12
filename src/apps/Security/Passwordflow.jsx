@@ -151,17 +151,13 @@ const ChangeyourPassword_1 = () => {
             {termsData.title}
           </Typography>
 
-          {termsData.sections.map((section, index) => (
+          {/* {termsData.sections.map((section, index) => (
             <Box key={index} mb={2}>
               <Typography variant="subtitle1" fontWeight="bold">
                 {section.heading}
               </Typography>
 
-              {/* {section.points.map((point, i) => (
-                <Typography key={i} variant="body2" sx={{ ml: 2, mt: 0.5 }}>
-                  • {point}
-                </Typography>
-              ))} */}
+             
               {section.points.map((point, i) => (
                 <Typography
                   key={i}
@@ -173,7 +169,39 @@ const ChangeyourPassword_1 = () => {
               ))}
 
             </Box>
+          ))} */}
+          {termsData.sections.map((section, index) => (
+            <Box key={index} mb={2}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {section.heading}
+              </Typography>
+
+              {section.points.map((point, i) => (
+                <Typography
+                  key={i}
+                  variant="body2"
+                  sx={{ ml: 2, mt: 0.5 }}
+                >
+                  •{" "}
+                  {point.textParts
+                    ? point.textParts.map((part, idx) => (
+                      <span
+                        key={idx}
+                        style={{ fontWeight: part.bold ? 700 : 400,  }}
+                      >
+                        {part.text}
+                      </span>
+                    ))
+                    : (
+                      <span style={{ fontWeight: point.bold ? 700 : 400 }}>
+                        {point.text}
+                      </span>
+                    )}
+                </Typography>
+              ))}
+            </Box>
           ))}
+
           <FormControlLabel
             control={
               <Checkbox
