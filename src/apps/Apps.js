@@ -178,15 +178,62 @@ import EditArea from "./pages/Route/EditArea";
 //import ChangeyourPassword from "./Security/Passwordflow";
 import ChangeyourPassword_1 from "./Security/Passwordflow";
 import Logochange from "./Security/Changelogo";
- import LoginChangepass from "./Security/Loginchangepassword";
+import LoginChangepass from "./Security/Loginchangepassword";
 
 
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 import Companychange from "./Security/Changecompany";
 import Changehdrftr from "./Security/ChangeHdrftr";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 function App() {
   const [theme, colorMode] = useMode();
+
+  const IDLE_TIME = 5 * 120 * 1000;
+
+  const navigate = useNavigate();
+  const timerRef = useRef(null);
+
+  const handleSessionExpire = () => {
+    toast.error("Session expired due to inactivity. Please login again.", {
+      style: {
+        fontSize: "20px",
+        padding: "20px 28px",
+        minWidth: "380px",
+        textAlign: "center",
+        lineHeight: "1.4"
+      },
+      autoClose: 10000
+    });
+   
+    sessionStorage.clear();
+    navigate("/");
+  };
+
+  const resetTimer = () => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(handleSessionExpire, IDLE_TIME);
+  };
+
+  useEffect(() => {
+    const events = ["mousemove", "keydown", "scroll", "click"];
+
+    events.forEach(event =>
+      window.addEventListener(event, resetTimer)
+    );
+
+    resetTimer();
+
+    return () => {
+      events.forEach(event =>
+        window.removeEventListener(event, resetTimer)
+      );
+      clearTimeout(timerRef.current);
+    };
+  }, []);
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -440,12 +487,12 @@ function App() {
                     path="/Secondarylistview/HSN/:accessID/:screenName/:parentID2/:parentID1/EditHSNMaster/:id/:Mode"
                     element={<EditHSNMaster />}
                   />
-                   {/* ROUTE EDIT */}
+                  {/* ROUTE EDIT */}
                   <Route
                     path="/:accessID/:screenName/EditRoute/:id/:Mode"
                     element={<EditRoute />}
                   />
-                   {/* AREA EDIT */}
+                  {/* AREA EDIT */}
                   <Route
                     // path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
                     path="/Secondarylistview/Route/:accessID/:screenName/:parentID1/EditRouteArea/:id/:Mode"
@@ -596,10 +643,10 @@ function App() {
                   <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
                   <Route path="/ChangeyourPassword_2" element={<Logochange />} />
                   <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
-                   <Route path="/ChangeyourPassword_4" element={<Companychange />} />
-                      <Route path="/ChangeyourPassword_5" element={<Changehdrftr />} />
+                  <Route path="/ChangeyourPassword_4" element={<Companychange />} />
+                  <Route path="/ChangeyourPassword_5" element={<Changehdrftr />} />
 
-      <Route
+                  <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
                     element={<Editproductstock />}
                   />
@@ -727,7 +774,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype"
                     element={<ListviewSecondary />}
                   />
-      
+
 
                   {/* NEW ORDER ITEM LIST VIEW */}
                   {/* <Route
@@ -1098,7 +1145,7 @@ function App() {
                     path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:LeadId"
                     element={<ViewLeadEnquiry />}
                   /> */}
-                   <Route
+                  <Route
                     path="/Secondarylistview/LeadEnquiry/ViewLeadEnquiry/:partyID/:LeadId"
                     element={<ViewLeadEnquiry />}
                   />
