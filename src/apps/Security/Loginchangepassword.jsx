@@ -151,8 +151,8 @@ const LoginChangepass = () => {
     const response = await dispatch(SettingspostData({ idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      // navigate("/Apps/change Password");
-      navigate("/Apps/ChangeyourPassword_4")
+       navigate("/#");
+      // navigate("/Apps/ChangeyourPassword_4")
     } else {
       toast.error(response.payload.Msg);
     }
