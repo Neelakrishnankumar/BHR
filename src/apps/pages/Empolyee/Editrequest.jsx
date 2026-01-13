@@ -4332,7 +4332,7 @@ const Editrequests = () => {
                               <Typography variant="body2" color="text.secondary">
                                 {item.Label}
                               </Typography>
-                              <Typography variant="h6" fontWeight="bold">
+                              <Typography variant="h6" fontWeight="bold" textAlign="right" marginRight={10}>
                                 {item.Value}
                               </Typography>
                             </Grid>
