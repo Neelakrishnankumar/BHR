@@ -172,8 +172,8 @@ const Changehdrftr = () => {
 
             setheaderImage(uploadedFile);
             sessionStorage.setItem("headerimg", uploadedFile);
-            toast.success(fileData.payload.Msg);         
-             await saveCompanyDetails(formikRef.current.values, {
+            toast.success(fileData.payload.Msg);
+            await saveCompanyDetails(formikRef.current.values, {
                 headerImage: uploadedFile,
             });
         }
@@ -228,8 +228,8 @@ const Changehdrftr = () => {
 
             setfooterImage(uploadedFile);
             toast.success(fileData.payload.Msg);
-          
-             await saveCompanyDetails(formikRef.current.values, {
+
+            await saveCompanyDetails(formikRef.current.values, {
                 footerImage: uploadedFile,
             });
         }
@@ -318,7 +318,15 @@ const Changehdrftr = () => {
             CompanyName: data.CM_NAME
         };
 
-        return dispatch(CompanydetailpostData({ idata }));
+        // return dispatch(CompanydetailpostData({ idata }));
+        const response = await dispatch(CompanydetailpostData({ idata }));
+        if (response.payload.Status == "Y") {
+            toast.success(response.payload.Msg);
+            navigate("/Apps/ChangeyourPassword_3")
+        } else {
+            toast.error(response.payload.Msg);
+        }
+
     };
     // const fnSave = async (values, overrides = {}) => {
 
@@ -576,7 +584,7 @@ const Changehdrftr = () => {
                                     variant="contained"
                                     // onClick={() => resetForm()}
                                     onClick={() => {
-                                        navigate("/#");
+                                        navigate("/Apps/ChangeyourPassword_3");
                                     }}
                                 >
                                     Skip

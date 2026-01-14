@@ -800,6 +800,7 @@ const Editrequests = () => {
       "FromDate",
       "ToDate",
       "LeavePart",
+      "Project",
       "Status",
 
       "action",

@@ -354,7 +354,7 @@ const Logochange = () => {
         const response = await dispatch(CompanydetailpostData({ idata }));
         if (response.payload.Status == "Y") {
             toast.success(response.payload.Msg);
-            navigate("/Apps/ChangeyourPassword_3")
+            navigate("/Apps/ChangeyourPassword_4")
         } else {
             toast.error(response.payload.Msg);
         }
@@ -561,7 +561,7 @@ const Logochange = () => {
                                     variant="contained"
                                     // onClick={() => resetForm()}
                                     onClick={() => {
-                                        navigate("/Apps/ChangeyourPassword_3");
+                                        navigate("/Apps/ChangeyourPassword_4");
                                     }}
                                 >
                                     Skip

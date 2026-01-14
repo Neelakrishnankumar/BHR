@@ -92,8 +92,8 @@
     "Code": "Please enter the Code",
     "Name": "Please enter the Name",
     "Password": "Please enter the Password",
-    "Department": "Please enter the Department",
-    "employeetype": "Please enter the Employee Type"
+    "Department": "Please select the Department",
+    "employeetype": "Please select the Employee Type"
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"
@@ -217,24 +217,25 @@
     "fromtime": "Please enter the From Time",
     "totime": "Please enter the To Time",
     "managerComments": "Please enter the Manager Comments",
-    "Status": "Please enter the Status"
+    "Status": "Please select the Status",
+    "reason": "Please enter the Reason"
   },
   "Leave": {
-    "LeavePart": "Please enter the Leave Part",
-    "leavetype": "Please enter the Leave Type",
+    "LeavePart": "Please select the Leave Part",
+    "leavetype": "Please select the Leave Type",
     "FromDate": "Please enter the From Date",
     "ToDate": "Please enter the To Date",
     "managerComments": "Please enter the Manager Comments",
-    "Status": "Please enter the Status",
+    "Status": "Please select the Status",
     "comment": "Please enter the Comments"
   },
   "Onduty": {
-    "LeavePart": "Please enter the Reason",
-    "ProName": "Please enter the Project",
+    "LeavePart": "Please select the Reason",
+    "ProName": "Please select the Project",
     "FromDate": "Please enter the From Date",
     "ToDate": "Please enter the To Date",
     "managerComments": "Please enter the Manager Comments",
-    "Status": "Please enter the Status",
+    "Status": "Please select the Status",
     "comment": "Please enter the Comments"
   },
   "Overtime": {
@@ -242,11 +243,11 @@
     "NumberOfHours": "Please enter the Number of Hours",
     "comments": "Please enter the Comments",
     "managerComments": "Please enter the Manager Comments",
-    "Status": "Please enter the Status"
+    "Status": "Please select the Status"
   },
   "Regularization": {
     "CheckInDate": "Please enter the Check In Date",
-    "appliedStatus": "Please enter the Applied Status",
+    "appliedStatus": "Please select the Applied Status",
     "remarks": "Please enter the Remarks",
     "managerComments": "Please enter the Manager Comments"
   },
@@ -256,15 +257,15 @@
     "ProName": "Please select the Project",
     "amount": "Please enter the Amount",
     "managerComments": "Please enter the Manager Comments",
-    "Status": "Please enter the Status",
+    "Status": "Please select the Status",
     "comments": "Please enter the Comments"
   },
   "Salaryadvance": {
     "date": "Please enter the Date",
-    "overhead": "Please enter the Purpose",
+    "overhead": "Please select the Purpose",
     "amount": "Please enter the Amount",
     "managerComments": "Please enter the Manager Comments",
-    "Status": "Please enter the Status",
+    "Status": "Please select the Status",
     "comments": "Please enter the Comments"
   },
   "Leaveconfiguration": {

@@ -8796,7 +8796,7 @@ const Editemployee = () => {
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
-                        <MenuItem value="WS">Week</MenuItem>
+                        {/* <MenuItem value="WS">Week</MenuItem> */}
                         <MenuItem value="MS">Month</MenuItem>
                       </TextField>
                       <TextField
@@ -9638,7 +9638,7 @@ const Editemployee = () => {
                       >
                         <MenuItem value="HS">Hours</MenuItem>
                         <MenuItem value="DS">Days</MenuItem>
-                        <MenuItem value="WS">Week</MenuItem>
+                        {/* <MenuItem value="WS">Week</MenuItem> */}
                         <MenuItem value="MS">Month</MenuItem>
                       </TextField>
                       <TextField

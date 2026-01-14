@@ -943,23 +943,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR252",
         },
-        {
-          name: "Activate My Subscription",
-          id: 5846,
-          url: "./ChangeyourPassword_3",
-          icon: (
-            <Tooltip title="Activate My Subscription">
-              <UnsubscribeIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR252",
-        },
+       
         {
           name: "Logo & GST Upload",
           id: 58467,
@@ -993,6 +977,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR258",
+        },
+         {
+          name: "Activate My Subscription",
+          id: 5846,
+          url: "./ChangeyourPassword_3",
+          icon: (
+            <Tooltip title="Activate My Subscription">
+              <UnsubscribeIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR252",
         },
 
       ],
