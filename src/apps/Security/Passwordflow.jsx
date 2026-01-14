@@ -87,7 +87,8 @@
 
 
 import React, { useState } from "react";
-import BackOfficelogoV1 from "../../assets/img/boswrkflow.PNG";
+import BackOfficelogoV2 from "../../assets/img/boswrkflow.PNG";
+import BackOfficelogoV1 from "../../assets/img/Back office Configuration.jpg";
 import termsData from "./Terms.json";
 import {
   Box,
@@ -104,6 +105,144 @@ const ChangeyourPassword_1 = () => {
   const navigate = useNavigate();
 
   return (
+    // <Box
+    //   sx={{
+    //     height: "90vh",
+    //     display: "flex",
+    //     flexDirection: "column",
+    //   }}
+    // >
+    //   {/* 🔹 Main Content */}
+    //   <Box
+    //     sx={{
+    //       flex: 1,
+    //       display: "flex",
+    //     }}
+    //   >
+
+    //     {/* LEFT SECTION – Flow Diagram */}
+    //     <Typography>Welcome to Beyondexs Agile Task Manager</Typography>
+
+    //     <Box
+    //       sx={{
+    //         flex: 1,
+    //         display: "flex",
+    //         alignItems: "center",
+    //         justifyContent: "center",
+    //         borderRight: "1px solid #e0e0e0",
+    //       }}
+    //     >
+    //       <img
+    //         src={BackOfficelogoV1}
+    //         alt="Flow Diagram"
+    //         style={{
+    //           width: "80%",
+    //           maxWidth: "350px",
+    //           objectFit: "contain",
+    //         }}
+    //       />
+    //     </Box>
+
+    //     {/* RIGHT SECTION – Terms & Conditions */}
+    //     <Box
+    //       sx={{
+    //         flex: 1,
+    //         padding: 4,
+    //         overflowY: "auto",
+    //       }}
+    //     >
+    //       <Typography variant="h6" fontWeight="bold" mb={2}>
+    //         {termsData.title}
+    //       </Typography>
+
+    //       {/* {termsData.sections.map((section, index) => (
+    //         <Box key={index} mb={2}>
+    //           <Typography variant="subtitle1" fontWeight="bold">
+    //             {section.heading}
+    //           </Typography>
+
+
+    //           {section.points.map((point, i) => (
+    //             <Typography
+    //               key={i}
+    //               variant="body2"
+    //               sx={{ ml: 2, mt: 0.5, fontWeight: point.bold ? "bold" : "normal" }}
+    //             >
+    //               • {point.text}
+    //             </Typography>
+    //           ))}
+
+    //         </Box>
+    //       ))} */}
+    //       {termsData.sections.map((section, index) => (
+    //         <Box key={index} mb={2}>
+    //           <Typography variant="subtitle1" fontWeight="bold">
+    //             {section.heading}
+    //           </Typography>
+
+    //           {section.points.map((point, i) => (
+    //             <Typography
+    //               key={i}
+    //               variant="body2"
+    //               sx={{ ml: 2, mt: 0.5 }}
+    //             >
+    //               •{" "}
+    //               {point.textParts
+    //                 ? point.textParts.map((part, idx) => (
+    //                   <span
+    //                     key={idx}
+    //                     style={{ fontWeight: part.bold ? 700 : 400, }}
+    //                   >
+    //                     {part.text}
+    //                   </span>
+    //                 ))
+    //                 : (
+    //                   <span style={{ fontWeight: point.bold ? 700 : 400 }}>
+    //                     {point.text}
+    //                   </span>
+    //                 )}
+    //             </Typography>
+    //           ))}
+    //         </Box>
+    //       ))}
+
+    //       <FormControlLabel
+    //         control={
+    //           <Checkbox
+    //             checked={agreed}
+    //             onChange={(e) => setAgreed(e.target.checked)}
+    //           />
+    //         }
+    //         label="I agree to the Terms & Conditions"
+    //       />
+    //     </Box>
+    //   </Box>
+
+    //   <Box display="flex" gap={2}
+    //     justifyContent="flex-end"
+    //     alignItems="center"
+    //     padding={2}
+    //   >
+    //     <Button
+    //       variant="contained"
+    //       color="success"
+    //       disabled={!agreed}
+    //       onClick={() => navigate("/Apps/ChangeyourPassword_2")}
+    //     >
+    //       Agree
+    //     </Button>
+
+    //     <Button
+    //       variant="contained"
+    //       color="warning"
+    //       onClick={() => navigate(-1)}
+    //     >
+    //       Cancel
+    //     </Button>
+    //   </Box>
+    //   {/* </Box> */}
+    // </Box>
+    
     <Box
       sx={{
         height: "90vh",
@@ -118,16 +257,26 @@ const ChangeyourPassword_1 = () => {
           display: "flex",
         }}
       >
-        {/* LEFT SECTION – Flow Diagram */}
+        {/* LEFT SECTION – Logo & Welcome */}
         <Box
           sx={{
             flex: 1,
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
+            padding: 4,
             borderRight: "1px solid #e0e0e0",
           }}
         >
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            mb={2}
+            textAlign="center"
+          >
+            Welcome to Beyondexs Agile Task Manager
+          </Typography>
+
           <img
             src={BackOfficelogoV1}
             alt="Flow Diagram"
@@ -147,29 +296,10 @@ const ChangeyourPassword_1 = () => {
             overflowY: "auto",
           }}
         >
-          <Typography variant="h6" fontWeight="bold" mb={2}>
+          <Typography variant="h5" fontWeight="bold" mb={1}>
             {termsData.title}
           </Typography>
 
-          {/* {termsData.sections.map((section, index) => (
-            <Box key={index} mb={2}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                {section.heading}
-              </Typography>
-
-             
-              {section.points.map((point, i) => (
-                <Typography
-                  key={i}
-                  variant="body2"
-                  sx={{ ml: 2, mt: 0.5, fontWeight: point.bold ? "bold" : "normal" }}
-                >
-                  • {point.text}
-                </Typography>
-              ))}
-
-            </Box>
-          ))} */}
           {termsData.sections.map((section, index) => (
             <Box key={index} mb={2}>
               <Typography variant="subtitle1" fontWeight="bold">
@@ -187,7 +317,7 @@ const ChangeyourPassword_1 = () => {
                     ? point.textParts.map((part, idx) => (
                       <span
                         key={idx}
-                        style={{ fontWeight: part.bold ? 700 : 400,  }}
+                        style={{ fontWeight: part.bold ? 700 : 400 }}
                       >
                         {part.text}
                       </span>
@@ -202,43 +332,29 @@ const ChangeyourPassword_1 = () => {
             </Box>
           ))}
 
+          {/* Reduced spacing below checkbox */}
           <FormControlLabel
+            sx={{ mt: -2 }}
             control={
               <Checkbox
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
               />
             }
-            label="I Agree to Terms & Conditions"
+            label="I agree to the Terms & Conditions"
           />
         </Box>
       </Box>
 
-      {/* 🔹 Bottom Actions */}
-      {/* <Box
-        sx={{
-          borderTop: "1px solid #e0e0e0",
-          px: 3,
-          py: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
-            />
-          }
-          label="I agree to Terms & Conditions"
-        /> */}
-
-      <Box display="flex" gap={2}
+      {/* 🔹 Footer Buttons (Closer to checkbox) */}
+      <Box
+        display="flex"
+        gap={2}
         justifyContent="flex-end"
         alignItems="center"
-        padding={2}
+        px={3}
+        py={0} 
+        mt={-3}  // ⬅ reduced padding
       >
         <Button
           variant="contained"
@@ -257,8 +373,8 @@ const ChangeyourPassword_1 = () => {
           Cancel
         </Button>
       </Box>
-      {/* </Box> */}
     </Box>
+
   );
 };
 

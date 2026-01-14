@@ -202,7 +202,7 @@ const Login = () => {
       navigate("/Apps/HR");
       console.log("firstLogin:", firstLogin);
       if (firstLogin == "Y") {
-         navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
+        navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
         // navigate("/Apps/HR")
       }
       else {
@@ -231,9 +231,41 @@ const Login = () => {
         >
           <Formik
             // onSubmit={handleFormSubmit}
-            initialValues={initialValues}
-            enableReinitialize={true}
-            // validationSchema={basicSchema}
+            initialValues={{
+              username: "",
+              password: "",
+              license: "",
+            }}
+
+            validate={(values) => {
+              const errors = {};
+
+              // Username validation
+              if (!values.username) {
+                errors.username = "Please enter username";
+              } 
+
+              // Password validation
+              if (!values.password) {
+                errors.password = "Please enter password";
+              } else if (
+                !/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(values.password)
+              ) {
+                errors.password =
+                  "Password must contain uppercase, number & special character";
+              }
+
+              // License validation
+              if (!values.license) {
+                errors.license = "Please enter subscription code";
+              }
+
+              return errors;
+            }}
+
+            onSubmit={(values, { resetForm }) => {
+              fnLogin(values, resetForm);
+            }}
           >
             {({
               values,
@@ -246,8 +278,8 @@ const Login = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <Stack
-                  component="form"
-                  height={{ sm: "450px", md: "343px" }}
+
+                  height={{ sm: "450px", md: "100%" }}
                   width={{ sm: "291px", md: "700px" }}
                   sx={{
                     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
@@ -308,6 +340,7 @@ const Login = () => {
                       <TextField
                         margin="normal"
                         focused
+                        name="username"
                         label="Username"
                         id="username"
                         value={values.username}
@@ -316,44 +349,53 @@ const Login = () => {
                         onSubmit={handleSubmit}
                         //  placeholder='Enter username'
                         fullWidth
-                        required
                         error={!!touched.username && !!errors.username}
                         helperText={touched.username && errors.username}
                       />
                     </FormControl>
 
-                    <FormControl focused margin="normal" fullWidth required>
+                    <FormControl
+                      focused
+                      margin="normal"
+                      fullWidth
+                      error={!!touched.password && !!errors.password}
+                    >
                       <InputLabel>Password</InputLabel>
+
                       <OutlinedInput
                         id="password"
+                        name="password"
                         type={value.showPassword ? "text" : "password"}
                         value={values.password}
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        //  placeholder='Enter password'
-                        error={!!touched.password && !!errors.password}
-                        helperText={touched.password && errors.password}
                         endAdornment={
                           <InputAdornment position="end">
-                            <IconButton
-                              onClick={handleClickShowPassword}
-                              edge="end"
-                            >
-                              {value.showPassword ? (
-                                <VisibilityOffIcon />
-                              ) : (
-                                <VisibilityIcon />
-                              )}
+                            <IconButton onClick={handleClickShowPassword} edge="end">
+                              {value.showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                             </IconButton>
                           </InputAdornment>
                         }
                         label="Password"
                       />
+
+                      {/* ✅ EXACT ERROR TEXT */}
+                      {touched.password && errors.password && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{ ml: "14px", mt: "4px" }}
+                        >
+                          {errors.password}
+                        </Typography>
+                      )}
                     </FormControl>
+
                     <TextField
                       margin="normal"
                       focused
                       label="Subscription Code"
+                      name="license"
                       id="license"
                       value={values.license}
                       onBlur={handleBlur}
@@ -361,7 +403,6 @@ const Login = () => {
                       onSubmit={handleSubmit}
                       //  placeholder='Enter license'
                       fullWidth
-                      required
                       error={!!touched.license && !!errors.license}
                       helperText={touched.license && errors.license}
                     />
@@ -376,9 +417,7 @@ const Login = () => {
                         Forgot Password?
                       </Typography>
                       <LoadingButton
-                        onClick={() => {
-                          fnLogin(values);
-                        }}
+                        type="submit"
                         color="success"
                         loading={isLoading}
                         variant="contained"
