@@ -2813,7 +2813,7 @@ const Editemployee = () => {
       EmployeeID: recID,
       Description: values.LoaDescription,
       //  ImageName: ImageName ? ImageName:Data.ImageName,
-      Attachment: uploadFile,
+      Attachment: uploadFile || values.Attachment || "",
       Personal: values.personal === true ? "Y" : "N",
       RenewalRequired: values.renewal === true ? "Y" : "N",
       Category: values.category,

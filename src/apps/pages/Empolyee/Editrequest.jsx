@@ -808,11 +808,16 @@ const Editrequests = () => {
   else if (show == "9") {
     VISIBLE_FIELDS = [
       "slno",
-      "Date",
+      // "Date",
+      "FEDate",
       //"Name",
       "Purpose",
+      "Project",
+      "Overhead",
       "Amount",
       "Status",
+      "Comments",
+      "ManagerComments",
       "action",
     ];
   } else if (show == "10") {
@@ -1826,7 +1831,8 @@ const Editrequests = () => {
         setExpensedata({
           RecordID: rowData.RecordID,
           referenceifany: rowData.Referenceifany,
-          date: rowData.Date,
+          // date: rowData.Date,
+          date: rowData.FEDate, //DATE GET WAS NOT FECTHED - CORRECTED --> MANOJ
           amount: rowData.Amount,
           comments: rowData.Comments,
           Status: rowData.Status,
@@ -1881,6 +1887,7 @@ const Editrequests = () => {
     code: Data.Code,
     description: Data.Name,
     date: formatDate(expensedata.date),
+    // date: expensedata.date || "",
     referenceifany: expensedata.referenceifany,
     amount: expensedata.amount,
     comments: expensedata.comments,
@@ -7941,6 +7948,7 @@ const Editrequests = () => {
                         <Button
                           color="error"
                           variant="contained"
+                          disabled={funMode === "A"}
                           onClick={() => {
                             Swal.fire({
                               title: errorMsgData.Warningmsg.Delete,
@@ -8008,7 +8016,9 @@ const Editrequests = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{file.uploadedDate}</TableCell>
                                     <TableCell>{file.filename}</TableCell>
-                                    <TableCell>{file.id}</TableCell>
+                                    {/* <TableCell>{file.id}</TableCell> */}
+                                    <TableCell>{file.purpose || file.id}</TableCell>
+                                     {/* TO DISPLAY THE PURPOSE IF NOT ID THEN */}
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">
