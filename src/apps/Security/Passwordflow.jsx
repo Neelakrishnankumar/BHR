@@ -151,6 +151,25 @@ const ChangeyourPassword_1 = () => {
             {termsData.title}
           </Typography>
 
+          {/* {termsData.sections.map((section, index) => (
+            <Box key={index} mb={2}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {section.heading}
+              </Typography>
+
+             
+              {section.points.map((point, i) => (
+                <Typography
+                  key={i}
+                  variant="body2"
+                  sx={{ ml: 2, mt: 0.5, fontWeight: point.bold ? "bold" : "normal" }}
+                >
+                  • {point.text}
+                </Typography>
+              ))}
+
+            </Box>
+          ))} */}
           {termsData.sections.map((section, index) => (
             <Box key={index} mb={2}>
               <Typography variant="subtitle1" fontWeight="bold">
@@ -158,12 +177,31 @@ const ChangeyourPassword_1 = () => {
               </Typography>
 
               {section.points.map((point, i) => (
-                <Typography key={i} variant="body2" sx={{ ml: 2, mt: 0.5 }}>
-                  • {point}
+                <Typography
+                  key={i}
+                  variant="body2"
+                  sx={{ ml: 2, mt: 0.5 }}
+                >
+                  •{" "}
+                  {point.textParts
+                    ? point.textParts.map((part, idx) => (
+                      <span
+                        key={idx}
+                        style={{ fontWeight: part.bold ? 700 : 400,  }}
+                      >
+                        {part.text}
+                      </span>
+                    ))
+                    : (
+                      <span style={{ fontWeight: point.bold ? 700 : 400 }}>
+                        {point.text}
+                      </span>
+                    )}
                 </Typography>
               ))}
             </Box>
           ))}
+
           <FormControlLabel
             control={
               <Checkbox
@@ -197,28 +235,28 @@ const ChangeyourPassword_1 = () => {
           label="I agree to Terms & Conditions"
         /> */}
 
-        <Box display="flex" gap={2}
-          justifyContent= "flex-end"
-          alignItems= "center"
-          padding={2}
-          >
-          <Button
-            variant="contained"
-            color="success"
-            disabled={!agreed}
-            onClick={() => navigate("/Apps/ChangeyourPassword_2")}
-          >
-            Agree
-          </Button>
+      <Box display="flex" gap={2}
+        justifyContent="flex-end"
+        alignItems="center"
+        padding={2}
+      >
+        <Button
+          variant="contained"
+          color="success"
+          disabled={!agreed}
+          onClick={() => navigate("/Apps/ChangeyourPassword_2")}
+        >
+          Agree
+        </Button>
 
-          <Button
-            variant="contained"
-            color="warning"
-            onClick={() => navigate(-1)}
-          >
-            Cancel
-          </Button>
-        </Box>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={() => navigate(-1)}
+        >
+          Cancel
+        </Button>
+      </Box>
       {/* </Box> */}
     </Box>
   );

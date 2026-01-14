@@ -183,9 +183,9 @@ const EditHSNMaster = () => {
   const initialValues = {
     Code: Data.Code || "",
     Description: Data.Description || "",
-    HSNIGST: Data.IGST || "",
-    HSNCGST: Data.CGST || "",
-    HSNSGST: Data.SGST || "",
+    HSNIGST: Data.IGST || "0.00",
+    HSNCGST: Data.CGST || "0.00",
+    HSNSGST: Data.SGST || "0.00",
     Sortorder: Data.Sortorder || "",
     Disable: Data.Disable == "Y" ? true : false,
     DeleteFlag: Data.DeleteFlag == "Y" ? true : false,
@@ -358,7 +358,7 @@ const EditHSNMaster = () => {
                       id="Description"
                       label={
                         <span>
-                          Description{" "}
+                          HSN Master Description{" "}
                           <span
                             style={{
                               fontSize: "20px",
@@ -383,22 +383,42 @@ const EditHSNMaster = () => {
                       name="HSNCGST"
                       type="number"
                       id="HSNCGST"
-                      label={
-                        <span>
-                          CGST(In Percentage)
-                          <span style={{
-                            fontSize: "20px",
-                            color: "red"
-                          }}>
-                            *
-                          </span>
-                        </span>
-                      }
+                      label ="CGST(In Percentage)"
+                      // label={
+                      //   <span>
+                      //     CGST(In Percentage)
+                      //     <span style={{
+                      //       fontSize: "20px",
+                      //       color: "red"
+                      //     }}>
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
                       variant="standard"
                       focused
                       value={values.HSNCGST}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                       onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setFieldValue("HSNCGST", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          let val = e.target.value;
+                          if (val === "" || val === ".") {
+                            setFieldValue("HSNCGST", "0.00");
+                            return;
+                          }
+                          if (!val.includes(".")) {
+                            val = `${val}.00`;
+                          }
+                          const num = Number(val);
+                          setFieldValue("HSNCGST", num.toFixed(2));
+                        }}
                       error={!!touched.HSNCGST && !!errors.HSNCGST}
                       helperText={touched.HSNCGST && errors.HSNCGST}
                       InputProps={{
@@ -411,22 +431,42 @@ const EditHSNMaster = () => {
                       name="HSNSGST"
                       type="number"
                       id="HSNSGST"
-                      label={
-                        <span>
-                          SGST(In Percentage)
-                          <span style={{
-                            fontSize: "20px",
-                            color: "red"
-                          }}>
-                            *
-                          </span>
-                        </span>
-                      }
+                      label="SGST(In Percentage)"
+                      // label={
+                      //   <span>
+                      //     SGST(In Percentage)
+                      //     <span style={{
+                      //       fontSize: "20px",
+                      //       color: "red"
+                      //     }}>
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
                       variant="standard"
                       focused
                       value={values.HSNSGST}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                       onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setFieldValue("HSNSGST", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          let val = e.target.value;
+                          if (val === "" || val === ".") {
+                            setFieldValue("HSNSGST", "0.00");
+                            return;
+                          }
+                          if (!val.includes(".")) {
+                            val = `${val}.00`;
+                          }
+                          const num = Number(val);
+                          setFieldValue("HSNSGST", num.toFixed(2));
+                        }}
                       error={!!touched.HSNSGST && !!errors.HSNSGST}
                       helperText={touched.HSNSGST && errors.HSNSGST}
                       InputProps={{
@@ -439,23 +479,42 @@ const EditHSNMaster = () => {
                       name="HSNIGST"
                       type="number"
                       id="HSNIGST"
-                      //label="IGST(In Percentage)"
-                      label={
-                        <span>
-                          IGST(In Percentage)
-                          <span style={{
-                            fontSize: "20px",
-                            color: "red"
-                          }}>
-                            *
-                          </span>
-                        </span>
-                      }
+                      label="IGST(In Percentage)"
+                      // label={
+                      //   <span>
+                      //     IGST(In Percentage)
+                      //     <span style={{
+                      //       fontSize: "20px",
+                      //       color: "red"
+                      //     }}>
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
                       variant="standard"
                       focused
                       value={values.HSNIGST}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                      onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setFieldValue("HSNIGST", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          let val = e.target.value;
+                          if (val === "" || val === ".") {
+                            setFieldValue("HSNIGST", "0.00");
+                            return;
+                          }
+                          if (!val.includes(".")) {
+                            val = `${val}.00`;
+                          }
+                          const num = Number(val);
+                          setFieldValue("HSNIGST", num.toFixed(2));
+                        }}
                       error={!!touched.HSNIGST && !!errors.HSNIGST}
                       helperText={touched.HSNIGST && errors.HSNIGST}
                       InputProps={{
@@ -569,3 +628,4 @@ const EditHSNMaster = () => {
 };
 
 export default EditHSNMaster;
+

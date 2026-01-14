@@ -266,7 +266,6 @@ const Login = () => {
             onSubmit={(values, { resetForm }) => {
               fnLogin(values, resetForm);
             }}
-
           >
             {({
               values,
@@ -280,7 +279,7 @@ const Login = () => {
               <form onSubmit={handleSubmit}>
                 <Stack
 
-                  height={{ sm: "450px", md: "343px" }}
+                  height={{ sm: "450px", md: "100%" }}
                   width={{ sm: "291px", md: "700px" }}
                   sx={{
                     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",

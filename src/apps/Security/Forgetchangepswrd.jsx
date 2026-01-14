@@ -235,12 +235,12 @@ const Forgetpassword_2 = () => {
                         validate={(values) => {
                             const errors = {};
                             if (!values.oldpassword) {
-                                errors.oldpassword = 'Please enter Old Password';
+                                errors.oldpassword = 'Please enter the Old Password';
                             }
 
                             if (!values.newpassword) {
                                 // errors.newpassword = 'New password is required';
-                                errors.newpassword = 'Please enter New Password';
+                                errors.newpassword = 'Please enter the New Password';
                             } else if (values.newpassword.length < 8) {
                                 errors.newpassword = 'Password must be at least 8 characters';
                             } else if (!/[A-Z]/.test(values.newpassword)) {
@@ -428,7 +428,13 @@ const Forgetpassword_2 = () => {
                                             >
                                                 Save
                                             </LoadingButton>
-                                            <Button variant="outlined" color="secondary" onClick={resetForm}>
+                                            <Button variant="contained" color="warning" 
+                                            // onClick={resetForm}
+                                            onClick={() => {                                             
+                                                    resetForm();                                                   
+                                                    navigate(-1);
+                                                }}
+                                            >
                                                 Cancel
                                             </Button>
                                         </Stack>

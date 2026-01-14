@@ -113,11 +113,11 @@ export const fnFetchImage = (AccessID, recID) => (dispatch, getState) => {
           apidata.Imgname = "Defaultimg.jpg";
         }
         dispatch(
-          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "" })
+          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "",accessid:AccessID,action:"get" })
         );
       } else {
         dispatch(
-          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "" })
+          Success({ Status: "Y", apiResponse: apidata.Imgname, Msg: "",accessid:AccessID,action:"get" })
         );
       }
     })
@@ -150,6 +150,7 @@ export const fnImageUpload =
             Status: "Y",
             apiResponse: response.data.name,
             Msg: response.data.Msg,
+            accessid:accessid
           })
         );
 
@@ -185,13 +186,14 @@ export function fnFileUpload(formData, id, accessid) {
   return async (dispatch) => {
     function onSuccess(success) {
       console.log("2---" + JSON.stringify(success.data));
-      toast.success(success.data.Msg||"Document Uploaded Sucessfully");
+      toast.success(success.data.Msg || "Document Uploaded Sucessfully");
 
       const datawait = dispatch(
         Success({
           Status: "Y",
           apiResponse: success.data.name,
           Msg: success.data.Msg,
+          accessid:accessid
         })
       );
       var uploadImgurl = store.getState().globalurl.imageNameUpdateUrl;
@@ -199,6 +201,7 @@ export function fnFileUpload(formData, id, accessid) {
         Recordid: id,
         ImageName: success.data.name,
         accessid: accessid,
+        Action: "post", //AS PER BACKEND TEAM REQUEST - ADDED "post" STRING FOR FILE UPLOAD TOO (PARKAVI AKKA - 09/01/2025)
       };
 
       axios
@@ -238,9 +241,40 @@ export function fnFileUpload(formData, id, accessid) {
     }
   };
 }
+export function fnCsvFileUploadnew(formData) {
+  return async (dispatch) => {
+    try {
+      const url = store.getState().globalurl.csvUploadUrl;
 
+      dispatch(pending());
+
+      const success = await axios.post(url, formData, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4MTA0OTV9.y3Bq2I7MMJLevEIVzb7m6UIirv86uvhoCBbb5qxF3lk",
+        },
+      });
+
+      // Simulate success payload structure
+      const result = {
+        Status: "Y",
+        apiResponse: success.data.name, // Ensure 'name' is part of the response
+        Msg: success.data.Msg,
+      };
+
+      // Dispatch success action
+      dispatch(Success(result));
+
+      // Return the result to the caller
+      return { payload: result };
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error; // Re-throw error for the caller
+    }
+  };
+}
 export function fnCsvFileUpload(formData) {
-  console.log("🚀 ~ fnCsvFileUpload ~ formData:",JSON.stringify(formData) )
+  console.log("🚀 ~ fnCsvFileUpload ~ formData:", JSON.stringify(formData))
   return async (dispatch) => {
     function onSuccess(success) {
       console.log("2---" + JSON.stringify(success.data));
@@ -253,7 +287,7 @@ export function fnCsvFileUpload(formData) {
           Msg: success.data.Msg,
         })
       );
-     
+
       return datawait;
     }
     function onError(error) {

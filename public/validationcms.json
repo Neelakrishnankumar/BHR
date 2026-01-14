@@ -1,12 +1,12 @@
 {
   "Designation": {
     "code": "Please enter the Code",
-    "name": "Please enter the Description",
+    "name": "Please enter the Name",
     "rank": "Please enter the Rank"
   },
   "Department": {
     "Code": "Please enter the Code",
-    "Name": "Please enter the Description",
+    "Name": "Please enter the Name",
     "Loc": "Please enter the Location"
   },
   "GeoLoc": {
@@ -20,9 +20,9 @@
   "Project": {
     "Code": "Please enter the Code",
     "name": "Please enter the Description",
-    "incharge": "Please enter the Owner",
+    "incharge": "Please select the Accountable Incharge",
     "projectOwner": "Please enter the Project Owner",
-    "CurrentStatus": "Please enter the Status",
+    "CurrentStatus": "Please select the Status",
     "budget": "Please enter the Budget"
   },
   "LeadMarketingActivity": {
@@ -33,7 +33,7 @@
   "Function": {
     "code": "Please enter the Code",
     "name": "Please enter the Description",
-    "categories": "Please enter the Categories"
+    "categories": "Please select the Categories"
   },
   "Shift": {
     "code": "Please enter the Code",
@@ -44,13 +44,13 @@
   "Leavetype": {
     "code": "Please enter the Code",
     "name": "Please enter the Description",
-    "leavetypecategories": "Please enter the Categories"
+    "leavetypecategories": "Please select the Categories"
   },
   "Overhead": {
     "code": "Please enter the Code",
     "name": "Please enter the Overhead",
     "frequency": "Please enter the Frequency",
-    "OverheadType": "Please enter the OverheadType",
+    "OverheadType": "Please select the OverheadType",
     "Overhead": "Please select the Overhead"
 
   },
@@ -108,26 +108,27 @@
     "GuidelinePrice": "Please enter the Guideline Price",
     "MinStock": "Please enter the Minimum Item Quantity",
     "supplier": "Please select the Supplier",
-    "MinOrderQty": "Please enter The Minimum Order Qty",
+    "MinOrderQty": "Please enter the Minimum Order Qty",
     "LeadTime": "Please enter the Lead Time (In days)",
-    "AgreedPrice": "Please enter the Agreed Price"
+    "AgreedPrice": "Please enter the Agreed Price",
+    "ReorderLevel":"Please enter the ReorderLevel"
   },
   "Route": {
     "Description": "Please enter the Route Description"
   },
   "ItemCategory": {
-    "Description": "Please enter the Item Description",
-    "HSNMaster": "Please select HSN Master",
-    "HSNCatgory": "Please select HSN Category"
+    "Description": "Please enter the Description",
+    "HSNMaster": "Please select the HSN Master",
+    "HSNCategory": "Please select the HSN Category"
   },
   "HSNCatgory": {
     "CategoryName": "Please enter the HSN Category Name"
   },
   "HSNMaster": {
-    "Description": "Please enter the HSN Master Name",
-    "HSNIGST": "Please enter IGST Amount",
-    "HSNCGST": "Please enter CGST Amount",
-    "HSNSGST": "Please enter SGST Amount"
+    "Description": "Please enter the HSN Master Description",
+    "HSNIGST": "Please enter the IGST(In Percentage)",
+    "HSNCGST": "Please enter the CGST(In Percentage)",
+    "HSNSGST": "Please enter the SGST(In Percentage)"
   },
   "Employeecontact": {
     "email": "Please enter the Email Id",
@@ -166,16 +167,16 @@
     "shift": "Please enter the Shift 1"
   },
   "ItemServices": {
-    "items": "Please select an Item",
-    "vendors": "Please select a Vendor",
+    "items": "Please select the Item",
+    "vendors": "Please select the Vendor",
     "servicedate": "Please enter the Date",
     "returndate": "Please enter the Expected Return Date",
     "complaints": "Please enter the Complaints",
     "tentativecharge": "Please enter the Tentative Charges"
   },
   "OrderItem": {
-    "discount": "Please enter the Discount (In Percentage)",
     "product": "Please select the Product",
+    "discount": "Please enter the Discount (In Percentage)",
     "quantity": "Please enter the Quantity"
   },
   "AdvancePayment": {

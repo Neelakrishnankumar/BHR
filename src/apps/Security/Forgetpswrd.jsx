@@ -151,17 +151,17 @@ const Forgetpassword_1 = () => {
                             const errors = {};
 
                             if (!values.username) {
-                                errors.username = "Please Enter Username";
+                                errors.username = "Please enter the Username";
                             }
                             if (!values.mailid) {
-                                errors.mailid = "Please Enter Mailid";
+                                errors.mailid = "Please enter the Email ID";
                             } else if (
                                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.mailid)
                             ) {
                                 errors.mailid = "Please enter valid Email ID";
                             }
                             if (!values.license) {
-                                errors.license = "Please Enter Subscription Code";
+                                errors.license = "Please enter the Subscription Code";
                             }
                             return errors;
                         }}
@@ -287,7 +287,7 @@ const Forgetpassword_1 = () => {
 
                                             <Button
                                                 variant="contained"
-                                                color={"warning"}
+                                                color="warning"
 
                                                 onClick={() => {
                                                     {
@@ -296,6 +296,7 @@ const Forgetpassword_1 = () => {
                                                     {
                                                         resetForm();
                                                     }
+                                                    navigate(-1);
                                                 }}
                                             >
                                                 Cancel

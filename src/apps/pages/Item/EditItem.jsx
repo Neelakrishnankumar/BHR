@@ -150,10 +150,10 @@ const EditItem = () => {
         const schema2 = Yup.object().shape({
           PurchaseUOM: Yup.string().required(data.Item.PurchaseUOM),
           ConsumptionUOM: Yup.string().required(data.Item.ConsumptionUOM),
-          BoxQuantity: Yup.string().required(data.Item.BoxQuantity),
-          PieceQuantity: Yup.string().required(data.Item.PieceQuantity),
+          // BoxQuantity: Yup.string().required(data.Item.BoxQuantity),
+          // PieceQuantity: Yup.string().required(data.Item.PieceQuantity),
           ConversionQty: Yup.string().required(data.Item.ConversionQty),
-          GuidelinePrice: Yup.string().required(data.Item.GuidelinePrice),
+          // GuidelinePrice: Yup.string().required(data.Item.GuidelinePrice),
           MinStock: Yup.string().required(data.Item.MinStock),
           ReorderLevel: Yup.string().required(data.Item.ReorderLevel),
         });
@@ -164,7 +164,7 @@ const EditItem = () => {
           }),
           MinOrderQty: Yup.string().required(data.Item.MinOrderQty),
           LeadTime: Yup.string().required(data.Item.LeadTime),
-          AgreedPrice: Yup.string().required(data.Item.AgreedPrice),
+          // AgreedPrice: Yup.string().required(data.Item.AgreedPrice),
         });
         setValidationSchema(schema);
         setValidationSchema2(schema2);
@@ -212,7 +212,7 @@ const EditItem = () => {
     MinOrderQty: "",
     supplier: "",
     LeadTime: "",
-    AgreedPrice: "",
+    AgreedPrice: "0.00",
     LastOrderDate: "",
     LastOrderNo: "",
     LastOrderPrice: "",
@@ -241,7 +241,7 @@ const EditItem = () => {
     supplier: null,
     MinOrderQty: "",
     LeadTime: "",
-    AgreedPrice: "",
+    AgreedPrice: "0.00",
     LastOrderDate: "",
     LastOrderNo: "",
     LastOrderPrice: "",
@@ -367,7 +367,7 @@ const EditItem = () => {
       ConsumptionUOMQty: values.PieceQuantity || "",
       PurchaseUOMQty: values.BoxQuantity || "",
       ConversionQty: values.ConversionQty || "",
-      Price: values.GuidelinePrice || "",
+      Price: values.GuidelinePrice || "0.00",
       MinStock: values.MinStock || "",
       ReorderLevel: values.ReorderLevel || "",
     };
@@ -412,10 +412,10 @@ const EditItem = () => {
         values.ExtendedWarrentyApplicable == true ? "Y" : "N",
       OnDemand: values.OnDemand == true ? "Y" : "N",
       ScheduledService: values.ScheduledService == true ? "Y" : "N",
-      ExtendedWarrentyPeriod: values.ExtendedWarranty || "",
-      ExtendedWarrentyEndPeriod: values.ExtendedWarrantyEnd || "",
-      ToatalWarretyPeriod: values.WarrantyPeriod || "",
-      WarretyEndPeriod: values.WarrantyEndPeriod || "",
+      ExtendedWarrentyPeriod: values.ExtendedWarranty || 0,
+      ExtendedWarrentyEndPeriod: values.ExtendedWarrantyEnd || 0,
+      ToatalWarretyPeriod: values.WarrantyPeriod || 0,
+      WarretyEndPeriod: values.WarrantyEndPeriod || 0,
       Disable: isCheck,
       DeleteFlag: values.DeleteFlag == true ? "Y" : "N",
     };
@@ -437,17 +437,17 @@ const EditItem = () => {
       funMode === "A" && !del
         ? "insert"
         : funMode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: funMode === "A" ? "-1" : leadData.recordID,
       CompanyID: CompanyID,
       PartyID: values.supplier.RecordID || "",
       ItemID: recID || "",
       MinimunOrdQty: values.MinOrderQty || "",
-      LeadTimeinDays: values.LeadTime || "0",
-      AggreedPrice: values.AgreedPrice || "0",
-      Sortorder: values.Sortorder || "0",
+      LeadTimeinDays: values.LeadTime || "0.00",
+      AggreedPrice: values.AgreedPrice || "0.00",
+      Sortorder: values.Sortorder || "0.00",
       Disable: values.Disable || "N",
     };
 
@@ -551,7 +551,7 @@ const EditItem = () => {
     PurchaseUOM: ItemStockData?.PurchaseUOM || "",
     ConsumptionUOM: ItemStockData?.ConsumptionUOM || "",
     ConversionQty: ItemStockData?.ConversionQty || "",
-    GuidelinePrice: ItemStockData?.Price || "",
+    GuidelinePrice: ItemStockData?.Price || "0.00",
     majCusstkQty: ItemStockData?.MajorCusStockQty || "",
     minCusstkQty: ItemStockData?.MinorCusStockQty || "",
     majvendorstkQty: ItemStockData?.MajorVenStockQty || "",
@@ -627,7 +627,7 @@ const EditItem = () => {
 
       setFieldValue("MinOrderQty", rowData.MinimunOrdQty || "");
       setFieldValue("LeadTime", rowData.LeadTimeinDays || "");
-      setFieldValue("AgreedPrice", rowData.AgreedPrice || "");
+      setFieldValue("AgreedPrice", rowData.AgreedPrice || "0.00");
       setFieldValue("LastOrderDate", rowData.LastOrdDate || "");
       setFieldValue("LastOrderNo", rowData.LastOrdNumber || "");
       setFieldValue("LastOrderQty", rowData.LastOrdQty || "");
@@ -672,10 +672,10 @@ const EditItem = () => {
             column.field === "PartyName"
               ? 190
               : column.field === "AgreedPrice"
-              ? 110
-              : column.field === "action"
-              ? 80
-              : 130,
+                ? 110
+                : column.field === "action"
+                  ? 80
+                  : 130,
           align: rightAlignedFields.includes(column.field) ? "right" : "left",
         })),
     [explorelistViewcolumn]
@@ -895,7 +895,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -980,6 +980,11 @@ const EditItem = () => {
                       onChange={handleChange}
                       error={!!touched.HSNCode && !!errors.HSNCode}
                       helperText={touched.HSNCode && errors.HSNCode}
+                      InputProps={{
+                        inputProps: {
+                          readOnly: true,
+                        },
+                      }}
                       autoFocus
                     />
                     <TextField
@@ -1009,8 +1014,9 @@ const EditItem = () => {
                       variant="standard"
                       focused
                       value={values.HSNCGST}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+
                       error={!!touched.HSNCGST && !!errors.HSNCGST}
                       helperText={touched.HSNCGST && errors.HSNCGST}
                       InputProps={{
@@ -1086,7 +1092,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                       <FormControlLabel
                         control={
@@ -1103,7 +1109,7 @@ const EditItem = () => {
                             marginTop: 0,
                           },
                         }}
-                        //inputProps={{ readOnly: mode == "V" }}
+                      //inputProps={{ readOnly: mode == "V" }}
                       />
                     </Box>
                   </Box>
@@ -1119,7 +1125,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -1148,7 +1154,7 @@ const EditItem = () => {
                 }, 100);
               }}
               enableReinitialize={true}
-              //validationSchema={validationSchema}
+            //validationSchema={validationSchema}
             >
               {({
                 values,
@@ -1194,7 +1200,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -1284,7 +1290,7 @@ const EditItem = () => {
                             onChange={handleChange}
                           />
                         }
-                        label="ByProduct (Job Work Component)"
+                        label="By-Product (Job Work Component)"
                         sx={{
                           marginTop: "20px",
                           "@media (max-width:500px)": {
@@ -1292,6 +1298,11 @@ const EditItem = () => {
                           },
                         }}
                       />
+
+                    </Box>
+
+                    {/* CHECKBOX */}
+                    <Box>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -1346,11 +1357,7 @@ const EditItem = () => {
                           },
                         }}
                       />
-                    </Box>
-
-                    {/* CHECKBOX */}
-                    <Box>
-                      <FormControlLabel
+                      {/* <FormControlLabel
                         control={
                           <Checkbox
                             name="DeleteFlag"
@@ -1366,8 +1373,8 @@ const EditItem = () => {
                           },
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
-                      />
-                      <FormControlLabel
+                      /> */}
+                      {/* <FormControlLabel
                         control={
                           <Checkbox
                             name="Disable"
@@ -1383,9 +1390,9 @@ const EditItem = () => {
                           },
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
-                      />
+                      /> */}
                     </Box>
-                    {values.ServiceAndMaintenance && (
+                    {/* {values.ServiceAndMaintenance && (
                       <>
                         <TextField
                           name="WarrantyPeriod"
@@ -1528,7 +1535,7 @@ const EditItem = () => {
                           />
                         </Box>
                       </>
-                    )}
+                    )} */}
                   </Box>
                   {/* BUTTONS */}
                   <Box
@@ -1542,7 +1549,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -1618,7 +1625,7 @@ const EditItem = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -1825,24 +1832,44 @@ const EditItem = () => {
                       name="GuidelinePrice"
                       type="number"
                       id="GuidelinePrice"
-                      label={
-                        <span>
-                          Guideline Price (Box){" "}
-                          <span
-                            style={{
-                              fontSize: "20px",
-                              color: "red",
-                            }}
-                          >
-                            *
-                          </span>
-                        </span>
-                      }
+                      label = "Guideline Price (Box)"
+                      // label={
+                      //   <span>
+                      //     Guideline Price (Box){" "}
+                      //     <span
+                      //       style={{
+                      //         fontSize: "20px",
+                      //         color: "red",
+                      //       }}
+                      //     >
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
                       variant="standard"
                       focused
                       value={values.GuidelinePrice}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                       onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setFieldValue("amount", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          let val = e.target.value;
+                          if (val === "" || val === ".") {
+                            setFieldValue("amount", "0.00");
+                            return;
+                          }
+                          if (!val.includes(".")) {
+                            val = `${val}.00`;
+                          }
+                          const num = Number(val);
+                          setFieldValue("amount", num.toFixed(2));
+                        }}
                       error={
                         !!touched.GuidelinePrice && !!errors.GuidelinePrice
                       }
@@ -1925,7 +1952,7 @@ const EditItem = () => {
                       variant="contained"
                       color="secondary"
                       loading={isLoading}
-                      //disabled={mode == "V" ? true : false}
+                    //disabled={mode == "V" ? true : false}
                     >
                       Save
                     </LoadingButton>
@@ -2148,7 +2175,7 @@ const EditItem = () => {
                         supplier: null,
                         MinOrderQty: "",
                         LeadTime: "",
-                        AgreedPrice: "",
+                        AgreedPrice: "0.00",
                         LastOrderDate: "",
                         LastOrderNo: "",
                         LastOrderPrice: "",
@@ -2357,18 +2384,38 @@ const EditItem = () => {
                         variant="standard"
                         id="AgreedPrice"
                         name="AgreedPrice"
-                        //label="Agreed Price"
-                        label={
-                          <>
-                            Agreed Price
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
+                        label="Agreed Price"
+                        // label={
+                        //   <>
+                        //     Agreed Price
+                        //     <span style={{ color: "red", fontSize: "20px" }}>
+                        //       *
+                        //     </span>
+                        //   </>
+                        // }
                         value={values.AgreedPrice}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
+                        // onBlur={handleBlur}
+                        // onChange={handleChange}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setFieldValue("AgreedPrice", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          let val = e.target.value;
+
+                          if (val === "" || val === ".") {
+                            setFieldValue("AgreedPrice", "0.00");
+                            return;
+                          }
+                          if (!val.includes(".")) {
+                            val = `${val}.00`;
+                          }
+                          const num = Number(val);
+                          setFieldValue("AgreedPrice", num.toFixed(2));
+                        }}
                         focused
                         error={!!touched.AgreedPrice && !!errors.AgreedPrice}
                         helperText={touched.AgreedPrice && errors.AgreedPrice}
@@ -2580,7 +2627,7 @@ const EditItem = () => {
                         });
                       }}
                       disabled={funMode === "A"}
-                      // disabled={funMode === "A" || (data.TaskSource === "Sprint" && data.Status === "AP")}
+                    // disabled={funMode === "A" || (data.TaskSource === "Sprint" && data.Status === "AP")}
                     >
                       Delete
                     </Button>

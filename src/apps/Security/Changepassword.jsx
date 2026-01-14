@@ -30,8 +30,6 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
@@ -50,6 +48,8 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useProSidebar } from "react-pro-sidebar";
 import { useState } from "react";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 const Changepass = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const Changepass = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const Subscriptioncode = sessionStorage.getItem("SubscriptionCode");
   const Username = sessionStorage.getItem("UserName");
- const FirstLogin = "Y";
+  const FirstLogin = "Y";
   const UserId = sessionStorage.getItem("loginrecordID");
   const data = useSelector((state) => state.formApi.Data) || {};
   console.log(data, "--data");
@@ -94,6 +94,17 @@ const Changepass = () => {
     borderTop: 0,
     borderLeft: 0,
     borderRight: 0,
+  };
+  const [showPassword, setShowPassword] = React.useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+  const handleToggle = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
   };
   const initialvalues = {
     currentpassword: "",
@@ -131,7 +142,7 @@ const Changepass = () => {
       UserName: Username,
       OldPassword: values.currentpassword,
       NewPassword: values.newpassword,
-      UserRecid:UserId,
+      UserRecid: UserId,
       // firsttime:"N",
       // Termsandconditions:"Y"
 
@@ -267,7 +278,7 @@ const Changepass = () => {
                 <FormControl fullWidth sx={{ gridColumn: "span 2", gap: formGap }}>
                   <TextField
                     name="currentpassword"
-                    type="password"
+                    type={showPassword.current ? "text" : "password"}
                     id="currentpassword"
                     label="Current Password"
                     variant="standard"
@@ -278,11 +289,23 @@ const Changepass = () => {
                     onChange={handleChange}
                     error={touched.currentpassword && !!errors.currentpassword}
                     helperText={touched.currentpassword && errors.currentpassword ? errors.currentpassword : ""}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => handleToggle("current")}
+                            edge="end"
+                          >
+                            {showPassword.current ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
 
                   <TextField
                     name="newpassword"
-                    type="password"
+                    type={showPassword.new ? "text" : "password"}
                     id="newpassword"
                     label="New Password"
                     variant="standard"
@@ -293,12 +316,24 @@ const Changepass = () => {
                     onChange={handleChange}
                     error={touched.newpassword && !!errors.newpassword}
                     helperText={touched.newpassword && errors.newpassword ? errors.newpassword : ""}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => handleToggle("new")}
+                            edge="end"
+                          >
+                            {showPassword.new ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                     inputProps={{ maxLength: 8 }}
                   />
 
                   <TextField
                     name="confirmpassword"
-                    type="password"
+                    type={showPassword.confirm ? "text" : "password"}
                     id="confirmpassword"
                     label="Confirm Password"
                     variant="standard"
@@ -309,6 +344,18 @@ const Changepass = () => {
                     onChange={handleChange}
                     error={touched.confirmpassword && !!errors.confirmpassword}
                     helperText={touched.confirmpassword && errors.confirmpassword ? errors.confirmpassword : ""}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => handleToggle("confirm")}
+                            edge="end"
+                          >
+                            {showPassword.confirm ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                     inputProps={{ maxLength: 8 }}
                   />
                 </FormControl>
