@@ -98,13 +98,12 @@ const Editdept = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          Name: Yup.string().required(data.Department.Name),
-          Loc: Yup.string().required(data.Department.Loc),
-
+          Name: Yup.string().trim().required(data.Department.Name),
+          Loc: Yup.string().trim().required(data.Department.Loc),
         };
 
         if (CompanyAutoCode === "N") {
-          schemaFields.Code = Yup.string().required(data.Designation.Code);
+          schemaFields.Code = Yup.string().trim().required(data.Department.Code);
         }
 
         const schema = Yup.object().shape(schemaFields);
