@@ -72,12 +72,12 @@ const Editdesignation = () => {
         setErrorMsgData(data);
         console.log(data, "errormsgdta");
         let schemaFields = {
-          name: Yup.string().required(data.Designation.name),
-          rank: Yup.string().required(data.Designation.rank),
+          name: Yup.string().trim().required(data.Designation.name),
+          rank: Yup.string().trim().required(data.Designation.rank),
         };
 
         if (CompanyAutoCode === "N") {
-          schemaFields.code = Yup.string().required(data.Designation.code);
+          schemaFields.code = Yup.string().trim().required(data.Designation.code);
         }
 
         const schema = Yup.object().shape(schemaFields);
