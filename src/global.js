@@ -441,6 +441,10 @@ export const getUrlSlice = createSlice({
       state.VendorFilterController = APIurl + "VendorFilterController.php";
       // UserActivityUrl = essURL + "UserActivityController.php";
       state.UserActivityUrl = APIurl + "UserActivityController.php";
+      state.OHPaymentUpdateController =
+        APIurl + "OHPaymentUpdateController.php";
+      state.PartyBydateByamtFilter =
+        APIurl + "PartyBydateByamtFilter.php";
     },
   },
 });

@@ -81,6 +81,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -3948,30 +3949,40 @@ const ListviewSecondary = () => {
             </Box>
           )
             : accessID == "TR310" ? (
-              <Box display="flex" flexDirection="row" padding="25px">
+              <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                 <Chip
                   icon={<ModeEditOutlinedIcon color="primary" />}
                   label="Edit"
                   variant="outlined"
                 />
+                <Chip
+                  icon={<Visibility color="primary" />}
+                  label="View"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<CurrencyRupeeOutlinedIcon color="primary" />}
+                  label="Payment"
+                  variant="outlined"
+                />
                 {params.OrderType === "Q" &&
                   <Chip
-                    icon={< CurrencyExchangeOutlinedIcon color="primary" />}
+                    icon={<CurrencyExchangeOutlinedIcon color="primary" />}
                     label="Convert to Order"
                     variant="outlined"
-                    sx={{ marginLeft: "50px" }}
+                    // sx={{ marginLeft: "50px" }}
                   />}
                 <Chip
                   icon={< GridViewIcon color="primary" />}
                   label="Order Item"
                   variant="outlined"
-                  sx={{ marginLeft: "50px" }}
+                  // sx={{ marginLeft: "50px" }}
                 />
                 <Chip
                   icon={< PictureAsPdfIcon color="error" />}
                   label="Order Pdf"
                   variant="outlined"
-                  sx={{ marginLeft: "50px" }}
+                  // sx={{ marginLeft: "50px" }}
                 />
 
               </Box>

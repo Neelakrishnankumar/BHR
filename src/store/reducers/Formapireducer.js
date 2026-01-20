@@ -74,6 +74,12 @@ const initialState = {
   partyBankgetdata: {},
   partyBankgetstatus: "",
   partyBankgetloading: false,
+  OHPaymentPutdata: {},
+  OHPaymentPutstatus: "",
+  OHPaymentPutloading: false,
+  PartyDateAndAmtFilterdata: [],
+  PartyDateAndAmtFilterstatus: "",
+  PartyDateAndAmtFilterloading: false,
   partyBankPostdata: {},
   partyContactgetdata: {},
   skillInsights1getdata: {},
@@ -2729,6 +2735,39 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
+
+      //ORDER HEADER - PAYMENT UPDATE
+      .addCase(OHPaymentUpdateController.pending, (state, action) => {
+        state.OHPaymentPutstatus = "idle";
+        state.OHPaymentPutloading = true;
+      })
+      .addCase(OHPaymentUpdateController.fulfilled, (state, action) => {
+        state.OHPaymentPutstatus = "success";
+        state.OHPaymentPutloading = false;
+        state.OHPaymentPutdata = action.meta.arg.idata;
+      })
+      .addCase(OHPaymentUpdateController.rejected, (state, action) => {
+        state.OHPaymentPutstatus = "Error";
+        state.OHPaymentPutloading = false;
+      })
+
+      //PARTY - SORT FILTER GET
+      .addCase(PartyBydateByamtFilter.pending, (state, action) => {
+        state.PartyDateAndAmtFilterstatus = "idle";
+        state.PartyDateAndAmtFilterloading = true;
+      })
+      .addCase(PartyBydateByamtFilter.fulfilled, (state, action) => {
+        state.PartyDateAndAmtFilterstatus = "success";
+        state.PartyDateAndAmtFilterloading = false;
+        state.PartyDateAndAmtFilterdata = action.payload.Data
+          ? action.payload.Data
+          : [];
+      })
+      .addCase(PartyBydateByamtFilter.rejected, (state, action) => {
+        state.PartyDateAndAmtFilterstatus = "Error";
+        state.PartyDateAndAmtFilterloading = false;
+      })
+
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
         state.sprintgetstatus = "idle";
@@ -4620,6 +4659,46 @@ export const userActivityLog = createAsyncThunk(
       },
     });
 
+    return response.data;
+  }
+);
+
+export const OHPaymentUpdateController
+  = createAsyncThunk(
+  "OHPaymentUpdateController/OrderHeaderPaymentUpdate",
+  async ({idata }) => {
+    const url = store.getState().globalurl.OHPaymentUpdateController;
+
+    const data = {
+      idata : idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  }
+);
+export const PartyBydateByamtFilter
+  = createAsyncThunk(
+  "PartyBydateByamtFilter/Get",
+  async ({SortType, CompanyID}) => {
+    const url = store.getState().globalurl.PartyBydateByamtFilter;
+
+    const data = {
+      SortType:SortType,
+      CompanyID:CompanyID
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
     return response.data;
   }
 );

@@ -180,13 +180,14 @@ import ChangeyourPassword_1 from "./Security/Passwordflow";
 import Logochange from "./Security/Changelogo";
 import LoginChangepass from "./Security/Loginchangepassword";
 
-
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 import Companychange from "./Security/Changecompany";
 import Changehdrftr from "./Security/ChangeHdrftr";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import EditOHPayment from "./pages/HR/EditOHPayment";
+import PartyByDate from "./pages/HR/PartyByDate";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -203,11 +204,11 @@ function App() {
         padding: "20px 28px",
         minWidth: "380px",
         textAlign: "center",
-        lineHeight: "1.4"
+        lineHeight: "1.4",
       },
-      autoClose: 10000
+      autoClose: 10000,
     });
-   
+
     sessionStorage.clear();
     navigate("/");
   };
@@ -220,16 +221,12 @@ function App() {
   useEffect(() => {
     const events = ["mousemove", "keydown", "scroll", "click"];
 
-    events.forEach(event =>
-      window.addEventListener(event, resetTimer)
-    );
+    events.forEach((event) => window.addEventListener(event, resetTimer));
 
     resetTimer();
 
     return () => {
-      events.forEach(event =>
-        window.removeEventListener(event, resetTimer)
-      );
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
       clearTimeout(timerRef.current);
     };
   }, []);
@@ -368,6 +365,11 @@ function App() {
                     element={<CreateQuestion />}
                   />
 
+{/* PARTY BY DATE FILTER */}
+                  <Route
+                    path="/Party/PartyDue"
+                    element={<PartyByDate />}
+                  />
                   <Route
                     path="/SkillGlow/CategoryMain"
                     element={<CategoryMain />}
@@ -640,11 +642,26 @@ function App() {
                   />
                   {/* <Route path="/Chart" element={<Chartboard />} /> */}
                   <Route path="/HR" element={<Logopage />} />
-                  <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} />
-                  <Route path="/ChangeyourPassword_2" element={<Logochange />} />
-                  <Route path="/ChangeyourPassword_3" element={<LoginChangepass />} />
-                  <Route path="/ChangeyourPassword_4" element={<Companychange />} />
-                  <Route path="/ChangeyourPassword_5" element={<Changehdrftr />} />
+                  <Route
+                    path="/ChangeyourPassword_1"
+                    element={<ChangeyourPassword_1 />}
+                  />
+                  <Route
+                    path="/ChangeyourPassword_2"
+                    element={<Logochange />}
+                  />
+                  <Route
+                    path="/ChangeyourPassword_3"
+                    element={<LoginChangepass />}
+                  />
+                  <Route
+                    path="/ChangeyourPassword_4"
+                    element={<Companychange />}
+                  />
+                  <Route
+                    path="/ChangeyourPassword_5"
+                    element={<Changehdrftr />}
+                  />
 
                   <Route
                     path="/:accessID/Editproductstock/:id/:Code/:Desc/:Mode"
@@ -774,7 +791,6 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype"
                     element={<ListviewSecondary />}
                   />
-
 
                   {/* NEW ORDER ITEM LIST VIEW */}
                   {/* <Route
@@ -1153,6 +1169,13 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/:OrderType/EditOrder/:id/:Mode"
                     // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
                     element={<EditOrder />}
+                  />
+
+                  {/* PAYMENT - ORDER HEADER */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:Type/:OrderType/EditPayment/:id/:Mode"
+                    // /Apps/Secondarylistview/TR304/Order/30/EditOrder/A
+                    element={<EditOHPayment />}
                   />
 
                   {/* ADVANCE PAYMENT */}
