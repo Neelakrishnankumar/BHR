@@ -42,6 +42,9 @@ import { GridToolbarContainer } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { leaveenquiryget } from "../../../store/reducers/Formapireducer";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { PDFDownloadLink } from "@react-pdf/renderer"
+import LeaveenqempPDF from "../pdf/Leavenquiryemppdf";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 const EditLeaveEnquiry = () => {
     const theme = useTheme();
@@ -57,6 +60,7 @@ const EditLeaveEnquiry = () => {
     const dispatch = useDispatch();
     let params = useParams();
     var recID = params.id;
+    const navigate = useNavigate();
     const handleApplyClick = async (values) => {
         try {
             const resultAction = await dispatch(
@@ -86,7 +90,61 @@ const EditLeaveEnquiry = () => {
             setRows([]);
         }
     };
+    const columns = [
+        // {
+        //   field: "SLNO",
+        //   headerName: "SL#",
+        //   width: 50,
+        //   headerAlign: "center",
+        //   align: "right",
+        // },
 
+        {
+            field: "slno",
+            headerName: "SL#",
+            width: 50,
+            sortable: false,
+            filterable: false,
+            valueGetter: (params) =>
+                `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+        },
+        {
+            field: "FromDate",
+            headerName: "From Date",
+            width: 200,
+            headerAlign: "center",
+            align: "left",
+        },
+        {
+            field: "ToDate",
+            headerName: "To Date",
+            width: 200,
+            headerAlign: "center",
+            align: "left",
+        },
+        {
+            field: "PermissionDate",
+            headerName: "Permission Date",
+            width: 200,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            field: "Reason",
+            headerName: "Reason",
+            width: 200,
+            headerAlign: "center",
+            align: "left",
+        },
+        {
+            field: "Status",
+            headerName: "Status",
+            width: 400,
+            headerAlign: "center",
+            align: "left",
+        },
+
+    ];
     function Custombar() {
         return (
             <GridToolbarContainer
@@ -97,7 +155,7 @@ const EditLeaveEnquiry = () => {
                 }}
             >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>List of Approvals</Typography>
+                    <Typography>List of Leave</Typography>
                     <Typography variant="h5">{`(${rowCount})`}</Typography>
                 </Box>
                 <Box
@@ -151,13 +209,18 @@ const EditLeaveEnquiry = () => {
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
                         // onSubmit={handleFormSubmit}
-                        initialValues={[]}
+                        initialValues={{
+                            FromDate: "",
+                            ToDate: "",
+                            leavetype: null,
+                            Permission: false
+                        }}
                         enableReinitialize={true}
-                    // onSubmit={(values, { resetForm }) => {
-                    //   setTimeout(() => {
-                    //     FnApproval(values, resetForm, false);
-                    //   }, 100);
-                    // }}
+                        onSubmit={(values, setSubmitting) => {
+                            setTimeout(() => {
+                                handleApplyClick(values);
+                            }, 100);
+                        }}
                     >
                         {({
                             values,
@@ -190,7 +253,6 @@ const EditLeaveEnquiry = () => {
                                     >
                                         <FormControl sx={{ gridColumn: "span 2", gap: formGap }}>
                                             <TextField
-
                                                 name="FromDate"
                                                 type="date"
                                                 id="FromDate"
@@ -272,9 +334,7 @@ const EditLeaveEnquiry = () => {
                                             variant="contained"
                                             color="secondary"
                                             type="submit"
-                                            onClick={(e) => {
-                                                handleApplyClick(values);
-                                            }}
+                                        // onClick={() => handleApplyClick(values)}
                                         >
                                             APPLY
                                         </Button>
@@ -283,9 +343,33 @@ const EditLeaveEnquiry = () => {
                                             variant="contained"
                                             color="error"
                                             size="small"
+                                            onClick={() => navigate(-1)}
                                         >
-                                            RESET
+                                            CANCEL
                                         </Button>
+                                        <PDFDownloadLink
+                                            document={
+                                                <LeaveenqempPDF
+                                                    // data={AttendanceData}
+                                                    // totalHours={totalHours}
+                                                    // filters={{
+                                                    //     Month: values.attmonth,
+                                                    //     Year: values.attyear,
+                                                    //     EmployeeID: attempData?.Name || EmpName,
+                                                    // }}
+                                                />
+                                            }
+                                            fileName={`Attendance_Report_ Employee}.pdf`}
+                                            style={{ color: "#d32f2f", cursor: "pointer" }}
+                                        >
+                                            {({ loading }) =>
+                                                loading ? (
+                                                    <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                                                ) : (
+                                                    <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                                )
+                                            }
+                                        </PDFDownloadLink>
 
                                     </Stack>
                                     <Box
@@ -335,8 +419,8 @@ const EditLeaveEnquiry = () => {
                                             // checkboxSelection
                                             rowHeight={dataGridRowHeight}
                                             headerHeight={dataGridHeaderFooterHeight}
-                                            rows={[]}
-                                            columns={[]}
+                                            rows={rows}
+                                            columns={columns}
                                             disableSelectionOnClick
                                             getRowId={(row) => row.SLNO}
                                             pageSize={pageSize}
@@ -381,7 +465,7 @@ const EditLeaveEnquiry = () => {
 
 
             </Box>
-        </React.Fragment>
+        </React.Fragment >
     )
 }
 
