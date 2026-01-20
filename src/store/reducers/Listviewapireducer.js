@@ -29,6 +29,8 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import EventNoteIcon from '@mui/icons-material/EventNote';
+
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
 import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
@@ -5031,6 +5033,16 @@ export const fetchListview =
                             <Tooltip title="Image upload">
                               <IconButton color="info" size="small">
                                 <AddPhotoAlternateIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                          <Link
+                            to={`/Apps/leaveenquiry/${params.row.RecordID}`}
+                            // state={{ EmpName: params.row.Name }}
+                          >
+                            <Tooltip title="Leave Inquiry">
+                              <IconButton color="info" size="small">
+                                  <EventNoteIcon />
                               </IconButton>
                             </Tooltip>
                           </Link>

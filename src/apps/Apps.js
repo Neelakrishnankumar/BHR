@@ -187,6 +187,7 @@ import Changehdrftr from "./Security/ChangeHdrftr";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import EditLeaveEnquiry from "./pages/HR/EditLeaveEnquiry";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -626,6 +627,9 @@ function App() {
                     path="/:screenName/imageupload/:accessID/:id"
                     element={<Imageupload />}
                   />
+                  
+                  <Route path="/leaveenquiry/:id" element={ <EditLeaveEnquiry /> } />
+
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:Type/EditMaterial Category/imageupload/:id"
                     element={<Imageupload />}

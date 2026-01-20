@@ -4598,24 +4598,26 @@ export const timeSheetreport = createAsyncThunk(
 
 export const leaveenquiryget = createAsyncThunk(
   "leavenquiry/leaveenquiryget",
-  async ({ data }) => {
-    var url = store.getState().globalurl.LeaveenquiryGetController;
+  async (data, { rejectWithValue }) => {
+    try {
+      const url = store.getState().globalurl.LeaveenquiryGetController;
 
-    console.log("get" + JSON.stringify(data));
-    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-      },
-    });
-    console.log(
-      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
-    );
-    return response.data;
+      console.log("Request Data:", data);
+
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
   }
 );
+
 
 export const userActivityLog = createAsyncThunk(
   "activity/log",
