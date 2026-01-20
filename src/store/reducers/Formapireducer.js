@@ -80,6 +80,9 @@ const initialState = {
   PartyDateAndAmtFilterdata: [],
   PartyDateAndAmtFilterstatus: "",
   PartyDateAndAmtFilterloading: false,
+  LeaveEntryRegdata: [],
+  LeaveEntryRegstatus: "",
+  LeaveEntryRegloading: false,
   partyBankPostdata: {},
   partyContactgetdata: {},
   skillInsights1getdata: {},
@@ -2768,6 +2771,23 @@ export const getApiSlice = createSlice({
         state.PartyDateAndAmtFilterloading = false;
       })
 
+      //PARTY - SORT FILTER GET
+      .addCase(leaveenquiryget.pending, (state, action) => {
+        state.LeaveEntryRegstatus = "idle";
+        state.LeaveEntryRegloading = true;
+      })
+      .addCase(leaveenquiryget.fulfilled, (state, action) => {
+        state.LeaveEntryRegstatus = "success";
+        state.LeaveEntryRegloading = false;
+        state.LeaveEntryRegdata = action.payload.Data
+          ? action.payload.Data
+          : [];
+      })
+      .addCase(leaveenquiryget.rejected, (state, action) => {
+        state.LeaveEntryRegstatus = "Error";
+        state.LeaveEntryRegloading = false;
+      })
+
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
         state.sprintgetstatus = "idle";
@@ -4635,15 +4655,48 @@ export const timeSheetreport = createAsyncThunk(
   }
 );
 
+// export const leaveenquiryget = createAsyncThunk(
+//   "leavenquiry/leaveenquiryget",
+//   async (data, { rejectWithValue }) => {
+//     try {
+//       const url = store.getState().globalurl.LeaveenquiryGetController;
+
+//       console.log("Request Data:", data);
+// const data = {
+//       data:data
+//     };
+//       const response = await axios.post(url, data, {
+//         headers: {
+//           Authorization:
+//             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//         },
+//       });
+
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data || error.message);
+//     }
+//   }
+// );
 export const leaveenquiryget = createAsyncThunk(
   "leavenquiry/leaveenquiryget",
-  async (data, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
       const url = store.getState().globalurl.LeaveenquiryGetController;
 
-      console.log("Request Data:", data);
+      // 👇 Wrap exactly as backend expects
+      const requestBody = {
+          FromDate: payload.FromDate,
+          ToDate: payload.ToDate,
+          LeaveTypeID: payload.LeaveTypeID,
+          EmployeesID: payload.EmployeesID,
+          CompanyID: payload.CompanyID,
+          Permission: payload.Permission,
+      };
 
-      const response = await axios.post(url, data, {
+      console.log("Final Request Body:", JSON.stringify(requestBody));
+
+      const response = await axios.post(url, requestBody, {
         headers: {
           Authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
@@ -4652,6 +4705,7 @@ export const leaveenquiryget = createAsyncThunk(
 
       return response.data;
     } catch (error) {
+      console.error("Leave enquiry API error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
   }

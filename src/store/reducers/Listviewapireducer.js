@@ -1874,6 +1874,41 @@ export const fetchListview =
                 );
               },
             };
+          }else if (AccessID == "TR213") {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 250,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              align: "center",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => {
+                return (
+                  <Box>
+                    <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
+                      <Tooltip title="Edit">
+                       <IconButton color="info" size="small">
+                         <ModeEditOutlinedIcon />
+                      </IconButton>
+                     </Tooltip>
+                     </Link>
+                     <Link
+                            to={`/Apps/LeaveTypeRegister/${params.row.RecordID}`}
+                            // state={{ EmpName: params.row.Name }}
+                          >
+                            <Tooltip title="Leave Entry Regsiter">
+                              <IconButton color="info" size="small">
+                                  <EventNoteIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                  </Box>
+                );
+              },
+            };
           } else if (AccessID == "TR049") {
             obj = {
               field: "action",

@@ -189,6 +189,7 @@ import { toast } from "react-hot-toast";
 import EditLeaveEnquiry from "./pages/HR/EditLeaveEnquiry";
 import EditOHPayment from "./pages/HR/EditOHPayment";
 import PartyByDate from "./pages/HR/PartyByDate";
+import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -631,6 +632,7 @@ function App() {
                   />
                   
                   <Route path="/leaveenquiry/:id" element={ <EditLeaveEnquiry /> } />
+                  <Route path="/LeaveTypeRegister/:id" element={ <LeaveEntryRegister /> } />
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:Type/EditMaterial Category/imageupload/:id"
