@@ -94,7 +94,7 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
           {/* Header only on first page */}
           {pageIndex === 0 && (
             <>
-            <Text style={styles.header}>List Of Leaves</Text>
+            <Text style={styles.header}>Leave Report</Text>
             <Text style={styles.header1}>(Leave taken from {filters.FromDate} to {filters.ToDate})</Text>
           </>
           )}

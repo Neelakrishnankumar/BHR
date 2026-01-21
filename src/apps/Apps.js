@@ -369,7 +369,7 @@ function App() {
 
 {/* PARTY BY DATE FILTER */}
                   <Route
-                    path="/Party/PartyDue"
+                    path="/Party/AgingReport"
                     element={<PartyByDate />}
                   />
                   <Route

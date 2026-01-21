@@ -508,10 +508,10 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_ACCESSIDS: "TR321",
         },
         // {
-        //   name: "Party Due",
+        //   name: "Aging Report",
         //   id: 4346895,
         //   //  url: "./TR243/Party",
-        //   url: "/Apps/Party/PartyDue",
+        //   url: "/Apps/Party/AgingReport",
         //   icon: (
         //     <Tooltip title="Party Due">
         //       <ScaleOutlinedIcon color="info" />

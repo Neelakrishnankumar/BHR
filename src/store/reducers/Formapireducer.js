@@ -4741,14 +4741,13 @@ export const userActivityLog = createAsyncThunk(
 export const OHPaymentUpdateController
   = createAsyncThunk(
   "OHPaymentUpdateController/OrderHeaderPaymentUpdate",
-  async ({idata }) => {
+  async (idata ) => {
     const url = store.getState().globalurl.OHPaymentUpdateController;
 
-    const data = {
-      idata : idata,
-    };
-    console.log("get" + JSON.stringify(data));
-    const response = await axios.post(url, data, {
+    // const data = {
+    //  idata,
+    // };
+    const response = await axios.post(url, idata, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
