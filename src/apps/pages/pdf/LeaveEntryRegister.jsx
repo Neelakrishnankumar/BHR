@@ -1,0 +1,160 @@
+import React from "react";
+import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 20,
+    fontSize: 10,
+    flexDirection: "column",
+  },
+  header: {
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 15,
+    fontWeight: "bold",
+  },
+  header1: {
+    fontSize: 11,
+    textAlign: "center",
+    marginBottom: 15,
+    fontWeight: "bold",
+  },
+  table: {
+    display: "table",
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#000",
+    borderStyle: "solid",
+  },
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    borderBottomStyle: "solid",
+  },
+  headerCell: {
+    padding: 5,
+    backgroundColor: "#eee",
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#000",
+    fontWeight: "bold",
+  },
+  cell: {
+    padding: 5,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#000",
+  },
+  cell1: {
+    padding: 5,
+    textAlign: "left",
+    borderRightWidth: 1,
+    borderColor: "#000",
+  },
+
+  // column widths
+  colSlno: { width: "7%" },
+  colEmp: { width: "36%" },
+  colTime: { width: "15%" },
+  colReason: { width: "27%" },
+  colStatus: { width: "15%" },
+  footer: {
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    fontSize: 9,
+    color: "grey",
+  },
+});
+
+// Pagination – 20 rows per page
+const paginateData = (data) => {
+  const pages = [];
+  for (let i = 0; i < data.length; i += 20) {
+    pages.push(data.slice(i, i + 20));
+  }
+  return pages;
+};
+
+const LeaveEntryPdf = ({ data = [], filters = {} }) => {
+  const pages = paginateData(data);
+
+  return (
+    <Document>
+      {pages.map((pageData, pageIndex) => (
+        <Page
+          size="A4"
+          orientation="portrait"
+          style={styles.page}
+          key={pageIndex}
+        >
+          {/* Header only on first page */}
+          {pageIndex === 0 && (
+            <>
+            <Text style={styles.header}>List Of Leaves</Text>
+            <Text style={styles.header1}>(Leave taken from {filters.FromDate} to {filters.ToDate})</Text>
+          </>
+          )}
+
+          {/* Table */}
+          <View style={styles.table}>
+            {/* Table Header */}
+            <View style={styles.row}>
+              <Text style={[styles.headerCell, styles.colSlno]}>SL#</Text>
+              <Text style={[styles.headerCell, styles.colEmp]}>
+                Employee Name
+              </Text>
+              <Text style={[styles.headerCell, styles.colReason]}>
+                Leave Type
+              </Text>
+              <Text style={[styles.headerCell, styles.colTime]}>From Date</Text>
+              <Text style={[styles.headerCell, styles.colTime]}>To Date</Text>
+              <Text style={[styles.headerCell, styles.colStatus]}>Status</Text>
+            </View>
+
+            {/* Table Body */}
+            {/* Table Body */}
+            {pageData.map((row, index) => {
+              const serialNo = pageIndex * 20 + index + 1;
+
+              return (
+                <View key={index} style={styles.row}>
+                  <Text style={[styles.cell, styles.colSlno]}>{serialNo}</Text>
+                  <Text style={[styles.cell1, styles.colEmp]}>
+                    {row.Employee}
+                  </Text>
+                  <Text style={[styles.cell1, styles.colReason]}>
+                    {row.LeaveName}
+                  </Text>
+                  <Text style={[styles.cell, styles.colTime]}>
+                    {row.FromDate}
+                  </Text>
+                  <Text style={[styles.cell, styles.colTime]}>
+                    {row.ToDate}
+                  </Text>
+
+                  <Text style={[styles.cell1, styles.colStatus]}>
+                    {row.Status}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+
+          <Text
+            style={styles.footer}
+            fixed
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} of ${totalPages}`
+            }
+          />
+        </Page>
+      ))}
+    </Document>
+  );
+};
+
+export default LeaveEntryPdf;

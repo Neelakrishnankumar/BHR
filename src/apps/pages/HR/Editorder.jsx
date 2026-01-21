@@ -1300,6 +1300,7 @@ const EditOrder = () => {
                         variant="contained"
                         type="submit"
                         loading={isLoading}
+                        disabled={ViewStatus === "Paid" ? true : false}
                       >
                         Save
                       </LoadingButton>
@@ -1335,6 +1336,7 @@ const EditOrder = () => {
                         onClick={() => {
                           Fnsave(values, "harddelete");
                         }}
+                        disabled={ViewStatus === "Paid" ? true : false}
                       >
                         Delete
                       </Button>
