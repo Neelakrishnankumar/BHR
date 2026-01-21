@@ -766,8 +766,10 @@ const Editvendor = () => {
       ContactPersonMobileNo2: values.mobileno2,
       AadhatNo1: values.aadharcardnumber1,
       AadhatNo2: values.aadharcardnumber2,
-      ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
-      ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
+      // ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
+      // ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
+      ContactPersonIDProofImg1:  ID1Image || partyContactgetdata.ContactPersonIDProofImg1,
+      ContactPersonIDProofImg2:  ID2Image || partyContactgetdata.ContactPersonIDProofImg2,
     };
 
     try {
@@ -1877,14 +1879,26 @@ const Editvendor = () => {
                       <Button
                         size="small"
                         variant="contained"
+                        // onClick={() => {
+                        //   data.ContactPersonIDProofImg1 || ID1Image
+                        //     ? window.open(
+                        //         ID1Image
+                        //           ? store.getState().globalurl.attachmentUrl +
+                        //               ID1Image
+                        //           : store.getState().globalurl.attachmentUrl +
+                        //               data.ContactPersonIDProofImg1,
+                        //         "_blank"
+                        //       )
+                        //     : toast.error("Please Upload File");
+                        // }}
                         onClick={() => {
-                          data.ContactPersonIDProofImg1 || ID1Image
+                          partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
                             ? window.open(
                                 ID1Image
                                   ? store.getState().globalurl.attachmentUrl +
                                       ID1Image
                                   : store.getState().globalurl.attachmentUrl +
-                                      data.ContactPersonIDProofImg1,
+                                      partyContactgetdata.ContactPersonIDProofImg1,
                                 "_blank"
                               )
                             : toast.error("Please Upload File");
@@ -1920,13 +1934,13 @@ const Editvendor = () => {
                         size="small"
                         variant="contained"
                         onClick={() => {
-                          data.ContactPersonIDProofImg2 || ID2Image
+                          partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
                             ? window.open(
                                 ID2Image
                                   ? store.getState().globalurl.attachmentUrl +
                                       ID2Image
                                   : store.getState().globalurl.attachmentUrl +
-                                      data.ContactPersonIDProofImg2,
+                                      partyContactgetdata.ContactPersonIDProofImg2,
                                 "_blank"
                               )
                             : toast.error("Please Upload File");

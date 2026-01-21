@@ -173,6 +173,7 @@ const Login = () => {
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyLogo = data.payload.CompanyLogo
       var firstLogin = data.payload.firstLogin
+      // var firstLogin = "Y";
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
 
 
@@ -248,12 +249,13 @@ const Login = () => {
               // Password validation
               if (!values.password) {
                 errors.password = "Please enter password";
-              } else if (
-                !/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(values.password)
-              ) {
-                errors.password =
-                  "Password must contain uppercase, number & special character";
-              }
+              } 
+              // else if (
+              //   !/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(values.password)
+              // ) {
+              //   errors.password =
+              //     "Password must contain uppercase, number & special character";
+              // }
 
               // License validation
               if (!values.license) {
