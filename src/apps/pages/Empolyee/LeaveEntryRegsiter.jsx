@@ -36,18 +36,31 @@ import { LoadingButton } from "@mui/lab";
 import {
   CheckinAutocomplete,
   Employeeautocomplete,
+  MultiFormikOptimizedAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { leaveenquiryget } from "../../../store/reducers/Formapireducer";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import LeaveEntryPdf from "../pdf/LeaveEntryRegister";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import ResetTvIcon from "@mui/icons-material/ResetTv";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import Swal from "sweetalert2";
 const LeaveEntryRegister = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const leaveEntryData = useSelector((state) => state.formApi.LeaveEntryRegdata);
-  const leaveEntryDataLoading = useSelector((state) => state.formApi.LeaveEntryRegloading);
+
+  const location = useLocation();
+  const state = location.state || {};
+  const leaveEntryData = useSelector(
+    (state) => state.formApi.LeaveEntryRegdata,
+  );
+  const leaveEntryDataLoading = useSelector(
+    (state) => state.formApi.LeaveEntryRegloading,
+  );
   const isLoading = useSelector((state) => state.formApi.loading);
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
@@ -55,53 +68,73 @@ const LeaveEntryRegister = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const [rowCount, setRowCount] = useState(0);
   const [rows, setRows] = useState([]);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   let params = useParams();
   var recID = params.id;
-const Column = [
-     {
-    field: "sno",
-    headerName: "SL#",
-    width: 50,
-    sortable: false,
-    filterable: false,
-    align: "center",
-    headerAlign: "center",
-    renderCell: (params) =>
-      params.api.getRowIndex(params.id) + 1,   // 🔥 Auto serial number
-  },
-  {
-    field: "PartyName",
-    headerName: "Party Name",
-    width: 300,
-    align: "left",
-    headerAlign: "center",
-  },
-  {
-    field: "OrderDate",
-    headerName: "Order Date",
-    width: 100,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "DaysDiff",
-    headerName: "Days",
-   width: 100,
-    align: "right",
-    headerAlign: "center",
-  },
-  {
-    field: "Balance",
-    headerName: "Balance",
-    width: 100,
-    align: "right",
-    headerAlign: "center",
-    valueFormatter: (params) =>
-      Number(params.value || 0).toFixed(2),
-  },
-];
-  const [empData, setempData] = useState(null);
+
+  useEffect(() => {
+    setRows([]);
+    setempData([]);
+  }, [recID]);
+
+  const Column = [
+    {
+      field: "sno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => params.api.getRowIndex(params.id) + 1, // 🔥 Auto serial number
+    },
+    {
+      field: "LeaveName",
+      headerName: "Leave Type",
+      width: 200,
+      align: "left",
+      headerAlign: "center",
+    },
+    {
+      field: "Employee",
+      headerName: "Employee Name",
+      width: 200,
+      align: "left",
+      headerAlign: "center",
+    },
+    {
+      field: "FromDate",
+      headerName: "From Date",
+      width: 100,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "ToDate",
+      headerName: "To Date",
+      width: 100,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "Status",
+      headerName: "Status",
+      width: 150,
+      align: "left",
+      headerAlign: "center",
+    },
+  ];
+
+  const formatToDDMMYYYY = (dateStr) => {
+    if (!dateStr) return "";
+    const [yyyy, mm, dd] = dateStr.split("-");
+    return `${dd}-${mm}-${yyyy}`;
+  };
+
+  const [errorMsgData, setErrorMsgData] = useState(null);
+
+  const [empData, setempData] = useState([]);
 
   const [proData, setproData] = useState(null);
 
@@ -120,6 +153,11 @@ const Column = [
   )}`;
 
   const handleApplyClick = async (values) => {
+    const employeeIds =
+      empData && empData.length > 0
+        ? empData.map((e) => e.RecordID).join(",") // 🔥 "98,132,145"
+        : "";
+
     try {
       const resultAction = await dispatch(
         leaveenquiryget({
@@ -127,8 +165,8 @@ const Column = [
           ToDate: values.ToDate || "",
           LeaveTypeID: recID || "",
           CompanyID: compID,
-          EmployeesID: empData ? empData.RecordID : "",
-          Permission: "Y",
+          EmployeesID: employeeIds || "",
+          Permission: "N",
         }),
       );
 
@@ -148,6 +186,31 @@ const Column = [
       setRows([]);
     }
   };
+
+  const fnLogOut = (props) => {
+    Swal.fire({
+      title: errorMsgData.Warningmsg[props],
+      // text:data.payload.Msg,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: props,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (props === "Logout") {
+          navigate("/");
+        }
+        if (props === "Close") {
+          navigate(-1);
+        }
+      } else {
+        return;
+      }
+    });
+  };
+const fromPDFDate = sessionStorage.getItem("FromDatePDF");
+const toPDFDate   = sessionStorage.getItem("ToDatePDF");
   function Custombar() {
     return (
       <GridToolbarContainer
@@ -158,9 +221,10 @@ const Column = [
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>List of Leave Enquiry</Typography>
+          <Typography>List Of Leave Entries</Typography>
           <Typography variant="h5">{`(${rowCount})`}</Typography>
         </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -180,20 +244,33 @@ const Column = [
           elevation={3}
           sx={{ height: "50px", margin: "10px 10px", background: "#F2F0F0" }}
         >
-          <Box display="flex" justifyContent="space-between">
-            <Box display="flex" borderRadius="3px" alignItems="center">
-              <IconButton></IconButton>
-              <Box borderRadius="3px" alignItems="center">
-                <Breadcrumbs maxItems={3} aria-label="breadcrumb">
-                  <Typography
-                    variant="h5"
-                    color="#0000D1"
-                    sx={{ cursor: "default", margin: "10px" }}
-                  >
-                    Leave Enquiry
-                  </Typography>
-                </Breadcrumbs>
-              </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box>
+              <Breadcrumbs maxItems={3} aria-label="breadcrumb">
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default", margin: "10px" }}
+                >
+                  Leave Enquiry Report ({state.LeaveType || ""})
+                </Typography>
+              </Breadcrumbs>
+            </Box>
+            <Box>
+              <Tooltip title="Close">
+                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                  <ResetTvIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Logout">
+                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                  <LogoutOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
         </Paper>
@@ -250,7 +327,20 @@ const Column = [
                         focused
                         value={values.FromDate}
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        // onChange={handleChange}
+
+                        onChange={(event) => {
+                          const newFromDate = event.target.value; // yyyy-mm-dd (for input)
+
+                          // 1️⃣ Update Formik normally
+                          setFieldValue("FromDate", newFromDate);
+
+                          // 2️⃣ Convert to dd-mm-yyyy
+                          const formatted = formatToDDMMYYYY(newFromDate);
+
+                          // 3️⃣ Remember it for next page / PDF
+                          sessionStorage.setItem("FromDatePDF", formatted);
+                        }}
                         error={!!touched.FromDate && !!errors.FromDate}
                         helperText={touched.FromDate && errors.FromDate}
                         // required
@@ -266,7 +356,15 @@ const Column = [
                         focused
                         value={values.ToDate}
                         onBlur={handleBlur}
-                        onChange={handleChange}
+                        // onChange={handleChange}
+                        onChange={(event) => {
+                          const newToDate = event.target.value;
+
+                          setFieldValue("ToDate", newToDate);
+
+                          const formatted = formatToDDMMYYYY(newToDate);
+                          sessionStorage.setItem("ToDatePDF", formatted);
+                        }}
                         error={!!touched.ToDate && !!errors.ToDate}
                         helperText={touched.ToDate && errors.ToDate}
                         // required
@@ -277,21 +375,46 @@ const Column = [
                             new Date().toISOString().split("T")[0],
                         }}
                       />
-                      <Employeeautocomplete
+                      {/* <Employeeautocomplete
                         name="Employee"
                         label="Employee"
                         id="Employee"
                         value={empData}
+                        multiple
                         // onChange={handleSelectionEmployeeChange}
                         onChange={(newValue) => {
-                          setempData(newValue);
-                          if (newValue)
+                          setempData(newValue || []);
+                          if (newValue && newValue.length > 0)
                             sessionStorage.setItem(
                               "empData",
                               JSON.stringify(newValue),
                             );
                           else sessionStorage.removeItem("empData");
                         }}
+                        url={employeeUrl}
+                      /> */}
+                      <MultiFormikOptimizedAutocomplete
+                        name="Employee"
+                        label="Employee"
+                        id="Employee"
+                        value={empData}
+                        multiple
+                        // onChange={handleSelectionEmployeeChange}
+                        onChange={(event, newValue) => {
+                          setempData(newValue || []);
+                          if (newValue && newValue.length > 0)
+                            sessionStorage.setItem(
+                              "empData",
+                              JSON.stringify(newValue),
+                            );
+                          else sessionStorage.removeItem("empData");
+                        }}
+                         disablePortal={false}
+                          PopperProps={{
+                            sx: {
+                              zIndex: 1500,
+                            },
+                          }}
                         url={employeeUrl}
                       />
                     </FormControl>
@@ -304,14 +427,7 @@ const Column = [
                     justifyContent="end"
                     marginTop={-4}
                   >
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      type="submit"
-                      //   onClick={(e) => {
-                      //     handleApplyClick(values);
-                      //   }}
-                    >
+                    <Button variant="contained" color="secondary" type="submit">
                       APPLY
                     </Button>
                     <Button
@@ -319,17 +435,52 @@ const Column = [
                       variant="contained"
                       color="error"
                       size="small"
+                      onClick={() => {
+                        // setRows([]);
+                        setempData([]);
+                      }}
                     >
                       RESET
                     </Button>
                     <Button
-                      type="reset"
                       variant="contained"
                       color="warning"
                       size="small"
+                      onClick={() => {
+                        setRows([]);
+                        setempData([]);
+                        navigate(-1);
+                      }}
                     >
                       CANCEL
                     </Button>
+
+                    {rows?.length > 0 && (
+                      <PDFDownloadLink
+                        document={
+                          <LeaveEntryPdf
+                            data={rows}
+                            filters={{
+                              EmployeeID: empData?.RecordID,
+                              FromDate: fromPDFDate,
+                              ToDate: toPDFDate,
+                            }}
+                          />
+                        }
+                        fileName={`LeaveEnquiry_Report.pdf`}
+                        style={{ color: "#d32f2f", cursor: "pointer" }}
+                      >
+                        {({ leaveEntryDataLoading }) =>
+                          leaveEntryDataLoading ? (
+                            <PictureAsPdfIcon
+                              sx={{ fontSize: 24, opacity: 0.5 }}
+                            />
+                          ) : (
+                            <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                          )
+                        }
+                      </PDFDownloadLink>
+                    )}
                   </Stack>
                   <Box
                     m="5px 0 0 0"
@@ -378,7 +529,7 @@ const Column = [
                       // checkboxSelection
                       rowHeight={dataGridRowHeight}
                       headerHeight={dataGridHeaderFooterHeight}
-                      rows={leaveEntryData}
+                      rows={rows}
                       columns={Column}
                       disableSelectionOnClick
                       getRowId={(row) => row.RecordID}

@@ -1897,9 +1897,9 @@ export const fetchListview =
                      </Link>
                      <Link
                             to={`/Apps/LeaveTypeRegister/${params.row.RecordID}`}
-                            // state={{ EmpName: params.row.Name }}
+                            state={{ LeaveType: params.row.LeaveType }}
                           >
-                            <Tooltip title="Leave Entry Regsiter">
+                            <Tooltip title="Leave Enquiry Report">
                               <IconButton color="info" size="small">
                                   <EventNoteIcon />
                               </IconButton>
@@ -6467,7 +6467,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            {params.row.Status === "Delivered" && (
+            {/* {params.row.Status === "Delivered" && (
               <Link
                 to={`./EditPayment/${params.row.RecordID}/E`}
                 state={{
@@ -6485,7 +6485,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>
-            ) }
+            ) } */}
 
             {/* CONVERT TO ORDER */}
             {params.row.OrderType === "Q" && (

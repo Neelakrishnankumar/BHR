@@ -99,6 +99,7 @@ import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import { Visibility } from "@mui/icons-material";
 import ClearIcon from "@mui/icons-material/Clear";
 import InputAdornment from "@mui/material/InputAdornment";
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -3454,7 +3455,20 @@ const Listview = () => {
               sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) : accessID == "TR083" ? (
+        ) : accessID == "TR213" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<EventNoteIcon color="primary" />}
+              label="Leave Enquiry Report"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR083" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}

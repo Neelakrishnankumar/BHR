@@ -3960,11 +3960,11 @@ const ListviewSecondary = () => {
                   label="View"
                   variant="outlined"
                 />
-                <Chip
+                {/* <Chip
                   icon={<CurrencyRupeeOutlinedIcon color="primary" />}
                   label="Payment"
                   variant="outlined"
-                />
+                /> */}
                 {params.OrderType === "Q" &&
                   <Chip
                     icon={<CurrencyExchangeOutlinedIcon color="primary" />}
