@@ -5105,7 +5105,7 @@ export const fetchListview =
                           </Link>
                           <Link
                             to={`/Apps/leaveenquiry/${params.row.RecordID}`}
-                            // state={{ EmpName: params.row.Name }}
+                            state={{ EmpName: params.row.Name }}
                           >
                             <Tooltip title="Leave Inquiry">
                               <IconButton color="info" size="small">
@@ -5117,6 +5117,7 @@ export const fetchListview =
                       ) : AccessID == "TR003" ? (
                         <Link
                           to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
+                          
                         >
                           <Tooltip title="Image upload">
                             <IconButton color="info" size="small">
