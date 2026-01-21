@@ -443,6 +443,10 @@ export const getUrlSlice = createSlice({
       // UserActivityUrl = essURL + "UserActivityController.php";
       state.UserActivityUrl = APIurl + "UserActivityController.php";
       state.LeaveenquiryGetController = APIurl + "HrEmployeeLeaveGetController.php";
+      state.OHPaymentUpdateController =
+        APIurl + "OHPaymentUpdateController.php";
+      state.PartyBydateByamtFilter =
+        APIurl + "PartyBydateByamtFilter.php";
     },
   },
 });

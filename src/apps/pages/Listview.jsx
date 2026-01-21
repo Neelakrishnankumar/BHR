@@ -3628,7 +3628,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR027" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3639,7 +3639,7 @@ const Listview = () => {
               icon={<AddPhotoAlternateIcon color="primary" />}
               label="Image Upload"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR243" ? (
@@ -3676,7 +3676,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR321" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3687,25 +3687,25 @@ const Listview = () => {
               icon={<Diversity2Icon color="primary" />}
               label="Leads"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<CategoryIcon color="primary" />}
               label="Order"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<RequestQuoteOutlinedIcon color="primary" />}
               label="Quotation"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<CurrencyRupeeOutlinedIcon color="primary" />}
               label="Advance Payment"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR313" ? (
@@ -3738,7 +3738,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR323" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3748,11 +3748,11 @@ const Listview = () => {
               icon={<AltRouteOutlinedIcon color="primary" />}
               label="Route Area"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR315" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3762,11 +3762,11 @@ const Listview = () => {
               icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR316" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3776,7 +3776,7 @@ const Listview = () => {
               icon={<QrCodeScannerOutlinedIcon color="primary" />}
               label="HSN Master"
               variant="outlined"
-              sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR099" ? (

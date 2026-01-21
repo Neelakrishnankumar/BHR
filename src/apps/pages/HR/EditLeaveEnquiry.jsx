@@ -36,7 +36,7 @@ import {
 
 } from "@mui/x-data-grid";
 import { LoadingButton } from "@mui/lab";
-import { CheckinAutocomplete } from '../../../ui-components/global/Autocomplete';
+import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete } from '../../../ui-components/global/Autocomplete';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -61,27 +61,42 @@ const EditLeaveEnquiry = () => {
     let params = useParams();
     var recID = params.id;
     const navigate = useNavigate();
-    const handleApplyClick = async (values) => {
-        try {
-            const resultAction = await dispatch(
-                leaveenquiryget({
-                    FromDate: values.FromDate || "",
-                    ToDate: values.ToDate || "",
-                    LeaveTypeID: values.leavetype?.RecordID || "",
-                    CompanyID: compID,
-                    EmployeesID: recID,
-                    Permission: values.Permission ? "Y" : "N",
-                })
-            );
+    const [isPermission, setIsPermission] = useState(false);
+    const location = useLocation();
+    const state = location.state || {};
 
+    const handleApplyClick = async (values) => {
+        const permissionFlag = values.Permission === true;
+        setIsPermission(permissionFlag);
+
+        const leaveTypeIds = permissionFlag
+            ? ""
+            : Array.isArray(values.leavetype)
+                ? values.leavetype.map(item => item.RecordID).join(",")
+                : "";
+
+        const payloadData = {
+            FromDate: values.FromDate || "",
+            ToDate: values.ToDate || "",
+            LeaveTypeID: leaveTypeIds,
+            CompanyID: compID,
+            EmployeesID: recID,
+            Permission: permissionFlag ? "Y" : "N",
+        };
+
+        console.log("API Payload:", payloadData);
+
+        try {
+            const resultAction = await dispatch(leaveenquiryget(payloadData));
             const payload = resultAction.payload;
 
             if (payload?.Status === "Y" && Array.isArray(payload?.Data)) {
-                const resData = payload.Data.map((item, index) => ({
-                    ...item,
-                    SLNO: index + 1,
-                }));
-                setRows(resData);
+                setRows(
+                    payload.Data.map((item, index) => ({
+                        ...item,
+                        SLNO: index + 1,
+                    }))
+                );
             } else {
                 setRows([]);
             }
@@ -90,15 +105,59 @@ const EditLeaveEnquiry = () => {
             setRows([]);
         }
     };
-    const columns = [
-        // {
-        //   field: "SLNO",
-        //   headerName: "SL#",
-        //   width: 50,
-        //   headerAlign: "center",
-        //   align: "right",
-        // },
 
+
+    // const columns = [
+
+    //     {
+    //         field: "slno",
+    //         headerName: "SL#",
+    //         width: 50,
+    //         sortable: false,
+    //         filterable: false,
+    //         valueGetter: (params) =>
+    //             `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+    //     },
+    //     {
+    //         field: "FromDate",
+    //         headerName: "From Date",
+    //         width: 200,
+    //         headerAlign: "center",
+    //         align: "left",
+    //     },
+    //     {
+    //         field: "ToDate",
+    //         headerName: "To Date",
+    //         width: 200,
+    //         headerAlign: "center",
+    //         align: "left",
+    //     },
+    //     {
+    //         field: "DisplayPermissionDate",
+    //         headerName: "Permission Date",
+    //         width: 200,
+    //         headerAlign: "center",
+    //         align: "center",
+    //     },
+    //     {
+    //         field: "Reason",
+    //         headerName: "Reason",
+    //         width: 200,
+    //         headerAlign: "center",
+    //         align: "left",
+    //     },
+    //     {
+    //         field: "Status",
+    //         headerName: "Status",
+    //         width: 400,
+    //         headerAlign: "center",
+    //         align: "left",
+    //     },
+
+    // ];
+    // const isPermission = filters?.Permission === "Y";
+
+    const columns = [
         {
             field: "slno",
             headerName: "SL#",
@@ -106,45 +165,75 @@ const EditLeaveEnquiry = () => {
             sortable: false,
             filterable: false,
             valueGetter: (params) =>
-                `${params.api.getRowIndexRelativeToVisibleRows(params.id) + 1}`
+                params.api.getRowIndexRelativeToVisibleRows(params.id) + 1,
         },
-        {
-            field: "FromDate",
-            headerName: "From Date",
-            width: 200,
-            headerAlign: "center",
-            align: "left",
-        },
-        {
-            field: "ToDate",
-            headerName: "To Date",
-            width: 200,
-            headerAlign: "center",
-            align: "left",
-        },
-        {
-            field: "PermissionDate",
-            headerName: "Permission Date",
-            width: 200,
-            headerAlign: "center",
-            align: "center",
-        },
-        {
-            field: "Reason",
-            headerName: "Reason",
-            width: 200,
-            headerAlign: "center",
-            align: "left",
-        },
+
+        ...(isPermission
+            ? [
+                {
+                    field: "DisplayPermissionDate",
+                    headerName: "Permission Date",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "center",
+                },
+                {
+                    field: "FromDate",
+                    headerName: "From Time",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+                {
+                    field: "ToDate",
+                    headerName: "To Time",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+
+                {
+                    field: "Reason",
+                    headerName: "Reason",
+                    width: 400,
+                    headerAlign: "center",
+                    align: "left",
+                },
+            ]
+            : [
+                {
+                    field: "FromDate",
+                    headerName: "From Date",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+                {
+                    field: "ToDate",
+                    headerName: "To Date",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+                {
+                    field: "Comments",
+                    headerName: "Reason",
+                    width: 400,
+                    headerAlign: "center",
+                    align: "left",
+                },
+            ]),
+
+
         {
             field: "Status",
             headerName: "Status",
-            width: 400,
+            width: 200,
             headerAlign: "center",
             align: "left",
         },
-
     ];
+
     function Custombar() {
         return (
             <GridToolbarContainer
@@ -190,13 +279,14 @@ const EditLeaveEnquiry = () => {
                                 <Breadcrumbs
                                     maxItems={3}
                                     aria-label="breadcrumb"
+
                                 >
                                     <Typography
                                         variant="h5"
                                         color="#0000D1"
                                         sx={{ cursor: "default", margin: '10px' }}
                                     >
-                                        Leave Enquiry
+                                        {`Leave Enquiry (${state?.EmpName ?? ""})`}
                                     </Typography>
 
                                 </Breadcrumbs>
@@ -208,18 +298,15 @@ const EditLeaveEnquiry = () => {
 
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
-                        // onSubmit={handleFormSubmit}
                         initialValues={{
                             FromDate: "",
                             ToDate: "",
-                            leavetype: null,
-                            Permission: false
+                            leavetype: [],
+                            Permission: false,
                         }}
-                        enableReinitialize={true}
-                        onSubmit={(values, setSubmitting) => {
-                            setTimeout(() => {
-                                handleApplyClick(values);
-                            }, 100);
+                        enableReinitialize
+                        onSubmit={(values) => {
+                            handleApplyClick(values);
                         }}
                     >
                         {({
@@ -230,32 +317,32 @@ const EditLeaveEnquiry = () => {
                             handleSubmit,
                             handleChange,
                             resetForm,
-                            setFieldValue
+                            setFieldValue,
                         }) => (
-                            <form
-                                onSubmit={handleSubmit}
-                                onReset={() => {
-                                    //selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                                    resetForm();
-                                }}
-                            >
-                                <Box>
+                            <form onSubmit={handleSubmit} onReset={resetForm}>
+                                <Box p={1}>
+                                    {/* 🔹 FORM GRID */}
                                     <Box
                                         display="grid"
                                         gap={formGap}
-                                        padding={1}
                                         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                                         sx={{
                                             "& > div": {
-                                                gridColumn: isNonMobile ? undefined : "span 4",
+                                                gridColumn: { xs: "span 4", md: "span 2" },
                                             },
                                         }}
                                     >
-                                        <FormControl sx={{ gridColumn: "span 2", gap: formGap }}>
+                                        <FormControl
+                                            sx={{
+                                                gridColumn: { xs: "span 4", md: "span 2" },
+                                                gap: formGap,
+                                            }}
+                                        >
+                                            {/* FROM DATE */}
                                             <TextField
+                                                fullWidth
                                                 name="FromDate"
                                                 type="date"
-                                                id="FromDate"
                                                 label="From Date"
                                                 variant="standard"
                                                 InputLabelProps={{ shrink: true }}
@@ -265,13 +352,13 @@ const EditLeaveEnquiry = () => {
                                                 onChange={handleChange}
                                                 error={!!touched.FromDate && !!errors.FromDate}
                                                 helperText={touched.FromDate && errors.FromDate}
-                                                // required
-                                                sx={{ gridColumn: "span 2" }}
                                             />
+
+                                            {/* TO DATE */}
                                             <TextField
+                                                fullWidth
                                                 name="ToDate"
                                                 type="date"
-                                                id="ToDate"
                                                 label="To Date"
                                                 variant="standard"
                                                 InputLabelProps={{ shrink: true }}
@@ -281,85 +368,86 @@ const EditLeaveEnquiry = () => {
                                                 onChange={handleChange}
                                                 error={!!touched.ToDate && !!errors.ToDate}
                                                 helperText={touched.ToDate && errors.ToDate}
-                                                // required
-                                                sx={{ gridColumn: "span 2" }}
                                                 inputProps={{
                                                     min:
                                                         values.FromDate ||
                                                         new Date().toISOString().split("T")[0],
                                                 }}
                                             />
-                                            <CheckinAutocomplete
+
+                                            {/* LEAVE TYPE */}
+                                            <MultiFormikOptimizedAutocomplete
+                                                multiple
+                                                fullWidth
+                                                sx={{ mt: 1 }}
+                                                id="leavetype"
                                                 name="leavetype"
                                                 label="Leave Type"
-                                                id="leavetype"
-                                                // required
-                                                value={values.leavetype}
-                                                onChange={async (newValue) => {
-                                                    setFieldValue("leavetype", newValue);
-                                                    // if (newValue?.RecordID) {
-                                                    //     await Balancedayfind(newValue.RecordID);
-                                                    // }
+                                                disabled={values.Permission}
+                                                value={Array.isArray(values.leavetype) ? values.leavetype : []}
+                                                onChange={(e, newValue) => {
+                                                    setFieldValue("leavetype", newValue || []);
                                                 }}
-                                                error={!!touched.leavetype && !!errors.leavetype}
-                                                helperText={touched.leavetype && errors.leavetype}
                                                 url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}'","Any":""}}`}
                                             />
-                                            <Box>
-                                                <Field
-                                                    //  size="small"
-                                                    type="checkbox"
-                                                    name="Permission"
-                                                    id="Permission"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    as={Checkbox}
-                                                    label="Permission"
-                                                />
 
-                                                <FormLabel focused={false}>Permission</FormLabel>
-                                            </Box>
+                                            {/* PERMISSION */}
+                                            <FormControlLabel
+                                                sx={{ mt: 1 }}
+                                                control={
+                                                    <Checkbox
+                                                        checked={values.Permission}
+                                                        onChange={(e) => {
+                                                            const checked = e.target.checked;
+                                                            setFieldValue("Permission", checked);
+                                                            if (checked) {
+                                                                setFieldValue("leavetype", []);
+                                                            }
+                                                        }}
+                                                    />
+                                                }
+                                                label="Permission"
+                                            />
                                         </FormControl>
-
                                     </Box>
+
+                                    {/* 🔹 ACTION BUTTONS */}
                                     <Stack
-                                        direction="row"
+                                        direction={{ xs: "column", sm: "row" }}
                                         spacing={2}
-                                        display="flex"
-                                        padding={1}
-                                        justifyContent="end"
-                                        marginTop={-4}
+                                        p={1}
+                                        justifyContent="flex-end"
+                                        alignItems={{ xs: "stretch", sm: "center" }}
                                     >
                                         <Button
                                             variant="contained"
                                             color="secondary"
                                             type="submit"
-                                        // onClick={() => handleApplyClick(values)}
                                         >
                                             APPLY
                                         </Button>
+
                                         <Button
-                                            type="reset"
                                             variant="contained"
                                             color="error"
-                                            size="small"
                                             onClick={() => navigate(-1)}
                                         >
                                             CANCEL
                                         </Button>
+
                                         <PDFDownloadLink
                                             document={
                                                 <LeaveenqempPDF
-                                                    // data={AttendanceData}
-                                                    // totalHours={totalHours}
-                                                    // filters={{
-                                                    //     Month: values.attmonth,
-                                                    //     Year: values.attyear,
-                                                    //     EmployeeID: attempData?.Name || EmpName,
-                                                    // }}
+                                                    data={rows}
+                                                    filters={{
+                                                        fromdate: values.FromDate,
+                                                        todate: values.ToDate,
+                                                        permission: isPermission ? "Y" : "N",
+                                                        EmpName: state?.EmpName ?? "",
+                                                    }}
                                                 />
                                             }
-                                            fileName={`Attendance_Report_ Employee}.pdf`}
+                                            fileName="Leave_Enquiry_Report.pdf"
                                             style={{ color: "#d32f2f", cursor: "pointer" }}
                                         >
                                             {({ loading }) =>
@@ -370,7 +458,6 @@ const EditLeaveEnquiry = () => {
                                                 )
                                             }
                                         </PDFDownloadLink>
-
                                     </Stack>
                                     <Box
                                         m="5px 0 0 0"

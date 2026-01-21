@@ -74,6 +74,15 @@ const initialState = {
   partyBankgetdata: {},
   partyBankgetstatus: "",
   partyBankgetloading: false,
+  OHPaymentPutdata: {},
+  OHPaymentPutstatus: "",
+  OHPaymentPutloading: false,
+  PartyDateAndAmtFilterdata: [],
+  PartyDateAndAmtFilterstatus: "",
+  PartyDateAndAmtFilterloading: false,
+  LeaveEntryRegdata: [],
+  LeaveEntryRegstatus: "",
+  LeaveEntryRegloading: false,
   partyBankPostdata: {},
   partyContactgetdata: {},
   skillInsights1getdata: {},
@@ -2729,6 +2738,56 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
+
+      //ORDER HEADER - PAYMENT UPDATE
+      .addCase(OHPaymentUpdateController.pending, (state, action) => {
+        state.OHPaymentPutstatus = "idle";
+        state.OHPaymentPutloading = true;
+      })
+      .addCase(OHPaymentUpdateController.fulfilled, (state, action) => {
+        state.OHPaymentPutstatus = "success";
+        state.OHPaymentPutloading = false;
+        state.OHPaymentPutdata = action.meta.arg.idata;
+      })
+      .addCase(OHPaymentUpdateController.rejected, (state, action) => {
+        state.OHPaymentPutstatus = "Error";
+        state.OHPaymentPutloading = false;
+      })
+
+      //PARTY - SORT FILTER GET
+      .addCase(PartyBydateByamtFilter.pending, (state, action) => {
+        state.PartyDateAndAmtFilterstatus = "idle";
+        state.PartyDateAndAmtFilterloading = true;
+      })
+      .addCase(PartyBydateByamtFilter.fulfilled, (state, action) => {
+        state.PartyDateAndAmtFilterstatus = "success";
+        state.PartyDateAndAmtFilterloading = false;
+        state.PartyDateAndAmtFilterdata = action.payload.Data
+          ? action.payload.Data
+          : [];
+      })
+      .addCase(PartyBydateByamtFilter.rejected, (state, action) => {
+        state.PartyDateAndAmtFilterstatus = "Error";
+        state.PartyDateAndAmtFilterloading = false;
+      })
+
+      //PARTY - SORT FILTER GET
+      .addCase(leaveenquiryget.pending, (state, action) => {
+        state.LeaveEntryRegstatus = "idle";
+        state.LeaveEntryRegloading = true;
+      })
+      .addCase(leaveenquiryget.fulfilled, (state, action) => {
+        state.LeaveEntryRegstatus = "success";
+        state.LeaveEntryRegloading = false;
+        state.LeaveEntryRegdata = action.payload.Data
+          ? action.payload.Data
+          : [];
+      })
+      .addCase(leaveenquiryget.rejected, (state, action) => {
+        state.LeaveEntryRegstatus = "Error";
+        state.LeaveEntryRegloading = false;
+      })
+
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
         state.sprintgetstatus = "idle";
@@ -4596,15 +4655,48 @@ export const timeSheetreport = createAsyncThunk(
   }
 );
 
+// export const leaveenquiryget = createAsyncThunk(
+//   "leavenquiry/leaveenquiryget",
+//   async (data, { rejectWithValue }) => {
+//     try {
+//       const url = store.getState().globalurl.LeaveenquiryGetController;
+
+//       console.log("Request Data:", data);
+// const data = {
+//       data:data
+//     };
+//       const response = await axios.post(url, data, {
+//         headers: {
+//           Authorization:
+//             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//         },
+//       });
+
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data || error.message);
+//     }
+//   }
+// );
 export const leaveenquiryget = createAsyncThunk(
   "leavenquiry/leaveenquiryget",
-  async (data, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
       const url = store.getState().globalurl.LeaveenquiryGetController;
 
-      console.log("Request Data:", data);
+      // 👇 Wrap exactly as backend expects
+      const requestBody = {
+          FromDate: payload.FromDate,
+          ToDate: payload.ToDate,
+          LeaveTypeID: payload.LeaveTypeID,
+          EmployeesID: payload.EmployeesID,
+          CompanyID: payload.CompanyID,
+          Permission: payload.Permission,
+      };
 
-      const response = await axios.post(url, data, {
+      console.log("Final Request Body:", JSON.stringify(requestBody));
+
+      const response = await axios.post(url, requestBody, {
         headers: {
           Authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
@@ -4613,6 +4705,7 @@ export const leaveenquiryget = createAsyncThunk(
 
       return response.data;
     } catch (error) {
+      console.error("Leave enquiry API error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -4641,6 +4734,46 @@ export const userActivityLog = createAsyncThunk(
       },
     });
 
+    return response.data;
+  }
+);
+
+export const OHPaymentUpdateController
+  = createAsyncThunk(
+  "OHPaymentUpdateController/OrderHeaderPaymentUpdate",
+  async ({idata }) => {
+    const url = store.getState().globalurl.OHPaymentUpdateController;
+
+    const data = {
+      idata : idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  }
+);
+export const PartyBydateByamtFilter
+  = createAsyncThunk(
+  "PartyBydateByamtFilter/Get",
+  async ({SortType, CompanyID}) => {
+    const url = store.getState().globalurl.PartyBydateByamtFilter;
+
+    const data = {
+      SortType:SortType,
+      CompanyID:CompanyID
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
     return response.data;
   }
 );
