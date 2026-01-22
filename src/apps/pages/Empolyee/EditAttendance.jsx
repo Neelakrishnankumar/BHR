@@ -63,7 +63,7 @@ const EditAttendance = () => {
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   console.log("AttendanceData", AttendanceData);
 
-  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const getLoading = useSelector((state) => state.formApi.AttendanceDataLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [page, setPage] = React.useState(0);
@@ -700,7 +700,7 @@ const EditAttendance = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    loading={getLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,

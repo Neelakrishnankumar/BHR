@@ -26,6 +26,7 @@ activityListener.startListening({
           CompanyID: sessionStorage.getItem("compID") || "0",
           AccessID: "Logout",
           Activity: "logout",
+          Type:"B",
         })
       );
 
@@ -44,6 +45,7 @@ activityListener.startListening({
           CompanyID: action.payload?.apiResponse?.CompanyRecordid || "0",
           AccessID: "Login",
           Activity: "login",
+          Type:"B",
         })
       );
       return; // ✅ VERY IMPORTANT (prevents double logging)
@@ -62,6 +64,7 @@ activityListener.startListening({
             "0",
           AccessID: action.payload?.accessID || "fetchApidata",
           Activity: action.payload?.action || "success",
+          Type:"B",
         })
       );
       return; // ✅ VERY IMPORTANT
@@ -82,6 +85,7 @@ activityListener.startListening({
             "0",
           AccessID: action.payload?.accessID || "formApi",
           Activity: action.payload?.action || "success",
+          Type:"B",
         })
       );
       return;
@@ -100,6 +104,7 @@ activityListener.startListening({
             "0",
           AccessID: action.payload?.accessid || "formApi",
           Activity: action.payload?.action || "success",
+          Type:"B",
         })
       );
       return;
@@ -162,6 +167,7 @@ activityListener.startListening({
         CompanyID,
         AccessID: AccessOrScreen, // may be AccessID or ScreenName
         Activity,
+        Type:"B",
       })
     );
   },

@@ -56,6 +56,7 @@ const initialState = {
   searchLoading: false,
   empAttendanceData: {},
   AttendanceData: {},
+  AttendanceDataLoading: false,
   RegGetData: {},
   leaveweeklyData: {
     Employee: "",
@@ -3230,6 +3231,15 @@ export const getApiSlice = createSlice({
       })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;
+state.AttendanceDataLoading = false;
+      })
+      .addCase(Attendance.pending, (state, action) => {
+        state.AttendanceDataStatus= "idle";
+        state.AttendanceDataLoading = true;
+      })
+      .addCase(Attendance.rejected, (state, action) => {
+        state.AttendanceData = {};
+        state.AttendanceDataLoading = false;
       })
       .addCase(RegGetData.pending, (state, action) => {
         state.RegGetData = {};
