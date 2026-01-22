@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   headerText: {
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10
@@ -42,91 +42,101 @@ const styles = StyleSheet.create({
   tableRowLast: {
     flexDirection: "row",
   },
- tableColHeader1: {
-  width: "10%",               
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-  fontWeight: "bold",
-  backgroundColor: "#EEE",
-  textAlign: "center",
-},
- tableCol1: {
-  width: "10%",               
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-  textAlign: "right",
-},
+  tableColHeader1: {
+    width: "10%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+  tableCol1: {
+    width: "10%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    textAlign: "right",
+  },
 
-tableColHeader: {
-  width: "12%",           
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-  fontWeight: "bold",
-  backgroundColor: "#EEE",
-  textAlign: "center",
-},
+  tableColHeader: {
+    width: "12%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
 
 
   tableCol: {
-  width: "12%",           
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-},
+    width: "12%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
 
-tableColHeader2: {
-  width: "12%",           
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-  fontWeight: "bold",
-  backgroundColor: "#EEE",
-  textAlign: "center",
-},
+  tableColHeader2: {
+    width: "12%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
 
-tableCol2: {
-  width: "12%",           
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-},
+  tableCol2: {
+    width: "12%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
 
-tableColHeader3: {
-  width: "12%",           
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-  fontWeight: "bold",
-  backgroundColor: "#EEE",
-  textAlign: "center",
-},
+  tableColHeader3: {
+    width: "12%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
 
-tableCol3: {
-  width: "12%",           
-  borderRightWidth: 1,
-  borderRightColor: "#000",
-  padding: 5,
-},
+  tableCol3: {
+    width: "12%",
+    borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+  },
 
-tableColHeaderLast: {
-  width: "12%",           
-  padding: 5,
-  fontWeight: "bold",
-  backgroundColor: "#EEE",
-  textAlign: "center",
-},
+  tableColHeaderLast: {
+    width: "12%",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
 
-tableColLast: {
-  width: "12%",           
-  padding: 5,
-},
+  tableColLast: {
+    width: "12%",
+    padding: 5,
+  },
 
 });
 
 // Split data: 20 on first page, 26 afterwards
+// const ROWS_PER_PAGE = 31;
+
+// const paginateData = (data) => {
+//   const pages = [];
+//   for (let i = 0; i < data.length; i += ROWS_PER_PAGE) {
+//     pages.push(data.slice(i, i + ROWS_PER_PAGE));
+//   }
+//   return pages;
+// };
+
 const paginateData = (data) => {
   const firstPage = data.slice(0, 31);
   const otherPages = [];
@@ -326,7 +336,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                   <Text style={dynamicStyles.tableCol}>
                     {row.EmployeeCheckInDate}
                   </Text>
-                   <Text style={dynamicStyles.tableCol}>
+                  <Text style={dynamicStyles.tableCol}>
                     {row.EmployeeCheckInTime}
                   </Text>
                   <Text style={dynamicStyles.tableCol}>
@@ -338,7 +348,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                   <Text style={dynamicStyles.tableCol3}>
                     {row.NumberOfHoursWorked}
                   </Text>
-                   <Text style={dynamicStyles.tableCol}>
+                  <Text style={dynamicStyles.tableCol}>
                     {row.PermissionHours}
                   </Text>
                   <Text style={dynamicStyles.tableColLast}>
@@ -361,10 +371,13 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
               fontSize: 10,
             }}
           >
-            <Text>
-              Page {pageIndex + 1} of {pages.length}
-            </Text>
+            <Text
+              render={({ pageNumber, totalPages }) =>
+                `Page ${pageNumber} / ${totalPages}`
+              }
+            />
           </View>
+
         </Page>
       ))}
     </Document>

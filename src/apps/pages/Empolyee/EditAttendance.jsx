@@ -198,6 +198,9 @@ const EditAttendance = () => {
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
         }
+        // if (params.row.Status === "Leave") {
+        //   return <DeckIcon color="danger" titleAccess="Leave" />;
+        // }
         return null;
       },
     },
