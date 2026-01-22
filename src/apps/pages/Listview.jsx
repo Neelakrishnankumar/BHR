@@ -3808,7 +3808,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR275" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
