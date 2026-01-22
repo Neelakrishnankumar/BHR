@@ -69,9 +69,8 @@ tableColHeader: {
   textAlign: "center",
 },
 
-
   tableCol: {
-  width: "12%",           
+  width: "10%",           
   borderRightWidth: 1,
   borderRightColor: "#000",
   padding: 5,
@@ -298,7 +297,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
           {/* Table Header */}
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableColHeader1}>S.No</Text>
+              <Text style={styles.tableColHeader1}>SL#</Text>
               {includeName && (
                 <Text style={styles.tableColHeader2}>Employee Name</Text>
               )}
@@ -307,7 +306,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
               <Text style={dynamicStyles.tableColHeader}>Check Out Date</Text>
               <Text style={dynamicStyles.tableColHeader}>Check Out Time</Text>
               <Text style={dynamicStyles.tableColHeader3}>Hrs</Text>
-              <Text style={dynamicStyles.tableColHeader}>Permission (In Minutes)</Text>
+              <Text style={dynamicStyles.tableColHeader}>Permission (In Hrs)</Text>
               <Text style={dynamicStyles.tableColHeaderLast}>Status</Text>
             </View>
 
@@ -324,7 +323,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.tableCol2}>{row.Name}</Text>
                   )}
                   <Text style={dynamicStyles.tableCol}>
-                    {row.EmployeeCheckInDate}
+                    {row.MonthDate}
                   </Text>
                    <Text style={dynamicStyles.tableCol}>
                     {row.EmployeeCheckInTime}

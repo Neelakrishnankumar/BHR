@@ -237,7 +237,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                         </View> */}
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
-                            <Text style={styles.headerCell1}>S.No</Text>
+                            <Text style={styles.headerCell1}>SL#</Text>
 
                             {isPermission ? (
                                 <>
