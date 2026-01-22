@@ -61,6 +61,8 @@ const EditOrder = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const location = useLocation();
   const state = location.state || {};
+  const ViewStatus = state.ViewStatus;
+  console.log("🚀 ~ EditOrder ~ ViewStatus:", ViewStatus)
   const DefaultProductDeliveryChargeGetData = useSelector(
     (state) => state.formApi.DefaultProductDeliveryChargeGetData
   );
@@ -588,47 +590,46 @@ const EditOrder = () => {
                     </TextField>
                     {mode === "A" ? (
                       <>
-                      <TextField
-                        name="tentativedeliverdate"
-                        type="date"
-                        id="tentativedeliverdate"
-                        label={
-                          params.OrderType === "O"
-                            ? "Tentative Deliver Date"
-                            : "Targeted Order Date"
-                        }
-                        variant="standard"
-                        focused
-                        inputFormat="YYYY-MM-DD"
-                        value={values.tentativedeliverdate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={
-                          !!touched.tentativedeliverdate &&
-                          !!errors.tentativedeliverdate
-                        }
-                        helperText={
-                          touched.tentativedeliverdate &&
-                          errors.tentativedeliverdate
-                        }
-                      />
-
-                       <Box sx={{ marginTop: "20px" }}>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="PurchaseCheckbox"
-                          id="PurchaseCheckbox"
-                          onChange={handleChange}
+                        <TextField
+                          name="tentativedeliverdate"
+                          type="date"
+                          id="tentativedeliverdate"
+                          label={
+                            params.OrderType === "O"
+                              ? "Tentative Deliver Date"
+                              : "Targeted Order Date"
+                          }
+                          variant="standard"
+                          focused
+                          inputFormat="YYYY-MM-DD"
+                          value={values.tentativedeliverdate}
                           onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Purchase"
-                        
+                          onChange={handleChange}
+                          error={
+                            !!touched.tentativedeliverdate &&
+                            !!errors.tentativedeliverdate
+                          }
+                          helperText={
+                            touched.tentativedeliverdate &&
+                            errors.tentativedeliverdate
+                          }
                         />
 
-                        <FormLabel focused={false}>Purchase</FormLabel>
+                        <Box sx={{ marginTop: "20px" }}>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="PurchaseCheckbox"
+                            id="PurchaseCheckbox"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Purchase"
+                          />
+
+                          <FormLabel focused={false}>Purchase</FormLabel>
                         </Box>
-                        </>
+                      </>
                     ) : (
                       false
                     )}
@@ -654,6 +655,7 @@ const EditOrder = () => {
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
+                              readOnly: ViewStatus === "Paid" ? true : false,
                             },
                           }}
                           autoFocus
@@ -717,6 +719,9 @@ const EditOrder = () => {
                             touched.tentativedeliverdate &&
                             errors.tentativedeliverdate
                           }
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         />
 
                         <TextField
@@ -735,9 +740,13 @@ const EditOrder = () => {
                           }}
                           focused
                           variant="standard"
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         >
                           <MenuItem value="Yes">Yes</MenuItem>
                           <MenuItem value="No">No</MenuItem>
+                          
                         </TextField>
                         <TextField
                           select
@@ -755,6 +764,9 @@ const EditOrder = () => {
                           }}
                           focused
                           variant="standard"
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         >
                           <MenuItem value="Yes">Yes</MenuItem>
                           <MenuItem value="No">No</MenuItem>
@@ -791,6 +803,9 @@ const EditOrder = () => {
                           onChange={handleChange}
                           error={!!touched.paiddate && !!errors.paiddate}
                           helperText={touched.paiddate && errors.paiddate}
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         />
                         <TextField
                           name="deliverydate"
@@ -833,6 +848,9 @@ const EditOrder = () => {
                           //     },
                           // }}
                           autoFocus
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         />
                         <TextField
                           name="PartyBalance"
@@ -881,7 +899,7 @@ const EditOrder = () => {
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
-                            // readOnly:true,
+                            readOnly: ViewStatus === "Paid" ? true : false, 
                             inputProps: {
                               style: { textAlign: "right" },
                             },
@@ -932,6 +950,9 @@ const EditOrder = () => {
                           }}
                           focused
                           variant="standard"
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         >
                           <MenuItem value="Created">Created</MenuItem>
                           <MenuItem value="Process">Confirm</MenuItem>
@@ -981,6 +1002,9 @@ const EditOrder = () => {
                           helperText={touched.paymentmode && errors.paymentmode}
                           focused
                           variant="standard"
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         >
                           <MenuItem value="COD">Cash On Delivery</MenuItem>
                           <MenuItem value="UPI">UPI</MenuItem>
@@ -1004,6 +1028,9 @@ const EditOrder = () => {
                             touched.receivername && errors.receivername
                           }
                           autoFocus
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                           // disabled
                         />
 
@@ -1030,6 +1057,9 @@ const EditOrder = () => {
                           }
                           inputProps={{ maxLength: 10 }}
                           sx={{ backgroundColor: "#ffffff" }}
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                         />
                         <TextField
                           name="DeliveryComments"
@@ -1049,6 +1079,9 @@ const EditOrder = () => {
                             touched.DeliveryComments && errors.DeliveryComments
                           }
                           autoFocus
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                           // disabled
                         />
                         <TextField
@@ -1068,21 +1101,25 @@ const EditOrder = () => {
                             touched.PaidComments && errors.PaidComments
                           }
                           autoFocus
+                          InputProps={{
+                            readOnly: ViewStatus === "Paid" ? true : false,
+                          }}
                           // disabled
                         />
                         <Box>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="PurchaseCheckbox"
-                          id="PurchaseCheckbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Purchase"
-                        />
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="PurchaseCheckbox"
+                            id="PurchaseCheckbox"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Purchase"
+                            disabled={ViewStatus === "Paid" ? true : false}
+                          />
 
-                        <FormLabel focused={false}>Purchase</FormLabel>
+                          <FormLabel focused={false}>Purchase</FormLabel>
                         </Box>
                       </>
                     )}
@@ -1194,19 +1231,19 @@ const EditOrder = () => {
                             Adjust From Advance
                           </MenuItem>
                         </TextField> */}
-                              <Box>
-                        <Field
-                          //  size="small"
-                          type="checkbox"
-                          name="PurchaseCheckbox"
-                          id="PurchaseCheckbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                          label="Purchase"
-                        />
+                        <Box>
+                          <Field
+                            //  size="small"
+                            type="checkbox"
+                            name="PurchaseCheckbox"
+                            id="PurchaseCheckbox"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            as={Checkbox}
+                            label="Purchase"
+                          />
 
-                        <FormLabel focused={false}>Purchase</FormLabel>
+                          <FormLabel focused={false}>Purchase</FormLabel>
                         </Box>
                       </>
                     )}
@@ -1249,7 +1286,6 @@ const EditOrder = () => {
 
                                         <FormLabel focused={false}>Disable</FormLabel>
                                     </Box> */}
-                               
                   </Box>
                   <Box
                     display="flex"
@@ -1264,6 +1300,7 @@ const EditOrder = () => {
                         variant="contained"
                         type="submit"
                         loading={isLoading}
+                        disabled={ViewStatus === "Paid" ? true : false}
                       >
                         Save
                       </LoadingButton>
@@ -1299,6 +1336,7 @@ const EditOrder = () => {
                         onClick={() => {
                           Fnsave(values, "harddelete");
                         }}
+                        disabled={ViewStatus === "Paid" ? true : false}
                       >
                         Delete
                       </Button>

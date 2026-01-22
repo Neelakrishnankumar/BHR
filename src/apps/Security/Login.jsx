@@ -173,7 +173,7 @@ const Login = () => {
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyLogo = data.payload.CompanyLogo
       var firstLogin = data.payload.firstLogin
-      // var firstLogin = "Y";
+      //  var firstLogin = "Y";
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
 
 
