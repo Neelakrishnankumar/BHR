@@ -210,9 +210,17 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                     {pageIndex === 0 && (
 
                         <View style={styles.headerTextContainer}>
-                            <Text style={styles.headerText}>
+                            {/* <Text style={styles.headerText}>
+                                
                                 {`Leave Enquiry Report - ${filters?.EmpName} - (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`}
+                            </Text> */}
+                            <Text style={styles.headerText}>
+                                {filters.permission === "Y"
+                                    ? `Permission Enquiry Report - ${filters?.EmpName} (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`
+                                    : `Leave Enquiry Report - ${filters?.EmpName} (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`
+                                }
                             </Text>
+
 
                         </View>
 
@@ -240,6 +248,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                                 </>
                             ) : (
                                 <>
+                                    <Text style={styles.headerCell}>Leave Type</Text>
                                     <Text style={styles.headerCell}>From Date</Text>
                                     <Text style={styles.headerCell}>To Date</Text>
                                     <Text style={styles.headerCellDesc}>Reason</Text>
@@ -287,6 +296,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                                         </>
                                     ) : (
                                         <>
+                                            <Text style={styles.cell}>{row.LeaveName}</Text>
                                             <Text style={styles.cell}>{row.FromDate}</Text>
                                             <Text style={styles.cell}>{row.ToDate}</Text>
                                             <Text style={styles.cellDesc}>{row.Comments}</Text>
