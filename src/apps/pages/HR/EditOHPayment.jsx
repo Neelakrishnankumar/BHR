@@ -340,32 +340,32 @@ const EditOHPayment = () => {
       toast.error("Please provide comments for low rating.");
       return;
     }
-              const netPayable =
-                Number(values.delivercharges || 0) +
-                Number(values.totalprice || 0);
+    const netPayable =
+      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
-                              const Balance = Number(values.PartyBalance || 0);
+    const Balance = Number(values.PartyBalance || 0);
 
-              const totalBalance = netPayable + Balance;
-              const toBePaid = netPayable - Number(values.paidamount || 0);
+    const totalBalance = netPayable + Balance;
+    const toBePaid = totalBalance - Number(values.paidamount || 0);
     const idata = {
-      OrderHeaderID: recID,
-      NextOrdDate: values.NextOrdDate || "",
-      PaymentMethod: values.paymentmode || "", 
-      Amount : netPayable || 0, 
+      PaymentMethod: values.paymentmode || "",
+      Amount: netPayable || 0,
       ReceiverName: values.receivername || "",
       ReceiverMobile: values.mobilenumber || "",
+      OrderHeaderID: recID,
+      EmpID: LoginID,
       DeliveryComments: values.DeliveryComments || "",
       PaidComments: values.PaidComments || "",
-      Balance : totalBalance || 0,
-      ToBePaid : toBePaid || 0,
-      EmpID: LoginID,
+      NextOrdDate: values.NextOrdDate || "",
+      Balance: Balance || 0,
+      ToBePaid: toBePaid || 0,
+      PaidAmount: values.paidamount || 0,
       Rating: values.Rating || 0,
-      Comments: values.RatingComments || "" ,
-      AmountType: 'P',
+      Comments: values.RatingComments || "",
+      AmountType: "P",
     };
 
-    const response = await dispatch(OHPaymentUpdateController({ idata }));
+    const response = await dispatch(OHPaymentUpdateController(idata));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
       navigate(-1);
@@ -522,7 +522,7 @@ const EditOHPayment = () => {
               const Balance = Number(values.PartyBalance || 0);
 
               const totalBalance = netPayable + Balance;
-              const toBePaid = netPayable - Number(values.paidamount || 0);
+              const toBePaid = totalBalance - Number(values.paidamount || 0);
               return (
                 <form onSubmit={handleSubmit}>
                   <Box
@@ -667,12 +667,12 @@ const EditOHPayment = () => {
                             },
                           }}
                         />
-                        {/* <TextField
+                        <TextField
                           name="PartyBalance"
                           // type="number"
                           type="text"
                           id="PartyBalance"
-                          label="Balance Amount"
+                          label="Due"
                           variant="standard"
                           focused
                           // value={Math.abs(Number(values.PartyBalance || 0))}
@@ -700,7 +700,7 @@ const EditOHPayment = () => {
                             },
                           }}
                           autoFocus
-                        /> */}
+                        />
                         <TextField
                           label="Total Payable"
                           variant="standard"
@@ -711,6 +711,22 @@ const EditOHPayment = () => {
                               style: { textAlign: "right" },
                             },
                           }}
+                        />
+
+                        <TextField
+                          type="number"
+                          label="To Be Paid"
+                          variant="standard"
+                          focused
+                          value={toBePaid.toFixed(2)}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                          autoFocus
                         />
                         <TextField
                           name="paidamount"
@@ -731,22 +747,7 @@ const EditOHPayment = () => {
                           }}
                           autoFocus
                         />
-                        <TextField
-                          type="number"
-                          label="To Be Paid"
-                          variant="standard"
-                          focused
-                          value={toBePaid.toFixed(2)}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          InputProps={{
-                            inputProps: {
-                              style: { textAlign: "right" },
-                            },
-                          }}
-                          autoFocus
-                        />
-                        <TextField
+                        {/* <TextField
                           select
                           label="Status"
                           id="status"
@@ -770,7 +771,7 @@ const EditOHPayment = () => {
                         >
                           <MenuItem value="Delivered">Delivered</MenuItem>
                           <MenuItem value="Paid">Paid</MenuItem>
-                        </TextField>
+                        </TextField> */}
                         <TextField
                           select
                           label="Payment Mode"

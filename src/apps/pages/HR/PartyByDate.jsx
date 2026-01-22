@@ -61,7 +61,9 @@ const PartyByDate = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
-  const PartyFilterData = useSelector((state) => state.formApi.PartyDateAndAmtFilterdata);
+  const PartyFilterData = useSelector(
+    (state) => state.formApi.PartyDateAndAmtFilterdata,
+  );
   console.log("PartyFilterData", PartyFilterData);
 
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -70,12 +72,43 @@ const PartyByDate = () => {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = useState(31);
   const [rowCount, setRowCount] = useState(0);
+  const [rows, setRows] = useState([]);
   const [show, setScreen] = React.useState("0");
   const EMPID = sessionStorage.getItem("EmpId");
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
+
+
+useEffect(() => {
+  // 🔥 Clear grid data when page loads
+  setRows([]);
+
+  // 🔥 Clear session stored sort also
+  sessionStorage.removeItem("partySort");
+
+  // 🔥 Clear when browser refresh / tab close
+  const handleUnload = () => {
+    setRows([]);
+    sessionStorage.removeItem("partySort");
+  };
+
+  window.addEventListener("beforeunload", handleUnload);
+
+  return () => {
+    // 🔥 Clear when navigating away
+    setRows([]);
+    window.removeEventListener("beforeunload", handleUnload);
+  };
+}, []);
+useEffect(() => {
+  if (Array.isArray(PartyFilterData)) {
+    setRows(PartyFilterData);
+  } else {
+    setRows([]);
+  }
+}, [PartyFilterData]);
 
   function AttendanceTool() {
     return (
@@ -103,88 +136,103 @@ const PartyByDate = () => {
   }
   const [proData, setproData] = useState(null);
 
-//   const PartyFilterColumn = [
+  //   const PartyFilterColumn = [
 
-//     {
-//       field: "slno",
-//       headerName: "SL#",
-//       width: 60,
-//       sortable: false,
-//       filterable: false,
-//       headerAlign: "center",
-//       disableColumnMenu: true,
-//       valueGetter: (params) => {
-//         const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+  //     {
+  //       field: "slno",
+  //       headerName: "SL#",
+  //       width: 60,
+  //       sortable: false,
+  //       filterable: false,
+  //       headerAlign: "center",
+  //       disableColumnMenu: true,
+  //       valueGetter: (params) => {
+  //         const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
 
-//         const totalVisibleRows = params.api.getAllRowIds().length;
-//         const totalAllRows = params.api.getRowsCount();
+  //         const totalVisibleRows = params.api.getAllRowIds().length;
+  //         const totalAllRows = params.api.getRowsCount();
 
-//         if (totalVisibleRows < totalAllRows) {
-//           return index + 1;
-//         } else {
-//           return page * pageSize + index + 1;
-//         }
-//       },
-//     },
-//   ];
-const PartyFilterColumn = [
-     {
-    field: "sno",
-    headerName: "SL#",
-    width: 50,
-    sortable: false,
-    filterable: false,
-    align: "center",
-    headerAlign: "center",
-    renderCell: (params) =>
-      params.api.getRowIndex(params.id) + 1,   // 🔥 Auto serial number
-  },
-  {
-    field: "PartyName",
-    headerName: "Party Name",
-    width: 300,
-    align: "left",
-    headerAlign: "center",
-  },
-  {
-    field: "OrderDate",
-    headerName: "Order Date",
-    width: 100,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "DaysDiff",
-    headerName: "Days",
-   width: 100,
-    align: "right",
-    headerAlign: "center",
-  },
-  {
-    field: "Balance",
-    headerName: "Balance",
-    width: 100,
-    align: "right",
-    headerAlign: "center",
-    valueFormatter: (params) =>
-      Number(params.value || 0).toFixed(2),
-  },
-];
+  //         if (totalVisibleRows < totalAllRows) {
+  //           return index + 1;
+  //         } else {
+  //           return page * pageSize + index + 1;
+  //         }
+  //       },
+  //     },
+  //   ];
+  const PartyFilterColumn = [
+    {
+      field: "sno",
+      headerName: "SL#",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => params.api.getRowIndex(params.id) + 1, // 🔥 Auto serial number
+    },
+    {
+      field: "PartyName",
+      headerName: "Party Name",
+      width: 300,
+      align: "left",
+      headerAlign: "center",
+    },
+    {
+      field: "OrderDate",
+      headerName: "Order Date",
+      width: 100,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "DaysDiff",
+      headerName: "Days",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
+    },
+    {
+      field: "Balance",
+      headerName: "Balance",
+      width: 100,
+      align: "right",
+      headerAlign: "center",
+      valueFormatter: (params) => Number(params.value || 0).toFixed(2),
+      renderCell: (params) => {
+        const value = Number(params.value || 0);
+        const displayValue = Math.abs(value).toFixed(2);
+
+        return (
+          <span
+            style={{
+              color:
+                value < 0 ? colors.redAccent[500] : colors.greenAccent[400],
+              fontWeight: 600,
+            }}
+          >
+            {displayValue}
+          </span>
+        );
+      },
+    },
+  ];
 
   const AttInitialvalues = {
     partySort: sessionStorage.getItem("partySort") || "",
   };
-const attendaceFnSave = async (values) => {
-  dispatch(
-    PartyBydateByamtFilter({
-      SortType: values.partySort || "",
-      CompanyID: CompanyID,
-    })
+  const attendaceFnSave = async (values) => {
+    dispatch(
+      PartyBydateByamtFilter({
+        SortType: values.partySort || "",
+        CompanyID: CompanyID,
+      }),
+    );
+  };
+
+  const exploreLoading = useSelector(
+    (state) => state.formApi.PartyDateAndAmtFilterloading,
   );
-};
-
-
-  const exploreLoading = useSelector((state) => state.formApi.PartyDateAndAmtFilterloading);
 
   const fnLogOut = (props) => {
     Swal.fire({
@@ -201,19 +249,9 @@ const attendaceFnSave = async (values) => {
       }
     });
   };
-  const [empData, setempData] = useState(null);
-  const handleSelectionEmployeeChange = (newValue) => {
-    if (newValue) {
-      setempData(newValue);
-      console.log(newValue.RecordID, "--selectedproductid");
-    } else {
-      setempData(null);
-    }
-    setUseCurrentEmp(false);
-  };
+
   console.log(proData, "--find proData");
 
-  const [useCurrentEmp, setUseCurrentEmp] = useState(false);
   return (
     <React.Fragment>
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
@@ -224,7 +262,7 @@ const attendaceFnSave = async (values) => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Party</Typography>
+            <Typography variant="h3">Aging Report</Typography>
           </Box>
           <Box display="flex">
             <Tooltip title="Close">
@@ -260,7 +298,7 @@ const attendaceFnSave = async (values) => {
             values,
             handleSubmit,
             resetForm,
-            setFieldValue
+            setFieldValue,
           }) => (
             <form
               onSubmit={handleSubmit}
@@ -306,8 +344,6 @@ const attendaceFnSave = async (values) => {
                     <MenuItem value={"ByDays"}>By Days</MenuItem>
                     <MenuItem value={"ByAmount"}>By Amount</MenuItem>
                   </TextField>
-
-                
                 </Stack>
                 <Stack
                   direction="row"
@@ -319,7 +355,20 @@ const attendaceFnSave = async (values) => {
                   <Button type="submit" variant="contained" color="secondary">
                     APPLY
                   </Button>
-                  <Button type="reset" variant="contained" color="error">
+                  <Button
+                    type="reset"
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      // 1️⃣ Clear Formik field
+                      setFieldValue("partySort", "");
+
+                      // 2️⃣ Clear sessionStorage
+                      sessionStorage.removeItem("partySort");
+
+                      setRows([]); // Clear displayed data
+                    }}
+                  >
                     RESET
                   </Button>
                 </Stack>
@@ -380,7 +429,8 @@ const attendaceFnSave = async (values) => {
                     }}
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
-                    rows={PartyFilterData}
+                    // rows={PartyFilterData}
+                    rows={rows}
                     columns={PartyFilterColumn}
                     disableSelectionOnClick
                     getRowId={(row) => row.RecordID}
@@ -388,7 +438,7 @@ const attendaceFnSave = async (values) => {
                     page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => { }}
+                    onCellClick={(params) => {}}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{

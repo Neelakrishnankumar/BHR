@@ -3655,6 +3655,12 @@ const Listview = () => {
               variant="outlined"
               // sx={{ marginLeft: "50px" }}
             />
+            <Chip
+              icon={<EventNoteIcon color="primary" />}
+              label="Leave Enquiry"
+              variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+            />
           </Box>
         ) : accessID == "TR243" ? (
           <Box display="flex" flexDirection="row" padding="25px">
