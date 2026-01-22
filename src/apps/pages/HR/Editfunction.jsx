@@ -96,7 +96,7 @@ const Editfunction = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.Function.name),
+          name: Yup.string().trim().required(data.Function.name),
           categories: Yup.string().required(data.Function.categories),
         };
 
