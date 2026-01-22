@@ -173,6 +173,7 @@ const EditLeaveEnquiry = () => {
 
         ...(isPermission
             ? [
+
                 {
                     field: "DisplayPermissionDate",
                     headerName: "Permission Date",
@@ -205,16 +206,9 @@ const EditLeaveEnquiry = () => {
             ]
             : [
                 {
-                    field: "Employee",
-                    headerName: "Employee Name",
-                    width: 150,
-                    headerAlign: "center",
-                    align: "left",
-                },
-                {
                     field: "LeaveName",
                     headerName: "Leave Type",
-                    width: 150,
+                    width: 200,
                     headerAlign: "center",
                     align: "left",
                 },
@@ -261,7 +255,9 @@ const EditLeaveEnquiry = () => {
                 }}
             >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>{isPermission ? "List Of Permission" : "List Of Leave"}</Typography>
+                    <Typography>
+                        {isPermission ? "List of Permission" : "List of Leave"}
+                    </Typography>
                     <Typography variant="h5">{`(${rowCount})`}</Typography>
                 </Box>
                 <Box

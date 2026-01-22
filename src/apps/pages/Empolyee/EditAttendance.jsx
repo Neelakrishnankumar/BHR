@@ -46,6 +46,8 @@ import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -198,11 +200,14 @@ const EditAttendance = () => {
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
         }
+        if (params.row.Status === "Casual leave" || params.row.Status === "Sick leave" || params.row.Status === "Medical leave") {
+          return <ExitToAppIcon color="primary" titleAccess="Leave" />;
+        }
         return null;
       },
     },
     {
-      field: "EmployeeCheckInDate",
+      field: "MonthDate",
       headerName: "Check In Date",
       flex: 1,
       headerAlign: "center",
@@ -233,7 +238,7 @@ const EditAttendance = () => {
     },
     {
       field: "PermissionInMinutes",
-      headerName: "Permission (In Minutes)",
+      headerName: "Permission (In Hours)",
       flex: 1,
       headerAlign: "center",
     },
@@ -672,6 +677,10 @@ const EditAttendance = () => {
                       backgroundColor: "#c9f5cc", // light green
                       color: "#1b5e20", // dark green text
                     },
+                    "& .leave-row": {
+                      backgroundColor: "#f3cd9b", // light green
+                      color: "#a16a03", // dark green text
+                    },
                   }}
                 >
                   <DataGrid
@@ -716,6 +725,7 @@ const EditAttendance = () => {
                       const status = params.row.Status;
                       if (status === "WeekOff") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
+                      if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
                       return params.indexRelativeToCurrentPage % 2 === 0
                         ? "odd-row"
                         : "even-row";
@@ -745,6 +755,12 @@ const EditAttendance = () => {
                       backgroundColor: "#c9f5cc",
                       borderColor: "#66bb6a",
                     }}
+                  />
+                   <Chip
+                    icon={<ExitToAppIcon color="primary" />}
+                    label="Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#f3cd9b", borderColor: "#a16a03", }}
                   />
                 </Box>
               </Box>
