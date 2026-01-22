@@ -49,7 +49,6 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 const EditLeaveEnquiry = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const isLoading = useSelector((state) => state.formApi.loading);
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const compID = sessionStorage.getItem("compID");
@@ -57,11 +56,15 @@ const EditLeaveEnquiry = () => {
     const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const [rowCount, setRowCount] = useState(0);
     const [rows, setRows] = useState([]);
+    const isLoading = useSelector((state) => state.formApi.LeaveEntryRegloading);
+
     const dispatch = useDispatch();
     let params = useParams();
     var recID = params.id;
     const navigate = useNavigate();
     const [isPermission, setIsPermission] = useState(false);
+    const  LeaveEnqPermission = sessionStorage.getItem("LeaveEnqPermission") === "Y";
+    const  LeaveEnqLeaveType = sessionStorage.getItem("LeaveEnqLeaveType") ? JSON.parse(sessionStorage.getItem("LeaveEnqLeaveType")) : [];
     const location = useLocation();
     const state = location.state || {};
 
@@ -202,6 +205,20 @@ const EditLeaveEnquiry = () => {
             ]
             : [
                 {
+                    field: "Employee",
+                    headerName: "Employee Name",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+                {
+                    field: "LeaveName",
+                    headerName: "Leave Type",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+                {
                     field: "FromDate",
                     headerName: "From Date",
                     width: 150,
@@ -218,7 +235,7 @@ const EditLeaveEnquiry = () => {
                 {
                     field: "Comments",
                     headerName: "Reason",
-                    width: 400,
+                    width: 300,
                     headerAlign: "center",
                     align: "left",
                 },
@@ -244,7 +261,7 @@ const EditLeaveEnquiry = () => {
                 }}
             >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>List of Leave</Typography>
+                    <Typography>{isPermission ? "List Of Permission" : "List Of Leave"}</Typography>
                     <Typography variant="h5">{`(${rowCount})`}</Typography>
                 </Box>
                 <Box
@@ -387,6 +404,7 @@ const EditLeaveEnquiry = () => {
                                                 value={Array.isArray(values.leavetype) ? values.leavetype : []}
                                                 onChange={(e, newValue) => {
                                                     setFieldValue("leavetype", newValue || []);
+                                                    sessionStorage.setItem("LeaveEnqLeaveType", JSON.stringify(newValue || []));
                                                 }}
                                                 url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}'","Any":""}}`}
                                             />
@@ -402,6 +420,7 @@ const EditLeaveEnquiry = () => {
                                                             setFieldValue("Permission", checked);
                                                             if (checked) {
                                                                 setFieldValue("leavetype", []);
+                                                                sessionStorage.setItem("LeaveEnqPermission", "Y");
                                                             }
                                                         }}
                                                     />
@@ -435,6 +454,7 @@ const EditLeaveEnquiry = () => {
                                             CANCEL
                                         </Button>
 
+                                      {rows.length > 0 && (
                                         <PDFDownloadLink
                                             document={
                                                 <LeaveenqempPDF
@@ -444,20 +464,21 @@ const EditLeaveEnquiry = () => {
                                                         todate: values.ToDate,
                                                         permission: isPermission ? "Y" : "N",
                                                         EmpName: state?.EmpName ?? "",
+                                                        selectedLeaveTypes: LeaveEnqLeaveType,
                                                     }}
                                                 />
                                             }
                                             fileName="Leave_Enquiry_Report.pdf"
                                             style={{ color: "#d32f2f", cursor: "pointer" }}
                                         >
-                                            {({ loading }) =>
-                                                loading ? (
+                                            {({ isLoading }) =>
+                                                isLoading ? (
                                                     <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
                                                 ) : (
                                                     <PictureAsPdfIcon sx={{ fontSize: 24 }} />
                                                 )
                                             }
-                                        </PDFDownloadLink>
+                                        </PDFDownloadLink>)}
                                     </Stack>
                                     <Box
                                         m="5px 0 0 0"
@@ -529,7 +550,7 @@ const EditLeaveEnquiry = () => {
                                             onStateChange={(stateParams) =>
                                                 setRowCount(stateParams.pagination.rowCount)
                                             }
-                                            loading={exploreLoading}
+                                            loading={isLoading}
                                             componentsProps={{
                                                 toolbar: {
                                                     showQuickFilter: true,
