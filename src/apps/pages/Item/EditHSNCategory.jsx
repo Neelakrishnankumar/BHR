@@ -95,7 +95,7 @@ const EditHSNCategory = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          CategoryName: Yup.string().required(data.HSNCatgory.CategoryName),
+          CategoryName: Yup.string().trim().required(data.HSNCatgory.CategoryName),
         });
         setValidationSchema(schema);
       })

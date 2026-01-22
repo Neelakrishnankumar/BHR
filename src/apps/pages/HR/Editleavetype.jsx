@@ -95,7 +95,7 @@ const LeaveType = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.Leavetype.name),
+          name: Yup.string().trim().required(data.Leavetype.name),
           leavetypecategories: Yup.string().required(data.Leavetype.leavetypecategories),
         };
 
