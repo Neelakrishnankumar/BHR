@@ -49,6 +49,8 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Swal from "sweetalert2";
+import { getConfig } from "../../../config";
+
 const LeaveEntryRegister = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -68,11 +70,15 @@ const LeaveEntryRegister = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const [rowCount, setRowCount] = useState(0);
   const [rows, setRows] = useState([]);
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg,FooterImg);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let params = useParams();
   var recID = params.id;
-
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
   useEffect(() => {
     setRows([]);
     setempData([]);
@@ -209,8 +215,8 @@ const LeaveEntryRegister = () => {
       }
     });
   };
-const fromPDFDate = sessionStorage.getItem("FromDatePDF");
-const toPDFDate   = sessionStorage.getItem("ToDatePDF");
+  const fromPDFDate = sessionStorage.getItem("FromDatePDF");
+  const toPDFDate = sessionStorage.getItem("ToDatePDF");
   function Custombar() {
     return (
       <GridToolbarContainer
@@ -409,12 +415,12 @@ const toPDFDate   = sessionStorage.getItem("ToDatePDF");
                             );
                           else sessionStorage.removeItem("empData");
                         }}
-                         disablePortal={false}
-                          PopperProps={{
-                            sx: {
-                              zIndex: 1500,
-                            },
-                          }}
+                        disablePortal={false}
+                        PopperProps={{
+                          sx: {
+                            zIndex: 1500,
+                          },
+                        }}
                         url={employeeUrl}
                       />
                     </FormControl>
@@ -464,6 +470,9 @@ const toPDFDate   = sessionStorage.getItem("ToDatePDF");
                               EmployeeID: empData?.RecordID,
                               FromDate: fromPDFDate,
                               ToDate: toPDFDate,
+                              HeaderImg: HeaderImg,
+                              FooterImg: FooterImg,
+                              Imageurl: baseurlUAAM
                             }}
                           />
                         }

@@ -47,6 +47,7 @@ import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { getConfig } from "../../../config";
 
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -77,6 +78,11 @@ const EditAttendance = () => {
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
 
   // useEffect(() => {
   //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -116,7 +122,7 @@ const EditAttendance = () => {
     console.log("Dispatching Attendance on load:", data);
 
     dispatch(Attendance({ data }));
-  }, [EMPID, dispatch]); 
+  }, [EMPID, dispatch]);
 
 
   function AttendanceTool() {
@@ -242,7 +248,7 @@ const EditAttendance = () => {
       flex: 1,
       headerAlign: "center",
     },
-    
+
     {
       field: "Status",
       headerName: "Status",
@@ -392,8 +398,8 @@ const EditAttendance = () => {
                 resetForm();
                 setproData(null);
                 setempData(null);
-                setFieldValue("attmonth",currentMonthNumber)
-                setFieldValue("attyear",currentYear)
+                setFieldValue("attmonth", currentMonthNumber)
+                setFieldValue("attyear", currentYear)
                 sessionStorage.removeItem("attmonth");
                 sessionStorage.removeItem("attyear");
                 sessionStorage.removeItem("empData");
@@ -612,6 +618,9 @@ const EditAttendance = () => {
                             Month: values.attmonth,
                             Year: values.attyear,
                             EmployeeID: empData?.Name,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }
@@ -756,7 +765,7 @@ const EditAttendance = () => {
                       borderColor: "#66bb6a",
                     }}
                   />
-                   <Chip
+                  <Chip
                     icon={<ExitToAppIcon color="primary" />}
                     label="Leave"
                     variant="outlined"

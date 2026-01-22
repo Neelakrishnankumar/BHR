@@ -5,12 +5,15 @@ import {
     View,
     Document,
     StyleSheet,
+    Image
 } from "@react-pdf/renderer";
 
 
 const styles = StyleSheet.create({
     page: {
-        padding: 20,
+        paddingTop: 90,
+        paddingBottom: 80,
+        paddingHorizontal: 20,
         fontSize: 10,
     },
     section: {
@@ -174,8 +177,69 @@ const styles = StyleSheet.create({
         padding: 5,
         textAlign: "left",
     },
+    header: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#000',
+        paddingBottom: 8,
+        marginBottom: 8,
+        alignItems: 'center',
+    },
+    headerWrapper: {
+        position: "absolute",
+        top: 20,
+        left: 20,
+        right: 20,
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 
+    headerImage: {
+        width: "100%",
+        height: 60,
+        objectFit: "contain",
+    },
+
+    titleContainer: {
+        marginTop: 10,
+        marginBottom: 10,
+        alignItems: "center",
+    },
+
+    headerText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+
+    /* FOOTER */
+    footerWrapper: {
+        position: "absolute",
+        bottom: 30,
+        left: 5,
+        right: 5,     // forces full width
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    footerImage: {
+        width: "100%",
+        height: 50,
+        objectFit: "cover",
+    },
+
+    pageNumber: {
+        position: "absolute",
+        bottom: 10,
+        left: 0,
+        right: 0,
+        textAlign: "center",
+        fontSize: 9,
+    },
 });
+
 
 const paginateData = (data) => {
     const firstPage = data.slice(0, 20);
@@ -189,7 +253,14 @@ const paginateData = (data) => {
 };
 const LeaveenqempPDF = ({ data = [], filters = {} }) => {
     const isPermission = filters?.permission === "Y";
-
+    const QR_BASE_URL = `${filters?.Imageurl}/uploads/images/`;  // your image folder path
+    // const QR_BASE_URL = "https://uaam.beyondexs.com/uploads/images/";
+    const headerPath = filters?.HeaderImg
+        ? `${QR_BASE_URL}${filters.HeaderImg}`
+        : null;
+    const footerPath = filters?.FooterImg
+        ? `${QR_BASE_URL}${filters.FooterImg}`
+        : null;
     const pages = paginateData(data);
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
@@ -205,15 +276,19 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
         <Document>
 
             {pages.map((pageData, pageIndex) => (
-                <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
+                <Page size="A4" orientation="portrait" style={styles.page} key={pageIndex}>
+                    <View fixed style={styles.headerWrapper}>
+                        {headerPath ? (
+                            <Image src={headerPath} style={styles.headerImage} />
+                        ) : (
+                            <View style={{ width: "100%", height: 60, backgroundColor: "#eee" }} />
+                        )}
+                    </View>
 
                     {pageIndex === 0 && (
 
                         <View style={styles.headerTextContainer}>
-                            {/* <Text style={styles.headerText}>
-                                
-                                {`Leave Enquiry Report - ${filters?.EmpName} - (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`}
-                            </Text> */}
+
                             <Text style={styles.headerText}>
                                 {filters.permission === "Y"
                                     ? `Permission Enquiry Report - ${filters?.EmpName} (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`
@@ -310,6 +385,15 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
 
                     </View>
                     {/* </View> */}
+                    {/* RIGHT — QR IMAGE */}
+                    <View fixed style={styles.footerWrapper}>
+                        {footerPath ? (
+                            <Image src={footerPath} style={styles.footerImage} />
+                        ) : (
+                            <View style={{ width: "100%", height: 50, backgroundColor: "#eee" }} />
+                        )}
+                    </View>
+
                     <View
                         fixed
                         style={{
