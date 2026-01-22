@@ -42,80 +42,88 @@ const styles = StyleSheet.create({
   tableRowLast: {
     flexDirection: "row",
   },
-  tableColHeader1: {
-    width: "5%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-    fontWeight: "bold",
-    backgroundColor: "#EEE",
-    textAlign: "center",
-  },
-  tableCol1: {
-    width: "5%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-    textAlign: "right",
-  },
-  tableColHeader: {
-    width: "20%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-    fontWeight: "bold",
-    backgroundColor: "#EEE",
-    textAlign: "center",
-  },
-  tableColHeader2: {
-    width: "30%",
-    flex: 1,
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-    fontWeight: "bold",
-    backgroundColor: "#EEE",
-    textAlign: "center",
-  },
-  tableColHeader3: {
-    width:"10%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-    fontWeight: "bold",
-    backgroundColor: "#EEE",
-    textAlign: "center",
-  },
-  tableColHeaderLast: {
-  
-    padding: 5,
-    fontWeight: "bold",
-    backgroundColor: "#EEE",
-    textAlign: "center",
-     width: "15%",
-  },
+ tableColHeader1: {
+  width: "10%",               
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+  fontWeight: "bold",
+  backgroundColor: "#EEE",
+  textAlign: "center",
+},
+ tableCol1: {
+  width: "10%",               
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+  textAlign: "right",
+},
+
+tableColHeader: {
+  width: "12%",           
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+  fontWeight: "bold",
+  backgroundColor: "#EEE",
+  textAlign: "center",
+},
+
+
   tableCol: {
-    width: "20%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-  },
-  tableCol2: {
-    width: "30%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-  },
-   tableCol3: {
-    width: "10%",
-    borderRightWidth: 1,
-    borderRightColor: "#000",
-    padding: 5,
-  },
-  tableColLast: {
-    padding: 5,
-    width: "15%",
-  },
+  width: "12%",           
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+},
+
+tableColHeader2: {
+  width: "12%",           
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+  fontWeight: "bold",
+  backgroundColor: "#EEE",
+  textAlign: "center",
+},
+
+tableCol2: {
+  width: "12%",           
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+},
+
+tableColHeader3: {
+  width: "12%",           
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+  fontWeight: "bold",
+  backgroundColor: "#EEE",
+  textAlign: "center",
+},
+
+tableCol3: {
+  width: "12%",           
+  borderRightWidth: 1,
+  borderRightColor: "#000",
+  padding: 5,
+},
+
+tableColHeaderLast: {
+  width: "12%",           
+  padding: 5,
+  fontWeight: "bold",
+  backgroundColor: "#EEE",
+  textAlign: "center",
+},
+
+tableColLast: {
+  width: "12%",           
+  padding: 5,
+},
+
 });
 
 // Split data: 20 on first page, 26 afterwards
@@ -294,9 +302,12 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
               {includeName && (
                 <Text style={styles.tableColHeader2}>Employee Name</Text>
               )}
-              <Text style={dynamicStyles.tableColHeader}>Check In</Text>
-              <Text style={dynamicStyles.tableColHeader}>Check Out</Text>
+              <Text style={dynamicStyles.tableColHeader}>Check In Date</Text>
+              <Text style={dynamicStyles.tableColHeader}>Check In Time</Text>
+              <Text style={dynamicStyles.tableColHeader}>Check Out Date</Text>
+              <Text style={dynamicStyles.tableColHeader}>Check Out Time</Text>
               <Text style={dynamicStyles.tableColHeader3}>Hrs</Text>
+              <Text style={dynamicStyles.tableColHeader}>Permission (In Minutes)</Text>
               <Text style={dynamicStyles.tableColHeaderLast}>Status</Text>
             </View>
 
@@ -313,13 +324,22 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.tableCol2}>{row.Name}</Text>
                   )}
                   <Text style={dynamicStyles.tableCol}>
-                    {row.EmplyeeCheckInDateTime}
+                    {row.EmployeeCheckInDate}
+                  </Text>
+                   <Text style={dynamicStyles.tableCol}>
+                    {row.EmployeeCheckInTime}
                   </Text>
                   <Text style={dynamicStyles.tableCol}>
-                    {row.EmplyeeCheckOutDateTime}
+                    {row.EmployeeCheckOutDate}
+                  </Text>
+                  <Text style={dynamicStyles.tableCol}>
+                    {row.EmployeeCheckOutTime}
                   </Text>
                   <Text style={dynamicStyles.tableCol3}>
                     {row.NumberOfHoursWorked}
+                  </Text>
+                   <Text style={dynamicStyles.tableCol}>
+                    {row.PermissionHours}
                   </Text>
                   <Text style={dynamicStyles.tableColLast}>
                     {row.Status}

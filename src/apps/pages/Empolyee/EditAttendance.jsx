@@ -202,14 +202,26 @@ const EditAttendance = () => {
       },
     },
     {
-      field: "EmplyeeCheckInDateTime",
-      headerName: "Employee Check In Date Time",
+      field: "EmployeeCheckInDate",
+      headerName: "Check In Date",
       flex: 1,
       headerAlign: "center",
     },
     {
-      field: "EmplyeeCheckOutDateTime",
-      headerName: "Employee Check Out Date Time",
+      field: "EmployeeCheckInTime",
+      headerName: "Check In Time",
+      flex: 1,
+      headerAlign: "center",
+    },
+    {
+      field: "EmployeeCheckOutDate",
+      headerName: "Check Out Date",
+      flex: 1,
+      headerAlign: "center",
+    },
+    {
+      field: "EmployeeCheckOutTime",
+      headerName: "Check Out Time",
       flex: 1,
       headerAlign: "center",
     },
@@ -219,6 +231,13 @@ const EditAttendance = () => {
       flex: 1,
       headerAlign: "center",
     },
+    {
+      field: "PermissionInMinutes",
+      headerName: "Permission (In Minutes)",
+      flex: 1,
+      headerAlign: "center",
+    },
+    
     {
       field: "Status",
       headerName: "Status",

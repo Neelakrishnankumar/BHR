@@ -26,27 +26,28 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Formik, Field, useFormikContext } from "formik";
 import {
-  dataGridHeaderFooterHeight,
-  dataGridHeight,
-  dataGridRowHeight,
-  formGap,
+    dataGridHeaderFooterHeight,
+    dataGridHeight,
+    dataGridRowHeight,
+    formGap,
 } from "../../../ui-components/global/utils";
 import { tokens } from "../../../Theme";
 import {
-  DataGrid,
-  
+    DataGrid,
+
 } from "@mui/x-data-grid";
 import { LoadingButton } from "@mui/lab";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 
 
 
 const EditLeaveEnquiry = () => {
-    
+
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-      const isLoading = useSelector((state) => state.formApi.loading);
-    
-    
+    const isLoading = useSelector((state) => state.formApi.loading);
+
+
     return (
         <React.Fragment>
             <Box sx={{ height: "100vh", overflow: "auto" }}>
@@ -85,9 +86,9 @@ const EditLeaveEnquiry = () => {
                 <Paper elevation={3} sx={{ margin: "10px" }}>
                     <Formik
                         // onSubmit={handleFormSubmit}
-                       // initialValues={AttachmentInitialValues}
+                        // initialValues={AttachmentInitialValues}
                         enableReinitialize={true}
-                        
+
                     >
                         {({
                             values,
@@ -108,39 +109,14 @@ const EditLeaveEnquiry = () => {
                                         gap={formGap}
                                         padding={1}
                                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                                        // gap="30px"
-                                        // sx={{
-                                        //     "& > div": {
-                                        //         gridColumn: isNonMobile ? undefined : "span 2",
-                                        //     },
-                                        // }}
+                                    // gap="30px"
+                                    // sx={{
+                                    //     "& > div": {
+                                    //         gridColumn: isNonMobile ? undefined : "span 2",
+                                    //     },
+                                    // }}
                                     >
                                         <FormControl sx={{ gap: formGap }}>
-                                            <TextField
-                                                fullWidth
-                                                variant="standard"
-                                                type="text"
-                                                id="code"
-                                                name="code"
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                label="Code"
-                                                focused
-                                            // inputProps={{ readOnly: true }}
-                                            />
-
-                                            <TextField
-                                                fullWidth
-                                                variant="standard"
-                                                type="text"
-                                                id="Name"
-                                                name="Name"
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                label="Name"
-                                                focused
-                                            // inputProps={{ readOnly: true }}
-                                            />
 
                                             <Box
                                                 m="5px 0 0 0"
@@ -187,13 +163,13 @@ const EditLeaveEnquiry = () => {
                                                             minHeight: dataGridHeaderFooterHeight,
                                                         },
                                                     }}
-                                                   // rows={explorelistViewData}
-                                                   // columns={columns}
+                                                    rows={[]}
+                                                    columns={[]}
                                                     disableSelectionOnClick
-                                                    getRowId={(row) => row.RecordID}
+                                                    getRowId={(row) => row.RecordID ?? Math.random()}
                                                     rowHeight={dataGridRowHeight}
                                                     headerHeight={dataGridHeaderFooterHeight}
-                                                  //  pageSize={pageSize}
+                                                    //  pageSize={pageSize}
                                                     // onPageSizeChange={(newPageSize) =>
                                                     //     setPageSize(newPageSize)
                                                     // }
@@ -212,7 +188,7 @@ const EditLeaveEnquiry = () => {
                                                     // onStateChange={(stateParams) =>
                                                     //     setRowCount(stateParams.pagination.rowCount)
                                                     // }
-                                                  //  loading={exploreLoading}
+                                                    //  loading={exploreLoading}
                                                     componentsProps={{
                                                         toolbar: {
                                                             showQuickFilter: true,
@@ -231,7 +207,7 @@ const EditLeaveEnquiry = () => {
                                         <FormControl
                                             sx={{
                                                 gap: formGap,
-                                                mt: { xs: "opx", md: "150px" },
+                                                mt: { xs: "opx", md: "10px" },
                                             }}
                                         >
                                             <TextField
@@ -242,7 +218,27 @@ const EditLeaveEnquiry = () => {
                                                 name="LoaDescription"
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
-                                                label="Description"
+                                                label="From Date"
+                                                sx={{
+                                                    //gridColumn: "span 2",
+                                                    backgroundColor: "#ffffff", // Set the background to white
+                                                    "& .MuiFilledInput-root": {
+                                                        backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                                                    },
+                                                }}
+                                                focused
+                                                inputProps={{ tabIndex: "-1" }}
+                                            />
+
+                                            <TextField
+                                                fullWidth
+                                                variant="standard"
+                                                type="text"
+                                                id="LoaDescription"
+                                                name="LoaDescription"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                label="To Date"
                                                 sx={{
                                                     //gridColumn: "span 2",
                                                     backgroundColor: "#ffffff", // Set the background to white
@@ -257,10 +253,7 @@ const EditLeaveEnquiry = () => {
                                             <TextField
                                                 label={
                                                     <>
-                                                        Category
-                                                        <span style={{ color: "red", fontSize: "20px" }}>
-                                                            *
-                                                        </span>
+                                                        Leave Type
                                                     </>
                                                 }
                                                 id="category"
@@ -273,12 +266,10 @@ const EditLeaveEnquiry = () => {
                                                 error={!!touched.category && !!errors.category}
                                                 helperText={touched.category && errors.category}
                                             >
-                                                <MenuItem value="EC">Education</MenuItem>
-                                                <MenuItem value="AD">Award</MenuItem>
-                                                <MenuItem value="CT">Certificate</MenuItem>
-                                                <MenuItem value="IS">Insurance</MenuItem>
-                                                <MenuItem value="WT">Warranty</MenuItem>
-                                                <MenuItem value="OS">Others</MenuItem>
+                                                <MenuItem value="">Casual Leave</MenuItem>
+                                                <MenuItem value="">Medical Leave</MenuItem>
+                                                <MenuItem value="">Sick Leave</MenuItem>
+
                                             </TextField>
                                             {/* </FormControl> */}
                                             <Box>
@@ -292,56 +283,9 @@ const EditLeaveEnquiry = () => {
                                                     as={Checkbox}
                                                     label="Personal"
                                                 />
-                                                <FormLabel focused={false}>Personal</FormLabel>
+                                                <FormLabel focused={false}>Permission</FormLabel>
                                             </Box>
                                             {/* {values.renewal == true ? ( */}
-                                            <TextField
-                                                name="RenewalDate"
-                                                label="Next Renewal Required Date"
-                                                type="date"
-                                                variant="standard"
-                                                focused
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                error={!!touched.RenewalDate && !!errors.RenewalDate}
-                                                helperText={touched.RenewalDate && errors.RenewalDate}
-                                                InputProps={{
-                                                    sx: {
-                                                        pl: 1.5,
-                                                    },
-                                                }}
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                            />
-
-                                            <FormControl
-                                                sx={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            >
-
-
-                                                <Box>
-                                                    <Field
-                                                        //  size="small"
-                                                        type="checkbox"
-                                                        name="renewal"
-                                                        id="renewal"
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        as={Checkbox}
-                                                        label="Renewal Required"
-                                                    />
-                                                    <FormLabel focused={false}>
-                                                        Renewal Required
-                                                    </FormLabel>
-
-                                                </Box>
-                                            </FormControl>
-
 
 
                                             <Box
@@ -364,35 +308,22 @@ const EditLeaveEnquiry = () => {
                                                             const file = e.target.files[0];
                                                             if (!file) return;
 
-                                                           // changeHandler(e);
+                                                            // changeHandler(e);
                                                             setFieldValue("Attachment", file.name); // UI display only
                                                         }}
                                                     />
-                                                    {/* <PictureAsPdfOutlinedIcon fontSize="small" /> */}
+                                                    <PictureAsPdfOutlinedIcon fontSize="small" />
                                                 </IconButton>
                                                 <Button
                                                     variant="contained"
                                                 >
-                                                    View
+                                                    Apply
                                                 </Button>
 
-                                                    <LoadingButton
-                                                        color="secondary"
-                                                        variant="contained"
-                                                        type="submit"
-                                                        loading={isLoading}
-                                                    >
-                                                        Save
-                                                    </LoadingButton>
-                                               
-                                                 
-                                                
-                                              
                                                 <Button
                                                     type="reset"
                                                     color="warning"
                                                     variant="contained"
-                                                  
                                                 >
                                                     Cancel
                                                 </Button>
