@@ -69,8 +69,8 @@ const Holidaylist = () => {
         const schema = Yup.object().shape({
 
           Date: Yup.string().required(data.Holidaylist.Date),
-          oscc: Yup.string().required(data.Holidaylist.oscc),
-          name: Yup.string().required(data.Holidaylist.name),
+          oscc: Yup.string().trim().required(data.Holidaylist.oscc),
+          name: Yup.string().trim().required(data.Holidaylist.name),
 
         });
 

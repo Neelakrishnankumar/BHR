@@ -83,7 +83,7 @@ const Editproject = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.Project.name),
+          name: Yup.string().trim().required(data.Project.name),
           //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
           // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),

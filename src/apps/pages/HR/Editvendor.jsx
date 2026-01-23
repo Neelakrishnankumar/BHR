@@ -134,7 +134,7 @@ const Editvendor = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.Party.name),
+          name: Yup.string().trim().required(data.Party.name),
 
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)

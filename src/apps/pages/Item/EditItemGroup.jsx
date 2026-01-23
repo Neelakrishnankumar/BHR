@@ -95,7 +95,7 @@ const EditItemGroup = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.ItemGroup.Description),
+          Description: Yup.string().trim().required(data.ItemGroup.Description),
         });
         setValidationSchema(schema);
       })

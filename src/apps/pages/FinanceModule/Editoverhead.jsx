@@ -256,7 +256,7 @@ const Editoverhead = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.Overhead.name),
+          name: Yup.string().trim().required(data.Overhead.name),
           OverheadType: Yup.object().required(data.Overhead.OverheadType).nullable(),
           frequency: Yup.string().required(data.Overhead.frequency),
         };

@@ -93,7 +93,7 @@ const EditRoute = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.Route.Description),
+          Description: Yup.string().trim().required(data.Route.Description),
         });
         setValidationSchema(schema);
       })
