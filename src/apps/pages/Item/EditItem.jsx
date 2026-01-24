@@ -145,7 +145,7 @@ const EditItem = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.Item.Description),
+          Description: Yup.string().trim().required(data.Item.Description),
         });
         const schema2 = Yup.object().shape({
           PurchaseUOM: Yup.string().required(data.Item.PurchaseUOM),
