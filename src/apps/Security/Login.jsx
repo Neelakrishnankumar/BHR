@@ -244,13 +244,13 @@ const Login = () => {
 
               // Username validation
               if (!values.username) {
-                errors.username = "Please enter username";
-              } 
+                errors.username = "Please enter Username";
+              }
 
               // Password validation
               if (!values.password) {
-                errors.password = "Please enter password";
-              } 
+                errors.password = "Please enter Password";
+              }
               // else if (
               //   !/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(values.password)
               // ) {
@@ -260,7 +260,7 @@ const Login = () => {
 
               // License validation
               if (!values.license) {
-                errors.license = "Please enter subscription code";
+                errors.license = "Please enter Subscription Code";
               }
 
               return errors;
@@ -311,6 +311,7 @@ const Login = () => {
                       padding: 1,
                       borderRadius: "5px",
                       height: "350px",
+                      // height: { sm: "300px", md: "350px" },
                       // marginBottom: "50px",
                       marginTop: "-30px",
                       flexDirection: "column-reverse",
@@ -319,10 +320,26 @@ const Login = () => {
 
                   >
                     <Typography
+                      variant="p" 
+                      sx={{
+                        marginBottom: { sm: 3, md: 8 },
+                        // marginRight: 2,
+                        fontSize:"13px",
+                        textAlign: "center",
+                        // fontWeight: "bold",  
+                        // color:"#f1af3f",
+                        // color:"#ed9d12",
+                        // color:"#76ade4",
+                      }}
+                    >
+
+                      Version 1.0
+                    </Typography>
+                    <Typography
                       variant="h6"
                       sx={{
-
-                        marginBottom: 8,
+                        fontWeight: "600",
+                        marginTop: 2,
                         // marginRight: 2,
                         textAlign: "center",
                       }}
