@@ -79,7 +79,7 @@ const Editlocation = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.GeoLoc.name),
+          name: Yup.string().trim().required(data.GeoLoc.name),
         };
 
         if (CompanyAutoCode === "N") {
