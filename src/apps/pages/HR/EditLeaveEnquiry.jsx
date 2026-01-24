@@ -45,6 +45,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import LeaveenqempPDF from "../pdf/Leavenquiryemppdf";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { getConfig } from "../../../config";
 
 const EditLeaveEnquiry = () => {
     const theme = useTheme();
@@ -52,22 +53,25 @@ const EditLeaveEnquiry = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
     const compID = sessionStorage.getItem("compID");
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg,FooterImg);
     const [pageSize, setPageSize] = React.useState(10);
     const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const [rowCount, setRowCount] = useState(0);
     const [rows, setRows] = useState([]);
     const isLoading = useSelector((state) => state.formApi.LeaveEntryRegloading);
-
     const dispatch = useDispatch();
     let params = useParams();
     var recID = params.id;
     const navigate = useNavigate();
     const [isPermission, setIsPermission] = useState(false);
-    const  LeaveEnqPermission = sessionStorage.getItem("LeaveEnqPermission") === "Y";
-    const  LeaveEnqLeaveType = sessionStorage.getItem("LeaveEnqLeaveType") ? JSON.parse(sessionStorage.getItem("LeaveEnqLeaveType")) : [];
+    const LeaveEnqPermission = sessionStorage.getItem("LeaveEnqPermission") === "Y";
+    const LeaveEnqLeaveType = sessionStorage.getItem("LeaveEnqLeaveType") ? JSON.parse(sessionStorage.getItem("LeaveEnqLeaveType")) : [];
     const location = useLocation();
     const state = location.state || {};
-
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
     const handleApplyClick = async (values) => {
         const permissionFlag = values.Permission === true;
         setIsPermission(permissionFlag);
@@ -276,32 +280,26 @@ const EditLeaveEnquiry = () => {
     return (
         <React.Fragment>
             <Box sx={{ height: "100vh", overflow: "auto" }}>
-                <Paper elevation={3} sx={{ height: '50px', margin: "10px 10px", background: "#F2F0F0" }}>
+                <Paper
+                    elevation={3}
+                    sx={{ height: "50px", margin: "10px 10px", background: "#F2F0F0" }}
+                >
                     <Box
                         display="flex"
+                        alignItems="center"
                         justifyContent="space-between"
-
                     >
                         <Box display="flex" borderRadius="3px" alignItems="center">
-                            <IconButton >
-                            </IconButton>
-                            <Box
-                                borderRadius="3px"
-                                alignItems="center"
-                            >
-                                <Breadcrumbs
-                                    maxItems={3}
-                                    aria-label="breadcrumb"
 
-                                >
+                            <Box>
+                                <Breadcrumbs maxItems={3} aria-label="breadcrumb">
                                     <Typography
                                         variant="h5"
                                         color="#0000D1"
-                                        sx={{ cursor: "default", margin: '10px' }}
+                                        sx={{ cursor: "default", margin: "10px" }}
                                     >
                                         {`Leave Enquiry (${state?.EmpName ?? ""})`}
                                     </Typography>
-
                                 </Breadcrumbs>
                             </Box>
                         </Box>
@@ -450,31 +448,35 @@ const EditLeaveEnquiry = () => {
                                             CANCEL
                                         </Button>
 
-                                      {rows.length > 0 && (
-                                        <PDFDownloadLink
-                                            document={
-                                                <LeaveenqempPDF
-                                                    data={rows}
-                                                    filters={{
-                                                        fromdate: values.FromDate,
-                                                        todate: values.ToDate,
-                                                        permission: isPermission ? "Y" : "N",
-                                                        EmpName: state?.EmpName ?? "",
-                                                        selectedLeaveTypes: LeaveEnqLeaveType,
-                                                    }}
-                                                />
-                                            }
-                                            fileName="Leave_Enquiry_Report.pdf"
-                                            style={{ color: "#d32f2f", cursor: "pointer" }}
-                                        >
-                                            {({ isLoading }) =>
-                                                isLoading ? (
-                                                    <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
-                                                ) : (
-                                                    <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                                )
-                                            }
-                                        </PDFDownloadLink>)}
+                                        {rows.length > 0 && (
+                                            <PDFDownloadLink
+                                                document={
+                                                    <LeaveenqempPDF
+                                                        data={rows}
+                                                        filters={{
+                                                            fromdate: values.FromDate,
+                                                            todate: values.ToDate,
+                                                            permission: isPermission ? "Y" : "N",
+                                                            EmpName: state?.EmpName ?? "",
+                                                            selectedLeaveTypes: LeaveEnqLeaveType,
+                                                            HeaderImg: HeaderImg,
+                                                            FooterImg: FooterImg,
+                                                            Imageurl: baseurlUAAM
+
+                                                        }}
+                                                    />
+                                                }
+                                                fileName={isPermission ? `Permission_Enquiry_Report_${state?.EmpName}.pdf` : `Leave_Enquiry_Report_${state?.EmpName}.pdf`}
+                                                style={{ color: "#d32f2f", cursor: "pointer" }}
+                                            >
+                                                {({ isLoading }) =>
+                                                    isLoading ? (
+                                                        <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
+                                                    ) : (
+                                                        <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                                    )
+                                                }
+                                            </PDFDownloadLink>)}
                                     </Stack>
                                     <Box
                                         m="5px 0 0 0"

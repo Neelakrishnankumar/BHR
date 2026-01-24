@@ -1,14 +1,69 @@
-import React from "react";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { Page, Image, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: {
-    padding: 20,
+    paddingTop: 90,
+    paddingBottom: 80,
+    paddingHorizontal: 20,
     fontSize: 10,
-    flexDirection: "column",
+  },
+
+  /* HEADER */
+  headerWrapper: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    right: 20,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  headerImage: {
+    width: "100%",
+    height: 60,
+    objectFit: "contain",
+  },
+
+  titleContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+
+  headerText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  /* FOOTER */
+  footerWrapper: {
+    position: "absolute",
+    bottom: 30,
+    left: 5,
+    right: 5,     // forces full width
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  footerImage: {
+    width: "100%",
+    height: 50,
+    objectFit: "cover",
+  },
+
+  pageNumber: {
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    fontSize: 9,
   },
   header: {
-    fontSize: 14,
+    fontSize: 16,
     textAlign: "center",
     marginBottom: 15,
     fontWeight: "bold",
@@ -81,7 +136,14 @@ const paginateData = (data) => {
 
 const LeaveEntryPdf = ({ data = [], filters = {} }) => {
   const pages = paginateData(data);
-
+  const QR_BASE_URL = `${filters?.Imageurl}/uploads/images/`;  // your image folder path
+  // const QR_BASE_URL = "https://uaam.beyondexs.com/uploads/images/";
+  const headerPath = filters?.HeaderImg
+    ? `${QR_BASE_URL}${filters.HeaderImg}`
+    : null;
+  const footerPath = filters?.FooterImg
+    ? `${QR_BASE_URL}${filters.FooterImg}`
+    : null;
   return (
     <Document>
       {pages.map((pageData, pageIndex) => (
@@ -91,12 +153,19 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
           style={styles.page}
           key={pageIndex}
         >
+          <View fixed style={styles.headerWrapper}>
+            {headerPath ? (
+              <Image src={headerPath} style={styles.headerImage} />
+            ) : (
+              <View style={{ width: "100%", height: 60, backgroundColor: "#eee" }} />
+            )}
+          </View>
           {/* Header only on first page */}
           {pageIndex === 0 && (
             <>
-            <Text style={styles.header}>Leave Report</Text>
-            <Text style={styles.header1}>(Leave taken from {filters.FromDate} to {filters.ToDate})</Text>
-          </>
+              <Text style={styles.header}>Leave Report</Text>
+              <Text style={styles.header1}>(Leave taken from {filters.FromDate} to {filters.ToDate})</Text>
+            </>
           )}
 
           {/* Table */}
@@ -143,7 +212,13 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
               );
             })}
           </View>
-
+          <View fixed style={styles.footerWrapper}>
+            {footerPath ? (
+              <Image src={footerPath} style={styles.footerImage} />
+            ) : (
+              <View style={{ width: "100%", height: 50, backgroundColor: "#eee" }} />
+            )}
+          </View>
           <Text
             style={styles.footer}
             fixed

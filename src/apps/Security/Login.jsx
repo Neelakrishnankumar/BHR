@@ -163,15 +163,14 @@ const Login = () => {
       var Groupaccess = data.payload.apiResponse.Groupaccess
       var UserName = data.payload.apiResponse.Name
       var loginrecordID = data.payload.apiResponse.Recordid
-
-
       var Modules = data.payload.apiResponse.Modules
-
       var UserName = data.payload.apiResponse.Name
       var SubscriptionCode = data.payload.SubscriptionCode
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyLogo = data.payload.CompanyLogo
+      var CompanyHeader = data.payload.CompanyHeader
+      var CompanyFooter = data.payload.CompanyFooter
       var firstLogin = data.payload.firstLogin
       //  var firstLogin = "Y";
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
@@ -196,6 +195,8 @@ const Login = () => {
       sessionStorage.setItem("firstLogin", firstLogin)
       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
       sessionStorage.setItem("CompanyLogo", CompanyLogo)
+      sessionStorage.setItem("CompanyHeader", CompanyHeader)
+      sessionStorage.setItem("CompanyFooter", CompanyFooter)
       sessionStorage.setItem("Overhead", Overhead)
       sessionStorage.setItem("YearRecorid", YearRecorid)
       sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))

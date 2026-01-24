@@ -19,16 +19,16 @@ const initialState = {
 
 export const authentication = createAsyncThunk(
   "lgems/authentication",
-  async ({idata}) => {
+  async ({ idata }) => {
     var url = store.getState().globalurl.authUrl;
     var data = {
-     ...idata
+      ...idata
     };
     console.log("🚀 ~ file: Formapireducer.js:334 ~ data:", JSON.stringify(data))
 
     const response = await axios.post(url, data, {
-      method:"POST",
-      
+      method: "POST",
+
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
@@ -45,7 +45,7 @@ export const authentication = createAsyncThunk(
 export const ForgotPasswordRequest = async (requestData) => {
   const url = store.getState().globalurl.forgotPasswordUrl;
   console.log('find the url', url);
-  
+
   if (!url) {
     console.error("Forgot password URL not found in Redux store");
     throw new Error("API URL missing");
@@ -105,7 +105,7 @@ export const getApiSlice = createSlice({
     Success(state, action) {
       console.log(
         "stage6--LoginReducer--inside Sucess reducer data" +
-          JSON.stringify(action.payload)
+        JSON.stringify(action.payload)
       );
 
       return {
@@ -133,7 +133,7 @@ export const getApiSlice = createSlice({
         state.loading = false;
         toast.error('Something Went Wrong')
       })
-    }
+  }
 });
 
 // Destructure and export the plain action creators
@@ -146,7 +146,7 @@ export const {
 
 export default getApiSlice.reducer;
 
-export function fetchApidata(emailID, password,license, company, year) {
+export function fetchApidata(emailID, password, license, company, year) {
   return async (dispatch) => {
     function onSuccess(success) {
       console.log("2---" + JSON.stringify(success.data));
@@ -160,6 +160,8 @@ export function fetchApidata(emailID, password,license, company, year) {
           Expiryin: success.data.Expiryin,
           CompanyAutoCode: success.data.CompanyAutoCode,
           CompanyLogo: success.data.CompanyLogo,
+          CompanyHeader: success.data.CompanyHeader,
+          CompanyFooter: success.data.CompanyFooter,
           firstLogin: success.data.FirstTime,
           subscription: success.data.subscription
         })
@@ -168,11 +170,11 @@ export function fetchApidata(emailID, password,license, company, year) {
     }
     function onError(error) {
       const errorMsg = error.response.data.Msg || "Something went wrong!";
-      dispatch(errored(errorMsg)); 
-      toast.error(errorMsg); 
+      dispatch(errored(errorMsg));
+      toast.error(errorMsg);
       return errorMsg;
     }
-    
+
     try {
       var url = store.getState().globalurl.loginUrl;
       var idata = {
@@ -200,7 +202,7 @@ export function fetchApidata(emailID, password,license, company, year) {
       return onError(error);
     }
   };
-  
+
 }
 export const attachmentPost = createAsyncThunk(
   "attachmentPost/postdata",
@@ -210,7 +212,7 @@ export const attachmentPost = createAsyncThunk(
       console.log("get" + JSON.stringify(data));
       const response = await axios.post(url, data, {
         headers: {
-           'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data',
           Authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
