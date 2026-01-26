@@ -41,6 +41,8 @@ import Popup from "../popup";
 import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/utils";
 // import CryptoJS from "crypto-js";
+import * as Yup from "yup";
+
 const EditSalaryComponent = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -60,10 +62,33 @@ const EditSalaryComponent = () => {
   const Year = sessionStorage.getItem("year");
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
+  const [validationSchema, setValidationSchema] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+
+
 
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        //Permission
+        const schema = Yup.object().shape({
+          description: Yup.string().required(data.Salarycomp.Name),
+          type: Yup.string().required(data.Salarycomp.Type),
+          category: Yup.string().required(data.Salarycomp.Category),
+        })
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -80,7 +105,7 @@ const EditSalaryComponent = () => {
         data.Type == "policy" ? "PC" : "",
     category: data.Category == "Allowance" ? "A" :
       data.Category == "Deduction" ? "D" : "",
-    sortOrder: data.Sortorder,
+    sortOrder: data.Sortorder || 0,
     disable: data.Disable === "Y" ? true : false,
   };
 
@@ -99,9 +124,9 @@ const EditSalaryComponent = () => {
 
     const idata = {
       RecordID: recID,
-      Name: values.description,
-      Type: values.type,
-      Category: values.category,
+      Name: values.description || "",
+      Type: values.type || "",
+      Category: values.category || "",
       SortOrder: values.sortOrder,
       Disable: values.disable === true ? "Y" : "N",
       CompanyID
@@ -147,7 +172,7 @@ const EditSalaryComponent = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
-      <Box display="flex" justifyContent="space-between" p={2}>
+        <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
               <IconButton onClick={() => toggleSidebar()}>
@@ -180,15 +205,15 @@ const EditSalaryComponent = () => {
       </Paper>
 
       {!getLoading ? (
-       <Paper elevation={3} sx={{ margin: "10px"}}>
+        <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
+            validationSchema={validationSchema}
             onSubmit={(values, setSubmitting) => {
               setTimeout(() => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ SalarySchema}
             enableReinitialize={true}
           >
             {({
@@ -201,6 +226,7 @@ const EditSalaryComponent = () => {
               handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
+
                 <Box
                   display="grid"
                   gap={formGap}
@@ -217,12 +243,19 @@ const EditSalaryComponent = () => {
                     name="description"
                     type="text"
                     id="description"
-                    label="Name"
-                     variant="standard"
+                    label={
+                      <span>
+                        Name <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                      </span>
+                    }
+                    // label="Name"
+                    variant="standard"
                     focused
                     value={values.description}
                     onBlur={handleBlur}
                     onChange={handleChange}
+                    error={!!touched.description && !!errors.description}
+                    helperText={touched.description && errors.description}
                     sx={{
                       //gridColumn: "span 2",
                       backgroundColor: "#ffffff", // Set the background to white
@@ -231,12 +264,11 @@ const EditSalaryComponent = () => {
                       }
                     }} />
 
-                  <FormControl
+                  {/* <FormControl
                     focused
-                     variant="standard"
-                    //sx={{ gridColumn: "span 2" }}
+                    variant="standard"
                   >
-                    <InputLabel id="status">Type</InputLabel>
+                    <InputLabel id="type">Type<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="type"
@@ -244,19 +276,44 @@ const EditSalaryComponent = () => {
                       value={values.type}
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      error={!!touched.type && !!errors.type}
+                      helperText={touched.type && errors.type}
                     >
                       <MenuItem value="FS">PERCENTAGE OF BASIC SALARY</MenuItem>
                       <MenuItem value="FX">FIXED AMOUNT</MenuItem>
                       <MenuItem value="PC">POLICY</MenuItem>
                     </Select>
-                  </FormControl>
-
-                  <FormControl
+                  </FormControl> */}
+                  <TextField
+                    label={
+                      <>
+                        Type
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    id="type"
+                    name="type"
                     focused
-                     variant="standard"
-                    //sx={{ gridColumn: "span 2" }}
+                    variant="standard"
+                    value={values.type}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    select
+                    error={!!touched.type && !!errors.type}
+                    helperText={touched.type && errors.type}
                   >
-                    <InputLabel id="status">Category</InputLabel>
+                    <MenuItem value="FS">PERCENTAGE OF BASIC SALARY</MenuItem>
+                    <MenuItem value="FX">FIXED AMOUNT</MenuItem>
+                    <MenuItem value="PC">POLICY</MenuItem>
+                  </TextField>
+                  {/* <FormControl
+                    focused
+                    variant="standard"
+                  //sx={{ gridColumn: "span 2" }}
+                  >
+                    <InputLabel id="category">Category<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel>
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="category"
@@ -264,25 +321,54 @@ const EditSalaryComponent = () => {
                       value={values.category}
                       onBlur={handleBlur}
                       onChange={handleChange}
+                      error={!!touched.category && !!errors.category}
+                      helperText={touched.category && errors.category}
                     >
                       <MenuItem value="A">ALLOWANCE</MenuItem>
                       <MenuItem value="D">DEDUCTION</MenuItem>
                     </Select>
-                  </FormControl>
-
+                  </FormControl> */}
+                  <TextField
+                    label={
+                      <>
+                        Category
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    id="category"
+                    name="category"
+                    focused
+                    variant="standard"
+                    value={values.category}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    select
+                    error={!!touched.category && !!errors.category}
+                    helperText={touched.category && errors.category}
+                  >
+                    <MenuItem value="A">ALLOWANCE</MenuItem>
+                    <MenuItem value="D">DEDUCTION</MenuItem>
+                  </TextField>
                   <TextField
                     name="sortOrder"
                     type="number"
                     id="sortOrder"
                     label="Sortorder"
-                     variant="standard"
+                    variant="standard"
                     focused
                     value={values.sortOrder}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     error={!!touched.sortOrder && !!errors.sortOrder}
                     helperText={touched.sortOrder && errors.sortOrder}
-                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
+                  //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                   />
                   <FormControl>
                     <Box>
@@ -302,24 +388,16 @@ const EditSalaryComponent = () => {
                   </FormControl>
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                  <LoadingButton
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+
+                  >
+                    Save
+                  </LoadingButton>
                   {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Save
-                    </Button>
-                  )} {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"

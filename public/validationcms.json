@@ -9,6 +9,7 @@
     "Name": "Please enter the Name",
     "Loc": "Please enter the Location"
   },
+
   "GeoLoc": {
     "code": "Please enter the Code",
     "name": "Please enter the Name"
@@ -345,5 +346,10 @@
     "number": "Marks must be a number",
     "numbertype": "Option must be a number",
     "option": "Please enter the Option"
+  },
+   "Salarycomp": {
+    "Type": "Please select the Type",
+    "Name": "Please enter the Name",
+    "Category": "Please select the Category"
   }
 }

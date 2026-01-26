@@ -437,13 +437,13 @@ const styles = StyleSheet.create({
     bottom: 25,
     left: 5,
     right: 5,
-    height: 50,
+    height: 60,
     justifyContent: "center",
     alignItems: "center",
   },
   footerImage: {
     width: "100%",
-    height: 50,
+    height: 100,
     objectFit: "cover",
   },
 

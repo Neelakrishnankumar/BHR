@@ -180,21 +180,28 @@ const EditLeaveEnquiry = () => {
 
                 {
                     field: "DisplayPermissionDate",
-                    headerName: "Permission Date",
+                    headerName: "Date",
                     width: 150,
                     headerAlign: "center",
                     align: "center",
                 },
                 {
                     field: "FromDate",
-                    headerName: "From Time",
+                    headerName: "From",
                     width: 150,
                     headerAlign: "center",
                     align: "left",
                 },
                 {
                     field: "ToDate",
-                    headerName: "To Time",
+                    headerName: "To",
+                    width: 150,
+                    headerAlign: "center",
+                    align: "left",
+                },
+                {
+                    field: "NumofHrsday",
+                    headerName: "Hours",
                     width: 150,
                     headerAlign: "center",
                     align: "left",
@@ -218,18 +225,25 @@ const EditLeaveEnquiry = () => {
                 },
                 {
                     field: "FromDate",
-                    headerName: "From Date",
+                    headerName: "From",
                     width: 150,
                     headerAlign: "center",
                     align: "left",
                 },
                 {
                     field: "ToDate",
-                    headerName: "To Date",
+                    headerName: "To",
                     width: 150,
                     headerAlign: "center",
                     align: "left",
                 },
+                // {
+                //     field: "NoofDays",
+                //     headerName: "Days",
+                //     width: 150,
+                //     headerAlign: "center",
+                //     align: "left",
+                // },
                 {
                     field: "Comments",
                     headerName: "Reason",
@@ -298,7 +312,7 @@ const EditLeaveEnquiry = () => {
                                         color="#0000D1"
                                         sx={{ cursor: "default", margin: "10px" }}
                                     >
-                                        {`Leave Enquiry (${state?.EmpName ?? ""})`}
+                                        {`Leave Enquiry (${state?.Employee ?? ""})`}
                                     </Typography>
                                 </Breadcrumbs>
                             </Box>
