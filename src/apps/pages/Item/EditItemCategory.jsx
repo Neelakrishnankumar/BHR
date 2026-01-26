@@ -109,7 +109,7 @@ const EditItemCategory = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.ItemCategory.Description).nullable(),
+          Description: Yup.string().trim().required(data.ItemCategory.Description).nullable(),
           HSNMaster: Yup.object().required(data.ItemCategory.HSNMaster).nullable(),
           HSNCategory: Yup.object().required(data.ItemCategory.HSNCategory).nullable(),
         });

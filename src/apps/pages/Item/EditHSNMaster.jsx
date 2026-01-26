@@ -95,7 +95,7 @@ const EditHSNMaster = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().required(data.HSNMaster.Description),
+          Description: Yup.string().trim().required(data.HSNMaster.Description),
           HSNIGST: Yup.number().typeError(data.HSNMaster.HSNIGST).required(data.HSNMaster.HSNIGST),
           HSNCGST: Yup.number().typeError(data.HSNMaster.HSNCGST).required(data.HSNMaster.HSNCGST),
           HSNSGST: Yup.number().typeError(data.HSNMaster.HSNSGST).required(data.HSNMaster.HSNSGST),

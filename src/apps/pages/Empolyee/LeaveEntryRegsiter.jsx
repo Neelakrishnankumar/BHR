@@ -95,13 +95,7 @@ const LeaveEntryRegister = () => {
       headerAlign: "center",
       renderCell: (params) => params.api.getRowIndex(params.id) + 1, // 🔥 Auto serial number
     },
-    {
-      field: "LeaveName",
-      headerName: "Leave Type",
-      width: 200,
-      align: "left",
-      headerAlign: "center",
-    },
+    
     {
       field: "Employee",
       headerName: "Employee Name",
@@ -110,15 +104,22 @@ const LeaveEntryRegister = () => {
       headerAlign: "center",
     },
     {
+      field: "LeaveName",
+      headerName: "Leave Type",
+      width: 200,
+      align: "left",
+      headerAlign: "center",
+    },
+    {
       field: "FromDate",
-      headerName: "From Date",
+      headerName: "From",
       width: 100,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "ToDate",
-      headerName: "To Date",
+      headerName: "To",
       width: 100,
       align: "center",
       headerAlign: "center",

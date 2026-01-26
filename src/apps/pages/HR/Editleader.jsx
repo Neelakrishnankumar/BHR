@@ -109,7 +109,7 @@ const EditLeader = () => {
         //   frequency: Yup.string().required(data.Overhead.frequency),
         // };
         let schemaFields = {
-          leadtitle: Yup.string().required(
+          leadtitle: Yup.string().trim().required(
             data.LeadMarketingActivity.leadtitle
           ),
           Status: Yup.string().required(data.LeadMarketingActivity.Status),

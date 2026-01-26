@@ -173,23 +173,23 @@ const Editvendor = () => {
 
         const schema = Yup.object().shape(schemaFields);
         const schema2 = Yup.object().shape({
-          bankname: Yup.string().required(data.BankDetails.bankname),
-          branchname: Yup.string().required(data.BankDetails.branchname),
-          Accounttype: Yup.string().required(data.BankDetails.Accounttype),
+          bankname: Yup.string().trim().required(data.BankDetails.bankname),
+          branchname: Yup.string().trim().required(data.BankDetails.branchname),
+          Accounttype: Yup.string().trim().required(data.BankDetails.Accounttype),
           ifsc: Yup.string()
             .required(data.BankDetails.ifsc)
             .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code"),
           accountnumber: Yup.string()
             .required(data.BankDetails.accountnumber)
             .matches(/^\d{9,18}$/, "Invalid Account Number"),
-          bankloc: Yup.string().required(data.BankDetails.bankloc),
-          accountholdname: Yup.string().required(
+          bankloc: Yup.string().trim().required(data.BankDetails.bankloc),
+          accountholdname: Yup.string().trim().required(
             data.BankDetails.accountholdname
           ),
-          bankaddress: Yup.string().required(data.BankDetails.bankaddress),
+          bankaddress: Yup.string().trim().required(data.BankDetails.bankaddress),
         });
         const schema3 = Yup.object().shape({
-          name1: Yup.string().required(data.Contactdetails.name1),
+          name1: Yup.string().trim().required(data.Contactdetails.name1),
           emailid1: Yup.string()
             .email("Invalid Email ID")
             .required(data.Contactdetails.emailid1),

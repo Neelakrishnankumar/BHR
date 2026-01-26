@@ -76,7 +76,7 @@ const Editgate = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
-          name: Yup.string().required(data.Geogate.name),
+          name: Yup.string().trim().required(data.Geogate.name),
         };
 
         if (CompanyAutoCode === "N") {

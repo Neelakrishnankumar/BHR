@@ -274,7 +274,7 @@ const Editrequests = () => {
         })
         setValidationSchema2(schema2);
         const schema3 = Yup.object().shape({
-          Name: Yup.string().required(data.Employee.Name),
+          Name: Yup.string().trim().required(data.Employee.Name),
           Department: Yup.object()
             .nullable()
             .required(data.Employee.Department),
