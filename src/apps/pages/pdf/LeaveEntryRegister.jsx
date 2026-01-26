@@ -1,4 +1,5 @@
 import { Page, Image, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import React from "react";
 
 const styles = StyleSheet.create({
   page: {
@@ -63,16 +64,17 @@ const styles = StyleSheet.create({
     fontSize: 9,
   },
   header: {
-    fontSize: 16,
+    fontSize: 15,
     textAlign: "center",
     marginBottom: 15,
     fontWeight: "bold",
   },
   header1: {
     fontSize: 11,
-    textAlign: "center",
-    marginBottom: 15,
+    textAlign: "left",
     fontWeight: "bold",
+    display: "block",
+    marginTop: 5,
   },
   table: {
     display: "table",
@@ -80,6 +82,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
+  },
+  table1: {
+    display: "table",
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#000",
+    borderStyle: "solid",
+    textAlign: "end",
   },
   row: {
     flexDirection: "row",
@@ -95,6 +105,15 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     fontWeight: "bold",
   },
+  headerCell1: {
+    padding: 3,
+    backgroundColor: "#eee",
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#000",
+    fontWeight: "bold",
+    fontSize: 9,
+  },
   cell: {
     padding: 5,
     textAlign: "center",
@@ -107,6 +126,27 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderColor: "#000",
   },
+  cell2: {
+    padding: 3,
+    textAlign: "left",
+    borderRightWidth: 1,
+    borderColor: "#000",
+    fontSize: 8,
+  },
+  cell3: {
+    padding: 3,
+    textAlign: "right",
+    borderRightWidth: 1,
+    borderColor: "#000",
+    fontSize: 8,
+  },
+  cell4: {
+    padding: 3,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#000",
+    fontSize: 8,
+  },
 
   // column widths
   colSlno: { width: "7%" },
@@ -114,6 +154,10 @@ const styles = StyleSheet.create({
   colTime: { width: "15%" },
   colReason: { width: "27%" },
   colStatus: { width: "15%" },
+
+  colSlno1: { width: "7%" },
+  colEmp1: { width: "33%" },
+  colTime1: { width: "20%" },
   footer: {
     position: "absolute",
     bottom: 10,
@@ -123,6 +167,13 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "grey",
   },
+  summaryWrapper: {
+    width: "100%",
+    marginTop: 5,
+    flexDirection: "row",
+    justifyContent: "flex-end",   // moves table to right
+  },
+
 });
 
 // Pagination – 20 rows per page
@@ -144,6 +195,22 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
   const footerPath = filters?.FooterImg
     ? `${QR_BASE_URL}${filters.FooterImg}`
     : null;
+
+  const employeeSummary = Object.values(
+    data.reduce((acc, row) => {
+      if (!acc[row.EmployeeID]) {
+        acc[row.EmployeeID] = {
+          EmployeeID: row.EmployeeID,
+          Employee: row.Employee,
+          TotalLeave: Number(row.TotalLeaveDays || 0),
+          LeavesTaken: Number(row.LeaveTakenDays || 0),
+          BalanceLeave: Number(row.BalanceLeaveDays || 0),
+        };
+      }
+      return acc;
+    }, {})
+  );
+
   return (
     <Document>
       {pages.map((pageData, pageIndex) => (
@@ -163,8 +230,8 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
           {/* Header only on first page */}
           {pageIndex === 0 && (
             <>
-              <Text style={styles.header}>Leave Report</Text>
-              <Text style={styles.header1}>(Leave taken from {filters.FromDate} to {filters.ToDate})</Text>
+              <Text style={styles.header}>Leave Report (From {filters.FromDate} to {filters.ToDate})</Text>
+              {/* <Text style={styles.header1}>(Leave taken from {filters.FromDate} to {filters.ToDate})</Text> */}
             </>
           )}
 
@@ -179,8 +246,8 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
               <Text style={[styles.headerCell, styles.colReason]}>
                 Leave Type
               </Text>
-              <Text style={[styles.headerCell, styles.colTime]}>From Date</Text>
-              <Text style={[styles.headerCell, styles.colTime]}>To Date</Text>
+              <Text style={[styles.headerCell, styles.colTime]}>From</Text>
+              <Text style={[styles.headerCell, styles.colTime]}>To</Text>
               <Text style={[styles.headerCell, styles.colStatus]}>Status</Text>
             </View>
 
@@ -212,6 +279,59 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
               );
             })}
           </View>
+          {/* <View style={styles.table1}>
+            <View style={styles.row}>
+              <Text style={[styles.headerCell1, styles.colSlno1]}>SL#</Text>
+              <Text style={[styles.headerCell1, styles.colEmp1]}>Employee</Text>
+              <Text style={[styles.headerCell1, styles.colTime1]}>Total</Text>
+              <Text style={[styles.headerCell1, styles.colTime1]}>Taken</Text>
+              <Text style={[styles.headerCell1, styles.colTime1]}>Balance</Text>
+            </View>
+
+            {employeeSummary.map((row, index) => (
+              <View key={index} style={styles.row}>
+                <Text style={[styles.cell2, styles.colSlno1]}>{index + 1}</Text>
+                <Text style={[styles.cell2, styles.colEmp1]}>
+                  {row.Employee}
+                </Text>
+                <Text style={[styles.cell3, styles.colTime1]}>{row.TotalLeave}</Text>
+                <Text style={[styles.cell3, styles.colTime1]}>{row.LeavesTaken}</Text>
+                <Text style={[styles.cell3, styles.colTime1]}>{row.BalanceLeave}</Text>
+              </View>
+            ))}
+          </View> */}
+          {/* SUMMARY TABLE — ONLY ON LAST PAGE */}
+          {pageIndex === pages.length - 1 && (
+            <React.Fragment>
+              <Text style={styles.header1}>Summary:</Text>
+              <View style={styles.summaryWrapper}>
+                <View style={styles.table1}>
+                  {/* Summary Header */}
+                  <View style={styles.row}>
+                    <Text style={[styles.headerCell1, styles.colSlno1]}>SL#</Text>
+                    <Text style={[styles.headerCell1, styles.colEmp1]}>Employee</Text>
+                    <Text style={[styles.headerCell1, styles.colTime1]}>Total Leave</Text>
+                    <Text style={[styles.headerCell1, styles.colTime1]}>Leave Taken</Text>
+                    <Text style={[styles.headerCell1, styles.colTime1]}>Leave Balance</Text>
+                  </View>
+
+                  {/* Summary Rows */}
+                  {employeeSummary.map((row, index) => (
+                    <View key={index} style={styles.row}>
+                      <Text style={[styles.cell4, styles.colSlno1]}>{index + 1}</Text>
+                      <Text style={[styles.cell2, styles.colEmp1]}>
+                        {row.Employee}
+                      </Text>
+                      <Text style={[styles.cell3, styles.colTime1]}>{row.TotalLeave}</Text>
+                      <Text style={[styles.cell3, styles.colTime1]}>{row.LeavesTaken}</Text>
+                      <Text style={[styles.cell3, styles.colTime1]}>{row.BalanceLeave}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </React.Fragment>
+          )}
+
           <View fixed style={styles.footerWrapper}>
             {footerPath ? (
               <Image src={footerPath} style={styles.footerImage} />
