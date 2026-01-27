@@ -17,6 +17,7 @@ import {
   Button,
   Stack,
   FormControlLabel,
+  FormControl,
 } from "@mui/material";
 import {
   DataGrid,
@@ -149,11 +150,11 @@ const Listview = () => {
   const YearRecorid = sessionStorage.getItem("YearRecorid");
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [showMore, setShowMore] = React.useState(false);
-  const [ImageName,setImgName] = useState({ name: "Choose File" });
+  const [ImageName, setImgName] = useState({ name: "Choose File" });
   const [saveSuccess, setSaveSuccess] = useState(false);
-   const [fileName,setFileName]=useState();
-     const [assignrecid, setAssignrecid] = useState("");
-   const handleFileChange = async (event) => {
+  const [fileName, setFileName] = useState();
+  const [assignrecid, setAssignrecid] = useState("");
+  const handleFileChange = async (event) => {
     try {
       const selectedFile = event.target.files[0];
       const fileObject = {
@@ -162,54 +163,54 @@ const Listview = () => {
         lastModifiedDate: selectedFile.lastModifiedDate,
         webkitRelativePath: selectedFile.webkitRelativePath,
         size: selectedFile.size,
-    };
-    
-  //     console.log(file);
-  
-    setImgName(fileObject);
+      };
+
+      //     console.log(file);
+
+      setImgName(fileObject);
       if (!selectedFile) {
         console.error("No file selected");
         return;
       }
-  setFileName(fileObject.name);
-  
-  console.log(fileObject.name,'===============');
+      setFileName(fileObject.name);
+
+      console.log(fileObject.name, '===============');
       setSelectedFile(selectedFile);
       console.log("Selected File:", selectedFile);
       console.log("RecordID :", assignrecid);
       // console.log("RecordID before appending to FormData:", Data.RecordID);
-     const formData = new FormData();
-       formData.append("file", selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
       formData.append("type", "POS");
-     formData.append("recordid",assignrecid);
-   
-   
+      formData.append("recordid", assignrecid);
+
+
 
       const fileData = await dispatch(fnCsvFileUploadnew(formData));
-  
+
       console.log("fileData:", JSON.stringify(fileData));
-  
-    //   if (fileData.payload) {
-    //     //setImgName(fileData.payload.apiResponse);
-    //     toast.success("File uploaded successfully!");
-    //   } else {
-    //     console.error("Unexpected response structure:", fileData);
-    //   }
-    // } catch (error) {
-    //   console.error("File upload failed:", error);
-    // }
-    if (fileData.payload && fileData.payload.Status === "Y") {
-      // Extract the Data field and show it in the toast
-      toast.success(fileData.payload.Data || "Process completed successfully");
+
+      //   if (fileData.payload) {
+      //     //setImgName(fileData.payload.apiResponse);
+      //     toast.success("File uploaded successfully!");
+      //   } else {
+      //     console.error("Unexpected response structure:", fileData);
+      //   }
+      // } catch (error) {
+      //   console.error("File upload failed:", error);
+      // }
+      if (fileData.payload && fileData.payload.Status === "Y") {
+        // Extract the Data field and show it in the toast
+        toast.success(fileData.payload.Data || "Process completed successfully");
       } else {
-          console.error("Unexpected response structure:", fileData);
-          toast.error("File upload failed!");
+        console.error("Unexpected response structure:", fileData);
+        toast.error("File upload failed!");
       }
     } catch (error) {
       console.error("File upload failed:", error);
       toast.error("Error uploading file!");
     }
-  
+
   };
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -3108,6 +3109,7 @@ const Listview = () => {
                       JSON.parse(sessionStorage.getItem("TR328_Party")) || [],
                     product:
                       JSON.parse(sessionStorage.getItem("TR328_Product")) || [],
+                    freshCall: sessionStorage.getItem("TR328_FreshCall") || "N",
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -3124,6 +3126,8 @@ const Listview = () => {
                     const fromDate = values.fromdate || "";
                     const toDate = values.date || "";
 
+                    const freshCall = values.freshCall === "Y";
+
                     sessionStorage.setItem("FromDate", fromDate);
                     sessionStorage.setItem("ToDate", toDate);
 
@@ -3132,20 +3136,9 @@ const Listview = () => {
                       JSON.stringify(values)
                     );
 
-                    const dateConditions = [];
+
 
                     const field = "FilterLastCallDate";
-
-                    if (fromDate && toDate) {
-                      dateConditions.push(
-                        `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                      );
-                    } else if (fromDate) {
-                      dateConditions.push(`(${field} >= '${fromDate}')`);
-                    } else if (toDate) {
-                      dateConditions.push(`(${field} <= '${toDate}')`);
-                    }
-
                     if (values.party?.length > 0) {
                       const partyIds = values.party
                         .map((p) => `'${p.RecordID}'`)
@@ -3165,13 +3158,30 @@ const Listview = () => {
                     }
                     if (compID) {
                       conditions.push(
-                        `HrLoginUserID='${LoginID}' AND CompanyID = '${compID}'`
+                        `HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`
                       );
                     }
-                    if (dateConditions.length > 0) {
-                      conditions.push(`(${dateConditions.join(" OR ")})`);
+                    if (freshCall) {
+                      // 👉 Fresh Call flow (NO DATE SENT)
+                      conditions.push(`CallType = 'FC'`);   // ⚠️ change field name if backend uses different column
                     }
+                    else {
+                      const dateConditions = [];
+                      if (fromDate && toDate) {
+                        dateConditions.push(
+                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                        );
+                      } else if (fromDate) {
+                        dateConditions.push(`(${field} >= '${fromDate}')`);
+                      } else if (toDate) {
+                        dateConditions.push(`(${field} <= '${toDate}')`);
+                      }
 
+
+                      if (dateConditions.length > 0) {
+                        conditions.push(`(${dateConditions.join(" OR ")})`);
+                      }
+                    }
                     // --------------------------
                     // FINAL WHERE CLAUSE
                     // --------------------------
@@ -3192,6 +3202,8 @@ const Listview = () => {
 
                     setTimeout(() => setSubmitting(false), 100);
                   }}
+
+
                 >
                   {({
                     values,
@@ -3203,6 +3215,7 @@ const Listview = () => {
                     resetForm,
                   }) => (
                     <form onSubmit={handleSubmit}>
+
                       <Box
                         sx={{
                           height: 600,
@@ -3222,6 +3235,11 @@ const Listview = () => {
                             setFieldValue("fromdate", newDate);
                             // dispatch(setFromDate(newDate));
                             sessionStorage.setItem("FromDate", newDate);
+
+                            if (newDate) {
+                              setFieldValue("freshCall", "N");
+                              sessionStorage.setItem("TR328_FreshCall", "N");
+                            }
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
@@ -3229,6 +3247,7 @@ const Listview = () => {
                             max: new Date().toISOString().split("T")[0],
                           }}
                           sx={{ width: 250, mt: 2 }}
+                          disabled={values.freshCall === "Y"}
                         />
 
                         <TextField
@@ -3243,6 +3262,11 @@ const Listview = () => {
                             setFieldValue("date", newDate);
                             // dispatch(setToDate(newDate));
                             sessionStorage.setItem("ToDate", newDate);
+
+                            if (newDate) {
+                              setFieldValue("freshCall", "N");
+                              sessionStorage.setItem("TR328_FreshCall", "N");
+                            }
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
@@ -3250,6 +3274,7 @@ const Listview = () => {
                             max: new Date().toISOString().split("T")[0],
                           }}
                           sx={{ width: 250, mt: 2 }}
+                          disabled={values.freshCall === "Y"}
                         />
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
@@ -3293,6 +3318,27 @@ const Listview = () => {
                           // helperText={touched.product && errors.product}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
                         />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={values.freshCall === "Y"}
+                              //disabled={Boolean(values.fromdate || values.date)}
+                              onChange={(e) => {
+                                const val = e.target.checked ? "Y" : "N";
+                                setFieldValue("freshCall", val);
+                                sessionStorage.setItem("TR328_FreshCall", val);
+                                if (val === "Y") {
+                                  setFieldValue("fromdate", "");
+                                  setFieldValue("date", "");
+                                  sessionStorage.removeItem("FromDate");
+                                  sessionStorage.removeItem("ToDate");
+                                }
+                              }}
+                            />
+                          }
+                          label="Fresh Calls"
+                        />
+
                         <Stack
                           direction="row"
                           alignItems="center"
@@ -3321,6 +3367,7 @@ const Listview = () => {
                                 "TR328_Product",
                                 "TR328_Filters",
                                 "TR328_WHERE",
+                                "TR328_FreshCall",
                               ].forEach((key) =>
                                 sessionStorage.removeItem(key)
                               );
@@ -3468,7 +3515,7 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR083" ? (
+        ) : accessID == "TR083" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
@@ -3653,13 +3700,13 @@ const Listview = () => {
               icon={<AddPhotoAlternateIcon color="primary" />}
               label="Image Upload"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<EventNoteIcon color="primary" />}
               label="Leave Enquiry"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR243" ? (
@@ -3707,25 +3754,25 @@ const Listview = () => {
               icon={<Diversity2Icon color="primary" />}
               label="Leads"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<CategoryIcon color="primary" />}
               label="Order"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<RequestQuoteOutlinedIcon color="primary" />}
               label="Quotation"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<CurrencyRupeeOutlinedIcon color="primary" />}
               label="Advance Payment"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR313" ? (
@@ -3768,7 +3815,7 @@ const Listview = () => {
               icon={<AltRouteOutlinedIcon color="primary" />}
               label="Route Area"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR315" ? (
@@ -3782,7 +3829,7 @@ const Listview = () => {
               icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR316" ? (
@@ -3796,7 +3843,7 @@ const Listview = () => {
               icon={<QrCodeScannerOutlinedIcon color="primary" />}
               label="HSN Master"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR099" ? (
@@ -3819,11 +3866,11 @@ const Listview = () => {
               label="Edit"
               variant="outlined"
             />
-             <Chip
+            <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
-            /> 
+            />
             <Chip
               icon={<PictureAsPdfIcon color="error" />}
               label="Download PDF"
@@ -3837,7 +3884,7 @@ const Listview = () => {
           </Box>
         ) : accessID == "TR128" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-           
+
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3848,9 +3895,9 @@ const Listview = () => {
               label="Gate"
               variant="outlined"
             />
-           
+
           </Box>
-        ): (
+        ) : (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
