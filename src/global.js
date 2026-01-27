@@ -291,6 +291,8 @@ const initialState = {
   VendorFilterController: "",
   // UserActivityUrl : essURL + "UserActivityController.php",
   UserActivityUrl: "",
+  UserActivityGet: "",
+  auditScreennameGet: ""
 };
 
 export const getUrlSlice = createSlice({
@@ -441,6 +443,8 @@ export const getUrlSlice = createSlice({
       state.VendorFilterController = APIurl + "VendorFilterController.php";
       // UserActivityUrl = essURL + "UserActivityController.php";
       state.UserActivityUrl = APIurl + "UserActivityController.php";
+      state.UserActivityGet = APIurl + "UserActivityGetController.php";
+      state.auditScreennameGet = APIurl + "ListviewHdrGetController.php";
     },
   },
 });

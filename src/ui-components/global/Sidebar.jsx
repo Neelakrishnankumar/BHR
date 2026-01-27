@@ -146,6 +146,8 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import store from "../..";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
+
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
@@ -549,6 +551,24 @@ const child = {
           icon: (
             <Tooltip title="Lead Enquiry">
               <QueryBuilderIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR328",
+        },
+
+         {
+          name: "Audit",
+          id: 4346899,
+          url: "/Apps/TR260/EditAudit",
+          icon: (
+            <Tooltip title="Audit">
+              <ArtTrackIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,

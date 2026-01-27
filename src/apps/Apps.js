@@ -188,6 +188,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import EditLeaveEnquiry from "./pages/HR/EditLeaveEnquiry";
+import EditAudit from "./pages/HR/EditAudit";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -1082,6 +1083,10 @@ function App() {
                   <Route
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
+                  />
+                    <Route
+                    path="/:accessID/EditAudit"
+                    element={<EditAudit />}
                   />
                   <Route
                     path="/:accessID/Editdailyattendance"

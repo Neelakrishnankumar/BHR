@@ -173,8 +173,10 @@ const Login = () => {
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyLogo = data.payload.CompanyLogo
       var firstLogin = data.payload.firstLogin
+     /
       // var firstLogin = "Y";
       console.log(CompanyAutoCode, "--login screen CompanyAutoCode");
+     
 
 
       sessionStorage.setItem("Expiryin", Expiryin);
@@ -200,6 +202,7 @@ const Login = () => {
       sessionStorage.setItem("YearRecorid", YearRecorid)
       sessionStorage.setItem("Groupaccess", JSON.stringify(Groupaccess))
       sessionStorage.setItem("Modules", JSON.stringify(Modules))
+      
       navigate("/Apps/HR");
       console.log("firstLogin:", firstLogin);
       if (firstLogin == "Y") {
