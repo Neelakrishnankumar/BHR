@@ -100,6 +100,7 @@ import { Visibility } from "@mui/icons-material";
 import ClearIcon from "@mui/icons-material/Clear";
 import InputAdornment from "@mui/material/InputAdornment";
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -149,11 +150,11 @@ const Listview = () => {
   const YearRecorid = sessionStorage.getItem("YearRecorid");
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [showMore, setShowMore] = React.useState(false);
-  const [ImageName,setImgName] = useState({ name: "Choose File" });
+  const [ImageName, setImgName] = useState({ name: "Choose File" });
   const [saveSuccess, setSaveSuccess] = useState(false);
-   const [fileName,setFileName]=useState();
-     const [assignrecid, setAssignrecid] = useState("");
-   const handleFileChange = async (event) => {
+  const [fileName, setFileName] = useState();
+  const [assignrecid, setAssignrecid] = useState("");
+  const handleFileChange = async (event) => {
     try {
       const selectedFile = event.target.files[0];
       const fileObject = {
@@ -162,54 +163,54 @@ const Listview = () => {
         lastModifiedDate: selectedFile.lastModifiedDate,
         webkitRelativePath: selectedFile.webkitRelativePath,
         size: selectedFile.size,
-    };
-    
-  //     console.log(file);
-  
-    setImgName(fileObject);
+      };
+
+      //     console.log(file);
+
+      setImgName(fileObject);
       if (!selectedFile) {
         console.error("No file selected");
         return;
       }
-  setFileName(fileObject.name);
-  
-  console.log(fileObject.name,'===============');
+      setFileName(fileObject.name);
+
+      console.log(fileObject.name, '===============');
       setSelectedFile(selectedFile);
       console.log("Selected File:", selectedFile);
       console.log("RecordID :", assignrecid);
       // console.log("RecordID before appending to FormData:", Data.RecordID);
-     const formData = new FormData();
-       formData.append("file", selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
       formData.append("type", "POS");
-     formData.append("recordid",assignrecid);
-   
-   
+      formData.append("recordid", assignrecid);
+
+
 
       const fileData = await dispatch(fnCsvFileUploadnew(formData));
-  
+
       console.log("fileData:", JSON.stringify(fileData));
-  
-    //   if (fileData.payload) {
-    //     //setImgName(fileData.payload.apiResponse);
-    //     toast.success("File uploaded successfully!");
-    //   } else {
-    //     console.error("Unexpected response structure:", fileData);
-    //   }
-    // } catch (error) {
-    //   console.error("File upload failed:", error);
-    // }
-    if (fileData.payload && fileData.payload.Status === "Y") {
-      // Extract the Data field and show it in the toast
-      toast.success(fileData.payload.Data || "Process completed successfully");
+
+      //   if (fileData.payload) {
+      //     //setImgName(fileData.payload.apiResponse);
+      //     toast.success("File uploaded successfully!");
+      //   } else {
+      //     console.error("Unexpected response structure:", fileData);
+      //   }
+      // } catch (error) {
+      //   console.error("File upload failed:", error);
+      // }
+      if (fileData.payload && fileData.payload.Status === "Y") {
+        // Extract the Data field and show it in the toast
+        toast.success(fileData.payload.Data || "Process completed successfully");
       } else {
-          console.error("Unexpected response structure:", fileData);
-          toast.error("File upload failed!");
+        console.error("Unexpected response structure:", fileData);
+        toast.error("File upload failed!");
       }
     } catch (error) {
       console.error("File upload failed:", error);
       toast.error("Error uploading file!");
     }
-  
+
   };
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -1123,6 +1124,15 @@ const Listview = () => {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
+                         <IconButton
+                          size="small"
+                          onClick={() => setShowMore(false)}
+                          sx={{ position: "absolute", top: 5, right: 4 }}
+                        >
+                          <Tooltip title="Close">
+                            <CancelIcon color="error" />
+                          </Tooltip>
+                        </IconButton>
                         <TextField
                           name="fromdate"
                           type="date"
@@ -2926,6 +2936,15 @@ const Listview = () => {
                     return (
                       <form onSubmit={handleSubmit}>
                         <Box sx={{ height: 600, overflowY: "auto" }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowMore(false)}
+                            sx={{ position: "absolute", top: 5, right: 4 }}
+                          >
+                            <Tooltip title="Close">
+                              <CancelIcon color="error" />
+                            </Tooltip>
+                          </IconButton>
                           <Typography mt={2} fontWeight="bold" color="error">
                             Status
                           </Typography>
@@ -3209,7 +3228,17 @@ const Listview = () => {
                           overflowY: "auto",
                           marginTop: "20px",
                         }}
+
                       >
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowMore(false)}
+                          sx={{ position: "absolute", top: 5, right: 4 }}
+                        >
+                          <Tooltip title="Close">
+                            <CancelIcon color="error" />
+                          </Tooltip>
+                        </IconButton>
                         <TextField
                           name="fromdate"
                           type="date"
@@ -3468,7 +3497,7 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR083" ? (
+        ) : accessID == "TR083" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
@@ -3653,13 +3682,13 @@ const Listview = () => {
               icon={<AddPhotoAlternateIcon color="primary" />}
               label="Image Upload"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<EventNoteIcon color="primary" />}
               label="Leave Enquiry"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR243" ? (
@@ -3707,25 +3736,25 @@ const Listview = () => {
               icon={<Diversity2Icon color="primary" />}
               label="Leads"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<CategoryIcon color="primary" />}
               label="Order"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<RequestQuoteOutlinedIcon color="primary" />}
               label="Quotation"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
             <Chip
               icon={<CurrencyRupeeOutlinedIcon color="primary" />}
               label="Advance Payment"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR313" ? (
@@ -3768,7 +3797,7 @@ const Listview = () => {
               icon={<AltRouteOutlinedIcon color="primary" />}
               label="Route Area"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR315" ? (
@@ -3782,7 +3811,7 @@ const Listview = () => {
               icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR316" ? (
@@ -3796,7 +3825,7 @@ const Listview = () => {
               icon={<QrCodeScannerOutlinedIcon color="primary" />}
               label="HSN Master"
               variant="outlined"
-              // sx={{ marginLeft: "50px" }}
+            // sx={{ marginLeft: "50px" }}
             />
           </Box>
         ) : accessID == "TR099" ? (
@@ -3819,11 +3848,11 @@ const Listview = () => {
               label="Edit"
               variant="outlined"
             />
-             <Chip
+            <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
-            /> 
+            />
             <Chip
               icon={<PictureAsPdfIcon color="error" />}
               label="Download PDF"
@@ -3837,7 +3866,7 @@ const Listview = () => {
           </Box>
         ) : accessID == "TR128" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-           
+
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
@@ -3848,9 +3877,9 @@ const Listview = () => {
               label="Gate"
               variant="outlined"
             />
-           
+
           </Box>
-        ): (
+        ) : (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}

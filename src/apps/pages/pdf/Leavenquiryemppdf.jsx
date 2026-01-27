@@ -513,7 +513,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
 
                                 {/* CL */}
                                 <View style={styles.row}>
-                                    <Text style={styles.cell}>Casual Leave</Text>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Casual Leave</Text>
                                     <Text style={styles.cell}>{totalLeave.CL}</Text>
                                     <Text style={styles.cell}>{takenLeave.CL}</Text>
                                     <Text style={[styles.cell, styles.lastCell]}>
@@ -523,7 +523,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
 
                                 {/* SL */}
                                 <View style={styles.row}>
-                                    <Text style={styles.cell}>Sick Leave</Text>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Sick Leave</Text>
                                     <Text style={styles.cell}>{totalLeave.G}</Text>
                                     <Text style={styles.cell}>{takenLeave.G}</Text>
                                     <Text style={[styles.cell, styles.lastCell]}>
@@ -533,7 +533,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
 
                                 {/* EL */}
                                 <View style={styles.row}>
-                                    <Text style={styles.cell}>Emergency Leave</Text>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Emergency Leave</Text>
                                     <Text style={styles.cell}>{totalLeave.M}</Text>
                                     <Text style={styles.cell}>{takenLeave.M}</Text>
                                     <Text style={[styles.cell, styles.lastCell]}>
