@@ -44,6 +44,7 @@ import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AttendancePDF from "../pdf/AttendancePdf";
+import DailyattendancePDF from "../pdf/Dailyattendancepdf";
 
 const EditdailyAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -438,7 +439,7 @@ const EditdailyAttendance = () => {
                   {AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
-                        <AttendancePDF
+                        <DailyattendancePDF
                           data={AttendanceData}
                           filters={{
                             Date: values.date,
@@ -446,7 +447,7 @@ const EditdailyAttendance = () => {
                           }}
                         />
                       }
-                      fileName={`Attendance_Report_${
+                      fileName={`Daily_Attendance_Report_${
                         empData?.Name || "Employee"
                       }.pdf`}
                       style={{ color: "#d32f2f", cursor: "pointer" }}

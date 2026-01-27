@@ -101,6 +101,7 @@ import { Visibility } from "@mui/icons-material";
 import ClearIcon from "@mui/icons-material/Clear";
 import InputAdornment from "@mui/material/InputAdornment";
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -1124,6 +1125,15 @@ const Listview = () => {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
+                         <IconButton
+                          size="small"
+                          onClick={() => setShowMore(false)}
+                          sx={{ position: "absolute", top: 5, right: 4 }}
+                        >
+                          <Tooltip title="Close">
+                            <CancelIcon color="error" />
+                          </Tooltip>
+                        </IconButton>
                         <TextField
                           name="fromdate"
                           type="date"
@@ -2927,6 +2937,15 @@ const Listview = () => {
                     return (
                       <form onSubmit={handleSubmit}>
                         <Box sx={{ height: 600, overflowY: "auto" }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowMore(false)}
+                            sx={{ position: "absolute", top: 5, right: 4 }}
+                          >
+                            <Tooltip title="Close">
+                              <CancelIcon color="error" />
+                            </Tooltip>
+                          </IconButton>
                           <Typography mt={2} fontWeight="bold" color="error">
                             Status
                           </Typography>
@@ -3222,7 +3241,17 @@ const Listview = () => {
                           overflowY: "auto",
                           marginTop: "20px",
                         }}
+
                       >
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowMore(false)}
+                          sx={{ position: "absolute", top: 5, right: 4 }}
+                        >
+                          <Tooltip title="Close">
+                            <CancelIcon color="error" />
+                          </Tooltip>
+                        </IconButton>
                         <TextField
                           name="fromdate"
                           type="date"
