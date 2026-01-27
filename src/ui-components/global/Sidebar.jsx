@@ -154,7 +154,7 @@ import PermMediaIcon from '@mui/icons-material/PermMedia';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import { logout } from "../../store/reducers/LoginReducer";
 import { useDispatch } from "react-redux";
-const child = {
+import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = {
   data: [
     {
       name: "Setup",
@@ -321,23 +321,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
         },
-        // {
-        //   name: "Payroll",
-        //   id: 46,
-        //   url: "./TR027/Employee Payroll",
-        //   icon: (
-        //     <Tooltip title="Employees">
-        //         <PeopleAltIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR027",
-        // },
+        {
+          name: "Payroll",
+          id: 46,
+          url: "./TR027/Employee Payroll",
+          icon: (
+            <Tooltip title="Employees">
+                <PeopleAltIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
         {
           name: "Overhead Type",
           id: 47,
@@ -509,6 +509,24 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR321",
         },
+        // {
+        //   name: "Aging Report",
+        //   id: 4346895,
+        //   //  url: "./TR243/Party",
+        //   url: "/Apps/Party/AgingReport",
+        //   icon: (
+        //     <Tooltip title="Aging Report">
+        //       <ScaleOutlinedIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR321",
+        // },
         //  {
         //   name: "Lead",
         //   id: 4346895,
@@ -744,7 +762,6 @@ const child = {
         },
       ],
     },
-
 
 
     // {

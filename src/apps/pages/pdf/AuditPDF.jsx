@@ -305,8 +305,13 @@ import { Page, Text, View, Document, StyleSheet,Image } from "@react-pdf/rendere
 
 // ================= STYLES =================
 const styles = StyleSheet.create({
-  page: { padding: 20, fontSize: 10 },
-
+  // page: { padding: 20, fontSize: 10 },
+  page: {
+    paddingTop: 80,
+    paddingBottom: 70,
+    paddingHorizontal: 20,
+    fontSize: 9,
+  },
   headerContainer: {
     alignItems: "center",
     marginBottom: 10,
@@ -410,16 +415,18 @@ console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage
     <Document>
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" style={styles.page} key={pageIndex}>
-  {/* HEADER */}
-            <View fixed style={styles.headerWrapper}>
-              {filters.HeaderImage && (
+
+          {/* HEADER */}
+  <View fixed style={styles.headerWrapper}>
+              {filters.HeaderImg && (
                 <Image
-                  src={`${filters.Imageurl}/uploads/images/${filters.HeaderImage}`}
+                  // src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                  src="https://uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
                   style={styles.headerImage}
                 />
               )}
             </View>
-          {/* HEADER */}
+
           {pageIndex === 0 && (
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>
@@ -456,16 +463,15 @@ console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage
             ))}
 
           </View>
-    {/* FOOTER */}
-            <View fixed style={styles.footerWrapper}>
-              {filters.FooterImage && (
-                <Image
-                  src={`${filters.Imageurl}/uploads/images/${filters.FooterImage}`}
-                  style={styles.footerImage}
-                />
-              )}
-            </View>
-          {/* FOOTER */}
+       {/* FOOTER */}
+               <View fixed style={styles.footerWrapper}>
+                 {filters.FooterImg && (
+                   <Image
+                     src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                     style={styles.footerImage}
+                   />
+                 )}
+               </View>
           <View fixed style={{ position: "absolute", bottom: 10, width: "100%", textAlign: "center" }}>
             <Text>Page {pageIndex + 1} of {pages.length}</Text>
           </View>

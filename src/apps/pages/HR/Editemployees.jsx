@@ -217,12 +217,12 @@ const Editemployee = () => {
 
         //Employee
         let schemaFields = {
-          Name: Yup.string().required(data.Employee.Name),
+          Name: Yup.string().trim().required(data.Employee.Name),
           Department: Yup.object()
             .nullable()
             .required(data.Employee.Department),
           employeetype: Yup.string().required(data.Employee.employeetype),
-          Password: Yup.string().required(data.Employee.Password),
+          Password: Yup.string().trim().required(data.Employee.Password),
         };
 
         if (CompanyAutoCode === "N") {
@@ -284,8 +284,8 @@ const Editemployee = () => {
 
         //Skills
         const schema3 = Yup.object().shape({
-          Skills: Yup.string().required(data.Skills.Skills),
-          Comments: Yup.string().required(data.Skills.Comments),
+          Skills: Yup.string().trim().required(data.Skills.Skills),
+          Comments: Yup.string().trim().required(data.Skills.Comments),
         });
 
         setValidationSchema3(schema3);
@@ -306,9 +306,9 @@ const Editemployee = () => {
         //Itemcustody
         const schema6 = Yup.object().shape({
           ItemNumber: Yup.string().required(data.Itemcustody.ItemNumber),
-          ItemName: Yup.string().required(data.Itemcustody.ItemName),
+          ItemName: Yup.string().trim().required(data.Itemcustody.ItemName),
           AssestID: Yup.string().required(data.Itemcustody.AssestID),
-          PurchaseReference: Yup.string().required(
+          PurchaseReference: Yup.string().trim().required(
             data.Itemcustody.PurchaseReference
           ),
           ItemValue: Yup.string().required(data.Itemcustody.ItemValue),
@@ -355,7 +355,7 @@ const Editemployee = () => {
         //   // Pincode: Yup.string().required(data.Locality.pincode),
         // });
         let schemaFields2 = {
-          localityname: Yup.string().required(data.Locality.name),
+          localityname: Yup.string().trim().required(data.Locality.name),
         };
         if (CompanyAutoCode === "N") {
           schemaFields2.localitycode = Yup.string().required(
@@ -373,8 +373,8 @@ const Editemployee = () => {
           vendors: Yup.object().required(data.ItemServices.vendors).nullable(),
           servicedate: Yup.string().required(data.ItemServices.servicedate),
           returndate: Yup.string().required(data.ItemServices.returndate),
-          complaints: Yup.string().required(data.ItemServices.complaints),
-          tentativecharge: Yup.string().required(
+          complaints: Yup.string().trim().required(data.ItemServices.complaints),
+          tentativecharge: Yup.string().trim().required(
             data.ItemServices.tentativecharge
           ),
         });
@@ -1393,6 +1393,13 @@ const Editemployee = () => {
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
   // **********Grid header function************
   const [rowCount, setRowCount] = useState(0);
+  const formatTwoDecimals = (value) => {
+    if (value === "" || value === null || value === undefined) return "0.00";
+    const num = Number(value);
+    if (isNaN(num)) return "0.00";
+    return num.toFixed(2);
+  };
+
   function Custombar() {
     return (
       <GridToolbarContainer
@@ -10551,6 +10558,7 @@ const Editemployee = () => {
                           }}
                           rows={explorelistViewData}
                           columns={columns}
+                          loading={exploreLoading}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
                           rowHeight={dataGridRowHeight}
@@ -10675,7 +10683,13 @@ const Editemployee = () => {
                             </span>
                           }
                           id="totaldays"
-                          onBlur={handleBlur}
+                          // onBlur={handleBlur}
+                          onBlur={(e) => {
+                            handleBlur(e);
+
+                            const formatted = formatTwoDecimals(e.target.value);
+                            setFieldValue("totaldays", formatted);
+                          }}
                           onChange={handleChange}
                           value={values.totaldays}
                           name="totaldays"
@@ -10698,7 +10712,13 @@ const Editemployee = () => {
                           type="number"
                           label="Avail Days"
                           id="availableleave"
-                          onBlur={handleBlur}
+                          // onBlur={handleBlur}
+                          onBlur={(e) => {
+                            handleBlur(e);
+
+                            const formatted = formatTwoDecimals(e.target.value);
+                            setFieldValue("availableleave", formatted);
+                          }}
                           onChange={handleChange}
                           value={values.availableleave}
                           name="availableleave"
@@ -10726,10 +10746,13 @@ const Editemployee = () => {
                           id="elligibledays"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          value={
-                            Number(values.totaldays) -
-                            Number(values.availableleave)
-                          }
+                          // value={
+                          //   Number(values.totaldays) -
+                          //   Number(values.availableleave)
+                          // }
+                          value={formatTwoDecimals(
+                            Number(values.totaldays) - Number(values.availableleave)
+                          )}
                           name="elligibledays"
                           error={
                             !!touched.elligibledays && !!errors.elligibledays

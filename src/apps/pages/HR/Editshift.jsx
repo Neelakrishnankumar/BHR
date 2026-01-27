@@ -71,7 +71,7 @@ const Editshift = () => {
                 setErrorMsgData(data);
 
                 let schemaFields = {
-                    name: Yup.string().required(data.Shift.name),
+                    name: Yup.string().trim().required(data.Shift.name),
                     starttime: Yup.string().required(data.Shift.starttime),
                     endtime: Yup.string().required(data.Shift.endtime),
                 };

@@ -9,6 +9,7 @@
     "Name": "Please enter the Name",
     "Loc": "Please enter the Location"
   },
+
   "GeoLoc": {
     "code": "Please enter the Code",
     "name": "Please enter the Name"
@@ -308,7 +309,7 @@
     "Code": "Please enter the Code",
     "Name": "Please enter the Name",
     "AnswerType": "Please enter the Answer Type",
-    "NoOfQuestions": "Please enter the No.Of Questions"
+    "NoOfQuestions": "Please enter the Assessment No.Of Questions"
   },
   "ListofAssessCat": {
     "assessment": "Please enter the Assessment",
@@ -331,19 +332,24 @@
     "Delete": "Do you want to Delete?"
   },
   "Questions": {
-    "Option1": "Option 1 is required",
-    "Option2": "Option 2 is required",
-    "Option3": "Option 3 is required",
-    "Option4": "Option 4 is required",
-    "Option5": "Option 5 is required",
-    "Option6": "Option 6 is required",
-    "Option7": "Option 7 is required",
-    "Option8": "Option 8 is required",
-    "Option9": "Option 9 is required",
-    "Option10": "Option 10 is required",
-    "Marks": "Marks are required",
+    "Option1": "Please enter Option 1",
+    "Option2": "Please enter Option 2",
+    "Option3": "Please enter Option 3",
+    "Option4": "Please enter Option 4",
+    "Option5": "Please enter Option 5",
+    "Option6": "Please enter Option 6",
+    "Option7": "Please enter Option 7",
+    "Option8": "Please enter Option 8",
+    "Option9": "Please enter Option 9",
+    "Option10": "Please enter Option 10",
+    "Marks": "Please enter the Marks",
     "number": "Marks must be a number",
     "numbertype": "Option must be a number",
-    "option": "Option is required"
+    "option": "Please enter the Option"
+  },
+   "Salarycomp": {
+    "Type": "Please select the Type",
+    "Name": "Please enter the Name",
+    "Category": "Please select the Category"
   }
 }

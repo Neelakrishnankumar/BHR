@@ -69,7 +69,7 @@ const Editoverheadtype = () => {
                 setErrorMsgData(data);
 
                 let schemaFields = {
-                    name: Yup.string().required(data.Overheadtype.name),
+                    name: Yup.string().trim().required(data.Overheadtype.name),
                    
                 };
 

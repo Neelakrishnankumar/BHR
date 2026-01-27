@@ -60,9 +60,9 @@ const CreateQuestion = () => {
   const screenName = params.screenName;
   const mode = params.Mode;
   const Assessmentid = params.parentID2;
-  console.log("🚀 ~ CreateQuestion ~ Assessmentid:", Assessmentid)
+  console.log("🚀 ~ CreateQuestion ~ Assessmentid:", Assessmentid);
   const QuestionID = params.parentID1;
-  console.log("🚀 ~ CreateQuestion ~ QuestionID:", QuestionID)
+  console.log("🚀 ~ CreateQuestion ~ QuestionID:", QuestionID);
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
   const CompanyID = sessionStorage.getItem("compID");
   const state = location.state || {};
@@ -119,8 +119,9 @@ const CreateQuestion = () => {
 
         if (answerType === "5Rates") {
           Array.from({ length: 5 }).forEach((_, i) => {
-            schema[`Option${i + 1}`] = Yup.string().required(
-              data?.Questions?.option
+            const optionKey = `Option${i + 1}`;
+            schema[optionKey] = Yup.string().required(
+              data?.Questions?.[optionKey]
             );
             schema[`Rate${i + 1}`] = markValidation;
           });
@@ -128,8 +129,9 @@ const CreateQuestion = () => {
 
         if (answerType === "10Rates") {
           Array.from({ length: 10 }).forEach((_, i) => {
-            schema[`Option${i + 1}`] = Yup.string().required(
-              data?.Questions?.option
+            const optionKey = `Option${i + 1}`;
+            schema[optionKey] = Yup.string().required(
+              data?.Questions?.[optionKey]
             );
             schema[`Rate${i + 1}`] = markValidation;
           });
@@ -371,75 +373,76 @@ const CreateQuestion = () => {
                   </Typography>
                 </Breadcrumbs> */}
 
-                 <Breadcrumbs
-              maxItems={2}
-              aria-label="breadcrumb"
-              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
-            >
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
-                }}
-              >
-                List of Assessment Type ({state.BreadCrumb1})
-              </Typography>
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}`,
-                    { state: { ...state } }
-                  );
-                }}
-              >
-                List of Category ({state.BreadCrumb2})
-              </Typography>
-              <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID2}/${params.parentID3}`,
-                    { state: { ...state } }
-                  );
-                }}
-              >
-                List of Assessment ({state.BreadCrumb3})
-              </Typography>
-               <Typography
-                variant="h5"
-                color="#0000D1"
-                sx={{ cursor: "default" }}
-                onClick={() => {
-                  navigate(
-                    `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID2}/${params.parentID3}/${params.accessID1}/${params.parentID2}`,
-                  {state: { ...state }}
-                )}}
-              >
-                List of Question Groups ({state.BreadCrumb4})
-              </Typography>
-               <Typography
-                variant="h5"
-                color="#0000D1"
-                onClick={() => navigate(-1)}
-                sx={{ cursor: "default" }}
-              >
-                List of Question
-              </Typography>
-               <Typography
+                <Breadcrumbs
+                  maxItems={2}
+                  aria-label="breadcrumb"
+                  separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate("/Apps/TR299/List%20Of%20Assessment%20Type");
+                    }}
+                  >
+                    List of Assessment Type ({state.BreadCrumb1})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Category ({state.BreadCrumb2})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID2}/${params.parentID3}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Assessment ({state.BreadCrumb3})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => {
+                      navigate(
+                        `/Apps/Secondarylistview/skillglow/TR294/List%20Of%20Assessment%20Category/${params.parentID4}/${params.accessID2}/${params.parentID3}/${params.accessID1}/${params.parentID2}`,
+                        { state: { ...state } }
+                      );
+                    }}
+                  >
+                    List of Question Groups ({state.BreadCrumb4})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    onClick={() => navigate(-1)}
+                    sx={{ cursor: "default" }}
+                  >
+                    List of Question
+                  </Typography>
+                  <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
                     {mode == "A" ? "New" : mode == "D" ? "Delete" : "Edit"}
                   </Typography>
-            </Breadcrumbs>
+                </Breadcrumbs>
               </Box>
             </Box>
 
@@ -495,63 +498,76 @@ const CreateQuestion = () => {
                     {/* TEXTFIELD */}
 
                     {CompanyAutoCode === "Y" ? (
-                    <TextField
-                      name="Code"
-                      id="Code"
-                      type="text"
-                      variant="standard"
-                      label="Code"
-                      placeholder="Auto"
-                      value={values.Code}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      focused
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      InputProps={{readOnly:true}}
-                    />
-                    ):(
-                     <TextField
-                      name="Code"
-                      id="Code"
-                      type="text"
-                      variant="standard"
-                      label={
-                        <span>
-                          Code{" "}
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
+                      <TextField
+                        name="Code"
+                        id="Code"
+                        type="text"
+                        variant="standard"
+                        label="Code"
+                        placeholder="Auto"
+                        value={values.Code}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        focused
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
+                        sx={{
+                          // backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        InputProps={{ readOnly: true }}
+                      />
+                    ) : (
+                      <TextField
+                        name="Code"
+                        id="Code"
+                        type="text"
+                        variant="standard"
+                        label={
+                          <span>
+                            Code{" "}
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
                           </span>
-                        </span>
-                      }
-                      //placeholder="Code"
-                      value={values.Code}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      focused
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        // backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        },
-                      }}
-                      autoFocus
-                    />
+                        }
+                        //placeholder="Code"
+                        value={values.Code}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        focused
+                        error={!!touched.Code && !!errors.Code}
+                        helperText={touched.Code && errors.Code}
+                        sx={{
+                          // backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        autoFocus
+                      />
                     )}
 
                     {/* TEXTFIELD */}
                     <TextField
                       variant="standard"
                       type="text"
-                      label="Question"
+                      // label="Question"
+                      label={
+                        <span>
+                          Question{" "}
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </span>
+                      }
                       name="Question"
                       id="Question"
                       //placeholder="Question"
@@ -568,7 +584,6 @@ const CreateQuestion = () => {
                         },
                       }}
                       autoFocus={CompanyAutoCode == "Y"}
-
                     />
                     {/* DROPDOWN */}
 
@@ -744,7 +759,17 @@ const CreateQuestion = () => {
                             <TextField
                               fullWidth
                               name={`Option${idx + 1}`}
-                              label={`Option ${idx + 1}`}
+                              // label={`Option ${idx + 1}`}
+                              label={
+                                <span>
+                                  Option {idx + 1}{" "}
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               id="Option"
                               type="text"
                               variant="standard"
@@ -775,7 +800,17 @@ const CreateQuestion = () => {
                             <TextField
                               fullWidth
                               name={`Rate${idx + 1}`}
-                              label="Marks"
+                              // label="Marks"
+                              label={
+                                <span>
+                                  Marks{" "}
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               variant="standard"
                               value={values[`Rate${idx + 1}`]}
                               onChange={handleChange}
@@ -793,6 +828,7 @@ const CreateQuestion = () => {
                                   style: { textAlign: "right" },
                                 },
                               }}
+                              focused
                             />
                           </Box>
                         </Box>
@@ -824,7 +860,17 @@ const CreateQuestion = () => {
                             <TextField
                               fullWidth
                               name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
+                              // label={`Option ${i + 1}`}
+                              label={
+                                  <span>
+                                    Option {i + 1}{" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                               variant="standard"
                               value={values[`Option${i + 1}`]}
                               onChange={handleChange}
@@ -837,13 +883,24 @@ const CreateQuestion = () => {
                                 touched[`Option${i + 1}`] &&
                                 errors[`Option${i + 1}`]
                               }
+                              focused
                             />
                           </Box>
                           <Box sx={{ width: "155px" }}>
                             <TextField
                               fullWidth
                               name={`Rate${i + 1}`}
-                              label="Marks"
+                              // label="Marks"
+                              label={
+                                  <span>
+                                    Marks{" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                               variant="standard"
                               value={values[`Rate${i + 1}`]}
                               onChange={handleChange}
@@ -861,6 +918,7 @@ const CreateQuestion = () => {
                                   style: { textAlign: "right" },
                                 },
                               }}
+                              focused
                             />
                           </Box>
                         </Box>
@@ -891,7 +949,17 @@ const CreateQuestion = () => {
                             <TextField
                               fullWidth
                               name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
+                              // label={`Option ${i + 1}`}
+                              label={
+                                  <span>
+                                    Option {i + 1}{" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                               variant="standard"
                               value={values[`Option${i + 1}`]}
                               onChange={handleChange}
@@ -904,13 +972,24 @@ const CreateQuestion = () => {
                                 touched[`Option${i + 1}`] &&
                                 errors[`Option${i + 1}`]
                               }
+                              focused
                             />
                           </Box>
                           <Box sx={{ width: "155px" }}>
                             <TextField
                               fullWidth
                               name={`Rate${i + 1}`}
-                              label="Marks"
+                              // label="Marks"
+                              label={
+                                  <span>
+                                    Marks{" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                               variant="standard"
                               value={values[`Rate${i + 1}`]}
                               onChange={handleChange}
@@ -928,6 +1007,7 @@ const CreateQuestion = () => {
                                   style: { textAlign: "right" },
                                 },
                               }}
+                              focused
                             />
                           </Box>
                         </Box>
@@ -958,7 +1038,17 @@ const CreateQuestion = () => {
                             <TextField
                               fullWidth
                               name={`Option${i + 1}`}
-                              label={`Option ${i + 1}`}
+                              // label={`Option ${i + 1}`}
+                              label={
+                                <span>
+                                  Option {i + 1}{" "}
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               variant="standard"
                               value={values[`Option${i + 1}`]}
                               onChange={handleChange}
@@ -971,13 +1061,24 @@ const CreateQuestion = () => {
                                 touched[`Option${i + 1}`] &&
                                 errors[`Option${i + 1}`]
                               }
+                              focused
                             />
                           </Box>
                           <Box sx={{ width: "155px" }}>
                             <TextField
                               fullWidth
                               name={`Rate${i + 1}`}
-                              label="Marks"
+                              // label="Marks"
+                              label={
+                                <span>
+                                  Marks{" "}
+                                  <span
+                                    style={{ color: "red", fontSize: "20px" }}
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              }
                               variant="standard"
                               value={values[`Rate${i + 1}`]}
                               onChange={handleChange}
@@ -995,6 +1096,7 @@ const CreateQuestion = () => {
                                   style: { textAlign: "right" },
                                 },
                               }}
+                              focused
                             />
                           </Box>
                         </Box>
@@ -1149,7 +1251,17 @@ const CreateQuestion = () => {
                               <TextField
                                 fullWidth
                                 name={`Option${i + 1}`}
-                                label={`Option ${i + 1}`}
+                                // label={`Option ${i + 1}`}
+                                label={
+                                  <span>
+                                    Option {i + 1}{" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                                 variant="standard"
                                 value={label} // always True / False
                                 InputProps={{
@@ -1163,7 +1275,17 @@ const CreateQuestion = () => {
                               <TextField
                                 fullWidth
                                 name={`Rate${i + 1}`}
-                                label="Marks"
+                                // label="Marks"
+                                label={
+                                  <span>
+                                    Marks{" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                                 variant="standard"
                                 value={values[`Rate${i + 1}`]}
                                 onChange={handleChange}
@@ -1181,6 +1303,7 @@ const CreateQuestion = () => {
                                     style: { textAlign: "right" },
                                   },
                                 }}
+                                focused
                               />
                             </Box>
                           </Box>
@@ -1210,7 +1333,17 @@ const CreateQuestion = () => {
                               <TextField
                                 fullWidth
                                 name={`Option${i + 1}`}
-                                label={`Option ${i + 1}`}
+                                // label={`Option ${i + 1}`}
+                                label={
+                                  <span>
+                                    Option {i + 1} {" "}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                                 variant="standard"
                                 value={label} // always Yes / No
                                 InputProps={{
@@ -1222,7 +1355,17 @@ const CreateQuestion = () => {
                               <TextField
                                 fullWidth
                                 name={`Rate${i + 1}`}
-                                label="Marks"
+                                // label="Marks"
+                                label={
+                                  <span>
+                                    Marks {""}
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </span>
+                                }
                                 variant="standard"
                                 value={values[`Rate${i + 1}`]}
                                 onChange={handleChange}
@@ -1240,6 +1383,7 @@ const CreateQuestion = () => {
                                     style: { textAlign: "right" },
                                   },
                                 }}
+                                focused
                               />
                             </Box>
                           </Box>
@@ -1260,13 +1404,24 @@ const CreateQuestion = () => {
                           <TextField
                             fullWidth
                             name="Option1"
-                            label="Option"
+                            // label="Option"
+                            label={
+                              <span>
+                                Option{" "}
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </span>
+                            }
                             variant="standard"
                             value={values.Option1}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={touched.Option1 && Boolean(errors.Option1)}
                             helperText={touched.Option1 && errors.Option1}
+                            focused
                           />
                         </Box>
 
@@ -1275,7 +1430,17 @@ const CreateQuestion = () => {
                           <TextField
                             fullWidth
                             name="Rate1"
-                            label="Marks"
+                            // label="Marks"
+                            label={
+                              <span>
+                                Marks{" "}
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </span>
+                            }
                             variant="standard"
                             value={values.Rate1}
                             onChange={handleChange}
@@ -1285,6 +1450,7 @@ const CreateQuestion = () => {
                             sx={{
                               "& .MuiInputBase-input": { textAlign: "right" },
                             }}
+                            focused
                           />
                         </Box>
                       </Box>

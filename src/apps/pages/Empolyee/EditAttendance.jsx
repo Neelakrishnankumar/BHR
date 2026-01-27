@@ -46,6 +46,9 @@ import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { getConfig } from "../../../config";
+
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -63,7 +66,7 @@ const EditAttendance = () => {
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   console.log("AttendanceData", AttendanceData);
 
-  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const getLoading = useSelector((state) => state.formApi.AttendanceDataLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [page, setPage] = React.useState(0);
@@ -75,6 +78,11 @@ const EditAttendance = () => {
   const [loading, setLoading] = useState(false);
   const colors = tokens(theme.palette.mode);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
 
   // useEffect(() => {
   //   fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -114,7 +122,7 @@ const EditAttendance = () => {
     console.log("Dispatching Attendance on load:", data);
 
     dispatch(Attendance({ data }));
-  }, [EMPID, dispatch]); 
+  }, [EMPID, dispatch]);
 
 
   function AttendanceTool() {
@@ -198,18 +206,33 @@ const EditAttendance = () => {
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
         }
+        if (params.row.Status === "Casual leave" || params.row.Status === "Sick leave" || params.row.Status === "Medical leave") {
+          return <ExitToAppIcon color="primary" titleAccess="Leave" />;
+        }
         return null;
       },
     },
     {
-      field: "EmplyeeCheckInDateTime",
-      headerName: "Employee Check In Date Time",
+      field: "MonthDate",
+      headerName: "Check In Date",
       flex: 1,
       headerAlign: "center",
     },
     {
-      field: "EmplyeeCheckOutDateTime",
-      headerName: "Employee Check Out Date Time",
+      field: "EmployeeCheckInTime",
+      headerName: "Check In Time",
+      flex: 1,
+      headerAlign: "center",
+    },
+    {
+      field: "EmployeeCheckOutDate",
+      headerName: "Check Out Date",
+      flex: 1,
+      headerAlign: "center",
+    },
+    {
+      field: "EmployeeCheckOutTime",
+      headerName: "Check Out Time",
       flex: 1,
       headerAlign: "center",
     },
@@ -219,6 +242,13 @@ const EditAttendance = () => {
       flex: 1,
       headerAlign: "center",
     },
+    {
+      field: "PermissionInMinutes",
+      headerName: "Permission (In Hours)",
+      flex: 1,
+      headerAlign: "center",
+    },
+
     {
       field: "Status",
       headerName: "Status",
@@ -368,8 +398,8 @@ const EditAttendance = () => {
                 resetForm();
                 setproData(null);
                 setempData(null);
-                setFieldValue("attmonth",currentMonthNumber)
-                setFieldValue("attyear",currentYear)
+                setFieldValue("attmonth", currentMonthNumber)
+                setFieldValue("attyear", currentYear)
                 sessionStorage.removeItem("attmonth");
                 sessionStorage.removeItem("attyear");
                 sessionStorage.removeItem("empData");
@@ -588,6 +618,9 @@ const EditAttendance = () => {
                             Month: values.attmonth,
                             Year: values.attyear,
                             EmployeeID: empData?.Name,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }
@@ -653,6 +686,10 @@ const EditAttendance = () => {
                       backgroundColor: "#c9f5cc", // light green
                       color: "#1b5e20", // dark green text
                     },
+                    "& .leave-row": {
+                      backgroundColor: "#f3cd9b", // light green
+                      color: "#a16a03", // dark green text
+                    },
                   }}
                 >
                   <DataGrid
@@ -681,7 +718,7 @@ const EditAttendance = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    loading={getLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
@@ -697,6 +734,7 @@ const EditAttendance = () => {
                       const status = params.row.Status;
                       if (status === "WeekOff") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
+                      if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
                       return params.indexRelativeToCurrentPage % 2 === 0
                         ? "odd-row"
                         : "even-row";
@@ -726,6 +764,12 @@ const EditAttendance = () => {
                       backgroundColor: "#c9f5cc",
                       borderColor: "#66bb6a",
                     }}
+                  />
+                  <Chip
+                    icon={<ExitToAppIcon color="primary" />}
+                    label="Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#f3cd9b", borderColor: "#a16a03", }}
                   />
                 </Box>
               </Box>

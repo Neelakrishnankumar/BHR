@@ -70,15 +70,14 @@ const EditAudit = () => {
 const company = sessionStorage.getItem("company");
 console.log(company, "--company");
 
+
+
+const HeaderImg = sessionStorage.getItem("CompanyHeader");
+const FooterImg = sessionStorage.getItem("CompanyFooter");
+
+console.log("HeaderImg", HeaderImg, FooterImg);
 const config = getConfig();
-const baseurl1 = config.UAAM_URL;
-// const HeaderImage = sessionStorage.getItem("CompanyHeader");
-// const FooterImage = sessionStorage.getItem("CompanyFooter");
-
-// console.log(HeaderImage, "--HeaderImage");
-// console.log(FooterImage,"FooterImage");
-
-
+const baseurlUAAM = config.UAAM_URL;
 
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
@@ -834,14 +833,14 @@ const getDiffInDays = (from, to) => {
       <PDFDownloadLink
                       document={
                         <AuditPDF
-                          data={finalAuditData}
-                          // filters={{
-                          //   FromDate: values.fromdate || "",
-                          //   ToDate: values.todate || "",
-                          //   Imageurl: baseurl1,
-                          //   HeaderImage: HeaderImage,
-                          //   FooterImage: FooterImage
-                          // }}
+                         data={finalAuditData}
+                          filters={{
+                            FromDate: values.fromdate || "",
+                            ToDate: values.todate || "",
+                            Imageurl: baseurlUAAM,
+                            HeaderImage: HeaderImg,
+                            FooterImage: FooterImg
+                          }}
                         />
                       }
                       fileName={`Audit_Report_${empData?.Name || "Employee"
