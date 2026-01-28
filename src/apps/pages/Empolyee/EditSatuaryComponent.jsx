@@ -40,6 +40,8 @@ import { SatuarySchema } from "../../Security/validation";
 import Popup from "../popup";
 import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/utils";
+import * as Yup from "yup";
+
 // import CryptoJS from "crypto-js";
 const EditSatuaryComponent = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -60,10 +62,27 @@ const EditSatuaryComponent = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const location = useLocation();
   const CompanyID = sessionStorage.getItem("compID");
+  const [validationSchema, setValidationSchema] = useState(null);
+    const [errorMsgData, setErrorMsgData] = useState(null);
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
-
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        //Permission
+        const schema = Yup.object().shape({
+          description: Yup.string().required(data.Salarycomp.Name),         
+        })
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   const style = {
     height: "55px",
     border: "2px solid #1769aa ",
@@ -75,7 +94,7 @@ const EditSatuaryComponent = () => {
 
   const InitialValue = {
     description: data.Name,
-    sortOrder: data.Sortorder,
+    sortOrder: data.Sortorder || 0,
     disable: data.Disable === "Y" ? true : false,
   };
 
@@ -178,7 +197,7 @@ const EditSatuaryComponent = () => {
                 Fnsave(values);
               }, 100);
             }}
-            validationSchema={SatuarySchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -208,7 +227,12 @@ const EditSatuaryComponent = () => {
                     name="description"
                     type="text"
                     id="description"
-                    label="Name"
+                    // label="Name"
+                    label={
+                      <span>
+                        Name <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                      </span>
+                    }
                     variant="standard"
                     focused
                     value={values.description}
@@ -238,7 +262,7 @@ const EditSatuaryComponent = () => {
                     onChange={handleChange}
                     error={!!touched.sortOrder && !!errors.sortOrder}
                     helperText={touched.sortOrder && errors.sortOrder}
-                    //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
+                  //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                   />
                   <FormControl>
                     <Box>

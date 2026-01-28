@@ -3786,6 +3786,7 @@ export const fetchListview =
                           AccessID === "TR027"
                             ? {
                                 EmpName: params.row.Name,
+                                Employee:params.row.Employee
                               }
                             : AccessID === "TR128"
                             ? {
@@ -5095,7 +5096,7 @@ export const fetchListview =
                         <Box>
                           <Link
                             to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                            state={{ EmpName: params.row.Name }}
+                            state={{ EmpName: params.row.Name,Employee:params.row.Employee }}
                           >
                             <Tooltip title="Image upload">
                               <IconButton color="info" size="small">
@@ -5105,7 +5106,7 @@ export const fetchListview =
                           </Link>
                           <Link
                             to={`/Apps/leaveenquiry/${params.row.RecordID}`}
-                            state={{ EmpName: params.row.Name }}
+                            state={{ EmpName: params.row.Name,Employee:params.row.Employee }}
                           >
                             <Tooltip title="Leave Enquiry">
                               <IconButton color="info" size="small">

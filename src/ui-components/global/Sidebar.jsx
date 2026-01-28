@@ -319,23 +319,23 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
         },
-        // {
-        //   name: "Payroll",
-        //   id: 46,
-        //   url: "./TR027/Employee Payroll",
-        //   icon: (
-        //     <Tooltip title="Employees">
-        //         <PeopleAltIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR027",
-        // },
+        {
+          name: "Payroll",
+          id: 46,
+          url: "./TR027/Employee Payroll",
+          icon: (
+            <Tooltip title="Employees">
+                <PeopleAltIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
         {
           name: "Overhead Type",
           id: 47,

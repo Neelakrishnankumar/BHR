@@ -368,8 +368,8 @@ const EditItem = () => {
       PurchaseUOMQty: values.BoxQuantity || "",
       ConversionQty: values.ConversionQty || "",
       Price: values.GuidelinePrice || "0.00",
-      MinStock: values.MinStock || "",
-      ReorderLevel: values.ReorderLevel || "",
+      MinStock: values.MinStock || "0",
+      ReorderLevel: values.ReorderLevel || "0",
     };
 
     const response = await dispatch(ItemStockMenuPut({ action, idata }));
@@ -1828,11 +1828,11 @@ const EditItem = () => {
                       }}
                     />
 
-                    <TextField
+                    {/* <TextField
                       name="GuidelinePrice"
                       type="number"
                       id="GuidelinePrice"
-                      label = "Guideline Price (Box)"
+                      label="Guideline Price (Box)"
                       // label={
                       //   <span>
                       //     Guideline Price (Box){" "}
@@ -1851,25 +1851,25 @@ const EditItem = () => {
                       value={values.GuidelinePrice}
                       // onBlur={handleBlur}
                       // onChange={handleChange}
-                       onChange={(e) => {
-                          const val = e.target.value;
-                          if (/^\d*\.?\d{0,2}$/.test(val)) {
-                            setFieldValue("amount", val);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          handleBlur(e);
-                          let val = e.target.value;
-                          if (val === "" || val === ".") {
-                            setFieldValue("amount", "0.00");
-                            return;
-                          }
-                          if (!val.includes(".")) {
-                            val = `${val}.00`;
-                          }
-                          const num = Number(val);
-                          setFieldValue("amount", num.toFixed(2));
-                        }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^\d*\.?\d{0,2}$/.test(val)) {
+                          setFieldValue("amount", val); //CHANGES BY JK
+                        }
+                      }}
+                      onBlur={(e) => {
+                        handleBlur(e);
+                        let val = e.target.value;
+                        if (val === "" || val === ".") {
+                          setFieldValue("amount", "0.00");
+                          return;
+                        }
+                        if (!val.includes(".")) {
+                          val = `${val}.00`;
+                        }
+                        const num = Number(val);
+                        setFieldValue("amount", num.toFixed(2));
+                      }}
                       error={
                         !!touched.GuidelinePrice && !!errors.GuidelinePrice
                       }
@@ -1880,7 +1880,41 @@ const EditItem = () => {
                       InputProps={{
                         inputProps: { style: { textAlign: "right" } },
                       }}
+                    /> */}
+                    <TextField
+                      name="GuidelinePrice"
+                      type="text"
+                      id="GuidelinePrice"
+                      label="Guideline Price (Box)"
+                      variant="standard"
+                      focused
+                      value={values.GuidelinePrice}
+                      onChange={(e) => {
+                        let val = e.target.value;
+
+                        // Allow only numbers and decimal
+                        if (!/^\d*\.?\d*$/.test(val)) return;
+
+                        // If user typed a whole number, convert to .00
+                        if (val !== "" && !val.includes(".")) {
+                          val = `${val}.00`;
+                        }
+
+                        // If user typed decimal but less than 2 digits, keep formatting safe
+                        const num = Number(val);
+                        if (!isNaN(num)) {
+                          setFieldValue("GuidelinePrice", num.toFixed(2));
+                        }
+                      }}
+                      onBlur={handleBlur}
+                      error={!!touched.GuidelinePrice && !!errors.GuidelinePrice}
+                      helperText={touched.GuidelinePrice && errors.GuidelinePrice}
+                      autoFocus
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
                     />
+
                     <TextField
                       name="MinStock"
                       type="number"

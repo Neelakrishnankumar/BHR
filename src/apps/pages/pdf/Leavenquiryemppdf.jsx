@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
 
-    headerCell1: {
+    headerCMl1: {
         width: 30,
         borderRightWidth: 1,
         borderRightColor: "#000",
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-    headerCell: {
+    headerCMl: {
         width: 70,
         borderRightWidth: 1,
         borderRightColor: "#000",
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-    headerCellDesc: {
+    headerCMlDesc: {
         flex: 1,
         borderRightWidth: 1,
         borderRightColor: "#000",
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-    cell1: {
+    cMl1: {
         width: 30,
         borderRightWidth: 1,
         borderRightColor: "#000",
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-    cell: {
+    cMl: {
         width: 70,
         borderRightWidth: 1,
         borderRightColor: "#000",
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-    cellDesc: {
+    cMlDesc: {
         flex: 1,
         borderRightWidth: 1,
         borderRightColor: "#000",
@@ -212,6 +212,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
     },
+    summaryText: {
+        fontSize: 9,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 2,
+    },
 
     /* FOOTER */
     footerWrapper: {
@@ -226,7 +232,7 @@ const styles = StyleSheet.create({
 
     footerImage: {
         width: "100%",
-        height: 50,
+        height: 100,
         objectFit: "cover",
     },
 
@@ -237,6 +243,38 @@ const styles = StyleSheet.create({
         right: 0,
         textAlign: "center",
         fontSize: 9,
+    },
+   table: {
+        display: "table",
+        width: "100%",
+        borderWidth: 1,
+        borderColor: "#000",
+        marginTop: 6,
+    },
+    row: {
+        flexDirection: "row",
+    },
+    headerCell: {
+        flex: 1,
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        backgroundColor: "#EEE",
+        padding: 4,
+        fontSize: 9,
+        fontWeight: "bold",
+        textAlign: "center",
+        fontweight: "bold",
+    },
+    cell: {
+        flex: 1,
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        padding: 4,
+        fontSize: 9,
+        textAlign: "right",
+    },
+    lastCell: {
+        borderRightWidth: 0,
     },
 });
 
@@ -267,6 +305,58 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
         const date = new Date(dateStr);
         return date.toLocaleDateString("en-GB"); // DD/MM/YYYY
     };
+    const permissionSummary = React.useMemo(() => {
+        if (!isPermission || !data.length) return null;
+
+        // Count unique permission days
+        const uniqueDays = new Set(
+            data.map(d => d.DisplayPermissionDate)
+        ).size;
+
+        // Sum total hours
+        const totalHours = data.reduce(
+            (sum, d) => sum + Number(d.NumofHrsday || 0),
+            0
+        );
+
+        return {
+            days: uniqueDays,
+            hours: totalHours,
+        };
+    }, [data, isPermission]);
+
+
+    const totalLeave = { CL: 0, G: 0, M: 0 };
+    const takenLeave = { CL: 0, G: 0, M: 0 };
+    const balancMeave = { CL: 0, G: 0, M: 0 };
+
+    data.forEach((row) => {
+        const type = row.Category; // CL / G / M
+        if (!totalLeave.hasOwnProperty(type)) return;
+
+        //  take total leave from API (same for all rows of same type)
+        totalLeave[type] = Number(row.TotalLeaveDays || 0);
+
+        //  count approved rows as taken leave
+        if (row.Status === "Approved") {
+            takenLeave[type] += 1;
+        }
+    });
+
+    //  calculate balance from count
+    Object.keys(totalLeave).forEach((type) => {
+        balancMeave[type] = totalLeave[type] - takenLeave[type];
+    });
+
+    //  totals
+    const totalLeaveDays =
+        totalLeave.CL + totalLeave.G + totalLeave.M;
+
+    const takenLeaveDays =
+        takenLeave.CL + takenLeave.G + takenLeave.M;
+
+    const balancMeaveDays =
+        balancMeave.CL + balancMeave.G + balancMeave.M;
 
     const monthNames = [
         "January", "February", "March", "April", "May", "June",
@@ -286,72 +376,41 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                     </View>
 
                     {pageIndex === 0 && (
-
                         <View style={styles.headerTextContainer}>
-
                             <Text style={styles.headerText}>
                                 {filters.permission === "Y"
                                     ? `Permission Enquiry Report - ${filters?.EmpName} (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`
                                     : `Leave Enquiry Report - ${filters?.EmpName} (${formatDate(filters.fromdate)} - ${formatDate(filters.todate)})`
                                 }
                             </Text>
-
-
                         </View>
-
                     )}
 
-                    {/* <View style={styles.table}> */}
-                    {/* <View style={styles.tableRow}>
-                            <Text style={styles.headerCell1}>S.No</Text>
-                            <Text style={styles.headerCell}>From Date</Text>
-                            <Text style={styles.headerCell}>To Date</Text>
-                            <Text style={styles.headerCell}>Permission Date</Text>
-                            <Text style={styles.headerCellDesc}>Reason</Text>
-                            <Text style={styles.headerCell}>Status</Text>
-                        </View> */}
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
-                            <Text style={styles.headerCell1}>SL#</Text>
+                            <Text style={styles.headerCMl1}>SL#</Text>
 
                             {isPermission ? (
                                 <>
-                                    <Text style={styles.headerCell}>Permission Date</Text>
-                                    <Text style={styles.headerCell}>From Time</Text>
-                                    <Text style={styles.headerCell}>To Time</Text>
-                                    <Text style={styles.headerCellDesc}>Reason</Text>
+                                    <Text style={styles.headerCMl}>Date</Text>
+                                    <Text style={styles.headerCMl}>From</Text>
+                                    <Text style={styles.headerCMl}>To</Text>
+                                    <Text style={styles.headerCMl}>Hours</Text>
+                                    <Text style={styles.headerCMlDesc}>Reason</Text>
                                 </>
                             ) : (
                                 <>
-                                    <Text style={styles.headerCell}>Leave Type</Text>
-                                    <Text style={styles.headerCell}>From Date</Text>
-                                    <Text style={styles.headerCell}>To Date</Text>
-                                    <Text style={styles.headerCellDesc}>Reason</Text>
+                                    <Text style={styles.headerCMl}>Leave Type</Text>
+                                    <Text style={styles.headerCMl}>From</Text>
+                                    <Text style={styles.headerCMl}>To</Text>
+                                    {/* <Text style={styles.headerCMl}>Days</Text> */}
+                                    <Text style={styles.headerCMlDesc}>Reason</Text>
                                 </>
                             )}
 
-                            <Text style={styles.headerCell}>Status</Text>
+                            <Text style={styles.headerCMl}>Status</Text>
                         </View>
 
-
-
-                        {/* {pageData.map((row, rowIndex) => {
-                                const isLast = rowIndex === pageData.length - 1;
-                                return (
-                                    <View
-                                        key={rowIndex}
-                                        style={isLast ? styles.tableRowLast : styles.tableRow}
-                                    >
-                                        <Text style={styles.cell1}>{rowIndex + 1}</Text>
-                                        <Text style={styles.cell}>{row.FromDate}</Text>
-                                        <Text style={styles.cell}>{row.ToDate}</Text>
-                                        <Text style={styles.cell}>{row.PermissionDate}</Text>
-                                        <Text style={styles.cellDesc}>{row.Reason}</Text>
-                                        <Text style={styles.cell}>{row.Status}</Text>
-                                    </View>
-
-                                );
-                            })} */}
                         {pageData.map((row, rowIndex) => {
                             const isLast = rowIndex === pageData.length - 1;
 
@@ -360,30 +419,137 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                                     key={rowIndex}
                                     style={isLast ? styles.tableRowLast : styles.tableRow}
                                 >
-                                    <Text style={styles.cell1}>{rowIndex + 1}</Text>
-
+                                    <Text style={styles.cMl1}>{rowIndex + 1}</Text>
                                     {isPermission ? (
                                         <>
-                                            <Text style={styles.cell}>{row.DisplayPermissionDate}</Text>
-                                            <Text style={styles.cell}>{row.FromDate}</Text>
-                                            <Text style={styles.cell}>{row.ToDate}</Text>
-                                            <Text style={styles.cellDesc}>{row.Reason}</Text>
+                                            <Text style={styles.cMl}>{row.DisplayPermissionDate}</Text>
+                                            <Text style={styles.cMl}>{row.FromDate}</Text>
+                                            <Text style={styles.cMl}>{row.ToDate}</Text>
+                                            <Text style={styles.cMl}>{row.NumofHrsday}</Text>
+                                            <Text style={styles.cMlDesc}>{row.Reason}</Text>
                                         </>
                                     ) : (
                                         <>
-                                            <Text style={styles.cell}>{row.LeaveName}</Text>
-                                            <Text style={styles.cell}>{row.FromDate}</Text>
-                                            <Text style={styles.cell}>{row.ToDate}</Text>
-                                            <Text style={styles.cellDesc}>{row.Comments}</Text>
+                                            <Text style={styles.cMl}>{row.LeaveName}</Text>
+                                            <Text style={styles.cMl}>{row.FromDate}</Text>
+                                            <Text style={styles.cMl}>{row.ToDate}</Text>
+                                            <Text style={styles.cMlDesc}>{row.Comments}</Text>
                                         </>
                                     )}
 
-                                    <Text style={styles.cell}>{row.Status}</Text>
+                                    <Text style={styles.cMl}>{row.Status}</Text>
                                 </View>
                             );
                         })}
 
                     </View>
+
+                    {isPermission && permissionSummary && (
+                        <View style={{ marginTop: 12 }}>
+                            <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
+                                Permission Summary
+                            </Text>
+
+                            <View style={styles.table}>
+                                <View style={styles.row}>
+                                    <Text style={styles.headerCell}>No of Days</Text>
+                                    <Text style={[styles.headerCell, styles.lastCell]}>
+                                        No of Hours
+                                    </Text>
+                                </View>
+
+                                <View style={styles.row}>
+                                    <Text style={styles.cell}>{permissionSummary.days}</Text>
+                                    <Text style={[styles.cell, styles.lastCell]}>
+                                        {permissionSummary.hours}
+                                    </Text>
+                                </View>
+                            </View>
+                          
+                        </View>
+                    )}
+
+                    {/* {isPermission && permissionSummary && (
+                        <View style={{ marginTop: 12 }}>
+                            <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
+                                Permission Summary
+                            </Text>
+
+                            <Text style={{ fontSize: 9, marginBottom: 2 }}>
+                                No of Days : {permissionSummary.days}
+                            </Text>
+
+                            <Text style={{ fontSize: 9, marginBottom: 2 }}>
+                                No of Hours : {permissionSummary.hours}
+                            </Text>
+
+                            {filters.leaveBalance && (
+                                <Text style={{ fontSize: 9, marginTop: 4 }}>
+                                    Balance Leave Days :{" "}
+                                    {Object.entries(filters.leaveBalance)
+                                        .map(([type, days]) => `${type} - ${days}`)
+                                        .join(", ")}
+                                </Text>
+                            )}
+                        </View>
+                    )} */}
+                    {/* LEAVE SUMMARY – TEXT ONLY */}
+                    {!isPermission && (
+                        <View style={{ marginTop: 12 }}>
+                            <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
+                                Leave Summary
+                            </Text>
+
+                            <View style={styles.table}>
+                                {/* HEADER */}
+                                <View style={styles.row}>
+                                    <Text style={styles.headerCell}>Leave Type</Text>
+                                    <Text style={styles.headerCell}>Total</Text>
+                                    <Text style={styles.headerCell}>Taken</Text>
+                                    <Text style={[styles.headerCell, styles.lastCell]}>
+                                        Balance
+                                    </Text>
+                                </View>
+
+                                {/* CL */}
+                                <View style={styles.row}>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Casual Leave</Text>
+                                    <Text style={styles.cell}>{totalLeave.CL}</Text>
+                                    <Text style={styles.cell}>{takenLeave.CL}</Text>
+                                    <Text style={[styles.cell, styles.lastCell]}>
+                                        {balancMeave.CL}
+                                    </Text>
+                                </View>
+
+                                {/* SL */}
+                                <View style={styles.row}>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Sick Leave</Text>
+                                    <Text style={styles.cell}>{totalLeave.G}</Text>
+                                    <Text style={styles.cell}>{takenLeave.G}</Text>
+                                    <Text style={[styles.cell, styles.lastCell]}>
+                                        {balancMeave.G}
+                                    </Text>
+                                </View>
+
+                                {/* EL */}
+                                <View style={styles.row}>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Emergency Leave</Text>
+                                    <Text style={styles.cell}>{totalLeave.M}</Text>
+                                    <Text style={styles.cell}>{takenLeave.M}</Text>
+                                    <Text style={[styles.cell, styles.lastCell]}>
+                                        {balancMeave.M}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            {/* OPTIONAL TOTAL LINE */}
+                            <Text style={{ fontSize: 9, marginTop: 4 }}>
+                                Total Leave Days: {totalLeaveDays}, Leave Taken Days: {takenLeaveDays},
+                                Balance Leave Days: {balancMeaveDays}
+                            </Text>
+                        </View>
+                    )}
+
                     {/* </View> */}
                     {/* RIGHT — QR IMAGE */}
                     <View fixed style={styles.footerWrapper}>

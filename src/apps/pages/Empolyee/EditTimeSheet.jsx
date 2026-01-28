@@ -757,8 +757,8 @@ const EditTimeSheet = () => {
                           projectName={projectName}
                           managerName={managerName}
                           filters={{
-                            Month: values.month,
-                            Year: values.year,
+                            Month: values.timemonth,
+                            Year: values.timeyear,
                             EmployeeID: timeempData?.Name || EMPNAME,
                           }}
                         />

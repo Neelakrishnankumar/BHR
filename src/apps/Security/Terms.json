@@ -6,9 +6,18 @@
       "points": [
         {
           "textParts": [
-            { "text": "The Free Plan includes access to ", "bold": false },
-            { "text": "1 Admin User, 5 Employees, and 1 Project", "bold": true },
-            { "text": " by default.", "bold": false }
+            {
+              "text": "The Free Plan includes access to ",
+              "bold": false
+            },
+            {
+              "text": "1 Admin User, 5 Employees, and 1 Project",
+              "bold": true
+            },
+            {
+              "text": " by default.",
+              "bold": false
+            }
           ]
         },
         {
@@ -21,9 +30,18 @@
       "points": [
         {
           "textParts": [
-            { "text": "We may send important updates, alerts, and notifications from time to time via ", "bold": false },
-            { "text": "Email and WhatsApp", "bold": true },
-            { "text": ".", "bold": false }
+            {
+              "text": "We may send important updates, alerts, and notifications from time to time via ",
+              "bold": false
+            },
+            {
+              "text": "Email and WhatsApp",
+              "bold": true
+            },
+            {
+              "text": ".",
+              "bold": false
+            }
           ]
         },
         {
@@ -47,17 +65,115 @@
       "points": [
         {
           "textParts": [
-            { "text": "Reports will be fully enabled only after the ", "bold": false },
-            { "text": "Company Logo, Header, and Footer", "bold": true },
-            { "text": " images are uploaded.", "bold": false }
+            {
+              "text": "Reports will be fully enabled only after the ",
+              "bold": false
+            },
+            {
+              "text": "Company Logo, Header, and Footer",
+              "bold": true
+            },
+            {
+              "text": " images are uploaded.",
+              "bold": false
+            }
           ]
         },
         {
           "textParts": [
-            { "text": "Until then, the system will display ", "bold": false },
-            { "text": "default company branding and logos", "bold": true },
-            { "text": " across reports and screens.", "bold": false }
+            {
+              "text": "Until then, the system will display ",
+              "bold": false
+            },
+            {
+              "text": "default company branding and logos",
+              "bold": true
+            },
+            {
+              "text": " across reports and screens.",
+              "bold": false
+            }
           ]
+        }
+      ]
+    },
+    {
+      "heading": "Back Office System Configuration – Bootstrap",
+      "points": [
+        {
+          "text": "Initial master setup required before using the system. These configurations define how the organization, users, and operational data are structured."
+        },
+        {
+          "textParts": [
+            {
+              "text": "Configure Company: Defines the basic company details such as company name, address, contact information, logo, and legal identifiers. This is the ",
+              "bold": false
+            },
+            {
+              "text": "root configuration",
+              "bold": true
+            },
+            {
+              "text": " for all other setups.",
+              "bold": false
+            }
+          ]
+        },
+        {
+          "text": "Setup Designation: Creates job titles or roles such as Manager, Engineer, or Accountant. Used for employee hierarchy, permissions, and reporting."
+        },
+        {
+          "text": "Setup Department: Defines organizational departments such as HR, Finance, and Operations. Helps in grouping employees and managing department-wise workflows."
+        },
+        {
+          "text": "Setup Leave Type: Configures different types of employee leave such as Casual Leave, Sick Leave, and Earned Leave. Used in leave management and attendance tracking."
+        },
+        {
+          "text": "Setup Shift: Defines working shifts with timings such as Morning Shift or Night Shift. Used for attendance, payroll, and work scheduling."
+        },
+        {
+          "text": "Setup Functions: Defines functional areas or responsibilities within the organization. Helps categorize work types, approvals, or operational roles."
+        },
+        {
+          "textParts": [
+            {
+              "text": "Setup Personnel (Maximum 5): Creates and manages employee or user records including personal details, designation, department, and shift. ",
+              "bold": false
+            },
+            {
+              "text": "A maximum of 5 personnel can be added",
+              "bold": true
+            },
+            {
+              "text": " during the bootstrap configuration and is used to control initial system access and licensing limits.",
+              "bold": false
+            }
+          ]
+        },
+        {
+          "textParts": [
+            {
+              "text": "Setup Project (Maximum 2): Defines projects handled by the organization. ",
+              "bold": false
+            },
+            {
+              "text": "A maximum of 2 projects can be created",
+              "bold": true
+            },
+            {
+              "text": " in the initial setup and is used for task tracking, assignments, and project-level reporting.",
+              "bold": false
+            }
+          ]
+        },
+        {
+          "text": "Setup HSN: Configures HSN (Harmonized System of Nomenclature) codes for goods and services. Required for GST compliance and tax calculations."
+        },
+        {
+          "text": "Setup Item: Creates items or products with pricing, tax details, and HSN mapping. Used in inventory management, billing, and purchase or sales processes."
+        },
+        {
+          "text": "Setup Party: Defines parties such as customers, vendors, or suppliers. Used in transactions, invoicing, and accounting workflows."
         }
       ]
     },

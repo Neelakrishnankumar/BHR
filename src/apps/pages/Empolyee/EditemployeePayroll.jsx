@@ -623,7 +623,7 @@ const EditemployeePayroll = () => {
   } else if (show == "1") {
     VISIBLE_FIELDS = [
       "SLNO",
-      "Allowances",
+      "Name",
       "Type",
       "value",
       "EffectiveValue",
@@ -653,7 +653,7 @@ const EditemployeePayroll = () => {
   } else {
     VISIBLE_FIELDS = [
       "SLNO",
-      "Deductions",
+      "Name",
       "Type",
       "value",
       "EffectiveValue",
@@ -980,13 +980,13 @@ const EditemployeePayroll = () => {
     },
 
     {
-      field: "EmplyeeCheckInDateTime",
-      headerName: "Emplyee CheckIn Date Time",
+      field: "CheckInDateTimeConcat",
+      headerName: "Employee CheckIn Date Time",
       flex: 1,
     },
     {
-      field: "EmplyeeCheckOutDateTime",
-      headerName: "Emplyee CheckOut Date Time",
+      field: "CheckOutDateTimeConcat",
+      headerName: "Employee CheckOut Date Time",
       flex: 1,
     },
     {
@@ -1839,6 +1839,7 @@ const EditemployeePayroll = () => {
       EmployeeID: recID,
       // ProjectID: "1"
       ProjectID: values.ProName.RecordID || 0,
+      CompanyID
       // ProjectName: values.ProName.Name || "",
     };
 
