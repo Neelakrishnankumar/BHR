@@ -9051,17 +9051,31 @@ const Editemployee = () => {
                         label="From Period"
                         variant="standard"
                         focused
-                        // inputFormat="YYYY-MM-DD"
-                        // value={funMode === "E" ? formatDateForInput(values.FromPeriod) : values.FromPeriod}                        // value={values.FromPeriod}
-
                         value={values.FromPeriod}
                         onBlur={handleBlur}
-                        onChange={handleChange}
-                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                      // helperText={touched.FromPeriod && errors.FromPeriod}
-                      //sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        onChange={(e) => {
+                          const { name, value } = e.target;
+                          setFieldValue(name, value);
+
+                          // 🔁 Run same logic if ToDate already exists
+                          if (values.ToPeriod) {
+                            const toDate = new Date(values.ToPeriod);
+                            const fromDate = new Date(value);
+
+                            // Renewal days
+                            const diffDays = differenceInDays(toDate, fromDate);
+                            setFieldValue("RenewableNotification", diffDays);
+
+                            // Notification Alert Date (still based on ToDate)
+                            const alertDate = subDays(toDate, 1);
+                            setFieldValue(
+                              "NotificationAlertDate",
+                              alertDate.toISOString().split("T")[0]
+                            );
+                          }
+                        }}
                       />
+
                       <TextField
                         name="ToPeriod"
                         type="date"
