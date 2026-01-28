@@ -17,6 +17,7 @@ import {
   Button,
   Stack,
   FormControlLabel,
+  FormControl,
 } from "@mui/material";
 import {
   DataGrid,
@@ -3127,6 +3128,7 @@ const Listview = () => {
                       JSON.parse(sessionStorage.getItem("TR328_Party")) || [],
                     product:
                       JSON.parse(sessionStorage.getItem("TR328_Product")) || [],
+                    freshCall: sessionStorage.getItem("TR328_FreshCall") || "N",
                   }}
                   enableReinitialize
                   validate={(values) => {
@@ -3143,6 +3145,8 @@ const Listview = () => {
                     const fromDate = values.fromdate || "";
                     const toDate = values.date || "";
 
+                    const freshCall = values.freshCall === "Y";
+
                     sessionStorage.setItem("FromDate", fromDate);
                     sessionStorage.setItem("ToDate", toDate);
 
@@ -3151,20 +3155,9 @@ const Listview = () => {
                       JSON.stringify(values)
                     );
 
-                    const dateConditions = [];
+
 
                     const field = "FilterLastCallDate";
-
-                    if (fromDate && toDate) {
-                      dateConditions.push(
-                        `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                      );
-                    } else if (fromDate) {
-                      dateConditions.push(`(${field} >= '${fromDate}')`);
-                    } else if (toDate) {
-                      dateConditions.push(`(${field} <= '${toDate}')`);
-                    }
-
                     if (values.party?.length > 0) {
                       const partyIds = values.party
                         .map((p) => `'${p.RecordID}'`)
@@ -3184,13 +3177,30 @@ const Listview = () => {
                     }
                     if (compID) {
                       conditions.push(
-                        `HrLoginUserID='${LoginID}' AND CompanyID = '${compID}'`
+                        `HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`
                       );
                     }
-                    if (dateConditions.length > 0) {
-                      conditions.push(`(${dateConditions.join(" OR ")})`);
+                    if (freshCall) {
+                      // 👉 Fresh Call flow (NO DATE SENT)
+                      conditions.push(`CallType = 'FC'`);   // ⚠️ change field name if backend uses different column
                     }
+                    else {
+                      const dateConditions = [];
+                      if (fromDate && toDate) {
+                        dateConditions.push(
+                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
+                        );
+                      } else if (fromDate) {
+                        dateConditions.push(`(${field} >= '${fromDate}')`);
+                      } else if (toDate) {
+                        dateConditions.push(`(${field} <= '${toDate}')`);
+                      }
 
+
+                      if (dateConditions.length > 0) {
+                        conditions.push(`(${dateConditions.join(" OR ")})`);
+                      }
+                    }
                     // --------------------------
                     // FINAL WHERE CLAUSE
                     // --------------------------
@@ -3211,6 +3221,8 @@ const Listview = () => {
 
                     setTimeout(() => setSubmitting(false), 100);
                   }}
+
+
                 >
                   {({
                     values,
@@ -3222,6 +3234,7 @@ const Listview = () => {
                     resetForm,
                   }) => (
                     <form onSubmit={handleSubmit}>
+
                       <Box
                         sx={{
                           height: 600,
@@ -3251,6 +3264,11 @@ const Listview = () => {
                             setFieldValue("fromdate", newDate);
                             // dispatch(setFromDate(newDate));
                             sessionStorage.setItem("FromDate", newDate);
+
+                            if (newDate) {
+                              setFieldValue("freshCall", "N");
+                              sessionStorage.setItem("TR328_FreshCall", "N");
+                            }
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
@@ -3258,6 +3276,7 @@ const Listview = () => {
                             max: new Date().toISOString().split("T")[0],
                           }}
                           sx={{ width: 250, mt: 2 }}
+                          disabled={values.freshCall === "Y"}
                         />
 
                         <TextField
@@ -3272,6 +3291,11 @@ const Listview = () => {
                             setFieldValue("date", newDate);
                             // dispatch(setToDate(newDate));
                             sessionStorage.setItem("ToDate", newDate);
+
+                            if (newDate) {
+                              setFieldValue("freshCall", "N");
+                              sessionStorage.setItem("TR328_FreshCall", "N");
+                            }
                           }}
                           focused
                           InputLabelProps={{ shrink: true }}
@@ -3279,6 +3303,7 @@ const Listview = () => {
                             max: new Date().toISOString().split("T")[0],
                           }}
                           sx={{ width: 250, mt: 2 }}
+                          disabled={values.freshCall === "Y"}
                         />
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
@@ -3322,6 +3347,27 @@ const Listview = () => {
                           // helperText={touched.product && errors.product}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2137","ScreenName":"Product","Filter":"CompanyID='${compID}' AND ItemsDesc ='Product'","Any":""}}`}
                         />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={values.freshCall === "Y"}
+                              //disabled={Boolean(values.fromdate || values.date)}
+                              onChange={(e) => {
+                                const val = e.target.checked ? "Y" : "N";
+                                setFieldValue("freshCall", val);
+                                sessionStorage.setItem("TR328_FreshCall", val);
+                                if (val === "Y") {
+                                  setFieldValue("fromdate", "");
+                                  setFieldValue("date", "");
+                                  sessionStorage.removeItem("FromDate");
+                                  sessionStorage.removeItem("ToDate");
+                                }
+                              }}
+                            />
+                          }
+                          label="Fresh Calls"
+                        />
+
                         <Stack
                           direction="row"
                           alignItems="center"
@@ -3350,6 +3396,7 @@ const Listview = () => {
                                 "TR328_Product",
                                 "TR328_Filters",
                                 "TR328_WHERE",
+                                "TR328_FreshCall",
                               ].forEach((key) =>
                                 sessionStorage.removeItem(key)
                               );

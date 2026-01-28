@@ -127,6 +127,7 @@
   },
   "HSNMaster": {
     "Description": "Please enter the HSN Master Description",
+    "Code": "Please enter the HSN Master Code",
     "HSNIGST": "Please enter the IGST(In Percentage)",
     "HSNCGST": "Please enter the CGST(In Percentage)",
     "HSNSGST": "Please enter the SGST(In Percentage)"

@@ -181,30 +181,30 @@ const EditLeaveEnquiry = () => {
                 {
                     field: "DisplayPermissionDate",
                     headerName: "Date",
-                    width: 150,
+                    width: 100,
                     headerAlign: "center",
                     align: "center",
                 },
                 {
                     field: "FromDate",
                     headerName: "From",
-                    width: 150,
+                    width: 100,
                     headerAlign: "center",
-                    align: "left",
+                    align: "center",
                 },
                 {
                     field: "ToDate",
                     headerName: "To",
-                    width: 150,
+                    width: 100,
                     headerAlign: "center",
-                    align: "left",
+                    align: "center",
                 },
                 {
                     field: "NumofHrsday",
                     headerName: "Hours",
-                    width: 150,
+                    width: 100,
                     headerAlign: "center",
-                    align: "left",
+                    align: "center",
                 },
 
                 {
