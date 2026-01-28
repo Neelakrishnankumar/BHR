@@ -11,7 +11,7 @@
               "bold": false
             },
             {
-              "text": "1 Admin User, 5 Employees, and 1 Project",
+              "text": "1 Admin User, 5 Employees and 1 Project",
               "bold": true
             },
             {
@@ -31,7 +31,7 @@
         {
           "textParts": [
             {
-              "text": "We may send important updates, alerts, and notifications from time to time via ",
+              "text": "We may send important updates, alerts and notifications from time to time via ",
               "bold": false
             },
             {
@@ -70,7 +70,7 @@
               "bold": false
             },
             {
-              "text": "Company Logo, Header, and Footer",
+              "text": "Company Logo, Header and Footer",
               "bold": true
             },
             {
@@ -101,12 +101,12 @@
       "heading": "Back Office System Configuration – Bootstrap",
       "points": [
         {
-          "text": "Initial master setup required before using the system. These configurations define how the organization, users, and operational data are structured."
+          "text": "Initial master setup required before using the system. These configurations define how the organization, users and operational data are structured."
         },
         {
           "textParts": [
             {
-              "text": "Configure Company: Defines the basic company details such as company name, address, contact information, logo, and legal identifiers. This is the ",
+              "text": "Configure Company: Defines the basic company details such as company name, address, contact information, logo and legal identifiers. This is the ",
               "bold": false
             },
             {
@@ -120,24 +120,24 @@
           ]
         },
         {
-          "text": "Setup Designation: Creates job titles or roles such as Manager, Engineer, or Accountant. Used for employee hierarchy, permissions, and reporting."
+          "text": "Setup Designation: Creates job titles or roles such as Manager, Engineer or Accountant. Used for employee hierarchy, permissions and reporting."
         },
         {
-          "text": "Setup Department: Defines organizational departments such as HR, Finance, and Operations. Helps in grouping employees and managing department-wise workflows."
+          "text": "Setup Department: Defines organizational departments such as HR, Finance and Operations. Helps in grouping employees and managing department-wise workflows."
         },
         {
-          "text": "Setup Leave Type: Configures different types of employee leave such as Casual Leave, Sick Leave, and Earned Leave. Used in leave management and attendance tracking."
+          "text": "Setup Leave Type: Configures different types of employee leave such as Casual Leave, Sick Leave and Earned Leave. Used in leave management and attendance tracking."
         },
         {
-          "text": "Setup Shift: Defines working shifts with timings such as Morning Shift or Night Shift. Used for attendance, payroll, and work scheduling."
+          "text": "Setup Shift: Defines working shifts with timings such as Morning Shift or Night Shift. Used for attendance, payroll and work scheduling."
         },
         {
-          "text": "Setup Functions: Defines functional areas or responsibilities within the organization. Helps categorize work types, approvals, or operational roles."
+          "text": "Setup Functions: Defines functional areas or responsibilities within the organization. Helps categorize work types, approvals or operational roles."
         },
         {
           "textParts": [
             {
-              "text": "Setup Personnel (Maximum 5): Creates and manages employee or user records including personal details, designation, department, and shift. ",
+              "text": "Setup Personnel (Maximum 5): Creates and manages employee or user records including personal details, designation, department and shift. ",
               "bold": false
             },
             {
@@ -161,7 +161,7 @@
               "bold": true
             },
             {
-              "text": " in the initial setup and is used for task tracking, assignments, and project-level reporting.",
+              "text": " in the initial setup and is used for task tracking, assignments and project-level reporting.",
               "bold": false
             }
           ]
@@ -170,10 +170,10 @@
           "text": "Setup HSN: Configures HSN (Harmonized System of Nomenclature) codes for goods and services. Required for GST compliance and tax calculations."
         },
         {
-          "text": "Setup Item: Creates items or products with pricing, tax details, and HSN mapping. Used in inventory management, billing, and purchase or sales processes."
+          "text": "Setup Item: Creates items or products with pricing, tax details and HSN mapping. Used in inventory management, billing and purchase or sales processes."
         },
         {
-          "text": "Setup Party: Defines parties such as customers, vendors, or suppliers. Used in transactions, invoicing, and accounting workflows."
+          "text": "Setup Party: Defines parties such as customers, vendors or suppliers. Used in transactions, invoicing and accounting workflows."
         }
       ]
     },

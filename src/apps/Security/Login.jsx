@@ -203,7 +203,7 @@ const Login = () => {
       sessionStorage.setItem("Modules", JSON.stringify(Modules))
       navigate("/Apps/HR");
       console.log("firstLogin:", firstLogin);
-      if (firstLogin == "N") {
+      if (firstLogin == "Y") {
         navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });
         // navigate("/Apps/HR")
       }
