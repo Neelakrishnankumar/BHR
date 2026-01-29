@@ -152,6 +152,7 @@ import PermMediaIcon from '@mui/icons-material/PermMedia';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import { logout } from "../../store/reducers/LoginReducer";
 import { useDispatch } from "react-redux";
+import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = {
   data: [
     {
@@ -413,7 +414,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           url: "./TR207/Satuary Component",
           icon: (
             <Tooltip title="Satuary Component">
-              <AttachMoneyIcon color="info" />
+              <LocalPoliceOutlinedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,

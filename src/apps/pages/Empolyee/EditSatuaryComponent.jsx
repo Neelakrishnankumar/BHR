@@ -262,6 +262,11 @@ const EditSatuaryComponent = () => {
                     onChange={handleChange}
                     error={!!touched.sortOrder && !!errors.sortOrder}
                     helperText={touched.sortOrder && errors.sortOrder}
+                    InputProps={{
+                        inputProps: {
+                          style: { textAlign: "right" },
+                        },
+                      }}
                   //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                   />
                   <FormControl>
