@@ -241,7 +241,7 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
             <View style={styles.row}>
               <Text style={[styles.headerCell, styles.colSlno]}>SL#</Text>
               <Text style={[styles.headerCell, styles.colEmp]}>
-                Employee Name
+                Employee
               </Text>
               <Text style={[styles.headerCell, styles.colReason]}>
                 Leave Type
