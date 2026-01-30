@@ -196,20 +196,45 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
     ? `${QR_BASE_URL}${filters.FooterImg}`
     : null;
 
-  const employeeSummary = Object.values(
-    data.reduce((acc, row) => {
-      if (!acc[row.EmployeeID]) {
-        acc[row.EmployeeID] = {
-          EmployeeID: row.EmployeeID,
-          Employee: row.Employee,
-          TotalLeave: Number(row.TotalLeaveDays || 0),
-          LeavesTaken: Number(row.LeaveTakenDays || 0),
-          BalanceLeave: Number(row.BalanceLeaveDays || 0),
-        };
-      }
-      return acc;
-    }, {})
-  );
+  // const employeeSummary = Object.values(
+  //   data.reduce((acc, row) => {
+  //     if (!acc[row.EmployeeID]) {
+  //       acc[row.EmployeeID] = {
+  //         EmployeeID: row.EmployeeID,
+  //         Employee: row.Employee,
+  //         TotalLeave: Number(row.TotalLeaveDays || 0),
+  //         LeavesTaken: Number(row.LeaveTakenDays || 0),
+  //         BalanceLeave: Number(row.BalanceLeaveDays || 0),
+  //       };
+  //     }
+  //     return acc;
+  //   }, {})
+  // );
+const employeeSummary = Object.values(
+  data.reduce((acc, row) => {
+    if (!acc[row.EmployeeID]) {
+      acc[row.EmployeeID] = {
+        EmployeeID: row.EmployeeID,
+        Employee: row.Employee,
+        TotalLeave: Number(row.TotalLeaveDays || 0),
+        ApprovedLeaveTaken: 0,
+      };
+    }
+
+    // ✅ Add only Approved leave days
+    if (row.Status === "Approved") {
+      acc[row.EmployeeID].ApprovedLeaveTaken +=
+        Number(row.NumofHrsday || 0);
+    }
+
+    return acc;
+  }, {})
+).map(emp => ({
+  ...emp,
+  TotalLeave: emp.TotalLeave.toFixed(2),
+  ApprovedLeaveTaken: emp.ApprovedLeaveTaken.toFixed(2),
+  BalanceLeave: (emp.TotalLeave - emp.ApprovedLeaveTaken).toFixed(2)
+}));
 
   return (
     <Document>
@@ -323,7 +348,7 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
                         {row.Employee}
                       </Text>
                       <Text style={[styles.cell3, styles.colTime1]}>{row.TotalLeave}</Text>
-                      <Text style={[styles.cell3, styles.colTime1]}>{row.LeavesTaken}</Text>
+                      <Text style={[styles.cell3, styles.colTime1]}>{row.ApprovedLeaveTaken}</Text>
                       <Text style={[styles.cell3, styles.colTime1]}>{row.BalanceLeave}</Text>
                     </View>
                   ))}
