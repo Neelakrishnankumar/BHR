@@ -509,24 +509,24 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR321",
         },
-        // {
-        //   name: "Aging Report",
-        //   id: 4346895,
-        //   //  url: "./TR243/Party",
-        //   url: "/Apps/Party/AgingReport",
-        //   icon: (
-        //     <Tooltip title="Aging Report">
-        //       <ScaleOutlinedIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR321",
-        // },
+        {
+          name: "Aging Report",
+          id: 4346895,
+          //  url: "./TR243/Party",
+          url: "/Apps/Party/AgingReport",
+          icon: (
+            <Tooltip title="Aging Report">
+              <ScaleOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR321",
+        },
         //  {
         //   name: "Lead",
         //   id: 4346895,
