@@ -55,7 +55,7 @@ const EditLeaveEnquiry = () => {
     const compID = sessionStorage.getItem("compID");
     const HeaderImg = sessionStorage.getItem("CompanyHeader");
     const FooterImg = sessionStorage.getItem("CompanyFooter");
-    console.log("HeaderImg", HeaderImg,FooterImg);
+    console.log("HeaderImg", HeaderImg, FooterImg);
     const [pageSize, setPageSize] = React.useState(10);
     const exploreLoading = useSelector((state) => state.exploreApi.loading);
     const [rowCount, setRowCount] = useState(0);
@@ -163,6 +163,22 @@ const EditLeaveEnquiry = () => {
 
     // ];
     // const isPermission = filters?.Permission === "Y";
+    // const getYearsFromDates = (fromDate, toDate) => {
+    //     if (!fromDate) return [];
+
+    //     const startYear = new Date(fromDate).getFullYear();
+    //     const endYear = toDate
+    //         ? new Date(toDate).getFullYear()
+    //         : startYear;
+
+    //     const years = [];
+    //     for (let y = startYear; y <= endYear; y++) {
+    //         years.push(y);
+    //     }
+
+    //     return years;
+    // };
+    const getCurrentYear = () => new Date().getFullYear();
 
     const columns = [
         {
@@ -328,6 +344,7 @@ const EditLeaveEnquiry = () => {
                             ToDate: "",
                             leavetype: [],
                             Permission: false,
+                            LeaveYears: [],
                         }}
                         enableReinitialize
                         onSubmit={(values) => {
@@ -414,7 +431,9 @@ const EditLeaveEnquiry = () => {
                                                     setFieldValue("leavetype", newValue || []);
                                                     sessionStorage.setItem("LeaveEnqLeaveType", JSON.stringify(newValue || []));
                                                 }}
-                                                url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}'","Any":""}}`}
+                                                url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}' AND Year = '${getCurrentYear()}'","Any":""}}`}
+                                            // url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${compID}' AND EmployeeID='${recID}' AND Year IN (${values.LeaveYears.map(y => `'${y}'`).join(",")})","Any":""}}`}
+
                                             />
 
                                             {/* PERMISSION */}
@@ -456,7 +475,7 @@ const EditLeaveEnquiry = () => {
 
                                         <Button
                                             variant="contained"
-                                            color="error"
+                                            color="warning"
                                             onClick={() => navigate(-1)}
                                         >
                                             CANCEL

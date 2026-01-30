@@ -88,6 +88,12 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     fontWeight: "bold", // BOLD header text
   },
+  legendContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 6,
+    gap: 10,
+  },
 });
 
 const paginateData = (data) => {
@@ -122,6 +128,14 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
               </Text>
             </View>
           )}
+          <View style={styles.legendContainer}>
+            <Text style={styles.legendText}>{"P -> Present"}</Text>
+            <Text style={styles.legendText}>{"A -> Absent"}</Text>
+            <Text style={styles.legendText}>{"HO -> Holiday"}</Text>
+            <Text style={styles.legendText}>{"WO -> Week Off"}</Text>
+            <Text style={styles.legendText}>{"L -> Leave"}</Text>
+            <Text style={styles.legendText}>{"IR -> IR Regular"}</Text>
+          </View>
           <View style={styles.table}>
             {/* Header Row */}
             <View style={styles.tableRow}>

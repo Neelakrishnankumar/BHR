@@ -914,8 +914,28 @@ const EditOrder = () => {
                           variant="standard"
                           focused
                           value={values.paidamount}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onBlur={handleBlur}
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            // allow only numbers + decimal
+                            const val = e.target.value;
+                            if (/^\d*\.?\d*$/.test(val)) {
+                              setFieldValue("paidamount", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
+
+                            if (val === "" || val === ".") {
+                              setFieldValue("paidamount", "0.00");
+                              return;
+                            }
+
+                            const num = parseFloat(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("paidamount", num.toFixed(2)); // ✅ forces .00
+                            }
+                          }}
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{

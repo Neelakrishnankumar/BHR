@@ -22,6 +22,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
+import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
 import {
   Box,
   Avatar,
@@ -326,7 +327,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           url: "./TR027/Employee Payroll",
           icon: (
             <Tooltip title="Employees">
-                <PeopleAltIcon color="info" />
+                <CurrencyRubleIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
