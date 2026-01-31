@@ -223,6 +223,7 @@
     "reason": "Please enter the Reason"
   },
   "Leave": {
+    "Year": "Please select the Year",
     "LeavePart": "Please select the Leave Part",
     "leavetype": "Please select the Leave Type",
     "FromDate": "Please enter the From Date",
