@@ -94,7 +94,7 @@
     "Name": "Please enter the Name",
     "Password": "Please enter the Password",
     "Department": "Please select the Department",
-    "employeetype": "Please select the Employee Type"
+    "employeetype": "Please select the Type"
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"
@@ -147,7 +147,7 @@
     "function": "Please enter the Function"
   },
   "Documents": {
-    "category": "Please enter the Category"
+    "category": "Please select the Category"
   },
   "Deployment": {
     "location": "Please enter the Location",
@@ -273,7 +273,7 @@
   },
   "Leaveconfiguration": {
     "totaldays": "Please enter the Eligible Days",
-    "leavetype": "Please enter the Leave Type"
+    "leavetype": "Please select the Leave Type"
   },
   "Manager": {
     "Level": "Please enter the Level",

@@ -14,6 +14,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Avatar,
+  Chip,
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -691,6 +693,57 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+               <Stack
+                direction="row"
+                padding={1}
+                alignItems="center"
+                justifyContent="space-between"
+
+              >
+                {/* LEFT SIDE ITEMS */}
+                <Box display="flex" alignItems="center" gap={2} >
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>P</Avatar>}
+                    label="Present"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
+                    label="Absent"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>WO</Avatar>}
+                    label="WeekOff"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>HO</Avatar>}
+                    label="Holiday"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4",  }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>L</Avatar>}
+                    label="Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>IR</Avatar>}
+                    label=" IR Regular "
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                </Box>
+              </Stack>
             </form>
           )}
         </Formik>
