@@ -392,6 +392,9 @@ const EditemployeePayroll = () => {
       GateRecID: 0,
       WeekOff: 0,
       CompanyID,
+      QualityAssurance: Data.QualityAssurance === "Y" ? "Y" : "N",
+      DeleteFlag: Data.DeleteFlag === "Y" ? "Y" : "N",
+      Module:"",
       SubscriptionCode
     };
     var type = "";
@@ -407,7 +410,8 @@ const EditemployeePayroll = () => {
       toast.success(data.payload.Msg);
       setLoading(false);
       navigate(
-        `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
+        // `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
+        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${data.payload.apiResponse}/E`
       );
     } else {
       toast.error(data.payload.Msg);

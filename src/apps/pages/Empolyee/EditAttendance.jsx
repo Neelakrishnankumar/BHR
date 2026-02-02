@@ -206,7 +206,7 @@ const EditAttendance = () => {
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
         }
-        if (params.row.Status === "Casual leave" || params.row.Status === "Sick leave" || params.row.Status === "Medical leave") {
+        if (params.row.Status === "Casual Leave" || params.row.Status === "Sick leave" || params.row.Status === "Medical leave") {
           return <ExitToAppIcon color="primary" titleAccess="Leave" />;
         }
         return null;
@@ -214,25 +214,25 @@ const EditAttendance = () => {
     },
     {
       field: "MonthDate",
-      headerName: "Check In Date",
+      headerName: "In Date",
       flex: 1,
       headerAlign: "center",
     },
     {
       field: "EmployeeCheckInTime",
-      headerName: "Check In Time",
+      headerName: "In Time",
       flex: 1,
       headerAlign: "center",
     },
-    {
-      field: "EmployeeCheckOutDate",
-      headerName: "Check Out Date",
-      flex: 1,
-      headerAlign: "center",
-    },
+    // {
+    //   field: "EmployeeCheckOutDate",
+    //   headerName: "Check Out Date",
+    //   flex: 1,
+    //   headerAlign: "center",
+    // },
     {
       field: "EmployeeCheckOutTime",
-      headerName: "Check Out Time",
+      headerName: "Out Time",
       flex: 1,
       headerAlign: "center",
     },
@@ -730,11 +730,30 @@ const EditAttendance = () => {
                     //     ? "odd-row"
                     //     : "even-row"
                     // }
+                    // getRowClassName={(params) => {
+                    //   const status = params.row.Status;
+                    //   if (status === "WeekOff") return "weekoff-row";
+                    //   if (status === "Holiday") return "holiday-row";
+                    //   if (status === "Casual Leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                    //   return params.indexRelativeToCurrentPage % 2 === 0
+                    //     ? "odd-row"
+                    //     : "even-row";
+                    // }}
                     getRowClassName={(params) => {
                       const status = params.row.Status;
                       if (status === "WeekOff") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
-                      if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                      // if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                      const leaveStatuses = [
+                        "casual leave",
+                        "sick leave",
+                        "medical leave",
+                      ];
+
+                      if (leaveStatuses.includes(status?.trim().toLowerCase())) {
+                        return "leave-row";
+                      }
+
                       return params.indexRelativeToCurrentPage % 2 === 0
                         ? "odd-row"
                         : "even-row";
