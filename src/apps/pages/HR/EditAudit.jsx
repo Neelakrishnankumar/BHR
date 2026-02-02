@@ -838,8 +838,8 @@ const getDiffInDays = (from, to) => {
                             FromDate: values.fromdate || "",
                             ToDate: values.todate || "",
                             Imageurl: baseurlUAAM,
-                            HeaderImage: HeaderImg,
-                            FooterImage: FooterImg
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg
                           }}
                         />
                       }

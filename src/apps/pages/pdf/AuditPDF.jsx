@@ -420,8 +420,8 @@ console.log(filters.HeaderImage,filters.FooterImage, "---HeaderImage FooterImage
   <View fixed style={styles.headerWrapper}>
               {filters.HeaderImg && (
                 <Image
-                  // src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
-                  src="https://uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
+                  src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                  // src="https://uaamuat.beyondexs.com/uploads/images/20260108_095454_bexlogo.jpg"
                   style={styles.headerImage}
                 />
               )}
