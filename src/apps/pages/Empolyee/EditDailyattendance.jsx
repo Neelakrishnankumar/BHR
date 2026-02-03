@@ -45,6 +45,7 @@ import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AttendancePDF from "../pdf/AttendancePdf";
 import DailyattendancePDF from "../pdf/Dailyattendancepdf";
+import { getConfig } from "../../../config";
 
 const EditdailyAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -57,6 +58,14 @@ const EditdailyAttendance = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const EmpName = sessionStorage.getItem("EmpName");
   const CompanyID = sessionStorage.getItem("compID");
+
+const HeaderImg = sessionStorage.getItem("CompanyHeader");
+const FooterImg = sessionStorage.getItem("CompanyFooter");
+
+console.log("HeaderImg", HeaderImg, FooterImg);
+const config = getConfig();
+const baseurlUAAM = config.UAAM_URL;
+
   const AttendanceData = useSelector(
     (state) => state.formApi.MonthlyAttendanceData
   );
@@ -444,6 +453,9 @@ const EditdailyAttendance = () => {
                           filters={{
                             Date: values.date,
                             //EmployeeID: empData?.Name || EmpName,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg
                           }}
                         />
                       }
