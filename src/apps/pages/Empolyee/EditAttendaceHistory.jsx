@@ -65,6 +65,7 @@ import AttendanceHistoryPDF from "../pdf/AttendanceHistoryPdf"
 import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { getConfig } from "../../../config";
 const EditAttendanceHistory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -89,6 +90,12 @@ const EditAttendanceHistory = () => {
     (state) => state.formApi.empAttendanceData
   );
   console.log("AttendanceData", AttendanceData);
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const config = getConfig();
+  const baseurl1 = config.UAAM_URL;
+
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -321,6 +328,7 @@ const EditAttendanceHistory = () => {
   const explorelistViewColumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
   );
+  const empAttLoading = useSelector((state) => state.formApi.empAttendanceDataLoading);
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
   const screenChange = (event) => {
     setScreen(event.target.value);
@@ -544,6 +552,9 @@ const EditAttendanceHistory = () => {
                             Month: values.month,
                             Year: values.year,
                             EmployeeID: empData?.RecordID,
+                            Imageurl: baseurl1,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }
@@ -677,7 +688,8 @@ const EditAttendanceHistory = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    // loading={exploreLoading}
+                    loading={empAttLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,

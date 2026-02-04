@@ -55,6 +55,7 @@ const initialState = {
   purchaseorderratingData: [],
   searchLoading: false,
   empAttendanceData: {},
+  empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
   AttendanceDataLoading: false,
   RegGetData: {},
@@ -3228,6 +3229,17 @@ export const getApiSlice = createSlice({
       })
       .addCase(empAttendance.fulfilled, (state, action) => {
         state.empAttendanceData = action.payload.Data;
+        state.empAttendanceDataLoading = false;
+      })
+      .addCase(empAttendance.pending, (state, action) => {
+        state.Status = "idle";
+        state.empAttendanceDataLoading = true;
+        state.empAttendanceData = [];
+      })
+      .addCase(empAttendance.rejected, (state, action) => {
+        state.Status = "Error";
+        state.empAttendanceDataLoading = false;
+        state.empAttendanceData = [];
       })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;

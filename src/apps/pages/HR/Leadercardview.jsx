@@ -290,9 +290,12 @@ const LeaderCardView = () => {
                 <CardContent>
                   <Typography
                     variant="h6"
-                    sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}
+                    sx={{ mb: 1,color: "#1565C0", fontWeight: "bold" }}
                   >
-                    #SL: {index + 1} {row.LeadTitle || ""}
+                   {row.LeadTitle || ""}
+                  </Typography>
+                  <Typography>
+                   <strong>#SL:</strong>  {index + 1}
                   </Typography>
                   <Typography>
                     <strong>Product Name:</strong> {row.ProjectName || ""}
