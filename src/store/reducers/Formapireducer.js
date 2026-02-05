@@ -4732,7 +4732,62 @@ export const leaveenquiryget = createAsyncThunk(
     }
   }
 );
+export const EmployeeVendorGetController = createAsyncThunk(
+  "empvendorget/empvendorgetfile",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const url = store.getState().globalurl.EmployeeVendorGetController;
 
+      const requestBody = {        
+          EmployeeID: payload.EmployeeID,
+          CompanyID: payload.CompanyID,
+          action: payload.action,       
+      };
+
+      console.log("Final Request Body:", JSON.stringify(requestBody));
+
+      const response = await axios.post(url, requestBody, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Leave enquiry API error:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const EmployeeVendorContactGet = createAsyncThunk(
+  "empvendorcontactget/empvendorcontactgetfile",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const url = store.getState().globalurl.EmployeeVendorContactGet;
+
+      const requestBody = {        
+          EmployeeID: payload.EmployeeID,
+          VendorID: payload.VendorID,
+          action: payload.action,       
+      };
+
+      console.log("Final Request Body:", JSON.stringify(requestBody));
+
+      const response = await axios.post(url, requestBody, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Leave enquiry API error:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 export const userActivityLog = createAsyncThunk(
   "activity/log",
