@@ -154,7 +154,8 @@ import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import { logout } from "../../store/reducers/LoginReducer";
 import { useDispatch } from "react-redux";
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
-import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = {
+import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
+const child = {
   data: [
     {
       name: "Setup",
@@ -327,7 +328,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           url: "./TR027/Employee Payroll",
           icon: (
             <Tooltip title="Employees">
-                <CurrencyRubleIcon color="info" />
+              <CurrencyRubleIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -962,7 +963,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR252",
         },
-       
+
         {
           name: "Logo & GST Upload",
           id: 58467,
@@ -997,7 +998,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR258",
         },
-         {
+        {
           name: "Activate My Subscription",
           id: 5846,
           url: "./ChangeyourPassword_3",
@@ -1049,13 +1050,18 @@ const Sidebars = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
-  const dispatch = useDispatch();   
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState("Product Category");
   // const ATMLogo = 'B2025-ATM01.png' 
   const [open, setOpen] = React.useState(false);
   // const companyLogo = sessionStorage.getItem("CompanyLogo");
   // console.log(companyLogo, "companyLogo");
   const firstLogin = sessionStorage.getItem("firstLogin");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  console.log(is003Subscription, "is003Subscription");
+  const restrictedMenus003 = ["Party"];
+
   // const firstLogin = "Y";
   console.log(firstLogin, "firstLogin");
   const [logoSrc, setLogoSrc] = useState(null);
@@ -1097,7 +1103,7 @@ const Sidebars = () => {
       : child.data.filter((menu) => menu.name !== "Company");
 
 
-  const handleMenu = (children, accessRow, isChild) => {
+  const handleMenu = (children, accessRow, isChild,  parentMenuID = null) => {
     return children.map(
       ({
         children,
@@ -1109,6 +1115,19 @@ const Sidebars = () => {
         UGA_ACCESSIDS,
         MenuID,
       }) => {
+         if (name === "Party") {
+      console.log("Party parent:", parentMenuID);
+    }
+
+    //  HIDE CRM → Party for 003 subscription
+    if (
+      parentMenuID === "CRM1800" &&
+      restrictedMenus003.includes(name) &&
+      is003Subscription
+    ) {
+      console.log("HIDDEN PARTY");
+      return null;
+    }
         if (!children) {
           return accessRow.map(
             ({
@@ -1151,7 +1170,7 @@ const Sidebars = () => {
             }
           );
         }
-
+       
         return Modules.map(({ PPD, SM_PMENU }) => {
           if (PPD && SM_PMENU === MenuID) {
             return (
@@ -1194,7 +1213,7 @@ const Sidebars = () => {
                   timeout="auto"
                   unmountOnExit
                 >
-                  {handleMenu(children, Groupaccess, false)}
+                  {handleMenu(children, Groupaccess, false, MenuID)}
                 </Collapse>
               </div>
             );

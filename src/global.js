@@ -292,6 +292,10 @@ const initialState = {
   // UserActivityUrl : essURL + "UserActivityController.php",
   UserActivityUrl: "",
   LeaveenquiryGetController: "",
+  EmployeeVendorGetController:"",
+  OHPaymentUpdateController: "",
+  PartyBydateByamtFilter: "",
+  EmployeeVendorContactGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -447,6 +451,8 @@ export const getUrlSlice = createSlice({
         APIurl + "OHPaymentUpdateController.php";
       state.PartyBydateByamtFilter =
         APIurl + "PartyBydateByamtFilter.php";
+      state.EmployeeVendorGetController = APIurl + "EmployeeVendorGetController.php";
+      state.EmployeeVendorContactGet = APIurl + "EmployeeVendorContractGetController.php";
     },
   },
 });
