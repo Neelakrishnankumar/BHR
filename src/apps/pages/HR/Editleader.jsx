@@ -589,7 +589,7 @@ const EditLeader = () => {
                     }}
                     error={!!touched.project && !!errors.project}
                     helperText={touched.project && errors.project}
-                    disabled={Type === "T"}
+                    disabled={Type === "T" && values.project?.Name !== "--"}
                     InputLabelProps={{
                       shrink: true, // ✅ prevents overlap
                     }}
