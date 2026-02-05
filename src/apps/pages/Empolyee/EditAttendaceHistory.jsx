@@ -14,6 +14,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Avatar,
+  Chip,
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -63,6 +65,7 @@ import AttendanceHistoryPDF from "../pdf/AttendanceHistoryPdf"
 import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { getConfig } from "../../../config";
 const EditAttendanceHistory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -87,6 +90,12 @@ const EditAttendanceHistory = () => {
     (state) => state.formApi.empAttendanceData
   );
   console.log("AttendanceData", AttendanceData);
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const config = getConfig();
+  const baseurl1 = config.UAAM_URL;
+
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -319,6 +328,7 @@ const EditAttendanceHistory = () => {
   const explorelistViewColumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
   );
+  const empAttLoading = useSelector((state) => state.formApi.empAttendanceDataLoading);
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
   const screenChange = (event) => {
     setScreen(event.target.value);
@@ -542,6 +552,9 @@ const EditAttendanceHistory = () => {
                             Month: values.month,
                             Year: values.year,
                             EmployeeID: empData?.RecordID,
+                            Imageurl: baseurl1,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }
@@ -675,7 +688,8 @@ const EditAttendanceHistory = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    // loading={exploreLoading}
+                    loading={empAttLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
@@ -691,6 +705,57 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+               <Stack
+                direction="row"
+                padding={1}
+                alignItems="center"
+                justifyContent="space-between"
+
+              >
+                {/* LEFT SIDE ITEMS */}
+                <Box display="flex" alignItems="center" gap={2} >
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>P</Avatar>}
+                    label="Present"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
+                    label="Absent"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>WO</Avatar>}
+                    label="WeekOff"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>HO</Avatar>}
+                    label="Holiday"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4",  }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>L</Avatar>}
+                    label="Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>IR</Avatar>}
+                    label=" IR Regular "
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                </Box>
+              </Stack>
             </form>
           )}
         </Formik>
