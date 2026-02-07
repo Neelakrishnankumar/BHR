@@ -156,20 +156,43 @@ const styles = StyleSheet.create({
 //   return [firstPage, ...otherPages];
 // };
 
-const paginateData = (data, rowsPerPage = 30) => {
+// const paginateData = (data, rowsPerPage = 30) => {
+//   if (!Array.isArray(data)) return [];
+
+//   const pages = [];
+//   for (let i = 0; i < data.length; i += rowsPerPage) {
+//     pages.push(data.slice(i, i + rowsPerPage));
+//   }
+
+//   return pages;
+// };
+
+const paginateData = (
+  data,
+  firstPageRows = 28,
+  otherPageRows = 30
+) => {
   if (!Array.isArray(data)) return [];
 
   const pages = [];
-  for (let i = 0; i < data.length; i += rowsPerPage) {
-    pages.push(data.slice(i, i + rowsPerPage));
+
+  // ✅ First page
+  pages.push(data.slice(0, firstPageRows));
+
+  // ✅ Remaining pages
+  let index = firstPageRows;
+  while (index < data.length) {
+    pages.push(data.slice(index, index + otherPageRows));
+    index += otherPageRows;
   }
 
   return pages;
 };
 
+
 const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
   // const pages = paginateData(data);
-  const pages = paginateData(data, 30);
+const pages = paginateData(data, 28, 30);
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
