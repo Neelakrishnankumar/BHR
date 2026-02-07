@@ -776,7 +776,8 @@ const EditemployeePayroll = () => {
   const column = [
     {
       field: "SLNO",
-      headerName: "SL.NO",
+      // headerName: "SL.NO",
+      headerName: "SL#",
     },
     {
       field: "Name",
@@ -958,6 +959,7 @@ const EditemployeePayroll = () => {
     {
       field: "Present",
       headerName: "Present",
+      align:"right"
     },
     // {
     //   field: "Absent",
@@ -967,20 +969,24 @@ const EditemployeePayroll = () => {
     {
       field: "Leave",
       headerName: "Leave",
+      align:"right"
     },
     {
       field: "Weekoff",
       headerName: "weekoff",
+      align:"right"
     },
     {
       field: "Total",
       headerName: "Total",
+      align:"right"
     },
   ];
   const AttColumn = [
     {
       field: "SLNO",
-      headerName: "SL.NO",
+      // headerName: "SL.NO",
+      headerName: "SL#",
     },
 
     {

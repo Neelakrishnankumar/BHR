@@ -331,11 +331,11 @@ const LeaderCardView = () => {
                   <Typography>
                     <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                   </Typography>
-                  {row.RequestDateTime && (
+                  {/* {row.RequestDateTime && ( */}
                    <Typography>
-                    <strong>Request Date & Time:</strong> {row.RequestDateTime || "NA"}
+                    <strong>Request Date & Time:</strong> {row.RequestDateTime || "N/A"}
                   </Typography>
-                  )}
+                  {/* )} */}
                 </CardContent>
                 {/* <Box display="flex" justifyContent="flex-end" mt={-4}>
                   <Tooltip title="Marketing Activity">

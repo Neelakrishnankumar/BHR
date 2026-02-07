@@ -309,6 +309,7 @@ const LeaveEntryRegister = () => {
                 onReset={() => {
                   //selectCellRowData({ rowData: {}, mode: "A", field: "" });
                   resetForm();
+                  setRows([])
                 }}
               >
                 <Box>
@@ -445,6 +446,7 @@ const LeaveEntryRegister = () => {
                       onClick={() => {
                         // setRows([]);
                         setempData([]);
+                        setRows([])
                       }}
                     >
                       RESET
