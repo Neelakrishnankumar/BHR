@@ -102,6 +102,8 @@ const EditAttendanceHistory = () => {
     (state) => state.formApi.empAttendanceData
   );
   console.log("AttendanceData", AttendanceData);
+
+
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -334,6 +336,7 @@ const EditAttendanceHistory = () => {
   const explorelistViewColumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
   );
+  const empAttLoading = useSelector((state) => state.formApi.empAttendanceDataLoading);
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
   const screenChange = (event) => {
     setScreen(event.target.value);
@@ -710,7 +713,8 @@ const EditAttendanceHistory = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    // loading={exploreLoading}
+                    loading={empAttLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,

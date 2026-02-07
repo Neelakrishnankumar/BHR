@@ -191,6 +191,7 @@ import EditOHPayment from "./pages/HR/EditOHPayment";
 import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
 import EditAudit from "./pages/HR/EditAudit";
+import Editparentcontact from "./pages/HR/Editparentcontact";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -1212,6 +1213,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
+                  />
+                  <Route
+                    path="/Parentcontact"
+                    element={<Editparentcontact />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

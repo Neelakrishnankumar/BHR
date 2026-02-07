@@ -9,11 +9,19 @@ import {
 
 
 const styles = StyleSheet.create({
+  // page: {
+  //   padding: 5,
+  //   fontSize: 6,
+  //   flexDirection: "column",
+  // },
   page: {
-    padding: 5,
+    paddingTop: 90,   // space for header
+    paddingBottom: 80, // space for footer
+    paddingHorizontal: 10,
     fontSize: 6,
     flexDirection: "column",
   },
+
   section: {
     marginBottom: 10,
      marginTop: 80,
@@ -49,7 +57,7 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     fontWeight: "bold", // BOLD header text
   },
-    headerText: {
+  headerText: {
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
@@ -299,7 +307,7 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
                 <Text style={styles.cell2}>{row.Holidays}</Text>
                 <Text style={styles.cell2}>{row.Weekoff}</Text>
                 <Text style={styles.cell2}>{row.Total}</Text>
-              </View> 
+              </View>
             ))}
           </View>
           

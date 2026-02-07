@@ -3928,7 +3928,7 @@ const ListviewSecondary = () => {
           </Box>
         )
           : accessID == "TR304" ? (
-            <Box display="flex" flexDirection="row" padding="25px">
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
                 icon={<ModeEditOutlinedIcon color="primary" />}
                 label="Edit"
@@ -3938,13 +3938,13 @@ const ListviewSecondary = () => {
                 icon={< VisibilityIcon style={{ color: '#eb710dff' }} />}
                 label="View"
                 variant="outlined"
-                sx={{ marginLeft: "50px" }}
+                // sx={{ marginLeft: "50px" }}
               />
               <Chip
                 icon={<AttachFileIcon color="primary" />}
                 label="Attachment"
                 variant="outlined"
-                sx={{ marginLeft: "50px" }}
+                // sx={{ marginLeft: "50px" }}
               />
             </Box>
           )

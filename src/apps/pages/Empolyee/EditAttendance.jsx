@@ -215,14 +215,18 @@ const EditAttendance = () => {
     {
       field: "MonthDate",
       headerName: "In Date",
-      flex: 1,
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
     },
     {
       field: "EmployeeCheckInTime",
       headerName: "In Time",
-      flex: 1,
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
     },
     // {
     //   field: "EmployeeCheckOutDate",
@@ -233,26 +237,34 @@ const EditAttendance = () => {
     {
       field: "EmployeeCheckOutTime",
       headerName: "Out Time",
-      flex: 1,
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
     },
     {
       field: "NumberOfHoursWorked",
       headerName: "Worked Hours",
-      flex: 1,
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
+
     },
     {
       field: "PermissionInMinutes",
       headerName: "Permission (In Hours)",
-      flex: 1,
+      // flex: 1,
+      width: 150,
       headerAlign: "center",
+      align: "center",
     },
 
     {
       field: "Status",
       headerName: "Status",
-      flex: 1,
+      // flex: 1,
+       width: 150,
       headerAlign: "center",
     },
     {
@@ -741,7 +753,7 @@ const EditAttendance = () => {
                     // }}
                     getRowClassName={(params) => {
                       const status = params.row.Status;
-                      if (status === "Week Off") return "week off-row";
+                      if (status === "Week Off") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
                       // if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
                       const leaveStatuses = [

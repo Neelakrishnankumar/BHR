@@ -111,22 +111,22 @@ const LeaderCardView = () => {
     });
   };
 
-//  const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
-//         // if (OrdHdrCount == 0) {
-//             // Case 1: No order yet → go to Add Order
-//             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
-//                 state: {
-//                     PartyID: partyID,
-//                     LeadTitle: leadTitle,
-//                     PartyName: PartyName,
-//                     LEStatus: LEStatus,
-//                     OrderCount: OrdHdrCount,
-//                 },
-//             // });
- 
-//         }
-//     )
-  
+  //  const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
+  //         // if (OrdHdrCount == 0) {
+  //             // Case 1: No order yet → go to Add Order
+  //             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
+  //                 state: {
+  //                     PartyID: partyID,
+  //                     LeadTitle: leadTitle,
+  //                     PartyName: PartyName,
+  //                     LEStatus: LEStatus,
+  //                     OrderCount: OrdHdrCount,
+  //                 },
+  //             // });
+
+  //         }
+  //     )
+
   const handleorderscreen = (
     recordID,
     partyID,
@@ -292,7 +292,10 @@ const LeaderCardView = () => {
                     variant="h6"
                     sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}
                   >
-                    #SL: {index + 1} {row.LeadTitle || ""}
+                    {row.LeadTitle || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>#SL:</strong>  {index + 1}
                   </Typography>
                   <Typography>
                     <strong>Product Name:</strong> {row.ProjectName || ""}
@@ -320,6 +323,11 @@ const LeaderCardView = () => {
                   <Typography>
                     <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                   </Typography>
+                  {row.RequestDateTime && (
+                    <Typography>
+                      <strong>Request Date & Time:</strong> {row.RequestDateTime || "NA"}
+                    </Typography>
+                  )}
                 </CardContent>
                 <Box display="flex" justifyContent="flex-end" mt={-4}>
                   <Tooltip title="Marketing Activity">
@@ -351,7 +359,7 @@ const LeaderCardView = () => {
                         )
                       }
                       size="small"
-                      //disabled={row.LEStatus === "Close"}
+                    //disabled={row.LEStatus === "Close"}
                     >
                       <ListAltOutlinedIcon sx={{ fontSize: 20 }} />
                     </IconButton>
@@ -399,50 +407,50 @@ const LeaderCardView = () => {
                     </>
                   )}
                   {row.LEStatus === "Opt to Order" && (
-                    
-                      <Tooltip title="Order">
-                        <IconButton
-                          color="primary"
-                          onClick={() =>
-                            handleorderscreen(
-                              row.RecordID,
-                              row.PartyID,
-                              row.LeadTitle,
-                              row.PartyName,
-                              row.LEStatus,
-                              row.OrdHdrCount,
-                              row.OrderCount,
-                            )
-                          }
-                          size="small"
-                        >
-                          <CategoryIcon sx={{ fontSize: 20 }} />
-                        </IconButton>
-                      </Tooltip>
-                    
+
+                    <Tooltip title="Order">
+                      <IconButton
+                        color="primary"
+                        onClick={() =>
+                          handleorderscreen(
+                            row.RecordID,
+                            row.PartyID,
+                            row.LeadTitle,
+                            row.PartyName,
+                            row.LEStatus,
+                            row.OrdHdrCount,
+                            row.OrderCount,
+                          )
+                        }
+                        size="small"
+                      >
+                        <CategoryIcon sx={{ fontSize: 20 }} />
+                      </IconButton>
+                    </Tooltip>
+
                   )}
                   {row.LEStatus === "Opt to Quote" && (
-                    
-                       <Tooltip title="Quotation">
-                        <IconButton
-                          color="primary"
-                          onClick={() =>
-                            handleorderscreen1(
-                              row.RecordID,
-                              row.PartyID,
-                              row.LeadTitle,
-                              row.PartyName,
-                              row.LEStatus,
-                              row.OrdHdrCount,
-                              row.QuotationCount
-                            )
-                          }
-                          size="small"
-                        >
-                          <RequestQuoteOutlinedIcon sx={{ fontSize: 20 }} />
-                        </IconButton>
-                      </Tooltip>
-                    
+
+                    <Tooltip title="Quotation">
+                      <IconButton
+                        color="primary"
+                        onClick={() =>
+                          handleorderscreen1(
+                            row.RecordID,
+                            row.PartyID,
+                            row.LeadTitle,
+                            row.PartyName,
+                            row.LEStatus,
+                            row.OrdHdrCount,
+                            row.QuotationCount
+                          )
+                        }
+                        size="small"
+                      >
+                        <RequestQuoteOutlinedIcon sx={{ fontSize: 20 }} />
+                      </IconButton>
+                    </Tooltip>
+
                   )}
                 </Box>
               </Card>

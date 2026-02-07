@@ -293,7 +293,11 @@ const initialState = {
   UserActivityUrl: "",
   LeaveenquiryGetController: "",
   UserActivityGet: "",
-  auditScreennameGet: ""
+  auditScreennameGet: "",
+  EmployeeVendorGetController:"",
+  OHPaymentUpdateController: "",
+  PartyBydateByamtFilter: "",
+  EmployeeVendorContactGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -451,6 +455,8 @@ export const getUrlSlice = createSlice({
         APIurl + "PartyBydateByamtFilter.php";
       state.UserActivityGet = APIurl + "UserActivityGetController.php";
       state.auditScreennameGet = APIurl + "ListviewHdrGetController.php";
+      state.EmployeeVendorGetController = APIurl + "EmployeeVendorGetController.php";
+      state.EmployeeVendorContactGet = APIurl + "EmployeeVendorContractGetController.php";
     },
   },
 });
