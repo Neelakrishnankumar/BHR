@@ -296,6 +296,7 @@ const initialState = {
   OHPaymentUpdateController: "",
   PartyBydateByamtFilter: "",
   EmployeeVendorContactGet:"",
+  Parentposturl:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -451,8 +452,9 @@ export const getUrlSlice = createSlice({
         APIurl + "OHPaymentUpdateController.php";
       state.PartyBydateByamtFilter =
         APIurl + "PartyBydateByamtFilter.php";
-      state.EmployeeVendorGetController = APIurl + "EmployeeVendorGetController.php";
-      state.EmployeeVendorContactGet = APIurl + "EmployeeVendorContractGetController.php";
+      state.EmployeeVendorGetController = APIurl + "ParentGetController.php";
+      state.EmployeeVendorContactGet = APIurl + "ParentContactGetController.php";
+      state.Parentposturl = APIurl + "ParentpostController.php";
     },
   },
 });
