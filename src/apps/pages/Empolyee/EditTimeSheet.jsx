@@ -82,6 +82,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { getConfig } from "../../../config";
 
 const EditTimeSheet = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -436,6 +437,14 @@ const EditTimeSheet = () => {
     (row) => row.Status === "Approved"
   );
 
+
+      const HeaderImg = sessionStorage.getItem("CompanyHeader");
+      const FooterImg = sessionStorage.getItem("CompanyFooter");
+      console.log("HeaderImg", HeaderImg, FooterImg);
+      const config = getConfig();
+      const baseurlUAAM = config.UAAM_URL;
+
+
   const currentMonthNumber = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const AttInitialvalues = {
@@ -760,6 +769,9 @@ const EditTimeSheet = () => {
                             Month: values.timemonth,
                             Year: values.timeyear,
                             EmployeeID: timeempData?.Name || EMPNAME,
+                             Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }

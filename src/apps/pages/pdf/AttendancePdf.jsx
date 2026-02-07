@@ -562,7 +562,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
   const totalPresent = data.filter(r => r.Status === "Present").length;
   const totalAbsent = data.filter(r => r.Status === "Absent").length;
   const totalHolidays = data.filter(r => r.Status === "Holiday").length;
-  const totalWeekOffs = data.filter(r => r.Status === "WeekOff").length;
+  const totalWeekOffs = data.filter(r => r.Status === "Week Off").length;
 
   // Leave segregation (example)
   const leaveSummary = {
@@ -574,7 +574,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
     <Document>
       {pages.map((pageData, pageIndex) => {
         const filteredRows = pageData.filter(
-          row => row.Status !== "WeekOff" && row.Status !== "Leave"
+          row => row.Status !== "Week Off" && row.Status !== "Leave"
         );
 
         return (
@@ -634,7 +634,13 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
 
 
               {filteredRows.map((row, i) => (
-                <View style={styles.tableRow}>
+                <View 
+                  style={[
+                    styles.tableRow,
+                    i === filteredRows.length - 1 && { borderBottomWidth: 0 }
+                  ]}
+                // style={styles.tableRow}
+                >
                   <Text style={[styles.tableCol, { width: "6%" }]}>
                     {i + 1}
                   </Text>
@@ -687,7 +693,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                 <View style={styles.summaryContainer}>
 
                   {/* Header Row */}
-                  <View style={styles.summaryRow}>
+                  {/* <View style={styles.summaryRow}>
                     <Text style={styles.summaryHeaderCell}>Present</Text>
                     <Text style={styles.summaryHeaderCell}>Absent</Text>
                     <Text style={styles.summaryHeaderCell}>Holidays</Text>
@@ -695,10 +701,24 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.summaryHeaderCell}>Casual Leave</Text>
                     <Text style={styles.summaryHeaderCell}>Sick Leave</Text>
                     <Text style={styles.summaryHeaderCell}>Medical Leave</Text>
+                  </View> */}
+       <View style={styles.summaryRow}>
+                    {["Present", "Absent", "Holidays", "Week Off", "Casual Leave", "Sick Leave", "Medical Leave"]
+                      .map((item, index, arr) => (
+                        <Text
+                          key={index}
+                          style={[
+                            styles.summaryHeaderCell,
+                            index === arr.length - 1 && { borderRightWidth: 0 }
+                          ]}
+                        >
+                          {item}
+                        </Text>
+                      ))}
                   </View>
-
+ 
                   {/* Value Row */}
-                  <View style={styles.summaryRow}>
+                  {/* <View style={styles.summaryRow}>
                     <Text style={styles.summaryValueCell}>{totalPresent}</Text>
                     <Text style={styles.summaryValueCell}>{totalAbsent}</Text>
                     <Text style={styles.summaryValueCell}>{totalHolidays}</Text>
@@ -706,6 +726,22 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.summaryValueCell}>{leaveSummary.CL}</Text>
                     <Text style={styles.summaryValueCell}>{leaveSummary.SL}</Text>
                     <Text style={styles.summaryValueCell}>{leaveSummary.EL}</Text>
+                  </View> */}
+             
+ 
+                  <View style={styles.summaryRow}>
+                    {[totalPresent, totalAbsent, totalHolidays, totalWeekOffs, leaveSummary.CL, leaveSummary.SL, leaveSummary.EL]
+                      .map((val, index, arr) => (
+                        <Text
+                          key={index}
+                          style={[
+                            styles.summaryValueCell,
+                            index === arr.length - 1 && { borderRightWidth: 0 }
+                          ]}
+                        >
+                          {val}
+                        </Text>
+                      ))}
                   </View>
 
                 </View>

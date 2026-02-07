@@ -4,13 +4,19 @@ import {
     Text,
     View,
     Document,
-    StyleSheet,
+    StyleSheet,Image
 } from "@react-pdf/renderer";
 
 // Styles
 const styles = StyleSheet.create({
-    page: {
-        padding: 20,
+    // page: {
+    //     padding: 20,
+    //     fontSize: 10,
+    // },
+      page: {
+        paddingTop: 90,
+        paddingBottom: 80,
+        paddingHorizontal: 20,
         fontSize: 10,
     },
     section: {
@@ -122,17 +128,49 @@ const styles = StyleSheet.create({
         width: "15%",
         padding: 5,
     },
+        /* HEADER */
+    headerWrapper: {
+        position: "absolute",
+        top: 20,
+        left: 20,
+        right: 20,
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    headerImage: {
+        width: "100%",
+        height: 60,
+        objectFit: "contain",
+    },
+    /* FOOTER */
+    footerWrapper: {
+        position: "absolute",
+        bottom: 30,
+        left: 5,
+        right: 5,     // forces full width
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    footerImage: {
+        width: "100%",
+        height: 100,
+        objectFit: "cover",
+    },
 });
 
 
 
 // Split data: 20 on first page, 26 afterwards
 const paginateData = (data) => {
-    const firstPage = data.slice(0, 100);
+    const firstPage = data.slice(0, 20);
     const otherPages = [];
 
-    for (let i = 100; i < data.length; i += 26) {
-        otherPages.push(data.slice(i, i + 26));
+    for (let i = 20; i < data.length; i += 0) {
+        otherPages.push(data.slice(i, i + 20));
     }
 
     return [firstPage, ...otherPages];
@@ -219,6 +257,15 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
         <Document>
             {pages.map((pageData, pageIndex) => (
                 <Page size="A4" style={styles.page} key={pageIndex}>
+                    
+                      <View fixed style={styles.headerWrapper}>
+                                  {filters.HeaderImg && (
+                                    <Image
+                                      src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                                      style={styles.headerImage}
+                                    />
+                                  )}
+                                </View>
                     {pageIndex === 0 && (
                         <View style={styles.headerContainer}>
                             {/* <Text style={styles.headerText}>
@@ -277,6 +324,16 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
                         })}
 
                     </View>
+
+                       {/* FOOTER */}
+                                    <View fixed style={styles.footerWrapper}>
+                                      {filters.FooterImg && (
+                                        <Image
+                                          src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                                          style={styles.footerImage}
+                                        />
+                                      )}
+                                    </View>
                     <View
                         fixed
                         style={{
@@ -290,6 +347,8 @@ const DailyattendancePDF = ({ data = [], filters = {} }) => {
                     >
                         <Text>Page {pageIndex + 1} of {pages.length}</Text>
                     </View>
+
+
                 </Page>
             ))}
         </Document>
