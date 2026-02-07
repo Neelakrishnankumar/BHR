@@ -2861,6 +2861,7 @@ export const fetchListview =
                           PartyName: params.row.PartyName,
                           PartyID: params.row.PartyID,
                           LeadTitle: params.row.LeadTitle,
+                          Editable:params.row.Editable
                         }}
                       >
                         <Tooltip title="View">
