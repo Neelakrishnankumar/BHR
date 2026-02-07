@@ -5106,7 +5106,7 @@ export const fetchListview =
                           </Link>
                           <Link
                             to={`/Apps/leaveenquiry/${params.row.RecordID}`}
-                            state={{ EmpName: params.row.Name,Employee:params.row.Employee }}
+                            state={{ EmpName: params.row.Name,Employee:params.row.Personnel }}
                           >
                             <Tooltip title="Leave Enquiry">
                               <IconButton color="info" size="small">

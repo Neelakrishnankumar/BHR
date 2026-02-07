@@ -22,6 +22,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
+import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
 import {
   Box,
   Avatar,
@@ -154,6 +155,7 @@ import PermMediaIcon from '@mui/icons-material/PermMedia';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import { logout } from "../../store/reducers/LoginReducer";
 import { useDispatch } from "react-redux";
+import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = {
   data: [
     {
@@ -327,7 +329,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           url: "./TR027/Employee Payroll",
           icon: (
             <Tooltip title="Employees">
-                <PeopleAltIcon color="info" />
+                <CurrencyRubleIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -415,7 +417,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           url: "./TR207/Satuary Component",
           icon: (
             <Tooltip title="Satuary Component">
-              <AttachMoneyIcon color="info" />
+              <LocalPoliceOutlinedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -509,24 +511,24 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR321",
         },
-        // {
-        //   name: "Aging Report",
-        //   id: 4346895,
-        //   //  url: "./TR243/Party",
-        //   url: "/Apps/Party/AgingReport",
-        //   icon: (
-        //     <Tooltip title="Aging Report">
-        //       <ScaleOutlinedIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR321",
-        // },
+        {
+          name: "Aging Report",
+          id: 4346895,
+          //  url: "./TR243/Party",
+          url: "/Apps/Party/AgingReport",
+          icon: (
+            <Tooltip title="Aging Report">
+              <ScaleOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR321",
+        },
         //  {
         //   name: "Lead",
         //   id: 4346895,

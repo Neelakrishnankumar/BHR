@@ -14,6 +14,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Avatar,
+  Chip,
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -63,6 +65,12 @@ import AttendanceHistoryPDF from "../pdf/AttendanceHistoryPdf"
 import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { getConfig } from "../../../config";
+import { FaFileExcel } from "react-icons/fa";
+import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
+
+
+
 const EditAttendanceHistory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -83,6 +91,13 @@ const EditAttendanceHistory = () => {
 
   // const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   // console.log("AttendanceData", AttendanceData);
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+
   const AttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
   );
@@ -542,6 +557,9 @@ const EditAttendanceHistory = () => {
                             Month: values.month,
                             Year: values.year,
                             EmployeeID: empData?.RecordID,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }
@@ -557,8 +575,25 @@ const EditAttendanceHistory = () => {
                         )
                       }
                     </PDFDownloadLink>
-                  )}
 
+
+                  )}
+                  {AttendanceData?.length > 0 && (
+
+                   <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer", }}
+                      onClick={() =>
+                      AttendanceHistoryExcel(
+                          AttendanceData,
+                          { month: values.month, year: values.year },
+                          empData
+                        )
+                      }
+                    />
+
+                  )}
                 </Stack>
               </Box>
               {/* <Box display="flex" padding={1} justifyContent="end" mt="10px" gap="20px">
@@ -691,6 +726,57 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+               <Stack
+                direction="row"
+                padding={1}
+                alignItems="center"
+                justifyContent="space-between"
+
+              >
+                {/* LEFT SIDE ITEMS */}
+                <Box display="flex" alignItems="center" gap={2} >
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>P</Avatar>}
+                    label="Present"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
+                    label="Absent"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>WO</Avatar>}
+                    label="WeekOff"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>HO</Avatar>}
+                    label="Holiday"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4",  }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>L</Avatar>}
+                    label="Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>IR</Avatar>}
+                    label=" IR Regular "
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                </Box>
+              </Stack>
             </form>
           )}
         </Formik>

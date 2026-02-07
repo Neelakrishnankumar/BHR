@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   header1: {
-    fontSize: 11,
+    fontSize: 15,
     textAlign: "left",
     fontWeight: "bold",
     display: "block",
-    marginTop: 5,
+    marginTop: 15,
   },
   table: {
     display: "table",
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
+    borderBottomWidth: 0
   },
   table1: {
     display: "table",
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     borderStyle: "solid",
     textAlign: "end",
+    borderBottomWidth: 0
   },
   row: {
     flexDirection: "row",
@@ -153,11 +155,18 @@ const styles = StyleSheet.create({
   colEmp: { width: "36%" },
   colTime: { width: "15%" },
   colReason: { width: "27%" },
-  colStatus: { width: "15%" },
+  colStatus: {
+     width: "15%" ,
+     borderRightWidth: 0,
+    },
 
   colSlno1: { width: "7%" },
   colEmp1: { width: "33%" },
   colTime1: { width: "20%" },
+  colTime1Leavebal: {
+     width: "20%",
+     borderRightWidth: 0,
+  },
   footer: {
     position: "absolute",
     bottom: 10,
@@ -196,20 +205,45 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
     ? `${QR_BASE_URL}${filters.FooterImg}`
     : null;
 
-  const employeeSummary = Object.values(
-    data.reduce((acc, row) => {
-      if (!acc[row.EmployeeID]) {
-        acc[row.EmployeeID] = {
-          EmployeeID: row.EmployeeID,
-          Employee: row.Employee,
-          TotalLeave: Number(row.TotalLeaveDays || 0),
-          LeavesTaken: Number(row.LeaveTakenDays || 0),
-          BalanceLeave: Number(row.BalanceLeaveDays || 0),
-        };
-      }
-      return acc;
-    }, {})
-  );
+  // const employeeSummary = Object.values(
+  //   data.reduce((acc, row) => {
+  //     if (!acc[row.EmployeeID]) {
+  //       acc[row.EmployeeID] = {
+  //         EmployeeID: row.EmployeeID,
+  //         Employee: row.Employee,
+  //         TotalLeave: Number(row.TotalLeaveDays || 0),
+  //         LeavesTaken: Number(row.LeaveTakenDays || 0),
+  //         BalanceLeave: Number(row.BalanceLeaveDays || 0),
+  //       };
+  //     }
+  //     return acc;
+  //   }, {})
+  // );
+const employeeSummary = Object.values(
+  data.reduce((acc, row) => {
+    if (!acc[row.EmployeeID]) {
+      acc[row.EmployeeID] = {
+        EmployeeID: row.EmployeeID,
+        Employee: row.Employee,
+        TotalLeave: Number(row.TotalLeaveDays || 0),
+        ApprovedLeaveTaken: 0,
+      };
+    }
+
+    // ✅ Add only Approved leave days
+    if (row.Status === "Approved") {
+      acc[row.EmployeeID].ApprovedLeaveTaken +=
+        Number(row.NumofHrsday || 0);
+    }
+
+    return acc;
+  }, {})
+).map(emp => ({
+  ...emp,
+  TotalLeave: emp.TotalLeave.toFixed(2),
+  ApprovedLeaveTaken: emp.ApprovedLeaveTaken.toFixed(2),
+  BalanceLeave: (emp.TotalLeave - emp.ApprovedLeaveTaken).toFixed(2)
+}));
 
   return (
     <Document>
@@ -241,7 +275,7 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
             <View style={styles.row}>
               <Text style={[styles.headerCell, styles.colSlno]}>SL#</Text>
               <Text style={[styles.headerCell, styles.colEmp]}>
-                Employee Name
+                Employee
               </Text>
               <Text style={[styles.headerCell, styles.colReason]}>
                 Leave Type
@@ -312,7 +346,7 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
                     <Text style={[styles.headerCell1, styles.colEmp1]}>Employee</Text>
                     <Text style={[styles.headerCell1, styles.colTime1]}>Total Leave</Text>
                     <Text style={[styles.headerCell1, styles.colTime1]}>Leave Taken</Text>
-                    <Text style={[styles.headerCell1, styles.colTime1]}>Leave Balance</Text>
+                    <Text style={[styles.headerCell1, styles.colTime1Leavebal]}>Leave Balance</Text>
                   </View>
 
                   {/* Summary Rows */}
@@ -323,8 +357,8 @@ const LeaveEntryPdf = ({ data = [], filters = {} }) => {
                         {row.Employee}
                       </Text>
                       <Text style={[styles.cell3, styles.colTime1]}>{row.TotalLeave}</Text>
-                      <Text style={[styles.cell3, styles.colTime1]}>{row.LeavesTaken}</Text>
-                      <Text style={[styles.cell3, styles.colTime1]}>{row.BalanceLeave}</Text>
+                      <Text style={[styles.cell3, styles.colTime1]}>{row.ApprovedLeaveTaken}</Text>
+                      <Text style={[styles.cell3, styles.colTime1Leavebal]}>{row.BalanceLeave}</Text>
                     </View>
                   ))}
                 </View>

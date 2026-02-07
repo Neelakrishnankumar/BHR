@@ -94,7 +94,7 @@
     "Name": "Please enter the Name",
     "Password": "Please enter the Password",
     "Department": "Please select the Department",
-    "employeetype": "Please select the Employee Type"
+    "employeetype": "Please select the Type"
   },
   "ItemGroup": {
     "Description": "Please enter the Item Description"
@@ -127,6 +127,7 @@
   },
   "HSNMaster": {
     "Description": "Please enter the HSN Master Description",
+    "Code": "Please enter the HSN Master Code",
     "HSNIGST": "Please enter the IGST(In Percentage)",
     "HSNCGST": "Please enter the CGST(In Percentage)",
     "HSNSGST": "Please enter the SGST(In Percentage)"
@@ -146,7 +147,7 @@
     "function": "Please enter the Function"
   },
   "Documents": {
-    "category": "Please enter the Category"
+    "category": "Please select the Category"
   },
   "Deployment": {
     "location": "Please enter the Location",
@@ -222,6 +223,7 @@
     "reason": "Please enter the Reason"
   },
   "Leave": {
+    "Year": "Please select the Year",
     "LeavePart": "Please select the Leave Part",
     "leavetype": "Please select the Leave Type",
     "FromDate": "Please enter the From Date",
@@ -271,7 +273,7 @@
   },
   "Leaveconfiguration": {
     "totaldays": "Please enter the Eligible Days",
-    "leavetype": "Please enter the Leave Type"
+    "leavetype": "Please select the Leave Type"
   },
   "Manager": {
     "Level": "Please enter the Level",

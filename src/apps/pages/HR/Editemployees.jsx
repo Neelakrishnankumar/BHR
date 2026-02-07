@@ -2574,6 +2574,8 @@ const Editemployee = () => {
     // biometric: deploymentData.Biometric === "Y"? true : false,
     // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
     Onsitedateflag: deploymentData.OnsiteDateFlag === "Y" ? true : false,
+    Geninvoice: deploymentData.GenerateInvoice === "Y" ? true : false,
+    Essaccess: deploymentData.EssAccess === "Y" ? true : false,
     Onsiterole: deploymentData.OnsiteActivityRole || "Project",
     biometric: deploymentData.BioMetric === "Y" ? true : false,
     mobile: deploymentData.MobileGeoFencing === "Y" ? true : false,
@@ -2623,6 +2625,8 @@ const Editemployee = () => {
       Saturday: values.Saturday === true ? "Y" : "N",
       Sunday: values.Sunday === true ? "Y" : "N",
       OnsiteDateFlag: values.Onsitedateflag === true ? "Y" : "N",
+      GenerateInvoice: values.Geninvoice === true ? "Y" : "N",
+      EssAccess: values.Essaccess === true ? "Y" : "N",
       OnsiteActivityRole: values.Onsiterole,
       BioMetric: values.biometric === true ? "Y" : "N",
       ManagerManual: values.managermanual === true ? "Y" : "N",
@@ -2708,7 +2712,9 @@ const Editemployee = () => {
       Thursday: deploymentData.ThursdayShift === "Y" ? true : false,
       Friday: deploymentData.FridayShift === "Y" ? true : false,
       Saturday: deploymentData.SaturdayShift === "Y" ? true : false,
-      OnsiteDateFlag: deploymentData.Onsitedateflag === true ? "Y" : "N",
+      OnsiteDateFlag: deploymentData.Onsitedateflag === "Y" ? true : false,
+      GenerateInvoice: deploymentData.GenerateInvoice === "Y" ? "Y" : "N",
+      EssAccess: deploymentData.EssAccess === "Y" ? "Y" : "N",
       // OnsiteActivityRole: values.onsiterole,
       OnsiteActivityRole: deploymentData.OnsiteActivityRole || "Project",
       Sunday: deploymentData.SundayShift === "Y" ? true : false,
@@ -6249,6 +6255,35 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Allow Backlog Data Entry
                       </FormLabel>
+                       <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="Geninvoice"
+                        id="Geninvoice"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Geninvoice"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        Generate Invoice
+                      </FormLabel> <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="Essaccess"
+                        id="Essaccess"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="Essaccess"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        ESS Access
+                      </FormLabel>
                     </Box>
                   </Box>
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
@@ -9051,17 +9086,31 @@ const Editemployee = () => {
                         label="From Period"
                         variant="standard"
                         focused
-                        // inputFormat="YYYY-MM-DD"
-                        // value={funMode === "E" ? formatDateForInput(values.FromPeriod) : values.FromPeriod}                        // value={values.FromPeriod}
-
                         value={values.FromPeriod}
                         onBlur={handleBlur}
-                        onChange={handleChange}
-                      // error={!!touched.FromPeriod && !!errors.FromPeriod}
-                      // helperText={touched.FromPeriod && errors.FromPeriod}
-                      //sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        onChange={(e) => {
+                          const { name, value } = e.target;
+                          setFieldValue(name, value);
+
+                          // 🔁 Run same logic if ToDate already exists
+                          if (values.ToPeriod) {
+                            const toDate = new Date(values.ToPeriod);
+                            const fromDate = new Date(value);
+
+                            // Renewal days
+                            const diffDays = differenceInDays(toDate, fromDate);
+                            setFieldValue("RenewableNotification", diffDays);
+
+                            // Notification Alert Date (still based on ToDate)
+                            const alertDate = subDays(toDate, 1);
+                            setFieldValue(
+                              "NotificationAlertDate",
+                              alertDate.toISOString().split("T")[0]
+                            );
+                          }
+                        }}
                       />
+
                       <TextField
                         name="ToPeriod"
                         type="date"

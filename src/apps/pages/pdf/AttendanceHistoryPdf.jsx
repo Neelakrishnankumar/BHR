@@ -4,7 +4,7 @@ import {
   Text,
   View,
   Document,
-  StyleSheet,
+  StyleSheet,Image
 } from "@react-pdf/renderer";
 
 
@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 10,
+     marginTop: 80,
   },
   table: {
     display: "table",
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10
+    
   },
   headerCell2: {
     flex: 1,
@@ -88,22 +90,76 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     fontWeight: "bold", // BOLD header text
   },
+  legendContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 6,
+    gap: 10,
+    //  marginTop: 60,
+  },
+
+  /* HEADER */
+  headerWrapper: {
+    position: "absolute",
+    top: 15,
+    left: 20,
+    right: 20,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerImage: {
+    width: "100%",
+    height: 50,
+    objectFit: "contain",
+  },
+
+ /* FOOTER */
+    footerWrapper: {
+    position: "absolute",
+    bottom: 25,
+    left: 5,
+    right: 5,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  footerImage: {
+    width: "100%",
+    height: 60,
+    objectFit: "cover",
+  },
+
+
 });
 
-const paginateData = (data) => {
-  if (!Array.isArray(data)) return [];
-  const firstPage = data.slice(0, 40);
-  const otherPages = [];
+// const paginateData = (data) => {
+//   if (!Array.isArray(data)) return [];
+//   const firstPage = data.slice(0, 40);
+//   const otherPages = [];
 
-  for (let i = 40; i < data.length; i += 26) {
-    otherPages.push(data.slice(i, i + 26));
+//   for (let i = 40; i < data.length; i += 26) {
+//     otherPages.push(data.slice(i, i + 26));
+//   }
+
+//   return [firstPage, ...otherPages];
+// };
+
+const paginateData = (data, rowsPerPage = 30) => {
+  if (!Array.isArray(data)) return [];
+
+  const pages = [];
+  for (let i = 0; i < data.length; i += rowsPerPage) {
+    pages.push(data.slice(i, i + rowsPerPage));
   }
 
-  return [firstPage, ...otherPages];
+  return pages;
 };
 
 const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
-  const pages = paginateData(data);
+  // const pages = paginateData(data);
+  const pages = paginateData(data, 30);
+
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -112,6 +168,16 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
     <Document>
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
+         {/* HEADER */}
+                    <View fixed style={styles.headerWrapper}>
+                      {filters.HeaderImg && (
+                        <Image
+                          src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                          style={styles.headerImage}
+                        />
+                      )}
+                    </View>
+        
           {pageIndex === 0 && (
             <View style={styles.section}>
               {/* <Text style={{ fontSize: 10, marginBottom: 4 }}>Attendance Report</Text>
@@ -122,6 +188,20 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
               </Text>
             </View>
           )}
+          <View style={[styles.legendContainer,
+
+             pageIndex === pages.length - 1 && { marginTop: 60 }
+          ]}
+         
+                  
+          >
+            <Text style={styles.legendText}>{"P -> Present"}</Text>
+            <Text style={styles.legendText}>{"A -> Absent"}</Text>
+            <Text style={styles.legendText}>{"HO -> Holiday"}</Text>
+            <Text style={styles.legendText}>{"WO -> Week Off"}</Text>
+            <Text style={styles.legendText}>{"L -> Leave"}</Text>
+            <Text style={styles.legendText}>{"IR -> IR Regular"}</Text>
+          </View>
           <View style={styles.table}>
             {/* Header Row */}
             <View style={styles.tableRow}>
@@ -222,6 +302,16 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
               </View> 
             ))}
           </View>
+          
+                      {/* FOOTER */}
+                      <View fixed style={styles.footerWrapper}>
+                        {filters.FooterImg && (
+                          <Image
+                            src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                            style={styles.footerImage}
+                          />
+                        )}
+                      </View>
           <View
             fixed
             style={{
@@ -235,6 +325,8 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
           >
             <Text>Page {pageIndex + 1} of {pages.length}</Text>
           </View>
+
+
         </Page>
       ))}
     </Document>

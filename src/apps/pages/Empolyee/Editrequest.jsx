@@ -284,6 +284,7 @@ const Editrequests = () => {
 
         setValidationSchema3(schema3);
         const schema4 = Yup.object().shape({
+          Year: Yup.string().required(data.Leave.Year),
           LeavePart: Yup.string().required(data.Leave.LeavePart),
           leavetype: Yup.object()
             .nullable()
@@ -729,7 +730,7 @@ const Editrequests = () => {
 
       dispatch(
         // fetchExplorelitview("TR086", "Expense", `parentID ='E' AND Approvedby=${recID}`, "")
-         fetchExplorelitview("TR086", "Expense", `Approvedby=${recID} AND CompanyID=${companyID}`, "")
+        fetchExplorelitview("TR086", "Expense", `Approvedby=${recID} AND CompanyID=${companyID}`, "")
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -928,15 +929,15 @@ const Editrequests = () => {
     setPage3(pageno);
     sessionStorage.setItem("secondaryCurrentPage", pageno);
   };
-   const handlePagechange4 = (pageno) => {
+  const handlePagechange4 = (pageno) => {
     setPage4(pageno);
     sessionStorage.setItem("secondaryCurrentPage", pageno);
   };
-   const handlePagechange5 = (pageno) => {
+  const handlePagechange5 = (pageno) => {
     setPage5(pageno);
     sessionStorage.setItem("secondaryCurrentPage", pageno);
   };
-   const handlePagechange6 = (pageno) => {
+  const handlePagechange6 = (pageno) => {
     setPage6(pageno);
     sessionStorage.setItem("secondaryCurrentPage", pageno);
   };
@@ -1010,7 +1011,7 @@ const Editrequests = () => {
     return visibleColumns;
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
 
-   const columns3 = React.useMemo(() => {
+  const columns3 = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
     );
@@ -1033,7 +1034,7 @@ const Editrequests = () => {
 
     return visibleColumns;
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
-   const columns4 = React.useMemo(() => {
+  const columns4 = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
     );
@@ -1056,7 +1057,7 @@ const Editrequests = () => {
 
     return visibleColumns;
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
-   const columns5 = React.useMemo(() => {
+  const columns5 = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
     );
@@ -1079,7 +1080,7 @@ const Editrequests = () => {
 
     return visibleColumns;
   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
-   const columns6 = React.useMemo(() => {
+  const columns6 = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
     );
@@ -1497,7 +1498,8 @@ const Editrequests = () => {
     managerComments: "",
     approvedby: "",
     approvedDate: "",
-    leavetype: ""
+    leavetype: "",
+    Year:""
   });
 
   const [perData, setPerData] = useState({
@@ -1618,7 +1620,8 @@ const Editrequests = () => {
         managerComments: "",
         approvedby: "",
         approvedDate: "",
-        leavetype: ""
+        leavetype: "",
+        Year:""
       });
       setOtdata({
         RecordID: "",
@@ -1720,6 +1723,7 @@ const Editrequests = () => {
           approvedDate: rowData.ApprovedDate,
           leavetype: rowData.LeaveTypeID,
           EmployeeID: rowData.EmployeeID,
+          Year:rowData.HiddenFromDate?.split("-")[0]
         });
         setPerData({
           recordID: rowData.RecordID,
@@ -2419,6 +2423,7 @@ const Editrequests = () => {
     imageurl: Data.ImageName
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+      Year: leaveData.Year || "",
   };
 
   const leaveFNsave = async (values, resetForm, del) => {
@@ -4124,233 +4129,239 @@ const Editrequests = () => {
                 handleSubmit,
                 resetForm,
                 setFieldValue
-              }) => (
-                <form
-                  onSubmit={handleSubmit}
-                  onReset={() => {
-                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                    resetForm();
-                  }}
-                >
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
+              }) => {
+                const selectedYear = values.Year;
+
+                const minDate = selectedYear ? `${selectedYear}-01-01` : undefined;
+                const maxDate = selectedYear ? `${selectedYear}-12-31` : undefined;
+
+                return(
+                  <form
+                    onSubmit={handleSubmit}
+                    onReset={() => {
+                      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                      resetForm();
                     }}
                   >
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="code"
-                        name="code"
-                        value={values.code}
-                        label="Code"
-                        focused
-                        inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                      />
-
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="description"
-                        name="description"
-                        value={values.description}
-                        label="Description"
-                        focused
-                        inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                      />
-                    </FormControl>
-                    <Stack
-                      sx={{
-                        //    width: {sm:'100%',md:'100%',lg:'100%'},
-                        //gridColumn: "span 2",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
-                        right: "0px",
-                      }}
-                    >
-                      <Avatar
-                        variant="rounded"
-                        src={userimg}
-                        sx={{ width: "200px", height: "120px" }}
-                      />
-                    </Stack>
-
                     <Box
-                      m="5px 0 0 0"
-                      //height={dataGridHeight}
-                      height="50vh"
+                      display="grid"
+                      gap={formGap}
+                      padding={1}
+                      gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                      // gap="30px"
                       sx={{
-                        "& .MuiDataGrid-root": {
-                          border: "none",
-                        },
-                        "& .MuiDataGrid-cell": {
-                          borderBottom: "none",
-                        },
-                        "& .name-column--cell": {
-                          color: colors.greenAccent[300],
-                        },
-                        "& .MuiDataGrid-columnHeaders": {
-                          backgroundColor: colors.blueAccent[800],
-                          borderBottom: "none",
-                        },
-                        "& .MuiDataGrid-virtualScroller": {
-                          backgroundColor: colors.primary[400],
-                        },
-                        "& .MuiDataGrid-footerContainer": {
-                          borderTop: "none",
-                          backgroundColor: colors.blueAccent[800],
-                        },
-                        "& .MuiCheckbox-root": {
-                          color: `${colors.greenAccent[200]} !important`,
-                        },
-                        "& .odd-row": {
-                          backgroundColor: "",
-                          color: "", // Color for odd rows
-                        },
-                        "& .even-row": {
-                          backgroundColor: "#D3D3D3",
-                          color: "", // Color for even rows
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 2",
                         },
                       }}
                     >
-                      <DataGrid
+                      <FormControl sx={{ gap: formGap }}>
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          id="code"
+                          name="code"
+                          value={values.code}
+                          label="Code"
+                          focused
+                          inputProps={{ readOnly: true }}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          id="description"
+                          name="description"
+                          value={values.description}
+                          label="Description"
+                          focused
+                          inputProps={{ readOnly: true }}
+                          sx={{
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                            },
+                          }}
+                        />
+                      </FormControl>
+                      <Stack
                         sx={{
+                          //    width: {sm:'100%',md:'100%',lg:'100%'},
+                          //gridColumn: "span 2",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                          right: "0px",
+                        }}
+                      >
+                        <Avatar
+                          variant="rounded"
+                          src={userimg}
+                          sx={{ width: "200px", height: "120px" }}
+                        />
+                      </Stack>
+
+                      <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
                           "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
                           },
                         }}
-                        rows={explorelistViewData}
-                        columns={columns1}
-                        disableSelectionOnClick
-                        getRowId={(row) => row.RecordID}
-                        rowHeight={dataGridRowHeight}
-                        headerHeight={dataGridHeaderFooterHeight}
-                        pageSize={pageSize1}
-                        page={page1}
-                        onPageSizeChange={(newPageSize) =>
-                          setPageSize1(newPageSize)
-                        }
-                        onPageChange={(pageno) => handlePagechange1(pageno)}
-                        onCellClick={(params) => {
-                          selectCellRowData({
-                            rowData: params.row,
-                            mode: "E",
-                            field: params.field,
-                            setFieldValue
-                          });
-                        }}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                        components={{
-                          Toolbar: LeaveTool,
-                        }}
-                        onStateChange={(stateParams) =>
-                          setRowCount(stateParams.pagination.rowCount)
-                        }
-                        getRowClassName={(params) =>
-                          params.indexRelativeToCurrentPage % 2 === 0
-                            ? "odd-row"
-                            : "even-row"
-                        }
-                        loading={exploreLoading}
-                        componentsProps={{
-                          toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
-                          },
-                        }}
-                      />
-                      {/* Leave Box aligned below the DataGrid */}
-                      <Box mt={2}>
-                        <Box
-                          display="flex"
-                          justifyContent="space-between"
-                          alignItems="center"
-                          mb={2}
-                        >
-                          <Typography variant="subtitle1" fontWeight="bold">
-                            Leave Details
-                          </Typography>
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns1}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          pageSize={pageSize1}
+                          page={page1}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize1(newPageSize)
+                          }
+                          onPageChange={(pageno) => handlePagechange1(pageno)}
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                              setFieldValue
+                            });
+                          }}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          components={{
+                            Toolbar: LeaveTool,
+                          }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                          }
+                          loading={exploreLoading}
+                          componentsProps={{
+                            toolbar: {
+                              showQuickFilter: true,
+                              quickFilterProps: { debounceMs: 500 },
+                            },
+                          }}
+                        />
+                        {/* Leave Box aligned below the DataGrid */}
+                        <Box mt={2}>
+                          <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            mb={2}
+                          >
+                            <Typography variant="subtitle1" fontWeight="bold">
+                              Leave Details
+                            </Typography>
+                          </Box>
+
+                          <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <Table aria-label="simple table" size="small">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell align="right">Total Leaves</TableCell>
+                                    <TableCell align="right">Taken</TableCell>
+                                    <TableCell align="right">Balance</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {leavegridData.LeaveDetailsData.TableData.map((row) => (
+                                    <TableRow
+                                      key={row.LeaveType}
+                                      sx={{
+                                        "& td, & th": {
+                                          paddingTop: "4px",
+                                          paddingBottom: "4px",
+                                          height: "30px", // you can adjust this value
+                                        },
+                                      }}
+                                    >
+                                      <TableCell component="th" scope="row">
+                                        {row.LeaveType}
+                                      </TableCell>
+                                      <TableCell align="right">{row.Total}</TableCell>
+                                      <TableCell align="right">{row.Taken}</TableCell>
+
+                                      <TableCell align="right">{row.Balance}</TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </Grid>
+
+                            {leavegridData.LeaveDetailsData.Others.map((item, index) => (
+                              <Grid item xs={4} key={index}>
+                                <Typography variant="body2" color="text.secondary">
+                                  {item.Label}
+                                </Typography>
+                                <Typography variant="h6" fontWeight="bold" textAlign="right" marginRight={10}>
+                                  {item.Value}
+                                </Typography>
+                              </Grid>
+                            ))}
+                          </Grid>
                         </Box>
 
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <Table aria-label="simple table" size="small">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell></TableCell>
-                                  <TableCell align="right">Total Leaves</TableCell>
-                                  <TableCell align="right">Taken</TableCell>
-                                  <TableCell align="right">Balance</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {leavegridData.LeaveDetailsData.TableData.map((row) => (
-                                  <TableRow
-                                    key={row.LeaveType}
-                                    sx={{
-                                      "& td, & th": {
-                                        paddingTop: "4px",
-                                        paddingBottom: "4px",
-                                        height: "30px", // you can adjust this value
-                                      },
-                                    }}
-                                  >
-                                    <TableCell component="th" scope="row">
-                                      {row.LeaveType}
-                                    </TableCell>
-                                    <TableCell align="right">{row.Total}</TableCell>
-                                    <TableCell align="right">{row.Taken}</TableCell>
-
-                                    <TableCell align="right">{row.Balance}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Grid>
-
-                          {leavegridData.LeaveDetailsData.Others.map((item, index) => (
-                            <Grid item xs={4} key={index}>
-                              <Typography variant="body2" color="text.secondary">
-                                {item.Label}
-                              </Typography>
-                              <Typography variant="h6" fontWeight="bold" textAlign="right" marginRight={10}>
-                                {item.Value}
-                              </Typography>
-                            </Grid>
-                          ))}
-                        </Grid>
                       </Box>
 
-                    </Box>
-
-                    <FormControl sx={{ gap: formGap }}>
-                      {/* <TextField
+                      <FormControl sx={{ gap: formGap }}>
+                        {/* <TextField
                           fullWidth
                           variant="standard"
                           type="text"
@@ -4364,7 +4375,7 @@ const Editrequests = () => {
                           focused
                           
                         /> */}
-                      {/* <FormControl
+                        {/* <FormControl
                           sx={{
                             //gridColumn: "span 2",
                             display: "flex",
@@ -4413,7 +4424,7 @@ const Editrequests = () => {
                           />
   
                         </FormControl> */}
-                      {/* <Productautocomplete
+                        {/* <Productautocomplete
                       name="leavetype"
                       label="Leave Type"
                       id="leavetype"
@@ -4427,50 +4438,84 @@ const Editrequests = () => {
                       //disabled={mode == "E" && values.Status != "AL" && values.Status != "QR"}
                       url={`https://hr.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"parentID=${compID}","Any":""}}`}
                     /> */}
-                      <FormControl>
-                        <CheckinAutocomplete
-
-                          name="leavetype"
-                          label={
-                            <span>
-                              Leave Type
-                              <span
-                                style={{ color: "red", fontSize: "20px" }}
-                              >
-                                *
-                              </span>
-                            </span>
-                          }
-                          variant="outlined"
-                          id="leavetype"
-                          // value={selectleaveLookupData}
-                          value={values.leavetype}
-                          onChange={async (newValue) => {
-                            setFieldValue("leavetype", {
-                              RecordID: newValue.RecordID,
-                              Code: newValue.Code,
-                              Name: newValue.Name,
-                            });
-
-                            if (newValue?.RecordID) {
-                              await Balancedayfind(newValue.RecordID);
-                            }
-
-
+                        <TextField
+                          labelId="demo-simple-TextField-filled-label"
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          // label={
+                          //   <span>
+                          //     Year <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          //   </span>
+                          // }
+                          label="Year"
+                          value={values.Year}
+                          id="Year"
+                          onBlur={handleBlur}
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            handleChange(e);
+                            setFieldValue("FromDate", "");
+                            setFieldValue("ToDate", "");
                           }}
-                          error={!!touched.leavetype && !!errors.leavetype}
-                          helperText={touched.leavetype && errors.leavetype}
 
-                          // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
-                          url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}'","Any":""}}`}
-                        />
-                        {/* {touched.leavetype && errors.leavetype && (
+                          name="Year"
+                          // required
+                          select
+                          error={!!touched.Year && !!errors.Year}
+                          helperText={touched.Year && errors.Year}
+                          focused
+                          // InputProps={{
+                          //   inputProps:{readOnly:mode === "E" }
+                          // }}
+                        >
+                          <MenuItem value="2025">2025</MenuItem>
+                          <MenuItem value="2026">2026</MenuItem>
+                          <MenuItem value="2027">2027</MenuItem>
+                        </TextField>
+                        <FormControl>
+
+                          <CheckinAutocomplete
+
+                            name="leavetype"
+                            label={
+                              <span>
+                                Leave Type
+                                <span
+                                  style={{ color: "red", fontSize: "20px" }}
+                                >
+                                  *
+                                </span>
+                              </span>
+                            }
+                            variant="outlined"
+                            id="leavetype"
+                            // value={selectleaveLookupData}
+                            value={values.leavetype}
+                            onChange={async (newValue) => {
+                              setFieldValue("leavetype", {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              });
+
+                              if (newValue?.RecordID) {
+                                await Balancedayfind(newValue.RecordID);
+                              }
+                            }}
+                            error={!!touched.leavetype && !!errors.leavetype}
+                            helperText={touched.leavetype && errors.leavetype}
+
+                            // "Filter":"parentID='${compID}' AND EmployeeID='${params.id}'",
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2107","ScreenName":"Leave Type","Filter":"parentID='${CompanyID}' AND EmployeeID='${params.id}' AND Year='${values.Year}'","Any":""}}`}
+                          />
+                          {/* {touched.leavetype && errors.leavetype && (
                           <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
                             {errors.leavetype}
                           </div>
                         )} */}
-                      </FormControl>
-                      {/* <FormControl focused variant="standard">
+                        </FormControl>
+                        {/* <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
                           {
                             <span>
@@ -4478,223 +4523,231 @@ const Editrequests = () => {
                             </span>
                           }
                         </InputLabel> */}
-                      <TextField
-                        labelId="demo-simple-TextField-filled-label"
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        label={
-                          <span>
-                            Leave Part <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                          </span>
-                        }
-                        value={values.LeavePart}
-                        id="LeavePart"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="LeavePart"
-                        // required
-                        select
-                        error={!!touched.LeavePart && !!errors.LeavePart}
-                        helperText={touched.LeavePart && errors.LeavePart}
-                        focused
-                      >
-                        <MenuItem value="FH">First Half</MenuItem>
-                        <MenuItem value="SH">Second Half</MenuItem>
-                        <MenuItem value="N">Full Day</MenuItem>
-                      </TextField>
-                      {/* </FormControl> */}
-                      <TextField
-                        name="FromDate"
-                        type="date"
-                        id="FromDate"
-                        label={
-                          <span>
-                            From Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                          </span>
-                        }
-                        inputFormat="YYYY-MM-DD"
-                        variant="standard"
-                        focused
-                        value={values.FromDate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // required
-                        error={!!touched.FromDate && !!errors.FromDate}
-                        helperText={touched.FromDate && errors.FromDate}
-                      />
-                      <TextField
-                        name="ToDate"
-                        type="date"
-                        id="ToDate"
-                        label={
-                          <span>
-                            To Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                          </span>
-                        }
-                        inputFormat="YYYY-MM-DD"
-                        variant="standard"
-                        focused
-                        value={values.ToDate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        // required
-                        error={!!touched.ToDate && !!errors.ToDate}
-                        helperText={touched.ToDate && errors.ToDate}
-                      />
-                      <TextField
-                        // disabled={mode == "E" && values.Status != "AL"}
-
-                        name="comment"
-                        type="comment"
-                        id="comment"
-                        label={
-                          <span>
-                            Comments <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                          </span>
-                        }
-                        multiline
-                        rows={6}
-                        variant="outlined"
-                        fullWidth
-                        focused
-                        // required
-                        value={values.comment}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.comment && !!errors.comment}
-                        helperText={touched.comment && errors.comment}
-                        sx={{ gridColumn: "span 2" }}
-                      />
-                      {/* {mode == "M" && ( */}
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        type="text"
-                        label={
-                          <span>
-                            Manager Comments <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                          </span>
-                        }
-                        // required
-                        multiline
-                        rows={6}
-                        value={values.managerComments}
-                        id="managerComments"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.managerComments && !!errors.managerComments}
-                        helperText={touched.managerComments && errors.managerComments}
-                        name="managerComments"
-                        sx={{
-                          gridColumn: "span 2",
-                        }}
-                        focused
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="approvedby"
-                        name="approvedby"
-                        value={values.approvedby}
-                        label="Approved By"
-                        focused
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        //inputProps={{ readOnly: true }}
-                        sx={{
-                          backgroundColor: "#ffffff",
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#f5f5f5",
-                          },
-                        }}
-                      />
-                      <TextField
-                        name="approvedDate"
-                        type="date"
-                        id="approvedDate"
-                        label="Approved Date"
-                        inputFormat="YYYY-MM-DD"
-                        variant="standard"
-                        focused
-                        value={values.approvedDate}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                      //required
-                      />
-
-                      {/* <FormControl focused variant="standard" required>
-                        <InputLabel id="Status">Status</InputLabel> */}
-                      <TextField
-                        label={
-                          <>
-                            Status<span style={{ color: "red", fontSize: "20px" }}> * </span>
-                          </>
-                        }
-                        id="Status"
-                        name="Status"
-                        value={values.Status}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Status && !!errors.Status}
-                        helperText={touched.Status && errors.Status}
-                        focused
-                        variant="standard"
-                        select
-                      >
-                        <MenuItem value="AL">Applied</MenuItem>
-                        <MenuItem value="RJ">Rejected</MenuItem>
-                        <MenuItem value="AP">Approved</MenuItem>
-                        <MenuItem value="QR">Query</MenuItem>
-
-                      </TextField>
-                      {/* </FormControl> */}
-
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="end"
-                    padding={1}
-                    gap={formGap}
-                  >
-                    {funMode !== "A" && (
-                      <Box display="flex" alignItems="center" gap={1}>
                         <TextField
-                          name="purpose"
-                          type="text"
-                          id="purpose"
-                          label="Purpose"
+                          labelId="demo-simple-TextField-filled-label"
+                          fullWidth
                           variant="standard"
-                          focused
-                          value={values.purpose}
+                          type="text"
+                          label={
+                            <span>
+                              Leave Part <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </span>
+                          }
+                          value={values.LeavePart}
+                          id="LeavePart"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          error={!!touched.purpose && !!errors.purpose}
-                          helperText={touched.purpose && errors.purpose}
-                          sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
-                          InputLabelProps={{ shrink: true }}
-
+                          name="LeavePart"
+                          // required
+                          select
+                          error={!!touched.LeavePart && !!errors.LeavePart}
+                          helperText={touched.LeavePart && errors.LeavePart}
+                          focused
+                        >
+                          <MenuItem value="FH">First Half</MenuItem>
+                          <MenuItem value="SH">Second Half</MenuItem>
+                          <MenuItem value="N">Full Day</MenuItem>
+                        </TextField>
+                        {/* </FormControl> */}
+                        <TextField
+                          name="FromDate"
+                          type="date"
+                          id="FromDate"
+                          label={
+                            <span>
+                              From Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </span>
+                          }
+                          // inputFormat="YYYY-MM-DD"
+                          inputProps={{
+                            min: minDate,
+                            max: maxDate
+                          }}
+                          variant="standard"
+                          focused
+                          value={values.FromDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          // required
+                          error={!!touched.FromDate && !!errors.FromDate}
+                          helperText={touched.FromDate && errors.FromDate}
                         />
-                        <FileUploadIconButton onFileSelect={(file) => {
-                          fileUpload(file, leaveData.recordID, "upload", "", values.purpose)
-                          setFieldValue("purpose", "");
-                        }}
+                        <TextField
+                          name="ToDate"
+                          type="date"
+                          id="ToDate"
+                          label={
+                            <span>
+                              To Date <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </span>
+                          }
+                          // inputFormat="YYYY-MM-DD"
+                          inputProps={{
+                            min: minDate,
+                            max: maxDate
+                          }}
+                          variant="standard"
+                          focused
+                          value={values.ToDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          // required
+                          error={!!touched.ToDate && !!errors.ToDate}
+                          helperText={touched.ToDate && errors.ToDate}
                         />
-                      </Box>
-                    )}
+                        <TextField
+                          // disabled={mode == "E" && values.Status != "AL"}
 
-                    {/* {YearFlag == "true" ? ( */}
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={isLoading}
+                          name="comment"
+                          type="comment"
+                          id="comment"
+                          label={
+                            <span>
+                              Comments <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </span>
+                          }
+                          multiline
+                          rows={6}
+                          variant="outlined"
+                          fullWidth
+                          focused
+                          // required
+                          value={values.comment}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.comment && !!errors.comment}
+                          helperText={touched.comment && errors.comment}
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                        {/* {mode == "M" && ( */}
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          type="text"
+                          label={
+                            <span>
+                              Manager Comments <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </span>
+                          }
+                          // required
+                          multiline
+                          rows={6}
+                          value={values.managerComments}
+                          id="managerComments"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.managerComments && !!errors.managerComments}
+                          helperText={touched.managerComments && errors.managerComments}
+                          name="managerComments"
+                          sx={{
+                            gridColumn: "span 2",
+                          }}
+                          focused
+                        />
+                        <TextField
+                          fullWidth
+                          variant="standard"
+                          type="text"
+                          id="approvedby"
+                          name="approvedby"
+                          value={values.approvedby}
+                          label="Approved By"
+                          focused
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          //inputProps={{ readOnly: true }}
+                          sx={{
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5",
+                            },
+                          }}
+                        />
+                        <TextField
+                          name="approvedDate"
+                          type="date"
+                          id="approvedDate"
+                          label="Approved Date"
+                          inputFormat="YYYY-MM-DD"
+                          variant="standard"
+                          focused
+                          value={values.approvedDate}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                        //required
+                        />
+
+                        {/* <FormControl focused variant="standard" required>
+                        <InputLabel id="Status">Status</InputLabel> */}
+                        <TextField
+                          label={
+                            <>
+                              Status<span style={{ color: "red", fontSize: "20px" }}> * </span>
+                            </>
+                          }
+                          id="Status"
+                          name="Status"
+                          value={values.Status}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.Status && !!errors.Status}
+                          helperText={touched.Status && errors.Status}
+                          focused
+                          variant="standard"
+                          select
+                        >
+                          <MenuItem value="AL">Applied</MenuItem>
+                          <MenuItem value="RJ">Rejected</MenuItem>
+                          <MenuItem value="AP">Approved</MenuItem>
+                          <MenuItem value="QR">Query</MenuItem>
+
+                        </TextField>
+                        {/* </FormControl> */}
+
+                      </FormControl>
+                    </Box>
+                    <Box
+                      display="flex"
+                      justifyContent="end"
+                      padding={1}
+                      gap={formGap}
                     >
-                      Save
-                    </LoadingButton>
-                    {/* ) : (
+                      {funMode !== "A" && (
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <TextField
+                            name="purpose"
+                            type="text"
+                            id="purpose"
+                            label="Purpose"
+                            variant="standard"
+                            focused
+                            value={values.purpose}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.purpose && !!errors.purpose}
+                            helperText={touched.purpose && errors.purpose}
+                            sx={{ gridColumn: "span 2", height: "20px", marginBottom: "20px" }}
+                            InputLabelProps={{ shrink: true }}
+
+                          />
+                          <FileUploadIconButton onFileSelect={(file) => {
+                            fileUpload(file, leaveData.recordID, "upload", "", values.purpose)
+                            setFieldValue("purpose", "");
+                          }}
+                          />
+                        </Box>
+                      )}
+
+                      {/* {YearFlag == "true" ? ( */}
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                      {/* ) : (
                         <Button
                           color="secondary"
                           variant="contained"
@@ -4704,134 +4757,135 @@ const Editrequests = () => {
                         </Button>
                       )}
                       {YearFlag == "true" ? ( */}
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Swal.fire({
-                          title: errorMsgData.Warningmsg.Delete,
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Confirm",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            leaveFNsave(values, resetForm, "harddelete");
-                          } else {
-                            return;
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    {/* ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Delete,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              leaveFNsave(values, resetForm, "harddelete");
+                            } else {
+                              return;
+                            }
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      {/* ) : (
                         <Button color="error" variant="contained" disabled={true}>
                           Delete
                         </Button>
                       )} */}
-                    <Button
-                      type="reset"
-                      color="warning"
-                      variant="contained"
-                      onClick={() => {
-                        setScreen(0);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Popup
-                      title="Leave Type"
-                      openPopup={openLETPopup}
-                      setOpenPopup={setOpenLETPopup}
-                    >
-                      <Listviewpopup
-                        accessID="2092"
-                        screenName="Leave Type"
-                        childToParent={childToParent}
-                      //filterName={"parentID"}
-                      //filterValue={""}
-                      />
-                    </Popup>
-                  </Box>
-                  {funMode !== "A" && (
-                    <Box mt={2}
-                    >
-                      <Paper elevation={3} sx={{ padding: 2 }}>
-                        {/* <Typography variant="h6" gutterBottom>
+                      <Button
+                        type="reset"
+                        color="warning"
+                        variant="contained"
+                        onClick={() => {
+                          setScreen(0);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Popup
+                        title="Leave Type"
+                        openPopup={openLETPopup}
+                        setOpenPopup={setOpenLETPopup}
+                      >
+                        <Listviewpopup
+                          accessID="2092"
+                          screenName="Leave Type"
+                          childToParent={childToParent}
+                        //filterName={"parentID"}
+                        //filterValue={""}
+                        />
+                      </Popup>
+                    </Box>
+                    {funMode !== "A" && (
+                      <Box mt={2}
+                      >
+                        <Paper elevation={3} sx={{ padding: 2 }}>
+                          {/* <Typography variant="h6" gutterBottom>
               Uploaded Files
             </Typography> */}
-                        <TableContainer component={Paper} >
-                          <Table size="small">
-                            <TableHead>
-                              <TableRow sx={rowSx}>
-                                <TableCell width={20}><strong>S.No</strong></TableCell>
-                                <TableCell><strong>Uploaded Date</strong></TableCell>
-                                <TableCell ><strong>Filename</strong></TableCell>
-                                <TableCell ><strong>Purpose</strong></TableCell>
-                                <TableCell ><strong>Source</strong></TableCell>
-                                <TableCell><strong>View</strong></TableCell>
+                          <TableContainer component={Paper} >
+                            <Table size="small">
+                              <TableHead>
+                                <TableRow sx={rowSx}>
+                                  <TableCell width={20}><strong>S.No</strong></TableCell>
+                                  <TableCell><strong>Uploaded Date</strong></TableCell>
+                                  <TableCell ><strong>Filename</strong></TableCell>
+                                  <TableCell ><strong>Purpose</strong></TableCell>
+                                  <TableCell ><strong>Source</strong></TableCell>
+                                  <TableCell><strong>View</strong></TableCell>
 
 
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {files.length === 0 ? (
-                                <TableRow>
-                                  <TableCell colSpan={4} align="center">
-                                    No files uploaded yet.
-                                  </TableCell>
                                 </TableRow>
-                              ) : (
-                                files.map((file, index) => (
-                                  <TableRow key={file.id || index} sx={rowSx}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{file.uploadedDate}</TableCell>
-                                    <TableCell>{file.filename}</TableCell>
-                                    <TableCell>{file.purpose}</TableCell>
-                                    <TableCell>{file.source}</TableCell>
-                                    <TableCell>
-                                      <Tooltip title="Open File">
-                                        <IconButton
-                                          color="primary"
-                                          component="a"
-                                          href={file.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          size="small"
-                                        >
-                                          <OpenInNewIcon fontSize="small" />
-                                        </IconButton>
-                                      </Tooltip>
-                                      <Tooltip title="delete">
-                                        <IconButton
-                                          color="error"
-                                          onClick={() => fileUpload(
-                                            file.filename,
-                                            leaveData.recordID,
-                                            "delete",
-                                            file.id,
-                                            file.purpose
-                                          )}
-                                          size="small"
-                                        >
-                                          <DeleteForeverIcon fontSize="small" />
-                                        </IconButton>
-                                      </Tooltip>
+                              </TableHead>
+                              <TableBody>
+                                {files.length === 0 ? (
+                                  <TableRow>
+                                    <TableCell colSpan={4} align="center">
+                                      No files uploaded yet.
                                     </TableCell>
-
                                   </TableRow>
-                                ))
-                              )}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </Paper>
-                    </Box>
-                  )}
-                </form>
-              )}
+                                ) : (
+                                  files.map((file, index) => (
+                                    <TableRow key={file.id || index} sx={rowSx}>
+                                      <TableCell>{index + 1}</TableCell>
+                                      <TableCell>{file.uploadedDate}</TableCell>
+                                      <TableCell>{file.filename}</TableCell>
+                                      <TableCell>{file.purpose}</TableCell>
+                                      <TableCell>{file.source}</TableCell>
+                                      <TableCell>
+                                        <Tooltip title="Open File">
+                                          <IconButton
+                                            color="primary"
+                                            component="a"
+                                            href={file.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            size="small"
+                                          >
+                                            <OpenInNewIcon fontSize="small" />
+                                          </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="delete">
+                                          <IconButton
+                                            color="error"
+                                            onClick={() => fileUpload(
+                                              file.filename,
+                                              leaveData.recordID,
+                                              "delete",
+                                              file.id,
+                                              file.purpose
+                                            )}
+                                            size="small"
+                                          >
+                                            <DeleteForeverIcon fontSize="small" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </TableCell>
+
+                                    </TableRow>
+                                  ))
+                                )}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </Paper>
+                      </Box>
+                    )}
+                  </form>
+                )
+              }}
             </Formik>
           </Paper>
         ) : (
@@ -8019,7 +8073,7 @@ const Editrequests = () => {
                                     <TableCell>{file.filename}</TableCell>
                                     {/* <TableCell>{file.id}</TableCell> */}
                                     <TableCell>{file.purpose || file.id}</TableCell>
-                                     {/* TO DISPLAY THE PURPOSE IF NOT ID THEN */}
+                                    {/* TO DISPLAY THE PURPOSE IF NOT ID THEN */}
                                     <TableCell>{file.source}</TableCell>
                                     <TableCell>
                                       <Tooltip title="Open File">

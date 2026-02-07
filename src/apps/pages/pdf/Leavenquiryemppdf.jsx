@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 9,
     },
-   table: {
+    table: {
         display: "table",
         width: "100%",
         borderWidth: 1,
@@ -308,13 +308,18 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
     const permissionSummary = React.useMemo(() => {
         if (!isPermission || !data.length) return null;
 
-        // Count unique permission days
+        // filter only approved permissions
+        const approvedData = data.filter(
+            d => d.Status === "Approved"
+        );
+
+        // count unique approved permission days
         const uniqueDays = new Set(
-            data.map(d => d.DisplayPermissionDate)
+            approvedData.map(d => d.DisplayPermissionDate)
         ).size;
 
-        // Sum total hours
-        const totalHours = data.reduce(
+        // sum approved hours only
+        const totalHours = approvedData.reduce(
             (sum, d) => sum + Number(d.NumofHrsday || 0),
             0
         );
@@ -324,6 +329,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
             hours: totalHours,
         };
     }, [data, isPermission]);
+
 
 
     const totalLeave = { CL: 0, G: 0, M: 0 };
@@ -465,7 +471,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                                     </Text>
                                 </View>
                             </View>
-                          
+
                         </View>
                     )}
 
@@ -533,7 +539,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
 
                                 {/* EL */}
                                 <View style={styles.row}>
-                                    <Text style={[styles.cell, { textAlign: "left" }]}>Emergency Leave</Text>
+                                    <Text style={[styles.cell, { textAlign: "left" }]}>Medical Leave</Text>
                                     <Text style={styles.cell}>{totalLeave.M}</Text>
                                     <Text style={styles.cell}>{takenLeave.M}</Text>
                                     <Text style={[styles.cell, styles.lastCell]}>
