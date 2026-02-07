@@ -195,7 +195,7 @@ import {
   Text,
   View,
   Document,
-  StyleSheet,
+  StyleSheet,Image
 } from "@react-pdf/renderer";
 
 // Styles
@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   page: {
     padding: 20,
     fontSize: 10,
+    paddingTop: 80,
   },
   section: {
     marginBottom: 10,
@@ -422,6 +423,38 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 
+    /* HEADER */
+  headerWrapper: {
+    position: "absolute",
+    top: 15,
+    left: 20,
+    right: 20,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerImage: {
+    width: "100%",
+    height: 50,
+    objectFit: "contain",
+  },
+
+ /* FOOTER */
+    footerWrapper: {
+    position: "absolute",
+    bottom: 25,
+    left: 5,
+    right: 5,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  footerImage: {
+    width: "100%",
+    height: 60,
+    objectFit: "cover",
+  },
+
 });
 
 // Split data: 20 on first page, 26 afterwards
@@ -457,7 +490,15 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
 
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
-
+         {/* HEADER */}
+                    <View fixed style={styles.headerWrapper}>
+                      {filters.HeaderImg && (
+                        <Image
+                          src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                          style={styles.headerImage}
+                        />
+                      )}
+                    </View>
           {pageIndex === 0 && (
 
             <View style={styles.headerTextContainer}>
@@ -545,6 +586,17 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
               );
             })}
           </View>
+
+          
+                                {/* FOOTER */}
+                                <View fixed style={styles.footerWrapper}>
+                                  {filters.FooterImg && (
+                                    <Image
+                                      src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                                      style={styles.footerImage}
+                                    />
+                                  )}
+                                </View>
               <View
                 fixed
                 style={{

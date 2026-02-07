@@ -200,8 +200,8 @@ const EditAttendance = () => {
       width: 60,
       headerAlign: "center",
       renderCell: (params) => {
-        if (params.row.Status === "WeekOff") {
-          return <AlarmOffIcon color="primary" titleAccess="WeekOff" />;
+        if (params.row.Status === "Week Off") {
+          return <AlarmOffIcon color="primary" titleAccess="Week Off" />;
         }
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
@@ -753,7 +753,7 @@ const EditAttendance = () => {
                     // }}
                     getRowClassName={(params) => {
                       const status = params.row.Status;
-                      if (status === "WeekOff") return "weekoff-row";
+                      if (status === "Week Off") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
                       // if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
                       const leaveStatuses = [
@@ -780,7 +780,7 @@ const EditAttendance = () => {
                 >
                   <Chip
                     icon={<AlarmOffIcon color="primary" />}
-                    label="WeekOff"
+                    label="Week Off"
                     variant="outlined"
                     sx={{
                       backgroundColor: "#f2acb7",

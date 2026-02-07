@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   header1: {
-    fontSize: 11,
+    fontSize: 15,
     textAlign: "left",
     fontWeight: "bold",
     display: "block",
-    marginTop: 5,
+    marginTop: 15,
   },
   table: {
     display: "table",
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
+    borderBottomWidth: 0
   },
   table1: {
     display: "table",
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     borderStyle: "solid",
     textAlign: "end",
+    borderBottomWidth: 0
   },
   row: {
     flexDirection: "row",
@@ -153,11 +155,18 @@ const styles = StyleSheet.create({
   colEmp: { width: "36%" },
   colTime: { width: "15%" },
   colReason: { width: "27%" },
-  colStatus: { width: "15%" },
+  colStatus: {
+     width: "15%" ,
+     borderRightWidth: 0,
+    },
 
   colSlno1: { width: "7%" },
   colEmp1: { width: "33%" },
   colTime1: { width: "20%" },
+  colTime1Leavebal: {
+     width: "20%",
+     borderRightWidth: 0,
+  },
   footer: {
     position: "absolute",
     bottom: 10,
@@ -337,7 +346,7 @@ const employeeSummary = Object.values(
                     <Text style={[styles.headerCell1, styles.colEmp1]}>Employee</Text>
                     <Text style={[styles.headerCell1, styles.colTime1]}>Total Leave</Text>
                     <Text style={[styles.headerCell1, styles.colTime1]}>Leave Taken</Text>
-                    <Text style={[styles.headerCell1, styles.colTime1]}>Leave Balance</Text>
+                    <Text style={[styles.headerCell1, styles.colTime1Leavebal]}>Leave Balance</Text>
                   </View>
 
                   {/* Summary Rows */}
@@ -349,7 +358,7 @@ const employeeSummary = Object.values(
                       </Text>
                       <Text style={[styles.cell3, styles.colTime1]}>{row.TotalLeave}</Text>
                       <Text style={[styles.cell3, styles.colTime1]}>{row.ApprovedLeaveTaken}</Text>
-                      <Text style={[styles.cell3, styles.colTime1]}>{row.BalanceLeave}</Text>
+                      <Text style={[styles.cell3, styles.colTime1Leavebal]}>{row.BalanceLeave}</Text>
                     </View>
                   ))}
                 </View>

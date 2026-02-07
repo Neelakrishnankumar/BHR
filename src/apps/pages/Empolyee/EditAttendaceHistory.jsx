@@ -66,6 +66,11 @@ import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { getConfig } from "../../../config";
+import { FaFileExcel } from "react-icons/fa";
+import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
+
+
+
 const EditAttendanceHistory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -86,15 +91,18 @@ const EditAttendanceHistory = () => {
 
   // const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   // console.log("AttendanceData", AttendanceData);
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+
   const AttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
   );
   console.log("AttendanceData", AttendanceData);
 
-    const HeaderImg = sessionStorage.getItem("CompanyHeader");
-  const FooterImg = sessionStorage.getItem("CompanyFooter");
-  const config = getConfig();
-  const baseurl1 = config.UAAM_URL;
 
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
@@ -552,7 +560,7 @@ const EditAttendanceHistory = () => {
                             Month: values.month,
                             Year: values.year,
                             EmployeeID: empData?.RecordID,
-                            Imageurl: baseurl1,
+                            Imageurl: baseurlUAAM,
                             HeaderImg: HeaderImg,
                             FooterImg: FooterImg,
                           }}
@@ -570,8 +578,25 @@ const EditAttendanceHistory = () => {
                         )
                       }
                     </PDFDownloadLink>
-                  )}
 
+
+                  )}
+                  {AttendanceData?.length > 0 && (
+
+                   <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer", }}
+                      onClick={() =>
+                      AttendanceHistoryExcel(
+                          AttendanceData,
+                          { month: values.month, year: values.year },
+                          empData
+                        )
+                      }
+                    />
+
+                  )}
                 </Stack>
               </Box>
               {/* <Box display="flex" padding={1} justifyContent="end" mt="10px" gap="20px">

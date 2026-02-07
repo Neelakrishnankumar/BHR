@@ -190,6 +190,7 @@ import EditLeaveEnquiry from "./pages/HR/EditLeaveEnquiry";
 import EditOHPayment from "./pages/HR/EditOHPayment";
 import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
+import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
 
 function App() {
@@ -1101,6 +1102,10 @@ function App() {
                   <Route
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
+                  />
+                    <Route
+                    path="/:accessID/EditAudit"
+                    element={<EditAudit />}
                   />
                   <Route
                     path="/:accessID/Editdailyattendance"

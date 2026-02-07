@@ -6407,18 +6407,18 @@ const EditemployeePayroll = () => {
                       onBlur={handleBlur}
                       select
                     >
-                      <MenuItem value={"1"}>1</MenuItem>
-                      <MenuItem value={"2"}>2</MenuItem>
-                      <MenuItem value={"3"}>3</MenuItem>
-                      <MenuItem value={"4"}>4</MenuItem>
-                      <MenuItem value={"5"}>5</MenuItem>
-                      <MenuItem value={"6"}>6</MenuItem>
-                      <MenuItem value={"7"}>7</MenuItem>
-                      <MenuItem value={"8"}>8</MenuItem>
-                      <MenuItem value={"9"}>9</MenuItem>
-                      <MenuItem value={"10"}>10</MenuItem>
-                      <MenuItem value={"11"}>11</MenuItem>
-                      <MenuItem value={"12"}>12</MenuItem>
+                      <MenuItem value={"1"}>January</MenuItem>
+                      <MenuItem value={"2"}>February</MenuItem>
+                      <MenuItem value={"3"}>March</MenuItem>
+                      <MenuItem value={"4"}>April</MenuItem>
+                      <MenuItem value={"5"}>May</MenuItem>
+                      <MenuItem value={"6"}>June</MenuItem>
+                      <MenuItem value={"7"}>July</MenuItem>
+                      <MenuItem value={"8"}>August</MenuItem>
+                      <MenuItem value={"9"}>September</MenuItem>
+                      <MenuItem value={"10"}>October</MenuItem>
+                      <MenuItem value={"11"}>November</MenuItem>
+                      <MenuItem value={"12"}>December</MenuItem>
                     </TextField>
                     <TextField
                       fullWidth
