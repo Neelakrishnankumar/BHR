@@ -4757,9 +4757,11 @@ const Editrequests = () => {
                         </Button>
                       )}
                       {YearFlag == "true" ? ( */}
+                      {/* {funMode !== "A" && ( */}
                       <Button
                         color="error"
                         variant="contained"
+                        disabled={funMode === "A"}
                         onClick={() => {
                           Swal.fire({
                             title: errorMsgData.Warningmsg.Delete,
@@ -4779,6 +4781,7 @@ const Editrequests = () => {
                       >
                         Delete
                       </Button>
+                      {/* )} */}
                       {/* ) : (
                         <Button color="error" variant="contained" disabled={true}>
                           Delete
