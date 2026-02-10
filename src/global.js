@@ -298,6 +298,10 @@ const initialState = {
   OHPaymentUpdateController: "",
   PartyBydateByamtFilter: "",
   EmployeeVendorContactGet:"",
+  ExcelFileDownload:"",
+  ExcelFileUpload:"",
+  Setup_MenuExcel:"",
+  Parentposturl:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -455,8 +459,12 @@ export const getUrlSlice = createSlice({
         APIurl + "PartyBydateByamtFilter.php";
       state.UserActivityGet = APIurl + "UserActivityGetController.php";
       state.auditScreennameGet = APIurl + "ListviewHdrGetController.php";
-      state.EmployeeVendorGetController = APIurl + "EmployeeVendorGetController.php";
-      state.EmployeeVendorContactGet = APIurl + "EmployeeVendorContractGetController.php";
+      state.EmployeeVendorGetController = APIurl + "ParentGetController.php";
+      state.EmployeeVendorContactGet = APIurl + "ParentContactGetController.php";
+      state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
+      state.ExcelFileUpload = APIurl + "ExcelFileUpload.php";
+      state.Setup_MenuExcel = APIurl + "Setup_Menu.php";
+      state.Parentposturl = APIurl + "ParentpostController.php";
     },
   },
 });
