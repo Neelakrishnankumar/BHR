@@ -18,6 +18,8 @@ import {
   Stack,
   FormControlLabel,
   FormControl,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import {
   DataGrid,
@@ -40,7 +42,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { tokens, ColorModeContext } from "../../Theme";
 import { useProSidebar } from "react-pro-sidebar";
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useActionData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -70,7 +72,10 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import SearchIcon from "@mui/icons-material/Search";
 import EmailIcon from "@mui/icons-material/Email";
 import {
+  ExcelFileDownload,
+  ExcelFileUpload,
   searchData,
+  Setup_MenuExcel,
   VendorFilterController,
 } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
@@ -102,7 +107,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import InputAdornment from "@mui/material/InputAdornment";
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import CancelIcon from "@mui/icons-material/Cancel";
-
+import FileUploadIconButton from "../../ui-components/global/Fileuploadbutton";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import { FaFileExcel } from "react-icons/fa";
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -155,6 +162,9 @@ const Listview = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [fileName, setFileName] = useState();
   const [assignrecid, setAssignrecid] = useState("");
+
+  //BULK UPLOAD
+  const [showBulkUpload, setShowBulkUpload] = React.useState(false);
   const handleFileChange = async (event) => {
     try {
       const selectedFile = event.target.files[0];
@@ -380,6 +390,7 @@ const Listview = () => {
     setUploadFile(fileData.payload.apiResponse);
   };
 
+
   const [productFilter, setProductFilter] = useState();
   const searchProduct = async () => {
     if (!productFilter) {
@@ -513,6 +524,14 @@ const Listview = () => {
             ) : (
               false
             )}
+            {/* <Tooltip title="Bulk Upload">
+              <IconButton sx={{ cursor: "pointer" }}>
+                <FaFileExcel size={20}
+                  color="#1D6F42"
+                  onClick={() => setShowBulkUpload((prev) => !prev)}
+                />
+              </IconButton>
+            </Tooltip> */}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -723,9 +742,53 @@ const Listview = () => {
     setPage(pageno);
     sessionStorage.setItem("currentPage", pageno);
   };
+  const [selectedFileExcel, setSelectedFileExcel] = React.useState(null);
+
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  const fileInputRef = React.useRef(null);
 
   return (
     <React.Fragment>
+      <input
+        id="bulk-excel-input"
+        type="file"
+        hidden
+        accept=".xlsx,.xls"
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+
+          console.log("FILE SELECTED:", file.name);
+
+          try {
+            const formattedScreenName = screenName
+              .trim()
+              .split(" ")
+              .filter(Boolean)
+              .map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+              )
+              .join("");
+
+            const forcedFileName = `${formattedScreenName}.xlsx`;
+
+            const formData = new FormData();
+            formData.append("excel", file, forcedFileName);
+
+            await dispatch(
+              ExcelFileUpload({ formData, forcedFileName })
+            ).unwrap();
+
+            toast.success("Excel uploaded successfully");
+          } catch (error) {
+            console.error(error);
+            toast.error("Upload failed");
+          }
+
+          e.target.value = null;
+        }}
+      />
       <Box m="5px">
         {accessID == "TR002" || accessID == "TR044" ? (
           <Paper
@@ -842,6 +905,452 @@ const Listview = () => {
                 Toolbar: CustomToolbar,
               }}
             />
+
+            {/* WORKING AS OF 09/02/2026 --> EXCEL + PARAMS */}
+            {/* {showBulkUpload && (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 3,
+                  borderRadius: 2,
+                  backgroundColor: "#fff",
+                  position: "relative",
+                }}
+              >
+                <Formik
+                  initialValues={{
+                    Sync: sessionStorage.getItem(`${screenName}_Sync`) || "Y",
+                  }}
+                  enableReinitialize={false}
+                  onSubmit={async (values, { setSubmitting }) => {
+                    if (!selectedFileExcel) {
+                      toast.error("Please select an Excel file");
+                      setSubmitting(false);
+                      return;
+                    }
+
+
+                    try {
+                      const formData = new FormData();
+                     
+                      const formatScreenName = (name) => {
+                        if (!name) return "";
+                        return name
+                          .trim()
+                          .split(" ")
+                          .filter(Boolean)
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join("");
+                      };
+
+                      const formattedScreenName = formatScreenName(screenName);
+                      const forcedFileName = `${formattedScreenName}.xlsx`;
+                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
+
+                      formData.append("excel", selectedFileExcel, forcedFileName);
+                      formData.append("CompanyID", compID);
+                      formData.append("screename", screenName);
+                      formData.append("Sync", values.Sync);
+                      formData.append("FinYear", YearRecorid || 0);
+
+                      await dispatch(
+                        ExcelFileUpload({
+                          formData,
+                          forcedFileName
+                        })
+                      ).unwrap();
+
+
+                      toast.success("Excel uploaded successfully");
+                      setShowBulkUpload(false);
+                    } catch (error) {
+                      toast.error("Upload failed");
+                    } finally {
+                      setSubmitting(false);
+                    }
+                  }}
+
+                >
+                  {({
+                    values,
+                    handleSubmit,
+                    setFieldValue,
+                    isSubmitting,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+
+                      <Tooltip title="Close">
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowBulkUpload(false)}
+                          sx={{ position: "absolute", top: 5, right: 5 }}
+                        >
+                          <CancelIcon color="error" />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Stack spacing={2} marginTop={2}
+                        sx={{
+                          width: "100%",
+                        }}>
+
+                        <Button
+                          variant="outlined"
+                          color="success"
+                          startIcon={<FileDownloadOutlinedIcon />}
+                          onClick={async () => {
+                            try {
+                              const formatScreenName = (name) => {
+                                if (!name) return "";
+
+                                return name
+                                  .trim()                       // remove leading/trailing spaces
+                                  .split(" ")                   // split words
+                                  .filter(Boolean)              // remove extra empty spaces
+                                  .map(word =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                  )
+                                  .join("");                    // join without space
+                              };
+
+                              const formattedScreenName = formatScreenName(screenName);
+                              const fileName = `${formattedScreenName}.xlsx`;
+
+
+                              const payload = {
+                                file: `'${fileName}'`,   
+                              };
+
+                              const result = await dispatch(
+                                ExcelFileDownload({ data: payload })
+                              );
+
+                              const blob = new Blob([result.payload], {
+                                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              });
+
+                              const url = window.URL.createObjectURL(blob);
+                              const link = document.createElement("a");
+                              link.href = url;
+                              link.setAttribute("download", fileName);
+                              document.body.appendChild(link);
+                              link.click();
+                              link.remove();
+
+                              toast.success("Excel downloaded successfully");
+                            } catch (error) {
+                              toast.error("Download failed");
+                            }
+                          }}
+                        >
+                          Download Excel Template
+                        </Button>
+
+
+                        <Button
+                          variant="outlined"
+                          startIcon={<FileUploadIconButton />}
+                          onClick={() => fileInputRef.current.click()}
+                        >
+                          Choose Excel File
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            hidden
+                            accept=".xlsx,.xls"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                setSelectedFileExcel(file);
+                              }
+                            }}
+                          />
+
+
+                        </Button>
+                        <Typography variant="caption">
+                          Debug: {selectedFileExcel ? "File Loaded" : "No File"}
+                        </Typography>
+
+                        {selectedFileExcel && (
+                          <Typography variant="caption">
+                            Selected: {selectedFileExcel.name}
+                          </Typography>
+                        )}
+
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            value={values.Sync}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setFieldValue("Sync", value);
+                              sessionStorage.setItem(`${screenName}_Sync`, value);
+                            }}
+                          >
+                            <FormControlLabel value="Y" control={<Radio />} label="Sync" />
+                            <FormControlLabel value="N" control={<Radio />} label="Replace" />
+                          </RadioGroup>
+                        </FormControl>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          disabled={isSubmitting}
+                        >
+                          Upload
+                        </Button>
+
+                      </Stack>
+
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            )} */}
+
+            {/* SEPERATE API FOR EXCEL AND PARAMS */}
+            {showBulkUpload && (
+              <Box
+                sx={{
+                  width: 300,
+                  p: 3,
+                  borderRadius: 2,
+                  backgroundColor: "#fff",
+                  position: "relative",
+                }}
+              >
+                <Formik
+                  initialValues={{
+                    // Sync: sessionStorage.getItem(`${screenName}_Sync`) === "Y",
+                    Sync: sessionStorage.getItem(`${screenName}_Sync`) || "Y",
+                  }}
+                  enableReinitialize={false}
+                  onSubmit={async (values, { setSubmitting }) => {
+                    try {
+                      const formData = new FormData();
+                      // formData.append("file", selectedFileExcel);
+                      // Format screenName → remove spaces
+                      const formatScreenName = (name) => {
+                        if (!name) return "";
+                        return name
+                          .trim()
+                          .split(" ")
+                          .filter(Boolean)
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join("");
+                      };
+
+                      const formattedScreenName = formatScreenName(screenName);
+                      const forcedFileName = `${formattedScreenName}.xlsx`;
+                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
+
+                      formData.append("CompanyID", compID);
+                      formData.append("screename", screenName);
+                      formData.append("Sync", values.Sync);
+                      formData.append("FinYear", YearRecorid || 0);
+                      const excelSetUp = {
+                        CompanyID: compID,
+                        screename: screenName,
+                        Sync: values.Sync,
+                        FinYear: YearRecorid || 0,
+                      };
+
+                      const response = await dispatch(
+                        Setup_MenuExcel(excelSetUp)
+                      ).unwrap();
+
+                      if (response.payload.Status == "Y") {
+                        toast.success(response.payload.Msg);
+                      } else {
+                        toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+                      }
+                    } catch (error) {
+                      toast.error("Upload failed");
+                    } finally {
+                      setSubmitting(false);
+                    }
+                  }}
+
+                >
+                  {({
+                    values,
+                    handleSubmit,
+                    setFieldValue,
+                    isSubmitting,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+
+                      {/* Close Button */}
+                      <Tooltip title="Close">
+                        <IconButton
+                          size="small"
+                          onClick={() => setShowBulkUpload(false)}
+                          sx={{ position: "absolute", top: 5, right: 5 }}
+                        >
+                          <CancelIcon color="error" />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Stack spacing={2} marginTop={2}
+                        sx={{
+                          width: "100%",
+                        }}>
+
+                        {/* ✅ Download Excel Button */}
+                        <Button
+                          variant="outlined"
+                          color="success"
+                          startIcon={<FileDownloadOutlinedIcon />}
+                          onClick={async () => {
+                            try {
+                              const formatScreenName = (name) => {
+                                if (!name) return "";
+
+                                return name
+                                  .trim()                       // remove leading/trailing spaces
+                                  .split(" ")                   // split words
+                                  .filter(Boolean)              // remove extra empty spaces
+                                  .map(word =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                  )
+                                  .join("");                    // join without space
+                              };
+
+                              const formattedScreenName = formatScreenName(screenName);
+                              const fileName = `${formattedScreenName}.xlsx`;
+
+
+                              const payload = {
+                                file: `'${fileName}'`,   // 🔥 REQUIRED single quotes
+                              };
+
+                              const result = await dispatch(
+                                ExcelFileDownload({ data: payload })
+                              );
+
+                              const blob = new Blob([result.payload], {
+                                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              });
+
+                              const url = window.URL.createObjectURL(blob);
+                              const link = document.createElement("a");
+                              link.href = url;
+                              link.setAttribute("download", fileName);
+                              document.body.appendChild(link);
+                              link.click();
+                              link.remove();
+
+                              toast.success("Excel downloaded successfully");
+                            } catch (error) {
+                              toast.error("Download failed");
+                            }
+                          }}
+                        >
+                          Download Excel Template
+                        </Button>
+
+
+                        {/* ✅ File Upload Button */}
+                        {/* <Button
+                          variant="outlined"
+                          startIcon={<FileUploadIconButton />}
+                          component="label"
+                        >
+                          Choose Excel File
+                          <input
+                            type="file"
+                            // ref={fileInputRef}
+                            hidden
+                            accept=".xlsx,.xls"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+
+                              setSelectedFileName(file.name);
+
+                              try {
+                                const formattedScreenName = screenName
+                                  .trim()
+                                  .split(" ")
+                                  .filter(Boolean)
+                                  .map(word =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                  )
+                                  .join("");
+
+                                const forcedFileName = `${formattedScreenName}.xlsx`;
+
+                                const formData = new FormData();
+                                formData.append("excel", file, forcedFileName);
+
+                                await dispatch(
+                                  ExcelFileUpload({ formData, forcedFileName })
+                                ).unwrap();
+
+                                toast.success("Excel uploaded successfully");
+
+                              } catch (error) {
+                                toast.error("Upload failed");
+                              }
+                            }}
+                          />
+
+
+                        </Button> */}
+                        <Button
+                          variant="outlined"
+                          startIcon={<FileUploadIconButton />}
+                          onClick={() => document.getElementById("bulk-excel-input").click()}
+                        >
+                          Choose Excel File
+                        </Button>
+                        {/* <Typography variant="caption">
+                          Debug: {selectedFileName ? "File Loaded" : "No File"}
+                        </Typography> */}
+                        {/* <Typography variant="caption">
+                          Debug: {selectedFileName || "No File"}
+                        </Typography> */}
+                        {selectedFileName && (
+                          <Typography variant="caption">
+                            Selected: {selectedFileName.name}
+                          </Typography>
+                        )}
+
+
+                        {/* ✅ Sync Checkbox */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            value={values.Sync}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setFieldValue("Sync", value);
+                              sessionStorage.setItem(`${screenName}_Sync`, value);
+                            }}
+                          >
+                            <FormControlLabel value="Y" control={<Radio />} label="Sync" />
+                            <FormControlLabel value="N" control={<Radio />} label="Replace" />
+                          </RadioGroup>
+                        </FormControl>
+
+                        {/* ✅ Upload Button */}
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          disabled={isSubmitting}
+                        >
+                          Upload
+                        </Button>
+
+                      </Stack>
+
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            )}
+
+
             {showMore && accessID === "TR313" && (
               <Box
                 sx={{
@@ -1125,7 +1634,7 @@ const Listview = () => {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
-                         <IconButton
+                        <IconButton
                           size="small"
                           onClick={() => setShowMore(false)}
                           sx={{ position: "absolute", top: 5, right: 4 }}
@@ -1938,351 +2447,6 @@ const Listview = () => {
                 </Formik>
               </Box>
             )}
-
-            {/* {showMore && accessID === "TR321" && (
-              <Box
-                sx={{
-                  width: 300,
-                  p: 2,
-                  borderRadius: 1,
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Formik
-                  initialValues={{
-                    fromdate: sessionStorage.getItem("FromDate") || "",
-                    date: sessionStorage.getItem("ToDate") || "",
-                    Created: sessionStorage.getItem("TR321_Created") === "Y",
-                    Process: sessionStorage.getItem("TR321_Process") === "Y",
-                    Paid: sessionStorage.getItem("TR321_Paid") === "Y",
-                    Picked: sessionStorage.getItem("TR321_Picked") === "Y",
-                    ReadyToDeliver:
-                      sessionStorage.getItem("TR321_ReadyToDeliver") === "Y",
-                    Delivered:
-                      sessionStorage.getItem("TR321_Delivered") === "Y",
-                    Scheduled:
-                      sessionStorage.getItem("TR321_Scheduled") === "Y",
-                  }}
-                  enableReinitialize
-                  validate={(values) => {
-                    const hasAtLeastOneValue =
-                      values.fromdate ||
-                      values.date ||
-                      values.Created ||
-                      values.Process ||
-                      values.ReadyToDeliver ||
-                      values.Paid ||
-                      values.Scheduled ||
-                      values.Delivered ||
-                      values.Picked;
-                  }}
-                  onSubmit={(values, { setSubmitting }) => {
-                    const conditions = [];
-                    const statusDateMap = {
-                      Created: "OROrderDate",
-                      Process: "ORProcessDate",
-                      ReadyToDeliver: "ORTentativeDate",
-                      YetToDeliver: "ORTentativeDate",
-                      Picked: "ORPickedDate",
-                      Scheduled: "ORTentativeDate",
-                      Delivered: "ORDeliveryDate",
-                      Paid: "ORPaidDate",
-                    };
-                    const statusValueMap = {
-                      Created: "Created",
-                      Process: "Process",
-                      ReadyToDeliver: "Ready To Deliver",
-                      YetToDeliver: "Yet To Deliver",
-                      Picked: "Picked",
-                      // Scheduled: "Scheduled",
-                      Scheduled: "Yet To Deliver",
-                      Delivered: "Delivered",
-                      Paid: "Paid",
-                    };
-
-                    const fromDate = values.fromdate || "";
-                    const toDate = values.date || "";
-
-                    sessionStorage.setItem("FromDate", fromDate);
-                    sessionStorage.setItem("ToDate", toDate);
-
-                    // Store checkbox values
-                    Object.keys(statusDateMap).forEach((status) => {
-                      sessionStorage.setItem(
-                        `TR321_${status}`,
-                        values[status] ? "Y" : "N"
-                      );
-                    });
-
-                    sessionStorage.setItem(
-                      "TR321_Filters",
-                      JSON.stringify(values)
-                    );
-
-                    // --------------------------
-                    // 1. STATUS IN ('A','B','C')
-                    // --------------------------
-                    // const selectedStatuses = Object.keys(statusDateMap).filter(
-                    //   (status) => values[status]
-                    // );
-
-                    // if (selectedStatuses.length > 0) {
-                    //   conditions.push(
-                    //     `LastOrderStatus IN (${selectedStatuses
-                    //       .map((s) => `'${s}'`)
-                    //       .join(", ")})`
-                    //   );
-                    // }
-                    const selectedStatuses = Object.keys(statusDateMap).filter(
-                      (status) => values[status]
-                    );
-
-                    if (selectedStatuses.length > 0) {
-                      conditions.push(
-                        `LastOrderStatus IN (${selectedStatuses
-                          .map((s) => `'${statusValueMap[s]}'`)
-                          .join(", ")})`
-                      );
-                    }
-
-                    // -------------------------------------------------
-                    // 2. DATE FIELD CONDITIONS based on selected status
-                    // -------------------------------------------------
-                    const dateConditions = [];
-
-                    selectedStatuses.forEach((status) => {
-                      const field = statusDateMap[status];
-
-                      if (fromDate && toDate) {
-                        dateConditions.push(
-                          `(${field} BETWEEN '${fromDate}' AND '${toDate}')`
-                        );
-                      } else if (fromDate) {
-                        dateConditions.push(`(${field} >= '${fromDate}')`);
-                      } else if (toDate) {
-                        dateConditions.push(`(${field} <= '${toDate}')`);
-                      }
-                    });
-
-                    if (dateConditions.length > 0) {
-                      conditions.push(`(${dateConditions.join(" OR ")})`);
-                    }
-
-                    // --------------------------
-                    // FINAL WHERE CLAUSE
-                    // --------------------------
-                    const whereClause = conditions.join(" AND ");
-                    console.log("FINAL FILTER:", whereClause);
-
-                    dispatch(
-                      fetchListview(
-                        accessID,
-                        screenName,
-                        whereClause,
-                        "",
-                        compID
-                      )
-                    );
-
-                    setTimeout(() => setSubmitting(false), 100);
-                  }}
-                >
-                  {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
-                    <form onSubmit={handleSubmit}>
-                      <Box sx={{ height: 600, overflowY: "auto" }}>
-                        <TextField
-                          name="fromdate"
-                          type="date"
-                          id="fromdate"
-                          label="From Date"
-                          variant="standard"
-                          value={values.fromdate || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("fromdate", newDate);
-                            // dispatch(setFromDate(newDate));
-                            sessionStorage.setItem("FromDate", newDate);
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                        />
-
-                        <TextField
-                          name="date"
-                          type="date"
-                          id="date"
-                          label="To Date"
-                          variant="standard"
-                          value={values.date || ""}
-                          onChange={(e) => {
-                            const newDate = e.target.value;
-                            setFieldValue("date", newDate);
-                            // dispatch(setToDate(newDate));
-                            sessionStorage.setItem("ToDate", newDate);
-                          }}
-                          focused
-                          InputLabelProps={{ shrink: true }}
-                          inputProps={{
-                            max: new Date().toISOString().split("T")[0],
-                          }}
-                          sx={{ width: 250, mt: 2 }}
-                        />
-
-                        <Typography mt={2} fontWeight="bold" color="error">
-                          Status
-                        </Typography>
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Created"
-                              checked={values.Created}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Created", checked);
-                                sessionStorage.setItem(
-                                  "TR321_Created",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Created"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Process"
-                              checked={values.Process}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Process", checked);
-                                sessionStorage.setItem(
-                                  "TR321_Process",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Confirm"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="ReadyToDeliver"
-                              checked={values.ReadyToDeliver}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("ReadyToDeliver", checked);
-                                sessionStorage.setItem(
-                                  "TR321_ReadyToDeliver",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Ready To Deliver"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Scheduled"
-                              checked={values.Scheduled}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Scheduled", checked);
-                                sessionStorage.setItem(
-                                  "TR321_Scheduled",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Scheduled"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Picked"
-                              checked={values.Picked}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Picked", checked);
-                                sessionStorage.setItem(
-                                  "TR321_Picked",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Picked"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Delivered"
-                              checked={values.Delivered}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Delivered", checked);
-                                sessionStorage.setItem(
-                                  "TR321_Delivered",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Delivered"
-                        />
-
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="Paid"
-                              checked={values.Paid}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFieldValue("Paid", checked);
-                                sessionStorage.setItem(
-                                  "TR321_Paid",
-                                  checked ? "Y" : "N"
-                                );
-                              }}
-                            />
-                          }
-                          label="Paid"
-                        />
-
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="end"
-                          spacing={1}
-                          mt={2}
-                        >
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                          >
-                            Apply
-                          </Button>
-                        </Stack>
-                      </Box>
-                    </form>
-                  )}
-                </Formik>
-              </Box>
-            )} */}
-
             {/* WORKING CODE BELOW ----- */}
             {/* {showMore && accessID === "TR321" && (
   <Box sx={{ width: 300, p: 2, borderRadius: 1, backgroundColor: "#fff" }}>
