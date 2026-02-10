@@ -44,7 +44,8 @@ import {
   partyContactData,
   PartyContactget,
   EmployeeVendorGetController,
-  EmployeeVendorContactGet
+  EmployeeVendorContactGet,
+  partypost
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -164,7 +165,10 @@ const Editemployee = () => {
   const state = location.state || {};
   console.log(state, "emnployee");
   const isLoading = useSelector((state) => state.formApi.loading);
-
+  const ParentgetData = useSelector((state) => state.formApi.Partygetdata);
+  console.log("ParentgetData", ParentgetData);
+  const ParentcontactgetData = useSelector((state) => state.formApi.Partycontactgetdata);
+  console.log("ParentcontactgetData", ParentcontactgetData);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
@@ -198,6 +202,10 @@ const Editemployee = () => {
   const [validationSchema10, setValidationSchema10] = useState(null);
   const [validationSchema11, setValidationSchema11] = useState(null);
   const [validationSchema12, setValidationSchema12] = useState(null);
+  const [validationSchema13, setValidationSchema13] = useState(null);
+  const [validationSchema14, setValidationSchema14] = useState(null);
+
+
   const [validationSchema17, setValidationSchema17] = useState(null);
   const dropdownData = [
     { ID: "All", Name: "All" },
@@ -211,6 +219,23 @@ const Editemployee = () => {
   const [viewImage, setViewImage] = React.useState(
     baseUrl + "Defaultimg.jpg"
   );
+  useEffect(() => {
+    const vendor =
+      is003Subscription === true &&
+        ParentgetData?.RecordID &&
+        ParentgetData.RecordID !== "0"
+        ? {
+          RecordID: ParentgetData.RecordID,
+          Code: ParentgetData.Code,
+          Name: ParentgetData.Name,
+        }
+        : null;
+
+    setContractorData((prev) => ({
+      ...prev,
+      vendor,
+    }));
+  }, [ParentgetData, is003Subscription]);
 
   useEffect(() => {
     if (Data?.ImageName) {
@@ -392,7 +417,59 @@ const Editemployee = () => {
             data.ItemServices.tentativecharge
           ),
         });
+
         setValidationSchema12(schema12);
+        const schema13 = Yup.object().shape({
+          name1: Yup.string().trim().required(data.Contactdetails.name1),
+          emailid1: Yup.string()
+            .email("Invalid Email ID")
+            .required(data.Contactdetails.emailid1),
+          mobileno1: Yup.string()
+            .matches(/^[0-9]{10}$/, "Invalid Mobile Number")
+            .required(data.Contactdetails.mobileno1),
+          aadharcardnumber2: Yup.string()
+            .nullable()
+            .notRequired()
+            .transform((value) => (value === "" ? null : value))
+            .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber2),
+          aadharcardnumber1: Yup.string()
+            .nullable()
+            .notRequired()
+            .transform((value) => (value === "" ? null : value))
+            .matches(/^\d{12}$/, data.Contactdetails.aadharcardnumber1),
+        });
+        setValidationSchema13(schema13);
+        let schemaFields14 = {
+          name1: Yup.string()
+            .trim()
+            .required(data.Party.name),
+
+          mobilenumber: Yup.string()
+            .required(data.Party.mobilenumber)
+            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+
+          emailid: Yup.string()
+            .nullable()
+            .notRequired()
+            .trim()
+            .test(
+              "email-or-empty",
+              "Invalid Email ID",
+              (value) => !value || Yup.string().email().isValidSync(value)
+            ),
+        };
+
+        if (CompanyAutoCode === "N") {
+          schemaFields14.code1 = Yup.string().required(data.Party.code);
+        }
+
+        if (CompanyAutoCode === "N") {
+          schemaFields14.code = Yup.string().required(data.Party.code);
+        }
+        const schema14 = Yup.object().shape(schemaFields14);
+        setValidationSchema14(schema14);
+
+
 
         const schema17 = Yup.object().shape({
           ItemNumber: Yup.string().required(data.Itemcustody.ItemNumber),
@@ -1005,10 +1082,18 @@ const Editemployee = () => {
     //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
     // }
     if (event.target.value == "8") {
+
       dispatch(getDeployment({ HeaderID: recID }));
-      const isStudent =
-        Data.DesignDesc === "Student" ||
-        deploymentInitialValue?.Designation?.Name === "Student";
+      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      const designationName =
+        Data?.DesignDesc ||
+        deploymentInitialValue?.Designation?.Name ||
+        "";
+
+      const isStudent = designationName === "Student";
+      // const isStudent =
+      //   Data.DesignationName === "Student" ||
+      //   deploymentInitialValue?.Designation?.Name === "Student";
 
       const filterCondition = isStudent
         ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
@@ -1055,7 +1140,8 @@ const Editemployee = () => {
       // selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "16") {
-      dispatch(EmployeeVendorContactGet({ EmployeeID: recID, VendorID: recID, action: "get" }));
+      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+      dispatch(EmployeeVendorContactGet({ EmployeeID: recID, VendorID: ParentgetData.RecordID, CompanyID: CompanyID, action: "get" }));
     }
     if (event.target.value == "10") {
       dispatch(
@@ -1685,6 +1771,8 @@ const Editemployee = () => {
     setLaoMode(mode);
 
     if (mode == "A") {
+      dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
+
       setFunMgrRecID("");
       setFunEmpRecID("");
       SetFunctionLookup(null);
@@ -1750,7 +1838,16 @@ const Editemployee = () => {
         unitrate: "",
         alertdate: "",
         renewalperiod: "",
-        vendor: "",
+        vendor: is003Subscription === true &&
+          ParentgetData?.RecordID &&
+          ParentgetData.RecordID !== "0"
+          ? {
+            RecordID: ParentgetData.RecordID,
+            Code: ParentgetData.Code,
+            Name: ParentgetData.Name,
+          }
+          : null,
+
         hsnCode: "",
         cgst: "",
         sgst: "",
@@ -1811,29 +1908,29 @@ const Editemployee = () => {
           itemValue: rowData.ItemValue,
           reference: rowData.PurchaseReference,
         });
-        setParentData({
-          recordID: rowData.RecordID,
-          code1: rowData.Code,
-          name1: rowData.Name,
-          mobilenumber: rowData.HrMobileNo,
-          emailid: rowData.HrEmailID,
-          address: rowData.Address,
-          locality: rowData.LocalityID
-            ? {
-              RecordID: rowData.LocalityID,
-              Code: rowData.LocalityCode,
-              Name: rowData.LocalityName,
-            }
-            : null,
-          maplink: rowData.MapLocation,
-          ReferenceBy: rowData.ReferenceID
-            ? {
-              RecordID: rowData.ReferenceID,
-              Code: rowData.ReferenceCode,
-              Name: rowData.ReferenceName,
-            }
-            : null,
-        });
+        // setParentData({
+        //   recordID: rowData.RecordID,
+        //   code1: rowData.Code,
+        //   name1: rowData.Name,
+        //   mobilenumber: rowData.HrMobileNo,
+        //   emailid: rowData.HrEmailID,
+        //   address: rowData.Address,
+        //   locality: rowData.LocalityID
+        //     ? {
+        //       RecordID: rowData.LocalityID,
+        //       Code: rowData.LocalityCode,
+        //       Name: rowData.LocalityName,
+        //     }
+        //     : null,
+        //   maplink: rowData.MapLocation,
+        //   ReferenceBy: rowData.ReferenceID
+        //     ? {
+        //       RecordID: rowData.ReferenceID,
+        //       Code: rowData.ReferenceCode,
+        //       Name: rowData.ReferenceName,
+        //     }
+        //     : null,
+        // });
         const formatDateForInputItems = (dateStr) => {
           if (!dateStr) return "";
           const [day, month, year] = dateStr.split("-");
@@ -2073,90 +2170,110 @@ const Editemployee = () => {
     }
   };
   const ParentInitialValue = {
-    code: Data.Code,
-    description: Data.Name,
-    code1: ParentData.code1,
-    name1: ParentData.name1,
-    locality: ParentData.locality || null,
-    ReferenceBy: ParentData.ReferenceBy || null,
-    address: ParentData.address || "",
-    maplink: ParentData.MapLocation || "",
-    mobilenumber: ParentData.mobilenumber || "",
-    emailid: ParentData.emailid || "",
-    // Pancardnumber: ParentData.PanCardNo || "",
-    // PanImg: ParentData.PanImg || "",
-    // GstImg: ParentData.gstImage || "",
-    // gstnumber: ParentData.GstNo || "",
-    // date: ParentData.RegistrationDate || "",
-    // verifieddate: ParentData.VerifyConfirmDate || "",
-    // vendor: Data.VendorCheckbox === "Y" ? true : false,
-    // customer: Data.CustomerCheckbox === "Y" ? true : false,
-    // prospect: Data.Prospects === "Y" ? true : false,
-    // delete: Data.DeleteFlag === "Y" ? true : false,
-    // BusinessPartner: Data.BusinessPartner === "Y" ? true : false,
-    // Parent: Data.ParentCheckBox === "Y" ? true : false,
-    // disable: Data.Disable === "Y" ? true : false,
+    // code: ParentgetData.Code,
+    // description: ParentgetData.Name,
+    code1: ParentgetData.Code || "",
+    name1: ParentgetData.Name || "",
+    locality: ParentgetData.LocalityID && ParentgetData.LocalityID !== "0"
+      ? {
+        RecordID: ParentgetData.LocalityID,
+        Code: ParentgetData.LocalityCode,
+        Name: ParentgetData.LocalityName,
+      }
+      : null,
+    ReferenceBy:
+      ParentgetData.ReferenceID && ParentgetData.ReferenceID !== "0"
+        ? {
+          RecordID: ParentgetData.ReferenceID,
+          Code: ParentgetData.ReferenceByName,
+          Name: ParentgetData.ReferenceByName,
+        }
+        : null, address: ParentgetData.Address || "",
+    maplink: ParentgetData.MapLocation || "",
+    mobilenumber: ParentgetData.MobileNo || "",
+    emailid: ParentgetData.EmailID || "",
+    address: ParentgetData.Address || "",
+    maplink: ParentgetData.MapLocation || "",
+    PanImg: ParentgetData.PanImg || "",
+    GstImg: ParentgetData.gstImage || "",
+    gstnumber: ParentgetData.GstNo || "",
+    mobilenumber: ParentgetData.MobileNo || "",
+    date: ParentgetData.RegistrationDate || "",
+    verifieddate: ParentgetData.VerifyConfirmDate || "",
+    emailid: ParentgetData.EmailID || "",
+    vendor: ParentgetData.VendorCheckbox === "Y" ? true : false,
+    customer: ParentgetData.CustomerCheckbox === "Y" ? true : false,
+    prospect: ParentgetData.Prospects === "Y" ? true : false,
+    delete: ParentgetData.DeleteFlag === "Y" ? true : false,
+    BusinessPartner: ParentgetData.BusinessPartner === "Y" ? true : false,
+    Parent: ParentgetData.ParentCheckBox === "Y" ? true : false,
+    disable: ParentgetData.Disable === "Y" ? true : false,
   };
+  console.log(ParentInitialValue, "ParentInitialValue");
   const Fnsave = async (values, resetForm, del) => {
     setLoading(true);
 
-    let action =
-      funMode === "A" && !del
-        ? "insert"
-        : funMode === "E" && del
-          ? "harddelete"
-          : "update";
-    // var isCheck = "N";
-    // if (values.disable == true) {
-    //   isCheck = "Y";
-    // }
+    // let action =
+    //   funMode === "A" && !del
+    //     ? "insert"
+    //     : funMode === "E" && del
+    //       ? "harddelete"
+    //       : "update";
+    const recordId = ParentgetData?.RecordID ?? -1;
 
-    // const isCheck = values.disable ? "Y" : "N";
+    let action;
+    if (del) {
+      action = "harddelete";
+    } else if (recordId !== -1 && recordId !== "-1") {
+      action = "update";
+    } else {
+      action = "insert";
+    }
 
-    const idata = {
-      RecordID: ParentData.recordID || -1,
-      Code: values.code1 || "",
-      Name: values.name1,
-      LocalityID: values.locality?.RecordID || 0,
-      LocalityName: values.locality?.Name || "",
-      ReferenceID: values.ReferenceBy?.RecordID || 0,
-      ReferenceName: values.ReferenceBy?.Name || "",
-      PanCardNo: values.Pancardnumber || "",
-      Address: values.address || "",
-      MapLocation: values.maplink || "",
-      PanImg: panImage,
-      GstNo: values.gstnumber || "",
-      GstImg: gstImage,
-      MobileNo: values.mobilenumber || "",
-      RegistrationDate: values.date || "",
-      VerifyConfirmDate: values.verifieddate || "",
-      EmailID: values.emailid || "",
-      CompanyID,
-      VendorCheckbox: values.vendor === true ? "Y" : "N",
-      CustomerCheckbox: values.customer === true ? "Y" : "N",
-      Prospects: values.prospect === true ? "Y" : "N",
-      // LocalityID: "1",
-      DeleteFlag: values.delete == true ? "Y" : "N",
-      BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
-      ParentCheckBox: "Y",
-      Disable: values.disable == true ? "Y" : "N",
-      Source: "Cloud",
-      CreateBy: LoginID,
-      EmployeeID: recID
+    const payload = {
+      action,
+      data: {
+        RecordID: ParentgetData.RecordID || -1,
+        // RecordID: "-1",
+        Code: values.code1 || "",
+        Name: values.name1 || "",
+        LocalityID: values.locality?.RecordID || 0,
+        LocalityName: values.locality?.Name || "",
+        ReferenceID: values.ReferenceBy?.RecordID || 0,
+        ReferenceName: values.ReferenceBy?.Name || "",
+        PanCardNo: values.Pancardnumber || "0",
+        Address: values.address || "",
+        MapLocation: values.maplink || "",
+        PanImg: panImage || "",
+        GstNo: values.gstnumber || "0",
+        GstImg: gstImage || "",
+        MobileNo: values.mobilenumber || "",
+        RegistrationDate: values.date || "",
+        VerifyConfirmDate: values.verifieddate || "",
+        EmailID: values.emailid || "",
+        CompanyID,
+        VendorCheckbox: values.vendor ? "Y" : "N",
+        CustomerCheckbox: values.customer ? "Y" : "N",
+        Prospects: values.prospect ? "Y" : "N",
+        DeleteFlag: values.delete ? "Y" : "N",
+        BusinessPartner: values.BusinessPartner ? "Y" : "N",
+        ParentCheckBox: "Y",
+        Disable: values.disable ? "Y" : "N",
+        Source: "Cloud",
+        CreateBy: LoginID,
+        EmployeeID: recID
+      }
     };
 
+
     try {
-      const response = await dispatch(postData({ accessID: "TR243V1", action, idata }));
+      const response = await dispatch(partypost(payload));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
         // navigate("/Apps/TR243/Party");
         // navigate(-1)
-        dispatch(
-          fetchExplorelitview("TR321", "Party", `CompanyID=${CompanyID}`, "")
-        );
-        selectCellRowData({ rowData: {}, mode: "A", field: "" });
-        resetForm();
+        dispatch(EmployeeVendorGetController({ EmployeeID: recID, CompanyID: CompanyID, action: "get" }))
       } else {
         toast.error(response.payload.Msg);
       }
@@ -2166,22 +2283,23 @@ const Editemployee = () => {
       setLoading(false);
     }
   };
-  const contactInitialValue = {
-    code: partyContactgetdata.Code || "",
-    name: partyContactgetdata.Name || "",
-    name1: partyContactgetdata.ContactPerson1 || "",
-    name2: partyContactgetdata.ContactPerson2 || "",
-    emailid1: partyContactgetdata.ContactPersonEmailID1 || "",
-    emailid2: partyContactgetdata.ContactPersonEmailID2 || "",
-    mobileno1: partyContactgetdata.ContactPersonMobileNo1 || "",
-    mobileno2: partyContactgetdata.ContactPersonMobileNo2 || "",
-    aadharcardnumber1: partyContactgetdata.AadhatNo1 || "",
-    aadharcardnumber2: partyContactgetdata.AadhatNo2 || "",
+  const parentcontactInitialValue = {
+    code: Data.Code || "",
+    name: Data.Name || "",
+    name1: ParentcontactgetData.ContactPerson1 || "",
+    name2: ParentcontactgetData.ContactPerson2 || "",
+    emailid1: ParentcontactgetData.ContactPersonEmailID1 || "",
+    emailid2: ParentcontactgetData.ContactPersonEmailID2 || "",
+    mobileno1: ParentcontactgetData.ContactPersonMobileNo1 || "",
+    mobileno2: ParentcontactgetData.ContactPersonMobileNo2 || "",
+    aadharcardnumber1: ParentcontactgetData.AadhaarNoOne || "",
+    aadharcardnumber2: ParentcontactgetData.AadhaarNoTwo || "",
     ContactPersonIDProofImg1:
-      partyContactgetdata.ContactPersonIDProofImg1 || "",
+      ParentcontactgetData.ContactPersonIDProofImg1 || "",
     ContactPersonIDProofImg2:
-      partyContactgetdata.ContactPersonIDProofImg2 || "",
+      ParentcontactgetData.ContactPersonIDProofImg2 || "",
   };
+  console.log("parentcontactInitialValue:", parentcontactInitialValue);
   const contactsave = async (values, del) => {
     setLoading(true);
 
@@ -2193,7 +2311,7 @@ const Editemployee = () => {
           : "update";
 
     const idata = {
-      VendorID: ParentData.recordID,
+      VendorID: ParentgetData.RecordID,
       ContactPerson1: values.name1,
       ContactPerson2: values.name2,
       ContactPersonEmailID1: values.emailid1,
@@ -2204,8 +2322,8 @@ const Editemployee = () => {
       AadhatNo2: values.aadharcardnumber2,
       // ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
       // ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
-      ContactPersonIDProofImg1: ID1Image || partyContactgetdata.ContactPersonIDProofImg1,
-      ContactPersonIDProofImg2: ID2Image || partyContactgetdata.ContactPersonIDProofImg2,
+      ContactPersonIDProofImg1: ID1Image || ParentcontactgetData.ContactPersonIDProofImg1 || "",
+      ContactPersonIDProofImg2: ID2Image || ParentcontactgetData.ContactPersonIDProofImg2 || "",
     };
 
     try {
@@ -2215,6 +2333,8 @@ const Editemployee = () => {
         toast.success(response.payload.Msg);
         // setShowContacts(false)
         // navigate("/Apps/TR243/Party");
+        dispatch(EmployeeVendorContactGet({ EmployeeID: recID, VendorID: ParentgetData.RecordID, CompanyID: CompanyID, action: "get" }));
+
       } else {
         toast.error(response.payload.Msg);
       }
@@ -2535,7 +2655,7 @@ const Editemployee = () => {
     Sgst: contractorData.sgst,
     Igst: contractorData.igst,
     TDS: contractorData.tds,
-    UnitRate: contractorData.unitrate,
+    UnitRate: contractorData.unitrate || "0.00",
     NotificationAlertDate: contractorData.alertdate,
     RenewableNotification: contractorData.renewalperiod || "",
     Description: contractorData.Description,
@@ -2544,7 +2664,7 @@ const Editemployee = () => {
     shift2: contractorData.shift2 || null,
   };
   // console.log(contractorData, "--get a contractorData");
-  console.log(Data.DesignDesc, "--contract idata");
+  console.log(Data.DesignationName, "--contract idata");
 
   //Contractor Save Function
   const contractSavefn = async (values, resetForm, del) => {
@@ -2617,9 +2737,15 @@ const Editemployee = () => {
       ProjectName: values?.project?.Name || "",
     };
     console.log(idata, "--contract idata");
-    const isStudent =
-      Data.DesignDesc === "Student" ||
-      deploymentInitialValue?.Designation?.Name === "Student";
+    // const isStudent =
+    //   Data.DesignationName === "Student" ||
+    //   deploymentInitialValue?.Designation?.Name === "Student";
+    const designationName =
+    Data?.DesignDesc ||
+    deploymentInitialValue?.Designation?.Name ||
+    "";
+
+  const isStudent = designationName === "Student";
 
     const filterCondition = isStudent
       ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
@@ -2936,8 +3062,8 @@ const Editemployee = () => {
     defaultpresent: deploymentData.AutoPresent === "Y" ? true : false,
     costofemployee: deploymentData.CostOfBudget || 0,
     costofcompany: deploymentData.CostOfCompany || 0,
-    costofbudgethour: deploymentData.CostOfBudgetHours,
-    costofcompanyhour: deploymentData.CostOfCompanyHours,
+    costofbudgethour: deploymentData.CostOfBudgetHours || 0.00,
+    costofcompanyhour: deploymentData.CostOfCompanyHours || 0.00,
     cloud: deploymentData.CloudApplication === "Y" ? true : false,
     Horizontal: true,
     Vertical: deploymentData.Vertical === "Y" ? true : false,
@@ -3378,9 +3504,15 @@ const Editemployee = () => {
                       setScreen(0);
                     }}
                   >
-                    {mode === "E"
+                    {/* {mode === "E"
                       ? `Personnel(${state.EmpName})`
-                      : "Personnel(New)"}
+                      : "Personnel(New)"} */}
+                    {
+                      mode === "E"
+                        ? `Personnel(${state?.EmpName || Data?.Name})`
+                        : "Personnel(New)"
+                    }
+
                   </Typography>
                   {show == "5" ? (
                     <Typography
@@ -8958,7 +9090,7 @@ const Editemployee = () => {
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={ParentInitialValue}
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema14}
               enableReinitialize={true}
               onSubmit={(values, setSubmitting) => {
                 setTimeout(() => {
@@ -9044,9 +9176,9 @@ const Editemployee = () => {
                       />
                     )}
                     <TextField
-                      name="name"
+                      name="name1"
                       type="text"
-                      id="name"
+                      id="name1"
                       label={
                         <>
                           Name
@@ -9057,11 +9189,11 @@ const Editemployee = () => {
                       }
                       variant="standard"
                       focused
-                      value={values.name}
+                      value={values.name1}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      error={!!touched.name && !!errors.name}
-                      helperText={touched.name && errors.name}
+                      error={!!touched.name1 && !!errors.name1}
+                      helperText={touched.name1 && errors.name1}
                       sx={{
                         backgroundColor: "#ffffff", // Set the background to white
                         "& .MuiFilledInput-root": {
@@ -9147,7 +9279,7 @@ const Editemployee = () => {
                       }}
                     />
 
-                    <CheckinAutocomplete
+                    {/* <CheckinAutocomplete
                       id="locality"
                       name="locality"
                       label="Locality"
@@ -9168,8 +9300,8 @@ const Editemployee = () => {
                       }}
                       error={!!touched.locality && !!errors.locality}
                       helperText={touched.locality && errors.locality}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"CompanyID=${CompanyID}","Any":""}}`}
-                    />
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2128","ScreenName":"Locality","Filter":"EmployeeID=${recID} AND CompanyID=${CompanyID}","Any":""}}`}
+                    /> */}
 
 
                     <TextField
@@ -9191,7 +9323,7 @@ const Editemployee = () => {
                         },
                       }}
                     />
-                    <CheckinAutocomplete
+                    {/* <CheckinAutocomplete
                       id="ReferenceBy"
                       name="ReferenceBy"
                       label="Partner Reference"
@@ -9204,8 +9336,8 @@ const Editemployee = () => {
                       }}
                       // error={!!touched.ReferenceBy && !!errors.ReferenceBy}
                       // helperText={touched.ReferenceBy && errors.ReferenceBy}
-                      url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"ParentID=${CompanyID}","Any":""}}`}
-                    />
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2131","ScreenName":"Partner Reference","Filter":"EmployeeID=${recID} AND ParentID=${CompanyID}","Any":""}}`}
+                    /> */}
 
                     {/* panimage */}
                   </Box>
@@ -9234,8 +9366,7 @@ const Editemployee = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        // navigate("/Apps/TR243/Party");
-                        navigate("/Apps/TR321/Party");
+                        setScreen(0);
                       }}
                     >
                       Cancel
@@ -9248,7 +9379,518 @@ const Editemployee = () => {
         ) : (
           false
         )}
+        {show == "16" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={parentcontactInitialValue}
+              onSubmit={(values, setSubmitting) => {
+                setTimeout(() => {
+                  contactsave(values);
+                }, 100);
+              }}
+              validationSchema={validationSchema13}
+              enableReinitialize={true}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                setFieldValue,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    {CompanyAutoCode == "Y" ? (
+                      <TextField
+                        name="code"
+                        type="text"
+                        id="code"
+                        label="Code"
+                        variant="standard"
+                        placeholder="Auto"
+                        focused
+                        // required
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.code && !!errors.code}
+                        helperText={touched.code && errors.code}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        InputProps={{ readOnly: true }}
+                      // autoFocus
+                      />
+                    ) : (
+                      <TextField
+                        name="code"
+                        type="text"
+                        id="code"
+                        label={
+                          <>
+                            Code
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        // required
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.code && !!errors.code}
+                        helperText={touched.code && errors.code}
+                        sx={{
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        autoFocus
+                      />
+                    )}
+                    <TextField
+                      name="name"
+                      type="text"
+                      id="name"
+                      label={
+                        <>
+                          Name
+                          {/* <span style={{ color: "red", fontSize: "20px" }}>
+                                     *
+                                   </span> */}
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.name}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name && errors.name}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          readOnly: true,
+                        },
+                      }}
+                      // required
+                      autoFocus={CompanyAutoCode == "Y"}
+                    />
+                    <Box
+                      sx={{
+                        padding: 1.5,
+                        backgroundColor: "#b2dfdb", // light green
+                        borderRadius: 1,
+                        width: "100%",
+                      }}
+                    >
+                      <Typography variant="h5" fontWeight="bold">
+                        Contact Person 1
+                      </Typography>
+                    </Box>
 
+                    <Box
+                      sx={{
+                        padding: 1.5,
+                        backgroundColor: "#b2dfdb",
+                        borderRadius: 1,
+                        width: "100%",
+                      }}
+                    >
+                      <Typography variant="h5" fontWeight="bold">
+                        Contact Person 2
+                      </Typography>
+                    </Box>
+                    {/* </Box> */}
+
+                    {/* <Typography>Contact Person 2</Typography> */}
+                    <TextField
+                      name="name1"
+                      label={
+                        <>
+                          Name
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.name1}
+                      // required
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // onChange={(e) => {
+                      //   const input = e.target.value.toUpperCase();
+                      //   if (/^[A-Z0-9]*$/.test(input) || input === "") {
+                      //     handleChange({
+                      //       target: {
+                      //         name: "name1",
+                      //         value: input,
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      error={!!touched.name1 && !!errors.name1}
+                      helperText={touched.name1 && errors.name1}
+                      sx={{
+                        backgroundColor: "#ffffff",
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      name="name2"
+                      label="Name"
+                      variant="standard"
+                      focused
+                      value={values.name2}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // onChange={(e) => {
+                      //   const input = e.target.value.toUpperCase();
+                      //   if (/^[0-9A-Z]*$/.test(input) || input === "") {
+                      //     // This updates Formik value correctly
+                      //     handleChange({
+                      //       target: {
+                      //         name: "name2",
+                      //         value: input,
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      error={!!touched.name2 && !!errors.name2}
+                      helperText={touched.name2 && errors.name2}
+                      sx={{
+                        backgroundColor: "#ffffff",
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      name="emailid1"
+                      type="tel"
+                      id="emailid1"
+                      label={
+                        <>
+                          Email ID
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      // required
+                      focused
+                      value={values.emailid1}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // onChange={(e) => {
+                      //   const value = e.target.value;
+                      //   // Only allow numbers and max 10 digits
+                      //   if (/^\d{0,10}$/.test(value)) {
+                      //     handleChange(e);
+                      //   }
+                      // }}
+                      error={!!touched.emailid1 && !!errors.emailid1}
+                      helperText={touched.emailid1 && errors.emailid1}
+                      // inputProps={{ maxLength: 10 }}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+
+                    <TextField
+                      name="emailid2"
+                      type="text"
+                      id="emailid2"
+                      label="Email ID"
+                      variant="standard"
+                      focused
+                      value={values.emailid2}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      name="mobileno1"
+                      type="tel"
+                      id="mobileno1"
+                      label={
+                        <>
+                          Mobile No
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.mobileno1}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.mobileno1 && !!errors.mobileno1}
+                      helperText={touched.mobileno1 && errors.mobileno1}
+                      // required
+                      inputProps={{ maxLength: 10 }}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      name="mobileno2"
+                      type="tel"
+                      id="mobileno2"
+                      label="Mobile No"
+                      variant="standard"
+                      focused
+                      inputProps={{ maxLength: 10 }}
+                      value={values.mobileno2}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="aadharcardnumber1"
+                      name="aadharcardnumber1"
+                      value={values.aadharcardnumber1}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Aadhar Card No"
+                      focused
+                      // onWheel={(e) => e.target.blur()}
+                      error={
+                        touched.aadharcardnumber1 &&
+                        Boolean(errors.aadharcardnumber1)
+                      }
+                      helperText={
+                        touched.aadharcardnumber1 && errors.aadharcardnumber1
+                      }
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="aadharcardnumber2"
+                      name="aadharcardnumber2"
+                      value={values.aadharcardnumber2}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Aadhar Card No"
+                      focused
+                      // onWheel={(e) => e.target.blur()}
+                      error={
+                        touched.aadharcardnumber2 &&
+                        Boolean(errors.aadharcardnumber2)
+                      }
+                      helperText={
+                        touched.aadharcardnumber2 && errors.aadharcardnumber2
+                      }
+                    />
+                  </Box>
+                  <Grid container spacing={2}>
+                    {/* ID Proof (Left side – 50%) */}
+                    <Grid item xs={12} md={6}>
+                      <Box display="flex" alignItems="center" gap={2}>
+                        <Tooltip title="ID Proof">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              // onChange={getFilepanChange}
+                              onChange={getFileID1Change}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                        <Button
+                          size="small"
+                          variant="contained"
+                          // onClick={() => {
+                          //   data.ContactPersonIDProofImg1 || ID1Image
+                          //     ? window.open(
+                          //         ID1Image
+                          //           ? store.getState().globalurl.attachmentUrl +
+                          //               ID1Image
+                          //           : store.getState().globalurl.attachmentUrl +
+                          //               data.ContactPersonIDProofImg1,
+                          //         "_blank"
+                          //       )
+                          //     : toast.error("Please Upload File");
+                          // }}
+                          onClick={() => {
+                            partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
+                              ? window.open(
+                                ID1Image
+                                  ? store.getState().globalurl.attachmentUrl +
+                                  ID1Image
+                                  : store.getState().globalurl.attachmentUrl +
+                                  partyContactgetdata.ContactPersonIDProofImg1,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          ID Proof View
+                        </Button>
+                      </Box>
+                    </Grid>
+
+                    {/* GST Proof (Right side – 50%) */}
+                    <Grid item xs={12} md={6}>
+                      <Box display="flex" alignItems="center" gap={2}>
+                        <Tooltip title="ID Proof">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              // onChange={getFilegstChange}
+                              onChange={getFileID2Change}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={() => {
+                            partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
+                              ? window.open(
+                                ID2Image
+                                  ? store.getState().globalurl.attachmentUrl +
+                                  ID2Image
+                                  : store.getState().globalurl.attachmentUrl +
+                                  partyContactgetdata.ContactPersonIDProofImg2,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          ID Proof View
+                        </Button>
+                      </Box>
+                    </Grid>
+                  </Grid>
+
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap="20px"
+                  >
+                    {/* GSTimage */}
+
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                    {/* {YearFlag == "true" ? (
+                               <Button
+                                 color="error"
+                                 variant="contained"
+                                 onClick={() => {
+                                   Fnsave(values, "harddelete");
+                                 }}
+                               >
+                                 Delete
+                               </Button>
+                             ) : (
+                               <Button color="error" variant="contained" disabled={true}>
+                                 Delete
+                               </Button>
+                             )} */}
+
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
 
         {/*Contracts In */}
         {show == "8" ? (
@@ -9478,7 +10120,7 @@ const Editemployee = () => {
                         disabled={is003Subscription === true}
                         label={
                           is003Subscription === true ? (
-                            "Vendor"
+                            "Parent"
                           ) : (
                             <>
                               Vendor
@@ -9511,7 +10153,7 @@ const Editemployee = () => {
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
                         url={
-                          Data.DesignDesc === "Student" ||
+                          Data.DesignationName === "Student" ||
                             deploymentInitialValue?.Designation?.Name ===
                             "Student"
                             ? `${listViewurl}?data={"Query":{"AccessID":"2133","ScreenName":"Parent","Filter":"parentID=${CompanyID}","Any":""}}`
@@ -9637,8 +10279,33 @@ const Editemployee = () => {
                           </span>
                         }
                         // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const val = e.target.value;
+
+                          // Allow numbers with optional decimal (up to 2 digits)
+                          if (/^\d*\.?\d{0,2}$/.test(val)) {
+                            setFieldValue("UnitRate", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          let val = e.target.value;
+
+                          if (val === "" || val === ".") {
+                            setFieldValue("UnitRate", "0.00");
+                            return;
+                          }
+
+                          // Ensure decimal exists
+                          if (!val.includes(".")) {
+                            val = `${val}.00`;
+                          }
+
+                          const num = Number(val);
+
+                          // ✅ Force exactly 2 decimals
+                          setFieldValue("UnitRate", num.toFixed(2));
+                        }}
                         error={!!touched.UnitRate && !!errors.UnitRate}
                         helperText={touched.UnitRate && errors.UnitRate}
                         // sx={{
@@ -9656,8 +10323,8 @@ const Editemployee = () => {
                             },
                           },
                         }}
-                        onWheel={(e) => e.target.blur()}
-                        multiline
+                        // onWheel={(e) => e.target.blur()}
+                        // multiline
                         inputProps={{ maxLength: 90 }}
                       />
                       <TextField
@@ -9966,6 +10633,11 @@ const Editemployee = () => {
                           errors.RenewableNotification
                         }
                         inputProps={{ readOnly: true }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
                       />
 
                       {/* <TextField
@@ -10513,7 +11185,7 @@ const Editemployee = () => {
                           },
                         }}
                         onWheel={(e) => e.target.blur()}
-                        multiline
+                        // multiline
                         inputProps={{ maxLength: 90 }}
                       />
                       <TextField

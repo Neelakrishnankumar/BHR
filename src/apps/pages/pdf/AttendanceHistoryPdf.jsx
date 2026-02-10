@@ -9,23 +9,27 @@ import {
 
 
 const styles = StyleSheet.create({
-  // page: {
-  //   padding: 5,
-  //   fontSize: 6,
-  //   flexDirection: "column",
-  // },
   page: {
-    paddingTop: 90,   // space for header
-    paddingBottom: 80, // space for footer
-    paddingHorizontal: 10,
+    padding: 5,
     fontSize: 6,
     flexDirection: "column",
   },
+  // page: {
+  //   paddingTop: 90,   // space for header
+  //   paddingBottom: 80, // space for footer
+  //   paddingHorizontal: 10,
+  //   fontSize: 6,
+  //   flexDirection: "column",
+  // },
 
   section: {
     marginBottom: 10,
-     marginTop: 80,
+    //  marginTop: 60,
   },
+  firstPageSection: {
+    //  marginBottom: 10,
+  marginTop: 80, // 👈 extra space only for first page
+},
   table: {
     display: "table",
     width: "100%",
@@ -107,36 +111,35 @@ const styles = StyleSheet.create({
   },
 
   /* HEADER */
-  headerWrapper: {
-    position: "absolute",
-    top: 15,
-    left: 20,
-    right: 20,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerImage: {
-    width: "100%",
-    height: 50,
-    objectFit: "contain",
-  },
+    headerWrapper: {
+        position: "absolute",
+        top: 10,
+        left: 20,
+        right: 20,
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 
- /* FOOTER */
-    footerWrapper: {
-    position: "absolute",
-    bottom: 25,
-    left: 5,
-    right: 5,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footerImage: {
-    width: "100%",
-    height: 60,
-    objectFit: "cover",
-  },
+    headerImage: {
+        width: "100%",
+        height: 60,
+        objectFit: "contain",
+    },
+    /* FOOTER */
+  footerWrapper: {
+  position: "absolute",
+  bottom: 30,
+  left: 5,
+  right: 5,
+  height: 80,
+},
+
+    footerImage: {
+        width: "100%",
+        height: 100,
+        objectFit: "cover",
+    },
 
 
 });
@@ -153,20 +156,43 @@ const styles = StyleSheet.create({
 //   return [firstPage, ...otherPages];
 // };
 
-const paginateData = (data, rowsPerPage = 30) => {
+// const paginateData = (data, rowsPerPage = 30) => {
+//   if (!Array.isArray(data)) return [];
+
+//   const pages = [];
+//   for (let i = 0; i < data.length; i += rowsPerPage) {
+//     pages.push(data.slice(i, i + rowsPerPage));
+//   }
+
+//   return pages;
+// };
+
+const paginateData = (
+  data,
+  firstPageRows = 28,
+  otherPageRows = 30
+) => {
   if (!Array.isArray(data)) return [];
 
   const pages = [];
-  for (let i = 0; i < data.length; i += rowsPerPage) {
-    pages.push(data.slice(i, i + rowsPerPage));
+
+  // ✅ First page
+  pages.push(data.slice(0, firstPageRows));
+
+  // ✅ Remaining pages
+  let index = firstPageRows;
+  while (index < data.length) {
+    pages.push(data.slice(index, index + otherPageRows));
+    index += otherPageRows;
   }
 
   return pages;
 };
 
+
 const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
   // const pages = paginateData(data);
-  const pages = paginateData(data, 30);
+const pages = paginateData(data, 28, 30);
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -187,7 +213,13 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
                     </View>
         
           {pageIndex === 0 && (
-            <View style={styles.section}>
+            <View 
+            // style={styles.section}
+            style={[
+      styles.section,
+      pageIndex === 0 && styles.firstPageSection
+    ]}
+            >
               {/* <Text style={{ fontSize: 10, marginBottom: 4 }}>Attendance Report</Text>
               <Text>Month: {monthNames[filters.Month - 1]}</Text>
               <Text>Year: {filters.Year}</Text> */}
@@ -198,7 +230,7 @@ const AttendanceHistoryPDF = ({ data = [], filters = {} }) => {
           )}
           <View style={[styles.legendContainer,
 
-             pageIndex === pages.length - 1 && { marginTop: 60 }
+             pageIndex === pages.length - 1 && { marginTop: 80 }
           ]}
          
                   

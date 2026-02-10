@@ -83,8 +83,14 @@ const initialState = {
   PartyDateAndAmtFilterstatus: "",
   PartyDateAndAmtFilterloading: false,
   LeaveEntryRegdata: [],
+  Partygetdata:[],
+  Partycontactgetdata:[],
   LeaveEntryRegstatus: "",
+  Partygetstatus: "",
+  Partygetloading: false,
   LeaveEntryRegloading: false,
+  Partycontactgetstatus: "",
+  Partycontactgetloading: false,
   partyBankPostdata: {},
   partyContactgetdata: {},
   skillInsights1getdata: {},
@@ -611,6 +617,24 @@ export const postDeployment = createAsyncThunk(
     return response.data;
   },
 );
+export const partypost = createAsyncThunk(
+  "employee/deployment/postdata",
+  async (payload) => {
+    const url = store.getState().globalurl.Parentposturl;
+
+    console.log(" Final API Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
+
+
 export const costLeatherData = createAsyncThunk(
   "bom/costing/leather",
   async ({ HeaderRecordID, LeatherRecordID, LeatherNumber }) => {
@@ -2796,6 +2820,38 @@ export const getApiSlice = createSlice({
         state.LeaveEntryRegloading = false;
       })
 
+       .addCase(EmployeeVendorGetController.pending, (state, action) => {
+        state.Partygetstatus = "idle";
+        state.Partygetloading = true;
+      })
+      .addCase(EmployeeVendorGetController.fulfilled, (state, action) => {
+        state.Partygetstatus = "success";
+        state.Partygetloading = false;
+        state.Partygetdata = action.payload.Data
+          ? action.payload.Data
+          : [];
+      })
+      .addCase(EmployeeVendorGetController.rejected, (state, action) => {
+        state.Partygetstatus = "Error";
+        state.Partygetloading = false;
+      })
+      
+       .addCase(EmployeeVendorContactGet.pending, (state, action) => {
+        state.Partycontactgetstatus = "idle";
+        state.Partycontactgetloading = true;
+      })
+      .addCase(EmployeeVendorContactGet.fulfilled, (state, action) => {
+        state.Partycontactgetstatus = "success";
+        state.Partycontactgetloading = false;
+        state.Partycontactgetdata = action.payload.Data
+          ? action.payload.Data
+          : [];
+      })
+      .addCase(EmployeeVendorContactGet.rejected, (state, action) => {
+        state.Partycontactgetstatus = "Error";
+        state.Partycontactgetloading = false;
+      })
+
       //SprintGet
       .addCase(sprintGetData.pending, (state, action) => {
         state.sprintgetstatus = "idle";
@@ -4810,10 +4866,11 @@ export const EmployeeVendorContactGet = createAsyncThunk(
     try {
       const url = store.getState().globalurl.EmployeeVendorContactGet;
 
-      const requestBody = {
-        EmployeeID: payload.EmployeeID,
-        VendorID: payload.VendorID,
-        action: payload.action,
+      const requestBody = {        
+          EmployeeID: payload.EmployeeID,
+          VendorID: payload.VendorID,
+          CompanyID: payload.CompanyID,
+          action: payload.action,       
       };
 
       console.log("Final Request Body:", JSON.stringify(requestBody));
