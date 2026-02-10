@@ -385,16 +385,33 @@ const styles = StyleSheet.create({
 });
 
 // ================= PAGINATION =================
-const paginateData = (data) => {
+// const paginateData = (data) => {
 
 
-  const firstPage = data.slice(0, 31);
+//   const firstPage = data.slice(0, 31);
+//   const otherPages = [];
+//   for (let i = 31; i < data.length; i += 26) {
+//     otherPages.push(data.slice(i, i + 26));
+//   }
+//   return [firstPage, ...otherPages];
+// };
+
+const paginateData = (data = []) => {
+  if (!Array.isArray(data)) return [];
+
+  const firstPageRows = 26;
+  const otherPageRows = 28;
+
+  const firstPage = data.slice(0, firstPageRows);
   const otherPages = [];
-  for (let i = 31; i < data.length; i += 26) {
-    otherPages.push(data.slice(i, i + 26));
+
+  for (let i = firstPageRows; i < data.length; i += otherPageRows) {
+    otherPages.push(data.slice(i, i + otherPageRows));
   }
+
   return [firstPage, ...otherPages];
 };
+
 
 // ================= PDF COMPONENT =================
 const AuditPDF = ({ data = [], filters = {} }) => {

@@ -92,6 +92,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TimeSheetreportpdf from "../pdf/TimesheetReportpdf";
 //import TimeSheetreportpdf from "../../reports/TimesheetReportpdf";
 import { getConfig } from "../../../config";
+import TimesheetReportExcel from "../pdf/TimesheetReportExcel";
+import { FaFileExcel } from "react-icons/fa";
 
 
 
@@ -1002,6 +1004,25 @@ const Edittimesheetreport = () => {
                     )
                   }
                 </PDFDownloadLink>
+
+                 <FaFileExcel
+                                      size={20}
+                                      color="#1D6F42"
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        TimesheetReportExcel(
+                                          safeAttendanceData,
+                                          {
+                                            Month: Month,
+                                            Year: Year,
+                                            EmployeeID: empData?.Name || EMPNAME,
+                                          },
+                                          projectName,
+                                          managerName,
+                                        
+                                        )
+                                      }
+                                    />
               </Box>
 
               <Box sx={{ gridColumn: "span 4" }}>

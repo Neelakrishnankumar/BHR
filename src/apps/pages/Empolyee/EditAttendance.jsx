@@ -48,6 +48,8 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { getConfig } from "../../../config";
+import { FaFileExcel } from "react-icons/fa";
+import MonthlyAttendanceExcel from "../pdf/MonthlyAttendanceExcel";
 
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -651,6 +653,41 @@ const EditAttendance = () => {
                       }
                     </PDFDownloadLink>
                   )}
+
+                   {AttendanceData?.length > 0 && (
+                  <FaFileExcel
+  size={20}
+  color="#1D6F42"
+  style={{ cursor: "pointer" }}
+  onClick={() =>
+    MonthlyAttendanceExcel(
+      AttendanceData,
+      {
+        month: values.attmonth,   // ✅ match Excel.jsx
+        year: values.attyear,     // ✅ match Excel.jsx
+        employee: empData?.Name   // ✅ match Excel.jsx
+      }
+    )
+  }
+/>
+                                    //  <FaFileExcel
+                                    //     size={20}
+                                    //     color="#1D6F42"
+                                    //     style={{ cursor: "pointer", }}
+                                    //     onClick={() =>
+                                    //     MonthlyAttendanceExcel(
+                                    //         AttendanceData,
+                                    //         {
+                                    //          Month: values.attmonth,
+                                    //          Year: values.attyear,
+                                    //          EmployeeID: empData?.Name, 
+                                    //         },
+                                    //         empData
+                                    //       )
+                                    //     }
+                                    //   />
+                  
+                                    )}
                 </Stack>
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>

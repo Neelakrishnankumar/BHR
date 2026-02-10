@@ -250,18 +250,18 @@ const styles = StyleSheet.create({
   },
 
  /* FOOTER */
-    footerWrapper: {
-    position: "absolute",
-    bottom: 25,
-    left: 5,
-    right: 5,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+   footerWrapper: {
+        position: "absolute",
+        bottom: 30,
+        left: 5,
+        right: 5,     // forces full width
+        height: 80,
+        justifyContent: "center",
+        alignItems: "center",
+    },
   footerImage: {
     width: "100%",
-    height: 60,
+    height: 100,
     objectFit: "cover",
   },
 });

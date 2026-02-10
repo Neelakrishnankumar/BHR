@@ -83,6 +83,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { getConfig } from "../../../config";
+import TimesheetExcel from "../pdf/TimesheetExcel";
+import { FaFileExcel } from "react-icons/fa";
 
 const EditTimeSheet = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -105,6 +107,8 @@ const EditTimeSheet = () => {
 
   const AttendanceData = useSelector((state) => state.formApi.timeSheetData);
   const projectName = useSelector((state) => state.formApi.projectName);
+  console.log(projectName, "--projectName");
+  
   const managerName = useSelector((state) => state.formApi.managerName);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
@@ -790,6 +794,27 @@ const EditTimeSheet = () => {
                       }
                     </PDFDownloadLink>
                   )}
+ {ApprovedData?.length > 0 && (
+                    <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        TimesheetExcel(
+                          ApprovedData,
+                          {
+                            Month: values.timemonth,
+                            Year: values.timeyear,
+                            EmployeeID: timeempData?.Name || EMPNAME,
+                          },
+                          projectName,
+                          managerName,
+                        
+                        )
+                      }
+                    />
+                  )}
+
                   {/* <PDFDownloadLink
                       document={
                         <InvoicePDF

@@ -441,33 +441,55 @@ const styles = StyleSheet.create({
 
  /* FOOTER */
     footerWrapper: {
-    position: "absolute",
-    bottom: 25,
-    left: 5,
-    right: 5,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footerImage: {
-    width: "100%",
-    height: 60,
-    objectFit: "cover",
-  },
+        position: "absolute",
+        bottom: 30,
+        left: 5,
+        right: 5,     // forces full width
+        height: 80,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    footerImage: {
+        width: "100%",
+        height: 100,
+        objectFit: "cover",
+    },
+  //   footerWrapper: {
+  //   position: "absolute",
+  //   bottom: 25,
+  //   left: 5,
+  //   right: 5,
+  //   height: 60,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
+  // footerImage: {
+  //   width: "100%",
+  //   height: 60,
+  //   objectFit: "cover",
+  // },
 
 });
 
 // Split data: 20 on first page, 26 afterwards
 const paginateData = (data) => {
-  const firstPage = data.slice(0, 20);
-  const otherPages = [];
+  const firstPageCount = 13;
+  const otherPageCount = 15;
 
-  for (let i = 20; i < data.length; i += 26) {
-    otherPages.push(data.slice(i, i + 26));
+  const pages = [];
+
+  // First page
+  pages.push(data.slice(0, firstPageCount));
+
+  // Remaining pages
+  for (let i = firstPageCount; i < data.length; i += otherPageCount) {
+    pages.push(data.slice(i, i + otherPageCount));
   }
 
-  return [firstPage, ...otherPages];
+  return pages;
 };
+
 
 //const TimeSheetPDF = ({ data = [], filters = {} }) => {
 const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName = "" }) => {
