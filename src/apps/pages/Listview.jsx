@@ -80,7 +80,7 @@ import {
 } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import { Delete, Psychology, Category } from "@mui/icons-material";
+import { Delete, Psychology, Category, PeopleAlt } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -107,6 +107,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import InputAdornment from "@mui/material/InputAdornment";
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import CancelIcon from "@mui/icons-material/Cancel";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import FileUploadIconButton from "../../ui-components/global/Fileuploadbutton";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { FaFileExcel } from "react-icons/fa";
@@ -239,7 +240,26 @@ const Listview = () => {
   //   listViewcolumn
   // );
   // `compID=${compID} AND compID=${YearRecorid}`
-  React.useEffect(() => {
+  // React.useEffect(() => {
+  //   dispatch(
+  //     fetchListview(
+  //       accessID,
+  //       screenName,
+  //       accessID == "TR010" ||
+  //         accessID == "TR140" ||
+  //         accessID == "TR047" ||
+  //         accessID == "TR152" ||
+  //         accessID == "TR155" ||
+  //         accessID == "TR022"
+  //         ? `compID=${compID}`
+  //         : "",
+  //       "",
+  //       compID
+  //     )
+  //   );
+  //   // dispatch(screenRightsData(accessID));
+  // }, [location.key]);
+ React.useEffect(() => {
     dispatch(
       fetchListview(
         accessID,
@@ -249,8 +269,10 @@ const Listview = () => {
           accessID == "TR047" ||
           accessID == "TR152" ||
           accessID == "TR155" ||
-          accessID == "TR022"
+          accessID == "TR022"         
           ? `compID=${compID}`
+          : accessID == "TR027" ? 
+          `CompanyID=${compID}`
           : "",
         "",
         compID
@@ -610,6 +632,8 @@ const Listview = () => {
             ) : accessID == "TR328" ? (
               false
             ) : accessID == "TR315" ? (
+              false
+            ) : accessID == "TR330" ? (
               false
             ) : YearFlag == "true" ? (
               // UGA_ADD ? (
@@ -1688,6 +1712,7 @@ const Listview = () => {
                           }}
                           sx={{ width: 250, mt: 2 }}
                         />
+
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="party"
@@ -1706,6 +1731,7 @@ const Listview = () => {
                           // helperText={touched.party && errors.party}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
                         />
+                        
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="product"
@@ -4025,6 +4051,15 @@ const Listview = () => {
             <Chip
               icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ) : accessID == "TR330" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>           
+            <Chip
+              icon={<PeopleAltIcon color="primary" />}
+              label="Personnel"
               variant="outlined"
             // sx={{ marginLeft: "50px" }}
             />

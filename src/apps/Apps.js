@@ -468,6 +468,15 @@ function App() {
                     path="/Secondarylistview/Item Group/:accessID/:screenName/:parentID2/:parentID1/EditItemCategory/:id/:Mode"
                     element={<EditItemCategory />}
                   />
+                   <Route
+                    path="/Secondarylistview/Classification/:accessID/:screenName/:filtertype/EditPersonnel/:id/:Mode"
+                    element={<Editemployee/>}
+                    
+                  />
+                   <Route
+                    path="/SecondarylistView/Classification/:accessID/:screenName/:filtertype"
+                    element={<ListviewSecondary />}
+                  />
                   {/* ITEM LIST VIEW*/}
                   <Route
                     path="/Secondarylistview/Item Group/:accessID1/:screenName/:parentID3/:parentID2/:accessID/:parentID1"

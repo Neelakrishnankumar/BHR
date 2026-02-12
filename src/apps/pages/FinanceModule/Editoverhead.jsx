@@ -310,7 +310,9 @@ const Editoverhead = () => {
       ? { RecordID: data.OverHeadTypeID, Name: data.OverHeadType }
       : null,
     disable: data.Disable === "Y" ? true : false,
-    delete: data.DeleteFlag === "Y" ? true : false
+    delete: data.DeleteFlag === "Y" ? true : false,
+    impactpayroll: data.Impactpayroll === "Y" ? true : false
+
 
   };
   console.log(initialValue, "OverheadType");
@@ -339,6 +341,8 @@ const Editoverhead = () => {
       CompanyID,
       Disable: values.disable == true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
+      Impactpayroll: values.impactpayroll == true ? "Y" : "N",
+
 
     };
     console.log(idata, "idata");
@@ -733,7 +737,7 @@ const Editoverhead = () => {
                   </TextField> */}
 
 
-                  <Box>
+                  {/* <Box>                    
                     <Field
                       //  size="small"
                       type="checkbox"
@@ -758,8 +762,48 @@ const Editoverhead = () => {
                     />
 
                     <FormLabel focused={false}>Disable</FormLabel>
-                  </Box>
+                  </Box> */}
+                  <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
 
+                    {values?.OverheadType?.Name === "Cost of Employee" && (
+                      <Box display="flex" alignItems="center">
+                        <Field
+                          type="checkbox"
+                          name="impactpayroll"
+                          id="impactpayroll"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                        />
+                        <FormLabel focused={false}>Impact Payroll</FormLabel>
+                      </Box>
+                    )}
+
+                    <Box display="flex" alignItems="center">
+                      <Field
+                        type="checkbox"
+                        name="delete"
+                        id="delete"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Delete</FormLabel>
+                    </Box>
+
+                    <Box display="flex" alignItems="center">
+                      <Field
+                        type="checkbox"
+                        name="disable"
+                        id="disable"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Disable</FormLabel>
+                    </Box>
+
+                  </Box>
 
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap={formGap}>

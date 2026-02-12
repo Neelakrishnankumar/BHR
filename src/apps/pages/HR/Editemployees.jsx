@@ -123,6 +123,9 @@ const Editemployee = () => {
   const CompanyID = sessionStorage.getItem("compID");
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode");
   const is003Subscription = SubscriptionCode.endsWith("003");
+  const is00123Subscription = ["001", "002", "003"].some(code =>
+    SubscriptionCode?.endsWith(code)
+  );
   console.log(SubscriptionCode, "codehr");
   const EMPID = sessionStorage.getItem("EmpId");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
@@ -152,6 +155,8 @@ const Editemployee = () => {
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
+  var mode = params.Mode;
+  var parentID = params.filtertype;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data) || {};
   // console.log(Data, "geteting Data");
@@ -172,6 +177,7 @@ const Editemployee = () => {
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
+
   console.log(
     "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
@@ -915,6 +921,7 @@ const Editemployee = () => {
       // WeekOff: 0,
       CompanyID,
       SubscriptionCode,
+      ClassificationID: parentID || 0,
     };
     console.log("🚀 ~ fnSave ~ saveData:", saveData);
     console.log(apiReturnValue, "moduleselect");
@@ -930,12 +937,12 @@ const Editemployee = () => {
 
       setLoading(false);
       if (del) {
-        navigate(`/Apps/TR027/Personnel`);
+        // navigate(`/Apps/TR027/Personnel`);
+        navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
       } else {
         navigate(
-          `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
-          { state: { ...state } }
-        );
+          // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
+          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`, { state: { ...state } });
       }
     } else {
       toast.error(data.payload.Msg);
@@ -2743,11 +2750,11 @@ const Editemployee = () => {
     //   Data.DesignationName === "Student" ||
     //   deploymentInitialValue?.Designation?.Name === "Student";
     const designationName =
-    Data?.DesignDesc ||
-    deploymentInitialValue?.Designation?.Name ||
-    "";
+      Data?.DesignDesc ||
+      deploymentInitialValue?.Designation?.Name ||
+      "";
 
-  const isStudent = designationName === "Student";
+    const isStudent = designationName === "Student";
 
     const filterCondition = isStudent
       ? `EmployeeID='${recID}' AND ParentCheckBox='Y' AND CompanyID=${CompanyID}`
@@ -3409,7 +3416,9 @@ const Editemployee = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate("/Apps/TR027/Personnel");
+          // navigate("/Apps/TR027/Personnel");
+          navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`);
+
         }
       } else {
         return;
@@ -4335,7 +4344,10 @@ const Editemployee = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate(`/Apps/TR027/Personnel`);
+                        // is00123Subscription
+                        //   ? navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`)
+                        //   : navigate(`/Apps/TR027/Personnel`);
+                        navigate(-1)
                       }}
                     >
                       Cancel
@@ -6857,7 +6869,7 @@ const Editemployee = () => {
                       />
 
                       <FormLabel focused={false}>
-                        ESS Access
+                        Self Service Access
                       </FormLabel>
                     </Box>
                   </Box>
