@@ -280,11 +280,11 @@ const styles = StyleSheet.create({
 
 
 const paginateData = (data) => {
-    const firstPage = data.slice(0, 20);
+    const firstPage = data.slice(0, 18);
     const otherPages = [];
 
-    for (let i = 20; i < data.length; i += 26) {
-        otherPages.push(data.slice(i, i + 26));
+    for (let i = 18; i < data.length; i += 24) {
+        otherPages.push(data.slice(i, i + 24));
     }
 
     return [firstPage, ...otherPages];
@@ -329,7 +329,100 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
             hours: totalHours,
         };
     }, [data, isPermission]);
+    // const permissionSummaryNew = React.useMemo(() => {
+    //     if (!isPermission || !data.length) return null;
 
+    //     const summary = {
+    //         Applied: { days: new Set(), hours: 0 },
+    //         Approved: { days: new Set(), hours: 0 },
+    //         Query: { days: new Set(), hours: 0 },
+    //         Rejected: { days: new Set(), hours: 0 },
+    //         // Reconsider: { days: new Set(), hours: 0 },
+    //         // Completed: { days: new Set(), hours: 0 },
+    //         // Assigned: { days: new Set(), hours: 0 },
+    //         // Scheduled: { days: new Set(), hours: 0 },
+    //     };
+
+    //     data.forEach((item) => {
+    //         const status = item.Status;
+    //         const convertToDecimalHours = (value) => {
+    //             if (!value) return 0;
+
+    //             const parts = value.toString().split(".");
+    //             const hours = Number(parts[0] || 0);
+    //             const minutes = Number(parts[1] || 0);
+
+    //             return hours + (minutes / 60);
+    //         };
+
+    //         const convertHHMMToReadable = (value) => {
+    //             if (!value) return "0 hr 0 min";
+
+    //             const parts = value.toString().split(".");
+    //             const hours = Number(parts[0] || 0);
+    //             const minutes = Number(parts[1] || 0);
+
+    //             return `${hours} hr ${minutes} min`;
+    //         };
+
+
+    //         if (summary[status]) {
+    //             summary[status].days.add(item.DisplayPermissionDate);
+    //             // summary[status].hours += Number(item.NumofHrsday || 0);
+    //             summary[status].hours += convertHHMMToReadable(item.NumofHrsday);
+
+
+    //         }
+    //     });
+
+    //     // convert Set → count
+    //     Object.keys(summary).forEach(status => {
+    //         summary[status].days = summary[status].days.size;
+    //     });
+
+    //     return summary;
+    // }, [data, isPermission]);
+
+const permissionSummaryNew = React.useMemo(() => {
+    if (!isPermission || !data.length) return null;
+
+    const summary = {
+        Applied: { days: new Set(), minutes: 0 },
+        Approved: { days: new Set(), minutes: 0 },
+        Query: { days: new Set(), minutes: 0 },
+        Rejected: { days: new Set(), minutes: 0 },
+    };
+
+    data.forEach((item) => {
+        const status = item.Status;
+
+        if (summary[status]) {
+            summary[status].days.add(item.DisplayPermissionDate);
+
+            // Convert HH.MM to total minutes
+            const parts = item.NumofHrsday?.toString().split(".") || [];
+            const hours = Number(parts[0] || 0);
+            const mins = Number(parts[1] || 0);
+
+            summary[status].minutes += (hours * 60) + mins;
+        }
+    });
+
+    // Convert minutes back to HH.MM format
+    Object.keys(summary).forEach(status => {
+        const totalMinutes = summary[status].minutes;
+
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        summary[status].hours =
+            `${hours}:${mins.toString().padStart(2, "0")}`;
+
+        summary[status].days = summary[status].days.size;
+    });
+
+    return summary;
+}, [data, isPermission]);
 
 
     const totalLeave = { CL: 0, G: 0, M: 0 };
@@ -450,7 +543,8 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
 
                     </View>
 
-                    {isPermission && permissionSummary && (
+                    {/* WORKING AS ON 09/02/2026 */}
+                    {/* {isPermission && permissionSummary && (
                         <View style={{ marginTop: 12 }}>
                             <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
                                 Permission Summary
@@ -472,6 +566,39 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                                 </View>
                             </View>
 
+                        </View>
+                    )} */}
+
+                    {/* NEW */}
+                    {isPermission && permissionSummaryNew && pageIndex === pages.length - 1 && (
+                        <View style={{ marginTop: 12 }}>
+                            <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
+                                Permission Summary
+                            </Text>
+
+                            <View style={styles.table}>
+                                {/* Header */}
+                                <View style={styles.row}>
+                                    <Text style={styles.headerCell}>Status</Text>
+                                    <Text style={styles.headerCell}>No of Days</Text>
+                                    <Text style={[styles.headerCell, styles.lastCell]}>
+                                        No of Hours
+                                    </Text>
+                                </View>
+
+                                {Object.entries(permissionSummaryNew).map(([status, values]) => (
+                                    <View style={styles.row} key={status}>
+                                        <Text style={[styles.cell, { textAlign: "left" }]}>
+                                            {status}
+                                        </Text>
+                                        <Text style={styles.cell}>{values.days}</Text>
+                                        <Text style={[styles.cell, styles.lastCell]}>
+                                            {/* {values.hours.toFixed(2)} */}
+                                            {values.hours}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
                         </View>
                     )}
 
@@ -500,7 +627,7 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
                         </View>
                     )} */}
                     {/* LEAVE SUMMARY – TEXT ONLY */}
-                    {!isPermission && (
+                    {!isPermission && pageIndex === pages.length - 1 && (
                         <View style={{ marginTop: 12 }}>
                             <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
                                 Leave Summary

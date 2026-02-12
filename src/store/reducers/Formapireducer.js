@@ -137,8 +137,8 @@ const initialState = {
   OrderdetailReportgetstatus: "",
   OrderdetailReportloading: false,
   leaderDetails: null,
-  data: null,  // Store your fetched data here
-  status: 'idle',
+  data: null, // Store your fetched data here
+  status: "idle",
   error: null,
 
   Auditgetdata: [],
@@ -149,8 +149,6 @@ const initialState = {
   AuditScreennamegetdata: [],
   Auditcompanygetstatus: "idle",
   Auditcompanygetloading: false,
-        
-
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -170,7 +168,7 @@ export const subscriptionRenewal = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 export const subScriptionCheck = createAsyncThunk(
@@ -188,10 +186,10 @@ export const subScriptionCheck = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 // export const empAttendance = createAsyncThunk(
 //   "employee/Payrollattendance",
@@ -230,10 +228,10 @@ export const CustomerpriceorderQty = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const Attendance = createAsyncThunk(
   "employee/attendance",
@@ -250,10 +248,10 @@ export const Attendance = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 /*attendance-- Process button*/
 export const AttendanceProcess = createAsyncThunk(
@@ -271,10 +269,10 @@ export const AttendanceProcess = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const costingBOMData = createAsyncThunk(
@@ -295,10 +293,10 @@ export const costingBOMData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const materialDcTrckData = createAsyncThunk(
   "matrial/dc-tracking",
@@ -317,10 +315,10 @@ export const materialDcTrckData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //Employee -- GEO LOCATION get
@@ -349,10 +347,10 @@ export const geolocationData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //Employee --GEO Location Update
@@ -372,10 +370,10 @@ export const geolocUpdate = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const searchData = createAsyncThunk("all/search", async ({ data }) => {
@@ -390,7 +388,7 @@ export const searchData = createAsyncThunk("all/search", async ({ data }) => {
   });
   console.log(
     "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-    response
+    response,
   );
   return response.data;
 });
@@ -406,7 +404,7 @@ export const LeaderData = createAsyncThunk("all/search", async ({ data }) => {
   });
   console.log(
     "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-    response
+    response,
   );
   return response.data;
 });
@@ -433,10 +431,10 @@ export const materialDcTrckChartData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //Material Stock Order
 export const stockorder = createAsyncThunk(
@@ -454,10 +452,10 @@ export const stockorder = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //purchaseorderratingData//
 export const purchaseorderrating = createAsyncThunk(
@@ -474,10 +472,10 @@ export const purchaseorderrating = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 // Material Procurement
@@ -504,10 +502,10 @@ export const procurementTrackingGet = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //Customer Leather
 export const customerLeather = createAsyncThunk(
@@ -529,10 +527,10 @@ export const customerLeather = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //DC Summary
@@ -554,10 +552,10 @@ export const dcSummary = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const dcpostSummary = createAsyncThunk(
   "delivery challan/summary/postdata",
@@ -573,10 +571,10 @@ export const dcpostSummary = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //Employee Deployment
 export const getDeployment = createAsyncThunk(
@@ -596,10 +594,10 @@ export const getDeployment = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const postDeployment = createAsyncThunk(
   "employee/deployment/postdata",
@@ -614,10 +612,10 @@ export const postDeployment = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const partypost = createAsyncThunk(
   "employee/deployment/postdata",
@@ -656,7 +654,7 @@ export const costLeatherData = createAsyncThunk(
     });
 
     return response.data;
-  }
+  },
 );
 
 export const conversionMaterialData = createAsyncThunk(
@@ -673,10 +671,10 @@ export const conversionMaterialData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const uomMaterialRate = createAsyncThunk(
@@ -693,10 +691,10 @@ export const uomMaterialRate = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const dpConversionData = createAsyncThunk(
   "Product/conversion",
@@ -720,10 +718,10 @@ export const dpConversionData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const StockProcessApi = createAsyncThunk(
   "Stock/process",
@@ -744,7 +742,7 @@ export const StockProcessApi = createAsyncThunk(
     });
     // console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
-  }
+  },
 );
 
 export const cbmCalculation = createAsyncThunk(
@@ -760,7 +758,7 @@ export const cbmCalculation = createAsyncThunk(
     });
     // console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
-  }
+  },
 );
 
 export const bomCopyFn = createAsyncThunk(
@@ -779,7 +777,7 @@ export const bomCopyFn = createAsyncThunk(
     });
     // console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
-  }
+  },
 );
 export const invoiceHeaderGetData = createAsyncThunk(
   "Invoice/Header",
@@ -800,10 +798,10 @@ export const invoiceHeaderGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const invoiceExploreGetData = createAsyncThunk(
@@ -825,10 +823,10 @@ export const invoiceExploreGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const RegGetData = createAsyncThunk(
   "RegGetData/getdata",
@@ -847,7 +845,7 @@ export const RegGetData = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 export const getLeaveentryData = createAsyncThunk(
   "Leave Entry/get",
@@ -862,7 +860,7 @@ export const getLeaveentryData = createAsyncThunk(
     console.log("get" + JSON.stringify(data));
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -873,10 +871,10 @@ export const getLeaveentryData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const getLeaveweeklyData = createAsyncThunk(
   "Leave Weekly/get",
@@ -890,7 +888,7 @@ export const getLeaveweeklyData = createAsyncThunk(
     console.log("get" + JSON.stringify(data));
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -901,10 +899,10 @@ export const getLeaveweeklyData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const stockGetData = createAsyncThunk(
   "stock/material",
@@ -933,10 +931,10 @@ export const stockGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data.Data;
-  }
+  },
 );
 export const requestMail = createAsyncThunk(
   "email/rquestmail",
@@ -953,10 +951,10 @@ export const requestMail = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const leaveAppoval = createAsyncThunk(
   "leave/approval",
@@ -975,7 +973,7 @@ export const leaveAppoval = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 export const InvoicePostData = createAsyncThunk(
   "PostData/header/details",
@@ -995,10 +993,10 @@ export const InvoicePostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const InvoicePostExploreData = createAsyncThunk(
@@ -1012,7 +1010,7 @@ export const InvoicePostExploreData = createAsyncThunk(
     };
     console.log(
       "🚀 ~ file: Formapireducer.js:209 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1023,17 +1021,16 @@ export const InvoicePostExploreData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const getFetchData = createAsyncThunk(
   "allScreen/Header",
   async ({ accessID, get, recID }) => {
     var url = store.getState().globalurl.apiUrl;
-
 
     const data = {
       accessid: accessID,
@@ -1043,7 +1040,7 @@ export const getFetchData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1054,16 +1051,15 @@ export const getFetchData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
 
     return response.data;
-  }
+  },
 );
 export const ModuleUrl = createAsyncThunk(
   "ModuleFetchData/Header",
   async ({ CompanyID }) => {
-
     var url = store.getState().globalurl.Moduleurl;
     const data = {
       CompanyID: CompanyID,
@@ -1085,7 +1081,7 @@ export const ModuleUrl = createAsyncThunk(
       console.error("Error during API call:", error);
       throw error;
     }
-  }
+  },
 );
 export const VendorRegisterFetchData = createAsyncThunk(
   "VendorRegisterFetchData/Header",
@@ -1098,7 +1094,7 @@ export const VendorRegisterFetchData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1109,10 +1105,10 @@ export const VendorRegisterFetchData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const ItemFlagFetchData = createAsyncThunk(
@@ -1126,7 +1122,7 @@ export const ItemFlagFetchData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1137,10 +1133,10 @@ export const ItemFlagFetchData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const ItemStockMenuGet = createAsyncThunk(
   "ItemStockMenuGet/Header",
@@ -1153,7 +1149,7 @@ export const ItemStockMenuGet = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1164,10 +1160,10 @@ export const ItemStockMenuGet = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const ItemMainGETFetchData = createAsyncThunk(
@@ -1181,7 +1177,7 @@ export const ItemMainGETFetchData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1192,10 +1188,10 @@ export const ItemMainGETFetchData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const VendorDefaultFetchData = createAsyncThunk(
   "VendorDefaultFetchData/Header",
@@ -1208,7 +1204,7 @@ export const VendorDefaultFetchData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1219,10 +1215,10 @@ export const VendorDefaultFetchData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const ItemMainMenuFetchData = createAsyncThunk(
   "ItemMainMenuFetchData/Header",
@@ -1238,7 +1234,7 @@ export const ItemMainMenuFetchData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1249,22 +1245,22 @@ export const ItemMainMenuFetchData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const LeadEnquiryFilterGet = createAsyncThunk(
   "LeadEnquiryFilterGet/Header",
-  async ({recID }) => {
+  async ({ recID }) => {
     var url = store.getState().globalurl.LeadEnquiryFilterGet;
     const data = {
-        LeaderID: recID,
+      LeaderID: recID,
     };
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1275,10 +1271,10 @@ export const LeadEnquiryFilterGet = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const DefaultProductDeliveryChargeGet = createAsyncThunk(
@@ -1291,7 +1287,7 @@ export const DefaultProductDeliveryChargeGet = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1302,10 +1298,10 @@ export const DefaultProductDeliveryChargeGet = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //PartyBank Get
 export const PartyBankget = createAsyncThunk(
@@ -1318,7 +1314,7 @@ export const PartyBankget = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1329,10 +1325,10 @@ export const PartyBankget = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //partyBank Post
 export const partyBankpostData = createAsyncThunk(
@@ -1354,10 +1350,10 @@ export const partyBankpostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //partyContact Get
@@ -1371,7 +1367,7 @@ export const PartyContactget = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1382,10 +1378,10 @@ export const PartyContactget = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //partyContact Post
 export const partyContactData = createAsyncThunk(
@@ -1407,10 +1403,10 @@ export const partyContactData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //Sprint Get
@@ -1424,7 +1420,7 @@ export const sprintGetData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1435,10 +1431,10 @@ export const sprintGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //Sprint Project Plan Get
@@ -1454,7 +1450,7 @@ export const sprintprojectplanGetData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1465,10 +1461,10 @@ export const sprintprojectplanGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //NEW SCHEDULE
@@ -1482,7 +1478,7 @@ export const scheduleGetData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1493,10 +1489,10 @@ export const scheduleGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //APPRAISAL BASED SCHEDULE
@@ -1511,7 +1507,7 @@ export const appraisalscheduleGetData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1522,10 +1518,10 @@ export const appraisalscheduleGetData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //SKILL-INSIGHTS
 export const getInsights1 = createAsyncThunk("getInsights1/get", async () => {
@@ -1539,7 +1535,7 @@ export const getInsights1 = createAsyncThunk("getInsights1/get", async () => {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
-    }
+    },
   );
 
   console.log("API Response:", response.data);
@@ -1559,12 +1555,12 @@ export const getInsights2 = createAsyncThunk(
           Authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
-      }
+      },
     );
 
     console.log("API Response:", response.data);
     return response.data;
-  }
+  },
 );
 
 //PROJECT COSTING
@@ -1584,12 +1580,12 @@ export const getProjectCosting = createAsyncThunk(
           Authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
-      }
+      },
     );
 
     console.log("API Response:", response.data);
     return response.data;
-  }
+  },
 );
 
 //ORDER HEADER PDF
@@ -1610,12 +1606,12 @@ export const getOrderdetailReport = createAsyncThunk(
           Authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
         },
-      }
+      },
     );
 
     console.log("API Response:", response.data);
     return response.data;
-  }
+  },
 );
 /* settings Get*/
 export const getSettingsData = createAsyncThunk(
@@ -1631,7 +1627,7 @@ export const getSettingsData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1642,10 +1638,10 @@ export const getSettingsData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const getBiometricData = createAsyncThunk(
   "Biometric/get",
@@ -1660,7 +1656,7 @@ export const getBiometricData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1671,10 +1667,10 @@ export const getBiometricData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 // Settings -- Approvals Checkbox
@@ -1691,7 +1687,7 @@ export const setttingsApprovalsData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1702,10 +1698,10 @@ export const setttingsApprovalsData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const getJioData = createAsyncThunk(
@@ -1721,7 +1717,7 @@ export const getJioData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1732,10 +1728,10 @@ export const getJioData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const Regularizationdata = createAsyncThunk(
   "regularization",
@@ -1749,7 +1745,7 @@ export const Regularizationdata = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -1760,10 +1756,10 @@ export const Regularizationdata = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const postData = createAsyncThunk(
@@ -1785,10 +1781,10 @@ export const postData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const ItemMainpostData = createAsyncThunk(
   "ItemMainpostData/post",
@@ -1808,10 +1804,10 @@ export const ItemMainpostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const ItemFlagMenuPut = createAsyncThunk(
   "ItemFlagMenuPut/post",
@@ -1831,10 +1827,10 @@ export const ItemFlagMenuPut = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const ItemStockMenuPut = createAsyncThunk(
   "ItemStockMenuPut/post",
@@ -1854,10 +1850,10 @@ export const ItemStockMenuPut = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const VendorRegisterpostData = createAsyncThunk(
   "VendorRegisterpostData/post",
@@ -1878,10 +1874,10 @@ export const VendorRegisterpostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const VendorDefaultPUTdata = createAsyncThunk(
   "VendorDefaultPUTdata/post",
@@ -1902,10 +1898,10 @@ export const VendorDefaultPUTdata = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const ItemFlagPostdata = createAsyncThunk(
   "ItemFlagPostdata/post",
@@ -1925,10 +1921,10 @@ export const ItemFlagPostdata = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 //Settings Post
 
@@ -1951,10 +1947,10 @@ export const SettingspostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const CompanydetailpostData = createAsyncThunk(
   "Company/Sub Post",
@@ -1975,10 +1971,10 @@ export const CompanydetailpostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const BiometricpostData = createAsyncThunk(
   "biometric/Sub Post",
@@ -1999,10 +1995,10 @@ export const BiometricpostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //settings Approvals
@@ -2025,10 +2021,10 @@ export const ApprovalsettingspostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const getFetchWeightage = createAsyncThunk(
@@ -2058,7 +2054,7 @@ export const getFetchWeightage = createAsyncThunk(
       console.error("Error fetching data:", error);
       throw error; // Ensure proper error handling
     }
-  }
+  },
 );
 
 export const postWeightage = createAsyncThunk(
@@ -2083,7 +2079,7 @@ export const postWeightage = createAsyncThunk(
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
+  },
 );
 
 export const explorePostData = createAsyncThunk(
@@ -2105,10 +2101,10 @@ export const explorePostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const PackingListPostData = createAsyncThunk(
@@ -2131,7 +2127,7 @@ export const PackingListPostData = createAsyncThunk(
     });
     // console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
     return response.data;
-  }
+  },
 );
 
 export const getVersionBom = createAsyncThunk(
@@ -2152,7 +2148,7 @@ export const getVersionBom = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const getVersionJobworkBom = createAsyncThunk(
   "jobwork/bom",
@@ -2172,7 +2168,7 @@ export const getVersionJobworkBom = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const hashtoken = createAsyncThunk(
   "hashtoken/data",
@@ -2189,7 +2185,7 @@ export const hashtoken = createAsyncThunk(
     //alert("response",response);
     console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
-  }
+  },
 );
 
 export const getBomList = createAsyncThunk(
@@ -2210,7 +2206,7 @@ export const getBomList = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const postPrdBthData = createAsyncThunk(
   "product/bom",
@@ -2218,7 +2214,7 @@ export const postPrdBthData = createAsyncThunk(
     var url = store.getState().globalurl.prdCardBthUrl;
     console.log(
       "🚀 ~ file: Formapireducer.js:334 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
     const response = await axios.post(url, data, {
       headers: {
@@ -2228,7 +2224,7 @@ export const postPrdBthData = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:314 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const getDCTracking = createAsyncThunk(
   "Deliverychalan/tracking",
@@ -2239,7 +2235,7 @@ export const getDCTracking = createAsyncThunk(
     };
     console.log(
       "🚀 ~ file: Formapireducer.js:334 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -2250,7 +2246,7 @@ export const getDCTracking = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const proPriceTracking = createAsyncThunk(
   "Product/Price Tracking",
@@ -2261,7 +2257,7 @@ export const proPriceTracking = createAsyncThunk(
     };
     console.log(
       "🚀 ~ file: Formapireducer.js:334 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -2272,7 +2268,7 @@ export const proPriceTracking = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
-  }
+  },
 );
 
 export const setReg = createAsyncThunk(
@@ -2286,7 +2282,7 @@ export const setReg = createAsyncThunk(
     // setAssignparams(params.rows);
     console.log(
       "🚀 ~ file: Formapireducer.js:334 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     // const response = await axios.post(url, data, {
@@ -2297,7 +2293,7 @@ export const setReg = createAsyncThunk(
     // });
     // console.log("🚀 ~ file: Formapireducer.js:345 ~ reg:", response)
     // return response.data;
-  }
+  },
 );
 
 // export function customerorderanalysis(RecordID,CompanyID,YearID) {
@@ -2353,7 +2349,7 @@ export const customerorderanalysis = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:334 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.get(url, {
@@ -2367,7 +2363,7 @@ export const customerorderanalysis = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const productorderanalysis = createAsyncThunk(
   "Product Order/Analysis",
@@ -2376,7 +2372,7 @@ export const productorderanalysis = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:334 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.get(url, {
@@ -2390,7 +2386,7 @@ export const productorderanalysis = createAsyncThunk(
     });
     console.log("🚀 ~ file: Formapireducer.js:345 ~ response:", response);
     return response.data;
-  }
+  },
 );
 export const getApiSlice = createSlice({
   name: "formApi",
@@ -2418,7 +2414,7 @@ export const getApiSlice = createSlice({
     },
     ratingChange(state, action) {
       const index = [...action.payload.rowdata].findIndex(
-        (value) => value.RecordID === action.payload.id
+        (value) => value.RecordID === action.payload.id,
       );
       action.payload.rowdata[index] = action.payload.rating;
       state.purchaseorderratingData = action.payload.rowdata;
@@ -2426,7 +2422,7 @@ export const getApiSlice = createSlice({
     packingListCarton(state, action) {
       console.log(
         "🚀 ~ file: Formapireducer.js:502 ~ packingListCarton ~ action:",
-        action
+        action,
       );
       console.log("action called");
       switch (action.payload.type) {
@@ -2775,7 +2771,6 @@ export const getApiSlice = createSlice({
         state.postLoading = false;
       })
 
-
       //ORDER HEADER - PAYMENT UPDATE
       .addCase(OHPaymentUpdateController.pending, (state, action) => {
         state.OHPaymentPutstatus = "idle";
@@ -2895,7 +2890,7 @@ export const getApiSlice = createSlice({
         // state.msg =  action.payload.Msg
         console.log(
           state.sprintPPget,
-          "--sprintprojectplanGetData state.sprintPPget"
+          "--sprintprojectplanGetData state.sprintPPget",
         );
       })
       .addCase(sprintprojectplanGetData.rejected, (state, action) => {
@@ -3135,40 +3130,40 @@ export const getApiSlice = createSlice({
       .addCase(costLeatherData.fulfilled, (state, action) => {
         console.log(
           "🚀 ~ file: Formapireducer.js:863 ~ .addCase ~ action:",
-          action
+          action,
         );
 
         if (action.meta.arg.LeatherNumber == 1) {
           state.costingLeatherCost.leatherOneCost = Number(
-            action.payload.LeatherCost
+            action.payload.LeatherCost,
           ).toFixed(2);
           state.costingLeatherCost.latestleatherOneCost = Number(
-            action.payload.LeatherLatestCost
+            action.payload.LeatherLatestCost,
           ).toFixed(2);
         }
         if (action.meta.arg.LeatherNumber == 2) {
           state.costingLeatherCost.leatherTwoCost = Number(
-            action.payload.LeatherCost
+            action.payload.LeatherCost,
           ).toFixed(2);
           state.costingLeatherCost.latestleatherTwoCost = Number(
-            action.payload.LeatherLatestCost
+            action.payload.LeatherLatestCost,
           ).toFixed(2);
         }
         if (action.meta.arg.LeatherNumber == 3) {
           state.costingLeatherCost.leatherThreeCost = Number(
-            action.payload.LeatherCost
+            action.payload.LeatherCost,
           ).toFixed(2);
           state.costingLeatherCost.latestleatherThreeCost = Number(
-            action.payload.LeatherLatestCost
+            action.payload.LeatherLatestCost,
           ).toFixed(2);
         }
       })
       .addCase(costingBOMData.fulfilled, (state, action) => {
         state.costingLeatherCost.materialCost = Number(
-          action.payload.Cost
+          action.payload.Cost,
         ).toFixed(2);
         state.costingLeatherCost.latestmaterialCost = Number(
-          action.payload.LatestCost
+          action.payload.LatestCost,
         ).toFixed(2);
       })
       .addCase(customerLeather.fulfilled, (state, action) => {
@@ -3310,10 +3305,10 @@ export const getApiSlice = createSlice({
       })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;
-state.AttendanceDataLoading = false;
+        state.AttendanceDataLoading = false;
       })
       .addCase(Attendance.pending, (state, action) => {
-        state.AttendanceDataStatus= "idle";
+        state.AttendanceDataStatus = "idle";
         state.AttendanceDataLoading = true;
       })
       .addCase(Attendance.rejected, (state, action) => {
@@ -3587,11 +3582,9 @@ state.AttendanceDataLoading = false;
         state.error = action.error.message;
       })
 
-
-
       //Audit UserGETController
 
-       .addCase(auditUserActivityGET.pending, (state) => {
+      .addCase(auditUserActivityGET.pending, (state) => {
         state.Auditgetstatus = "loading";
         state.Auditgetloading = true;
         state.Auditgetdata = [];
@@ -3609,8 +3602,8 @@ state.AttendanceDataLoading = false;
       })
 
       //AuditScrenCompanyGET
-      
-         .addCase(auditScreennameGET.pending, (state) => {
+
+      .addCase(auditScreennameGET.pending, (state) => {
         state.Auditcompanygetstatus = "loading";
         state.Auditcompanygetloading = true;
         state.AuditScreennamegetdata = [];
@@ -3626,8 +3619,6 @@ state.AttendanceDataLoading = false;
         state.error = action.error.message;
         state.AuditScreennamegetdata = [];
       })
-   
-
 
       .addCase(getLeaveweeklyData.pending, (state) => {
         state.Status = "idle";
@@ -3718,7 +3709,7 @@ export const fetchApidata =
 
     console.log(
       "🚀 ~ file: Formapireducer.js:794 ~ JSON.stringify(data):",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
     dispatch(pending());
     axios
@@ -3732,7 +3723,7 @@ export const fetchApidata =
       .then((response) => {
         console.log(
           "🚀 ~ file: Formapireducer.js:413 ~ .then ~ response:",
-          response
+          response,
         );
         console.log("response data" + JSON.stringify(response.data));
         var apidata = response.data;
@@ -3819,7 +3810,7 @@ export const fetchApidata =
               Msg: "",
 
               accessID: AccessID,
-            })
+            }),
           );
         } else {
           dispatch(
@@ -3828,7 +3819,7 @@ export const fetchApidata =
               Status: apidata.Status,
 
               accessID: AccessID,
-            })
+            }),
           );
         }
       })
@@ -3850,7 +3841,7 @@ export function postApidata(AccessID, Action, idata) {
           // data:success.
           apiResponse: {},
           Msg: success.data.Msg,
-        })
+        }),
       );
       return datawait;
     }
@@ -3893,7 +3884,7 @@ export function postApidata(AccessID, Action, idata) {
       });
       console.log(
         "🚀 ~ file: Formapireducer.js:335 ~ return ~ success:",
-        success
+        success,
       );
       return onSuccess(success);
     } catch (error) {
@@ -3907,7 +3898,7 @@ export function proformainvApidata(
   ProfoInvoiceNO,
   ProfoInvoiceDate,
   parentID,
-  YearID
+  YearID,
 ) {
   return async (dispatch) => {
     function onSuccess(success) {
@@ -3919,7 +3910,7 @@ export function proformainvApidata(
           Status: success.data.Status,
           apiResponse: {},
           Msg: success.data.Msg,
-        })
+        }),
       );
       return datawait;
     }
@@ -3960,7 +3951,7 @@ export function finalinvApidata(
   FinalInvoiceNO,
   FinalInvoiceDate,
   parentID,
-  YearID
+  YearID,
 ) {
   return async (dispatch) => {
     function onSuccess(success) {
@@ -3972,7 +3963,7 @@ export function finalinvApidata(
           Status: success.data.Status,
           apiResponse: {},
           Msg: success.data.Msg,
-        })
+        }),
       );
       return datawait;
     }
@@ -4020,7 +4011,7 @@ export function postApidatawol(AccessID, Action, idata) {
           apiResponse: success.data.Recid,
           Msg: success.data.Msg,
           // Data: idata
-        })
+        }),
       );
       return datawait;
     }
@@ -4045,7 +4036,7 @@ export function postApidatawol(AccessID, Action, idata) {
       });
       console.log(
         "🚀 ~ file: Formapireducer.js:475 ~ return ~ success:",
-        success
+        success,
       );
       return onSuccess(success);
     } catch (error) {
@@ -4064,7 +4055,7 @@ export function fetchRecIDApidata(AccessID, Action, idata) {
           Status: success.data.Status,
           apiResponse: success.data.Data,
           Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4105,7 +4096,7 @@ export function VersioningFetch(recid) {
           Status: success.data.Status,
           apiResponse: success.data.Data,
           Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4148,7 +4139,7 @@ export function supplierTrackFetch(SupplierID) {
           Status: success.data.Status,
           apiResponse: success.data.Data,
           Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4187,7 +4178,7 @@ export function TrackingFetchfn(MaterialID, Type) {
           // Status: success.data.Status,
           apiResponse: success.data,
           // Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4228,7 +4219,7 @@ export function bomCopyApiData(recid, type) {
           Status: success.data.Status,
           apiResponse: {},
           Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4268,7 +4259,7 @@ export function bomFetchapiData(AccessID, Action, idata) {
           Status: success.data.Status,
           apiResponse: success.data.Data,
           Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4310,7 +4301,7 @@ export function stockFetchapiData(AccessID, Action, idata) {
           Status: success.data.Status,
           apiResponse: success.data.Data,
           Msg: "",
-        })
+        }),
       );
       return datawait;
     }
@@ -4385,7 +4376,7 @@ export const stockApidata =
               Status: apidata.Status,
               apiResponse: apidata.Data,
               Msg: "",
-            })
+            }),
           );
         } else {
           dispatch(
@@ -4394,7 +4385,7 @@ export const stockApidata =
               Status: apidata.Status,
               apiResponse: apidata.Data,
               Msg: "",
-            })
+            }),
           );
         }
       })
@@ -4444,7 +4435,7 @@ export const batchApidata =
               Status: apidata.Status,
               apiResponse: apidata.Data,
               Msg: "",
-            })
+            }),
           );
         } else {
           dispatch(
@@ -4453,7 +4444,7 @@ export const batchApidata =
               Status: apidata.Status,
               apiResponse: apidata.Data,
               Msg: "",
-            })
+            }),
           );
         }
       })
@@ -4471,7 +4462,7 @@ export function orderFetchapiData(name) {
         Success({
           Status: success.data.Status,
           apiResponse: success.data.Data,
-        })
+        }),
       );
       return datawait;
     }
@@ -4515,7 +4506,7 @@ export function stockvalueFetchapiData(name) {
       const datawait = dispatch(
         stockSuccess({
           stockapiResponse: success.data.Data,
-        })
+        }),
       );
       return datawait;
     }
@@ -4559,7 +4550,7 @@ export function MaterialTrackingFetchData(RecordID, Type) {
       const datawait = dispatch(
         stockReqSuccess({
           stockReqapiResponse: success.data.Data,
-        })
+        }),
       );
       return datawait;
     }
@@ -4604,7 +4595,7 @@ export function supplierTrackingFetchData(RecordID) {
       const datawait = dispatch(
         stockReqSuccess({
           stockReqapiResponse: success.data.Data,
-        })
+        }),
       );
       return datawait;
     }
@@ -4648,7 +4639,7 @@ export function stockRequirementFetchapiData(name) {
       const datawait = dispatch(
         stockReqSuccess({
           stockReqapiResponse: success.data.Data,
-        })
+        }),
       );
       return datawait;
     }
@@ -4697,10 +4688,10 @@ export const timeSheetPostData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
@@ -4718,10 +4709,10 @@ export const empAttendance = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const MonthlyAttendance = createAsyncThunk(
   "employee/monthlyattendance",
@@ -4738,10 +4729,10 @@ export const MonthlyAttendance = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const timeSheet = createAsyncThunk(
   "timeSheet/timeSheetattendance",
@@ -4759,10 +4750,10 @@ export const timeSheet = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const timeSheetreport = createAsyncThunk(
   "timeSheet/timeSheetattendance",
@@ -4780,10 +4771,10 @@ export const timeSheetreport = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 // export const leaveenquiryget = createAsyncThunk(
@@ -4817,12 +4808,12 @@ export const leaveenquiryget = createAsyncThunk(
 
       // 👇 Wrap exactly as backend expects
       const requestBody = {
-          FromDate: payload.FromDate,
-          ToDate: payload.ToDate,
-          LeaveTypeID: payload.LeaveTypeID,
-          EmployeesID: payload.EmployeesID,
-          CompanyID: payload.CompanyID,
-          Permission: payload.Permission,
+        FromDate: payload.FromDate,
+        ToDate: payload.ToDate,
+        LeaveTypeID: payload.LeaveTypeID,
+        EmployeesID: payload.EmployeesID,
+        CompanyID: payload.CompanyID,
+        Permission: payload.Permission,
       };
 
       console.log("Final Request Body:", JSON.stringify(requestBody));
@@ -4839,7 +4830,7 @@ export const leaveenquiryget = createAsyncThunk(
       console.error("Leave enquiry API error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 export const EmployeeVendorGetController = createAsyncThunk(
   "empvendorget/empvendorgetfile",
@@ -4847,10 +4838,10 @@ export const EmployeeVendorGetController = createAsyncThunk(
     try {
       const url = store.getState().globalurl.EmployeeVendorGetController;
 
-      const requestBody = {        
-          EmployeeID: payload.EmployeeID,
-          CompanyID: payload.CompanyID,
-          action: payload.action,       
+      const requestBody = {
+        EmployeeID: payload.EmployeeID,
+        CompanyID: payload.CompanyID,
+        action: payload.action,
       };
 
       console.log("Final Request Body:", JSON.stringify(requestBody));
@@ -4867,7 +4858,7 @@ export const EmployeeVendorGetController = createAsyncThunk(
       console.error("Leave enquiry API error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 export const EmployeeVendorContactGet = createAsyncThunk(
   "empvendorcontactget/empvendorcontactgetfile",
@@ -4896,12 +4887,12 @@ export const EmployeeVendorContactGet = createAsyncThunk(
       console.error("Leave enquiry API error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 export const userActivityLog = createAsyncThunk(
   "activity/log",
-  async ({ RecordID, UserID, CompanyID, AccessID, Activity,Type }) => {
+  async ({ RecordID, UserID, CompanyID, AccessID, Activity, Type }) => {
     const url = store.getState().globalurl.UserActivityUrl;
     // OR hardcode:
     // const url = "https://essuat.beyondexs.com/api/UserActivityController.php";
@@ -4912,24 +4903,22 @@ export const userActivityLog = createAsyncThunk(
       CompanyID,
       AccessID,
       Activity,
-      Type
+      Type,
     };
 
     const response = await axios.post(url, payload, {
       headers: {
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ...",
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ...",
       },
     });
 
     return response.data;
-  }
+  },
 );
 
-export const OHPaymentUpdateController
-  = createAsyncThunk(
+export const OHPaymentUpdateController = createAsyncThunk(
   "OHPaymentUpdateController/OrderHeaderPaymentUpdate",
-  async (idata ) => {
+  async (idata) => {
     const url = store.getState().globalurl.OHPaymentUpdateController;
 
     // const data = {
@@ -4942,17 +4931,16 @@ export const OHPaymentUpdateController
       },
     });
     return response.data;
-  }
+  },
 );
-export const PartyBydateByamtFilter
-  = createAsyncThunk(
+export const PartyBydateByamtFilter = createAsyncThunk(
   "PartyBydateByamtFilter/Get",
-  async ({SortType, CompanyID}) => {
+  async ({ SortType, CompanyID }) => {
     const url = store.getState().globalurl.PartyBydateByamtFilter;
 
     const data = {
-      SortType:SortType,
-      CompanyID:CompanyID
+      SortType: SortType,
+      CompanyID: CompanyID,
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
@@ -4962,7 +4950,7 @@ export const PartyBydateByamtFilter
       },
     });
     return response.data;
-  }
+  },
 );
 
 //Audit UserActivityGETController
@@ -5002,7 +4990,7 @@ export const PartyBydateByamtFilter
 // );
 
 export const auditUserActivityGET = createAsyncThunk(
-   "Audit/UserActivityGET",
+  "Audit/UserActivityGET",
   async ({ data }) => {
     var url = store.getState().globalurl.UserActivityGet;
 
@@ -5016,10 +5004,10 @@ export const auditUserActivityGET = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 //Audit Screen Comapny Get
@@ -5037,13 +5025,66 @@ export const auditScreennameGET = createAsyncThunk(
             Authorization:
               "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
-        }
+        },
       );
 
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
+export const ExcelFileUpload = createAsyncThunk(
+  "ExcelFileUpload/BulkExcelUpload/Post",
+  async ({ formData, forcedFileName }) => {
+    const baseUrl = store.getState().globalurl.ExcelFileUpload;
+    const uploadUrl = `${baseUrl}?filename=${encodeURIComponent(forcedFileName)}`;
+
+    const response = await axios.post(uploadUrl, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  },
+);
+
+export const ExcelFileDownload = createAsyncThunk(
+  "ExcelFileDownload/BulkExcelDownload/Get",
+  async ({ data }) => {
+    const baseUrl = store.getState().globalurl.ExcelFileDownload;
+
+    const response = await axios.get(baseUrl, {
+      params: data,
+      responseType: "blob", // 🔥 IMPORTANT for file download
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  },
+);
+
+export const Setup_MenuExcel = createAsyncThunk(
+  "Setup_MenuExcel/BulkExcelParams/Post",
+  async ( excelSetUp ) => {
+    const baseUrl = store.getState().globalurl.Setup_MenuExcel;
+    // const uploadUrl = `${baseUrl}?filename=${encodeURIComponent(forcedFileName)}`;
+
+    const response = await axios.post(baseUrl, excelSetUp, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  },
+);
