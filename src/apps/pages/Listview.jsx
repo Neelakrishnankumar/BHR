@@ -524,14 +524,14 @@ const Listview = () => {
             ) : (
               false
             )}
-            {/* <Tooltip title="Bulk Upload">
+            <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -775,12 +775,15 @@ const Listview = () => {
 
             const formData = new FormData();
             formData.append("excel", file, forcedFileName);
-
-            await dispatch(
+            const response = await dispatch(
               ExcelFileUpload({ formData, forcedFileName })
             ).unwrap();
-
-            toast.success("Excel uploaded successfully");
+            if (response.payload.Status == "Y") {
+              toast.success(response.payload.Msg);
+              window.location.reload();
+            } else {
+              toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+            }
           } catch (error) {
             console.error(error);
             toast.error("Upload failed");
@@ -1161,6 +1164,7 @@ const Listview = () => {
 
                       if (response.payload.Status == "Y") {
                         toast.success(response.payload.Msg);
+                        window.location.reload();
                       } else {
                         toast.error(response.payload.Msg ? response.payload.Msg : "Error");
                       }

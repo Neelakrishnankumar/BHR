@@ -463,7 +463,7 @@ export const getUrlSlice = createSlice({
       state.EmployeeVendorContactGet = APIurl + "ParentContactGetController.php";
       state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
       state.ExcelFileUpload = APIurl + "ExcelFileUpload.php";
-      state.Setup_MenuExcel = APIurl + "Setup_Menu.php";
+      state.Setup_MenuExcel = APIurl + "SetupMenu.php";
       state.Parentposturl = APIurl + "ParentpostController.php";
     },
   },

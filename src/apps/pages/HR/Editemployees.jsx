@@ -643,6 +643,8 @@ const Editemployee = () => {
               ? "CO"
               : Data.EmpType === "Student"
                 ? "ST"
+              : Data.EmpType === "Intern"
+                ? "IN"
                 : "",
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
@@ -4022,6 +4024,7 @@ const Editemployee = () => {
                         {/* <MenuItem value="ST">Student</MenuItem> */}
                         <MenuItem value="CI">Contracts In</MenuItem>
                         <MenuItem value="CO">Contracts Out</MenuItem>
+                        <MenuItem value="IN">Intern</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
                       <Box>
