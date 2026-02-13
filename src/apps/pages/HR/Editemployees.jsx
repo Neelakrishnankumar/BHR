@@ -310,6 +310,24 @@ const Editemployee = () => {
           .transform((value) => (value === "" ? null : value))
           .matches(/^\d{10}$/, data.Employeecontact.phonenumber);
 
+        schemaFields1.Branch = Yup.string()
+          .trim()
+          .required(data.Employeecontact.Branch);
+
+        schemaFields1.AccountHoldersName = Yup.string()
+          .trim()
+          .required(data.Employeecontact.AccountHoldersName);
+
+        schemaFields1.AccountNumber = Yup.string()
+          .trim()
+          .required(data.Employeecontact.AccountNumber)
+          .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
+
+        schemaFields1.IfscCode = Yup.string()
+          .trim()
+          .required(data.Employeecontact.IfscCode)
+          .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
+
         const schema1 = Yup.object().shape(schemaFields1);
         setValidationSchema1(schema1);
 
@@ -649,7 +667,9 @@ const Editemployee = () => {
               ? "CO"
               : Data.EmpType === "Student"
                 ? "ST"
-                : "",
+                : Data.EmpType === "Intern"
+                  ? "IN"
+                  : "",
     checkbox: Data.Disable,
     scrummaster: Data.ScrumMaster === "Y" ? true : false,
     prjmanager: Data.ProjectManager === "Y" ? true : false,
@@ -1288,6 +1308,11 @@ const Editemployee = () => {
     esinumber: DataExplore.EsiNo,
     permanentaddress: DataExplore.PermanentAddress,
     localaddress: DataExplore.LocalAddress,
+    FatherName: DataExplore.FathersName,
+    AccountNumber: DataExplore.AccountNumber,
+    AccountHoldersName: DataExplore.AccountHoldersName,
+    IfscCode: DataExplore.IfscCode,
+    Branch: DataExplore.Branch,
   };
 
 
@@ -1309,6 +1334,11 @@ const Editemployee = () => {
       EsiNo: values.esinumber,
       PermanentAddress: values.permanentaddress,
       LocalAddress: values.localaddress,
+      FathersName: values.FatherName,
+      Branch: values.Branch,
+      IfscCode: values.IfscCode,
+      AccountHoldersName: values.AccountHoldersName,
+      AccountNumber: values.AccountNumber,
     };
     type = "update";
 
@@ -4031,6 +4061,7 @@ const Editemployee = () => {
                         {/* <MenuItem value="ST">Student</MenuItem> */}
                         <MenuItem value="CI">Contracts In</MenuItem>
                         <MenuItem value="CO">Contracts Out</MenuItem>
+                        <MenuItem value="IN">Intern</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
                       <Box>
@@ -4513,6 +4544,26 @@ const Editemployee = () => {
                     <TextField
                       fullWidth
                       variant="standard"
+                      type="text"
+                      id="FatherName"
+                      name="FatherName"
+                      value={values.FatherName}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      label="Father's Name"
+                      sx={{
+                        //gridColumn: "span 2",
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      focused
+                    // inputProps={{ readOnly: true }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
                       type="number"
                       id="phonenumber"
                       name="phonenumber"
@@ -4658,6 +4709,128 @@ const Editemployee = () => {
                           backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
                         },
                       }}
+                    />
+
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        gridColumn: "span 2",   // 👈 makes it occupy full row
+                        mt: 2
+                      }}
+                    >
+                      Bank Details:
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="AccountHoldersName"
+                      name="AccountHoldersName"
+                      value={values.AccountHoldersName}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // label="Account Holder's Name"
+                      label={
+                        <>
+                          Account Holder Name
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      focused
+                      error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
+                      helperText={touched.AccountHoldersName && errors.AccountHoldersName}
+                      onWheel={(e) => e.target.blur()}
+                      sx={
+                        {
+                          //gridColumn: "span 2", background: "#fff6c3"
+                        }
+                      }
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="number"
+                      id="AccountNumber"
+                      name="AccountNumber"
+                      value={values.AccountNumber}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // label="Account Number"
+                      label={
+                        <>
+                          Account Number
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      focused
+                      error={touched.AccountNumber && Boolean(errors.AccountNumber)}
+                      helperText={touched.AccountNumber && errors.AccountNumber}
+                      onWheel={(e) => e.target.blur()}
+                      sx={
+                        {
+                          //gridColumn: "span 2", background: "#fff6c3"
+                        }
+                      }
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="IfscCode"
+                      name="IfscCode"
+                      value={values.IfscCode}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // label="IFSC Code"
+                      label={
+                        <>
+                          IFSC Code
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      focused
+                      error={touched.IfscCode && Boolean(errors.IfscCode)}
+                      helperText={touched.IfscCode && errors.IfscCode}
+                      onWheel={(e) => e.target.blur()}
+                      sx={
+                        {
+                          //gridColumn: "span 2", background: "#fff6c3"
+                        }
+                      }
+                    />
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      type="text"
+                      id="Branch"
+                      name="Branch"
+                      value={values.Branch}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      // label="Branch"
+                      label={
+                        <>
+                          Branch
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      focused
+                      error={touched.Branch && Boolean(errors.Branch)}
+                      helperText={touched.Branch && errors.Branch}
+                      onWheel={(e) => e.target.blur()}
+                      sx={
+                        {
+                          //gridColumn: "span 2", background: "#fff6c3"
+                        }
+                      }
                     />
                   </Box>
 

@@ -29,7 +29,8 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import EventNoteIcon from '@mui/icons-material/EventNote';
+import EventNoteIcon from "@mui/icons-material/EventNote";
+
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
 import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
@@ -93,6 +94,7 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
 import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
+import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 const initialState = {
@@ -121,7 +123,7 @@ export const getMail = createAsyncThunk("mail/get", async (data) => {
   });
   console.log(
     "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-    response
+    response,
   );
   return response.data;
 });
@@ -146,11 +148,11 @@ export const sendMail = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     toast.success("Mail Send Successfully");
     return response.data;
-  }
+  },
 );
 
 export const getApiSlice = createSlice({
@@ -327,7 +329,7 @@ const productionCardUPdate = (type, recID) => async (dispatch, getState) => {
     .then((response) => {
       console.log(
         "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-        response.data
+        response.data,
       );
       // console.log("response data" + response.data);
       if (response.data.Status == "Y") {
@@ -354,7 +356,7 @@ const fnProcess = (recID, accessid) => (dispatch, getState) => {
   };
   console.log(
     "🚀 ~ file: Listviewapireducer.js:228 ~ fnProcess ~ data:",
-    JSON.stringify(data)
+    JSON.stringify(data),
   );
 
   axios
@@ -368,7 +370,7 @@ const fnProcess = (recID, accessid) => (dispatch, getState) => {
     .then((response) => {
       console.log(
         "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-        response.data
+        response.data,
       );
       // console.log("response data" + response.data);
       if (response.data.Status == "Y") {
@@ -410,7 +412,7 @@ const indentOrderSave =
       .then((response) => {
         console.log(
           "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-          response.data
+          response.data,
         );
         // alert( JSON.stringify( response.data))
         console.log("response data" + response.data);
@@ -459,7 +461,7 @@ const PurchaseIndent = createAsyncThunk(
       .then((response) => {
         console.log(
           "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-          response.data
+          response.data,
         );
         // console.log("response data" + response.data);
         if (response.data.Status == "Y") {
@@ -473,7 +475,7 @@ const PurchaseIndent = createAsyncThunk(
           toast.error(response.data.Msg);
         }
       });
-  }
+  },
 );
 
 const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
@@ -499,7 +501,7 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
     .then((response) => {
       console.log(
         "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-        response.data
+        response.data,
       );
       // console.log("response data" + response.data);
       if (response.data.Status == "Y") {
@@ -1068,11 +1070,11 @@ export const fetchListview =
       console.log("🔍 TR321 DEBUG - filter:", filter);
       console.log(
         "🔍 TR321 DEBUG - TR321_RESET:",
-        sessionStorage.getItem("TR321_RESET")
+        sessionStorage.getItem("TR321_RESET"),
       );
       console.log(
         "🔍 TR321 DEBUG - TR321_HASFILTER:",
-        sessionStorage.getItem("TR321_HASFILTER")
+        sessionStorage.getItem("TR321_HASFILTER"),
       );
 
       // 🔥 ONE-TIME RESET: Clear immediately + CompanyID
@@ -1080,7 +1082,7 @@ export const fetchListview =
         console.log("🔍 TR321 - ONE-TIME RESET: CompanyID");
         sessionStorage.removeItem("TR321_RESET");
         dispatch(
-          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
         return;
       }
@@ -1090,7 +1092,7 @@ export const fetchListview =
       if (hasFilter !== "Y") {
         console.log("🔍 TR321 - NO FILTERS (null/N): CompanyID");
         dispatch(
-          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
         return;
       }
@@ -1117,7 +1119,7 @@ export const fetchListview =
         "hasBalance:",
         hasBalance,
         "hasStatusFilter:",
-        hasStatusFilter
+        hasStatusFilter,
       );
 
       // CASE 1: PROSPECT/BALANCE
@@ -1176,7 +1178,7 @@ export const fetchListview =
                 dateConditions.push(`${col}='${fromdate}'`);
               } else {
                 dateConditions.push(
-                  `${col} BETWEEN '${fromdate}' AND '${todate}'`
+                  `${col} BETWEEN '${fromdate}' AND '${todate}'`,
                 );
               }
             }
@@ -1199,7 +1201,7 @@ export const fetchListview =
       // CASE 3: FALLBACK
       console.log("🔍 TR321 - FALLBACK: CompanyID");
       dispatch(
-        fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+        fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
       );
     } else {
       filter = `CompanyID=${CompId}`;
@@ -1316,7 +1318,7 @@ export const fetchListview =
                             color="success"
                             onClick={productionCardUPdate(
                               "S",
-                              params.row.RecordID
+                              params.row.RecordID,
                             )}
                           >
                             <PlayCircleOutlineOutlinedIcon />
@@ -1333,7 +1335,7 @@ export const fetchListview =
                                 color="warning"
                                 onClick={productionCardUPdate(
                                   "P",
-                                  params.row.RecordID
+                                  params.row.RecordID,
                                 )}
                               >
                                 <PauseCircleOutlinedIcon />
@@ -1347,7 +1349,7 @@ export const fetchListview =
                                 color="primary"
                                 onClick={productionCardUPdate(
                                   "R",
-                                  params.row.RecordID
+                                  params.row.RecordID,
                                 )}
                               >
                                 <NotStartedOutlinedIcon />
@@ -1365,7 +1367,7 @@ export const fetchListview =
                               color="success"
                               onClick={productionCardUPdate(
                                 "C",
-                                params.row.RecordID
+                                params.row.RecordID,
                               )}
                             >
                               <TaskAltOutlinedIcon />
@@ -1428,7 +1430,7 @@ export const fetchListview =
                                 Templateid: "ET_006",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -1538,20 +1540,20 @@ export const fetchListview =
                       setLoading(true);
 
                       const resultAction = await dispatch(
-                        getProjectCosting({ ProjectID, EmployeeID })
+                        getProjectCosting({ ProjectID, EmployeeID }),
                       );
 
                       const data = resultAction.payload; // <-- this depends on how your thunk is defined
                       if (!data?.HeaderData?.DetailData?.length) {
                         alert(
-                          "No Costing available to generate PDF. Kindly add costing..."
+                          "No Costing available to generate PDF. Kindly add costing...",
                         );
                         return;
                       }
 
                       // Generate and download PDF
                       const blob = await pdf(
-                        <ProjectPDF data={data} UserName={UserName} />
+                        <ProjectPDF data={data} UserName={UserName} />,
                       ).toBlob();
                       const link = document.createElement("a");
                       link.href = URL.createObjectURL(blob);
@@ -3129,7 +3131,7 @@ export const fetchListview =
                                 Templateid: "ET_010",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -3265,7 +3267,7 @@ export const fetchListview =
                           onClick={() =>
                             sessionStorage.setItem(
                               "indentRecID",
-                              params.row.RecordID
+                              params.row.RecordID,
                             )
                           }
                           size="small"
@@ -3736,7 +3738,7 @@ export const fetchListview =
               Success({
                 columndata: listviewData.Data.columns,
                 rowdata: listviewData.Data.rows,
-              })
+              }),
             );
           } else if (
             AccessID !== "TR105" &&
@@ -4307,7 +4309,7 @@ export const fetchListview =
                               Templateid: "ET_011",
                               RecordID: params.row.RecordID,
                               UserName: "Trinity",
-                            })
+                            }),
                           );
                         }}
                       >
@@ -4432,7 +4434,7 @@ export const fetchListview =
                               Templateid: "ET_005",
                               RecordID: params.row.RecordID,
                               UserName: "Trinity",
-                            })
+                            }),
                           );
                         }}
                       >
@@ -4599,7 +4601,7 @@ export const fetchListview =
                                 Templateid: "ET_013",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -4627,7 +4629,7 @@ export const fetchListview =
                                 Templateid: "ET_014",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -4655,7 +4657,7 @@ export const fetchListview =
                                 Templateid: "ET_015",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -4686,7 +4688,7 @@ export const fetchListview =
                                 productionlookupOpen({
                                   materialRecID: params.row.MtlRecordID,
                                   productionCardID: params.row.PcdhRecordID,
-                                })
+                                }),
                               )
                             }
                             color="info"
@@ -4703,7 +4705,7 @@ export const fetchListview =
                                 dispatch(
                                   productionColorlookupOpen({
                                     materialRecID: params.row.MtlRecordID,
-                                  })
+                                  }),
                                 )
                               }
                               color="info"
@@ -4757,7 +4759,7 @@ export const fetchListview =
                             "insert",
                             indentRecID,
                             params.row.SupplierID,
-                            params.row.parentID
+                            params.row.parentID,
                           )}
                         >
                           <ListAltOutlinedIcon />
@@ -5199,7 +5201,7 @@ export const fetchListview =
             Success({
               columndata: listviewData.Data.columns,
               rowdata: listviewData.Data.rows,
-            })
+            }),
           );
         } else {
           dispatch(Success({ columndata: [], rowdata: [] }));
@@ -5365,7 +5367,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   `./EditListOfQuestionGroups/${params.row.RecordID}/E`,
                   {
                     state: { ...state },
-                  }
+                  },
                 )
               }
             >
@@ -5509,7 +5511,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     BreadCrumb1: params.row.Name,
                     AssessmentType: params.row.AssessmentType,
                   },
-                }
+                },
               )
             }
           >
@@ -5610,7 +5612,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   state: {
                     BreadCrumb1: params.row.Name,
                   },
-                }
+                },
               );
             }}
           >
@@ -5631,7 +5633,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     BreadCrumb1: params.row.Name,
                     SkillAssTypeID: params.row.RecordID,
                   },
-                }
+                },
               );
             }}
           >
@@ -5916,7 +5918,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       BreadCrumb3: params.row.Name,
                       Designation: params.row.Designation,
                     },
-                  }
+                  },
                 )
               }
             >
@@ -6012,7 +6014,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         setLoading(true);
 
         const resultAction = await dispatch(
-          getOrderdetailReport({ PartyID, OrderHdrID, CompanyID })
+          getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
         );
 
         const data = resultAction.payload; // <-- this depends on how your thunk is defined
@@ -6027,7 +6029,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             data={data}
             UserName={UserName}
             OrderType={OrderType}
-          />
+          />,
         ).toBlob();
         // const link = document.createElement("a");
         // link.href = URL.createObjectURL(blob);
@@ -6125,7 +6127,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     };
 
     const response = await dispatch(
-      postData({ accessID: "TR310", action, idata })
+      postData({ accessID: "TR310", action, idata }),
     );
 
     if (response.payload.Status === "Y") {
@@ -6195,7 +6197,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         ...state,
                         BreadCrumb1: params.row.ItemGroup,
                       },
-                    }
+                    },
                   )
                 }
               >
@@ -6258,7 +6260,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         ...state,
                         BreadCrumb1: params.row.HSNCategory,
                       },
-                    }
+                    },
                   )
                 }
               >
@@ -6390,7 +6392,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         ...state,
                         BreadCrumb1: params.row.Route,
                       },
-                    }
+                    },
                   )
                 }
               >
@@ -6556,7 +6558,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         Breadcrumb2: params.row.LeadTitle,
                         Breadcrumb1: params.row.Party,
                       },
-                    }
+                    },
                   )
                 }
                 color="primary"

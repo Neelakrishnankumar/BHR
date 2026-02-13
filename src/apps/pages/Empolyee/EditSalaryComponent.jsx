@@ -100,7 +100,7 @@ const EditSalaryComponent = () => {
 
   const InitialValue = {
     description: data.Name,
-    type: data.Type == "Percentage of basic salary" ? "FS" :
+    type: data.Type == "Percentage of basic salary" ? "PS" :
       data.Type == "Fixed" ? "FX" :
         data.Type == "policy" ? "PC" : "",
     category: data.Category == "Allowance" ? "A" :
@@ -304,7 +304,7 @@ const EditSalaryComponent = () => {
                     error={!!touched.type && !!errors.type}
                     helperText={touched.type && errors.type}
                   >
-                    <MenuItem value="FS">PERCENTAGE OF BASIC SALARY</MenuItem>
+                    <MenuItem value="PS">PERCENTAGE OF BASIC SALARY</MenuItem>
                     <MenuItem value="FX">FIXED AMOUNT</MenuItem>
                     <MenuItem value="PC">POLICY</MenuItem>
                   </TextField>
