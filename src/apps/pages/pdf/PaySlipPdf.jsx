@@ -93,60 +93,66 @@ const styles = StyleSheet.create({
 
     table: {
         borderLeft: "1px solid #000",
-        borderRight: "1px solid #000",
+        // borderRight: "1px solid #000",
         borderBottom: "1px solid #000",
         fontSize: 8
     },
 
     table1: {
-        border: "1px solid #000",
+        // border: "1px solid #000",
+        borderLeft: "1px solid #000",
+        borderBottom: "1px solid #000",
+        borderTop: "1px solid #000",
         fontSize: 8,
-        marginTop:"5px"
+        marginTop: "5px"
     },
 
     tableHeader: {
         flexDirection: "row",
         borderBottom: "1px solid #000",
         borderRight: "1px solid #000",
-        padding: 5,
+        // padding: 5,
         fontWeight: "bold",
-        display: "flex",
-        justifyContent: "center"
+        // display: "flex",
+        // justifyContent: "center"
     },
 
     tableRow: {
         flexDirection: "row",
         borderBottom: "1px solid #000",
+        borderRight: "1px solid #000",
         // borderRight: "1px solid #000",
         // padding: 5,
-        paddingVertical: 6,  // equal height rows
-        paddingHorizontal: 5,
-        // minHeight: 18,    
+        // paddingVertical: 6,  // equal height rows
+        // paddingHorizontal: 5,
+        minHeight: 20,
     },
 
     col1: {
         width: "70%",
         borderRight: "1px solid black",
-        paddingRight: 5,
+        padding: 5,
     },
 
     col2: {
         width: "30%",
         textAlign: "right",
-        paddingRight: 5,
+        padding: 5,
     },
 
     headerCol1: {
         width: "70%",
         textAlign: "center",
         fontWeight: "bold",
-        borderRight: "1px solid black"
+        borderRight: "1px solid black",
+        padding: 5,
     },
 
     headerCol2: {
         width: "30%",
         textAlign: "center",
         fontWeight: "bold",
+        padding: 5,
     },
 
 
@@ -162,7 +168,7 @@ const styles = StyleSheet.create({
     netPayRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        fontWeight: "bold"
+        fontWeight: "bold",
     },
 
     amountWords: {
@@ -178,7 +184,55 @@ const styles = StyleSheet.create({
         borderBottom: "1px solid #000",
         padding: 8,
         fontSize: 8,
-        textAlign: "justify"
+        flexDirection: "row",
+        // textAlign: "justify"
+    },
+
+    BankDetails: {
+    flex: 1,
+    paddingRight: 15,
+},
+    bankTitle: {
+        fontWeight: "bold",
+        marginBottom: 4,
+    },
+
+    bankRow: {
+        flexDirection: "row",
+        marginBottom: 3,
+    },
+
+    bankLabel: {
+        width: "50%",
+    },
+
+    bankColon: {
+        width: "5%",
+        textAlign: "center",
+    },
+
+    bankValue: {
+        width: "45%",
+    },
+
+    signatureColumn: {
+        // flex: 1,
+        width: "35%",
+        // display: "flex",
+        alignItems: "flex-end",   // pushes signature to right side
+        justifyContent: "center",
+    },
+
+    signatureContainer1: {
+        alignItems: "flex-start",   // pushes whole block to right
+    },
+    signatureContainer: {
+        alignItems: "flex-end",   // pushes whole block to right
+    },
+
+    signatureBlock: {
+        width: 120,               // same width as image
+        alignItems: "center", 
     },
 
     signatureRow: {
@@ -221,6 +275,7 @@ const PayslipPdf = ({ data, filters }) => {
 
     const deductionRows = normalizeRows([
         { label: "PF AMOUNT", amount: "1800" },
+        { label: "INSURANCE", amount: "1875" },
     ]);
 
 
@@ -265,11 +320,11 @@ const PayslipPdf = ({ data, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>TIC0861</Text>
                         </View>
-                        <View style={styles.gridRow}>
+                        {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Position</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>Developer</Text>
-                        </View>
+                        </View> */}
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Grade</Text>
                             <Text style={styles.spaceColon}>:</Text>
@@ -280,10 +335,11 @@ const PayslipPdf = ({ data, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>IT</Text>
                         </View>
+
                         <View style={styles.gridRow}>
-                            <Text style={styles.label}>Work Location</Text>
+                            <Text style={styles.label}>Father's Name (Mr.)</Text>
                             <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>Chennai</Text>
+                            <Text style={styles.value}>Ramswamy</Text>
                         </View>
                     </View>
 
@@ -298,24 +354,25 @@ const PayslipPdf = ({ data, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>Developer</Text>
                         </View>
-                        <View style={styles.gridRow}>
+                        {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Division</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>Web</Text>
-                        </View>
+                        </View> */}
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Section</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>IT</Text>
                         </View>
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Work Location</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>Chennai</Text>
+                        </View>
                     </View>
 
                     <View style={[styles.gridColumn, { borderRight: 0 }]}>
-                        <View style={styles.gridRow}>
-                            <Text style={styles.label}>Father's Name(Mr.)</Text>
-                            <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>Ramswamy</Text>
-                        </View>
+
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Date Of Joining</Text>
                             <Text style={styles.spaceColon}>:</Text>
@@ -354,6 +411,25 @@ const PayslipPdf = ({ data, filters }) => {
                     </View>
                 </View>
 
+                {/* ---------------- OTHER ALLOWANCES ---------------- */}
+                <View style={styles.table1}>
+                    <View style={styles.tableHeader}>
+                        <Text style={styles.headerCol1}>OTHER ALLOWANCES</Text>
+                        <Text style={styles.headerCol2}>AMOUNT</Text>
+                    </View>
+
+                    {/* {deductionRows.map((row, index) => (
+                        <View style={styles.tableRow} key={index}>
+                            <Text style={styles.col1}>{row.label}</Text>
+                            <Text style={styles.col2}>{row.amount}</Text>
+                        </View>
+                    ))} */}
+
+                    <View style={styles.tableRow}>
+                        <Text style={styles.col1}>Conveyance</Text>
+                        <Text style={styles.col2}>3675</Text>
+                    </View>
+                </View>
                 {/* ---------------- DEDUCTIONS ---------------- */}
                 <View style={styles.table1}>
                     <View style={styles.tableHeader}>
@@ -374,10 +450,29 @@ const PayslipPdf = ({ data, filters }) => {
                     </View>
                 </View>
 
+                {/* ---------------- OTHER DEDUCTIONS ---------------- */}
+                <View style={styles.table1}>
+                    <View style={styles.tableHeader}>
+                        <Text style={styles.headerCol1}>OTHER DEDUCTIONS</Text>
+                        <Text style={styles.headerCol2}>AMOUNT</Text>
+                    </View>
+
+                    {/* {deductionRows.map((row, index) => (
+                        <View style={styles.tableRow} key={index}>
+                            <Text style={styles.col1}>{row.label}</Text>
+                            <Text style={styles.col2}>{row.amount}</Text>
+                        </View>
+                    ))} */}
+
+                    <View style={styles.tableRow}>
+                        <Text style={styles.col1}>Conveyance</Text>
+                        <Text style={styles.col2}>3675</Text>
+                    </View>
+                </View>
                 {/* ---------------- NET PAY ---------------- */}
                 <View style={styles.netPaySection}>
                     <View style={styles.netPayRow}>
-                        <Text>NET PAY</Text>
+                        <Text>NET PAY (Basic Pay + Allowances + Other Allowances - (Deductions + Other Deductions))</Text>
                         <Text>25418</Text>
                     </View>
                     <Text style={styles.amountWords}>
@@ -386,7 +481,7 @@ const PayslipPdf = ({ data, filters }) => {
                 </View>
 
                 {/* ---------------- DECLARATION ---------------- */}
-                <View style={styles.declaration}>
+                {/* <View style={styles.declaration}>
                     <Text style={{ textAlign: "center", fontWeight: "bold" }}>
                         Declaration By The Receiver
                     </Text>
@@ -405,13 +500,58 @@ const PayslipPdf = ({ data, filters }) => {
                     <View style={{ marginTop: 20, textAlign: "right" }}>
                         <Text>Receiver's Signature</Text>
                     </View>
+                </View> */}
+                <View style={styles.declaration}>
+                    <View style={styles.BankDetails}>
+
+                        <Text style={styles.bankTitle}>
+                            Bank Details:
+                        </Text>
+
+                        <View style={styles.bankRow}>
+                            <Text style={styles.bankLabel}>Account Holder Name</Text>
+                            <Text style={styles.bankColon}>:</Text>
+                            <Text style={styles.bankValue}>Manoj</Text>
+                        </View>
+
+                        <View style={styles.bankRow}>
+                            <Text style={styles.bankLabel}>Account Number</Text>
+                            <Text style={styles.bankColon}>:</Text>
+                            <Text style={styles.bankValue}>1234567890</Text>
+                        </View>
+
+                        <View style={styles.bankRow}>
+                            <Text style={styles.bankLabel}>IFSC Code</Text>
+                            <Text style={styles.bankColon}>:</Text>
+                            <Text style={styles.bankValue}>SBIN0001234</Text>
+                        </View>
+
+                        <View style={styles.bankRow}>
+                            <Text style={styles.bankLabel}>Branch</Text>
+                            <Text style={styles.bankColon}>:</Text>
+                            <Text style={styles.bankValue}>Chennai</Text>
+                        </View>
+
+                    </View>
+
+                    <View style={styles.signatureColumn}>
+                        <View style={styles.signatureBlock}>
+                            <Text style={{ textAlign: "center",marginBottom:"2px" }}>
+                                Authorised Signature
+                            </Text>
+                            <Image
+                                src="/BexATM.png"
+                                style={{ width: 120, height: 40 }}
+                            />
+                        </View>
+                    </View>
                 </View>
 
-                <View style={styles.footerNote}>
+                {/* <View style={styles.footerNote}>
                     <Text>
                         This is a system generated pay slip. Hence, signature is not needed
                     </Text>
-                </View>
+                </View> */}
 
             </Page>
         </Document>

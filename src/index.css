@@ -39,7 +39,9 @@ html,
 .wrapper{
   /* background-image: url(./assets/img/background7.jpg); */
   /* background-image: url(./assets/img/BOS_Cover1.png); */
-  background-image: url(./assets/img/BOS_Cover2.png);
+  /* background-image: url(./assets/img/BOS_Cover2.png); */
+  /* background-image: url(./assets/img/BOS_Cover3.png); */
+  background-image: url(./assets/img/BOS_Cover4.png);
   background-size: cover;
   opacity: 0.9;
   

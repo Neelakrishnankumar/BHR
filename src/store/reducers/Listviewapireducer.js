@@ -5085,24 +5085,6 @@ export const fetchListview =
                               </IconButton>
                             </Tooltip>
                           </Link>
-
-                          <Tooltip title="Download Payslip">
-                            <PDFDownloadLink
-                              document={<PayslipPdf data={[]} filters={{}} />}
-                              fileName="payslip.pdf"
-                              style={{ textDecoration: "none" }}
-                            >
-                              {({ loading }) => (
-                                <IconButton
-                                  color="error"
-                                  size="small"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <PictureAsPdfIcon />
-                                </IconButton>
-                              )}
-                            </PDFDownloadLink>
-                          </Tooltip>
                         </Box>
                       ) : AccessID == "TR003" ? (
                         <Link
