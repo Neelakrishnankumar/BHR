@@ -845,9 +845,9 @@ const Editoverhead = () => {
                   <Button
                     variant="contained"
                     color="warning"
-                    onClick={() => {
-                      navigate(-1);
-                    }}
+                    onClick={() => 
+                      navigate("/Apps/TR085/Overhead")
+                    }
                   >
                     CANCEL
                   </Button>
