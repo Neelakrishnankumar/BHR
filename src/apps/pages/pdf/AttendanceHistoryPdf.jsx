@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
+    borderBottomWidth: 0,
+    borderRightWidth: 0
   },
   tableRow: {
     flexDirection: "row",
@@ -229,8 +231,8 @@ const pages = paginateData(data, 28, 30);
             </View>
           )}
           <View style={[styles.legendContainer,
-
-             pageIndex === pages.length - 1 && { marginTop: 80 }
+pageIndex !== 0 && styles.firstPageSection,
+            //  pageIndex === pages.length - 1 && { marginTop: 100 }
           ]}
          
                   
@@ -245,7 +247,7 @@ const pages = paginateData(data, 28, 30);
           <View style={styles.table}>
             {/* Header Row */}
             <View style={styles.tableRow}>
-              <Text style={styles.headerCell1}>S.No</Text>
+              <Text style={styles.headerCell1}>SL#</Text>
               <Text style={styles.headerCell}>EMPLOYEE</Text>
               <Text style={styles.headerCell1}>1</Text>
               <Text style={styles.headerCell1}>2</Text>

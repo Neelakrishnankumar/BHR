@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     right: 0,
     textAlign: "center",
     fontSize: 9,
-    color: "grey",
+    color: "#000",
   },
   summaryWrapper: {
     width: "100%",

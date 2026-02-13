@@ -192,6 +192,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEE",
     textAlign: "center",
   },
+  tableColApprDate: {
+     width: 70,
+    // borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
+
+
   tableColHeaderSmall: {
     width: 50,
     borderRightWidth: 1,
@@ -213,6 +224,13 @@ const styles = StyleSheet.create({
   tableCol: {
     width: 70,
     borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    textAlign: "left",
+  },
+  tablerowApprDate : {
+width: 70,
+    // borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 5,
     textAlign: "left",
@@ -278,28 +296,48 @@ const styles = StyleSheet.create({
 
 //   return [firstPage, ...otherPages];
 // };
-const paginateData = (data) => {
-  if (!Array.isArray(data)) return [];
+const FIRST_PAGE_COUNT = 13;
+const OTHER_PAGE_COUNT = 15;
 
+const paginateData = (data) => {
   const pages = [];
 
-  // First page → 13 rows
-  pages.push(data.slice(0, 13));
+  // First page
+  pages.push(data.slice(0, FIRST_PAGE_COUNT));
 
-  // Remaining pages → 15 rows each
-  for (let i = 13; i < data.length; i += 15) {
-    pages.push(data.slice(i, i + 15));
+  // Remaining pages
+  for (
+    let i = FIRST_PAGE_COUNT;
+    i < data.length;
+    i += OTHER_PAGE_COUNT
+  ) {
+    pages.push(data.slice(i, i + OTHER_PAGE_COUNT));
   }
 
   return pages;
 };
+// const paginateData = (data) => {
+//   if (!Array.isArray(data)) return [];
+
+//   const pages = [];
+
+//   // First page → 13 rows
+//   pages.push(data.slice(0, 13));
+
+//   // Remaining pages → 15 rows each
+//   for (let i = 13; i < data.length; i += 15) {
+//     pages.push(data.slice(i, i + 15));
+//   }
+
+//   return pages;
+// };
 
 
 
 //const TimeSheetreportpdf = ({ data = [], filters = {} }) => {
 const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", managerName = "" }) => {
-  // const pages = paginateData(data);
-const pages = paginateData(data, 13, 15);
+  const pages = paginateData(data);
+// const pages = paginateData(data, 13, 15);
 
   pages.forEach((page, i) => {
     console.log(`Page ${i + 1} first row index:`, data.indexOf(page[0]));
@@ -340,7 +378,7 @@ const pages = paginateData(data, 13, 15);
             // </View>
             <View style={styles.headerTextContainer}>
               <Text style={styles.headerText}>
-                {`TimeSheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
+                {`Time Sheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
               </Text>
               <Text style={styles.subHeaderText}>
                 {`Project: ${projectName}`}
@@ -363,29 +401,37 @@ const pages = paginateData(data, 13, 15);
           {/* Table Header */}
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableColHeader1}>S.No</Text>
+              <Text style={styles.tableColHeader1}>SL#</Text>
               <Text style={styles.tableColHeader}>Date</Text>
               <Text style={styles.tableColHeaderSmall}>Project</Text>
               <Text style={styles.tableColHeaderDescription}>Description</Text>
               <Text style={styles.tableColHeader}>Comp Date</Text>
               <Text style={styles.tableColHeaderSmall}>Appr By</Text>
-              <Text style={styles.tableColHeader}>Appr Date</Text>
+              <Text style={styles.tableColApprDate}>Appr Date</Text>
             </View>
 
             {pageData.map((row, rowIndex) => {
+                 const globalIndex =
+  pageIndex === 0
+    ? rowIndex + 1
+    : FIRST_PAGE_COUNT +
+      (pageIndex - 1) * OTHER_PAGE_COUNT +
+      rowIndex +
+      1;
               const isLast = rowIndex === pageData.length - 1;
               return (
                 <View
                   key={rowIndex}
                   style={isLast ? styles.tableRowLast : styles.tableRow}
                 >
-                  <Text style={styles.tableCol1}>{rowIndex + 1}</Text>
+                  <Text style={styles.tableCol1}>{globalIndex}</Text>
+                  {/* <Text style={styles.tableCol1}>{rowIndex + 1}</Text> */}
                   <Text style={styles.tableCol}>{row.Date}</Text>
                   <Text style={styles.tableColSmall}>{row.ProjectCode}</Text>
                   <Text style={styles.tableColDescription}>{row.Description}</Text>
                   <Text style={styles.tableCol}>{row.CompletedDate?.split(" ")[0]}</Text>
                   <Text style={styles.tableColSmall}>{row.ManagerCode}</Text>
-                  <Text style={styles.tableCol}>{row.ApprovedDate}</Text>
+                  <Text style={styles.tablerowApprDate}>{row.ApprovedDate}</Text>
                 </View>
               );
             })}

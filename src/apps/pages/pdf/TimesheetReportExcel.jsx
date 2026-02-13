@@ -19,7 +19,7 @@ export const TimesheetReportExcel = (
     "July","August","September","October","November","December"
   ];
 
-  const title = `Timesheet - ${filters.EmployeeID || ""} (${monthNames[filters.Month - 1]} - ${filters.Year})`;
+  const title = `Time Sheet - ${filters.EmployeeID || ""} (${monthNames[filters.Month - 1]} - ${filters.Year})`;
 
   XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "A1" });
 

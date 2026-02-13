@@ -25,7 +25,7 @@ export const TimesheetExcel = (
   const monthName = monthNames[monthIndex] || "";
 
   /* ================= TITLE ================= */
-  const title = `Timesheet - ${filters.EmployeeID || ""} (${monthName} - ${filters.Year || ""})`;
+  const title = `Time Sheet - ${filters.EmployeeID || ""} (${monthName} - ${filters.Year || ""})`;
 
   XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "A1" });
 
