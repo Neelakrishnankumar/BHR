@@ -163,7 +163,8 @@ export function fetchApidata(emailID, password, license, company, year) {
           CompanyHeader: success.data.CompanyHeader,
           CompanyFooter: success.data.CompanyFooter,
           firstLogin: success.data.FirstTime,
-          subscription: success.data.subscription
+          subscription: success.data.subscription,
+          CompanySignature: success.data.CompanySignature
         })
       );
       return datawait;

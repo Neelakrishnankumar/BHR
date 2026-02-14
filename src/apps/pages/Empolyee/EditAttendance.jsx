@@ -26,6 +26,7 @@ import {
   resetTrackingData,
   Attendance,
   AttendanceProcess,
+  paySlipGet,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -49,7 +50,7 @@ import { useEffect } from "react";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { getConfig } from "../../../config";
 import PayslipPdf from "../pdf/PaySlipPdf";
-
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -68,6 +69,9 @@ const EditAttendance = () => {
   console.log("AttendanceData", AttendanceData);
 
   const getLoading = useSelector((state) => state.formApi.AttendanceDataLoading);
+  //PAYSLIP
+  const paySlipdata = useSelector((state) => state.formApi.paySlipdata);
+  const paySliploading = useSelector((state) => state.formApi.paySliploading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [page, setPage] = React.useState(0);
@@ -81,6 +85,8 @@ const EditAttendance = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  console.log("🚀 ~ EditAttendance ~ CompanySignature:", CompanySignature)
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
@@ -291,6 +297,20 @@ const EditAttendance = () => {
     attyear: Number(sessionStorage.getItem("attyear")) || currentYear,
 
   };
+  // const attendaceFnSave = async (values) => {
+  //   const data = {
+  //     Month: values.attmonth.toString(),
+  //     Year: values.attyear,
+  //     EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
+  //     // ProjectID: proData.RecordID
+  //     ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
+  //     CompanyID
+  //   };
+  //   console.log(data, "=====DATA");
+  //   dispatch(Attendance({ data }));
+
+  //   // setButtonVisible(true)
+  // };
   const attendaceFnSave = async (values) => {
     const data = {
       Month: values.attmonth.toString(),
@@ -303,6 +323,21 @@ const EditAttendance = () => {
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
 
+    const payslip = {
+      Month: "February",
+      Finyear: values.attyear,
+      EmployeeID: "102",
+      CompanyID
+    }
+
+    const paySlipResponse = await dispatch(paySlipGet(payslip))
+
+    if (paySlipResponse.payload.Status === "Y") {
+      toast.success(paySlipResponse.payload.Message);
+    }
+    else {
+      toast.error(paySlipResponse.payload.Message);
+    }
     // setButtonVisible(true)
   };
 
@@ -324,6 +359,9 @@ const EditAttendance = () => {
     });
   };
   const [empData, setempData] = useState(null);
+
+  //PAYSLIP 
+
   const handleSelectionEmployeeChange = (newValue) => {
     if (newValue) {
       setempData(newValue);
@@ -608,36 +646,6 @@ const EditAttendance = () => {
           }
           label="Self"
         /> */}
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={useCurrentEmp}
-                        onChange={(e) => {
-                          setUseCurrentEmp(e.target.checked);
-                          setempData(null)
-                        }}
-                        color="primary"
-                      />
-                    }
-                    label="Payslip"
-                  />
-                  <Tooltip title="Download Payslip">
-                    <PDFDownloadLink
-                      document={<PayslipPdf data={[]} filters={{}} />}
-                      fileName="payslip.pdf"
-                      style={{ textDecoration: "none", display:"flex" }}
-                    >
-
-                      <IconButton
-                        color="error"
-                        size="small"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <PictureAsPdfIcon />
-                      </IconButton>
-
-                    </PDFDownloadLink>
-                  </Tooltip>
                 </Stack>
                 <Stack
                   direction="row"
@@ -646,6 +654,28 @@ const EditAttendance = () => {
                   padding={1}
                   justifyContent="end"
                 >
+                  <PDFDownloadLink
+                    document={<PayslipPdf data={paySlipdata}
+                      filters={{
+                        Imageurl: baseurlUAAM,
+                        HeaderImg: HeaderImg,
+                        CompanySignature: CompanySignature,
+                      }}
+                    />}
+                    fileName="payslip.pdf"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="success"
+                      startIcon={<FileDownloadOutlinedIcon />}
+                    // disabled={loading}
+                    >
+                      {/* {loading ? "Generating..." : "Payslip"} */}
+                      Payslip
+                    </Button>
+
+                  </PDFDownloadLink>
                   <Button type="submit" variant="contained" color="secondary">
                     APPLY
                   </Button>
