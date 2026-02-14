@@ -192,7 +192,7 @@ import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
 import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
-import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
+// import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
   const [theme, colorMode] = useMode();
