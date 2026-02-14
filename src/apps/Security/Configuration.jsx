@@ -72,7 +72,7 @@ const Configuration = () => {
     console.log(data, "--data");
     const isLoading = useSelector((state) => state.formApi.postLoading);
     const [logoimage, setlogoimage] = useState("");
-            console.log("Nowlogo", logoimage);
+    console.log("Nowlogo", logoimage);
 
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
@@ -300,6 +300,8 @@ const Configuration = () => {
         noofemployee: data.CM_NOOFEMP,
         address: data.CM_ADDRESS,
         gstnumber: data.CM_GST,
+        sessiontime: data.CM_SESSIONTIMEOUT,
+        gracetime: data.CM_GRACETIME,
         // address: data?.address || "", // Set default value if data.address is undefined
         // gstnumber: data?.gstnumber || "",
         logoimage: data.CM_IMAGE,
@@ -340,8 +342,10 @@ const Configuration = () => {
             GstImage: gstImage,
             AutoCode: autocode ? "Y" : "N",
             HeaderImg: data.CM_HEADER,
-            FooterImg:data.CM_FOOTER,
-            CompanyName: data.CM_NAME
+            FooterImg: data.CM_FOOTER,
+            CompanyName: data.CM_NAME,
+            GraceTime: data.CM_GRACETIME,
+            SessionTimeOut: data.CM_SESSIONTIMEOUT
 
         };
         console.log(offaddress, "Address");
@@ -531,6 +535,28 @@ const Configuration = () => {
                                         }}
 
                                     />
+                                    <TextField
+                                        name="gracetime"
+                                        type="number"
+                                        id="gracetime"
+                                        label="Grace Time"
+                                        variant="standard"
+                                        focused
+                                        value={values.gracetime}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            sessionStorage.setItem("gracetime", e.target.value);
+                                        }}
+                                        autoFocus
+                                        sx={{
+                                            gridColumn: "span 2",
+                                            background: "",
+                                            input: { textAlign: "right" },
+
+                                        }}
+
+                                    />
+
 
                                 </FormControl>
                                 <FormControl
@@ -599,7 +625,27 @@ const Configuration = () => {
                                         }}
 
                                     />
+                                    <TextField
+                                        name="sessiontime"
+                                        type="number"
+                                        id="sessiontime"
+                                        label="Session Time"
+                                        variant="standard"
+                                        focused
+                                        value={values.sessiontime}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            sessionStorage.setItem("sessiontime", e.target.value);
+                                        }}
+                                        autoFocus
+                                        sx={{
+                                            gridColumn: "span 2",
+                                            background: "",
+                                            input: { textAlign: "right" },
 
+                                        }}
+
+                                    />
 
 
                                 </FormControl>

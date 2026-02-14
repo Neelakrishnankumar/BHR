@@ -183,7 +183,7 @@ import LoginChangepass from "./Security/Loginchangepassword";
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 import Companychange from "./Security/Changecompany";
 import Changehdrftr from "./Security/ChangeHdrftr";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import EditLeaveEnquiry from "./pages/HR/EditLeaveEnquiry";
@@ -192,6 +192,7 @@ import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
 import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
+import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -200,6 +201,7 @@ function App() {
 
   const navigate = useNavigate();
   const timerRef = useRef(null);
+
 
   const handleSessionExpire = () => {
     toast.error("Session expired due to inactivity. Please login again.", {
@@ -221,6 +223,18 @@ function App() {
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(handleSessionExpire, IDLE_TIME);
   };
+  const [sessionTime, setSessionTime] = useState(null);
+
+  useEffect(() => {
+    const storedSessionTime = sessionStorage.getItem("sessiontime");
+
+    if (storedSessionTime) {
+      setSessionTime(storedSessionTime);
+      console.log(storedSessionTime, "Session Time from storage");
+    } else {
+      console.log("No sessiontime found");
+    }
+  }, []);
 
   useEffect(() => {
     const events = ["mousemove", "keydown", "scroll", "click"];
@@ -247,8 +261,12 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-                  <Route
+                  {/* <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
+                    element={<EditemployeePayroll />}
+                  /> */}
+                  <Route
+                    path="/:accessID/:screenName/EditPayroll/:id/:Mode"
                     element={<EditemployeePayroll />}
                   />
                   <Route
@@ -369,7 +387,7 @@ function App() {
                     element={<CreateQuestion />}
                   />
 
-{/* PARTY BY DATE FILTER */}
+                  {/* PARTY BY DATE FILTER */}
                   <Route
                     path="/Party/AgingReport"
                     element={<PartyByDate />}
@@ -468,12 +486,12 @@ function App() {
                     path="/Secondarylistview/Item Group/:accessID/:screenName/:parentID2/:parentID1/EditItemCategory/:id/:Mode"
                     element={<EditItemCategory />}
                   />
-                   <Route
+                  <Route
                     path="/Secondarylistview/Classification/:accessID/:screenName/:filtertype/EditPersonnel/:id/:Mode"
-                    element={<Editemployee/>}
-                    
+                    element={<Editemployee />}
+
                   />
-                   <Route
+                  <Route
                     path="/SecondarylistView/Classification/:accessID/:screenName/:filtertype"
                     element={<ListviewSecondary />}
                   />
@@ -641,9 +659,9 @@ function App() {
                     path="/:screenName/imageupload/:accessID/:id"
                     element={<Imageupload />}
                   />
-                  
-                  <Route path="/leaveenquiry/:id" element={ <EditLeaveEnquiry /> } />
-                  <Route path="/LeaveTypeRegister/:id" element={ <LeaveEntryRegister /> } />
+
+                  <Route path="/leaveenquiry/:id" element={<EditLeaveEnquiry />} />
+                  <Route path="/LeaveTypeRegister/:id" element={<LeaveEntryRegister />} />
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:Type/EditMaterial Category/imageupload/:id"
@@ -1112,7 +1130,7 @@ function App() {
                     path="/:accessID/Editattendance"
                     element={<EditAttendance />}
                   />
-                    <Route
+                  <Route
                     path="/:accessID/EditAudit"
                     element={<EditAudit />}
                   />
