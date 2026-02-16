@@ -708,7 +708,7 @@ const Forgetpassword_1 = () => {
                                             <Box
                                                 sx={{
                                                     display: "flex",
-                                                    justifyContent: "space-between",
+                                                    justifyContent: "flex-end",
                                                     alignItems: "center",
                                                     mt: 1,
                                                 }}
@@ -718,7 +718,7 @@ const Forgetpassword_1 = () => {
                                                     onClick={() => navigate(-1)}
                                                     sx={{
                                                         // color: "#00796b",
-                                                        color: "#608dcb",
+                                                        color: "warning",
                                                         fontSize: "14px",
                                                         cursor: "pointer",
                                                         textDecoration: "none",

@@ -326,7 +326,7 @@ const EditAttendance = () => {
     const payslip = {
       Month: "February",
       Finyear: values.attyear,
-      EmployeeID: "102",
+      EmployeeID: "117",
       CompanyID
     }
 
@@ -646,6 +646,36 @@ const EditAttendance = () => {
           }
           label="Self"
         /> */}
+                  {/* <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={useCurrentEmp}
+                        onChange={(e) => {
+                          setUseCurrentEmp(e.target.checked);
+                          setempData(null)
+                        }}
+                        color="primary"
+                      />
+                    }
+                    label="Payslip"
+                  /> */}
+                  {/* <Tooltip title="Download Payslip">
+                    <PDFDownloadLink
+                      document={<PayslipPdf data={[]} filters={{}} />}
+                      fileName="payslip.pdf"
+                      style={{ textDecoration: "none", display:"flex" }}
+                    >
+
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <PictureAsPdfIcon />
+                      </IconButton>
+
+                    </PDFDownloadLink>
+                  </Tooltip> */}
                 </Stack>
                 <Stack
                   direction="row"

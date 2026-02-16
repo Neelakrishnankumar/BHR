@@ -3672,7 +3672,20 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ) : accessID == "TR058" ? (
+        ) : accessID == "TR333" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<PictureAsPdfIcon color="error" />}
+              label="Download Payslip Pdf"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}

@@ -9,20 +9,12 @@ import {
 import React from "react";
 import { Font } from "@react-pdf/renderer";
 
-Font.register({
-    family: "Roboto",
-    fonts: [
-        { src: "/fonts/Roboto-Regular.ttf" },
-        { src: "/fonts/Roboto-Bold.ttf", fontWeight: "bold" }
-    ]
-});
-
 
 const styles = StyleSheet.create({
     page: {
         padding: 20,
         fontSize: 9,
-        border: "1px solid #000"
+        border: "1px solid #000",
     },
 
     /* ---------------- HEADER ---------------- */
@@ -38,6 +30,7 @@ const styles = StyleSheet.create({
     companyText: {
         textAlign: "center",
         flex: 1,
+        fontSize: 12,
     },
 
     titleSection: {
@@ -73,7 +66,7 @@ const styles = StyleSheet.create({
     },
 
     label: {
-        width: "50%",
+        width: "40%",
         fontSize: 8,
         fontWeight: "bold"
     },
@@ -84,7 +77,7 @@ const styles = StyleSheet.create({
     },
 
     value: {
-        width: "45%",
+        width: "55%",
         textAlign: "left",
         fontSize: 8
     },
@@ -94,17 +87,17 @@ const styles = StyleSheet.create({
     table: {
         borderLeft: "1px solid #000",
         // borderRight: "1px solid #000",
-        borderBottom: "1px solid #000",
+        // borderBottom: "1px solid #000",
         fontSize: 8
     },
 
     table1: {
         // border: "1px solid #000",
         borderLeft: "1px solid #000",
-        borderBottom: "1px solid #000",
-        borderTop: "1px solid #000",
-        fontSize: 8,
-        marginTop: "5px"
+        // borderBottom: "1px solid #000",
+        // borderTop: "1px solid #000",
+        // fontSize: 8,
+        // marginTop: "5px"
     },
 
     tableHeaderMain: {
@@ -177,10 +170,11 @@ const styles = StyleSheet.create({
 
     headerColMain: {
         width: "100%",
-        textAlign: "center",
+        textAlign: "left",
         fontWeight: "bold",
         // borderRight: "1px solid black",
         padding: 5,
+        fontSize: 10
     },
     headerCol1: {
         width: "5%",
@@ -188,6 +182,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
+        fontSize: 10
     },
 
     headerCol2: {
@@ -196,7 +191,8 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
-        paddingLeft: "45px"
+        fontSize: 10
+        // paddingLeft: "45px"
     },
 
     headerCol3: {
@@ -205,6 +201,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         // borderRight: "1px solid black",
         padding: 5,
+        fontSize: 10
     },
     TransactionheaderCol1: {
         width: "5%",
@@ -212,6 +209,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
+        fontSize: 10
     },
 
     TransactionheaderCol2: {
@@ -220,7 +218,8 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
-        paddingLeft: "45px"
+        // paddingLeft: "45px",
+        fontSize: 10
     },
 
     TransactionheaderCol3: {
@@ -229,12 +228,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
+        fontSize: 10
     },
     TransactionheaderCol4: {
         width: "15%",
         textAlign: "center",
-        fontWeight: "bold",
+        fontWeight: "bolder",
         padding: 5,
+        fontSize: 10
     },
 
 
@@ -275,8 +276,10 @@ const styles = StyleSheet.create({
         paddingRight: 15,
     },
     bankTitle: {
-        fontWeight: "bold",
+        fontWeight: "900",
         marginBottom: 4,
+        fontSize: 10,
+
     },
 
     bankRow: {
@@ -285,7 +288,7 @@ const styles = StyleSheet.create({
     },
 
     bankLabel: {
-        width: "50%",
+        width: "30%",
     },
 
     bankColon: {
@@ -294,7 +297,7 @@ const styles = StyleSheet.create({
     },
 
     bankValue: {
-        width: "45%",
+        width: "65%",
     },
 
     signatureColumn: {
@@ -342,7 +345,7 @@ const PayslipPdf = ({ data = {}, filters }) => {
         ? `${QR_BASE_URL}${filters.CompanySignature}`
         : null;
 
-    const normalizeRows = (rows, minRows = 4) => {
+    const normalizeRows = (rows, minRows = 3) => {
         const filled = [...rows];
         while (filled.length < minRows) {
             filled.push({ label: "", amount: "" });
@@ -382,86 +385,153 @@ const PayslipPdf = ({ data = {}, filters }) => {
     //     { Sl: "2", label: "INSURANCE", amount: "1875" },
     // ]);
 
+    // const transactionRows = normalizeRows(
+    //     (data?.transactions || []).map((item, index) => ({
+    //         Sl: index + 1,
+    //         title: item.component,
+    //         credit: item.amount,
+    //         debit: item.debit
+    //     }))
+    // );
     const transactionRows = normalizeRows(
         (data?.transactions || []).map((item, index) => ({
             Sl: index + 1,
             title: item.component,
-            credit: item.credit,
-            debit: item.debit
+            credit: item.type?.toLowerCase() === "credit"
+                ? item.amount
+                : "--",
+
+            debit: item.type?.toLowerCase() === "debit"
+                ? item.amount
+                : "--"
         }))
     );
 
 
-    const Netpayable = data?.Totals?.netNetPay || ""
+    const Netpayable = data?.Totals?.NetPay || ""
+    // const numberToWordsInRupees = (num) => {
+    //     if (!num) return "Zero Rupees Only";
+
+    //     const a = [
+    //         "",
+    //         "One",
+    //         "Two",
+    //         "Three",
+    //         "Four",
+    //         "Five",
+    //         "Six",
+    //         "Seven",
+    //         "Eight",
+    //         "Nine",
+    //         "Ten",
+    //         "Eleven",
+    //         "Twelve",
+    //         "Thirteen",
+    //         "Fourteen",
+    //         "Fifteen",
+    //         "Sixteen",
+    //         "Seventeen",
+    //         "Eighteen",
+    //         "Nineteen",
+    //     ];
+    //     const b = [
+    //         "",
+    //         "",
+    //         "Twenty",
+    //         "Thirty",
+    //         "Forty",
+    //         "Fifty",
+    //         "Sixty",
+    //         "Seventy",
+    //         "Eighty",
+    //         "Ninety",
+    //     ];
+
+    //     const toWords = (n) => {
+    //         if (n < 20) return a[n];
+    //         if (n < 100)
+    //             return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
+    //         if (n < 1000)
+    //             return (
+    //                 a[Math.floor(n / 100)] +
+    //                 " Hundred" +
+    //                 (n % 100 ? " " + toWords(n % 100) : "")
+    //             );
+    //         if (n < 100000)
+    //             return (
+    //                 toWords(Math.floor(n / 1000)) +
+    //                 " Thousand" +
+    //                 (n % 1000 ? " " + toWords(n % 1000) : "")
+    //             );
+    //         if (n < 10000000)
+    //             return (
+    //                 toWords(Math.floor(n / 100000)) +
+    //                 " Lakh" +
+    //                 (n % 100000 ? " " + toWords(n % 100000) : "")
+    //             );
+    //         return (
+    //             toWords(Math.floor(n / 10000000)) +
+    //             " Crore" +
+    //             (n % 10000000 ? " " + toWords(n % 10000000) : "")
+    //         );
+    //     };
+
+    //     return toWords(parseInt(num)) + " Rupees Only";
+    // };
+
     const numberToWordsInRupees = (num) => {
-        if (!num) return "Zero Rupees Only";
+  if (!num) return "Zero Rupees Only";
 
-        const a = [
-            "",
-            "One",
-            "Two",
-            "Three",
-            "Four",
-            "Five",
-            "Six",
-            "Seven",
-            "Eight",
-            "Nine",
-            "Ten",
-            "Eleven",
-            "Twelve",
-            "Thirteen",
-            "Fourteen",
-            "Fifteen",
-            "Sixteen",
-            "Seventeen",
-            "Eighteen",
-            "Nineteen",
-        ];
-        const b = [
-            "",
-            "",
-            "Twenty",
-            "Thirty",
-            "Forty",
-            "Fifty",
-            "Sixty",
-            "Seventy",
-            "Eighty",
-            "Ninety",
-        ];
+  // ✅ Remove commas and convert to number
+  const cleanNum = Number(String(num).replace(/,/g, ""));
+  const n = Math.floor(cleanNum); // remove decimals
 
-        const toWords = (n) => {
-            if (n < 20) return a[n];
-            if (n < 100)
-                return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
-            if (n < 1000)
-                return (
-                    a[Math.floor(n / 100)] +
-                    " Hundred" +
-                    (n % 100 ? " " + toWords(n % 100) : "")
-                );
-            if (n < 100000)
-                return (
-                    toWords(Math.floor(n / 1000)) +
-                    " Thousand" +
-                    (n % 1000 ? " " + toWords(n % 1000) : "")
-                );
-            if (n < 10000000)
-                return (
-                    toWords(Math.floor(n / 100000)) +
-                    " Lakh" +
-                    (n % 100000 ? " " + toWords(n % 100000) : "")
-                );
-            return (
-                toWords(Math.floor(n / 10000000)) +
-                " Crore" +
-                (n % 10000000 ? " " + toWords(n % 10000000) : "")
-            );
-        };
+  const a = [
+    "", "One", "Two", "Three", "Four", "Five",
+    "Six", "Seven", "Eight", "Nine", "Ten",
+    "Eleven", "Twelve", "Thirteen", "Fourteen",
+    "Fifteen", "Sixteen", "Seventeen",
+    "Eighteen", "Nineteen",
+  ];
 
-        return toWords(parseInt(num)) + " Rupees Only";
-    };
+  const b = [
+    "", "", "Twenty", "Thirty", "Forty",
+    "Fifty", "Sixty", "Seventy",
+    "Eighty", "Ninety",
+  ];
+
+  const toWords = (x) => {
+    if (x < 20) return a[x];
+    if (x < 100)
+      return b[Math.floor(x / 10)] + (x % 10 ? " " + a[x % 10] : "");
+    if (x < 1000)
+      return (
+        a[Math.floor(x / 100)] +
+        " Hundred" +
+        (x % 100 ? " " + toWords(x % 100) : "")
+      );
+    if (x < 100000)
+      return (
+        toWords(Math.floor(x / 1000)) +
+        " Thousand" +
+        (x % 1000 ? " " + toWords(x % 1000) : "")
+      );
+    if (x < 10000000)
+      return (
+        toWords(Math.floor(x / 100000)) +
+        " Lakh" +
+        (x % 100000 ? " " + toWords(x % 100000) : "")
+      );
+
+    return (
+      toWords(Math.floor(x / 10000000)) +
+      " Crore" +
+      (x % 10000000 ? " " + toWords(x % 10000000) : "")
+    );
+  };
+
+  return toWords(n) + " Rupees Only";
+};
 
     const payableInWords = numberToWordsInRupees(Netpayable);
     return (
@@ -565,6 +635,11 @@ const PayslipPdf = ({ data = {}, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.TotalPaidDays}</Text>
                         </View>
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Basic Pay</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.Salary}</Text>
+                        </View>
                     </View>
 
                 </View>
@@ -647,7 +722,7 @@ const PayslipPdf = ({ data = {}, filters }) => {
                 {/* ---------------- TRANSACTIONS ---------------- */}
                 <View style={styles.table1}>
                     <View style={styles.tableHeaderMain}>
-                        <Text style={styles.headerColMain}>TRANSACTIONS</Text>
+                        <Text style={styles.headerColMain}>Transactions</Text>
                     </View>
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.TransactionheaderCol1}>SL#</Text>
@@ -676,7 +751,7 @@ const PayslipPdf = ({ data = {}, filters }) => {
                     {/* ---------------- NET PAY ---------------- */}
                     <View style={styles.netPaySection}>
                         <View style={styles.netPayRow}>
-                            <Text>Net Pay (Basic Pay + Allowances + Other Allowances - (Deductions + Other Deductions))</Text>
+                            <Text>Net Pay = Basic Pay + Allowances + Other Allowances - Deductions - Other Deductions</Text>
                             <Text>{data?.Totals?.NetPay}</Text>
                         </View>
                         <Text style={styles.amountWords}>

@@ -675,6 +675,8 @@ const Login = () => {
       var SubscriptionCode = data.payload.SubscriptionCode
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
+      var CompanyGraceTime = data.payload.CompanyGraceTime
+      var CompanySessionTimeOut = data.payload.CompanySessionTimeOut
       var CompanyLogo = data.payload.CompanyLogo
       var CompanyHeader = data.payload.CompanyHeader
       var CompanyFooter = data.payload.CompanyFooter
@@ -702,6 +704,8 @@ const Login = () => {
       sessionStorage.setItem("Fob", Fob)
       sessionStorage.setItem("firstLogin", firstLogin)
       sessionStorage.setItem("CompanyAutoCode", CompanyAutoCode)
+      sessionStorage.setItem("CompanyGraceTime", CompanyGraceTime)
+      sessionStorage.setItem("CompanySessionTimeOut", CompanySessionTimeOut)
       sessionStorage.setItem("CompanyLogo", CompanyLogo)
       sessionStorage.setItem("CompanyHeader", CompanyHeader)
       sessionStorage.setItem("CompanyFooter", CompanyFooter)
