@@ -302,6 +302,8 @@ const initialState = {
   ExcelFileUpload:"",
   Setup_MenuExcel:"",
   Parentposturl:"",
+  Processposturl:"",
+  PayslipGetController:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -384,7 +386,8 @@ export const getUrlSlice = createSlice({
       state.apiweightageUrl = APIurl + "HRWeightagesGetContoller.php";
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
-      state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      // state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
@@ -465,6 +468,8 @@ export const getUrlSlice = createSlice({
       state.ExcelFileUpload = APIurl + "ExcelFileUpload.php";
       state.Setup_MenuExcel = APIurl + "SetupMenu.php";
       state.Parentposturl = APIurl + "ParentpostController.php";
+      state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
+      state.PayslipGetController = APIurl + "PayslipGetController.php";
     },
   },
 });

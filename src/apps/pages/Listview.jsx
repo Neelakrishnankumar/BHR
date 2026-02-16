@@ -560,14 +560,14 @@ const Listview = () => {
             ) : (
               false
             )}
-            <Tooltip title="Bulk Upload">
+            {/* <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -3741,7 +3741,20 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ) : accessID == "TR058" ? (
+        ) : accessID == "TR333" ? (
+          <Box display="flex" flexDirection="row" gap={2} padding="25px">
+            {/* <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            /> */}
+            <Chip
+              icon={<PictureAsPdfIcon color="error" />}
+              label="Download Payslip Pdf"
+              variant="outlined"
+            />
+          </Box>
+        ): accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
