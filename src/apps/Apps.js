@@ -195,14 +195,64 @@ import Editparentcontact from "./pages/HR/Editparentcontact";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
+  //   useEffect(() => {
+  //   const grace = sessionStorage.getItem("CompanyGraceTime");
+  //   const timeout = sessionStorage.getItem("CompanySessionTimeOut");
+
+  //   console.log("Grace:", grace);
+  //   console.log("Timeout:", timeout);
+  // }, []);
+
+  //   const [theme, colorMode] = useMode();
+
+  //   const IDLE_TIME = 5 * 120 * 1000;
+
+  //   const navigate = useNavigate();
+  //   const timerRef = useRef(null);
+
+
+  //   const handleSessionExpire = () => {
+  //     toast.error("Session expired due to inactivity. Please login again.", {
+  //       style: {
+  //         fontSize: "20px",
+  //         padding: "20px 28px",
+  //         minWidth: "380px",
+  //         textAlign: "center",
+  //         lineHeight: "1.4",
+  //       },
+  //       autoClose: 10000,
+  //     });
+
+  //     sessionStorage.clear();
+  //     navigate("/");
+  //   };
+
+  //   const resetTimer = () => {
+  //     clearTimeout(timerRef.current);
+  //     // timerRef.current = setTimeout(handleSessionExpire, IDLE_TIME);
+  //     timerRef.current = setTimeout(handleSessionExpire, sessionTime*1000);
+  //   };
+  //   const [sessionTime, setSessionTime] = useState(null);
+
+  const [sessionTime, setSessionTime] = useState(null);
+
+  //  Load Session Timeout (seconds → milliseconds)
   const [theme, colorMode] = useMode();
-
-  const IDLE_TIME = 5 * 120 * 1000;
-
   const navigate = useNavigate();
   const timerRef = useRef(null);
+  useEffect(() => {
+    const timeout = sessionStorage.getItem("CompanySessionTimeOut");
 
+    if (timeout) {
+      const timeoutInMs = Number(timeout) * 1000; 
+      setSessionTime(timeoutInMs);
+      console.log("Session timeout (ms):", timeoutInMs);
+    } else {
+      console.log("No CompanySessionTimeOut found in sessionStorage");
+    }
+  }, []);
 
+  //  Logout function
   const handleSessionExpire = () => {
     toast.error("Session expired due to inactivity. Please login again.", {
       style: {
@@ -219,11 +269,33 @@ function App() {
     navigate("/");
   };
 
+  // Reset Timer
   const resetTimer = () => {
+    if (!sessionTime) return;
+
     clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(handleSessionExpire, IDLE_TIME);
+    timerRef.current = setTimeout(handleSessionExpire, sessionTime);
   };
-  const [sessionTime, setSessionTime] = useState(null);
+
+  // Attach Activity Listeners
+  useEffect(() => {
+    if (!sessionTime) return;
+
+    const events = ["mousemove", "keydown", "scroll", "click"];
+
+    events.forEach((event) =>
+      window.addEventListener(event, resetTimer)
+    );
+
+    resetTimer(); // start timer initially
+
+    return () => {
+      events.forEach((event) =>
+        window.removeEventListener(event, resetTimer)
+      );
+      clearTimeout(timerRef.current);
+    };
+  }, [sessionTime]);
 
   useEffect(() => {
     const storedSessionTime = sessionStorage.getItem("sessiontime");
@@ -261,10 +333,10 @@ function App() {
                 {/* <Topbar Tittle={screenName} /> */}
 
                 <Routes>
-                  {/* <Route
+                  <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
                     element={<EditemployeePayroll />}
-                  /> */}
+                  />
                   <Route
                     path="/:accessID/:screenName/EditPayroll/:id/:Mode"
                     element={<EditemployeePayroll />}

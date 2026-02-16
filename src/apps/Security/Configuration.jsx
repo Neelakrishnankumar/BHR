@@ -68,6 +68,10 @@ const Configuration = () => {
     const YearFlag = sessionStorage.getItem("YearFlag");
     const compID = sessionStorage.getItem("compID");
     const Username = sessionStorage.getItem("UserName");
+    const grace = sessionStorage.getItem("CompanyGraceTime");
+    const timeout = sessionStorage.getItem("CompanySessionTimeOut");
+    console.log("Grace:", grace);
+    console.log("Timeout:", timeout);
     const data = useSelector((state) => state.formApi.Data) || {};
     console.log(data, "--data");
     const isLoading = useSelector((state) => state.formApi.postLoading);
@@ -76,6 +80,8 @@ const Configuration = () => {
 
     const [gstImage, setGstImage] = useState("");
     const [offaddress, setOffaddress] = useState("");
+    const [sessiontime, setSessiontime] = useState("");
+    const [gracetime, setGracetime] = useState("");
     const [gst, setGst] = useState("");
     const [autocode, setAutocode] = useState(data?.CM_AUTOCODE === "Y");
     const { toggleSidebar, broken, rtl } = useProSidebar();
@@ -103,6 +109,8 @@ const Configuration = () => {
             setlogoimage(data.CM_IMAGE || "");
             setGstImage(data.CM_GSTIMAGE || "");
             setAutocode(data.CM_AUTOCODE === "Y");
+            setSessiontime(data.CM_SESSIONTIMEOUT);
+            setGracetime(data.CM_GRACETIME);
         }
     }, [data]);
 
@@ -118,90 +126,7 @@ const Configuration = () => {
         console.log(checked, "CompanyAutoCode")
     };
 
-    // useEffect(() => {
-    //     if (initialvalues?.gstnumber) {
-    //       setGst(initialvalues.gstnumber);
-    //     }
-    //   }, [initialvalues]);
-
-    // const getFilepanChange = async (e) => {
-    //     let files = e.target.files;
-    //     let fileReader = new FileReader();
-
-    //     fileReader.readAsDataURL(files[0]);
-    //     fileReader.onload = (event) => {
-    //         let fileInput = !!event.target.result;
-    //         if (fileInput) {
-    //             try {
-    //                 Resizer.imageFileResizer(
-    //                     files[0],
-    //                     150,
-    //                     150,
-    //                     "JPEG",
-    //                     100,
-    //                     0,
-    //                     async (uri) => {
-    //                         const formData = { image: uri, type: "images" };
-    //                         const fileData = await dispatch(imageUpload({ formData }));
-    //                         console.log("Uploaded File Response:", fileData);
-
-    //                         if (fileData?.payload?.Status === "Y") {
-    //                             toast.success(fileData.payload.Msg);
-    //                             setlogoimage(fileData.payload.name);
-    //                         } else {
-    //                             toast.error("File upload failed.");
-    //                         }
-    //                     },
-    //                     "base64",
-    //                     150,
-    //                     150
-    //                 );
-    //             } catch (err) {
-    //                 console.log(err);
-    //                 toast.error("An error occurred during file processing.");
-    //             }
-    //         }
-    //     };
-    // };
-    // const getFilegstChange = async (e) => {
-    //     let files = e.target.files;
-    //     let fileReader = new FileReader();
-
-    //     fileReader.readAsDataURL(files[0]);
-    //     fileReader.onload = (event) => {
-    //         let fileInput = !!event.target.result;
-    //         if (fileInput) {
-    //             try {
-    //                 Resizer.imageFileResizer(
-    //                     files[0],
-    //                     150,
-    //                     150,
-    //                     "JPEG",
-    //                     100,
-    //                     0,
-    //                     async (uri) => {
-    //                         const formData = { image: uri, type: "images" };
-    //                         const fileData = await dispatch(fileUpload({ formData }));
-    //                         console.log("Uploaded File Response:", fileData);
-
-    //                         if (fileData?.payload?.Status === "Y") {
-    //                             toast.success(fileData.payload.Msg);
-    //                             setGstImage(fileData.payload.name);
-    //                         } else {
-    //                             toast.error("File upload failed.");
-    //                         }
-    //                     },
-    //                     "base64",
-    //                     150,
-    //                     150
-    //                 );
-    //             } catch (err) {
-    //                 console.log(err);
-    //                 toast.error("An error occurred during file processing.");
-    //             }
-    //         }
-    //     };
-    // };
+   
     const getFilepanChange = async (event) => {
         setlogoimage(event.target.files[0]);
 
@@ -344,8 +269,8 @@ const Configuration = () => {
             HeaderImg: data.CM_HEADER,
             FooterImg: data.CM_FOOTER,
             CompanyName: data.CM_NAME,
-            GraceTime: data.CM_GRACETIME,
-            SessionTimeOut: data.CM_SESSIONTIMEOUT
+            GraceTime: gracetime,
+            SessionTimeOut: sessiontime
 
         };
         console.log(offaddress, "Address");
@@ -542,9 +467,11 @@ const Configuration = () => {
                                         label="Grace Time"
                                         variant="standard"
                                         focused
-                                        value={values.gracetime}
+                                        // value={values.gracetime}
+                                        value={gracetime}
                                         onChange={(e) => {
                                             handleChange(e);
+                                            setGracetime(e.target.value)
                                             sessionStorage.setItem("gracetime", e.target.value);
                                         }}
                                         autoFocus
@@ -632,9 +559,11 @@ const Configuration = () => {
                                         label="Session Time"
                                         variant="standard"
                                         focused
-                                        value={values.sessiontime}
+                                        // value={values.sessiontime}
+                                        value={sessiontime}
                                         onChange={(e) => {
                                             handleChange(e);
+                                            setSessiontime(e.target.value)
                                             sessionStorage.setItem("sessiontime", e.target.value);
                                         }}
                                         autoFocus

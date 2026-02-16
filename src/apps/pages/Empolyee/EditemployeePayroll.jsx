@@ -43,6 +43,7 @@ import {
   AttendanceProcess,
   requestMail,
   leaveAppoval,
+  Processpost,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -83,7 +84,7 @@ import {
   dataGridRowHeight,
   formGap,
 } from "../../../ui-components/global/utils";
-import { CheckinAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 // ***********************************************
 //  Developer:Gowsalya
 // Purpose:To Create Employee
@@ -498,7 +499,9 @@ const EditemployeePayroll = () => {
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
-  const [show, setScreen] = React.useState("0");
+  // const [show, setScreen] = React.useState(mode == "E" ? "1" : "0");
+  const [show, setScreen] = React.useState(accessID == "TR027" ? "0" : "11");
+
   // material
   const [supprodata, setSupprodata] = useState({
     RecordID: "",
@@ -556,7 +559,7 @@ const EditemployeePayroll = () => {
     }
 
     if (event.target.value == "0") {
-      // dispatch(fetchApidata(accessID, "get", recID));
+      dispatch(fetchApidata(accessID, "get", recID));
     }
     // if (event.target.value == "9") {
     //   dispatch(fetchApidata(accessID, "get", recID));
@@ -778,188 +781,221 @@ const EditemployeePayroll = () => {
       field: "SLNO",
       // headerName: "SL.NO",
       headerName: "SL#",
-       width: 50,
+      width: 50,
     },
     {
       field: "Name",
       headerName: "Name",
       width: 150,
+      headerAlign: "center"
     },
     // {
     //   field: "Block",
     //   headerName: "Block",
-    //   flex: 1,
+    //    flex: 1,
     // },
     {
       field: "Day1",
       headerName: "1",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day2",
       headerName: "2",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day3",
       headerName: "3",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day4",
       headerName: "4",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day5",
       headerName: "5",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day6",
       headerName: "6",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day7",
       headerName: "7",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day8",
       headerName: "8",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day9",
       headerName: "9",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day10",
       headerName: "10",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day11",
       headerName: "11",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day12",
       headerName: "12",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day13",
       headerName: "13",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day14",
       headerName: "14",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day15",
       headerName: "15",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day16",
       headerName: "16",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day17",
       headerName: "17",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day18",
       headerName: "18",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day19",
       headerName: "19",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day20",
       headerName: "20",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day21",
       headerName: "21",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day22",
       headerName: "22",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day23",
       headerName: "23",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day24",
       headerName: "24",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day25",
       headerName: "25",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day26",
       headerName: "26",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day27",
       headerName: "27",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Day28",
       headerName: "28",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day29",
       headerName: "29",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day30",
       headerName: "30",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Day31",
       headerName: "31",
       flex: 1,
+      headerAlign: "center"
     },
 
     {
       field: "Present",
       headerName: "Present",
+      headerAlign: "center",
       align: "right"
     },
     // {
@@ -970,16 +1006,19 @@ const EditemployeePayroll = () => {
     {
       field: "Leave",
       headerName: "Leave",
+      headerAlign: "center",
       align: "right"
     },
     {
       field: "Weekoff",
       headerName: "weekoff",
+      headerAlign: "center",
       align: "right"
     },
     {
       field: "Total",
       headerName: "Total",
+      headerAlign: "center",
       align: "right"
     },
   ];
@@ -994,21 +1033,25 @@ const EditemployeePayroll = () => {
       field: "CheckInDateTimeConcat",
       headerName: "Employee CheckIn Date Time",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "CheckOutDateTimeConcat",
       headerName: "Employee CheckOut Date Time",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "NumberOfHoursWorked",
       headerName: "Number Of Hours Worked",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Status",
       headerName: "Status",
       flex: 1,
+      headerAlign: "center"
     },
     {
       field: "Action",
@@ -1819,7 +1862,14 @@ const EditemployeePayroll = () => {
       toast.error(response.payload.Msg);
     }
   };
-
+  const currentMonthNumber = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const PayprocessInitialvalues = {
+    project: [],
+    Designation: [],
+    month: currentMonthNumber,
+    year: currentYear,
+  };
   // *************** PAYROLL ATTENDANCE *************** //
   const PAttInitialvalues = {
     code: Data.Code,
@@ -1827,18 +1877,37 @@ const EditemployeePayroll = () => {
     month: "",
     year: "",
   };
+  // const projectIDs = values.project.map((p) => `'${p.RecordID}'`).join(",");
+  // const DesignationIDs = values.Designation.map((d) => `'${d.RecordID}'`).join(",");
+  // const attFnSave = async (values) => {
+  //   const data = {
+  //     Month: values.month.toString(),
+  //     Year: values.year,
+  //     // EmployeeID: recID,
+  //     CompanyID,
+  //     ManagerID: "",
+  //     Etype: "E",
+  //     ProjectID: values.project.map((p) => `'${p.RecordID}'`).join(","),
+  //     DesignationID: values.Designation.map((d) => `'${d.RecordID}'`).join(",")
+
+  //   };
+
+  //   dispatch(empAttendance({ data }));
+  // };
   const attFnSave = async (values) => {
     const data = {
       Month: values.month.toString(),
       Year: values.year,
-      EmployeeID: recID,
       CompanyID,
       ManagerID: "",
-      Etype: ""
+      Etype: "E",
+      ProjectID: values.project.map((p) => p.RecordID).join(","),
+      DesignationID: values.Designation.map((d) => d.RecordID).join(","),
     };
 
     dispatch(empAttendance({ data }));
   };
+
   /***********Attendance ************/
   const AttInitialvalues = {
     code: Data.Code,
@@ -1869,33 +1938,57 @@ const EditemployeePayroll = () => {
   //   month:"",
   //   year:"",
   // }
+  // const attendaceProcessFnSave = async (values) => {
+  //   // toast.success("----response.payload.Msg");
+
+  //   console.log("month", values.month.toString());
+
+  //   const data = {
+  //     Month: values.month.toString(),
+  //     Year: values.year,
+  //     EmployeeID: recID,
+  //   };
+
+  //   const response = await dispatch(AttendanceProcess({ data }));
+
+  //   if (response.payload.Status == "Y") {
+  //     toast.success(response.payload.Msg);
+  //   } else {
+  //     toast.error(response.payload.Msg);
+  //   }
+  // };
+  /*end of the Process button onclick */
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
   const attendaceProcessFnSave = async (values) => {
-    // toast.success("----response.payload.Msg");
-
-    console.log("month", values.month.toString());
-
+    const EmployeeIDs = empAttendanceData
+      .map(row => row.EmpRecid)
+      .join(",");
     const data = {
-      Month: values.month.toString(),
-      Year: values.year,
-      EmployeeID: recID,
+      action: "update",
+      data: {
+        // Month: values.month.toString(),   
+        Month: monthNames[Number(values.month) - 1],
+        Year: values.year.toString(),
+        CompanyID: CompanyID,
+        EmployeeID: EmployeeIDs
+      }
     };
 
-    const response = await dispatch(AttendanceProcess({ data }));
+    console.log("Final Payload:", data);
 
-    // Check if the day count is less than 15
-    //   if (values.dayCount < 15) {
-    //     alert("Minimum 15 days needed");
+    const response = await dispatch(Processpost(data));
 
-    //     // return; // Exit the function if the condition is not met
-    // }
-
-    if (response.payload.Status == "Y") {
+    if (response.payload.Status === "Y") {
       toast.success(response.payload.Msg);
+      navigate("/Apps/TR333/Payroll");
     } else {
       toast.error(response.payload.Msg);
     }
   };
-  /*end of the Process button onclick */
 
   const getFileChange = async (event) => {
     // setImgName(event.target.files[0]);
@@ -2055,7 +2148,7 @@ const EditemployeePayroll = () => {
                     {mode === "E"
                       ? `Employee(${state.EmpName})`
                       : "Employee(New)"} */}
-                      Payroll
+                    Payroll
                   </Typography>
                   {show == "1" ? (
                     <Typography
@@ -2160,7 +2253,7 @@ const EditemployeePayroll = () => {
               </Box>
             </Box>
             <Box display="flex">
-              {mode !== "A" ? (
+              {mode !== "A" && accessID == "TR027" ? (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                   <InputLabel id="demo-select-small">Explore</InputLabel>
                   <Select
@@ -2170,8 +2263,8 @@ const EditemployeePayroll = () => {
                     label="Explore"
                     onChange={screenChange}
                   >
-                    <MenuItem value={0}>Employee</MenuItem>
-
+                    {accessID == "TR027" && (<MenuItem value={0}>Employee</MenuItem>)}
+                    {/* <MenuItem value={0}>Employee</MenuItem> */}
                     <MenuItem value={1}>Allowances</MenuItem>
                     <MenuItem value={5}>Deductions</MenuItem>
                     {/* <MenuItem value={2}>Leave</MenuItem>
@@ -2181,7 +2274,7 @@ const EditemployeePayroll = () => {
                     <MenuItem value={9}>Expense</MenuItem>
                     <MenuItem value={10}>Regularization</MenuItem> */}
                     <MenuItem value={3}>Attendance</MenuItem>
-                    <MenuItem value={4}>Payroll Attendance</MenuItem>
+                    {accessID == "TR027" && (<MenuItem value={4}>Payroll Attendance</MenuItem>)}
                   </Select>
                 </FormControl>
               ) : (
@@ -2202,7 +2295,7 @@ const EditemployeePayroll = () => {
           </Box>
         </Paper>
 
-        {/* {show == "0" ? (
+        {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
 
             <Formik
@@ -2652,11 +2745,11 @@ const EditemployeePayroll = () => {
           </Paper>
         ) : (
           false
-        )} */}
-        {show == "0" ? (
+        )}
+        {show == "11" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
-              initialValues={PAttInitialvalues}
+              initialValues={PayprocessInitialvalues}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
@@ -2694,7 +2787,7 @@ const EditemployeePayroll = () => {
                       },
                     }}
                   >
-                    <CheckinAutocomplete
+                    {/* <CheckinAutocomplete
                       id="project"
                       name="project"
                       label="Project"
@@ -2708,18 +2801,21 @@ const EditemployeePayroll = () => {
                       error={!!touched.project && !!errors.project}
                       helperText={touched.project && errors.project}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                    /> */}
+                    <MultiFormikOptimizedAutocomplete
+                      name="project"
+                      label="Project"
+                      id="project"
+                      value={values.project}
+                      onChange={(e, newValue) => {
+                        setFieldValue("project", newValue)
+                      }}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
+
                     />
-                    <CheckinAutocomplete
+                    {/* <CheckinAutocomplete
                       name="Designation"
-                      label="Designation"
-                      // label={
-                      //   <span>
-                      //     Designation
-                      //     <span style={{ color: "red", fontSize: "20px" }}>
-                      //       *
-                      //     </span>
-                      //   </span>
-                      // }
+                      label="Designation"                     
                       variant="outlined"
                       id="Designation"
                       value={values.Designation}
@@ -2728,6 +2824,16 @@ const EditemployeePayroll = () => {
                       }}
                       error={!!touched.Designation && !!errors.Designation}
                       helperText={touched.Designation && errors.Designation}
+                      url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                    /> */}
+                    <MultiFormikOptimizedAutocomplete
+                      name="Designation"
+                      label="Designation"
+                      id="Designation"
+                      value={values.Designation}
+                      onChange={(e, newValue) => {
+                        setFieldValue("Designation", newValue)
+                      }}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
                     <TextField
@@ -2784,7 +2890,7 @@ const EditemployeePayroll = () => {
                     <Button type="submit" variant="contained" color="secondary">
                       APPLY
                     </Button>
-                    <Button type="reset" variant="contained" color="primary">
+                    <Button type="reset" variant="contained" color="primary" onClick={() => attendaceProcessFnSave(values)}>
                       PROCESS
                     </Button>
                     <Button type="reset" variant="contained" color="error">
@@ -3337,7 +3443,8 @@ const EditemployeePayroll = () => {
                         color="warning"
                         variant="contained"
                         onClick={() => {
-                          setScreen(0);
+                          // setScreen(0);
+                          navigate(`/Apps/TR333/Payroll`);
                         }}
                       >
                         Cancel

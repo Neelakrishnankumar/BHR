@@ -83,8 +83,8 @@ const initialState = {
   PartyDateAndAmtFilterstatus: "",
   PartyDateAndAmtFilterloading: false,
   LeaveEntryRegdata: [],
-  Partygetdata:[],
-  Partycontactgetdata:[],
+  Partygetdata: [],
+  Partycontactgetdata: [],
   LeaveEntryRegstatus: "",
   Partygetstatus: "",
   Partygetloading: false,
@@ -623,6 +623,22 @@ export const partypost = createAsyncThunk(
     const url = store.getState().globalurl.Parentposturl;
 
     console.log(" Final API Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
+export const Processpost = createAsyncThunk(
+  "employee/deployment/postdata",
+  async (payload) => {
+    const url = store.getState().globalurl.Processposturl;
+
+    console.log("Final API Payload:", payload);
 
     const response = await axios.post(url, payload, {
       headers: {
@@ -2820,7 +2836,7 @@ export const getApiSlice = createSlice({
         state.LeaveEntryRegloading = false;
       })
 
-       .addCase(EmployeeVendorGetController.pending, (state, action) => {
+      .addCase(EmployeeVendorGetController.pending, (state, action) => {
         state.Partygetstatus = "idle";
         state.Partygetloading = true;
       })
@@ -2835,8 +2851,8 @@ export const getApiSlice = createSlice({
         state.Partygetstatus = "Error";
         state.Partygetloading = false;
       })
-      
-       .addCase(EmployeeVendorContactGet.pending, (state, action) => {
+
+      .addCase(EmployeeVendorContactGet.pending, (state, action) => {
         state.Partycontactgetstatus = "idle";
         state.Partycontactgetloading = true;
       })
@@ -4866,11 +4882,11 @@ export const EmployeeVendorContactGet = createAsyncThunk(
     try {
       const url = store.getState().globalurl.EmployeeVendorContactGet;
 
-      const requestBody = {        
-          EmployeeID: payload.EmployeeID,
-          VendorID: payload.VendorID,
-          CompanyID: payload.CompanyID,
-          action: payload.action,       
+      const requestBody = {
+        EmployeeID: payload.EmployeeID,
+        VendorID: payload.VendorID,
+        CompanyID: payload.CompanyID,
+        action: payload.action,
       };
 
       console.log("Final Request Body:", JSON.stringify(requestBody));
@@ -5073,7 +5089,7 @@ export const ExcelFileDownload = createAsyncThunk(
 
 export const Setup_MenuExcel = createAsyncThunk(
   "Setup_MenuExcel/BulkExcelParams/Post",
-  async ( excelSetUp ) => {
+  async (excelSetUp) => {
     const baseUrl = store.getState().globalurl.Setup_MenuExcel;
     // const uploadUrl = `${baseUrl}?filename=${encodeURIComponent(forcedFileName)}`;
 
