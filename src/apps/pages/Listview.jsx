@@ -99,7 +99,7 @@ import {
 } from "../../ui-components/global/Autocomplete";
 import OrdEnqProductPDF from "./pdf/OrdEnqProduct";
 import OrdEnqPartyPDF from "./pdf/OrdEnqParty";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { BlobProvider, PDFDownloadLink } from "@react-pdf/renderer";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import { Visibility } from "@mui/icons-material";
@@ -111,6 +111,10 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import FileUploadIconButton from "../../ui-components/global/Fileuploadbutton";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { FaFileExcel } from "react-icons/fa";
+import { getConfig } from "../../config";
+import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
+
+
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -121,6 +125,16 @@ const Listview = () => {
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
   const location = useLocation();
   console.log(location, "location -----------------");
+
+
+   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+    console.log("baseurlUAAM",baseurlUAAM)
+
+
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -1960,32 +1974,66 @@ const Listview = () => {
                             Apply
                           </Button>
                           {values.Type === "ByProduct" ? (
-                            <PDFDownloadLink
-                              document={
-                                <OrdEnqProductPDF
-                                  data={listViewData}
-                                  Product={values?.product?.Name}
-                                  Party={values?.party?.Name}
-                                  filters={{
-                                    fromdate: values?.fromdate,
-                                    todate: values?.date,
-                                    ordertype: values.ordertype
-                                  }}
-                                />
-                              }
-                              fileName={`OrderEnquirySummary_Product.pdf`}
-                              style={{ color: "#d32f2f", cursor: "pointer" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon
-                                    sx={{ fontSize: 24, opacity: 0.5 }}
-                                  />
-                                ) : (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                )
-                              }
-                            </PDFDownloadLink>
+                            // <PDFDownloadLink
+                            //   document={
+                            //     <OrdEnqProductPDF
+                            //       data={listViewData}
+                            //       Product={values?.product?.Name}
+                            //       Party={values?.party?.Name}
+                            //       filters={{
+                            //         fromdate: values?.fromdate,
+                            //         todate: values?.date,
+                            //         ordertype: values.ordertype,
+                            //         Imageurl: baseurlUAAM,
+                            //         HeaderImg: HeaderImg,
+                            //         FooterImg: FooterImg,
+                            //       }}
+                            //     />
+                            //   }
+                            //   fileName={`OrderEnquirySummary_Product.pdf`}
+                            //   style={{ color: "#d32f2f", cursor: "pointer" }}
+                            // >
+                            //   {({ loading }) =>
+                            //     loading ? (
+                            //       <PictureAsPdfIcon
+                            //         sx={{ fontSize: 24, opacity: 0.5 }}
+                            //       />
+                            //     ) : (
+                            //       <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                            //     )
+                            //   }
+                            // </PDFDownloadLink>
+                            
+<BlobProvider
+  document={
+    <OrdEnqProductPDF
+      data={listViewData}
+      Product={values?.product?.Name}
+      Party={values?.party?.Name}
+      filters={{
+        fromdate: values?.fromdate,
+        todate: values?.date,
+        ordertype: values?.ordertype,
+        Imageurl: baseurlUAAM,
+        HeaderImg: HeaderImg,
+        FooterImg: FooterImg,
+      }}
+    />
+  }
+>
+  {({ url, loading }) =>
+    loading ? (
+      <PictureAsPdfIcon
+        sx={{ fontSize: 24, opacity: 0.5 }}
+      />
+    ) : (
+      <PictureAsPdfIcon
+        sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+        onClick={() => window.open(url, "_blank")}
+      />
+    )
+  }
+</BlobProvider>
                           ) : (
                             <PDFDownloadLink
                               document={
@@ -1996,7 +2044,10 @@ const Listview = () => {
                                   filters={{
                                     fromdate: values?.fromdate,
                                     todate: values?.date,
-                                    ordertype: values.ordertype
+                                    ordertype: values.ordertype,
+                                    Imageurl: baseurlUAAM,
+                                    HeaderImg: HeaderImg,
+                                    FooterImg: FooterImg,
                                   }}
                                 />
                               }
@@ -2014,6 +2065,24 @@ const Listview = () => {
                               }
                             </PDFDownloadLink>
                           )}
+
+<FaFileExcel
+  size={20}
+  color="#1D6F42"
+  style={{ cursor: "pointer" }}
+  onClick={() =>
+    OrderEnqProdandPartyExcel(
+      listViewData,
+      {
+        fromdate: values?.fromdate,
+        todate: values?.todate,
+        ordertype: values?.ordertype,
+        product: values?.product?.Name || "",
+        party: values?.party?.Name || "",
+      }
+    )
+  }
+/>
 
                           {/* <Button
                             type="button"
@@ -3674,11 +3743,11 @@ const Listview = () => {
           </Box>
         ) : accessID == "TR333" ? (
           <Box display="flex" flexDirection="row" gap={2} padding="25px">
-            <Chip
+            {/* <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"
               variant="outlined"
-            />
+            /> */}
             <Chip
               icon={<PictureAsPdfIcon color="error" />}
               label="Download Payslip Pdf"

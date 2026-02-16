@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderBottomWidth: 1,
         borderBottomColor: "#000",
-        borderBottomStyle: "solid",
+        // borderBottomStyle: "solid",
     },
     tableRowLast: {
         flexDirection: "row",
@@ -78,7 +78,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#EEE",
         textAlign: "center",
     },
-
+    headerCMlstatus: {
+        width: 70,
+        // borderRightWidth: 1,
+        borderRightColor: "#000",
+        padding: 5,
+        fontWeight: "bold",
+        backgroundColor: "#EEE",
+        textAlign: "center",
+    }
+,
     headerCMlDesc: {
         flex: 1,
         borderRightWidth: 1,
@@ -104,7 +113,14 @@ const styles = StyleSheet.create({
         padding: 5,
         textAlign: "center",
     },
-
+    cMlstatus: {
+         width: 70,
+        // borderRightWidth: 1,
+        borderRightColor: "#000",
+        padding: 5,
+        textAlign: "center",
+    }
+,
     cMlDesc: {
         flex: 1,
         borderRightWidth: 1,
@@ -244,15 +260,16 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 9,
     },
-    table: {
-        display: "table",
-        width: "100%",
-        borderWidth: 1,
-        borderColor: "#000",
-        marginTop: 6,
-    },
+    // table: {
+    //     display: "table",
+    //     width: "100%",
+    //     borderWidth: 1,
+    //     borderColor: "#000",
+    //     marginTop: 6,
+    // },
     row: {
         flexDirection: "row",
+        fontWeight: "bold"
     },
     headerCell: {
         flex: 1,
@@ -263,7 +280,6 @@ const styles = StyleSheet.create({
         fontSize: 9,
         fontWeight: "bold",
         textAlign: "center",
-        fontweight: "bold",
     },
     cell: {
         flex: 1,
@@ -273,9 +289,21 @@ const styles = StyleSheet.create({
         fontSize: 9,
         textAlign: "right",
     },
+    cellmedi: {
+flex: 1,
+        borderRightWidth: 1,
+        // borderBottomWidth: 1,
+        padding: 4,
+        fontSize: 9,
+        textAlign: "right",
+    },
     lastCell: {
         borderRightWidth: 0,
     },
+
+    noBottomBorder: {
+  borderBottomWidth: 0,
+},
 });
 
 
@@ -305,30 +333,30 @@ const LeaveenqempPDF = ({ data = [], filters = {} }) => {
         const date = new Date(dateStr);
         return date.toLocaleDateString("en-GB"); // DD/MM/YYYY
     };
-    const permissionSummary = React.useMemo(() => {
-        if (!isPermission || !data.length) return null;
+    // const permissionSummary = React.useMemo(() => {
+    //     if (!isPermission || !data.length) return null;
 
-        // filter only approved permissions
-        const approvedData = data.filter(
-            d => d.Status === "Approved"
-        );
+    //     // filter only approved permissions
+    //     const approvedData = data.filter(
+    //         d => d.Status === "Approved"
+    //     );
 
-        // count unique approved permission days
-        const uniqueDays = new Set(
-            approvedData.map(d => d.DisplayPermissionDate)
-        ).size;
+    //     // count unique approved permission days
+    //     const uniqueDays = new Set(
+    //         approvedData.map(d => d.DisplayPermissionDate)
+    //     ).size;
 
-        // sum approved hours only
-        const totalHours = approvedData.reduce(
-            (sum, d) => sum + Number(d.NumofHrsday || 0),
-            0
-        );
+    //     // sum approved hours only
+    //     const totalHours = approvedData.reduce(
+    //         (sum, d) => sum + Number(d.NumofHrsday || 0),
+    //         0
+    //     );
 
-        return {
-            days: uniqueDays,
-            hours: totalHours,
-        };
-    }, [data, isPermission]);
+    //     return {
+    //         days: uniqueDays,
+    //         hours: totalHours,
+    //     };
+    // }, [data, isPermission]);
     // const permissionSummaryNew = React.useMemo(() => {
     //     if (!isPermission || !data.length) return null;
 
@@ -424,6 +452,7 @@ const permissionSummaryNew = React.useMemo(() => {
     return summary;
 }, [data, isPermission]);
 
+//Leave Summary
 
     const totalLeave = { CL: 0, G: 0, M: 0 };
     const takenLeave = { CL: 0, G: 0, M: 0 };
@@ -507,7 +536,7 @@ const permissionSummaryNew = React.useMemo(() => {
                                 </>
                             )}
 
-                            <Text style={styles.headerCMl}>Status</Text>
+                            <Text style={styles.headerCMlstatus}>Status</Text>
                         </View>
 
                         {pageData.map((row, rowIndex) => {
@@ -536,7 +565,7 @@ const permissionSummaryNew = React.useMemo(() => {
                                         </>
                                     )}
 
-                                    <Text style={styles.cMl}>{row.Status}</Text>
+                                    <Text style={styles.cMlstatus}>{row.Status}</Text>
                                 </View>
                             );
                         })}
@@ -570,37 +599,77 @@ const permissionSummaryNew = React.useMemo(() => {
                     )} */}
 
                     {/* NEW */}
-                    {isPermission && permissionSummaryNew && pageIndex === pages.length - 1 && (
-                        <View style={{ marginTop: 12 }}>
-                            <Text style={{ fontSize: 10, fontWeight: "bold", marginBottom: 4 }}>
-                                Permission Summary
+                  {isPermission && 
+ permissionSummaryNew && 
+ pageIndex === pages.length - 1 && (
+    <View style={{ marginTop: 12 }}>
+
+        <Text
+            style={{
+                fontSize: 10,
+                fontWeight: "bold",
+                marginBottom: 4
+            }}
+        >
+            Permission Summary
+        </Text>
+
+        <View style={styles.table}>
+
+            {/* Header Row */}
+            <View style={styles.row}>
+                <Text style={styles.headerCell}>Status</Text>
+                <Text style={styles.headerCell}>No of Days</Text>
+                <Text style={[styles.headerCell, styles.lastCell]}>
+                    No of Hours
+                </Text>
+            </View>
+
+            {/* Data Rows */}
+            {Object.entries(permissionSummaryNew).map(
+                ([status, values], index, arr) => {
+
+                    const isLast = index === arr.length - 1;
+
+                    return (
+                        <View style={styles.row} key={status}>
+                            
+                            <Text
+                                style={[
+                                    styles.cell,
+                                    { textAlign: "left" },
+                                    isLast && styles.noBottomBorder
+                                ]}
+                            >
+                                {status}
                             </Text>
 
-                            <View style={styles.table}>
-                                {/* Header */}
-                                <View style={styles.row}>
-                                    <Text style={styles.headerCell}>Status</Text>
-                                    <Text style={styles.headerCell}>No of Days</Text>
-                                    <Text style={[styles.headerCell, styles.lastCell]}>
-                                        No of Hours
-                                    </Text>
-                                </View>
+                            <Text
+                                style={[
+                                    styles.cell,
+                                    isLast && styles.noBottomBorder
+                                ]}
+                            >
+                                {values.days}
+                            </Text>
 
-                                {Object.entries(permissionSummaryNew).map(([status, values]) => (
-                                    <View style={styles.row} key={status}>
-                                        <Text style={[styles.cell, { textAlign: "left" }]}>
-                                            {status}
-                                        </Text>
-                                        <Text style={styles.cell}>{values.days}</Text>
-                                        <Text style={[styles.cell, styles.lastCell]}>
-                                            {/* {values.hours.toFixed(2)} */}
-                                            {values.hours}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
+                            <Text
+                                style={[
+                                    styles.cell,
+                                    styles.lastCell,
+                                    isLast && styles.noBottomBorder
+                                ]}
+                            >
+                                {values.hours}
+                            </Text>
+
                         </View>
-                    )}
+                    );
+                }
+            )}
+        </View>
+    </View>
+)}
 
                     {/* {isPermission && permissionSummary && (
                         <View style={{ marginTop: 12 }}>
@@ -666,10 +735,10 @@ const permissionSummaryNew = React.useMemo(() => {
 
                                 {/* EL */}
                                 <View style={styles.row}>
-                                    <Text style={[styles.cell, { textAlign: "left" }]}>Medical Leave</Text>
-                                    <Text style={styles.cell}>{totalLeave.M}</Text>
-                                    <Text style={styles.cell}>{takenLeave.M}</Text>
-                                    <Text style={[styles.cell, styles.lastCell]}>
+                                    <Text style={[styles.cellmedi, { textAlign: "left" }]}>Medical Leave</Text>
+                                    <Text style={styles.cellmedi}>{totalLeave.M}</Text>
+                                    <Text style={styles.cellmedi}>{takenLeave.M}</Text>
+                                    <Text style={[styles.cellmedi, styles.lastCell]}>
                                         {balancMeave.M}
                                     </Text>
                                 </View>

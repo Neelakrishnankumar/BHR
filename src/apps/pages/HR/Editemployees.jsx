@@ -3540,7 +3540,7 @@ const Editemployee = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                      setScreen(0);
+                      setScreen(1);
                     }}
                   >
                     {/* {mode === "E"
@@ -3746,6 +3746,7 @@ const Editemployee = () => {
                     onChange={screenChange}
                   >
                     <MenuItem value={0}>Personnel</MenuItem>
+                    {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
                     {initialValues.employeetype === "CI" ? (
                       <MenuItem value={8}>Contracts In</MenuItem>

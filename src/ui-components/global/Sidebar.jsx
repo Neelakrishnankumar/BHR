@@ -54,7 +54,7 @@ import { useHref, Link } from "react-router-dom";
 import { tokens } from "../../Theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import PriceCheckIcon from '@mui/icons-material/PriceCheck';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import { useNavigate } from "react-router-dom";
@@ -695,23 +695,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR124",
         },
-        // {
-        //   name: "Payroll",
-        //   id: 46,
-        //   url: "./TR027/Employee Payroll",
-        //   icon: (
-        //     <Tooltip title="Employees">
-        //       <CurrencyRubleIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR027",
-        // },
+        {
+          name: "Payroll Configuration",
+          id: 47,
+          url: "./TR027/Employee Payroll",
+          icon: (
+            <Tooltip title="Payroll Configuration">
+              <PriceCheckIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
           {
           name: "Payroll",
           id: 46,
@@ -828,11 +828,11 @@ const child = {
           UGA_ACCESSIDS: "TR259",
         },
         {
-          name: "Time Sheet",
+          name: "Timesheet",
           url: "/Apps/TR261/EditTimeSheet",
           id: 5592,
           icon: (
-            <Tooltip title="Time Sheet">
+            <Tooltip title="Timesheet">
               <PendingActionsOutlinedIcon color="info" />
             </Tooltip>
           ),

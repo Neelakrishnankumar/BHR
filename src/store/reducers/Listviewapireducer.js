@@ -6389,7 +6389,7 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
         )}
         {accessID === "TR333" && (
           <>
-            <Tooltip title="Edit">
+            {/* <Tooltip title="Edit">
               <IconButton
                 color="info"
                 size="small"
@@ -6403,7 +6403,7 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
               >
                 <ModeEditOutlinedIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             {params.row.Process === "P" ? (
               <PayslipBtn
                 CompanyID={params.row.CompanyID}

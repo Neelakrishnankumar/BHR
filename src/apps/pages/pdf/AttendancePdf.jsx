@@ -563,6 +563,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
   const totalAbsent = data.filter(r => r.Status === "Absent").length;
   const totalHolidays = data.filter(r => r.Status === "Holiday").length;
   const totalWeekOffs = data.filter(r => r.Status === "Week Off").length;
+const totalPermission = data.filter(r => r.PermissionHours).length;
 
   // Leave segregation (example)
   const leaveSummary = {
@@ -625,7 +626,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                   Hours
                 </Text>
                 <Text style={[styles.tableColHeader, { width: "15%" }]}>
-                  Prm(In Hrs)
+                  Prm (In Hrs)
                 </Text>
                 <Text style={[styles.tableColHeaderLast, { width: "19%" }]}>
                   Status
@@ -703,7 +704,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                     <Text style={styles.summaryHeaderCell}>Medical Leave</Text>
                   </View> */}
        <View style={styles.summaryRow}>
-                    {["Present", "Absent", "Holidays", "Week Off", "Casual Leave", "Sick Leave", "Medical Leave"]
+                    {["Present", "Absent", "Holidays", "Week Off", "Casual Leave", "Sick Leave", "Medical Leave", "Permission"]
                       .map((item, index, arr) => (
                         <Text
                           key={index}
@@ -730,7 +731,7 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
              
  
                   <View style={styles.summaryRow}>
-                    {[totalPresent, totalAbsent, totalHolidays, totalWeekOffs, leaveSummary.CL, leaveSummary.SL, leaveSummary.EL]
+                    {[totalPresent, totalAbsent, totalHolidays, totalWeekOffs, leaveSummary.CL, leaveSummary.SL, leaveSummary.EL,totalPermission]
                       .map((val, index, arr) => (
                         <Text
                           key={index}
