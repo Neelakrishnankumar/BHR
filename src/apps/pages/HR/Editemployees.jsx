@@ -312,20 +312,20 @@ const Editemployee = () => {
 
         schemaFields1.Branch = Yup.string()
           .trim()
-          .required(data.Employeecontact.Branch);
+          .notRequired(data.Employeecontact.Branch);
 
         schemaFields1.AccountHoldersName = Yup.string()
           .trim()
-          .required(data.Employeecontact.AccountHoldersName);
+          .notRequired(data.Employeecontact.AccountHoldersName);
 
         schemaFields1.AccountNumber = Yup.string()
           .trim()
-          .required(data.Employeecontact.AccountNumber)
+          .notRequired(data.Employeecontact.AccountNumber)
           .matches(/^\d{9,18}$/, data.Employeecontact.AccountNumber);
 
         schemaFields1.IfscCode = Yup.string()
           .trim()
-          .required(data.Employeecontact.IfscCode)
+          .notRequired(data.Employeecontact.IfscCode)
           .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, data.Employeecontact.IfscCode);
 
         const schema1 = Yup.object().shape(schemaFields1);
@@ -4730,15 +4730,15 @@ const Editemployee = () => {
                       value={values.AccountHoldersName}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // label="Account Holder's Name"
-                      label={
-                        <>
-                          Account Holder Name
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                      label="Account Holder Name"
+                      // label={
+                      //   <>
+                      //     Account Holder Name
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
                       focused
                       error={touched.AccountHoldersName && Boolean(errors.AccountHoldersName)}
                       helperText={touched.AccountHoldersName && errors.AccountHoldersName}
@@ -4758,15 +4758,15 @@ const Editemployee = () => {
                       value={values.AccountNumber}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // label="Account Number"
-                      label={
-                        <>
-                          Account Number
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                      label="Account Number"
+                      // label={
+                      //   <>
+                      //     Account Number
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
                       focused
                       error={touched.AccountNumber && Boolean(errors.AccountNumber)}
                       helperText={touched.AccountNumber && errors.AccountNumber}
@@ -4786,15 +4786,15 @@ const Editemployee = () => {
                       value={values.IfscCode}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // label="IFSC Code"
-                      label={
-                        <>
-                          IFSC Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                      label="IFSC Code"
+                      // label={
+                      //   <>
+                      //     IFSC Code
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
                       focused
                       error={touched.IfscCode && Boolean(errors.IfscCode)}
                       helperText={touched.IfscCode && errors.IfscCode}
@@ -4814,15 +4814,15 @@ const Editemployee = () => {
                       value={values.Branch}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      // label="Branch"
-                      label={
-                        <>
-                          Branch
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
+                      label="Branch"
+                      // label={
+                      //   <>
+                      //     Branch
+                      //     <span style={{ color: "red", fontSize: "20px" }}>
+                      //       *
+                      //     </span>
+                      //   </>
+                      // }
                       focused
                       error={touched.Branch && Boolean(errors.Branch)}
                       helperText={touched.Branch && errors.Branch}

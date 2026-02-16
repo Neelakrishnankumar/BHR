@@ -157,13 +157,15 @@ const EditemployeePayroll = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
-  // useEffect(() => {
-  //   dispatch(fetchApidata(accessID, "get", recID));
-  // }, []);
+  useEffect(() => {
+    dispatch(fetchApidata("TR027", "get", recID));
+  }, []);
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const currentYear = new Date().getFullYear();
+
   const handleButtonClick = (params) => {
     const rowData = {
       CheckInDate: params.row.CheckInDate,
@@ -509,6 +511,18 @@ const EditemployeePayroll = () => {
     SortOrder: "",
   });
   const [boMode, setBomode] = useState("A");
+  const getLastSixMonthsIN = () => {
+    const today = new Date();
+    const months = [];
+
+    for (let i = 0; i < 6; i++) {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      months.push(date.getMonth() + 1);
+    }
+
+    return months.reverse().join(",");
+
+  };
 
   // **********ScreenChange Function*********
   const screenChange = (event) => {
@@ -523,6 +537,7 @@ const EditemployeePayroll = () => {
           ""
         )
       );
+
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
         rowData: {},
@@ -560,6 +575,18 @@ const EditemployeePayroll = () => {
 
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
+    }
+    if (event.target.value == "4") {
+      const data = {
+        Year: currentYear,
+        Month: getLastSixMonthsIN(),
+        CompanyID,
+        ManagerID: "",
+        Etype: "E",
+        ProjectID: "1",
+        DesignationID: "83",
+      };
+      dispatch(empAttendance({ data }));
     }
     // if (event.target.value == "9") {
     //   dispatch(fetchApidata(accessID, "get", recID));
@@ -1863,7 +1890,6 @@ const EditemployeePayroll = () => {
     }
   };
   const currentMonthNumber = new Date().getMonth() + 1;
-  const currentYear = new Date().getFullYear();
   const PayprocessInitialvalues = {
     project: [],
     Designation: [],
@@ -1894,19 +1920,21 @@ const EditemployeePayroll = () => {
 
   //   dispatch(empAttendance({ data }));
   // };
+
   const attFnSave = async (values) => {
     const data = {
-      Month: values.month.toString(),
+      Month: values.month.toString() ,
       Year: values.year,
       CompanyID,
       ManagerID: "",
       Etype: "E",
-      ProjectID: values.project.map((p) => p.RecordID).join(","),
-      DesignationID: values.Designation.map((d) => d.RecordID).join(","),
+      ProjectID: values.project.map((p) => p.RecordID).join(",") || "",
+      DesignationID: values.Designation.map((d) => d.RecordID).join(",") || "",
     };
 
     dispatch(empAttendance({ data }));
   };
+
 
   /***********Attendance ************/
   const AttInitialvalues = {
@@ -1968,14 +1996,14 @@ const EditemployeePayroll = () => {
       .map(row => row.EmpRecid)
       .join(",");
     const data = {
-      action: "update",
-      data: {
+      // action: "update",
+      
         // Month: values.month.toString(),   
         Month: monthNames[Number(values.month) - 1],
         Year: values.year.toString(),
         CompanyID: CompanyID,
         EmployeeID: EmployeeIDs
-      }
+      
     };
 
     console.log("Final Payload:", data);
@@ -2681,7 +2709,9 @@ const EditemployeePayroll = () => {
                       color="warning"
                       variant="contained"
                       onClick={() => {
-                        navigate(`/Apps/TR027/Employees`);
+                        // navigate(`/Apps/TR027/Employees`);
+                        navigate("/Apps/TR027/Employee%20Payroll")
+
                       }}
                     >
                       Cancel
@@ -3444,7 +3474,8 @@ const EditemployeePayroll = () => {
                         variant="contained"
                         onClick={() => {
                           // setScreen(0);
-                          navigate(`/Apps/TR333/Payroll`);
+                          // navigate(`/Apps/TR333/Payroll`);
+                          navigate("/Apps/TR027/Employee%20Payroll")
                         }}
                       >
                         Cancel
@@ -6308,7 +6339,7 @@ const EditemployeePayroll = () => {
                       inputProps={{ readOnly: true }}
                     // sx={{ gridColumn: "span 2" }}
                     />
-                    <TextField
+                    {/* <TextField
                       fullWidth
                       variant="standard"
                       type="month"
@@ -6351,7 +6382,7 @@ const EditemployeePayroll = () => {
                         },
                       }}
                     // sx={{ gridColumn: "span 2" }}
-                    />
+                    /> */}
                   </Box>
                   <Box
                     display="flex"
@@ -6359,15 +6390,15 @@ const EditemployeePayroll = () => {
                     padding={1}
                     gap="20px"
                   >
-                    <Button type="submit" variant="contained" color="secondary">
+                    {/* <Button type="submit" variant="contained" color="secondary">
                       APPLY
-                    </Button>
+                    </Button> */}
                     {/* <Button type="reset" variant="contained" color="primary">
                 PROCESS
               </Button> */}
-                    <Button type="reset" variant="contained" color="error">
+                    {/* <Button type="reset" variant="contained" color="error">
                       RESET
-                    </Button>
+                    </Button> */}
                   </Box>
 
                   <Box m="5px">

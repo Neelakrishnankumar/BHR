@@ -303,6 +303,7 @@ const initialState = {
   Setup_MenuExcel:"",
   Parentposturl:"",
   Processposturl:"",
+  PayslipGetController:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -468,6 +469,7 @@ export const getUrlSlice = createSlice({
       state.Setup_MenuExcel = APIurl + "SetupMenu.php";
       state.Parentposturl = APIurl + "ParentpostController.php";
       state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
+      state.PayslipGetController = APIurl + "PayslipGetController.php";
     },
   },
 });

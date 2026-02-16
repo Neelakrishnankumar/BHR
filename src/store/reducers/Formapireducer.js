@@ -149,6 +149,11 @@ const initialState = {
   AuditScreennamegetdata: [],
   Auditcompanygetstatus: "idle",
   Auditcompanygetloading: false,
+
+  //PAYSLIP
+  paySlipdata: [],
+  paySlipstatus: "",
+  paySliploading: false,
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2819,6 +2824,23 @@ export const getApiSlice = createSlice({
         state.PartyDateAndAmtFilterloading = false;
       })
 
+      //PAYSLIP - GET
+      .addCase(paySlipGet.pending, (state, action) => {
+        state.paySlipstatus = "idle";
+        state.paySliploading = true;
+      })
+      .addCase(paySlipGet.fulfilled, (state, action) => {
+        state.paySlipstatus = "success";
+        state.paySliploading = false;
+        state.paySlipdata = action.payload.data
+          ? action.payload.data
+          : [];
+      })
+      .addCase(paySlipGet.rejected, (state, action) => {
+        state.paySlipstatus = "Error";
+        state.paySliploading = false;
+      })
+
       //PARTY - SORT FILTER GET
       .addCase(leaveenquiryget.pending, (state, action) => {
         state.LeaveEntryRegstatus = "idle";
@@ -5101,6 +5123,28 @@ export const Setup_MenuExcel = createAsyncThunk(
       },
     });
 
+    return response.data;
+  },
+);
+
+export const paySlipGet = createAsyncThunk(
+  "paySlipGet/Get",
+  async (payslip ) => {
+    const url = store.getState().globalurl.PayslipGetController;
+
+    const data = {
+      EmployeeID: payslip.EmployeeID,
+      CompanyID: payslip.CompanyID,
+      Finyear: payslip.Finyear,
+      Month: payslip.Month,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
     return response.data;
   },
 );
