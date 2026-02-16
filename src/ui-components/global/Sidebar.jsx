@@ -157,6 +157,50 @@ import { logout } from "../../store/reducers/LoginReducer";
 import { useDispatch } from "react-redux";
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+const is003Subscription = SubscriptionCode.endsWith("003");
+const is00123Subscription = ["001", "002", "003"].some(code =>
+  SubscriptionCode?.endsWith(code)
+);
+
+const getPersonnelMenu = (is00123Subscription) =>
+  is00123Subscription
+    ? {
+      name: "Personnel",
+      id: 5634,
+      url: "./TR330/Classification",
+      icon: (
+        <Tooltip title="Classification">
+          <PeopleAltIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR027",
+    }
+    : {
+      name: "Personnel",
+      id: 5634,
+      url: "./TR027/Personnel",
+      icon: (
+        <Tooltip title="Classification">
+          <PeopleAltIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR027",
+    };
+
 const child = {
   data: [
     {
@@ -170,6 +214,7 @@ const child = {
         </Tooltip>
       ),
       children: [
+
         {
           name: "Designation",
           id: 4578,
@@ -222,23 +267,25 @@ const child = {
           UGA_ACCESSIDS: "TR232",
         },
 
-        {
-          name: "Personnel",
-          url: "./TR027/Personnel",
-          id: 5634,
-          icon: (
-            <Tooltip title="Personnel">
-              <PeopleAltIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR027",
-        },
+        // {
+        //   name: "Personnel",
+        //   // url: "./TR027/Personnel",
+        //   url: is00123Subscription == true ? "./TR330/Classification" : "./TR027/Personnel",
+        //   id: 5634,
+        //   icon: (
+        //     <Tooltip title="Classification">
+        //       <PeopleAltIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR027",
+        // },
+        getPersonnelMenu(is00123Subscription),
         {
           name: "Project",
           id: 4346894,
@@ -324,23 +371,23 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
         },
-        {
-          name: "Payroll",
-          id: 46,
-          url: "./TR027/Employee Payroll",
-          icon: (
-            <Tooltip title="Employees">
-              <CurrencyRubleIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR027",
-        },
+        // {
+        //   name: "Payroll",
+        //   id: 46,
+        //   url: "./TR027/Employee Payroll",
+        //   icon: (
+        //     <Tooltip title="Employees">
+        //       <CurrencyRubleIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR027",
+        // },
         {
           name: "Overhead Type",
           id: 47,
@@ -583,23 +630,23 @@ const child = {
           UGA_ACCESSIDS: "TR328",
         },
 
-         {
-          name: "Audit",
-          id: 4346899,
-          url: "/Apps/TR260/EditAudit",
-          icon: (
-            <Tooltip title="Audit">
-              <ArtTrackIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR328",
-        },
+        //  {
+        //   name: "Audit",
+        //   id: 4346899,
+        //   url: "/Apps/TR260/EditAudit",
+        //   icon: (
+        //     <Tooltip title="Audit">
+        //       <ArtTrackIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR328",
+        // },
 
       ],
     },
@@ -647,6 +694,23 @@ const child = {
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR124",
+        },
+        {
+          name: "Payroll",
+          id: 46,
+          url: "./TR027/Employee Payroll",
+          icon: (
+            <Tooltip title="Employees">
+              <CurrencyRubleIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
         },
         {
           name: "Employee Request",
@@ -747,11 +811,11 @@ const child = {
           UGA_ACCESSIDS: "TR259",
         },
         {
-          name: "Time Sheet",
+          name: "Timesheet",
           url: "/Apps/TR261/EditTimeSheet",
           id: 5592,
           icon: (
-            <Tooltip title="Time Sheet">
+            <Tooltip title="Timesheet">
               <PendingActionsOutlinedIcon color="info" />
             </Tooltip>
           ),
@@ -1079,6 +1143,10 @@ const Sidebars = () => {
   const firstLogin = sessionStorage.getItem("firstLogin");
   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
   const is003Subscription = SubscriptionCode.endsWith("003");
+  const is00123Subscription = ["001", "002", "003"].some(code =>
+    SubscriptionCode?.endsWith(code)
+  );
+
   console.log(is003Subscription, "is003Subscription");
   const restrictedMenus003 = ["Party"];
 
@@ -1123,7 +1191,7 @@ const Sidebars = () => {
       : child.data.filter((menu) => menu.name !== "Company");
 
 
-  const handleMenu = (children, accessRow, isChild,  parentMenuID = null) => {
+  const handleMenu = (children, accessRow, isChild, parentMenuID = null) => {
     return children.map(
       ({
         children,
@@ -1135,19 +1203,19 @@ const Sidebars = () => {
         UGA_ACCESSIDS,
         MenuID,
       }) => {
-         if (name === "Party") {
-      console.log("Party parent:", parentMenuID);
-    }
+        if (name === "Party") {
+          console.log("Party parent:", parentMenuID);
+        }
 
-    //  HIDE CRM → Party for 003 subscription
-    if (
-      parentMenuID === "CRM1800" &&
-      restrictedMenus003.includes(name) &&
-      is003Subscription
-    ) {
-      console.log("HIDDEN PARTY");
-      return null;
-    }
+        //  HIDE CRM → Party for 003 subscription
+        if (
+          parentMenuID === "CRM1800" &&
+          restrictedMenus003.includes(name) &&
+          is003Subscription
+        ) {
+          console.log("HIDDEN PARTY");
+          return null;
+        }
         if (!children) {
           return accessRow.map(
             ({
@@ -1190,7 +1258,7 @@ const Sidebars = () => {
             }
           );
         }
-       
+
         return Modules.map(({ PPD, SM_PMENU }) => {
           if (PPD && SM_PMENU === MenuID) {
             return (

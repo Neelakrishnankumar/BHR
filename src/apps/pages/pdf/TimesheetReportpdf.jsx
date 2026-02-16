@@ -378,7 +378,7 @@ const TimeSheetreportpdf = ({ data = [], filters = {}, projectName = "", manager
             // </View>
             <View style={styles.headerTextContainer}>
               <Text style={styles.headerText}>
-                {`Time Sheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
+                {`Timesheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
               </Text>
               <Text style={styles.subHeaderText}>
                 {`Project: ${projectName}`}

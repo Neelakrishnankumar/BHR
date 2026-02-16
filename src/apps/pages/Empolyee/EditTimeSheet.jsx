@@ -558,7 +558,7 @@ const EditTimeSheet = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Time Sheet</Typography>
+            <Typography variant="h3">Timesheet</Typography>
             {/* <Typography variant="h4">
                             Timesheet ({empData?.Name})
                         </Typography> */}

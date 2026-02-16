@@ -80,7 +80,7 @@ import {
 } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import { Delete, Psychology, Category } from "@mui/icons-material";
+import { Delete, Psychology, Category, PeopleAlt } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -99,7 +99,7 @@ import {
 } from "../../ui-components/global/Autocomplete";
 import OrdEnqProductPDF from "./pdf/OrdEnqProduct";
 import OrdEnqPartyPDF from "./pdf/OrdEnqParty";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { BlobProvider, PDFDownloadLink } from "@react-pdf/renderer";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import { Visibility } from "@mui/icons-material";
@@ -107,9 +107,14 @@ import ClearIcon from "@mui/icons-material/Clear";
 import InputAdornment from "@mui/material/InputAdornment";
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import CancelIcon from "@mui/icons-material/Cancel";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import FileUploadIconButton from "../../ui-components/global/Fileuploadbutton";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { FaFileExcel } from "react-icons/fa";
+import { getConfig } from "../../config";
+import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
+
+
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -120,6 +125,16 @@ const Listview = () => {
   var currentPage = parseInt(sessionStorage.getItem("currentPage"));
   const location = useLocation();
   console.log(location, "location -----------------");
+
+
+   const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+    console.log("baseurlUAAM",baseurlUAAM)
+
+
 
   const dispatch = useDispatch();
   const params = useParams();
@@ -239,7 +254,26 @@ const Listview = () => {
   //   listViewcolumn
   // );
   // `compID=${compID} AND compID=${YearRecorid}`
-  React.useEffect(() => {
+  // React.useEffect(() => {
+  //   dispatch(
+  //     fetchListview(
+  //       accessID,
+  //       screenName,
+  //       accessID == "TR010" ||
+  //         accessID == "TR140" ||
+  //         accessID == "TR047" ||
+  //         accessID == "TR152" ||
+  //         accessID == "TR155" ||
+  //         accessID == "TR022"
+  //         ? `compID=${compID}`
+  //         : "",
+  //       "",
+  //       compID
+  //     )
+  //   );
+  //   // dispatch(screenRightsData(accessID));
+  // }, [location.key]);
+ React.useEffect(() => {
     dispatch(
       fetchListview(
         accessID,
@@ -249,8 +283,10 @@ const Listview = () => {
           accessID == "TR047" ||
           accessID == "TR152" ||
           accessID == "TR155" ||
-          accessID == "TR022"
+          accessID == "TR022"         
           ? `compID=${compID}`
+          : accessID == "TR027" ? 
+          `CompanyID=${compID}`
           : "",
         "",
         compID
@@ -524,14 +560,14 @@ const Listview = () => {
             ) : (
               false
             )}
-            {/* <Tooltip title="Bulk Upload">
+            <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -610,6 +646,8 @@ const Listview = () => {
             ) : accessID == "TR328" ? (
               false
             ) : accessID == "TR315" ? (
+              false
+            ) : accessID == "TR330" ? (
               false
             ) : YearFlag == "true" ? (
               // UGA_ADD ? (
@@ -775,12 +813,15 @@ const Listview = () => {
 
             const formData = new FormData();
             formData.append("excel", file, forcedFileName);
-
-            await dispatch(
+            const response = await dispatch(
               ExcelFileUpload({ formData, forcedFileName })
             ).unwrap();
-
-            toast.success("Excel uploaded successfully");
+            if (response.payload.Status == "Y") {
+              toast.success(response.payload.Msg);
+              window.location.reload();
+            } else {
+              toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+            }
           } catch (error) {
             console.error(error);
             toast.error("Upload failed");
@@ -1161,6 +1202,7 @@ const Listview = () => {
 
                       if (response.payload.Status == "Y") {
                         toast.success(response.payload.Msg);
+                        window.location.reload();
                       } else {
                         toast.error(response.payload.Msg ? response.payload.Msg : "Error");
                       }
@@ -1684,6 +1726,7 @@ const Listview = () => {
                           }}
                           sx={{ width: 250, mt: 2 }}
                         />
+
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="party"
@@ -1702,6 +1745,7 @@ const Listview = () => {
                           // helperText={touched.party && errors.party}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
                         />
+                        
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="product"
@@ -1930,32 +1974,66 @@ const Listview = () => {
                             Apply
                           </Button>
                           {values.Type === "ByProduct" ? (
-                            <PDFDownloadLink
-                              document={
-                                <OrdEnqProductPDF
-                                  data={listViewData}
-                                  Product={values?.product?.Name}
-                                  Party={values?.party?.Name}
-                                  filters={{
-                                    fromdate: values?.fromdate,
-                                    todate: values?.date,
-                                    ordertype: values.ordertype
-                                  }}
-                                />
-                              }
-                              fileName={`OrderEnquirySummary_Product.pdf`}
-                              style={{ color: "#d32f2f", cursor: "pointer" }}
-                            >
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon
-                                    sx={{ fontSize: 24, opacity: 0.5 }}
-                                  />
-                                ) : (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                )
-                              }
-                            </PDFDownloadLink>
+                            // <PDFDownloadLink
+                            //   document={
+                            //     <OrdEnqProductPDF
+                            //       data={listViewData}
+                            //       Product={values?.product?.Name}
+                            //       Party={values?.party?.Name}
+                            //       filters={{
+                            //         fromdate: values?.fromdate,
+                            //         todate: values?.date,
+                            //         ordertype: values.ordertype,
+                            //         Imageurl: baseurlUAAM,
+                            //         HeaderImg: HeaderImg,
+                            //         FooterImg: FooterImg,
+                            //       }}
+                            //     />
+                            //   }
+                            //   fileName={`OrderEnquirySummary_Product.pdf`}
+                            //   style={{ color: "#d32f2f", cursor: "pointer" }}
+                            // >
+                            //   {({ loading }) =>
+                            //     loading ? (
+                            //       <PictureAsPdfIcon
+                            //         sx={{ fontSize: 24, opacity: 0.5 }}
+                            //       />
+                            //     ) : (
+                            //       <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                            //     )
+                            //   }
+                            // </PDFDownloadLink>
+                            
+<BlobProvider
+  document={
+    <OrdEnqProductPDF
+      data={listViewData}
+      Product={values?.product?.Name}
+      Party={values?.party?.Name}
+      filters={{
+        fromdate: values?.fromdate,
+        todate: values?.date,
+        ordertype: values?.ordertype,
+        Imageurl: baseurlUAAM,
+        HeaderImg: HeaderImg,
+        FooterImg: FooterImg,
+      }}
+    />
+  }
+>
+  {({ url, loading }) =>
+    loading ? (
+      <PictureAsPdfIcon
+        sx={{ fontSize: 24, opacity: 0.5 }}
+      />
+    ) : (
+      <PictureAsPdfIcon
+        sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+        onClick={() => window.open(url, "_blank")}
+      />
+    )
+  }
+</BlobProvider>
                           ) : (
                             <PDFDownloadLink
                               document={
@@ -1966,7 +2044,10 @@ const Listview = () => {
                                   filters={{
                                     fromdate: values?.fromdate,
                                     todate: values?.date,
-                                    ordertype: values.ordertype
+                                    ordertype: values.ordertype,
+                                    Imageurl: baseurlUAAM,
+                                    HeaderImg: HeaderImg,
+                                    FooterImg: FooterImg,
                                   }}
                                 />
                               }
@@ -1984,6 +2065,24 @@ const Listview = () => {
                               }
                             </PDFDownloadLink>
                           )}
+
+<FaFileExcel
+  size={20}
+  color="#1D6F42"
+  style={{ cursor: "pointer" }}
+  onClick={() =>
+    OrderEnqProdandPartyExcel(
+      listViewData,
+      {
+        fromdate: values?.fromdate,
+        todate: values?.todate,
+        ordertype: values?.ordertype,
+        product: values?.product?.Name || "",
+        party: values?.party?.Name || "",
+      }
+    )
+  }
+/>
 
                           {/* <Button
                             type="button"
@@ -4021,6 +4120,15 @@ const Listview = () => {
             <Chip
               icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ) : accessID == "TR330" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>           
+            <Chip
+              icon={<PeopleAltIcon color="primary" />}
+              label="Personnel"
               variant="outlined"
             // sx={{ marginLeft: "50px" }}
             />

@@ -21,11 +21,10 @@ export const TimesheetExcel = (
     "July","August","September","October","November","December"
   ];
 
-  const monthIndex = Number(filters.Month) - 1;
+  const monthIndex = Number(filters.Month) - 1; 
   const monthName = monthNames[monthIndex] || "";
-
-  /* ================= TITLE ================= */
-  const title = `Time Sheet - ${filters.EmployeeID || ""} (${monthName} - ${filters.Year || ""})`;
+ /* ================= TITLE ================= */
+  const title = `Timesheet - ${filters.EmployeeID || ""} (${monthName} - ${filters.Year || ""})`;
 
   XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "A1" });
 

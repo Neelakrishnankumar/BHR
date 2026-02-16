@@ -50,6 +50,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { getConfig } from "../../../config";
 import { FaFileExcel } from "react-icons/fa";
 import MonthlyAttendanceExcel from "../pdf/MonthlyAttendanceExcel";
+import PayslipPdf from "../pdf/PaySlipPdf";
 
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -266,7 +267,7 @@ const EditAttendance = () => {
       field: "Status",
       headerName: "Status",
       // flex: 1,
-       width: 150,
+      width: 150,
       headerAlign: "center",
     },
     {
@@ -609,6 +610,36 @@ const EditAttendance = () => {
           }
           label="Self"
         /> */}
+                  {/* <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={useCurrentEmp}
+                        onChange={(e) => {
+                          setUseCurrentEmp(e.target.checked);
+                          setempData(null)
+                        }}
+                        color="primary"
+                      />
+                    }
+                    label="Payslip"
+                  /> */}
+                  {/* <Tooltip title="Download Payslip">
+                    <PDFDownloadLink
+                      document={<PayslipPdf data={[]} filters={{}} />}
+                      fileName="payslip.pdf"
+                      style={{ textDecoration: "none", display:"flex" }}
+                    >
+
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <PictureAsPdfIcon />
+                      </IconButton>
+
+                    </PDFDownloadLink>
+                  </Tooltip> */}
                 </Stack>
                 <Stack
                   direction="row"

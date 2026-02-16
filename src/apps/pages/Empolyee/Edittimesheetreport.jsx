@@ -568,7 +568,7 @@ const Edittimesheetreport = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h3">Time Sheet Report</Typography>
+            <Typography variant="h3">Timesheet Report</Typography>
           </Box>
           <Box display="flex">
             {/* <Tooltip title="Attendance ">

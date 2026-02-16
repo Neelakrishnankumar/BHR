@@ -189,7 +189,9 @@ const EditAttendanceHistory = () => {
     {
       field: "slno",
       headerName: "SL#",
-      width: 60,
+      width: 40,
+      headerAlign: "center",
+      align:"right",
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
@@ -238,15 +240,15 @@ const EditAttendanceHistory = () => {
     { field: "Day29", headerName: "29", width: 5 },
     { field: "Day30", headerName: "30", width: 5 },
     { field: "Day31", headerName: "31", width: 5 },
-    { field: "Present", headerName: "Present" },
+    { field: "Present", headerName: "Present",headerAlign: "center",align:"right", },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "Unpaidleave", headerName: "Unpaid Leave" },
-    { field: "Absent", headerName: "Absent" },
-    // { field: "Irregular", headerName: "IRREGULAR" },
-    { field: "Holidays", headerName: "Holiday" },
-    { field: "Weekoff", headerName: "Weekoff" },
-    { field: "Total", headerName: "Total Days" },
-  ];
+    { field: "Unpaidleave", headerName: "Unpaid Leave",headerAlign: "center",align:"right", },
+    { field: "Absent", headerName: "Absent",headerAlign: "center",align:"right", },
+        // { field: "Irregular", headerName: "IRREGULAR" },
+    { field: "Holidays", headerName: "Holidays",headerAlign: "center",align:"right", },
+    { field: "Weekoff", headerName: "Week Off",headerAlign: "center",align:"right", },
+    { field: "Total", headerName: "Total Days",headerAlign: "center",align:"right", },
+    ];
   // const AttendanceData = [
   //   {
   //     id: 1,
@@ -308,6 +310,7 @@ const EditAttendanceHistory = () => {
     };
 
     dispatch(empAttendance({ data }));
+     setPage(0); 
   };
 
   const attendaceProcessFnSave = async (values) => {
@@ -693,12 +696,8 @@ const EditAttendanceHistory = () => {
                         minHeight: dataGridHeaderFooterHeight,
                       }
                     }}
-
-
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
-
-
                     rows={AttendanceData}
                     columns={AttColumn}
                     disableSelectionOnClick
@@ -757,7 +756,7 @@ const EditAttendanceHistory = () => {
 
                   <Chip
                     avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>WO</Avatar>}
-                    label="WeekOff"
+                    label="Week Off"
                     variant="outlined"
                     sx={{ backgroundColor: "#ccc4c4", }}
                   />

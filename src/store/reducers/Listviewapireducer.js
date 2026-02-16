@@ -29,7 +29,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import EventNoteIcon from '@mui/icons-material/EventNote';
+import EventNoteIcon from "@mui/icons-material/EventNote";
 
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
@@ -69,7 +69,6 @@ import {
 import { Visibility } from "@mui/icons-material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import CategoryIcon from "@mui/icons-material/Category";
-
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
@@ -95,6 +94,8 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
 import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
+import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 const initialState = {
   rowData: [],
@@ -122,7 +123,7 @@ export const getMail = createAsyncThunk("mail/get", async (data) => {
   });
   console.log(
     "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-    response
+    response,
   );
   return response.data;
 });
@@ -147,11 +148,11 @@ export const sendMail = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     toast.success("Mail Send Successfully");
     return response.data;
-  }
+  },
 );
 
 export const getApiSlice = createSlice({
@@ -328,7 +329,7 @@ const productionCardUPdate = (type, recID) => async (dispatch, getState) => {
     .then((response) => {
       console.log(
         "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-        response.data
+        response.data,
       );
       // console.log("response data" + response.data);
       if (response.data.Status == "Y") {
@@ -355,7 +356,7 @@ const fnProcess = (recID, accessid) => (dispatch, getState) => {
   };
   console.log(
     "🚀 ~ file: Listviewapireducer.js:228 ~ fnProcess ~ data:",
-    JSON.stringify(data)
+    JSON.stringify(data),
   );
 
   axios
@@ -369,7 +370,7 @@ const fnProcess = (recID, accessid) => (dispatch, getState) => {
     .then((response) => {
       console.log(
         "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-        response.data
+        response.data,
       );
       // console.log("response data" + response.data);
       if (response.data.Status == "Y") {
@@ -411,7 +412,7 @@ const indentOrderSave =
       .then((response) => {
         console.log(
           "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-          response.data
+          response.data,
         );
         // alert( JSON.stringify( response.data))
         console.log("response data" + response.data);
@@ -460,7 +461,7 @@ const PurchaseIndent = createAsyncThunk(
       .then((response) => {
         console.log(
           "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-          response.data
+          response.data,
         );
         // console.log("response data" + response.data);
         if (response.data.Status == "Y") {
@@ -474,7 +475,7 @@ const PurchaseIndent = createAsyncThunk(
           toast.error(response.data.Msg);
         }
       });
-  }
+  },
 );
 
 const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
@@ -500,7 +501,7 @@ const CustomerOrderSave = (type, recID) => (dispatch, getState) => {
     .then((response) => {
       console.log(
         "🚀 ~ file: Listviewapireducer.js:96 ~ .then ~ response",
-        response.data
+        response.data,
       );
       // console.log("response data" + response.data);
       if (response.data.Status == "Y") {
@@ -658,6 +659,7 @@ export const fetchListview =
         AccessID != "TR316" &&
         AccessID != "TR317" &&
         AccessID != "TR318" &&
+         AccessID != "TR027" &&
         AccessID != "TR319" &&
         AccessID != "TR324" &&
         AccessID != "TR127"
@@ -726,6 +728,7 @@ export const fetchListview =
       AccessID == "TR294" ||
       AccessID == "TR317" ||
       AccessID == "TR318" ||
+      AccessID == "TR027" ||
       AccessID == "TR319" ||
       AccessID == "TR282"
       // AccessID == "TR304"
@@ -1067,11 +1070,11 @@ export const fetchListview =
       console.log("🔍 TR321 DEBUG - filter:", filter);
       console.log(
         "🔍 TR321 DEBUG - TR321_RESET:",
-        sessionStorage.getItem("TR321_RESET")
+        sessionStorage.getItem("TR321_RESET"),
       );
       console.log(
         "🔍 TR321 DEBUG - TR321_HASFILTER:",
-        sessionStorage.getItem("TR321_HASFILTER")
+        sessionStorage.getItem("TR321_HASFILTER"),
       );
 
       // 🔥 ONE-TIME RESET: Clear immediately + CompanyID
@@ -1079,7 +1082,7 @@ export const fetchListview =
         console.log("🔍 TR321 - ONE-TIME RESET: CompanyID");
         sessionStorage.removeItem("TR321_RESET");
         dispatch(
-          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
         return;
       }
@@ -1089,7 +1092,7 @@ export const fetchListview =
       if (hasFilter !== "Y") {
         console.log("🔍 TR321 - NO FILTERS (null/N): CompanyID");
         dispatch(
-          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+          fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
         );
         return;
       }
@@ -1116,7 +1119,7 @@ export const fetchListview =
         "hasBalance:",
         hasBalance,
         "hasStatusFilter:",
-        hasStatusFilter
+        hasStatusFilter,
       );
 
       // CASE 1: PROSPECT/BALANCE
@@ -1175,7 +1178,7 @@ export const fetchListview =
                 dateConditions.push(`${col}='${fromdate}'`);
               } else {
                 dateConditions.push(
-                  `${col} BETWEEN '${fromdate}' AND '${todate}'`
+                  `${col} BETWEEN '${fromdate}' AND '${todate}'`,
                 );
               }
             }
@@ -1198,7 +1201,7 @@ export const fetchListview =
       // CASE 3: FALLBACK
       console.log("🔍 TR321 - FALLBACK: CompanyID");
       dispatch(
-        fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId)
+        fetchListview(AccessID, "Party", `CompanyID=${CompId}`, "", CompId),
       );
     } else {
       filter = `CompanyID=${CompId}`;
@@ -1212,10 +1215,10 @@ export const fetchListview =
           AccessID == "TR128"
             ? `parentID=${CompId}`
             : AccessID == "TR273"
-            ? "Type = 'CI'"
-            : AccessID == "TR274"
-            ? "Type = 'CO'"
-            : filter,
+              ? "Type = 'CI'"
+              : AccessID == "TR274"
+                ? "Type = 'CO'"
+                : filter,
         // Filter: `CompanyID=${CompId}`,
         Any: any,
         //CompId,
@@ -1285,9 +1288,8 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }productioncard.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }productioncard.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -1316,7 +1318,7 @@ export const fetchListview =
                             color="success"
                             onClick={productionCardUPdate(
                               "S",
-                              params.row.RecordID
+                              params.row.RecordID,
                             )}
                           >
                             <PlayCircleOutlineOutlinedIcon />
@@ -1333,7 +1335,7 @@ export const fetchListview =
                                 color="warning"
                                 onClick={productionCardUPdate(
                                   "P",
-                                  params.row.RecordID
+                                  params.row.RecordID,
                                 )}
                               >
                                 <PauseCircleOutlinedIcon />
@@ -1347,7 +1349,7 @@ export const fetchListview =
                                 color="primary"
                                 onClick={productionCardUPdate(
                                   "R",
-                                  params.row.RecordID
+                                  params.row.RecordID,
                                 )}
                               >
                                 <NotStartedOutlinedIcon />
@@ -1365,7 +1367,7 @@ export const fetchListview =
                               color="success"
                               onClick={productionCardUPdate(
                                 "C",
-                                params.row.RecordID
+                                params.row.RecordID,
                               )}
                             >
                               <TaskAltOutlinedIcon />
@@ -1380,9 +1382,8 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }PRODUCTIONCARD.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }PRODUCTIONCARD.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -1398,11 +1399,9 @@ export const fetchListview =
                     <Tooltip title="Production Requirement">
                       <IconButton
                         component="a"
-                        href={`${
-                          store.getState().globalurl.pdfurl
-                        }ProductionRequirement.php?Token=${
-                          params.row.Hashtoken
-                        }`}
+                        href={`${store.getState().globalurl.pdfurl
+                          }ProductionRequirement.php?Token=${params.row.Hashtoken
+                          }`}
                         target="_blank"
                         rel="noreferrer"
                         sx={{ color: "#4615b2" }}
@@ -1421,11 +1420,9 @@ export const fetchListview =
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }PRODUCTIONCARD.php?Token=${
-                                  params.row.Hashtoken
-                                }`,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }PRODUCTIONCARD.php?Token=${params.row.Hashtoken
+                                  }`,
                               })
                             );
                             dispatch(
@@ -1433,7 +1430,7 @@ export const fetchListview =
                                 Templateid: "ET_006",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -1543,20 +1540,20 @@ export const fetchListview =
                       setLoading(true);
 
                       const resultAction = await dispatch(
-                        getProjectCosting({ ProjectID, EmployeeID })
+                        getProjectCosting({ ProjectID, EmployeeID }),
                       );
 
                       const data = resultAction.payload; // <-- this depends on how your thunk is defined
                       if (!data?.HeaderData?.DetailData?.length) {
                         alert(
-                          "No Costing available to generate PDF. Kindly add costing..."
+                          "No Costing available to generate PDF. Kindly add costing...",
                         );
                         return;
                       }
 
                       // Generate and download PDF
                       const blob = await pdf(
-                        <ProjectPDF data={data} UserName={UserName} />
+                        <ProjectPDF data={data} UserName={UserName} />,
                       ).toBlob();
                       const link = document.createElement("a");
                       link.href = URL.createObjectURL(blob);
@@ -1789,6 +1786,7 @@ export const fetchListview =
             };
           } else if (
             AccessID == "TR315" ||
+            AccessID == "TR330" ||
             AccessID == "TR316" ||
             AccessID == "TR317" ||
             AccessID == "TR318" ||
@@ -1874,7 +1872,7 @@ export const fetchListview =
                 );
               },
             };
-          }else if (AccessID == "TR213") {
+          } else if (AccessID == "TR213") {
             obj = {
               field: "action",
               headerName: "Action",
@@ -1890,21 +1888,21 @@ export const fetchListview =
                   <Box>
                     <Link to={`./Edit${screenName}/${params.row.RecordID}/E`}>
                       <Tooltip title="Edit">
-                       <IconButton color="info" size="small">
-                         <ModeEditOutlinedIcon />
-                      </IconButton>
-                     </Tooltip>
-                     </Link>
-                     <Link
-                            to={`/Apps/LeaveTypeRegister/${params.row.RecordID}`}
-                            state={{ LeaveType: params.row.LeaveType }}
-                          >
-                            <Tooltip title="Leave Enquiry Report">
-                              <IconButton color="info" size="small">
-                                  <EventNoteIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Link>
+                        <IconButton color="info" size="small">
+                          <ModeEditOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                    <Link
+                      to={`/Apps/LeaveTypeRegister/${params.row.RecordID}`}
+                      state={{ LeaveType: params.row.LeaveType }}
+                    >
+                      <Tooltip title="Leave Enquiry Report">
+                        <IconButton color="info" size="small">
+                          <EventNoteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
                   </Box>
                 );
               },
@@ -2861,7 +2859,7 @@ export const fetchListview =
                           PartyName: params.row.PartyName,
                           PartyID: params.row.PartyID,
                           LeadTitle: params.row.LeadTitle,
-                          Editable:params.row.Editable
+                          Editable: params.row.Editable
                         }}
                       >
                         <Tooltip title="View">
@@ -3103,9 +3101,8 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }productpacking.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }productpacking.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -3124,11 +3121,9 @@ export const fetchListview =
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }productpacking.php?Token=${
-                                  params.row.Hashtoken
-                                }`,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }productpacking.php?Token=${params.row.Hashtoken
+                                  }`,
                               })
                             );
                             dispatch(
@@ -3136,7 +3131,7 @@ export const fetchListview =
                                 Templateid: "ET_010",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -3272,7 +3267,7 @@ export const fetchListview =
                           onClick={() =>
                             sessionStorage.setItem(
                               "indentRecID",
-                              params.row.RecordID
+                              params.row.RecordID,
                             )
                           }
                           size="small"
@@ -3724,7 +3719,7 @@ export const fetchListview =
                           OperationStageID: params.row.OperationStageID,
                           stagesName: params.row.OperationStageName,
                         }}
-                        //state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
+                      //state ={{MilestoneID:params.row.MilestoneID,projectID:params.row.ProjectID,OperationStageID:params.row.OperationStageID}}
                       >
                         <Tooltip title="Edit">
                           <IconButton color="info" size="small">
@@ -3743,7 +3738,7 @@ export const fetchListview =
               Success({
                 columndata: listviewData.Data.columns,
                 rowdata: listviewData.Data.rows,
-              })
+              }),
             );
           } else if (
             AccessID !== "TR105" &&
@@ -3768,84 +3763,85 @@ export const fetchListview =
                 return (
                   <Stack direction="row">
                     {AccessID !== "TR119" &&
-                    AccessID !== "TR118" &&
-                    AccessID !== "TR032" &&
-                    AccessID !== "TR099" &&
-                    AccessID !== "TR048" &&
-                    AccessID !== "TR010" &&
-                    AccessID !== "TR083" &&
-                    AccessID !== "TR097" &&
-                    AccessID !== "TR135" &&
-                    AccessID !== "TR136" &&
-                    AccessID !== "TR091" &&
-                    AccessID !== "TR151" &&
-                    //AccessID !== "TR027" &&
-                    AccessID !== "TR052" ? (
+                      AccessID !== "TR118" &&
+                      AccessID !== "TR032" &&
+                      AccessID !== "TR099" &&
+                      AccessID !== "TR048" &&
+                      AccessID !== "TR010" &&
+                      AccessID !== "TR083" &&
+                      AccessID !== "TR097" &&
+                      AccessID !== "TR135" &&
+                      AccessID !== "TR136" &&
+                      AccessID !== "TR091" &&
+                      AccessID !== "TR151" &&
+                      //AccessID !== "TR027" &&
+                      AccessID !== "TR052" ? (
                       <Link
                         to={`./Edit${screenName}/${params.row.RecordID}/E`}
                         state={
                           AccessID === "TR027"
                             ? {
-                                EmpName: params.row.Name,
-                                Employee:params.row.Employee
-                              }
+                              EmpName: params.row.Name,
+                              Employee: params.row.Employee,
+                              BreadCrumb1: params.row.Description,
+                            }
                             : AccessID === "TR128"
-                            ? {
+                              ? {
                                 LocationName: params.row.Name,
                                 CompanyName: params.row.CompanyName,
                               }
-                            : AccessID === "TR127"
-                            ? {
-                                GateName: params.row.Name,
-                                LocationName: params.row.LocationName,
-                                CompanyName: params.row.CompanyName,
-                              }
-                            : AccessID === "TR257"
-                            ? {
-                                EmpName: params.row.Name,
-                              }
-                            : AccessID === "TR132"
-                            ? {
-                                proName: params.row.ProjectName,
-                                Date: params.row.Date,
-                                EmpName: params.row.EmployeeName,
-                                Locname: params.row.LocationName,
-                              }
-                            : AccessID === "TR123"
-                            ? {
-                                EmpName: params.row.Name,
-                              }
-                            : AccessID === "TR134"
-                            ? {
-                                proName: params.row.ProjectName,
-                                EmpName: params.row.EmployeeName,
-                                Date: params.row.Date,
-                                Locname: params.row.LocationName,
-                                EmployeeID: params.row.EmployeesID,
-                                checkinID: params.row.CheckinID,
-                              }
-                            : AccessID === "TR124"
-                            ? {
-                                EmpName: params.row.EmployeeName,
-                                checkinID: params.row.CheckinID,
-                              }
-                            : // : AccessID === "TR127"
-                              // ? {
-                              //     GateName: params.row.Name,
-                              //     LocationName: params.row.LocationName,
-                              //     CompanyName: params.row.CompanyName,
-                              //   }
-                              // : AccessID === "TR129"
-                              // ? {
-                              //     bin: params.row.Name,
-                              //     LocationName: params.row.LocationName,
-                              //     CompanyName: params.row.CompanyName,
-                              //   }
-                              {
-                                CustomerID: params.row.CustomerRecordID,
-                                ProductID: params.row.ProductRecordID,
-                                BomID: params.row.BomRecordID,
-                              }
+                              : AccessID === "TR127"
+                                ? {
+                                  GateName: params.row.Name,
+                                  LocationName: params.row.LocationName,
+                                  CompanyName: params.row.CompanyName,
+                                }
+                                : AccessID === "TR257"
+                                  ? {
+                                    EmpName: params.row.Name,
+                                  }
+                                  : AccessID === "TR132"
+                                    ? {
+                                      proName: params.row.ProjectName,
+                                      Date: params.row.Date,
+                                      EmpName: params.row.EmployeeName,
+                                      Locname: params.row.LocationName,
+                                    }
+                                    : AccessID === "TR123"
+                                      ? {
+                                        EmpName: params.row.Name,
+                                      }
+                                      : AccessID === "TR134"
+                                        ? {
+                                          proName: params.row.ProjectName,
+                                          EmpName: params.row.EmployeeName,
+                                          Date: params.row.Date,
+                                          Locname: params.row.LocationName,
+                                          EmployeeID: params.row.EmployeesID,
+                                          checkinID: params.row.CheckinID,
+                                        }
+                                        : AccessID === "TR124"
+                                          ? {
+                                            EmpName: params.row.EmployeeName,
+                                            checkinID: params.row.CheckinID,
+                                          }
+                                          : // : AccessID === "TR127"
+                                          // ? {
+                                          //     GateName: params.row.Name,
+                                          //     LocationName: params.row.LocationName,
+                                          //     CompanyName: params.row.CompanyName,
+                                          //   }
+                                          // : AccessID === "TR129"
+                                          // ? {
+                                          //     bin: params.row.Name,
+                                          //     LocationName: params.row.LocationName,
+                                          //     CompanyName: params.row.CompanyName,
+                                          //   }
+                                          {
+                                            CustomerID: params.row.CustomerRecordID,
+                                            ProductID: params.row.ProductRecordID,
+                                            BomID: params.row.BomRecordID,
+                                          }
                         }
                       >
                         <Tooltip title="Edit">
@@ -3914,9 +3910,8 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }deliverychallan.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }deliverychallan.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -3929,8 +3924,8 @@ export const fetchListview =
                       false
                     )}
                     {params.row.Process != "Y" &&
-                    params.row.parentID == "MO" &&
-                    AccessID == "TR052" ? (
+                      params.row.parentID == "MO" &&
+                      AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -3942,8 +3937,8 @@ export const fetchListview =
                       </Link>
                     ) : null}
                     {params.row.Process != "Y" &&
-                    params.row.parentID == "LO" &&
-                    AccessID == "TR052" ? (
+                      params.row.parentID == "LO" &&
+                      AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -3955,8 +3950,8 @@ export const fetchListview =
                       </Link>
                     ) : null}
                     {params.row.Process != "Y" &&
-                    params.row.parentID == "PO" &&
-                    AccessID == "TR052" ? (
+                      params.row.parentID == "PO" &&
+                      AccessID == "TR052" ? (
                       <Link>
                         <IconButton
                           color="primary"
@@ -4268,11 +4263,9 @@ export const fetchListview =
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }Leatherpackingreport.php?Token=${
-                              params.row.Hashtoken
-                            }`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }Leatherpackingreport.php?Token=${params.row.Hashtoken
+                              }`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4284,9 +4277,8 @@ export const fetchListview =
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }LEATHERPACKING.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4307,11 +4299,9 @@ export const fetchListview =
                           dispatch(
                             mailOpen({
                               row: params.row,
-                              link: `${
-                                store.getState().globalurl.pdfurl
-                              }Leatherpackingreport.php?Token=${
-                                params.row.Hashtoken
-                              }`,
+                              link: `${store.getState().globalurl.pdfurl
+                                }Leatherpackingreport.php?Token=${params.row.Hashtoken
+                                }`,
                             })
                           );
                           dispatch(
@@ -4319,7 +4309,7 @@ export const fetchListview =
                               Templateid: "ET_011",
                               RecordID: params.row.RecordID,
                               UserName: "Trinity",
-                            })
+                            }),
                           );
                         }}
                       >
@@ -4333,7 +4323,7 @@ export const fetchListview =
                           color="primary"
                           variant="contained"
                           onClick={fnProcess(params.row.RecordID, "TR050")}
-                          // onClick={()=>alert("hai")}
+                        // onClick={()=>alert("hai")}
                         >
                           <SettingsBackupRestoreIcon />
                         </IconButton>
@@ -4344,9 +4334,8 @@ export const fetchListview =
                       <Tooltip title="Cutting Component">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMCC.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }BOMCC.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="primary"
@@ -4363,9 +4352,8 @@ export const fetchListview =
                       <Tooltip title="Production">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMPROD.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }BOMPROD.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="success"
@@ -4382,9 +4370,8 @@ export const fetchListview =
                       <Tooltip title="Packing">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMPACK.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }BOMPACK.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="error"
@@ -4400,9 +4387,8 @@ export const fetchListview =
                       <Tooltip title="All BOM">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }BOMALL.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }BOMALL.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color=""
@@ -4418,9 +4404,8 @@ export const fetchListview =
                       <Tooltip title="Internal Order">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }Internalorder.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }Internalorder.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color=""
@@ -4440,9 +4425,8 @@ export const fetchListview =
                           dispatch(
                             mailOpen({
                               row: params.row,
-                              link: `${
-                                store.getState().globalurl.pdfurl
-                              }BOMALL.php?Token=${params.row.Hashtoken}`,
+                              link: `${store.getState().globalurl.pdfurl
+                                }BOMALL.php?Token=${params.row.Hashtoken}`,
                             })
                           );
                           dispatch(
@@ -4450,7 +4434,7 @@ export const fetchListview =
                               Templateid: "ET_005",
                               RecordID: params.row.RecordID,
                               UserName: "Trinity",
-                            })
+                            }),
                           );
                         }}
                       >
@@ -4503,13 +4487,12 @@ export const fetchListview =
 
                     {AccessID == "TR074" ? (
                       params.row.parentID == "CC" &&
-                      params.row.Process == "Y" ? (
+                        params.row.Process == "Y" ? (
                         <Tooltip title="Print ">
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }BATCHCC.php?Token=${params.row.Hashtoken}`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }BATCHCC.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4526,13 +4509,12 @@ export const fetchListview =
                     )}
                     {AccessID == "TR074" ? (
                       params.row.parentID == "PC" &&
-                      params.row.Process == "Y" ? (
+                        params.row.Process == "Y" ? (
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }BATCHPROD.php?Token=${params.row.Hashtoken}`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }BATCHPROD.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4549,13 +4531,12 @@ export const fetchListview =
                     )}
                     {AccessID == "TR074" ? (
                       params.row.parentID == "PK" &&
-                      params.row.Process == "Y" ? (
+                        params.row.Process == "Y" ? (
                         <Tooltip title="Print">
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }BATCHPACK.php?Token=${params.row.Hashtoken}`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }BATCHPACK.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -4574,9 +4555,8 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }openpurchaseorder.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -4590,9 +4570,8 @@ export const fetchListview =
                       <Tooltip title="Print">
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }purchaseorder.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }purchaseorder.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -4603,8 +4582,8 @@ export const fetchListview =
                       </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
-                    params.row.parentID == "CC" &&
-                    params.row.Process == "Y" ? (
+                      params.row.parentID == "CC" &&
+                      params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
                           color="info"
@@ -4613,9 +4592,8 @@ export const fetchListview =
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }BATCHCC.php?Token=${params.row.Hashtoken}`,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }BATCHCC.php?Token=${params.row.Hashtoken}`,
                               })
                             );
                             dispatch(
@@ -4623,7 +4601,7 @@ export const fetchListview =
                                 Templateid: "ET_013",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -4632,8 +4610,8 @@ export const fetchListview =
                       </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
-                    params.row.parentID == "PC" &&
-                    params.row.Process == "Y" ? (
+                      params.row.parentID == "PC" &&
+                      params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
                           color="info"
@@ -4642,9 +4620,8 @@ export const fetchListview =
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }BATCHPROD.php?Token=${params.row.Hashtoken}`,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }BATCHPROD.php?Token=${params.row.Hashtoken}`,
                               })
                             );
                             dispatch(
@@ -4652,7 +4629,7 @@ export const fetchListview =
                                 Templateid: "ET_014",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -4661,8 +4638,8 @@ export const fetchListview =
                       </Tooltip>
                     ) : null}
                     {AccessID == "TR074" &&
-                    params.row.parentID == "PK" &&
-                    params.row.Process == "Y" ? (
+                      params.row.parentID == "PK" &&
+                      params.row.Process == "Y" ? (
                       <Tooltip title="Email">
                         <IconButton
                           color="info"
@@ -4671,9 +4648,8 @@ export const fetchListview =
                             dispatch(
                               mailOpen({
                                 row: params.row,
-                                link: `${
-                                  store.getState().globalurl.pdfurl
-                                }BATCHPACK.php?Token=${params.row.Hashtoken}`,
+                                link: `${store.getState().globalurl.pdfurl
+                                  }BATCHPACK.php?Token=${params.row.Hashtoken}`,
                               })
                             );
                             dispatch(
@@ -4681,7 +4657,7 @@ export const fetchListview =
                                 Templateid: "ET_015",
                                 RecordID: params.row.RecordID,
                                 UserName: "Trinity",
-                              })
+                              }),
                             );
                           }}
                         >
@@ -4712,7 +4688,7 @@ export const fetchListview =
                                 productionlookupOpen({
                                   materialRecID: params.row.MtlRecordID,
                                   productionCardID: params.row.PcdhRecordID,
-                                })
+                                }),
                               )
                             }
                             color="info"
@@ -4729,7 +4705,7 @@ export const fetchListview =
                                 dispatch(
                                   productionColorlookupOpen({
                                     materialRecID: params.row.MtlRecordID,
-                                  })
+                                  }),
                                 )
                               }
                               color="info"
@@ -4783,7 +4759,7 @@ export const fetchListview =
                             "insert",
                             indentRecID,
                             params.row.SupplierID,
-                            params.row.parentID
+                            params.row.parentID,
                           )}
                         >
                           <ListAltOutlinedIcon />
@@ -4935,8 +4911,8 @@ export const fetchListview =
                  </Link>
                 :false} */}
                     {params.row.InvType == "SI" &&
-                    AccessID == "TR011" &&
-                    params.row.Print == "Y" ? (
+                      AccessID == "TR011" &&
+                      params.row.Print == "Y" ? (
                       <Tooltip
                         title={
                           params.row.Process == "Y"
@@ -4946,9 +4922,8 @@ export const fetchListview =
                       >
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }sampleinvoice.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }sampleinvoice.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -4962,9 +4937,9 @@ export const fetchListview =
                     )}
 
                     {params.row.InvType == "FI" &&
-                    AccessID == "TR011" &&
-                    params.row.parentID == "P" &&
-                    params.row.Print == "Y" ? (
+                      AccessID == "TR011" &&
+                      params.row.parentID == "P" &&
+                      params.row.Print == "Y" ? (
                       <Tooltip
                         title={
                           params.row.Process == "Y"
@@ -4974,9 +4949,8 @@ export const fetchListview =
                       >
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }finalreport.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }finalreport.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -4990,9 +4964,9 @@ export const fetchListview =
                     )}
 
                     {params.row.InvType == "FI" &&
-                    AccessID == "TR011" &&
-                    params.row.parentID == "L" &&
-                    params.row.Print == "Y" ? (
+                      AccessID == "TR011" &&
+                      params.row.parentID == "L" &&
+                      params.row.Print == "Y" ? (
                       <Tooltip
                         title={
                           params.row.Process == "Y"
@@ -5002,9 +4976,8 @@ export const fetchListview =
                       >
                         <IconButton
                           component="a"
-                          href={`${
-                            store.getState().globalurl.pdfurl
-                          }leatherinvoice.php?Token=${params.row.Hashtoken}`}
+                          href={`${store.getState().globalurl.pdfurl
+                            }leatherinvoice.php?Token=${params.row.Hashtoken}`}
                           target="_blank"
                           rel="noreferrer"
                           color="info"
@@ -5017,9 +4990,9 @@ export const fetchListview =
                       false
                     )}
                     {params.row.InvType == "PI" &&
-                    AccessID == "TR011" &&
-                    params.row.parentID == "P" &&
-                    params.row.Print == "Y" ? (
+                      AccessID == "TR011" &&
+                      params.row.parentID == "P" &&
+                      params.row.Print == "Y" ? (
                       <>
                         <Tooltip
                           title={
@@ -5030,9 +5003,8 @@ export const fetchListview =
                         >
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }report.php?Token=${params.row.Hashtoken}`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }report.php?Token=${params.row.Hashtoken}`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -5044,11 +5016,9 @@ export const fetchListview =
                         <Tooltip title="Leather Consumption">
                           <IconButton
                             component="a"
-                            href={`${
-                              store.getState().globalurl.pdfurl
-                            }leatherconsumption.php?Token=${
-                              params.row.Hashtoken
-                            }`}
+                            href={`${store.getState().globalurl.pdfurl
+                              }leatherconsumption.php?Token=${params.row.Hashtoken
+                              }`}
                             target="_blank"
                             rel="noreferrer"
                             color="info"
@@ -5097,7 +5067,7 @@ export const fetchListview =
                         <Box>
                           <Link
                             to={`/Apps/${screenName}/imageupload/${AccessID}/${params.row.RecordID}`}
-                            state={{ EmpName: params.row.Name,Employee:params.row.Employee }}
+                            state={{ EmpName: params.row.Name, Employee: params.row.Employee }}
                           >
                             <Tooltip title="Image upload">
                               <IconButton color="info" size="small">
@@ -5107,11 +5077,11 @@ export const fetchListview =
                           </Link>
                           <Link
                             to={`/Apps/leaveenquiry/${params.row.RecordID}`}
-                            state={{ EmpName: params.row.Name,Employee:params.row.Personnel }}
+                            state={{ EmpName: params.row.Name, Employee: params.row.Personnel }}
                           >
                             <Tooltip title="Leave Enquiry">
                               <IconButton color="info" size="small">
-                                  <EventNoteIcon />
+                                <EventNoteIcon />
                               </IconButton>
                             </Tooltip>
                           </Link>
@@ -5119,7 +5089,7 @@ export const fetchListview =
                       ) : AccessID == "TR003" ? (
                         <Link
                           to={`/Apps/Secondarylistview/${AccessID}/${screenName}/${params.row.parentID}/EditMaterial Category/imageupload/${params.row.RecordID}`}
-                          
+
                         >
                           <Tooltip title="Image upload">
                             <IconButton color="info" size="small">
@@ -5231,7 +5201,7 @@ export const fetchListview =
             Success({
               columndata: listviewData.Data.columns,
               rowdata: listviewData.Data.rows,
-            })
+            }),
           );
         } else {
           dispatch(Success({ columndata: [], rowdata: [] }));
@@ -5397,7 +5367,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   `./EditListOfQuestionGroups/${params.row.RecordID}/E`,
                   {
                     state: { ...state },
-                  }
+                  },
                 )
               }
             >
@@ -5541,7 +5511,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     BreadCrumb1: params.row.Name,
                     AssessmentType: params.row.AssessmentType,
                   },
-                }
+                },
               )
             }
           >
@@ -5579,9 +5549,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               size="small"
               onClick={async () => {
                 if (["Pdf", "Ppt"].includes(params.row.ContentType)) {
-                  const url = `${
-                    store.getState().globalurl.baseUrl
-                  }uploads/attachments/${params.row.AttachmentName}`;
+                  const url = `${store.getState().globalurl.baseUrl
+                    }uploads/attachments/${params.row.AttachmentName}`;
 
                   try {
                     const response = await fetch(url);
@@ -5643,7 +5612,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   state: {
                     BreadCrumb1: params.row.Name,
                   },
-                }
+                },
               );
             }}
           >
@@ -5664,7 +5633,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     BreadCrumb1: params.row.Name,
                     SkillAssTypeID: params.row.RecordID,
                   },
-                }
+                },
               );
             }}
           >
@@ -5858,28 +5827,28 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID == "TR296" ||
           accessID == "TR297" ||
           accessID == "TR298") && (
-          <IconButton
-            color="primary"
-            size="small"
-            // onClick={() =>
-            //   navigate(
-            //     `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
-            //     {
-            //       state: { ...state, BreadCrumb3: params.row.Name },
-            //     }
-            //   )
-            // }
-            onClick={() =>
-              navigate(`./TR281/${params.row.RecordID}`, {
-                state: { ...state, BreadCrumb3: params.row.Name },
-              })
-            }
-          >
-            <Tooltip title="Question Groups">
-              <Category />
-            </Tooltip>
-          </IconButton>
-        )}
+            <IconButton
+              color="primary"
+              size="small"
+              // onClick={() =>
+              //   navigate(
+              //     `/Apps/Secondarylistview/skillglow/TR281/List Of Question Groups/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
+              //     {
+              //       state: { ...state, BreadCrumb3: params.row.Name },
+              //     }
+              //   )
+              // }
+              onClick={() =>
+                navigate(`./TR281/${params.row.RecordID}`, {
+                  state: { ...state, BreadCrumb3: params.row.Name },
+                })
+              }
+            >
+              <Tooltip title="Question Groups">
+                <Category />
+              </Tooltip>
+            </IconButton>
+          )}
 
         {(accessID == "TR280" ||
           accessID == "TR300" ||
@@ -5887,28 +5856,28 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           accessID == "TR296" ||
           accessID == "TR297" ||
           accessID == "TR298") && (
-          <IconButton
-            color="primary"
-            size="small"
-            // onClick={() =>
-            //   navigate(
-            //     `./TR279/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
-            //     {
-            //       state: { ...state, BreadCrumb2: params.row.Name },
-            //     }
-            //   )
-            // }
-            onClick={() =>
-              navigate(`./TR279/${params.row.RecordID}`, {
-                state: { ...state, BreadCrumb3: params.row.Name },
-              })
-            }
-          >
-            <Tooltip title="Session">
-              <AccessTimeOutlined />
-            </Tooltip>
-          </IconButton>
-        )}
+            <IconButton
+              color="primary"
+              size="small"
+              // onClick={() =>
+              //   navigate(
+              //     `./TR279/${params.row.SkillcategoriesID}/${params.row.RecordID}`,
+              //     {
+              //       state: { ...state, BreadCrumb2: params.row.Name },
+              //     }
+              //   )
+              // }
+              onClick={() =>
+                navigate(`./TR279/${params.row.RecordID}`, {
+                  state: { ...state, BreadCrumb3: params.row.Name },
+                })
+              }
+            >
+              <Tooltip title="Session">
+                <AccessTimeOutlined />
+              </Tooltip>
+            </IconButton>
+          )}
         {/* {(accessID == "TR300" || accessID == "TR295" || accessID == "TR296" || accessID == "TR297" || accessID == "TR298") && (
           <IconButton
             color="primary"
@@ -5949,7 +5918,7 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                       BreadCrumb3: params.row.Name,
                       Designation: params.row.Designation,
                     },
-                  }
+                  },
                 )
               }
             >
@@ -6045,7 +6014,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         setLoading(true);
 
         const resultAction = await dispatch(
-          getOrderdetailReport({ PartyID, OrderHdrID, CompanyID })
+          getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
         );
 
         const data = resultAction.payload; // <-- this depends on how your thunk is defined
@@ -6060,7 +6029,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             data={data}
             UserName={UserName}
             OrderType={OrderType}
-          />
+          />,
         ).toBlob();
         // const link = document.createElement("a");
         // link.href = URL.createObjectURL(blob);
@@ -6158,7 +6127,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     };
 
     const response = await dispatch(
-      postData({ accessID: "TR310", action, idata })
+      postData({ accessID: "TR310", action, idata }),
     );
 
     if (response.payload.Status === "Y") {
@@ -6167,7 +6136,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       if (response.payload.Result) {
         try {
           msg = JSON.parse(response.payload.Result)?.Msg || msg;
-        } catch {}
+        } catch { }
       }
 
       toast.success(msg);
@@ -6228,11 +6197,34 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         ...state,
                         BreadCrumb1: params.row.ItemGroup,
                       },
-                    }
+                    },
                   )
                 }
               >
                 <CategoryOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR330" && (
+          <>
+            <Tooltip title="Personnel">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(
+                    `/Apps/SecondarylistView/Classification/TR027/Personnel/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.Description,
+                      },
+                    }
+                  )
+                }
+              >
+                <PeopleAltIcon />
               </IconButton>
             </Tooltip>
           </>
@@ -6268,7 +6260,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         ...state,
                         BreadCrumb1: params.row.HSNCategory,
                       },
-                    }
+                    },
                   )
                 }
               >
@@ -6400,7 +6392,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         ...state,
                         BreadCrumb1: params.row.Route,
                       },
-                    }
+                    },
                   )
                 }
               >
@@ -6520,15 +6512,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 LeadTitle: params.row.LeadTitle,
                 PartyID: params.row.PartyRecordID,
               }}
-              // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
+            // /Secondarylistview/:accessID/:screenName/:filtertype/EditOrderitem/:id/:Mode
             >
               <Tooltip title="Order Item">
                 <IconButton
                   color="info"
                   size="small"
-                  // onClick={() =>
-                  //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
-                  // }
+                // onClick={() =>
+                //   handleorderitemscreen(row.RecordID, row.PartyID, row.LeadTitle, row.PartyName, row.LEStatus)
+                // }
                 >
                   <GridViewIcon />
                 </IconButton>
@@ -6566,7 +6558,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                         Breadcrumb2: params.row.LeadTitle,
                         Breadcrumb1: params.row.Party,
                       },
-                    }
+                    },
                   )
                 }
                 color="primary"
