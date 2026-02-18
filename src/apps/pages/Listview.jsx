@@ -52,7 +52,7 @@ import { useContext } from "react";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useState } from "react";
-import { fnCsvFileUpload, fnCsvFileUploadnew } from "../../store/reducers/Imguploadreducer";
+import { fnCsvFileUpload, fnCsvFileUploadnew, } from "../../store/reducers/Imguploadreducer";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { screenRightsData } from "../../store/reducers/screenRightsreducer";
 import EditIcon from "@mui/icons-material/Edit";
@@ -380,6 +380,23 @@ const Listview = () => {
     setUploadFile(fileData.payload.apiResponse);
   };
 
+
+  //For import file
+  // const handleDesignationImport = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   // formData.append("importType", "DESIGNATION");
+
+  //   await dispatch(fnDesignationImport(formData));
+
+  //   event.target.value = ""; // reset input
+  // };
+
+
+
   const [productFilter, setProductFilter] = useState();
   const searchProduct = async () => {
     if (!productFilter) {
@@ -620,6 +637,23 @@ const Listview = () => {
               // )
               false
             )}
+
+              {/* <Tooltip arrow title="Import Excel">
+                <IconButton
+                  size="large"
+                  color="primary"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept=".xlsx,.xls"
+                    type="file"
+                    onChange={handleDesignationImport}
+                  />
+
+                  <FileUploadIcon />
+                </IconButton>
+              </Tooltip> */}
             {/* <Tooltip arrow title="Excel">
             <IconButton  color="primary">
             <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
@@ -1125,7 +1159,7 @@ const Listview = () => {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <Box sx={{ height: 600, overflowY: "auto" }}>
-                         <IconButton
+                        <IconButton
                           size="small"
                           onClick={() => setShowMore(false)}
                           sx={{ position: "absolute", top: 5, right: 4 }}

@@ -180,6 +180,7 @@ const initialState = {
   attachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
+  designationImportUrl:"",
   pcdurl: "",
   pdfurl: "",
   indentUrl: "",
@@ -304,6 +305,7 @@ export const getUrlSlice = createSlice({
       const APIurl = config.API_URL;
       const baseurl = config.BASE_URL;
       const baseurlUAAM = config.UAAM_URL;
+      //const uaturl = "https://essuat.beyondexs.com"
 
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
@@ -324,6 +326,9 @@ export const getUrlSlice = createSlice({
       state.attachmentUrl = baseurl + "uploads/images/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
+      // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
+
+
       state.pcdurl = APIurl + "PCDController.php";
       state.pdfurl = baseurl + "tcpdf/";
       state.indentUrl = APIurl + "IndentController.php";
