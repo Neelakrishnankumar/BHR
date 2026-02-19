@@ -387,8 +387,8 @@ export const getUrlSlice = createSlice({
       state.apiweightageUrl = APIurl + "HRWeightagesGetContoller.php";
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
-      // state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
+      state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      // state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
