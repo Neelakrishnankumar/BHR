@@ -627,7 +627,7 @@ const EditOrder = () => {
                             label="Purchase"
                           />
 
-                          <FormLabel focused={false}>Purchase</FormLabel>
+                          <FormLabel focused={false}>Purchase Inward</FormLabel>
                         </Box>
                       </>
                     ) : (
@@ -1159,7 +1159,7 @@ const EditOrder = () => {
                             disabled={ViewStatus === "Paid" ? true : false}
                           />
 
-                          <FormLabel focused={false}>Purchase</FormLabel>
+                          <FormLabel focused={false}>Purchase Inward</FormLabel>
                         </Box>
                       </>
                     )}
@@ -1283,7 +1283,7 @@ const EditOrder = () => {
                             label="Purchase"
                           />
 
-                          <FormLabel focused={false}>Purchase</FormLabel>
+                          <FormLabel focused={false}>Purchase Inward</FormLabel>
                         </Box>
                       </>
                     )}
