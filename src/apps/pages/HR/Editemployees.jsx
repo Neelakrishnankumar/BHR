@@ -3089,6 +3089,11 @@ const Editemployee = () => {
     Sunday: deploymentData.SundayShift === "Y" ? true : false,
     // biometric: deploymentData.Biometric === "Y"? true : false,
     // mobile: deploymentData.MobileGeofencing === "Y" ? true : false,
+    office: deploymentData.Office === "Y" ? true : false,
+    workfromhome: deploymentData.WorkFromHome === "Y" ? true : false,
+    hybrid: deploymentData.Hybrid === "Y" ? true : false,
+    onsite: deploymentData.OnSite === "Y" ? true : false,
+
     Onsitedateflag: deploymentData.OnsiteDateFlag === "Y" ? true : false,
     Geninvoice: deploymentData.GenerateInvoice === "Y" ? true : false,
     Essaccess: deploymentData.EssAccess === "Y" ? true : false,
@@ -3140,6 +3145,12 @@ const Editemployee = () => {
       Friday: values.Friday === true ? "Y" : "N",
       Saturday: values.Saturday === true ? "Y" : "N",
       Sunday: values.Sunday === true ? "Y" : "N",
+
+      Office: values.office === true ? "Y" : "N",
+      WorkFromHome: values.workfromhome === true ? "Y" : "N",
+      Hybrid: values.hybrid === true ? "Y" : "N",
+      OnSite: values.onsite === true ? "Y" : "N",
+
       OnsiteDateFlag: values.Onsitedateflag === true ? "Y" : "N",
       GenerateInvoice: values.Geninvoice === true ? "Y" : "N",
       EssAccess: values.Essaccess === true ? "Y" : "N",
@@ -6941,6 +6952,86 @@ const Editemployee = () => {
                       />
                     </FormControl>
                   </Box>
+                    <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Typography variant="h5" padding={1}>
+                    Work Location
+                  </Typography>
+                    <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+  <Box>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="office"
+                        id="office"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="office"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        Office
+                      </FormLabel>
+                      <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="workfromhome"
+                        id="workfromhome"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="workfromhome"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        Work From Home
+                      </FormLabel>
+                       <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="hybrid"
+                        id="hybrid"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="hybrid"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        Hybrid
+                      </FormLabel>
+                       <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="onsite"
+                        id="onsite"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="onsite"
+                      // disabled
+                      />
+
+                      <FormLabel focused={false}>
+                        Onsite
+                      </FormLabel>
+                    </Box>
+                  </Box>
+
                   <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
                     Project Details
