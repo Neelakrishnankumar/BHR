@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
 
     table: {
         borderLeft: "1px solid #000",
+        borderTop: "1px solid #000",
         // borderRight: "1px solid #000",
         // borderBottom: "1px solid #000",
         fontSize: 8
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
         // border: "1px solid #000",
         borderLeft: "1px solid #000",
         // borderBottom: "1px solid #000",
-        // borderTop: "1px solid #000",
+        borderTop: "1px solid #000",
         // fontSize: 8,
         // marginTop: "5px"
     },
@@ -103,7 +104,8 @@ const styles = StyleSheet.create({
     tableHeaderMain: {
         flexDirection: "row",
         borderBottom: "1px solid #000",
-        borderRight: "1px solid #000",
+        borderLeft: "none",
+        // borderRight: "1px solid #000",
         fontWeight: "bold",
     },
     tableHeader: {
@@ -114,6 +116,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         // display: "flex",
         // justifyContent: "center"
+    },
+    sectionHeading: {
+        fontSize: 11,
+        fontWeight: "bold",
+        marginTop: 10,
+        marginBottom: 4,
     },
 
     tableRow: {
@@ -480,58 +488,58 @@ const PayslipPdf = ({ data = {}, filters }) => {
     // };
 
     const numberToWordsInRupees = (num) => {
-  if (!num) return "Zero Rupees Only";
+        if (!num) return "Zero Rupees Only";
 
-  // ✅ Remove commas and convert to number
-  const cleanNum = Number(String(num).replace(/,/g, ""));
-  const n = Math.floor(cleanNum); // remove decimals
+        // ✅ Remove commas and convert to number
+        const cleanNum = Number(String(num).replace(/,/g, ""));
+        const n = Math.floor(cleanNum); // remove decimals
 
-  const a = [
-    "", "One", "Two", "Three", "Four", "Five",
-    "Six", "Seven", "Eight", "Nine", "Ten",
-    "Eleven", "Twelve", "Thirteen", "Fourteen",
-    "Fifteen", "Sixteen", "Seventeen",
-    "Eighteen", "Nineteen",
-  ];
+        const a = [
+            "", "One", "Two", "Three", "Four", "Five",
+            "Six", "Seven", "Eight", "Nine", "Ten",
+            "Eleven", "Twelve", "Thirteen", "Fourteen",
+            "Fifteen", "Sixteen", "Seventeen",
+            "Eighteen", "Nineteen",
+        ];
 
-  const b = [
-    "", "", "Twenty", "Thirty", "Forty",
-    "Fifty", "Sixty", "Seventy",
-    "Eighty", "Ninety",
-  ];
+        const b = [
+            "", "", "Twenty", "Thirty", "Forty",
+            "Fifty", "Sixty", "Seventy",
+            "Eighty", "Ninety",
+        ];
 
-  const toWords = (x) => {
-    if (x < 20) return a[x];
-    if (x < 100)
-      return b[Math.floor(x / 10)] + (x % 10 ? " " + a[x % 10] : "");
-    if (x < 1000)
-      return (
-        a[Math.floor(x / 100)] +
-        " Hundred" +
-        (x % 100 ? " " + toWords(x % 100) : "")
-      );
-    if (x < 100000)
-      return (
-        toWords(Math.floor(x / 1000)) +
-        " Thousand" +
-        (x % 1000 ? " " + toWords(x % 1000) : "")
-      );
-    if (x < 10000000)
-      return (
-        toWords(Math.floor(x / 100000)) +
-        " Lakh" +
-        (x % 100000 ? " " + toWords(x % 100000) : "")
-      );
+        const toWords = (x) => {
+            if (x < 20) return a[x];
+            if (x < 100)
+                return b[Math.floor(x / 10)] + (x % 10 ? " " + a[x % 10] : "");
+            if (x < 1000)
+                return (
+                    a[Math.floor(x / 100)] +
+                    " Hundred" +
+                    (x % 100 ? " " + toWords(x % 100) : "")
+                );
+            if (x < 100000)
+                return (
+                    toWords(Math.floor(x / 1000)) +
+                    " Thousand" +
+                    (x % 1000 ? " " + toWords(x % 1000) : "")
+                );
+            if (x < 10000000)
+                return (
+                    toWords(Math.floor(x / 100000)) +
+                    " Lakh" +
+                    (x % 100000 ? " " + toWords(x % 100000) : "")
+                );
 
-    return (
-      toWords(Math.floor(x / 10000000)) +
-      " Crore" +
-      (x % 10000000 ? " " + toWords(x % 10000000) : "")
-    );
-  };
+            return (
+                toWords(Math.floor(x / 10000000)) +
+                " Crore" +
+                (x % 10000000 ? " " + toWords(x % 10000000) : "")
+            );
+        };
 
-  return toWords(n) + " Rupees Only";
-};
+        return toWords(n) + " Rupees Only";
+    };
 
     const payableInWords = numberToWordsInRupees(Netpayable);
     return (
@@ -645,10 +653,13 @@ const PayslipPdf = ({ data = {}, filters }) => {
                 </View>
 
                 {/* ---------------- EARNINGS TABLE ---------------- */}
+                <Text style={styles.sectionHeading}>Allowances</Text>
                 <View style={styles.table}>
-                    <View style={styles.tableHeaderMain}>
+                    {/* <View style={styles.tableHeaderMain}>
                         <Text style={styles.headerColMain}>Allowances</Text>
-                    </View>
+                    </View> */}
+                    
+
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.headerCol1}>SL#</Text>
                         <Text style={styles.headerCol2}>Title</Text>
@@ -681,10 +692,13 @@ const PayslipPdf = ({ data = {}, filters }) => {
                     </View>
                 </View> */}
                 {/* ---------------- DEDUCTIONS ---------------- */}
+                 <Text style={styles.sectionHeading}>Deductions</Text>
                 <View style={styles.table1}>
-                    <View style={styles.tableHeaderMain}>
+                    {/* <View style={styles.tableHeaderMain}>
                         <Text style={styles.headerColMain}>Deductions</Text>
-                    </View>
+                    </View> */}
+                   
+
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.headerCol1}>SL#</Text>
                         <Text style={styles.headerCol2}>Title</Text>
@@ -720,10 +734,13 @@ const PayslipPdf = ({ data = {}, filters }) => {
 
 
                 {/* ---------------- TRANSACTIONS ---------------- */}
+                <Text style={styles.sectionHeading}>Transactions</Text>
+
                 <View style={styles.table1}>
-                    <View style={styles.tableHeaderMain}>
+                    {/* <View style={styles.tableHeaderMain}>
                         <Text style={styles.headerColMain}>Transactions</Text>
-                    </View>
+                    </View> */}
+
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.TransactionheaderCol1}>SL#</Text>
                         <Text style={styles.TransactionheaderCol2}>Title</Text>
