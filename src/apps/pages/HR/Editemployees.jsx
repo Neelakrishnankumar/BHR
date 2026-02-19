@@ -93,6 +93,8 @@ import {
   Productautocomplete,
   ProductautocompleteLevel,
   SingleFormikOptimizedAutocomplete,
+  ItemGroupLookup,
+  ItemsLookup,
 } from "../../../ui-components/global/Autocomplete";
 import Resizer from "react-image-file-resizer";
 import ContactsIcon from '@mui/icons-material/Contacts';
@@ -210,9 +212,9 @@ const Editemployee = () => {
   const [validationSchema12, setValidationSchema12] = useState(null);
   const [validationSchema13, setValidationSchema13] = useState(null);
   const [validationSchema14, setValidationSchema14] = useState(null);
-
-
   const [validationSchema17, setValidationSchema17] = useState(null);
+
+
   const dropdownData = [
     { ID: "All", Name: "All" },
     { ID: "Selected", Name: "Selected" },
@@ -496,13 +498,13 @@ const Editemployee = () => {
 
 
         const schema17 = Yup.object().shape({
-          ItemNumber: Yup.string().required(data.Itemcustody.ItemNumber),
-          ItemName: Yup.string().trim().required(data.Itemcustody.ItemName),
-          AssestID: Yup.string().required(data.Itemcustody.AssestID),
+          itemGroup: Yup.object().required(data.Itemcustody1.itemGroup).nullable(),
+          items: Yup.object().required(data.Itemcustody1.items).nullable(),
+          AssestID: Yup.string().required(data.Itemcustody1.AssestID),
           PurchaseReference: Yup.string().trim().required(
-            data.Itemcustody.PurchaseReference
+            data.Itemcustody1.PurchaseReference
           ),
-          ItemValue: Yup.string().required(data.Itemcustody.ItemValue),
+          ItemValue: Yup.string().required(data.Itemcustody1.ItemValue),
         });
         setValidationSchema17(schema17);
       })
@@ -1421,7 +1423,7 @@ const Editemployee = () => {
   } else if (show == "7") {
     VISIBLE_FIELDS = ["slno", "ItemNumber", "ItemName", "ItemValue", "PurchaseReference", "AssestID", "action"];
   } else if (show == "17") {
-    VISIBLE_FIELDS = ["slno", "ItemNumber", "ItemName", "ItemValue", "PurchaseReference", "AssestID", "action"];
+    VISIBLE_FIELDS = ["slno", "Itemgroup", "Item", "ItemValue", "PurchaseReference", "AssestID", "action"];
   } else if (show == "13") {
     VISIBLE_FIELDS = ["slno", "Locality", "Pincode", "action"];
   } else if (show == "14") {
@@ -1685,7 +1687,7 @@ const Editemployee = () => {
                           : show == "15"
                             ? "List of Parent"
                             : show == "17"
-                              ? "List of Item Custody1"
+                              ? "List of Item Custody"
                               : show == "8" || show == "11"
                                 ? "List of Contracts"
                                 : "List of Managers"}
@@ -1727,6 +1729,14 @@ const Editemployee = () => {
     recordID: "",
     itemNO: "",
     itemName: "",
+    assestID: "",
+    itemValue: "",
+    reference: "",
+  });
+  const [itemCustodyData1, setItemCustodyData1] = useState({
+    recordID: "",
+    itemGroup: null,
+    items: null,
     assestID: "",
     itemValue: "",
     reference: "",
@@ -1830,6 +1840,14 @@ const Editemployee = () => {
         recordID: "",
         itemNO: "",
         itemName: "",
+        assestID: "",
+        itemValue: "",
+        reference: "",
+      });
+      setItemCustodyData1({
+        recordID: "",
+        itemGroup: null,
+        items: null,
         assestID: "",
         itemValue: "",
         reference: "",
@@ -1945,6 +1963,24 @@ const Editemployee = () => {
           itemValue: rowData.ItemValue,
           reference: rowData.PurchaseReference,
         });
+        setItemCustodyData1({
+          recordID: rowData.RecordID,
+          itemGroup: rowData.ItemGroupID
+            ? {
+              RecordID: rowData.ItemGroupID,
+              Itemgroup: rowData.Itemgroup,
+            }
+            : null,
+          items: rowData.ItemID
+            ? {
+              RecordID: rowData.ItemID,
+              Code: rowData.Item,
+            }
+            : null,
+          assestID: rowData.AssestID,
+          itemValue: rowData.ItemValue,
+          reference: rowData.PurchaseReference,
+        });
         // setParentData({
         //   recordID: rowData.RecordID,
         //   code1: rowData.Code,
@@ -1991,10 +2027,17 @@ const Editemployee = () => {
               Name: rowData.PartyName || "",
             }
             : null,
-          items: rowData.ItemcustodyID
+          // items: rowData.ItemcustodyID
+          //   ? {
+          //     RecordID: rowData.ItemcustodyID,
+          //     Code: rowData.ItemCode || "",
+          //     Name: rowData.ItemName || "",
+          //   }
+          //   : null,
+          items: rowData.ItemID
             ? {
-              RecordID: rowData.ItemcustodyID,
-              Code: rowData.ItemCode || "",
+              RecordID: rowData.ItemID,
+              Code: rowData.Item || "",
               Name: rowData.ItemName || "",
             }
             : null,
@@ -3461,13 +3504,13 @@ const Editemployee = () => {
       ? store.getState().globalurl.imageUrl + Data.ImageName
       : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
     Disable: "N",
-    recordID: itemCustodyData.recordID || "",
-    ItemNumber: itemCustodyData.itemNO || "",
-    ItemName: itemCustodyData.itemName || "",
-    AssestID: itemCustodyData.assestID || "",
-    ItemValue: itemCustodyData.itemValue || "",
-    PurchaseReference: itemCustodyData.reference || "",
-  }), [Data, itemCustodyData]);
+    recordID: itemCustodyData1.recordID || "",
+    itemGroup: itemCustodyData1.itemGroup || null,
+    items: itemCustodyData1.items || null,
+    AssestID: itemCustodyData1.assestID || "",
+    ItemValue: itemCustodyData1.itemValue || "",
+    PurchaseReference: itemCustodyData1.reference || "",
+  }), [Data, itemCustodyData1]);
 
   const empItemCustody1Fn = async (values, resetForm, del) => {
     setLoading(true);
@@ -3478,10 +3521,10 @@ const Editemployee = () => {
           ? "harddelete"
           : "update";
     const idata = {
-      RecordID: itemCustodyData.recordID,
+      RecordID: itemCustodyData1.recordID,
       EmployeeID: recID,
-      ItemNumber: values.ItemNumber,
-      ItemName: values.ItemName,
+      ItemGroupID: values.itemGroup?.RecordID,
+      ItemID: values.items?.RecordID,
       AssestID: values.AssestID,
       PurchaseReference: values.PurchaseReference,
       ItemValue: values.ItemValue,
@@ -3496,7 +3539,7 @@ const Editemployee = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR212", "ItemCustody", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR212", "ItemCustody", `EmployeeID=${recID} AND CompanyID=${CompanyID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -3636,7 +3679,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Item Custody1
+                      Item Custody
                     </Typography>
                   ) : (
                     false
@@ -3768,10 +3811,11 @@ const Editemployee = () => {
                     <MenuItem value={9}>Geo Location</MenuItem>
                     <MenuItem value={10}>Leave Configuration</MenuItem>
                     <MenuItem value={6}>List of Documents</MenuItem>
-                    <MenuItem value={7}>Item Custody</MenuItem>
+                    {/* <MenuItem value={7}>Item Custody</MenuItem> */}
+                    <MenuItem value={17}>Item Custody</MenuItem>
                     <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
-                    {/* <MenuItem value={17}>Item Custody1</MenuItem> */}
+                    
                   </Select>
                 </FormControl>
               ) : (
@@ -8774,7 +8818,7 @@ const Editemployee = () => {
                     <FormControl
                       sx={{ gap: formGap, height: { ItemdataGridHeight } }}
                     >
-                      <CheckinAutocomplete
+                      <ItemsLookup
                         name="items"
                         label={
                           <>
@@ -12983,7 +13027,7 @@ const Editemployee = () => {
             <Formik
               initialValues={itemcustody1InitialValue}
               enableReinitialize={true}
-              validationSchema={validationSchema6}
+              validationSchema={validationSchema17}
               onSubmit={(values, { resetForm }) => {
                 setTimeout(() => {
                   empItemCustody1Fn(values, resetForm, false);
@@ -13154,7 +13198,7 @@ const Editemployee = () => {
                       marginTop: "20px"
                     }}>
 
-                      <CheckinAutocomplete
+                      <ItemGroupLookup
                         sx={{ marginTop: "7px" }}
                         name="itemGroup"
                         label={
@@ -13171,18 +13215,21 @@ const Editemployee = () => {
                         value={values.itemGroup}
                         onChange={(newValue) => {
                           setFieldValue("itemGroup", newValue);
+                          setFieldValue("itemGroupID", newValue.RecordID);
                           console.log(newValue, "--newValue");
                           console.log(newValue.RecordID, "////");
+
+                          setFieldValue("items", null);
                         }}
                         error={!!touched.itemGroup && !!errors.itemGroup}
                         helperText={touched.itemGroup && errors.itemGroup}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2144","ScreenName":"Department","Filter":"CompanyID=${CompanyID}","Any":""}}`}
                       />
 
 
-                      <CheckinAutocomplete
+                      <ItemsLookup
                         // sx={{ marginTop: "7px" }}
                         name="items"
                         label={
@@ -13199,19 +13246,17 @@ const Editemployee = () => {
                         value={values.items}
                         onChange={(newValue) => {
                           setFieldValue("items", newValue);
-                          console.log(newValue, "--newValue");
-                          console.log(newValue.RecordID, "////");
                         }}
                         error={!!touched.items && !!errors.items}
                         helperText={touched.items && errors.items}
                         //  onChange={handleSelectionFunctionname}
                         // defaultValue={selectedFunctionName}
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${CompanyID}","Any":""}}`}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2145","ScreenName":"Items","Filter":"ItemGroupID='${values.itemGroup ? values.itemGroup.RecordID : ""}' AND CompanyID='${CompanyID}'","Any":""}}`}
                       />
                       <TextField
                         fullWidth
                         variant="standard"
-                        type="number"
+                        type="text"
                         value={values.ItemValue}
                         id="ItemValue"
                         name="ItemValue"
@@ -13224,8 +13269,28 @@ const Editemployee = () => {
                           </>
                         }
                         // required
-                        onBlur={handleBlur}
-                        onChange={handleChange}
+                        // onBlur={handleBlur}
+                        // onChange={handleChange}
+                       onChange={(e) => {
+                            // allow only numbers + decimal
+                            const val = e.target.value;
+                            if (/^\d*\.?\d*$/.test(val)) {
+                              setFieldValue("ItemValue", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
+
+                            if (val === "" || val === ".") {
+                              setFieldValue("ItemValue", "0.00");
+                              return;
+                            }
+
+                            const num = parseFloat(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("ItemValue", num.toFixed(2)); // ✅ forces .00
+                            }
+                          }}
                         error={!!touched.ItemValue && !!errors.ItemValue}
                         helperText={touched.ItemValue && errors.ItemValue}
                         sx={{
@@ -13290,7 +13355,7 @@ const Editemployee = () => {
                         name="PurchaseReference"
                         label={
                           <>
-                            Reference{" "}
+                            Purchase Reference{" "}
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -13364,7 +13429,7 @@ const Editemployee = () => {
                           confirmButtonText: "Confirm",
                         }).then((result) => {
                           if (result.isConfirmed) {
-                            empItemCustodyFn(values, resetForm, "harddelete");
+                            empItemCustody1Fn(values, resetForm, "harddelete");
                           } else {
                             return;
                           }

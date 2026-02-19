@@ -12,6 +12,7 @@ import {
   LinearProgress,
   Paper,
   Breadcrumbs,
+  MenuItem,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -28,6 +29,7 @@ import {
   getFetchData,
   postApidata,
   postData,
+  replacementQtyGet,
 } from "../../../store/reducers/Formapireducer";
 import React, { useState, useEffect, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -73,7 +75,9 @@ const EditOrderitem = () => {
   const [validationSchema, setValidationSchema] = useState(null);
 
   const [errorMsgData, setErrorMsgData] = useState(null);
-
+  const ReplacementQtyGet = useSelector((state) => state.formApi.replacementQtyGetdata);
+  const ReplacementQty = ReplacementQtyGet?.ReplacementQty || 0;
+  console.log("🚀 ~ EditOrderitem ~ ReplacementQty:", ReplacementQty)
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -86,21 +90,65 @@ const EditOrderitem = () => {
       .then((data) => {
         setErrorMsgData(data);
 
+        // let schemaFields = {
+        //   discount: Yup.number()
+        //     .typeError(data.OrderItem.discount)
+        //     .required(data.OrderItem.discount),
+        //   product: Yup.object()
+        //     .nullable()
+        //     .shape({
+        //       RecordID: Yup.string().required(data.OrderItem.product),
+        //       Name: Yup.string().nullable(), // optional
+        //     })
+        //     .required(data.OrderItem.product),
+        //   quantity: Yup.number()
+        //     .typeError(data.OrderItem.quantity)
+        //     .required(data.OrderItem.quantity)
+        //     .min(1, "Quantity must be greater than 0"),
+        // };
         let schemaFields = {
           discount: Yup.number()
             .typeError(data.OrderItem.discount)
             .required(data.OrderItem.discount),
+
           product: Yup.object()
             .nullable()
             .shape({
               RecordID: Yup.string().required(data.OrderItem.product),
-              Name: Yup.string().nullable(), // optional
+              Name: Yup.string().nullable(),
             })
             .required(data.OrderItem.product),
-          quantity: Yup.number()
-            .typeError(data.OrderItem.quantity)
-            .required(data.OrderItem.quantity)
-            .min(1, "Quantity must be greater than 0"),
+
+          // ⭐ PURCHASE QUANTITY
+          quantity: Yup.number().when("PurchaseType", {
+            is: "Purchase",
+            then: (schema) =>
+              schema
+                .typeError(data.OrderItem.quantity)
+                .required(data.OrderItem.quantity)
+                .min(1, "Quantity must be greater than 0"),
+            otherwise: (schema) => schema.nullable(),
+          }),
+
+          // ⭐ DAMAGE QTY
+          damageqty: Yup.number().when("PurchaseType", {
+            is: "Damage",
+            then: (schema) =>
+              schema
+                .required("Please enter the Damage Quantity")
+                .min(1, "Damage Quantity must be greater than 0"),
+            otherwise: (schema) => schema.nullable(),
+          }),
+
+          // ⭐ RETURN QTY
+          returnQuantity: Yup.number().when("PurchaseType", {
+            is: "Return",
+            then: (schema) =>
+              schema
+                .required("Please enter the Return Quantity")
+                .min(1, "Return Quantity must be greater than 0"),
+            otherwise: (schema) => schema.nullable(),
+          }),
         };
 
         const schema = Yup.object().shape(schemaFields);
@@ -108,6 +156,10 @@ const EditOrderitem = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, []);
+
+  useEffect(() => {
+    dispatch(replacementQtyGet({ PartyID: params.filtertype || 0, CompanyID: CompanyID }));
+  }, [location.key]);
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
   const PartyRecordID = state.PartyID;
@@ -118,7 +170,9 @@ const EditOrderitem = () => {
   }, [location.key]);
 
   const InitialValue = {
-    quantity: data.Quantity,
+    quantity: data.Quantity || 1,
+    damageqty: data.DamageQty,
+    returnQuantity: data.ReturnQty,
     price:
       mode === "A"
         ? DefaultProductDeliveryChargeGetData?.Price || 0
@@ -128,28 +182,30 @@ const EditOrderitem = () => {
       data.NetPrice ||
       (data.Discount == 0
         ? (mode === "A"
-            ? DefaultProductDeliveryChargeGetData?.Price
-            : data.Price) || 0
+          ? DefaultProductDeliveryChargeGetData?.Price
+          : data.Price) || 0
         : 0),
     amount: data.Amount,
     discount: data.Discount || 0,
+    // PurchaseType: data.PurchaseType || "Purchase",
+    PurchaseType: data.DamageQty > 0 ? "Damage" : data.ReturnQty > 0 ? "Return" : "Purchase",
     product:
       mode === "A"
         ? DefaultProductDeliveryChargeGetData?.RecordID &&
           DefaultProductDeliveryChargeGetData?.RecordID !== "0"
           ? {
-              RecordID: DefaultProductDeliveryChargeGetData.RecordID,
-              Name: DefaultProductDeliveryChargeGetData.Name,
-              Price: DefaultProductDeliveryChargeGetData.Price,
-            }
+            RecordID: DefaultProductDeliveryChargeGetData.RecordID,
+            Name: DefaultProductDeliveryChargeGetData.Name,
+            Price: DefaultProductDeliveryChargeGetData.Price,
+          }
           : null
         : data.ProductComboID
-        ? {
+          ? {
             RecordID: data.ProductComboID,
             Name: data.ProductComboName,
             Price: data.ProductComboPrice,
           }
-        : null,
+          : null,
   };
 
   const Fnsave = async (values, del, actions) => {
@@ -158,8 +214,8 @@ const EditOrderitem = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -176,6 +232,9 @@ const EditOrderitem = () => {
       Discount: values.discount || 0,
       NetPrice: values.netprice || 0,
       Amount: values.amount || 0,
+      DamageQty: values.PurchaseType === "Damage" ? values.damageqty : 0,
+      ReturnQty: values.PurchaseType === "Return" ? values.returnQuantity : 0,
+      ReplacementQty: ReplacementQty || 0,
     };
 
     // {
@@ -366,8 +425,8 @@ const EditOrderitem = () => {
                     ? "Add Order Item"
                     : "Edit Order Item"
                   : mode === "A"
-                  ? "Add Quotation Item"
-                  : "Edit Quotation Item"}
+                    ? "Add Quotation Item"
+                    : "Edit Quotation Item"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -412,6 +471,8 @@ const EditOrderitem = () => {
               setFieldValue,
               setFieldTouched,
             }) => {
+
+              const netQuantity = Number(values.quantity || 0) + Number(ReplacementQty || 0);
               // const recalc = (changedField, newValue) => {
               //   const price = parseFloat(values.price || 0);
               //   const net = parseFloat(values.netprice || 0);
@@ -661,7 +722,7 @@ const EditOrderitem = () => {
                       //label="Discount (In Percentage)"
                       label={
                         <>
-                          Discount (In Percentage)
+                          Discount / Add On(%)
                           <span style={{ color: "red", fontSize: "20px" }}>
                             {" "}
                             *{" "}
@@ -703,34 +764,168 @@ const EditOrderitem = () => {
                       }}
                     />
                     <TextField
-                      name="quantity"
-                      type="number"
-                      id="quantity"
-                      label={
-                        <>
-                          Quantity
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            {" "}
-                            *{" "}
-                          </span>
-                        </>
-                      }
-                      variant="standard"
-                      focused
-                      value={values.quantity}
+                      select
+                      label="Quantity Type"
+                      id="PurchaseType"
+                      name="PurchaseType"
+                      value={values.PurchaseType}
                       onBlur={handleBlur}
-                      //onChange={handleChange}
-                      onChange={(e) => recalc("quantity", e.target.value)}
-                      error={!!touched.quantity && !!errors.quantity}
-                      helperText={touched.quantity && errors.quantity}
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
+                      onChange={(e) => {
+                        const type = e.target.value;
+
+                        handleChange(e);
+                        sessionStorage.setItem("PurchaseType", type);
+
+                        // RESET / RECALCULATE AMOUNT BASED ON TYPE
+                        if (type === "Damage" || type === "Return") {
+                          setFieldValue("amount", "0.00");
+                          setFieldValue("quantity", "0");
+                        } else {
+                          const price = parseFloat(values.price || 0);
+                          const qty = parseFloat(values.quantity || 0);
+                          const disc = parseFloat(values.discount || 0);
+
+                          const netPrice = price - (price * disc) / 100;
+                          const amt = netPrice * qty;
+
+                          setFieldValue("netprice", netPrice.toFixed(2));
+                          setFieldValue("amount", amt.toFixed(2));
+                        }
                       }}
-                      autoFocus
-                    />
-                    <TextField
+
+                      focused
+                      variant="standard"
+                    >
+                      <MenuItem value="Purchase">Purchase</MenuItem>
+                      <MenuItem value="Damage">Damage</MenuItem>
+                      <MenuItem value="Return">Return</MenuItem>
+                    </TextField>
+
+                    {(values.PurchaseType === "Damage") ? (
+                      <TextField
+                        name="damageqty"
+                        type="number"
+                        id="damageqty"
+                        label={
+                          <>
+                            Damage Quantity
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        value={values.damageqty}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        // onChange={(e) => recalc("damageqty", e.target.value)}
+                        error={!!touched.damageqty && !!errors.damageqty}
+                        helperText={touched.damageqty && errors.damageqty}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        autoFocus
+                      />
+                    ) : values.PurchaseType === "Return" ? (
+                      <TextField
+                        name="returnQuantity"
+                        type="number"
+                        id="returnQuantity"
+                        label={
+                          <>
+                            Return Quantity
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        value={values.returnQuantity}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        // onChange={(e) => recalc("returnQuantity", e.target.value)}
+                        error={!!touched.returnQuantity && !!errors.returnQuantity}
+                        helperText={touched.returnQuantity && errors.returnQuantity}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        autoFocus
+                      />) : (<TextField
+                        name="quantity"
+                        type="number"
+                        id="quantity"
+                        label={
+                          <>
+                            Quantity
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              {" "}
+                              *{" "}
+                            </span>
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        value={values.quantity}
+                        onBlur={handleBlur}
+                        //onChange={handleChange}
+                        onChange={(e) => recalc("quantity", e.target.value)}
+                        error={!!touched.quantity && !!errors.quantity}
+                        helperText={touched.quantity && errors.quantity}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                        autoFocus
+                      />)}
+
+                    {(values.PurchaseType === "Damage" || values.PurchaseType === "Return") ? (
+                      <TextField
+                        name="amount"
+                        type="number"
+                        id="amount"
+                        label="Amount"
+                        variant="standard"
+                        focused
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        // onChange={handleChange}
+                        onChange={(e) => {
+                          const discount = e.target.value;
+                          setFieldValue("discount", discount);
+
+                          const price = parseFloat(values.price || 0);
+                          const disc = parseFloat(discount || 0);
+
+                          const netPrice = price - (price * disc) / 100;
+                          const fixedNet = parseFloat(netPrice.toFixed(2));
+
+                          setFieldValue("netprice", fixedNet);
+
+                          // ★ Recalculate amount if quantity already entered
+                          const qty = parseFloat(values.quantity || 0);
+                          const amt = 0;
+
+                          setFieldValue("amount", amt.toFixed(2));
+                        }}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        InputProps={{
+                          readOnly: true,
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+                    ) : (<TextField
                       name="amount"
                       type="number"
                       id="amount"
@@ -766,7 +961,48 @@ const EditOrderitem = () => {
                           style: { textAlign: "right" },
                         },
                       }}
-                    />
+                    />)}
+
+                    {(mode === "A" && ReplacementQty > 0) ? (
+                      <>
+                        <TextField
+                          name="replacementQty"
+                          type="number"
+                          id="replacementQty"
+                          label="Replacement Qty"
+                          variant="standard"
+                          focused
+                          value={ReplacementQty}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                        />
+                        <TextField
+                          name="netQty"
+                          type="number"
+                          id="netQty"
+                          label="Net Quantity"
+                          variant="standard"
+                          focused
+                          value={netQuantity}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.netQty && !!errors.netQty}
+                          helperText={touched.netQty && errors.netQty}
+                          InputProps={{
+                            readOnly: true,
+                            inputProps: {
+                              style: { textAlign: "right" },
+                            },
+                          }}
+                        />
+
+                      </>) : null}
                   </Box>
                   <Box
                     display="flex"

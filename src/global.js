@@ -304,6 +304,7 @@ const initialState = {
   Parentposturl:"",
   Processposturl:"",
   PayslipGetController:"",
+  PartyReplacementQtyGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -470,6 +471,7 @@ export const getUrlSlice = createSlice({
       state.Parentposturl = APIurl + "ParentpostController.php";
       state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
       state.PayslipGetController = APIurl + "PayslipGetController.php";
+      state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
     },
   },
 });

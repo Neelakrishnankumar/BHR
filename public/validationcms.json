@@ -182,7 +182,7 @@
   },
   "OrderItem": {
     "product": "Please select the Product",
-    "discount": "Please enter the Discount (In Percentage)",
+    "discount": "Please enter the Discount / Add On(%)",
     "quantity": "Please enter the Quantity"
   },
   "AdvancePayment": {
@@ -215,6 +215,13 @@
     "ItemName": "Please enter the Item Name",
     "AssestID": "Please enter the Assest ID",
     "PurchaseReference": "Please enter the Reference",
+    "ItemValue": "Please enter the Item Value"
+  },
+  "Itemcustody1": {
+    "itemGroup": "Please select the Item Group",
+    "items": "Please select the Item",
+    "AssestID": "Please enter the Asset ID",
+    "PurchaseReference": "Please enter the Purchase Reference",
     "ItemValue": "Please enter the Item Value"
   },
   "Permission": {
