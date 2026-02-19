@@ -11,11 +11,7 @@ import { Font } from "@react-pdf/renderer";
 
 
 const styles = StyleSheet.create({
-    page: {
-        padding: 20,
-        fontSize: 9,
-        border: "1px solid #000",
-    },
+
 
     /* ---------------- HEADER ---------------- */
 
@@ -92,13 +88,20 @@ const styles = StyleSheet.create({
         fontSize: 8
     },
 
+    // table1: {
+    //     // border: "1px solid #000",
+    //     borderLeft: "1px solid #000",
+    //     // borderBottom: "1px solid #000",
+    //     borderTop: "1px solid #000",
+    //     // fontSize: 8,
+    //     // marginTop: "5px"
+    // },
     table1: {
-        // border: "1px solid #000",
         borderLeft: "1px solid #000",
-        // borderBottom: "1px solid #000",
-        borderTop: "1px solid #000",
-        // fontSize: 8,
-        // marginTop: "5px"
+    },
+    commonTable: {
+        borderLeft: "1px solid #000",
+        // borderRight: "1px solid #000",
     },
 
     tableHeaderMain: {
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     Transsactioncol2: {
-        width: "65%",
+        width: "55%",
         borderRight: "1px solid black",
         padding: 5,
     },
@@ -175,7 +178,12 @@ const styles = StyleSheet.create({
         textAlign: "right",
         padding: 5,
     },
-
+    Transsactioncol5: {
+        width: "10%",
+        textAlign: "right",
+        borderRight: "1px solid black",
+        padding: 5,
+    },
     headerColMain: {
         width: "100%",
         textAlign: "left",
@@ -190,7 +198,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
-        fontSize: 10
+        fontSize: 11
     },
 
     headerCol2: {
@@ -199,7 +207,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
-        fontSize: 10
+        fontSize: 11
         // paddingLeft: "45px"
     },
 
@@ -209,7 +217,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         // borderRight: "1px solid black",
         padding: 5,
-        fontSize: 10
+        fontSize: 11
     },
     TransactionheaderCol1: {
         width: "5%",
@@ -217,17 +225,25 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
-        fontSize: 10
+        fontSize: 11
     },
 
     TransactionheaderCol2: {
-        width: "65%",
+        width: "55%",
         textAlign: "center",
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
         // paddingLeft: "45px",
-        fontSize: 10
+        fontSize: 11
+    },
+    TransactionheaderCol5: {
+        width: "10%",
+        textAlign: "center",
+        fontWeight: "bold",
+        borderRight: "1px solid black",
+        padding: 5,
+        fontSize: 11
     },
 
     TransactionheaderCol3: {
@@ -236,14 +252,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         borderRight: "1px solid black",
         padding: 5,
-        fontSize: 10
+        fontSize: 11
     },
     TransactionheaderCol4: {
         width: "15%",
         textAlign: "center",
         fontWeight: "bolder",
         padding: 5,
-        fontSize: 10
+        fontSize: 11
     },
 
 
@@ -273,7 +289,7 @@ const styles = StyleSheet.create({
         borderLeft: "1px solid #000",
         borderRight: "1px solid #000",
         borderBottom: "1px solid #000",
-        padding: 8,
+        padding: 2,
         fontSize: 8,
         flexDirection: "row",
         // textAlign: "justify"
@@ -297,6 +313,7 @@ const styles = StyleSheet.create({
 
     bankLabel: {
         width: "30%",
+        fontSize: 9,
     },
 
     bankColon: {
@@ -340,32 +357,82 @@ const styles = StyleSheet.create({
         padding: 5,
         fontSize: 8,
         fontStyle: "italic"
-    }
+    },
+    // footerWrapper: {
+    //     position: "absolute",
+    //     bottom: 5,
+    //     left: 5,
+    //     right: 5,     // forces full width
+    //     height: 80,
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    // },
+
+    // footerImage: {
+    //     width: "100%",
+    //     height: 100,
+    //     objectFit: "cover",
+    // }
+    // page: {
+    //     padding: 20,
+    //     fontSize: 9,
+    //     border: "1px solid #000",
+    // },
+    page: {
+        padding: 20,
+        paddingBottom: 55,
+        fontSize: 9,
+        border: "1px solid #000",
+    },
+
+    footerWrapper: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 45,
+    },
+
+    footerImage: {
+        width: "100%",
+        height: 45,
+    },
+
 });
 
-const PayslipPdf = ({ data = {}, filters }) => {
+const PayslipPdf = ({ data = {}, filters = {} }) => {
 
     const QR_BASE_URL = `${filters?.Imageurl}/uploads/images/`;
     const headerPath = filters?.HeaderImg
         ? `${QR_BASE_URL}${filters.HeaderImg}`
         : null;
+    const footerPath = filters?.FooterImg
+        ? `${QR_BASE_URL}${filters.FooterImg}`
+        : null;
     const CompanySignature = filters?.CompanySignature
         ? `${QR_BASE_URL}${filters.CompanySignature}`
         : null;
 
-    const normalizeRows = (rows, minRows = 3) => {
-        const filled = [...rows];
-        while (filled.length < minRows) {
-            filled.push({ label: "", amount: "" });
+    const normalizeRows = (rows, minRows = 3, maxRows = 5) => {
+        let filled = [...rows];
+
+        // Limit maximum rows
+        if (filled.length > maxRows) {
+            return filled.slice(0, maxRows);
         }
-        return filled.slice(0, minRows);
+
+        // Ensure minimum rows only if less than minRows
+        if (filled.length < minRows) {
+            const emptyRowsNeeded = minRows - filled.length;
+            for (let i = 0; i < emptyRowsNeeded; i++) {
+                filled.push({});
+            }
+        }
+
+        return filled;
     };
 
 
-    // const allowanceRows = normalizeRows([
-    //     { Sl: "1", label: "BASIC PAY", amount: "12000" },
-    //     { Sl: "2", label: "HOUSE RENT ALLOWANCE", amount: "4800" },
-    // ]);
     const allowanceRows = normalizeRows(
         (data?.Allowances || []).map((item, index) => ({
             Sl: index + 1,
@@ -373,12 +440,6 @@ const PayslipPdf = ({ data = {}, filters }) => {
             amount: item.amount
         }))
     );
-
-
-    // const deductionRows = normalizeRows([
-    //     { Sl: "1", label: "PF AMOUNT", amount: "1800" },
-    //     { Sl: "2", label: "INSURANCE", amount: "1875" },
-    // ]);
 
     const deductionRows = normalizeRows(
         (data?.Deductions || []).map((item, index) => ({
@@ -405,87 +466,19 @@ const PayslipPdf = ({ data = {}, filters }) => {
         (data?.transactions || []).map((item, index) => ({
             Sl: index + 1,
             title: item.component,
+            date: item.date,
             credit: item.type?.toLowerCase() === "credit"
                 ? item.amount
-                : "--",
+                : "0.00",
 
             debit: item.type?.toLowerCase() === "debit"
                 ? item.amount
-                : "--"
+                : "0.00"
         }))
     );
 
 
     const Netpayable = data?.Totals?.NetPay || ""
-    // const numberToWordsInRupees = (num) => {
-    //     if (!num) return "Zero Rupees Only";
-
-    //     const a = [
-    //         "",
-    //         "One",
-    //         "Two",
-    //         "Three",
-    //         "Four",
-    //         "Five",
-    //         "Six",
-    //         "Seven",
-    //         "Eight",
-    //         "Nine",
-    //         "Ten",
-    //         "Eleven",
-    //         "Twelve",
-    //         "Thirteen",
-    //         "Fourteen",
-    //         "Fifteen",
-    //         "Sixteen",
-    //         "Seventeen",
-    //         "Eighteen",
-    //         "Nineteen",
-    //     ];
-    //     const b = [
-    //         "",
-    //         "",
-    //         "Twenty",
-    //         "Thirty",
-    //         "Forty",
-    //         "Fifty",
-    //         "Sixty",
-    //         "Seventy",
-    //         "Eighty",
-    //         "Ninety",
-    //     ];
-
-    //     const toWords = (n) => {
-    //         if (n < 20) return a[n];
-    //         if (n < 100)
-    //             return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
-    //         if (n < 1000)
-    //             return (
-    //                 a[Math.floor(n / 100)] +
-    //                 " Hundred" +
-    //                 (n % 100 ? " " + toWords(n % 100) : "")
-    //             );
-    //         if (n < 100000)
-    //             return (
-    //                 toWords(Math.floor(n / 1000)) +
-    //                 " Thousand" +
-    //                 (n % 1000 ? " " + toWords(n % 1000) : "")
-    //             );
-    //         if (n < 10000000)
-    //             return (
-    //                 toWords(Math.floor(n / 100000)) +
-    //                 " Lakh" +
-    //                 (n % 100000 ? " " + toWords(n % 100000) : "")
-    //             );
-    //         return (
-    //             toWords(Math.floor(n / 10000000)) +
-    //             " Crore" +
-    //             (n % 10000000 ? " " + toWords(n % 10000000) : "")
-    //         );
-    //     };
-
-    //     return toWords(parseInt(num)) + " Rupees Only";
-    // };
 
     const numberToWordsInRupees = (num) => {
         if (!num) return "Zero Rupees Only";
@@ -575,6 +568,16 @@ const PayslipPdf = ({ data = {}, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeCode}</Text>
                         </View>
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Employee</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.EmployeeName}</Text>
+                        </View>
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Designation</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.EmployeeDesignation}</Text>
+                        </View>
                         {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Position</Text>
                             <Text style={styles.spaceColon}>:</Text>
@@ -585,30 +588,18 @@ const PayslipPdf = ({ data = {}, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeLevel}</Text>
                         </View>
+
+
+
+                    </View>
+
+                    <View style={styles.gridColumn}>
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Department</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeDepartment}</Text>
                         </View>
 
-                        <View style={styles.gridRow}>
-                            <Text style={styles.label}>Father's Name (Mr.)</Text>
-                            <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.FatherName}</Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.gridColumn}>
-                        <View style={styles.gridRow}>
-                            <Text style={styles.label}>Employee Name</Text>
-                            <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.EmployeeName}</Text>
-                        </View>
-                        <View style={styles.gridRow}>
-                            <Text style={styles.label}>Designation</Text>
-                            <Text style={styles.spaceColon}>:</Text>
-                            <Text style={styles.value}>{data?.EmployeeDesignation}</Text>
-                        </View>
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Division</Text>
                             <Text style={styles.spaceColon}>:</Text>
@@ -624,19 +615,23 @@ const PayslipPdf = ({ data = {}, filters }) => {
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.WorkLocation}</Text>
                         </View>
-                    </View>
-
-                    <View style={[styles.gridColumn, { borderRight: 0 }]}>
-
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Date Of Joining</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeDateOfJoin}</Text>
                         </View>
+                    </View>
+
+                    <View style={[styles.gridColumn, { borderRight: 0 }]}>
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Date Of Birth</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.EmployeeDob}</Text>
+                        </View>
+                        <View style={styles.gridRow}>
+                            <Text style={styles.label}>Father/Guardian</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.FatherName}</Text>
                         </View>
                         <View style={styles.gridRow}>
                             <Text style={styles.label}>Total Paid Days</Text>
@@ -644,25 +639,32 @@ const PayslipPdf = ({ data = {}, filters }) => {
                             <Text style={styles.value}>{data?.TotalPaidDays}</Text>
                         </View>
                         <View style={styles.gridRow}>
+                            <Text style={styles.label}>Type</Text>
+                            <Text style={styles.spaceColon}>:</Text>
+                            <Text style={styles.value}>{data?.EmployeeType}</Text>
+                        </View>
+                        {/* <View style={styles.gridRow}>
                             <Text style={styles.label}>Basic Pay</Text>
                             <Text style={styles.spaceColon}>:</Text>
                             <Text style={styles.value}>{data?.Salary}</Text>
-                        </View>
+                        </View> */}
                     </View>
 
                 </View>
 
                 {/* ---------------- EARNINGS TABLE ---------------- */}
-                <Text style={styles.sectionHeading}>Allowances</Text>
-                <View style={styles.table}>
+                {/* <Text style={styles.sectionHeading}>Allowances</Text> */}
+                <View style={[styles.commonTable, styles.table1]}>
+
+
                     {/* <View style={styles.tableHeaderMain}>
                         <Text style={styles.headerColMain}>Allowances</Text>
                     </View> */}
-                    
+
 
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.headerCol1}>SL#</Text>
-                        <Text style={styles.headerCol2}>Title</Text>
+                        <Text style={styles.headerCol2}>Allowance</Text>
                         <Text style={styles.headerCol3}>Amount</Text>
                     </View>
 
@@ -678,6 +680,7 @@ const PayslipPdf = ({ data = {}, filters }) => {
                         <Text style={styles.col2}>Gross Total</Text>
                         <Text style={styles.col3}>{data?.Totals?.SumOfAllowances}</Text>
                     </View>
+
                 </View>
 
                 {/* ---------------- OTHER ALLOWANCES ---------------- */}
@@ -692,16 +695,16 @@ const PayslipPdf = ({ data = {}, filters }) => {
                     </View>
                 </View> */}
                 {/* ---------------- DEDUCTIONS ---------------- */}
-                 <Text style={styles.sectionHeading}>Deductions</Text>
-                <View style={styles.table1}>
+                {/* <Text style={styles.sectionHeading}>Deductions</Text> */}
+                <View style={[styles.commonTable, styles.table1]}>
                     {/* <View style={styles.tableHeaderMain}>
                         <Text style={styles.headerColMain}>Deductions</Text>
                     </View> */}
-                   
+
 
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.headerCol1}>SL#</Text>
-                        <Text style={styles.headerCol2}>Title</Text>
+                        <Text style={styles.headerCol2}>Deduction</Text>
                         <Text style={styles.headerCol3}>Amount</Text>
                     </View>
 
@@ -734,22 +737,24 @@ const PayslipPdf = ({ data = {}, filters }) => {
 
 
                 {/* ---------------- TRANSACTIONS ---------------- */}
-                <Text style={styles.sectionHeading}>Transactions</Text>
+                {/* <Text style={styles.sectionHeading}>Transactions</Text> */}
 
-                <View style={styles.table1}>
+                <View style={[styles.commonTable, styles.table1]}>
                     {/* <View style={styles.tableHeaderMain}>
                         <Text style={styles.headerColMain}>Transactions</Text>
                     </View> */}
 
                     <View style={styles.tableHeader} fixed>
                         <Text style={styles.TransactionheaderCol1}>SL#</Text>
-                        <Text style={styles.TransactionheaderCol2}>Title</Text>
+                        <Text style={styles.TransactionheaderCol5}>Date</Text>
+                        <Text style={styles.TransactionheaderCol2}>Transaction</Text>
                         <Text style={styles.TransactionheaderCol3}>Credit</Text>
                         <Text style={styles.TransactionheaderCol4}>Debit</Text>
                     </View>
                     {transactionRows.map((row, index) => (
                         <View style={styles.tableRow} key={index} wrap={false}>
                             <Text style={styles.Transsactioncol1}>{row.Sl}</Text>
+                            <Text style={styles.Transsactioncol5}>{row.date}</Text>
                             <Text style={styles.Transsactioncol2}>{row.title}</Text>
                             <Text style={styles.Transsactioncol3}>{row.credit}</Text>
                             <Text style={styles.Transsactioncol4}>{row.debit}</Text>
@@ -758,22 +763,45 @@ const PayslipPdf = ({ data = {}, filters }) => {
 
                     <View style={styles.tableRow}>
                         <Text style={styles.Transsactioncol1}></Text>
+                        <Text style={styles.Transsactioncol5}></Text>
                         <Text style={styles.Transsactioncol2}>Gross Total</Text>
                         <Text style={styles.Transsactioncol3}>{data?.Totals?.SumOfCreditTransactions}</Text>
                         <Text style={styles.Transsactioncol4}>{data?.Totals?.SumOfDebitTransactions}</Text>
+                    </View>
+                    <View style={styles.tableRow}>
+                        <Text style={styles.col1}></Text>
+                        <Text style={styles.col2}>Net Total</Text>
+                        <Text style={styles.col3}>{data?.Totals?.NetPay}</Text>
                     </View>
                 </View>
 
                 <View break={false}>
                     {/* ---------------- NET PAY ---------------- */}
-                    <View style={styles.netPaySection}>
+                    {/* <View style={styles.netPaySection}>
                         <View style={styles.netPayRow}>
-                            <Text>Net Pay = Basic Pay + Allowances + Other Allowances - Deductions - Other Deductions</Text>
+                            <Text>Net Pay = Allowances + Other Allowances - Deductions - Other Deductions</Text>
                             <Text>{data?.Totals?.NetPay}</Text>
                         </View>
                         <Text style={styles.amountWords}>
-                            ({payableInWords}).
+                            {`In Words - ${payableInWords}`}
                         </Text>
+                    </View> */}
+                    <View style={styles.netPaySection}>
+
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center"
+                        }}>
+                            <Text style={{ fontSize: 9 }}>
+                                {`In Words - ${payableInWords}`}
+                            </Text>
+
+                            <Text style={{ fontSize: 9, fontWeight: 700 }}>
+                                {data?.Totals?.NetPay}
+                            </Text>
+                        </View>
+
                     </View>
 
                     {/* ---------------- DECLARATION ---------------- */}
@@ -830,7 +858,7 @@ const PayslipPdf = ({ data = {}, filters }) => {
 
                         </View>
 
-                        <View style={styles.signatureColumn}>
+                        {/* <View style={styles.signatureColumn}>
                             <View style={styles.signatureBlock}>
                                 <Text style={{ textAlign: "center", marginBottom: "2px" }}>
                                     Authorised Signature
@@ -842,7 +870,39 @@ const PayslipPdf = ({ data = {}, filters }) => {
                                         style={{ width: 120, height: 40 }}
                                     />) : null}
                             </View>
+                        </View> */}
+                        <View style={styles.signatureColumn}>
+                            <View style={styles.signatureBlock}>
+                                <Text style={{ fontSize: 8, marginBottom: 2 }}>
+                                    Digitally Signed on
+                                </Text>
+                                <Text style={{ fontSize: 8, marginBottom: 2 }}>
+                                    {/* {new Date().toLocaleString()} */}
+                                    {new Date().toLocaleDateString("en-GB")}
+
+                                </Text>
+
+                                <Text style={{ fontSize: 8, marginBottom: 2 }}>
+                                    Authorised by (Mr.Govindaraj)
+                                </Text>
+
+                                {CompanySignature && (
+                                    <Image
+                                        src={CompanySignature}
+                                        style={{ width: 100, height: 25, marginVertical: 3 }}
+                                    />
+                                )}
+                                {/* <Text style={{ fontSize: 8, marginBottom: -1 }}>
+                                   ( Mr.Govindaraj)
+                                </Text> */}
+
+                                {/* <Text style={{ fontSize: 8 }}>
+                                    Authorised Signature
+                                </Text> */}
+
+                            </View>
                         </View>
+
                     </View>
                 </View>
                 {/* <View style={styles.footerNote}>
@@ -850,10 +910,18 @@ const PayslipPdf = ({ data = {}, filters }) => {
                         This is a system generated pay slip. Hence, signature is not needed
                     </Text>
                 </View> */}
-
+                <View fixed style={styles.footerWrapper}>
+                    {footerPath && (
+                        <Image
+                            src={footerPath}
+                            style={styles.footerImage}
+                        />
+                    )}
+                </View>
             </Page>
         </Document>
     );
 };
 
 export default PayslipPdf;
+

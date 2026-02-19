@@ -6240,6 +6240,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             filters={{
               Imageurl: baseurlUAAM,
               HeaderImg: HeaderImg,
+              FooterImg: FooterImg,
               CompanySignature: CompanySignature,
             }}
           />,
