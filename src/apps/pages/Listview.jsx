@@ -2003,37 +2003,37 @@ const Listview = () => {
                             //     )
                             //   }
                             // </PDFDownloadLink>
-
-                            <BlobProvider
-                              document={
-                                <OrdEnqProductPDF
-                                  data={listViewData}
-                                  Product={values?.product?.Name}
-                                  Party={values?.party?.Name}
-                                  filters={{
-                                    fromdate: values?.fromdate,
-                                    todate: values?.date,
-                                    ordertype: values?.ordertype,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                  }}
-                                />
-                              }
-                            >
-                              {({ url, loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon
-                                    sx={{ fontSize: 24, opacity: 0.5 }}
-                                  />
-                                ) : (
-                                  <PictureAsPdfIcon
-                                    sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
-                                    onClick={() => window.open(url, "_blank")}
-                                  />
-                                )
-                              }
-                            </BlobProvider>
+                            
+<BlobProvider
+  document={
+    <OrdEnqProductPDF
+      data={listViewData}
+      Product={values?.product?.Name}
+      Party={values?.party?.Name}
+      filters={{
+        fromdate: values?.fromdate,
+        todate: values?.date,
+        ordertype: values?.ordertype,
+        // Imageurl: baseurlUAAM,
+        // HeaderImg: HeaderImg,
+        // FooterImg: FooterImg,
+      }}
+    />
+  }
+>
+  {({ url, loading }) =>
+    loading ? (
+      <PictureAsPdfIcon
+        sx={{ fontSize: 24, opacity: 0.5 }}
+      />
+    ) : (
+      <PictureAsPdfIcon
+        sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+        onClick={() => window.open(url, "_blank")}
+      />
+    )
+  }
+</BlobProvider>
                           ) : (
                             <PDFDownloadLink
                               document={
@@ -2045,9 +2045,9 @@ const Listview = () => {
                                     fromdate: values?.fromdate,
                                     todate: values?.date,
                                     ordertype: values.ordertype,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
+                                    // Imageurl: baseurlUAAM,
+                                    // HeaderImg: HeaderImg,
+                                    // FooterImg: FooterImg,
                                   }}
                                 />
                               }
@@ -2066,7 +2066,7 @@ const Listview = () => {
                             </PDFDownloadLink>
                           )}
 
-                          {/* <FaFileExcel
+{/* <FaFileExcel
   size={20}
   color="#1D6F42"
   style={{ cursor: "pointer" }}
