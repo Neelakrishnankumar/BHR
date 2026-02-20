@@ -2014,9 +2014,9 @@ const Listview = () => {
         fromdate: values?.fromdate,
         todate: values?.date,
         ordertype: values?.ordertype,
-        Imageurl: baseurlUAAM,
-        HeaderImg: HeaderImg,
-        FooterImg: FooterImg,
+        // Imageurl: baseurlUAAM,
+        // HeaderImg: HeaderImg,
+        // FooterImg: FooterImg,
       }}
     />
   }
@@ -2045,9 +2045,9 @@ const Listview = () => {
                                     fromdate: values?.fromdate,
                                     todate: values?.date,
                                     ordertype: values.ordertype,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
+                                    // Imageurl: baseurlUAAM,
+                                    // HeaderImg: HeaderImg,
+                                    // FooterImg: FooterImg,
                                   }}
                                 />
                               }
@@ -2066,7 +2066,7 @@ const Listview = () => {
                             </PDFDownloadLink>
                           )}
 
-<FaFileExcel
+{/* <FaFileExcel
   size={20}
   color="#1D6F42"
   style={{ cursor: "pointer" }}
@@ -2082,7 +2082,7 @@ const Listview = () => {
       }
     )
   }
-/>
+/> */}
 
                           {/* <Button
                             type="button"
