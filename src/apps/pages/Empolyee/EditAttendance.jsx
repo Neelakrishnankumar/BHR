@@ -686,7 +686,7 @@ const EditAttendance = () => {
                   padding={1}
                   justifyContent="end"
                 >
-                  <PDFDownloadLink
+                  {/* <PDFDownloadLink
                     document={<PayslipPdf data={paySlipdata}
                       filters={{
                         Imageurl: baseurlUAAM,
@@ -703,11 +703,10 @@ const EditAttendance = () => {
                       startIcon={<FileDownloadOutlinedIcon />}
                     // disabled={loading}
                     >
-                      {/* {loading ? "Generating..." : "Payslip"} */}
                       Payslip
                     </Button>
 
-                  </PDFDownloadLink>
+                  </PDFDownloadLink> */}
                   <Button type="submit" variant="contained" color="secondary">
                     APPLY
                   </Button>

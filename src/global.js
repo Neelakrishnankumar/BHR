@@ -240,7 +240,7 @@ const initialState = {
   SprintgetUrl: "",
   SprintPPGetUrl: "",
   regGetUrl: "",
-  //payrollattendanceUrl: APIurl + "PayrollAttendanceController.php",
+  payslipattendanceUrl: "",
   leavelApprovalUrl: "",
   requestAcknowledgeUrl: "",
   monthlyattendanceUrl: "",
@@ -388,7 +388,7 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      // state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
+      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
