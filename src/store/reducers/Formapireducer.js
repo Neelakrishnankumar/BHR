@@ -154,6 +154,11 @@ const initialState = {
   paySlipdata: [],
   paySlipstatus: "",
   paySliploading: false,
+
+  //ORDER ITEM --> REPLACEMENT QTY
+  replacementQtyGetdata: {},
+  replacementQtyGetstatus: "",
+  replacementQtyGetloading: false,
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2840,6 +2845,22 @@ export const getApiSlice = createSlice({
         state.paySlipstatus = "Error";
         state.paySliploading = false;
       })
+      //ORDER ITEM --> REPLACEMENT QTY - GET
+      .addCase(replacementQtyGet.pending, (state, action) => {
+        state.replacementQtyGetstatus = "idle";
+        state.replacementQtyGetloading = true;
+      })
+      .addCase(replacementQtyGet.fulfilled, (state, action) => {
+        state.replacementQtyGetstatus = "success";
+        state.replacementQtyGetloading = false;
+        state.replacementQtyGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(replacementQtyGet.rejected, (state, action) => {
+        state.replacementQtyGetstatus = "Error";
+        state.replacementQtyGetloading = false;
+      })
 
       //PARTY - SORT FILTER GET
       .addCase(leaveenquiryget.pending, (state, action) => {
@@ -5137,6 +5158,26 @@ export const paySlipGet = createAsyncThunk(
       CompanyID: payslip.CompanyID,
       Finyear: payslip.Finyear,
       Month: payslip.Month,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+export const replacementQtyGet = createAsyncThunk(
+  "replacementQtyGet/Get",
+  async ({PartyID,CompanyID}) => {
+    const url = store.getState().globalurl.PartyReplacementQtyGet;
+
+    const data = {
+      PartyID: PartyID,
+      CompanyID: CompanyID,
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {

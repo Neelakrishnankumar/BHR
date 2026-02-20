@@ -127,12 +127,12 @@ const Listview = () => {
   console.log(location, "location -----------------");
 
 
-   const HeaderImg = sessionStorage.getItem("CompanyHeader");
-    const FooterImg = sessionStorage.getItem("CompanyFooter");
-    console.log("HeaderImg", HeaderImg, FooterImg);
-    const config = getConfig();
-    const baseurlUAAM = config.UAAM_URL;
-    console.log("baseurlUAAM",baseurlUAAM)
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  console.log("baseurlUAAM", baseurlUAAM)
 
 
 
@@ -273,7 +273,7 @@ const Listview = () => {
   //   );
   //   // dispatch(screenRightsData(accessID));
   // }, [location.key]);
- React.useEffect(() => {
+  React.useEffect(() => {
     dispatch(
       fetchListview(
         accessID,
@@ -283,11 +283,11 @@ const Listview = () => {
           accessID == "TR047" ||
           accessID == "TR152" ||
           accessID == "TR155" ||
-          accessID == "TR022"         
+          accessID == "TR022"
           ? `compID=${compID}`
-          : accessID == "TR027" ? 
-          `CompanyID=${compID}`
-          : "",
+          : accessID == "TR027" ?
+            `CompanyID=${compID}`
+            : "",
         "",
         compID
       )
@@ -1745,7 +1745,7 @@ const Listview = () => {
                           // helperText={touched.party && errors.party}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
                         />
-                        
+
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="product"
@@ -3754,7 +3754,7 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR058" ? (
+        ) : accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
@@ -4138,7 +4138,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR330" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>           
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<PeopleAltIcon color="primary" />}
               label="Personnel"
