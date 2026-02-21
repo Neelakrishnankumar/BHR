@@ -132,6 +132,9 @@ import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+
+
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import FenceIcon from "@mui/icons-material/Fence";
 import { menuHeight } from "./utils";
@@ -924,139 +927,140 @@ const Sidebars = () => {
             UGA_ACCESSIDS: "TR027",
           },
           {
-            name: "Payroll",
-            id: 46,
-            url: "./TR333/Payroll",
-            icon: (
-              <Tooltip title="Payroll">
-                <CurrencyRubleIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR027",
-          },
-          {
-            name: "Employee Request",
-            id: 5846,
-            url: "./TR257/Employee Request",
-            icon: (
-              <Tooltip title="Requests">
-                <PermContactCalendarIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR257",
-          },
-          // {
-          //   name: "Approval",
-          //   id: 5859,
-          //   url: "./TR027/Approval",
-          //   icon: (
-          //     <Tooltip title="Approval">
-          //       <TaskAltIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR258",
-          // },
-        ],
-      },
-      {
-        name: "Agile",
-        id: 45678,
-        MenuID: "EM900",
-        Tooltipname: "Agile",
-        icon: (
-          <Tooltip title="Agile">
-            <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
-          </Tooltip>
-        ),
-        children: [
-          {
-            name: "Attendance(D)",
-            url: "/Apps/TR260/Editdailyattendance",
-            id: 5590,
-            icon: (
-              <Tooltip title="Daily Attendance">
-                <AppRegistrationOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR260",
-          },
-          {
-            name: "Attendance(M)",
-            url: "/Apps/TR260/EditAttendance",
-            id: 5580,
-            icon: (
-              <Tooltip title="Monthly Attendance">
-                <AppRegistrationOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR260",
-          },
-          {
-            name: "Attendance Register",
-            url: "/Apps/TR259/EditAttendanceHistory",
-            id: 5591,
-            icon: (
-              <Tooltip title="Attendance Register">
-                <WorkHistoryOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR259",
-          },
-          {
-            name: "Timesheet",
-            url: "/Apps/TR261/EditTimeSheet",
-            id: 5592,
-            icon: (
-              <Tooltip title="Timesheet">
-                <PendingActionsOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR261",
-          },
-        ],
-      },
+          name: "Payroll",
+          id: 46,
+          url: "./TR333/Payroll",
+          icon: (
+            <Tooltip title="Payroll">
+              <CurrencyRubleIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
+        {
+          name: "Employee Request",
+          id: 5846,
+          url: "./TR257/Employee Request",
+          icon: (
+            <Tooltip title="Requests">
+              <PermContactCalendarIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR257",
+        },
+        // {
+        //   name: "Approval",
+        //   id: 5859,
+        //   url: "./TR027/Approval",
+        //   icon: (
+        //     <Tooltip title="Approval">
+        //       <TaskAltIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR258",
+        // },
+      ],
+    },
+    {
+      name: "Agile",
+      id: 45678,
+      MenuID: "EM900",
+      Tooltipname: "Agile",
+      icon: (
+        <Tooltip title="Agile">
+          <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+        {
+          name: "Attendance(D)",
+          url: "/Apps/TR260/Editdailyattendance",
+          id: 5590,
+          icon: (
+            <Tooltip title="Daily Attendance">
+              <AppRegistrationOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR260",
+        },
+        {
+          name: "Attendance(M)",
+          url: "/Apps/TR260/EditAttendance",
+          id: 5580,
+          icon: (
+            <Tooltip title="Monthly Attendance">
+              {/* <AppRegistrationOutlinedIcon color="info" /> */}
+              <CalendarMonthOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR260",
+        },
+        {
+          name: "Attendance Register",
+          url: "/Apps/TR259/EditAttendanceHistory",
+          id: 5591,
+          icon: (
+            <Tooltip title="Attendance Register">
+              <WorkHistoryOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR259",
+        },
+        {
+          name: "Timesheet",
+          url: "/Apps/TR261/EditTimeSheet",
+          id: 5592,
+          icon: (
+            <Tooltip title="Timesheet">
+              <PendingActionsOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR261",
+        },
+      ],
+    },
 
 
       // {

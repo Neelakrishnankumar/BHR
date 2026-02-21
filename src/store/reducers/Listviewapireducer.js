@@ -5191,7 +5191,7 @@ export const fetchListview =
                   <Stack direction="row">
                     <Link>
                       {params.row.EmpType === "Contracts In" && (
-                        <Tooltip title="Contracts In">
+                        <Tooltip title="Contract In">
                           <IconButton color="info">
                             <RedoIcon />
                           </IconButton>
@@ -5201,7 +5201,7 @@ export const fetchListview =
 
                     <Link>
                       {params.row.EmpType === "Contracts Out" && (
-                        <Tooltip title="Contracts Out">
+                        <Tooltip title="Contract Out">
                           <IconButton color="info">
                             <UndoIcon />
                           </IconButton>

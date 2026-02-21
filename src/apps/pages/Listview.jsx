@@ -54,7 +54,7 @@ import { useContext } from "react";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useState } from "react";
-import { fnCsvFileUpload, fnCsvFileUploadnew } from "../../store/reducers/Imguploadreducer";
+import { fnCsvFileUpload, fnCsvFileUploadnew, } from "../../store/reducers/Imguploadreducer";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { screenRightsData } from "../../store/reducers/screenRightsreducer";
 import EditIcon from "@mui/icons-material/Edit";
@@ -560,6 +560,7 @@ const Listview = () => {
             ) : (
               false
             )}
+
             {/* <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
@@ -568,6 +569,7 @@ const Listview = () => {
                 />
               </IconButton>
             </Tooltip> */}
+
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -677,6 +679,23 @@ const Listview = () => {
               // )
               false
             )}
+
+              {/* <Tooltip arrow title="Import Excel">
+                <IconButton
+                  size="large"
+                  color="primary"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept=".xlsx,.xls"
+                    type="file"
+                    onChange={handleDesignationImport}
+                  />
+
+                  <FileUploadIcon />
+                </IconButton>
+              </Tooltip> */}
             {/* <Tooltip arrow title="Excel">
             <IconButton  color="primary">
             <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
@@ -816,11 +835,11 @@ const Listview = () => {
             const response = await dispatch(
               ExcelFileUpload({ formData, forcedFileName })
             ).unwrap();
-            if (response.payload.Status == "Y") {
-              toast.success(response.payload.Msg);
-              window.location.reload();
+            if (response.Status == "Y") {
+              toast.success(response.Msg);
+             // window.location.reload();
             } else {
-              toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+              toast.error(response.Msg ? response.Msg : "Error");
             }
           } catch (error) {
             console.error(error);
@@ -1183,8 +1202,9 @@ const Listview = () => {
 
                       const formattedScreenName = formatScreenName(screenName);
                       const forcedFileName = `${formattedScreenName}.xlsx`;
-                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
+                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName);
 
+                      
                       formData.append("CompanyID", compID);
                       formData.append("screename", screenName);
                       formData.append("Sync", values.Sync);
@@ -1200,11 +1220,11 @@ const Listview = () => {
                         Setup_MenuExcel(excelSetUp)
                       ).unwrap();
 
-                      if (response.payload.Status == "Y") {
-                        toast.success(response.payload.Msg);
-                        window.location.reload();
+                      if (response.Status == "Y") {
+                        toast.success(response.Msg);
+                       // window.location.reload();
                       } else {
-                        toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+                        toast.error(response.Msg ? response.Msg : "Error");
                       }
                     } catch (error) {
                       toast.error("Upload failed");
@@ -1238,7 +1258,7 @@ const Listview = () => {
                           width: "100%",
                         }}>
 
-                        {/* ✅ Download Excel Button */}
+                        {/* Download Excel Button */}
                         <Button
                           variant="outlined"
                           color="success"
