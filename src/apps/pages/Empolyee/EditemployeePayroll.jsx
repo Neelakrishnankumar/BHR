@@ -149,6 +149,10 @@ const EditemployeePayroll = () => {
   const empAttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
   );
+  const payslipAttendanceData = useSelector(
+    (state) => state.formApi.payslipAttendanceData
+  );
+  console.log("payslipAttendanceData", payslipAttendanceData);
   console.log("empAttendanceData", empAttendanceData);
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
@@ -2017,7 +2021,7 @@ const EditemployeePayroll = () => {
     "July", "August", "September", "October", "November", "December"
   ];
   const attendaceProcessFnSave = async (values) => {
-    const EmployeeIDs = empAttendanceData
+    const EmployeeIDs = payslipAttendanceData
       .map(row => row.EmpRecid)
       .join(",");
     const data = {
