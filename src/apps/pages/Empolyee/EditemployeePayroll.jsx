@@ -44,6 +44,7 @@ import {
   requestMail,
   leaveAppoval,
   Processpost,
+  payslipAttendance,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -1921,9 +1922,25 @@ const EditemployeePayroll = () => {
   //   dispatch(empAttendance({ data }));
   // };
 
+  // const attFnSave = async (values) => {
+  //   const data = {
+  //     Month: values.month.toString() ,
+  //     Year: values.year,
+  //     CompanyID,
+  //     ManagerID: "",
+  //     Etype: "E",
+  //     ProjectID: values.project.map((p) => p.RecordID).join(",") || "",
+  //     DesignationID: values.Designation.map((d) => d.RecordID).join(",") || "",
+  //   };
+
+  //   // dispatch(empAttendance({ data }));
+  //   dispatch(payslipAttendance({ data }));
+  // };
+  const [rows, setRows] = useState([]);
   const attFnSave = async (values) => {
+
     const data = {
-      Month: values.month.toString() ,
+      Month: values.month.toString(),
       Year: values.year,
       CompanyID,
       ManagerID: "",
@@ -1932,9 +1949,17 @@ const EditemployeePayroll = () => {
       DesignationID: values.Designation.map((d) => d.RecordID).join(",") || "",
     };
 
-    dispatch(empAttendance({ data }));
-  };
+    const response = await dispatch(payslipAttendance({ data }));
 
+    if (response?.payload?.Status === "Y") {
+
+      // Directly set rows from dispatch response
+      setRows(response.payload.Data || []);
+
+    } else {
+      setRows([]);
+    }
+  };
 
   /***********Attendance ************/
   const AttInitialvalues = {
@@ -1997,13 +2022,13 @@ const EditemployeePayroll = () => {
       .join(",");
     const data = {
       // action: "update",
-      
-        // Month: values.month.toString(),   
-        Month: monthNames[Number(values.month) - 1],
-        Year: values.year.toString(),
-        CompanyID: CompanyID,
-        EmployeeID: EmployeeIDs
-      
+
+      // Month: values.month.toString(),   
+      Month: monthNames[Number(values.month) - 1],
+      Year: values.year.toString(),
+      CompanyID: CompanyID,
+      EmployeeID: EmployeeIDs
+
     };
 
     console.log("Final Payload:", data);
@@ -2974,7 +2999,7 @@ const EditemployeePayroll = () => {
                             minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                        rows={empAttendanceData}
+                        rows={rows}
                         columns={column}
                         disableSelectionOnClick
                         getRowId={(row) => row.SLNO}

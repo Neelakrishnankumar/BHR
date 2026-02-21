@@ -55,6 +55,7 @@ const initialState = {
   purchaseorderratingData: [],
   searchLoading: false,
   empAttendanceData: {},
+  // payslipAttendanceData: {},
   empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
   AttendanceDataLoading: false,
@@ -154,6 +155,11 @@ const initialState = {
   paySlipdata: [],
   paySlipstatus: "",
   paySliploading: false,
+
+  //ORDER ITEM --> REPLACEMENT QTY
+  replacementQtyGetdata: {},
+  replacementQtyGetstatus: "",
+  replacementQtyGetloading: false,
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2421,6 +2427,7 @@ export const getApiSlice = createSlice({
       state.stockorderData = [];
       state.purchaseorderratingData = [];
       state.empAttendanceData = [];
+      // state.payslipAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
       state.MonthlyAttendanceData = [];
@@ -2839,6 +2846,22 @@ export const getApiSlice = createSlice({
       .addCase(paySlipGet.rejected, (state, action) => {
         state.paySlipstatus = "Error";
         state.paySliploading = false;
+      })
+      //ORDER ITEM --> REPLACEMENT QTY - GET
+      .addCase(replacementQtyGet.pending, (state, action) => {
+        state.replacementQtyGetstatus = "idle";
+        state.replacementQtyGetloading = true;
+      })
+      .addCase(replacementQtyGet.fulfilled, (state, action) => {
+        state.replacementQtyGetstatus = "success";
+        state.replacementQtyGetloading = false;
+        state.replacementQtyGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(replacementQtyGet.rejected, (state, action) => {
+        state.replacementQtyGetstatus = "Error";
+        state.replacementQtyGetloading = false;
       })
 
       //PARTY - SORT FILTER GET
@@ -3341,6 +3364,20 @@ export const getApiSlice = createSlice({
         state.empAttendanceDataLoading = false;
         state.empAttendanceData = [];
       })
+      // .addCase(payslipAttendance.fulfilled, (state, action) => {
+      //   state.empAttendanceData = action.payload.Data;
+      //   state.empAttendanceDataLoading = false;
+      // })
+      // .addCase(payslipAttendance.pending, (state, action) => {
+      //   state.Status = "idle";
+      //   state.empAttendanceDataLoading = true;
+      //   state.empAttendanceData = [];
+      // })
+      // .addCase(payslipAttendance.rejected, (state, action) => {
+      //   state.Status = "Error";
+      //   state.empAttendanceDataLoading = false;
+      //   state.empAttendanceData = [];
+      // })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;
         state.AttendanceDataLoading = false;
@@ -4752,6 +4789,27 @@ export const empAttendance = createAsyncThunk(
     return response.data;
   },
 );
+export const payslipAttendance = createAsyncThunk(
+  "employee/Payslipattendance",
+  async ({ data }) => {
+    var url = store.getState().globalurl.payslipattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const MonthlyAttendance = createAsyncThunk(
   "employee/monthlyattendance",
   async ({ data }) => {
@@ -5137,6 +5195,26 @@ export const paySlipGet = createAsyncThunk(
       CompanyID: payslip.CompanyID,
       Finyear: payslip.Finyear,
       Month: payslip.Month,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+export const replacementQtyGet = createAsyncThunk(
+  "replacementQtyGet/Get",
+  async ({PartyID,CompanyID}) => {
+    const url = store.getState().globalurl.PartyReplacementQtyGet;
+
+    const data = {
+      PartyID: PartyID,
+      CompanyID: CompanyID,
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {

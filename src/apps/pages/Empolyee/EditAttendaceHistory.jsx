@@ -209,6 +209,7 @@ const EditAttendanceHistory = () => {
       },
     },
     { field: "Name", headerName: "Employee", width: 150 },
+    { field: "Designation", headerName: "Designation", headerAlign: "center", width: 150 },
     { field: "Day1", headerName: "1", width: 5 },
     { field: "Day2", headerName: "2", width: 5 },
     { field: "Day3", headerName: "3", width: 5 },

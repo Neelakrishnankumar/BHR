@@ -304,9 +304,9 @@ const EditSalaryComponent = () => {
                     error={!!touched.type && !!errors.type}
                     helperText={touched.type && errors.type}
                   >
-                    <MenuItem value="PS">PERCENTAGE OF BASIC SALARY</MenuItem>
-                    <MenuItem value="FX">FIXED AMOUNT</MenuItem>
-                    <MenuItem value="PC">POLICY</MenuItem>
+                    <MenuItem value="PS">Percentage Of Basic Salary</MenuItem>
+                    <MenuItem value="FX">Fixed Amount</MenuItem>
+                    <MenuItem value="PC">Policy</MenuItem>
                   </TextField>
                   {/* <FormControl
                     focused
@@ -348,8 +348,8 @@ const EditSalaryComponent = () => {
                     error={!!touched.category && !!errors.category}
                     helperText={touched.category && errors.category}
                   >
-                    <MenuItem value="A">ALLOWANCE</MenuItem>
-                    <MenuItem value="D">DEDUCTION</MenuItem>
+                    <MenuItem value="A">Allowance</MenuItem>
+                    <MenuItem value="D">Deduction</MenuItem>
                   </TextField>
                   <TextField
                     name="sortOrder"

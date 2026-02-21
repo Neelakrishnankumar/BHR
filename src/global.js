@@ -241,7 +241,7 @@ const initialState = {
   SprintgetUrl: "",
   SprintPPGetUrl: "",
   regGetUrl: "",
-  //payrollattendanceUrl: APIurl + "PayrollAttendanceController.php",
+  payslipattendanceUrl: "",
   leavelApprovalUrl: "",
   requestAcknowledgeUrl: "",
   monthlyattendanceUrl: "",
@@ -305,6 +305,7 @@ const initialState = {
   Parentposturl:"",
   Processposturl:"",
   PayslipGetController:"",
+  PartyReplacementQtyGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -391,8 +392,8 @@ export const getUrlSlice = createSlice({
       state.apiweightageUrl = APIurl + "HRWeightagesGetContoller.php";
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
-      // state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
+      state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
@@ -475,6 +476,7 @@ export const getUrlSlice = createSlice({
       state.Parentposturl = APIurl + "ParentpostController.php";
       state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
       state.PayslipGetController = APIurl + "PayslipGetController.php";
+      state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
     },
   },
 });
