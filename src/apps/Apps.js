@@ -192,6 +192,7 @@ import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
 import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
+import BRRForm from "./pages/SOP/BRRForm";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -1316,6 +1317,10 @@ function App() {
                   <Route
                     path="/Parentcontact"
                     element={<Editparentcontact />}
+                  />
+                  <Route
+                    path="/BatchReconciliation/BRRForm"
+                    element={<BRRForm />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
