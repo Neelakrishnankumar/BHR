@@ -54,7 +54,7 @@ import { useContext } from "react";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useState } from "react";
-import { fnCsvFileUpload, fnCsvFileUploadnew } from "../../store/reducers/Imguploadreducer";
+import { fnCsvFileUpload, fnCsvFileUploadnew, } from "../../store/reducers/Imguploadreducer";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { screenRightsData } from "../../store/reducers/screenRightsreducer";
 import EditIcon from "@mui/icons-material/Edit";
@@ -127,12 +127,12 @@ const Listview = () => {
   console.log(location, "location -----------------");
 
 
-   const HeaderImg = sessionStorage.getItem("CompanyHeader");
-    const FooterImg = sessionStorage.getItem("CompanyFooter");
-    console.log("HeaderImg", HeaderImg, FooterImg);
-    const config = getConfig();
-    const baseurlUAAM = config.UAAM_URL;
-    console.log("baseurlUAAM",baseurlUAAM)
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  console.log("baseurlUAAM", baseurlUAAM)
 
 
 
@@ -273,7 +273,7 @@ const Listview = () => {
   //   );
   //   // dispatch(screenRightsData(accessID));
   // }, [location.key]);
- React.useEffect(() => {
+  React.useEffect(() => {
     dispatch(
       fetchListview(
         accessID,
@@ -283,11 +283,11 @@ const Listview = () => {
           accessID == "TR047" ||
           accessID == "TR152" ||
           accessID == "TR155" ||
-          accessID == "TR022"         
+          accessID == "TR022"
           ? `compID=${compID}`
-          : accessID == "TR027" ? 
-          `CompanyID=${compID}`
-          : "",
+          : accessID == "TR027" ?
+            `CompanyID=${compID}`
+            : "",
         "",
         compID
       )
@@ -560,14 +560,16 @@ const Listview = () => {
             ) : (
               false
             )}
-            {/* <Tooltip title="Bulk Upload">
+
+            <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
+
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -677,6 +679,23 @@ const Listview = () => {
               // )
               false
             )}
+
+              {/* <Tooltip arrow title="Import Excel">
+                <IconButton
+                  size="large"
+                  color="primary"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept=".xlsx,.xls"
+                    type="file"
+                    onChange={handleDesignationImport}
+                  />
+
+                  <FileUploadIcon />
+                </IconButton>
+              </Tooltip> */}
             {/* <Tooltip arrow title="Excel">
             <IconButton  color="primary">
             <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
@@ -816,11 +835,11 @@ const Listview = () => {
             const response = await dispatch(
               ExcelFileUpload({ formData, forcedFileName })
             ).unwrap();
-            if (response.payload.Status == "Y") {
-              toast.success(response.payload.Msg);
-              window.location.reload();
+            if (response.Status == "Y") {
+              toast.success(response.Msg);
+             // window.location.reload();
             } else {
-              toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+              toast.error(response.Msg ? response.Msg : "Error");
             }
           } catch (error) {
             console.error(error);
@@ -1183,8 +1202,9 @@ const Listview = () => {
 
                       const formattedScreenName = formatScreenName(screenName);
                       const forcedFileName = `${formattedScreenName}.xlsx`;
-                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
+                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName);
 
+                      
                       formData.append("CompanyID", compID);
                       formData.append("screename", screenName);
                       formData.append("Sync", values.Sync);
@@ -1200,11 +1220,11 @@ const Listview = () => {
                         Setup_MenuExcel(excelSetUp)
                       ).unwrap();
 
-                      if (response.payload.Status == "Y") {
-                        toast.success(response.payload.Msg);
-                        window.location.reload();
+                      if (response.Status == "Y") {
+                        toast.success(response.Msg);
+                       // window.location.reload();
                       } else {
-                        toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+                        toast.error(response.Msg ? response.Msg : "Error");
                       }
                     } catch (error) {
                       toast.error("Upload failed");
@@ -1238,7 +1258,7 @@ const Listview = () => {
                           width: "100%",
                         }}>
 
-                        {/* ✅ Download Excel Button */}
+                        {/* Download Excel Button */}
                         <Button
                           variant="outlined"
                           color="success"
@@ -1745,7 +1765,7 @@ const Listview = () => {
                           // helperText={touched.party && errors.party}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2140","ScreenName":"Party","Filter":"CompanyID=${compID}","Any":""}}`}
                         />
-                        
+
                         <MultiFormikOptimizedAutocomplete
                           sx={{ width: 250, mt: 1 }}
                           id="product"
@@ -2014,9 +2034,9 @@ const Listview = () => {
         fromdate: values?.fromdate,
         todate: values?.date,
         ordertype: values?.ordertype,
-        Imageurl: baseurlUAAM,
-        HeaderImg: HeaderImg,
-        FooterImg: FooterImg,
+        // Imageurl: baseurlUAAM,
+        // HeaderImg: HeaderImg,
+        // FooterImg: FooterImg,
       }}
     />
   }
@@ -2045,9 +2065,9 @@ const Listview = () => {
                                     fromdate: values?.fromdate,
                                     todate: values?.date,
                                     ordertype: values.ordertype,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
+                                    // Imageurl: baseurlUAAM,
+                                    // HeaderImg: HeaderImg,
+                                    // FooterImg: FooterImg,
                                   }}
                                 />
                               }
@@ -2066,7 +2086,7 @@ const Listview = () => {
                             </PDFDownloadLink>
                           )}
 
-<FaFileExcel
+{/* <FaFileExcel
   size={20}
   color="#1D6F42"
   style={{ cursor: "pointer" }}
@@ -2082,7 +2102,7 @@ const Listview = () => {
       }
     )
   }
-/>
+/> */}
 
                           {/* <Button
                             type="button"
@@ -3754,7 +3774,7 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
-        ): accessID == "TR058" ? (
+        ) : accessID == "TR058" ? (
           <Box display="flex" flexDirection="row" padding="25px">
             <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
@@ -4138,7 +4158,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR330" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>           
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<PeopleAltIcon color="primary" />}
               label="Personnel"

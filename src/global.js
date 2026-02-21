@@ -180,6 +180,7 @@ const initialState = {
   attachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
+  designationImportUrl:"",
   pcdurl: "",
   pdfurl: "",
   indentUrl: "",
@@ -240,7 +241,7 @@ const initialState = {
   SprintgetUrl: "",
   SprintPPGetUrl: "",
   regGetUrl: "",
-  //payrollattendanceUrl: APIurl + "PayrollAttendanceController.php",
+  payslipattendanceUrl: "",
   leavelApprovalUrl: "",
   requestAcknowledgeUrl: "",
   monthlyattendanceUrl: "",
@@ -317,6 +318,7 @@ export const getUrlSlice = createSlice({
       const APIurl = config.API_URL;
       const baseurl = config.BASE_URL;
       const baseurlUAAM = config.UAAM_URL;
+      //const uaturl = "https://essuat.beyondexs.com"
 
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
@@ -337,6 +339,9 @@ export const getUrlSlice = createSlice({
       state.attachmentUrl = baseurl + "uploads/images/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
+      // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
+
+
       state.pcdurl = APIurl + "PCDController.php";
       state.pdfurl = baseurl + "tcpdf/";
       state.indentUrl = APIurl + "IndentController.php";
@@ -388,7 +393,7 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      // state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
+      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";

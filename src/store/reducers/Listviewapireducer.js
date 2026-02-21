@@ -5191,7 +5191,7 @@ export const fetchListview =
                   <Stack direction="row">
                     <Link>
                       {params.row.EmpType === "Contracts In" && (
-                        <Tooltip title="Contracts In">
+                        <Tooltip title="Contract In">
                           <IconButton color="info">
                             <RedoIcon />
                           </IconButton>
@@ -5201,7 +5201,7 @@ export const fetchListview =
 
                     <Link>
                       {params.row.EmpType === "Contracts Out" && (
-                        <Tooltip title="Contracts Out">
+                        <Tooltip title="Contract Out">
                           <IconButton color="info">
                             <UndoIcon />
                           </IconButton>
@@ -6240,6 +6240,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             filters={{
               Imageurl: baseurlUAAM,
               HeaderImg: HeaderImg,
+              FooterImg: FooterImg,
               CompanySignature: CompanySignature,
             }}
           />,

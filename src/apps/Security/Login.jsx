@@ -818,13 +818,13 @@ const Login = () => {
                 validate={(values) => {
                   const errors = {};
                   if (!values.username) {
-                    errors.username = "Please enter Username";
+                    errors.username = "Please enter the Username";
                   }
                   if (!values.password) {
-                    errors.password = "Please enter Password";
+                    errors.password = "Please enter the Password";
                   }
                   if (!values.license) {
-                    errors.license = "Please enter Subscription Code";
+                    errors.license = "Please enter the Subscription Code";
                   }
                   return errors;
                 }}

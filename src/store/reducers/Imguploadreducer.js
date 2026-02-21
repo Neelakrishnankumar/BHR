@@ -311,3 +311,48 @@ export function fnCsvFileUpload(formData) {
     }
   };
 }
+
+
+// // designationImport.js
+// export function fnDesignationImport(formData) {
+//   return async (dispatch) => {
+//     try {
+//       dispatch(pending());
+
+//       //const baseUrl = store.getState().globalurl.designationImportUrl;
+
+//       const file = formData.get("file");
+//       const fileName = file?.name; 
+
+//        const url = `https://essuat.beyondexs.com?filename=${encodeURIComponent(fileName)}`;
+
+       
+//       const response = await axios.post(url, formData, {
+//         headers: {
+//           Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4MTA0OTV9.y3Bq2I7MMJLevEIVzb7m6UIirv86uvhoCBbb5qxF3lk",
+//         },
+//       });
+
+//       dispatch(
+//         Success({
+//           Status: "Y",
+//           apiResponse: response.data,
+//           Msg: response.data?.Msg,
+//         })
+//       );
+
+//       toast.success(response.data?.Msg || "Import successful");
+//       return response;
+//     } catch (error) {
+//       dispatch(
+//         Error({
+//           Status: "N",
+//           Msg: error.message,
+//         })
+//       );
+
+//       toast.error("Import failed");
+//       throw error;
+//     }
+//   };
+// }

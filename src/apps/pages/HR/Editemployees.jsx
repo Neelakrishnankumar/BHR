@@ -98,6 +98,8 @@ import {
 } from "../../../ui-components/global/Autocomplete";
 import Resizer from "react-image-file-resizer";
 import ContactsIcon from '@mui/icons-material/Contacts';
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 // ***********************************************
 //  Developer:Gowsalya
@@ -941,7 +943,7 @@ const Editemployee = () => {
       // WeekOff: 0,
       CompanyID,
       SubscriptionCode,
-      ClassificationID: parentID || 0,
+      ClassificationID: parentID ? parentID : 0,
     };
     console.log("🚀 ~ fnSave ~ saveData:", saveData);
     console.log(apiReturnValue, "moduleselect");
@@ -959,11 +961,22 @@ const Editemployee = () => {
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
-      } else {
-        navigate(
-          // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
-          `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`, { state: { ...state } });
-      }
+      } 
+      // else {
+      //   navigate(
+      //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
+      //     `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`, { state: { ...state } });
+      // }
+      else {
+
+    navigate(
+      is00123Subscription
+        ? `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`
+        : `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
+      { state: { ...state } }
+    );
+
+  }
     } else {
       toast.error(data.payload.Msg);
       console.log(data.payload.Msg, "--error");
@@ -3434,7 +3447,12 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+
+  const [uploading, setUploading] = useState(false);
+
   const changeHandler = async (event) => {
+    setUploading(true);   // Start loader
+
     setSelectedFile(event.target.files[0]);
 
     console.log(event.target.files[0]);
@@ -3448,6 +3466,8 @@ const Editemployee = () => {
 
     console.log("fileData" + JSON.stringify(fileData));
     setUploadFile(fileData.payload.apiResponse);
+
+    setUploading(false);  // Stop loader
   };
   const fnViewFile = (values) => {
     const baseUrl = store.getState().globalurl.attachmentUrl;
@@ -4115,8 +4135,8 @@ const Editemployee = () => {
                         <MenuItem value="PP">Prohibition Period</MenuItem>
                         <MenuItem value="PM">Permanent</MenuItem>
                         {/* <MenuItem value="ST">Student</MenuItem> */}
-                        <MenuItem value="CI">Contracts In</MenuItem>
-                        <MenuItem value="CO">Contracts Out</MenuItem>
+                        <MenuItem value="CI">Contract In</MenuItem>
+                        <MenuItem value="CO">Contract Out</MenuItem>
                         <MenuItem value="IN">Intern</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
@@ -8175,21 +8195,31 @@ const Editemployee = () => {
                             color="warning"
                             aria-label="upload picture"
                             component="label"
+                            disabled={uploading}
                           >
                             <input
                               hidden
-                              // accept=".pdf"
                               type="file"
                               onChange={(e) => {
                                 const file = e.target.files[0];
                                 if (!file) return;
 
                                 changeHandler(e);
-                                setFieldValue("Attachment", file.name); // UI display only
+                                setFieldValue("Attachment", file.name);
                               }}
                             />
-                            <PictureAsPdfOutlinedIcon fontSize="small" />
+
+                            {uploading ? (
+                              <>
+                                <CircularProgress size={18} sx={{ mr: 1 }} />
+                                Uploading...
+                              </>
+                            ) : (
+                              <PictureAsPdfOutlinedIcon fontSize="small" />
+                            )}
+
                           </IconButton>
+
                           <Button
                             variant="contained"
                             onClick={() => fnViewFile(values)}

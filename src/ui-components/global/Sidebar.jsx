@@ -132,6 +132,9 @@ import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+
+
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import FenceIcon from "@mui/icons-material/Fence";
 import { menuHeight } from "./utils";
@@ -799,7 +802,8 @@ const child = {
           id: 5580,
           icon: (
             <Tooltip title="Monthly Attendance">
-              <AppRegistrationOutlinedIcon color="info" />
+              {/* <AppRegistrationOutlinedIcon color="info" /> */}
+              <CalendarMonthOutlinedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,

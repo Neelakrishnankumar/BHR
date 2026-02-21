@@ -55,6 +55,7 @@ const initialState = {
   purchaseorderratingData: [],
   searchLoading: false,
   empAttendanceData: {},
+  // payslipAttendanceData: {},
   empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
   AttendanceDataLoading: false,
@@ -2426,6 +2427,7 @@ export const getApiSlice = createSlice({
       state.stockorderData = [];
       state.purchaseorderratingData = [];
       state.empAttendanceData = [];
+      // state.payslipAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
       state.MonthlyAttendanceData = [];
@@ -3362,6 +3364,20 @@ export const getApiSlice = createSlice({
         state.empAttendanceDataLoading = false;
         state.empAttendanceData = [];
       })
+      // .addCase(payslipAttendance.fulfilled, (state, action) => {
+      //   state.empAttendanceData = action.payload.Data;
+      //   state.empAttendanceDataLoading = false;
+      // })
+      // .addCase(payslipAttendance.pending, (state, action) => {
+      //   state.Status = "idle";
+      //   state.empAttendanceDataLoading = true;
+      //   state.empAttendanceData = [];
+      // })
+      // .addCase(payslipAttendance.rejected, (state, action) => {
+      //   state.Status = "Error";
+      //   state.empAttendanceDataLoading = false;
+      //   state.empAttendanceData = [];
+      // })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;
         state.AttendanceDataLoading = false;
@@ -4773,6 +4789,27 @@ export const empAttendance = createAsyncThunk(
     return response.data;
   },
 );
+export const payslipAttendance = createAsyncThunk(
+  "employee/Payslipattendance",
+  async ({ data }) => {
+    var url = store.getState().globalurl.payslipattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const MonthlyAttendance = createAsyncThunk(
   "employee/monthlyattendance",
   async ({ data }) => {
@@ -5138,7 +5175,7 @@ export const Setup_MenuExcel = createAsyncThunk(
 
     const response = await axios.post(baseUrl, excelSetUp, {
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
