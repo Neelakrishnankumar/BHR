@@ -161,6 +161,9 @@ import { useDispatch } from "react-redux";
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
+import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 const is003Subscription = SubscriptionCode.endsWith("003");
 const is00123Subscription = ["001", "002", "003"].some(code =>
@@ -715,7 +718,7 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR027",
         },
-          {
+        {
           name: "Payroll",
           id: 46,
           url: "./TR333/Payroll",
@@ -1038,6 +1041,54 @@ const child = {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR253",
         },
+      ],
+    },
+    {
+      name: "GSBD",
+      id: 95654,
+      MenuID: "SOP100",
+      Tooltipname: "GSBD",
+      icon: (
+        <Tooltip title="GSBD">
+          <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
+        </Tooltip>
+      ),
+      children: [
+        {
+          name: "QC",
+          id: 5843,
+          url: "/Apps/TR335/SOP Document List",
+          icon: (
+            <Tooltip title="SOP Document List">
+              <LibraryAddCheckOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR335",
+        },
+        {
+          name: "QA",
+          id: 5877,
+          url: "/Apps/TR335/SOP Document List",
+          icon: (
+            <Tooltip title="SOP Document List">
+              <IntegrationInstructionsOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR335",
+        },
+
       ],
     },
     {

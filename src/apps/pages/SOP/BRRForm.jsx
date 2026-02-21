@@ -8,6 +8,8 @@ import { useProSidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import React, { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { BRREmpLookup, MultiFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
+import { useSelector } from "react-redux";
 
 function BRRForm() {
     const navigate = useNavigate();
@@ -17,6 +19,7 @@ function BRRForm() {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const { toggleSidebar, broken, rtl } = useProSidebar();
     const mode = params.Mode;
+    const compID = sessionStorage.getItem("compID");
 
     const [errorMsgData, setErrorMsgData] = useState(null);
 
@@ -42,6 +45,26 @@ function BRRForm() {
             }
         });
     };
+
+    const [empData, setempData] = useState(null);
+    const [empData1, setempData1] = useState(null);
+    const [empData2, setempData2] = useState(null);
+
+    const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+
+    let employeeFilter = `CompanyID='${compID}'`;
+
+    const employeeUrl = `${listViewurl}?data=${encodeURIComponent(
+        JSON.stringify({
+            Query: {
+                AccessID: "2117",
+                ScreenName: "Employee",
+                Filter: employeeFilter,
+                Any: "",
+                CompId: "",
+            },
+        }),
+    )}`;
     return (
         <React.Fragment
             sx={{
@@ -75,15 +98,25 @@ function BRRForm() {
                                     sx={{ cursor: "default" }}
                                     onClick={() => navigate("/Apps/TR323/Route")}
                                 >
-                                    {mode === "E" ? `List Of Route
-                           (${state.BreadCrumb1})` : `List Of Route`}
+                                    {`List Of Batch
+                           (${state.BreadCrumb1 || ""})`}
+                                </Typography>
+                                <Typography
+                                    variant="h5"
+                                    color="#0000D1"
+                                    sx={{ cursor: "default" }}
+                                    onClick={() => navigate("/Apps/TR323/Route")}
+                                >
+                                    {`List Of Batch Reconciliation Records
+                           (${state.BreadCrumb1 || ""})`}
                                 </Typography>
                                 <Typography
                                     variant="h5"
                                     color="#0000D1"
                                     sx={{ cursor: "default" }}
                                 >
-                                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
+                                    Add
+                                    {/* {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"} */}
                                 </Typography>
                             </Breadcrumbs>
                         </Box>
@@ -112,8 +145,9 @@ function BRRForm() {
                 <Typography
                     variant="h5"
                     sx={{
-                        mb: 3,
+                        my: 2,
                         fontWeight: "bold",
+                        textAlign: "center",
                     }}
                 >
                     BATCH RECONCILIATION RECORD FORM
@@ -126,6 +160,7 @@ function BRRForm() {
                         padding: "10px",
                         fontFamily: "Times New Roman",
                         fontSize: "14px",
+                        margin: "auto"
                     }}
                 >
                     {/* ================= PRODUCT SECTION ================= */}
@@ -459,8 +494,22 @@ function BRRForm() {
                                         border: "1px solid black",
                                     }}
                                 >
-                                    <input
-                                        style={{ width: "100%", border: "none", outline: "none" }}
+                                    <BRREmpLookup
+                                        name="Employee"
+                                        label="Employee"
+                                        id="Employee"
+                                        value={empData}
+                                        // onChange={handleSelectionEmployeeChange}
+                                        onChange={(newValue) => {
+                                            setempData(newValue);
+                                        }}
+                                        disablePortal={false}
+                                        PopperProps={{
+                                            sx: {
+                                                zIndex: 1500,
+                                            },
+                                        }}
+                                        url={employeeUrl}
                                     />
                                 </td>
                                 <td
@@ -470,8 +519,22 @@ function BRRForm() {
                                         border: "1px solid black",
                                     }}
                                 >
-                                    <input
-                                        style={{ width: "100%", border: "none", outline: "none" }}
+                                    <BRREmpLookup
+                                        name="Employee"
+                                        label="Employee"
+                                        id="Employee"
+                                        value={empData1}
+                                        // onChange={handleSelectionEmployeeChange}
+                                        onChange={(newValue) => {
+                                            setempData1(newValue);
+                                        }}
+                                        disablePortal={false}
+                                        PopperProps={{
+                                            sx: {
+                                                zIndex: 1500,
+                                            },
+                                        }}
+                                        url={employeeUrl}
                                     />
                                 </td>
                                 <td
@@ -481,8 +544,22 @@ function BRRForm() {
                                         border: "1px solid black",
                                     }}
                                 >
-                                    <input
-                                        style={{ width: "100%", border: "none", outline: "none" }}
+                                    <BRREmpLookup
+                                        name="Employee"
+                                        label="Employee"
+                                        id="Employee"
+                                        value={empData2}
+                                        // onChange={handleSelectionEmployeeChange}
+                                        onChange={(newValue) => {
+                                            setempData2(newValue);
+                                        }}
+                                        disablePortal={false}
+                                        PopperProps={{
+                                            sx: {
+                                                zIndex: 1500,
+                                            },
+                                        }}
+                                        url={employeeUrl}
                                     />
                                 </td>
                             </tr>

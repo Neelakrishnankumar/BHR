@@ -561,14 +561,14 @@ const Listview = () => {
               false
             )}
 
-            <Tooltip title="Bulk Upload">
+            {/* <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
