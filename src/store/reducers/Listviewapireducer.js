@@ -99,7 +99,7 @@ import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { getConfig } from "../../config";
-
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -1828,7 +1828,8 @@ export const fetchListview =
             };
           }
           else if (
-            AccessID == "TR336"
+            AccessID == "TR336" ||
+            AccessID == "TR337" 
           ) {
             obj = {
               field: "action",
@@ -6870,6 +6871,26 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 }
               >
                 <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR337" && (
+          <>
+            <Tooltip title="SOP Documents">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb: params.row.Description,
+                    },
+                  })
+                }
+              >
+                <ArrowForwardIosOutlinedIcon />
               </IconButton>
             </Tooltip>
           </>

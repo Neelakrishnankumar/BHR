@@ -1285,9 +1285,9 @@ const Sidebars = () => {
         {
           name: "QA",
           id: 5877,
-          url: "/Apps/TR336/SOP Document List",
+          url: "/Apps/TR337/List Of SOPs",
           icon: (
-            <Tooltip title="SOP Document List">
+            <Tooltip title="List Of SOPs">
               <IntegrationInstructionsOutlinedIcon color="info" />
             </Tooltip>
           ),
@@ -1297,7 +1297,7 @@ const Sidebars = () => {
           UGA_PRINT: true,
           UGA_PROCESS: true,
           UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR336",
+          UGA_ACCESSIDS: "TR337",
         },
 
       ],
