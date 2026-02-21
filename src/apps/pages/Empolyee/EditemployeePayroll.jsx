@@ -149,6 +149,10 @@ const EditemployeePayroll = () => {
   const empAttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
   );
+  const payslipAttendanceData = useSelector(
+    (state) => state.formApi.payslipAttendanceData
+  );
+  console.log("payslipAttendanceData", payslipAttendanceData);
   console.log("empAttendanceData", empAttendanceData);
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
@@ -167,6 +171,11 @@ const EditemployeePayroll = () => {
   const [selectedData, setSelectedData] = useState(null);
   const currentYear = new Date().getFullYear();
 
+  const yearOptions = [
+    currentYear - 1,
+    currentYear,
+    currentYear + 1
+  ];
   const handleButtonClick = (params) => {
     const rowData = {
       CheckInDate: params.row.CheckInDate,
@@ -2017,7 +2026,7 @@ const EditemployeePayroll = () => {
     "July", "August", "September", "October", "November", "December"
   ];
   const attendaceProcessFnSave = async (values) => {
-    const EmployeeIDs = empAttendanceData
+    const EmployeeIDs = payslipAttendanceData
       .map(row => row.EmpRecid)
       .join(",");
     const data = {
@@ -2917,7 +2926,7 @@ const EditemployeePayroll = () => {
                       <MenuItem value={"11"}>November</MenuItem>
                       <MenuItem value={"12"}>December</MenuItem>
                     </TextField>
-                    <TextField
+                    {/* <TextField
                       fullWidth
                       variant="standard"
                       type="text"
@@ -2934,7 +2943,25 @@ const EditemployeePayroll = () => {
                         },
                       }}
                     // sx={{ gridColumn: "span 2" }}
-                    />
+                    /> */}
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      id="year"
+                      name="year"
+                      label="Year"
+                      value={values.year}
+                      focused
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      select
+                    >
+                      {yearOptions.map((year) => (
+                        <MenuItem key={year} value={year.toString()}>
+                          {year}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Box>
                   <Box
                     display="flex"
