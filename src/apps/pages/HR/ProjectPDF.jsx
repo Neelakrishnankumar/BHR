@@ -227,7 +227,11 @@ const issueDate = new Date().toLocaleDateString("en-GB");
             }}
           >
             <Text>Issue Date: {issueDate}</Text>
-            <Text>
+            <Text
+            style={{
+              color: "#000"
+            }}
+            >
               Page {pageIndex + 1} of {totalPages}
             </Text>
             <Text>Prepared by: {userName}</Text>

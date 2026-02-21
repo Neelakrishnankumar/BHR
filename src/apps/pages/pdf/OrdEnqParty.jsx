@@ -56,6 +56,14 @@ const styles = StyleSheet.create({
         borderColor: "#000",
         textAlign: "center",
     },
+    headerCellstatus: {
+padding: 4,
+        fontWeight: 2000,
+        backgroundColor: "#f0f0f0",
+        // borderRightWidth: 1,
+        borderColor: "#000",
+        textAlign: "center",
+    },
     cell: {
         padding: 4,
         borderRightWidth: 1,
@@ -214,7 +222,7 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) =
 
                                     {/* TABLE HEADER */}
                                     <View style={styles.tableRow}>
-                                        <Text style={[styles.headerCell, { flex: 0.5 }]}>S.No</Text>
+                                        <Text style={[styles.headerCell, { flex: 0.5 }]}>SL#</Text>
                                         <Text style={[styles.headerCell, { flex: 1 }]}>Date</Text>
                                         <Text style={[styles.headerCell, { flex: 3.5 }]}>Product</Text>
                                         <Text style={[styles.headerCell, { flex: 0.4 }]}>Qty</Text>
@@ -224,7 +232,7 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) =
                                         {filters.ordertype == "" ? (<Text style={[styles.headerCell, { flex: 0.7 }]}>Order Type</Text>) : null}
 
                                         <Text
-                                            style={[styles.headerCell, { flex: 1.5, textAlign: "center" }]}
+                                            style={[styles.headerCellstatus, { flex: 1.5, textAlign: "center" }]}
                                         >
                                             Status
                                         </Text>

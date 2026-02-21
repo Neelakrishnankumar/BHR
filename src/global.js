@@ -293,6 +293,18 @@ const initialState = {
   // UserActivityUrl : essURL + "UserActivityController.php",
   UserActivityUrl: "",
   LeaveenquiryGetController: "",
+  UserActivityGet: "",
+  auditScreennameGet: "",
+  EmployeeVendorGetController:"",
+  OHPaymentUpdateController: "",
+  PartyBydateByamtFilter: "",
+  EmployeeVendorContactGet:"",
+  ExcelFileDownload:"",
+  ExcelFileUpload:"",
+  Setup_MenuExcel:"",
+  Parentposturl:"",
+  Processposturl:"",
+  PayslipGetController:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -379,7 +391,8 @@ export const getUrlSlice = createSlice({
       state.apiweightageUrl = APIurl + "HRWeightagesGetContoller.php";
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
-      state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      // state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
@@ -452,6 +465,16 @@ export const getUrlSlice = createSlice({
         APIurl + "OHPaymentUpdateController.php";
       state.PartyBydateByamtFilter =
         APIurl + "PartyBydateByamtFilter.php";
+      state.UserActivityGet = APIurl + "UserActivityGetController.php";
+      state.auditScreennameGet = APIurl + "ListviewHdrGetController.php";
+      state.EmployeeVendorGetController = APIurl + "ParentGetController.php";
+      state.EmployeeVendorContactGet = APIurl + "ParentContactGetController.php";
+      state.ExcelFileDownload = APIurl + "ExcelFileDownload.php";
+      state.ExcelFileUpload = APIurl + "ExcelFileUpload.php";
+      state.Setup_MenuExcel = APIurl + "SetupMenu.php";
+      state.Parentposturl = APIurl + "ParentpostController.php";
+      state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
+      state.PayslipGetController = APIurl + "PayslipGetController.php";
     },
   },
 });

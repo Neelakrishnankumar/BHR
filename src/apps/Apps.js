@@ -183,22 +183,76 @@ import LoginChangepass from "./Security/Loginchangepassword";
 import ViewLeadEnquiry from "./pages/HR/ViewLeadEnquiry";
 import Companychange from "./Security/Changecompany";
 import Changehdrftr from "./Security/ChangeHdrftr";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import EditLeaveEnquiry from "./pages/HR/EditLeaveEnquiry";
 import EditOHPayment from "./pages/HR/EditOHPayment";
 import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
+import EditAudit from "./pages/HR/EditAudit";
+import Editparentcontact from "./pages/HR/Editparentcontact";
+// import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
+  //   useEffect(() => {
+  //   const grace = sessionStorage.getItem("CompanyGraceTime");
+  //   const timeout = sessionStorage.getItem("CompanySessionTimeOut");
+
+  //   console.log("Grace:", grace);
+  //   console.log("Timeout:", timeout);
+  // }, []);
+
+  //   const [theme, colorMode] = useMode();
+
+  //   const IDLE_TIME = 5 * 120 * 1000;
+
+  //   const navigate = useNavigate();
+  //   const timerRef = useRef(null);
+
+
+  //   const handleSessionExpire = () => {
+  //     toast.error("Session expired due to inactivity. Please login again.", {
+  //       style: {
+  //         fontSize: "20px",
+  //         padding: "20px 28px",
+  //         minWidth: "380px",
+  //         textAlign: "center",
+  //         lineHeight: "1.4",
+  //       },
+  //       autoClose: 10000,
+  //     });
+
+  //     sessionStorage.clear();
+  //     navigate("/");
+  //   };
+
+  //   const resetTimer = () => {
+  //     clearTimeout(timerRef.current);
+  //     // timerRef.current = setTimeout(handleSessionExpire, IDLE_TIME);
+  //     timerRef.current = setTimeout(handleSessionExpire, sessionTime*1000);
+  //   };
+  //   const [sessionTime, setSessionTime] = useState(null);
+
+  const [sessionTime, setSessionTime] = useState(null);
+
+  //  Load Session Timeout (seconds → milliseconds)
   const [theme, colorMode] = useMode();
-
-  const IDLE_TIME = 5 * 120 * 1000;
-
   const navigate = useNavigate();
   const timerRef = useRef(null);
+  useEffect(() => {
+    const timeout = sessionStorage.getItem("CompanySessionTimeOut");
 
+    if (timeout) {
+      const timeoutInMs = Number(timeout) * 1000; 
+      setSessionTime(timeoutInMs);
+      console.log("Session timeout (ms):", timeoutInMs);
+    } else {
+      console.log("No CompanySessionTimeOut found in sessionStorage");
+    }
+  }, []);
+
+  //  Logout function
   const handleSessionExpire = () => {
     toast.error("Session expired due to inactivity. Please login again.", {
       style: {
@@ -215,10 +269,44 @@ function App() {
     navigate("/");
   };
 
+  // Reset Timer
   const resetTimer = () => {
+    if (!sessionTime) return;
+
     clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(handleSessionExpire, IDLE_TIME);
+    timerRef.current = setTimeout(handleSessionExpire, sessionTime);
   };
+
+  // Attach Activity Listeners
+  useEffect(() => {
+    if (!sessionTime) return;
+
+    const events = ["mousemove", "keydown", "scroll", "click"];
+
+    events.forEach((event) =>
+      window.addEventListener(event, resetTimer)
+    );
+
+    resetTimer(); // start timer initially
+
+    return () => {
+      events.forEach((event) =>
+        window.removeEventListener(event, resetTimer)
+      );
+      clearTimeout(timerRef.current);
+    };
+  }, [sessionTime]);
+
+  useEffect(() => {
+    const storedSessionTime = sessionStorage.getItem("sessiontime");
+
+    if (storedSessionTime) {
+      setSessionTime(storedSessionTime);
+      console.log(storedSessionTime, "Session Time from storage");
+    } else {
+      console.log("No sessiontime found");
+    }
+  }, []);
 
   useEffect(() => {
     const events = ["mousemove", "keydown", "scroll", "click"];
@@ -247,6 +335,10 @@ function App() {
                 <Routes>
                   <Route
                     path="/:accessID/:screenName/EditEmployee Payroll/:id/:Mode"
+                    element={<EditemployeePayroll />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditPayroll/:id/:Mode"
                     element={<EditemployeePayroll />}
                   />
                   <Route
@@ -367,7 +459,7 @@ function App() {
                     element={<CreateQuestion />}
                   />
 
-{/* PARTY BY DATE FILTER */}
+                  {/* PARTY BY DATE FILTER */}
                   <Route
                     path="/Party/AgingReport"
                     element={<PartyByDate />}
@@ -465,6 +557,15 @@ function App() {
                   <Route
                     path="/Secondarylistview/Item Group/:accessID/:screenName/:parentID2/:parentID1/EditItemCategory/:id/:Mode"
                     element={<EditItemCategory />}
+                  />
+                  <Route
+                    path="/Secondarylistview/Classification/:accessID/:screenName/:filtertype/EditPersonnel/:id/:Mode"
+                    element={<Editemployee />}
+
+                  />
+                  <Route
+                    path="/SecondarylistView/Classification/:accessID/:screenName/:filtertype"
+                    element={<ListviewSecondary />}
                   />
                   {/* ITEM LIST VIEW*/}
                   <Route
@@ -630,9 +731,9 @@ function App() {
                     path="/:screenName/imageupload/:accessID/:id"
                     element={<Imageupload />}
                   />
-                  
-                  <Route path="/leaveenquiry/:id" element={ <EditLeaveEnquiry /> } />
-                  <Route path="/LeaveTypeRegister/:id" element={ <LeaveEntryRegister /> } />
+
+                  <Route path="/leaveenquiry/:id" element={<EditLeaveEnquiry />} />
+                  <Route path="/LeaveTypeRegister/:id" element={<LeaveEntryRegister />} />
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:Type/EditMaterial Category/imageupload/:id"
@@ -1102,6 +1203,10 @@ function App() {
                     element={<EditAttendance />}
                   />
                   <Route
+                    path="/:accessID/EditAudit"
+                    element={<EditAudit />}
+                  />
+                  <Route
                     path="/:accessID/Editdailyattendance"
                     element={<EditdailyAttendance />}
                   />
@@ -1207,6 +1312,10 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID1/:screenName/:filtertype/:Type/:OrderType/:accessID/:filtertype1/EditOrderitem/:id/:Mode"
                     element={<EditOrderitem />}
+                  />
+                  <Route
+                    path="/Parentcontact"
+                    element={<Editparentcontact />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

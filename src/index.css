@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;900&display=swap');
  /* @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,700;1,400;1,700&display=swap'); */
-html,
+/* html,
 .content {
   height: 100vh;
   width: 100%;
@@ -8,8 +8,18 @@ html,
   overflow-y: auto;
   /* font-weight: 900; */
 
+/* } */ 
+html, 
+body{
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
+.content {
+    height:100vh;
+  width: 100%;
+    overflow-y: auto;
+}
 /* .app{
   display: flex;
   position: relative;
@@ -37,7 +47,11 @@ html,
 } */ 
 
 .wrapper{
-  background-image: url(./assets/img/background7.jpg);
+  /* background-image: url(./assets/img/background7.jpg); */
+  /* background-image: url(./assets/img/BOS_Cover1.png); */
+  /* background-image: url(./assets/img/BOS_Cover2.png); */
+  /* background-image: url(./assets/img/BOS_Cover3.png); */
+  background-image: url(./assets/img/BOS_Cover4.png);
   background-size: cover;
   opacity: 0.9;
   

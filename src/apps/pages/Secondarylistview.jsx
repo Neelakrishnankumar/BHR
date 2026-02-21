@@ -82,6 +82,7 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -302,6 +303,9 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR318") {
     filter = `CompanyID = '${compID}' AND ItemGroupID='${parentID1}'`;
+  }
+  else if (accessID == "TR027") {
+    filter = `CompanyID = '${compID}' AND ClassificationID='${parentID || 0}'`;
   }
   else if (accessID == "TR319") {
     filter = `CompanyID = '${compID}' AND ItemCategoryID='${parentID1}'`;
@@ -1650,6 +1654,32 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
               >
                 List of Item Category
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR027" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR330/Classification");
+                }}
+              >
+                Classification ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                Personnel
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3894,7 +3924,7 @@ const ListviewSecondary = () => {
             mb={-2} >
             Legend
           </Typography>
-          </Box>
+        </Box>
         {accessID == "TR001" ? (
           <Box
             display="flex"
@@ -3928,7 +3958,7 @@ const ListviewSecondary = () => {
           </Box>
         )
           : accessID == "TR304" ? (
-            <Box display="flex" flexDirection="row" padding="25px">
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
               <Chip
                 icon={<ModeEditOutlinedIcon color="primary" />}
                 label="Edit"
@@ -3938,73 +3968,96 @@ const ListviewSecondary = () => {
                 icon={< VisibilityIcon style={{ color: '#eb710dff' }} />}
                 label="View"
                 variant="outlined"
-                sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
               />
               <Chip
                 icon={<AttachFileIcon color="primary" />}
                 label="Attachment"
                 variant="outlined"
-                sx={{ marginLeft: "50px" }}
+              // sx={{ marginLeft: "50px" }}
               />
             </Box>
           )
-            : accessID == "TR310" ? (
+            : accessID == "TR027" ? (
               <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                 <Chip
                   icon={<ModeEditOutlinedIcon color="primary" />}
                   label="Edit"
                   variant="outlined"
                 />
-                <Chip
-                  icon={<Visibility color="primary" />}
-                  label="View"
-                  variant="outlined"
-                />
-                {/* <Chip
-                  icon={<CurrencyRupeeOutlinedIcon color="primary" />}
-                  label="Payment"
-                  variant="outlined"
-                /> */}
-                {params.OrderType === "Q" &&
-                  <Chip
-                    icon={<CurrencyExchangeOutlinedIcon color="primary" />}
-                    label="Convert to Order"
-                    variant="outlined"
-                    // sx={{ marginLeft: "50px" }}
-                  />}
-                <Chip
-                  icon={< GridViewIcon color="primary" />}
-                  label="Order Item"
-                  variant="outlined"
-                  // sx={{ marginLeft: "50px" }}
-                />
-                <Chip
-                  icon={< PictureAsPdfIcon color="error" />}
-                  label="Order Pdf"
-                  variant="outlined"
-                  // sx={{ marginLeft: "50px" }}
-                />
 
+                <Chip
+                  icon={<AddPhotoAlternateIcon color="primary" />}
+                  label="Image Upload"
+                  variant="outlined"
+                // sx={{ marginLeft: "50px" }}
+                />
+                <Chip
+                  icon={<EventNoteIcon color="primary" />}
+                  label="Leave Enquiry"
+                  variant="outlined"
+                // sx={{ marginLeft: "50px" }}
+                />
               </Box>
+
             )
-              : (accessID == "TR294" && params.parentID1 === "AP") ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
+              : accessID == "TR310" ? (
+                <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                   <Chip
                     icon={<ModeEditOutlinedIcon color="primary" />}
                     label="Edit"
                     variant="outlined"
                   />
+                  <Chip
+                    icon={<Visibility color="primary" />}
+                    label="View"
+                    variant="outlined"
+                  />
                   {/* <Chip
+                  icon={<CurrencyRupeeOutlinedIcon color="primary" />}
+                  label="Payment"
+                  variant="outlined"
+                /> */}
+                  {params.OrderType === "Q" &&
+                    <Chip
+                      icon={<CurrencyExchangeOutlinedIcon color="primary" />}
+                      label="Convert to Order"
+                      variant="outlined"
+                    // sx={{ marginLeft: "50px" }}
+                    />}
+                  <Chip
+                    icon={< GridViewIcon color="primary" />}
+                    label="Order Item"
+                    variant="outlined"
+                  // sx={{ marginLeft: "50px" }}
+                  />
+                  <Chip
+                    icon={< PictureAsPdfIcon color="error" />}
+                    label="Order Pdf"
+                    variant="outlined"
+                  // sx={{ marginLeft: "50px" }}
+                  />
+
+                </Box>
+              )
+                : (accessID == "TR294" && params.parentID1 === "AP") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    {/* <Chip
                   icon={<Psychology color="primary" />}
                   label="Skill Assessment"
                   variant="outlined"
                 /> */}
-                  <Chip
-                    icon={<CategoryOutlinedIcon color="primary" />}
-                    label="Appraisal"
-                    variant="outlined"
-                  />
-                  {/* <Chip
+                    <Chip
+                      icon={<CategoryOutlinedIcon color="primary" />}
+                      label="Appraisal"
+                      variant="outlined"
+                    />
+                    {/* <Chip
                   icon={<GppMaybeOutlinedIcon color="primary" />}
                   label="Compliance"
                   variant="outlined"
@@ -4019,743 +4072,743 @@ const ListviewSecondary = () => {
                   label="Feedback"
                   variant="outlined"
                 /> */}
-                </Box>
-              ) : (accessID == "TR294" && params.parentID1 === "SK") ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Psychology color="primary" />}
-                    label="Skill Assessment"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : (accessID == "TR294" && params.parentID1 === "SV") ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<QuestionAnswerOutlinedIcon color="primary" />}
-                    label="Survey"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : (accessID == "TR294" && params.parentID1 === "FB") ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<FeedbackOutlinedIcon color="primary" />}
-                    label="Feedback"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : (accessID == "TR294" && params.parentID1 === "CL") ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<GppMaybeOutlinedIcon color="primary" />}
-                    label="Compliance"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR280" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Category color="primary" />}
-                    label="Question Group"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AccessTimeIcon color="primary" />}
-                    label="Session"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR300" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Category color="primary" />}
-                    label="Question Group"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AccessTimeIcon color="primary" />}
-                    label="Session"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                    label="Schedule"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                    label="Schedule History"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR295" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Category color="primary" />}
-                    label="Question Group"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AccessTimeIcon color="primary" />}
-                    label="Session"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<SendTimeExtensionOutlinedIcon />}
-                    label="Schedule"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR305" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                    label="Appraisal Schedule"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                    label="Schedule History"
-                    variant="outlined"
-                  />
+                  </Box>
+                ) : (accessID == "TR294" && params.parentID1 === "SK") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Psychology color="primary" />}
+                      label="Skill Assessment"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : (accessID == "TR294" && params.parentID1 === "SV") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<QuestionAnswerOutlinedIcon color="primary" />}
+                      label="Survey"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : (accessID == "TR294" && params.parentID1 === "FB") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<FeedbackOutlinedIcon color="primary" />}
+                      label="Feedback"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : (accessID == "TR294" && params.parentID1 === "CL") ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<GppMaybeOutlinedIcon color="primary" />}
+                      label="Compliance"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR280" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR300" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                      label="Schedule"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                      label="Schedule History"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR295" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<SendTimeExtensionOutlinedIcon />}
+                      label="Schedule"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR305" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                      label="Appraisal Schedule"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                      label="Schedule History"
+                      variant="outlined"
+                    />
 
-                </Box>
-              ) : accessID == "TR296" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Category color="primary" />}
-                    label="Question Group"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AccessTimeIcon color="primary" />}
-                    label="Session"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                    label="Schedule"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                    label="Schedule History"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR297" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Category color="primary" />}
-                    label="Question Group"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AccessTimeIcon color="primary" />}
-                    label="Session"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                    label="Schedule"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                    label="Schedule History"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR298" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<Category color="primary" />}
-                    label="Question Group"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AccessTimeIcon color="primary" />}
-                    label="Session"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<SendTimeExtensionOutlinedIcon color="primary" />}
-                    label="Schedule"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<HistoryToggleOffOutlinedIcon color="primary" />}
-                    label="Schedule History"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR288" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<Psychology color="primary" />}
-                    label="Schedule"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR283" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  {/* <Chip
+                  </Box>
+                ) : accessID == "TR296" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                      label="Schedule"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                      label="Schedule History"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR297" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                      label="Schedule"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                      label="Schedule History"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR298" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<Category color="primary" />}
+                      label="Question Group"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AccessTimeIcon color="primary" />}
+                      label="Session"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<SendTimeExtensionOutlinedIcon color="primary" />}
+                      label="Schedule"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<HistoryToggleOffOutlinedIcon color="primary" />}
+                      label="Schedule History"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR288" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<Psychology color="primary" />}
+                      label="Schedule"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR283" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    {/* <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
             /> */}
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  {/* <Chip
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                </Box>
-              ) : accessID == "TR303" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<AssistantIcon color="primary" />}
-                    label="Marketing Activity"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR318" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<InventoryOutlinedIcon color="primary" />}
-                    label="Item"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR291" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  {/* <Chip
+                  </Box>
+                ) : accessID == "TR303" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AssistantIcon color="primary" />}
+                      label="Marketing Activity"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR318" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<InventoryOutlinedIcon color="primary" />}
+                      label="Item"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR291" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    {/* <Chip
               icon={<Visibility color="primary" />}
               label="View"
               variant="outlined"
             /> */}
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  {/* <Chip
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                </Box>
-              ) : accessID == "TR281" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  {/* <Chip
+                  </Box>
+                ) : accessID == "TR281" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                  <Chip
-                    icon={<QuizIcon color="primary" />}
-                    label="Question"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR282" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  {/* <Chip
+                    <Chip
+                      icon={<QuizIcon color="primary" />}
+                      label="Question"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR282" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    {/* <Chip
               icon={<Delete color="error" />}
               label="Delete"
               variant="outlined"
             /> */}
-                </Box>
-              ) : accessID == "TR279" ? (
-                <Box display="flex" flexDirection="row" gap={2} padding="25px">
-                  <Chip
-                    icon={<Download color="primary" />}
-                    label="Download"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<OpenInNewIcon color="primary" />}
-                    label="Open Link"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR032" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Color Shades"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR033" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Customer"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR050" ? (
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  padding="25px"
-                  sx={{ overflowY: "auto" }}
-                >
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<SettingsBackupRestoreIcon color="primary" />}
-                    label="Process"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="primary" />}
-                    label="Cutting Component"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="success" />}
-                    label="Production"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="error" />}
-                    label="Packing"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="" />}
-                    label="All BOM"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="" />}
-                    label="Internal Order"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<EmailIcon color="primary" />}
-                    label="Email"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR003" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Material"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<AddPhotoAlternateIcon color="primary" />}
-                    label="Image Upload"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR004" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Stock"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<AddPhotoAlternateIcon color="primary" />}
-                    label="Image Upload"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR097" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Delivery Challan"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR079" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Stock"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR111" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR113" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR048" ? (
-                <Box display="flex" flexDirection="row" padding="25px" gap={3}>
-                  <Chip
-                    icon={<SummarizeOutlinedIcon color="primary" />}
-                    label="Issue"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<OpenInBrowserOutlinedIcon color="primary" />}
-                    label="Alternate Material"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<OpenInBrowserOutlinedIcon color="warning" />}
-                    label="Alternate Color"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR118" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR051" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR119" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Indent Order"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR074" ? (
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  padding="25px"
-                  sx={{ overflowY: "auto" }}
-                >
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Issue"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="error" />}
-                    label="Completion"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<TaskAltOutlinedIcon color="success" />}
-                    label="Completed"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="primary" />}
-                    label="Print"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<EmailIcon color="primary" />}
-                    label="Email"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR087" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="primary" />}
-                    label="Print"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<EmailIcon color="primary" />}
-                    label="Email"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR073" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Invoice"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR103" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Stock"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR104" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Stock"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR011" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="primary" />}
-                    label="Print"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<EmailIcon color="primary" />}
-                    label="Email"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="Post Shipment"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR084" ? (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<PrintOutlinedIcon color="primary" />}
-                    label="Print"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                  <Chip
-                    icon={<EmailIcon color="primary" />}
-                    label="Email"
-                    variant="outlined"
-                    sx={{ marginLeft: "50px" }}
-                  />
-                </Box>
-              ) : accessID == "TR080" ? (
-                false
-              ) : accessID == "TR112" ? (
-                false
-              ) : accessID == "TR114" ? (
-                false
-              ) : accessID == "TR115" ? (
-                false
-              ) : accessID == "TR102" ? (
-                false
-              ) : accessID == "TR233" ? (
-                <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                  <Chip
-                    icon={<BalanceIcon color="primary" />}
-                    label="Stage Weightage"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Stages"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR236" ? (
-                <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                  <Chip
-                    icon={<BalanceIcon color="primary" />}
-                    label="Activity Weightage"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Activities"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : accessID == "TR234" ? (
-                <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                  <Chip
-                    icon={<BalanceIcon color="primary" />}
-                    label="Task Weightage"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                  <Chip
-                    icon={<ListAltOutlinedIcon color="primary" />}
-                    label="List of Tasks"
-                    variant="outlined"
-                  />
-                </Box>
-              ) : (
-                <Box display="flex" flexDirection="row" padding="25px">
-                  <Chip
-                    icon={<ModeEditOutlinedIcon color="primary" />}
-                    label="Edit"
-                    variant="outlined"
-                  />
-                </Box>
-              )}
+                  </Box>
+                ) : accessID == "TR279" ? (
+                  <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                    <Chip
+                      icon={<Download color="primary" />}
+                      label="Download"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<OpenInNewIcon color="primary" />}
+                      label="Open Link"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR032" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Color Shades"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR033" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Customer"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR050" ? (
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    padding="25px"
+                    sx={{ overflowY: "auto" }}
+                  >
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<SettingsBackupRestoreIcon color="primary" />}
+                      label="Process"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="primary" />}
+                      label="Cutting Component"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="success" />}
+                      label="Production"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="error" />}
+                      label="Packing"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="" />}
+                      label="All BOM"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="" />}
+                      label="Internal Order"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<EmailIcon color="primary" />}
+                      label="Email"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR003" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Material"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<AddPhotoAlternateIcon color="primary" />}
+                      label="Image Upload"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR004" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Stock"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<AddPhotoAlternateIcon color="primary" />}
+                      label="Image Upload"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR097" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Delivery Challan"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR079" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Stock"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR111" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR113" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR048" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={3}>
+                    <Chip
+                      icon={<SummarizeOutlinedIcon color="primary" />}
+                      label="Issue"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<OpenInBrowserOutlinedIcon color="primary" />}
+                      label="Alternate Material"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<OpenInBrowserOutlinedIcon color="warning" />}
+                      label="Alternate Color"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR118" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR051" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR119" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Indent Order"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR074" ? (
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    padding="25px"
+                    sx={{ overflowY: "auto" }}
+                  >
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Issue"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="error" />}
+                      label="Completion"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<TaskAltOutlinedIcon color="success" />}
+                      label="Completed"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="primary" />}
+                      label="Print"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<EmailIcon color="primary" />}
+                      label="Email"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR087" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="primary" />}
+                      label="Print"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<EmailIcon color="primary" />}
+                      label="Email"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR073" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Invoice"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR103" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Stock"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR104" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Stock"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR011" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="primary" />}
+                      label="Print"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<EmailIcon color="primary" />}
+                      label="Email"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="Post Shipment"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR084" ? (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<PrintOutlinedIcon color="primary" />}
+                      label="Print"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                    <Chip
+                      icon={<EmailIcon color="primary" />}
+                      label="Email"
+                      variant="outlined"
+                      sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ) : accessID == "TR080" ? (
+                  false
+                ) : accessID == "TR112" ? (
+                  false
+                ) : accessID == "TR114" ? (
+                  false
+                ) : accessID == "TR115" ? (
+                  false
+                ) : accessID == "TR102" ? (
+                  false
+                ) : accessID == "TR233" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                    <Chip
+                      icon={<BalanceIcon color="primary" />}
+                      label="Stage Weightage"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Stages"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR236" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                    <Chip
+                      icon={<BalanceIcon color="primary" />}
+                      label="Activity Weightage"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Activities"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : accessID == "TR234" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                    <Chip
+                      icon={<BalanceIcon color="primary" />}
+                      label="Task Weightage"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<ListAltOutlinedIcon color="primary" />}
+                      label="List of Tasks"
+                      variant="outlined"
+                    />
+                  </Box>
+                ) : (
+                  <Box display="flex" flexDirection="row" padding="25px">
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                  </Box>
+                )}
       </Box>
       <MatxCustomizer
         open={open}

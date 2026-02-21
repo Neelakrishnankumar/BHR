@@ -491,10 +491,52 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: "#000",
     padding: 3,
-    textAlign: "left",
+    textAlign: "center",
   },
   tableColLast: {
     padding: 3,
+    textAlign: "left",
+  },
+  // For attendance summary css
+  summaryContainer: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+  summaryRow: {
+    flexDirection: "row",
+  },
+  summaryHeaderCell: {
+    flex: 1,
+    padding: 6,
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    backgroundColor: "#EEE",
+  },
+  summaryValueCell: {
+    flex: 1,
+    padding: 6,
+    fontSize: 10,
+    textAlign: "right",
+    borderRightWidth: 1,
+  },
+  summaryTitle: {
+    fontSize: 12,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 15,
+    marginBottom: 6,
+  },
+
+  prmText: {
+    width: "100%",
+    fontSize: 10,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 10,
     textAlign: "left",
   },
 });
@@ -517,12 +559,23 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
+  const totalPresent = data.filter(r => r.Status === "Present").length;
+  const totalAbsent = data.filter(r => r.Status === "Absent").length;
+  const totalHolidays = data.filter(r => r.Status === "Holiday").length;
+  const totalWeekOffs = data.filter(r => r.Status === "Week Off").length;
+const totalPermission = data.filter(r => r.PermissionHours).length;
 
+  // Leave segregation (example)
+  const leaveSummary = {
+    CL: data.filter(r => r.Status === "Casual Leave").length,
+    SL: data.filter(r => r.Status === "Sick leave").length,
+    EL: data.filter(r => r.Status === "Medical Leave").length,
+  };
   return (
     <Document>
       {pages.map((pageData, pageIndex) => {
         const filteredRows = pageData.filter(
-          row => row.Status !== "WeekOff" && row.Status !== "Leave"
+          row => row.Status !== "Week Off" && row.Status !== "Leave"
         );
 
         return (
@@ -541,10 +594,13 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
               <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>
                   {/* {`Attendance Report - ${filters.employee} (${monthNames[filters.month - 1]} - ${filters.year})`} */}
-                 { `Attendance Report - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
+                  {`Attendance Report - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
                   {/* {filters.Self === "Y"
                     ? `Attendance Report - ${filters.employee}`
                     : `Attendance Report - Reporting to ${filters.employee}`} */}
+                </Text>
+                <Text style={styles.prmText}>
+                  Prm - Permission
                 </Text>
               </View>
             )}
@@ -555,54 +611,60 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
                 <Text style={[styles.tableColHeader, { width: "6%" }]}>SL#</Text>
 
                 <Text style={[styles.tableColHeader, { width: "15%" }]}>
-                  Check In Date
-                </Text>
-                <Text style={[styles.tableColHeader, { width: "12%" }]}>
-                  Check In Time
+                  In Date
                 </Text>
                 <Text style={[styles.tableColHeader, { width: "15%" }]}>
+                  In Time
+                </Text>
+                {/* <Text style={[styles.tableColHeader, { width: "15%" }]}>
                   Check Out Date
+                </Text> */}
+                <Text style={[styles.tableColHeader, { width: "15%" }]}>
+                  Out Time
                 </Text>
-                <Text style={[styles.tableColHeader, { width: "12%" }]}>
-                  Check Out Time
-                </Text>
-                <Text style={[styles.tableColHeader, { width: "10%" }]}>
+                <Text style={[styles.tableColHeader, { width: "15%" }]}>
                   Hours
                 </Text>
                 <Text style={[styles.tableColHeader, { width: "15%" }]}>
-                  Permission(In Hrs)
+                  Prm (In Hrs)
                 </Text>
-                <Text style={[styles.tableColHeaderLast, { width: "16%" }]}>
+                <Text style={[styles.tableColHeaderLast, { width: "19%" }]}>
                   Status
                 </Text>
               </View>
 
 
               {filteredRows.map((row, i) => (
-                <View style={styles.tableRow}>
+                <View 
+                  style={[
+                    styles.tableRow,
+                    i === filteredRows.length - 1 && { borderBottomWidth: 0 }
+                  ]}
+                // style={styles.tableRow}
+                >
                   <Text style={[styles.tableCol, { width: "6%" }]}>
-                    {row.SLNO}
+                    {i + 1}
                   </Text>
 
                   <Text style={[styles.tableCol, { width: "15%" }]}>
                     {row.MonthDate}
                   </Text>
-                  <Text style={[styles.tableCol, { width: "12%" }]}>
+                  <Text style={[styles.tableCol, { width: "15%" }]}>
                     {row.EmployeeCheckInTime}
                   </Text>
-                  <Text style={[styles.tableCol, { width: "15%" }]}>
+                  {/* <Text style={[styles.tableCol, { width: "15%" }]}>
                     {row.EmployeeCheckOutDate}
-                  </Text>
-                  <Text style={[styles.tableCol, { width: "12%" }]}>
+                  </Text> */}
+                  <Text style={[styles.tableCol, { width: "15%" }]}>
                     {row.EmployeeCheckOutTime}
                   </Text>
-                  <Text style={[styles.tableCol, { width: "10%" }]}>
+                  <Text style={[styles.tableCol, { width: "15%" }]}>
                     {row.NumberOfHoursWorked}
                   </Text>
                   <Text style={[styles.tableCol, { width: "15%" }]}>
                     {row.PermissionHours}
                   </Text>
-                  <Text style={[styles.tableColLast, { width: "16%" }]}>
+                  <Text style={[styles.tableColLast, { width: "19%" }]}>
                     {row.Status}
                   </Text>
                 </View>
@@ -623,7 +685,71 @@ const AttendancePDF = ({ data = [], filters = {} }) => {
             <Text fixed style={styles.pageNumber}>
               Page {pageIndex + 1} of {pages.length}
             </Text>
+            {pageIndex === 0 && (
+              <View break>
+
+                {/* Attendance Summary Title */}
+
+                <Text style={styles.summaryTitle}>Attendance Total Summary</Text>
+                <View style={styles.summaryContainer}>
+
+                  {/* Header Row */}
+                  {/* <View style={styles.summaryRow}>
+                    <Text style={styles.summaryHeaderCell}>Present</Text>
+                    <Text style={styles.summaryHeaderCell}>Absent</Text>
+                    <Text style={styles.summaryHeaderCell}>Holidays</Text>
+                    <Text style={styles.summaryHeaderCell}>Week Off</Text>
+                    <Text style={styles.summaryHeaderCell}>Casual Leave</Text>
+                    <Text style={styles.summaryHeaderCell}>Sick Leave</Text>
+                    <Text style={styles.summaryHeaderCell}>Medical Leave</Text>
+                  </View> */}
+       <View style={styles.summaryRow}>
+                    {["Present", "Absent", "Holidays", "Week Off", "Casual Leave", "Sick Leave", "Medical Leave", "Permission"]
+                      .map((item, index, arr) => (
+                        <Text
+                          key={index}
+                          style={[
+                            styles.summaryHeaderCell,
+                            index === arr.length - 1 && { borderRightWidth: 0 }
+                          ]}
+                        >
+                          {item}
+                        </Text>
+                      ))}
+                  </View>
+ 
+                  {/* Value Row */}
+                  {/* <View style={styles.summaryRow}>
+                    <Text style={styles.summaryValueCell}>{totalPresent}</Text>
+                    <Text style={styles.summaryValueCell}>{totalAbsent}</Text>
+                    <Text style={styles.summaryValueCell}>{totalHolidays}</Text>
+                    <Text style={styles.summaryValueCell}>{totalWeekOffs}</Text>
+                    <Text style={styles.summaryValueCell}>{leaveSummary.CL}</Text>
+                    <Text style={styles.summaryValueCell}>{leaveSummary.SL}</Text>
+                    <Text style={styles.summaryValueCell}>{leaveSummary.EL}</Text>
+                  </View> */}
+             
+ 
+                  <View style={styles.summaryRow}>
+                    {[totalPresent, totalAbsent, totalHolidays, totalWeekOffs, leaveSummary.CL, leaveSummary.SL, leaveSummary.EL,totalPermission]
+                      .map((val, index, arr) => (
+                        <Text
+                          key={index}
+                          style={[
+                            styles.summaryValueCell,
+                            index === arr.length - 1 && { borderRightWidth: 0 }
+                          ]}
+                        >
+                          {val}
+                        </Text>
+                      ))}
+                  </View>
+
+                </View>
+              </View>
+            )}
           </Page>
+
         );
       })}
     </Document>

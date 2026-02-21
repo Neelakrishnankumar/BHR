@@ -96,6 +96,7 @@ const EditHSNMaster = () => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
           Description: Yup.string().trim().required(data.HSNMaster.Description),
+          Code: Yup.string().trim().required(data.HSNMaster.Code),
           HSNIGST: Yup.number().typeError(data.HSNMaster.HSNIGST).required(data.HSNMaster.HSNIGST),
           HSNCGST: Yup.number().typeError(data.HSNMaster.HSNCGST).required(data.HSNMaster.HSNCGST),
           HSNSGST: Yup.number().typeError(data.HSNMaster.HSNSGST).required(data.HSNMaster.HSNSGST),
@@ -298,7 +299,7 @@ const EditHSNMaster = () => {
                       },
                     }}
                   >
-                    {CompanyAutoCode == "Y" ? (
+                    {/* {CompanyAutoCode == "Y" ? (
                       <TextField
                         name="Code"
                         type="text"
@@ -322,14 +323,14 @@ const EditHSNMaster = () => {
                         InputProps={{ readOnly: true }}
                       // autoFocus
                       />
-                    ) : (
+                    ) : ( */}
                       <TextField
                         name="Code"
                         type="text"
                         id="Code"
                         label={
                           <>
-                            Code
+                            HSN Master Code
                             <span style={{ color: "red", fontSize: "20px" }}>
                               *
                             </span>
@@ -351,7 +352,7 @@ const EditHSNMaster = () => {
                         }}
                         autoFocus
                       />
-                    )}
+                    {/* )} */}
                     <TextField
                       name="Description"
                       type="text"

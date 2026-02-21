@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   Footerlogo: {
     width: "100%",
-    height: 40,
+    height: 50,
     //objectFit:"cover"
   },
 
@@ -836,7 +836,11 @@ const OrderHeaderPdf = ({ data, UserName, OrderType }) => {
               {FooterImage && (
                 <Image src={FooterImage} style={styles.Footerlogo} />
               )}
-              <Text>
+              <Text
+                style={{
+              color: "#000"
+            }}
+              >
                 Page {pageIndex + 1} of {totalPages}
               </Text>
               {/* <Text>Prepared by: {userName}</Text> */}

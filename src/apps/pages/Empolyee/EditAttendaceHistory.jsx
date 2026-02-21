@@ -14,6 +14,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Avatar,
+  Chip,
 } from "@mui/material";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight, formGap } from "../../../ui-components/global/utils";
 import {
@@ -63,6 +65,12 @@ import AttendanceHistoryPDF from "../pdf/AttendanceHistoryPdf"
 import { toast } from "react-hot-toast";
 import { Employeeautocomplete } from "../../../ui-components/global/Autocomplete";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { getConfig } from "../../../config";
+import { FaFileExcel } from "react-icons/fa";
+import AttendanceHistoryExcel from "../pdf/AttendanceHistoryexcel";
+
+
+
 const EditAttendanceHistory = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -83,10 +91,19 @@ const EditAttendanceHistory = () => {
 
   // const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   // console.log("AttendanceData", AttendanceData);
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+    const FooterImg = sessionStorage.getItem("CompanyFooter");
+    console.log("HeaderImg", HeaderImg, FooterImg);
+    const config = getConfig();
+    const baseurlUAAM = config.UAAM_URL;
+
   const AttendanceData = useSelector(
     (state) => state.formApi.empAttendanceData
   );
   console.log("AttendanceData", AttendanceData);
+
+
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
@@ -172,7 +189,9 @@ const EditAttendanceHistory = () => {
     {
       field: "slno",
       headerName: "SL#",
-      width: 60,
+      width: 40,
+      headerAlign: "center",
+      align:"right",
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
@@ -221,15 +240,15 @@ const EditAttendanceHistory = () => {
     { field: "Day29", headerName: "29", width: 5 },
     { field: "Day30", headerName: "30", width: 5 },
     { field: "Day31", headerName: "31", width: 5 },
-    { field: "Present", headerName: "Present" },
+    { field: "Present", headerName: "Present",headerAlign: "center",align:"right", },
     // { field: "Leave", headerName: "LEAVE" },
-    { field: "Unpaidleave", headerName: "Unpaid Leave" },
-    { field: "Absent", headerName: "Absent" },
-    // { field: "Irregular", headerName: "IRREGULAR" },
-    { field: "Holidays", headerName: "Holiday" },
-    { field: "Weekoff", headerName: "Weekoff" },
-    { field: "Total", headerName: "Total Days" },
-  ];
+    { field: "Unpaidleave", headerName: "Unpaid Leave",headerAlign: "center",align:"right", },
+    { field: "Absent", headerName: "Absent",headerAlign: "center",align:"right", },
+        // { field: "Irregular", headerName: "IRREGULAR" },
+    { field: "Holidays", headerName: "Holidays",headerAlign: "center",align:"right", },
+    { field: "Weekoff", headerName: "Week Off",headerAlign: "center",align:"right", },
+    { field: "Total", headerName: "Total Days",headerAlign: "center",align:"right", },
+    ];
   // const AttendanceData = [
   //   {
   //     id: 1,
@@ -291,6 +310,7 @@ const EditAttendanceHistory = () => {
     };
 
     dispatch(empAttendance({ data }));
+     setPage(0); 
   };
 
   const attendaceProcessFnSave = async (values) => {
@@ -319,6 +339,7 @@ const EditAttendanceHistory = () => {
   const explorelistViewColumn = useSelector(
     (state) => state.exploreApi.explorecolumnData
   );
+  const empAttLoading = useSelector((state) => state.formApi.empAttendanceDataLoading);
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
   const screenChange = (event) => {
     setScreen(event.target.value);
@@ -542,6 +563,9 @@ const EditAttendanceHistory = () => {
                             Month: values.month,
                             Year: values.year,
                             EmployeeID: empData?.RecordID,
+                            Imageurl: baseurlUAAM,
+                            HeaderImg: HeaderImg,
+                            FooterImg: FooterImg,
                           }}
                         />
                       }
@@ -557,8 +581,28 @@ const EditAttendanceHistory = () => {
                         )
                       }
                     </PDFDownloadLink>
-                  )}
 
+
+                  )}
+                  {AttendanceData?.length > 0 && (
+
+                   <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer", }}
+                      onClick={() =>
+                      AttendanceHistoryExcel(
+                          AttendanceData,
+                          {
+                           month: values.month, 
+                           year: values.year 
+                          },
+                          empData
+                        )
+                      }
+                    />
+
+                  )}
                 </Stack>
               </Box>
               {/* <Box display="flex" padding={1} justifyContent="end" mt="10px" gap="20px">
@@ -652,12 +696,8 @@ const EditAttendanceHistory = () => {
                         minHeight: dataGridHeaderFooterHeight,
                       }
                     }}
-
-
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
-
-
                     rows={AttendanceData}
                     columns={AttColumn}
                     disableSelectionOnClick
@@ -675,7 +715,8 @@ const EditAttendanceHistory = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    // loading={exploreLoading}
+                    loading={empAttLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
@@ -691,6 +732,57 @@ const EditAttendanceHistory = () => {
                   />
                 </Box>
               </Box>
+               <Stack
+                direction="row"
+                padding={1}
+                alignItems="center"
+                justifyContent="space-between"
+
+              >
+                {/* LEFT SIDE ITEMS */}
+                <Box display="flex" alignItems="center" gap={2} >
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>P</Avatar>}
+                    label="Present"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                   <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>A</Avatar>}
+                    label="Absent"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>WO</Avatar>}
+                    label="Week Off"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>HO</Avatar>}
+                    label="Holiday"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4",  }}
+                  />
+
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>L</Avatar>}
+                    label="Leave"
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+                  <Chip
+                    avatar={<Avatar sx={{ bgcolor: "#ffff", width: 24, height: 24, fontSize: 12 }}>IR</Avatar>}
+                    label=" IR Regular "
+                    variant="outlined"
+                    sx={{ backgroundColor: "#ccc4c4", }}
+                  />
+
+                </Box>
+              </Stack>
             </form>
           )}
         </Formik>

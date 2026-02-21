@@ -195,7 +195,7 @@ import {
   Text,
   View,
   Document,
-  StyleSheet,
+  StyleSheet,Image
 } from "@react-pdf/renderer";
 
 // Styles
@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   page: {
     padding: 20,
     fontSize: 10,
+    paddingTop: 80,
   },
   section: {
     marginBottom: 10,
@@ -382,6 +383,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEE",
     textAlign: "center",
   },
+  tableColHeaderApprDate:{
+    width: 70,
+    // borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    fontWeight: "bold",
+    backgroundColor: "#EEE",
+    textAlign: "center",
+  },
   tableColHeaderSmall: {
     width: 50,
     borderRightWidth: 1,
@@ -407,6 +417,13 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: "left",
   },
+  tableColApprDate: {
+    width: 70,
+    // borderRightWidth: 1,
+    borderRightColor: "#000",
+    padding: 5,
+    textAlign: "left",
+  },
   tableColSmall: {
     width: 50,
     borderRightWidth: 1,
@@ -422,19 +439,93 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 
+    /* HEADER */
+  headerWrapper: {
+    position: "absolute",
+    top: 15,
+    left: 20,
+    right: 20,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerImage: {
+    width: "100%",
+    height: 50,
+    objectFit: "contain",
+  },
+
+ /* FOOTER */
+    footerWrapper: {
+        position: "absolute",
+        bottom: 30,
+        left: 5,
+        right: 5,     // forces full width
+        height: 80,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    footerImage: {
+        width: "100%",
+        height: 100,
+        objectFit: "cover",
+    },
+  //   footerWrapper: {
+  //   position: "absolute",
+  //   bottom: 25,
+  //   left: 5,
+  //   right: 5,
+  //   height: 60,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
+  // footerImage: {
+  //   width: "100%",
+  //   height: 60,
+  //   objectFit: "cover",
+  // },
+
 });
 
 // Split data: 20 on first page, 26 afterwards
-const paginateData = (data) => {
-  const firstPage = data.slice(0, 20);
-  const otherPages = [];
+const FIRST_PAGE_COUNT = 13;
+const OTHER_PAGE_COUNT = 15;
 
-  for (let i = 20; i < data.length; i += 26) {
-    otherPages.push(data.slice(i, i + 26));
+const paginateData = (data) => {
+  const pages = [];
+
+  // First page
+  pages.push(data.slice(0, FIRST_PAGE_COUNT));
+
+  // Remaining pages
+  for (
+    let i = FIRST_PAGE_COUNT;
+    i < data.length;
+    i += OTHER_PAGE_COUNT
+  ) {
+    pages.push(data.slice(i, i + OTHER_PAGE_COUNT));
   }
 
-  return [firstPage, ...otherPages];
+  return pages;
 };
+// const paginateData = (data) => {
+//   const firstPageCount = 13;
+//   const otherPageCount = 15;
+
+//   const pages = [];
+
+//   // First page
+//   pages.push(data.slice(0, firstPageCount));
+
+//   // Remaining pages
+//   for (let i = firstPageCount; i < data.length; i += otherPageCount) {
+//     pages.push(data.slice(i, i + otherPageCount));
+//   }
+
+//   return pages;
+// };
+
 
 //const TimeSheetPDF = ({ data = [], filters = {} }) => {
 const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName = "" }) => {
@@ -457,12 +548,20 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
 
       {pages.map((pageData, pageIndex) => (
         <Page size="A4" orientation="landscape" style={styles.page} key={pageIndex}>
-
+         {/* HEADER */}
+                    <View fixed style={styles.headerWrapper}>
+                      {filters.HeaderImg && (
+                        <Image
+                          src={`${filters.Imageurl}/uploads/images/${filters.HeaderImg}`}
+                          style={styles.headerImage}
+                        />
+                      )}
+                    </View>
           {pageIndex === 0 && (
 
             <View style={styles.headerTextContainer}>
               <Text style={styles.headerText}>
-                {`TimeSheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
+                {`Timesheet - ${filters.EmployeeID} (${monthNames[filters.Month - 1]} - ${filters.Year})`}
               </Text>
              
 
@@ -518,33 +617,54 @@ const TimeSheetPDF = ({ data = [], filters = {}, projectName = "", managerName =
           </View> */}
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableColHeader1}>S.No</Text>
+              <Text style={styles.tableColHeader1}>SL#</Text>
               <Text style={styles.tableColHeader}>Date</Text>
               <Text style={styles.tableColHeaderSmall}>Project</Text>
               <Text style={styles.tableColHeaderDescription}>Description</Text>
               <Text style={styles.tableColHeader}>Comp Date</Text>
               <Text style={styles.tableColHeaderSmall}>Appr By</Text>
-              <Text style={styles.tableColHeader}>Appr Date</Text>
+              <Text style={styles.tableColHeaderApprDate}>Appr Date</Text>
             </View>
 
             {pageData.map((row, rowIndex) => {
+       const globalIndex =
+  pageIndex === 0
+    ? rowIndex + 1
+    : FIRST_PAGE_COUNT +
+      (pageIndex - 1) * OTHER_PAGE_COUNT +
+      rowIndex +
+      1;
+
               const isLast = rowIndex === pageData.length - 1;
               return (
                 <View
                   key={rowIndex}
                   style={isLast ? styles.tableRowLast : styles.tableRow}
                 >
-                  <Text style={styles.tableCol1}>{rowIndex + 1}</Text>
+                  {/* <Text style={styles.tableCol1}>{rowIndex + 1}</Text> */}
+                  
+                  <Text style={styles.tableCol1}>{globalIndex}</Text>
                   <Text style={styles.tableCol}>{row.DaliytaskCorrectDate}</Text>
                   <Text style={styles.tableColSmall}>{row.ProjectCode}</Text>
                   <Text style={styles.tableColDescription}>{row.Description}</Text>
                   <Text style={styles.tableCol}>{row.CompletedDate?.split(" ")[0]}</Text>
                   <Text style={styles.tableColSmall}>{row.ManagerCode}</Text>
-                  <Text style={styles.tableCol}>{row.ApprovedDate}</Text>
+                  <Text style={styles.tableColApprDate}>{row.ApprovedDate}</Text>
                 </View>
               );
             })}
           </View>
+
+          
+                                {/* FOOTER */}
+                                <View fixed style={styles.footerWrapper}>
+                                  {filters.FooterImg && (
+                                    <Image
+                                      src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
+                                      style={styles.footerImage}
+                                    />
+                                  )}
+                                </View>
               <View
                 fixed
                 style={{

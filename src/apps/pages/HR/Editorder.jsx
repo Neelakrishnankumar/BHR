@@ -644,8 +644,28 @@ const EditOrder = () => {
                           variant="standard"
                           focused
                           value={values.delivercharges}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onBlur={handleBlur}
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            // allow only numbers + decimal
+                            const val = e.target.value;
+                            if (/^\d*\.?\d*$/.test(val)) {
+                              setFieldValue("delivercharges", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
+
+                            if (val === "" || val === ".") {
+                              setFieldValue("delivercharges", "0.00");
+                              return;
+                            }
+
+                            const num = parseFloat(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("delivercharges", num.toFixed(2)); // ✅ forces .00
+                            }
+                          }}
                           error={
                             !!touched.delivercharges && !!errors.delivercharges
                           }
@@ -861,7 +881,7 @@ const EditOrder = () => {
                           variant="standard"
                           focused
                           // value={values.PartyBalance}
-                          value={Math.abs(Number(values.PartyBalance || 0))}
+                          value={Math.abs(Number(values.PartyBalance || 0)).toFixed(2)}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={
@@ -894,8 +914,28 @@ const EditOrder = () => {
                           variant="standard"
                           focused
                           value={values.paidamount}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onBlur={handleBlur}
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            // allow only numbers + decimal
+                            const val = e.target.value;
+                            if (/^\d*\.?\d*$/.test(val)) {
+                              setFieldValue("paidamount", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
+
+                            if (val === "" || val === ".") {
+                              setFieldValue("paidamount", "0.00");
+                              return;
+                            }
+
+                            const num = parseFloat(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("paidamount", num.toFixed(2)); // ✅ forces .00
+                            }
+                          }}
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{

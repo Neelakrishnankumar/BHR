@@ -22,6 +22,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import RedoIcon from "@mui/icons-material/Redo";
 import UndoIcon from "@mui/icons-material/Undo";
+import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
 import {
   Box,
   Avatar,
@@ -53,7 +54,7 @@ import { useHref, Link } from "react-router-dom";
 import { tokens } from "../../Theme";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import PriceCheckIcon from '@mui/icons-material/PriceCheck';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import { useNavigate } from "react-router-dom";
@@ -131,6 +132,9 @@ import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+
+
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import FenceIcon from "@mui/icons-material/Fence";
 import { menuHeight } from "./utils";
@@ -146,13 +150,61 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import store from "../..";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
+
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import { logout } from "../../store/reducers/LoginReducer";
 import { useDispatch } from "react-redux";
-import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = {
+import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
+import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+const is003Subscription = SubscriptionCode.endsWith("003");
+const is00123Subscription = ["001", "002", "003"].some(code =>
+  SubscriptionCode?.endsWith(code)
+);
+
+const getPersonnelMenu = (is00123Subscription) =>
+  is00123Subscription
+    ? {
+      name: "Personnel",
+      id: 5634,
+      url: "./TR330/Classification",
+      icon: (
+        <Tooltip title="Classification">
+          <PeopleAltIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR027",
+    }
+    : {
+      name: "Personnel",
+      id: 5634,
+      url: "./TR027/Personnel",
+      icon: (
+        <Tooltip title="Classification">
+          <PeopleAltIcon color="info" />
+        </Tooltip>
+      ),
+      UGA_ADD: true,
+      UGA_DEL: true,
+      UGA_MOD: true,
+      UGA_PRINT: true,
+      UGA_PROCESS: true,
+      UGA_VIEW: true,
+      UGA_ACCESSIDS: "TR027",
+    };
+
+const child = {
   data: [
     {
       name: "Setup",
@@ -165,6 +217,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
         </Tooltip>
       ),
       children: [
+
         {
           name: "Designation",
           id: 4578,
@@ -217,23 +270,25 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_ACCESSIDS: "TR232",
         },
 
-        {
-          name: "Personnel",
-          url: "./TR027/Personnel",
-          id: 5634,
-          icon: (
-            <Tooltip title="Personnel">
-              <PeopleAltIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR027",
-        },
+        // {
+        //   name: "Personnel",
+        //   // url: "./TR027/Personnel",
+        //   url: is00123Subscription == true ? "./TR330/Classification" : "./TR027/Personnel",
+        //   id: 5634,
+        //   icon: (
+        //     <Tooltip title="Classification">
+        //       <PeopleAltIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR027",
+        // },
+        getPersonnelMenu(is00123Subscription),
         {
           name: "Project",
           id: 4346894,
@@ -319,23 +374,23 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR121",
         },
-        {
-          name: "Payroll",
-          id: 46,
-          url: "./TR027/Employee Payroll",
-          icon: (
-            <Tooltip title="Employees">
-                <PeopleAltIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR027",
-        },
+        // {
+        //   name: "Payroll",
+        //   id: 46,
+        //   url: "./TR027/Employee Payroll",
+        //   icon: (
+        //     <Tooltip title="Employees">
+        //       <CurrencyRubleIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR027",
+        // },
         {
           name: "Overhead Type",
           id: 47,
@@ -413,7 +468,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           url: "./TR207/Satuary Component",
           icon: (
             <Tooltip title="Satuary Component">
-              <AttachMoneyIcon color="info" />
+              <LocalPoliceOutlinedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -507,24 +562,24 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR321",
         },
-        // {
-        //   name: "Aging Report",
-        //   id: 4346895,
-        //   //  url: "./TR243/Party",
-        //   url: "/Apps/Party/AgingReport",
-        //   icon: (
-        //     <Tooltip title="Aging Report">
-        //       <ScaleOutlinedIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR321",
-        // },
+        {
+          name: "Aging Report",
+          id: 4346895,
+          //  url: "./TR243/Party",
+          url: "/Apps/Party/AgingReport",
+          icon: (
+            <Tooltip title="Aging Report">
+              <ScaleOutlinedIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR321",
+        },
         //  {
         //   name: "Lead",
         //   id: 4346895,
@@ -578,6 +633,24 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_ACCESSIDS: "TR328",
         },
 
+        //  {
+        //   name: "Audit",
+        //   id: 4346899,
+        //   url: "/Apps/TR260/EditAudit",
+        //   icon: (
+        //     <Tooltip title="Audit">
+        //       <ArtTrackIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR328",
+        // },
+
       ],
     },
     {
@@ -624,6 +697,40 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_PROCESS: true,
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR124",
+        },
+        {
+          name: "Payroll Configuration",
+          id: 47,
+          url: "./TR027/Employee Payroll",
+          icon: (
+            <Tooltip title="Payroll Configuration">
+              <PriceCheckIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
+        },
+          {
+          name: "Payroll",
+          id: 46,
+          url: "./TR333/Payroll",
+          icon: (
+            <Tooltip title="Payroll">
+              <CurrencyRubleIcon color="info" />
+            </Tooltip>
+          ),
+          UGA_ADD: true,
+          UGA_DEL: true,
+          UGA_MOD: true,
+          UGA_PRINT: true,
+          UGA_PROCESS: true,
+          UGA_VIEW: true,
+          UGA_ACCESSIDS: "TR027",
         },
         {
           name: "Employee Request",
@@ -695,7 +802,8 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           id: 5580,
           icon: (
             <Tooltip title="Monthly Attendance">
-              <AppRegistrationOutlinedIcon color="info" />
+              {/* <AppRegistrationOutlinedIcon color="info" /> */}
+              <CalendarMonthOutlinedIcon color="info" />
             </Tooltip>
           ),
           UGA_ADD: true,
@@ -724,11 +832,11 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_ACCESSIDS: "TR259",
         },
         {
-          name: "Time Sheet",
+          name: "Timesheet",
           url: "/Apps/TR261/EditTimeSheet",
           id: 5592,
           icon: (
-            <Tooltip title="Time Sheet">
+            <Tooltip title="Timesheet">
               <PendingActionsOutlinedIcon color="info" />
             </Tooltip>
           ),
@@ -960,7 +1068,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR252",
         },
-       
+
         {
           name: "Logo & GST Upload",
           id: 58467,
@@ -995,7 +1103,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';const child = 
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR258",
         },
-         {
+        {
           name: "Activate My Subscription",
           id: 5846,
           url: "./ChangeyourPassword_3",
@@ -1047,13 +1155,22 @@ const Sidebars = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
-  const dispatch = useDispatch();   
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState("Product Category");
   // const ATMLogo = 'B2025-ATM01.png' 
   const [open, setOpen] = React.useState(false);
   // const companyLogo = sessionStorage.getItem("CompanyLogo");
   // console.log(companyLogo, "companyLogo");
   const firstLogin = sessionStorage.getItem("firstLogin");
+  const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+  const is003Subscription = SubscriptionCode.endsWith("003");
+  const is00123Subscription = ["001", "002", "003"].some(code =>
+    SubscriptionCode?.endsWith(code)
+  );
+
+  console.log(is003Subscription, "is003Subscription");
+  const restrictedMenus003 = ["Party"];
+
   // const firstLogin = "Y";
   console.log(firstLogin, "firstLogin");
   const [logoSrc, setLogoSrc] = useState(null);
@@ -1095,7 +1212,7 @@ const Sidebars = () => {
       : child.data.filter((menu) => menu.name !== "Company");
 
 
-  const handleMenu = (children, accessRow, isChild) => {
+  const handleMenu = (children, accessRow, isChild, parentMenuID = null) => {
     return children.map(
       ({
         children,
@@ -1107,6 +1224,19 @@ const Sidebars = () => {
         UGA_ACCESSIDS,
         MenuID,
       }) => {
+        if (name === "Party") {
+          console.log("Party parent:", parentMenuID);
+        }
+
+        //  HIDE CRM → Party for 003 subscription
+        if (
+          parentMenuID === "CRM1800" &&
+          restrictedMenus003.includes(name) &&
+          is003Subscription
+        ) {
+          console.log("HIDDEN PARTY");
+          return null;
+        }
         if (!children) {
           return accessRow.map(
             ({
@@ -1192,7 +1322,7 @@ const Sidebars = () => {
                   timeout="auto"
                   unmountOnExit
                 >
-                  {handleMenu(children, Groupaccess, false)}
+                  {handleMenu(children, Groupaccess, false, MenuID)}
                 </Collapse>
               </div>
             );

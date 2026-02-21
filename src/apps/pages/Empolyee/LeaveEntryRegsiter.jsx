@@ -50,6 +50,8 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Swal from "sweetalert2";
 import { getConfig } from "../../../config";
+import { FaFileExcel } from "react-icons/fa";
+import LeaveEntryRegisterExcel from "../pdf/LeaveEntryRegisterExcel";
 
 const LeaveEntryRegister = () => {
   const theme = useTheme();
@@ -72,13 +74,15 @@ const LeaveEntryRegister = () => {
   const [rows, setRows] = useState([]);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
-  console.log("HeaderImg", HeaderImg,FooterImg);
+  console.log("HeaderImg", HeaderImg, FooterImg);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let params = useParams();
+
   var recID = params.id;
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
+
   useEffect(() => {
     setRows([]);
     setempData([]);
@@ -95,7 +99,7 @@ const LeaveEntryRegister = () => {
       headerAlign: "center",
       renderCell: (params) => params.api.getRowIndex(params.id) + 1, // 🔥 Auto serial number
     },
-    
+
     {
       field: "Employee",
       headerName: "Employee Name",
@@ -309,6 +313,7 @@ const LeaveEntryRegister = () => {
                 onReset={() => {
                   //selectCellRowData({ rowData: {}, mode: "A", field: "" });
                   resetForm();
+                  setRows([]);
                 }}
               >
                 <Box>
@@ -445,6 +450,7 @@ const LeaveEntryRegister = () => {
                       onClick={() => {
                         // setRows([]);
                         setempData([]);
+                        setRows([]);
                       }}
                     >
                       RESET
@@ -473,7 +479,7 @@ const LeaveEntryRegister = () => {
                               ToDate: toPDFDate,
                               HeaderImg: HeaderImg,
                               FooterImg: FooterImg,
-                              Imageurl: baseurlUAAM
+                              Imageurl: baseurlUAAM,
                             }}
                           />
                         }
@@ -490,6 +496,24 @@ const LeaveEntryRegister = () => {
                           )
                         }
                       </PDFDownloadLink>
+                    )}
+
+                    {rows?.length > 0 && (
+                      <FaFileExcel
+                        size={20}
+                        color="#1D6F42"
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          LeaveEntryRegisterExcel(
+                            rows,
+                            {
+                              EmployeeID: empData?.RecordID,
+                              FromDate: fromPDFDate,
+                              ToDate: toPDFDate,
+                            },
+                         )
+                        }
+                      />
                     )}
                   </Stack>
                   <Box

@@ -121,13 +121,18 @@ const passedData = location.state;  // Get the passed data
       Remarks: values.remarks,
       NewCheckInDate : values.CheckInDate,
       NewCheckOutDate: values.CheckOutDate,
-      NewCheckInTime:values.EmplyeeCheckInDateTime
-      ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
-      : "",
-      NewCheckOutTime:  values.EmplyeeCheckOutDateTime
-      ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
-      : "",
+      NewCheckInTime: values.EmplyeeCheckInDateTime,
+      // ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
+      // : "",
+      NewCheckOutTime:  values.EmplyeeCheckOutDateTime,
+      // ? values.EmplyeeCheckOutDateTime.split(" / ")[1] 
+      // : "",
       NewStatus: values.Status,
+      RegularStatus: "",
+      ManagerComments:"",
+      AppliedStatus:"",
+      Source:"",
+      Reason:""
     };
     console.log(idata, "-idata");
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -309,12 +314,12 @@ const passedData = location.state;  // Get the passed data
                       inputFormat="HH:mm"
                     // inputFormat="HH:mm:aa"
                     variant="standard"
-                    //value={values.EmplyeeCheckInDateTime}
-                    value={
-                      values.EmplyeeCheckInDateTime
-                        ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
-                        : ""
-                    }
+                    value={values.EmplyeeCheckInDateTime}
+                    // value={
+                    //   values.EmplyeeCheckInDateTime
+                    //     ? values.EmplyeeCheckInDateTime.split(" / ")[1] // gets "09:02"
+                    //     : ""
+                    // }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
@@ -343,12 +348,12 @@ const passedData = location.state;  // Get the passed data
                     id="EmplyeeCheckOutDateTime"
                     label="Check Out Time"
                     inputFormat="HH:mm:aa"
-                    //value={values.EmplyeeCheckOutDateTime}
-                    value={
-                      values.EmplyeeCheckOutDateTime
-                        ? values.EmplyeeCheckOutDateTime.split(" / ")[1] // gets "09:02"
-                        : ""
-                    }
+                    value={values.EmplyeeCheckOutDateTime}
+                    // value={
+                    //   values.EmplyeeCheckOutDateTime
+                    //     ? values.EmplyeeCheckOutDateTime.split(" / ")[1] // gets "09:02"
+                    //     : ""
+                    // }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused

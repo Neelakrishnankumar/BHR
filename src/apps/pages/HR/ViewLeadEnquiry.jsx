@@ -24,9 +24,9 @@ import RequestQuoteOutlinedIcon from '@mui/icons-material/RequestQuoteOutlined';
 const LeaderCardView = () => {
   // const { id } = useParams();
   const location = useLocation();
-  const  params  = useParams();
-  const partyID  = params.partyID;
-  const LeadId  = params.LeadId;
+  const params = useParams();
+  const partyID = params.partyID;
+  const LeadId = params.LeadId;
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -113,22 +113,22 @@ const LeaderCardView = () => {
     });
   };
 
-//  const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
-//         // if (OrdHdrCount == 0) {
-//             // Case 1: No order yet → go to Add Order
-//             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
-//                 state: {
-//                     PartyID: partyID,
-//                     LeadTitle: leadTitle,
-//                     PartyName: PartyName,
-//                     LEStatus: LEStatus,
-//                     OrderCount: OrdHdrCount,
-//                 },
-//             // });
- 
-//         }
-//     )
-  
+  //  const handleorderscreen = (recordID, partyID, leadTitle, PartyName, LEStatus, OrdHdrCount) => {
+  //         // if (OrdHdrCount == 0) {
+  //             // Case 1: No order yet → go to Add Order
+  //             navigate(`/Apps/Secondarylistview/TR310/Order/${recordID}/Leader/EditOrder/-1/A`, {
+  //                 state: {
+  //                     PartyID: partyID,
+  //                     LeadTitle: leadTitle,
+  //                     PartyName: PartyName,
+  //                     LEStatus: LEStatus,
+  //                     OrderCount: OrdHdrCount,
+  //                 },
+  //             // });
+
+  //         }
+  //     )
+
   const handleorderscreen = (
     recordID,
     partyID,
@@ -290,11 +290,20 @@ const LeaderCardView = () => {
                 }}
               >
                 <CardContent>
+                  {/* <Typography
+                    variant="h6"
+                    sx={{color: "#1565C0", fontWeight: "bold" }}
+                  >
+                    #SL: {index + 1} 
+                  </Typography> */}
                   <Typography
                     variant="h6"
                     sx={{ mb: 1, color: "#1565C0", fontWeight: "bold" }}
                   >
-                    #SL: {index + 1} {row.LeadTitle || ""}
+                    {row.LeadTitle || ""}
+                  </Typography>
+                  <Typography>
+                    <strong>#SL:</strong>  {index + 1}
                   </Typography>
                   <Typography>
                     <strong>Product Name:</strong> {row.ProjectName || ""}
@@ -322,6 +331,11 @@ const LeaderCardView = () => {
                   <Typography>
                     <strong>Next Visit Date:</strong> {row.NextVisitDate || ""}
                   </Typography>
+                  {/* {row.RequestDateTime && ( */}
+                   <Typography>
+                    <strong>Request Date & Time:</strong> {row.RequestDateTime || "N/A"}
+                  </Typography>
+                  {/* )} */}
                 </CardContent>
                 {/* <Box display="flex" justifyContent="flex-end" mt={-4}>
                   <Tooltip title="Marketing Activity">

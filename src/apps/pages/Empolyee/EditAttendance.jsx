@@ -26,6 +26,7 @@ import {
   resetTrackingData,
   Attendance,
   AttendanceProcess,
+  paySlipGet,
 } from "../../../store/reducers/Formapireducer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -48,7 +49,10 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useEffect } from "react";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { getConfig } from "../../../config";
-
+import { FaFileExcel } from "react-icons/fa";
+import MonthlyAttendanceExcel from "../pdf/MonthlyAttendanceExcel";
+import PayslipPdf from "../pdf/PaySlipPdf";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 const EditAttendance = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -67,6 +71,9 @@ const EditAttendance = () => {
   console.log("AttendanceData", AttendanceData);
 
   const getLoading = useSelector((state) => state.formApi.AttendanceDataLoading);
+  //PAYSLIP
+  const paySlipdata = useSelector((state) => state.formApi.paySlipdata);
+  const paySliploading = useSelector((state) => state.formApi.paySliploading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [page, setPage] = React.useState(0);
@@ -80,6 +87,8 @@ const EditAttendance = () => {
   const [errorMsgData, setErrorMsgData] = useState(null);
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  console.log("🚀 ~ EditAttendance ~ CompanySignature:", CompanySignature)
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
@@ -200,13 +209,13 @@ const EditAttendance = () => {
       width: 60,
       headerAlign: "center",
       renderCell: (params) => {
-        if (params.row.Status === "WeekOff") {
-          return <AlarmOffIcon color="primary" titleAccess="WeekOff" />;
+        if (params.row.Status === "Week Off") {
+          return <AlarmOffIcon color="primary" titleAccess="Week Off" />;
         }
         if (params.row.Status === "Holiday") {
           return <DeckIcon color="primary" titleAccess="Holiday" />;
         }
-        if (params.row.Status === "Casual leave" || params.row.Status === "Sick leave" || params.row.Status === "Medical leave") {
+        if (params.row.Status === "Casual Leave" || params.row.Status === "Sick leave" || params.row.Status === "Medical leave") {
           return <ExitToAppIcon color="primary" titleAccess="Leave" />;
         }
         return null;
@@ -214,45 +223,57 @@ const EditAttendance = () => {
     },
     {
       field: "MonthDate",
-      headerName: "Check In Date",
-      flex: 1,
+      headerName: "In Date",
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
     },
     {
       field: "EmployeeCheckInTime",
-      headerName: "Check In Time",
-      flex: 1,
+      headerName: "In Time",
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
     },
-    {
-      field: "EmployeeCheckOutDate",
-      headerName: "Check Out Date",
-      flex: 1,
-      headerAlign: "center",
-    },
+    // {
+    //   field: "EmployeeCheckOutDate",
+    //   headerName: "Check Out Date",
+    //   flex: 1,
+    //   headerAlign: "center",
+    // },
     {
       field: "EmployeeCheckOutTime",
-      headerName: "Check Out Time",
-      flex: 1,
+      headerName: "Out Time",
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
     },
     {
       field: "NumberOfHoursWorked",
       headerName: "Worked Hours",
-      flex: 1,
+      // flex: 1,
+      width: 130,
       headerAlign: "center",
+      align: "center",
+
     },
     {
       field: "PermissionInMinutes",
       headerName: "Permission (In Hours)",
-      flex: 1,
+      // flex: 1,
+      width: 150,
       headerAlign: "center",
+      align: "center",
     },
 
     {
       field: "Status",
       headerName: "Status",
-      flex: 1,
+      // flex: 1,
+      width: 150,
       headerAlign: "center",
     },
     {
@@ -278,6 +299,20 @@ const EditAttendance = () => {
     attyear: Number(sessionStorage.getItem("attyear")) || currentYear,
 
   };
+  // const attendaceFnSave = async (values) => {
+  //   const data = {
+  //     Month: values.attmonth.toString(),
+  //     Year: values.attyear,
+  //     EmployeeID: useCurrentEmp ? EMPID : empData.RecordID,
+  //     // ProjectID: proData.RecordID
+  //     ProjectID: proData && proData.RecordID ? proData.RecordID : 0,
+  //     CompanyID
+  //   };
+  //   console.log(data, "=====DATA");
+  //   dispatch(Attendance({ data }));
+
+  //   // setButtonVisible(true)
+  // };
   const attendaceFnSave = async (values) => {
     const data = {
       Month: values.attmonth.toString(),
@@ -290,6 +325,21 @@ const EditAttendance = () => {
     console.log(data, "=====DATA");
     dispatch(Attendance({ data }));
 
+    const payslip = {
+      Month: "February",
+      Finyear: values.attyear,
+      EmployeeID: "117",
+      CompanyID
+    }
+
+    const paySlipResponse = await dispatch(paySlipGet(payslip))
+
+    if (paySlipResponse.payload.Status === "Y") {
+      toast.success(paySlipResponse.payload.Message);
+    }
+    else {
+      toast.error(paySlipResponse.payload.Message);
+    }
     // setButtonVisible(true)
   };
 
@@ -311,6 +361,9 @@ const EditAttendance = () => {
     });
   };
   const [empData, setempData] = useState(null);
+
+  //PAYSLIP 
+
   const handleSelectionEmployeeChange = (newValue) => {
     if (newValue) {
       setempData(newValue);
@@ -595,6 +648,36 @@ const EditAttendance = () => {
           }
           label="Self"
         /> */}
+                  {/* <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={useCurrentEmp}
+                        onChange={(e) => {
+                          setUseCurrentEmp(e.target.checked);
+                          setempData(null)
+                        }}
+                        color="primary"
+                      />
+                    }
+                    label="Payslip"
+                  /> */}
+                  {/* <Tooltip title="Download Payslip">
+                    <PDFDownloadLink
+                      document={<PayslipPdf data={[]} filters={{}} />}
+                      fileName="payslip.pdf"
+                      style={{ textDecoration: "none", display:"flex" }}
+                    >
+
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <PictureAsPdfIcon />
+                      </IconButton>
+
+                    </PDFDownloadLink>
+                  </Tooltip> */}
                 </Stack>
                 <Stack
                   direction="row"
@@ -603,6 +686,28 @@ const EditAttendance = () => {
                   padding={1}
                   justifyContent="end"
                 >
+                  <PDFDownloadLink
+                    document={<PayslipPdf data={paySlipdata}
+                      filters={{
+                        Imageurl: baseurlUAAM,
+                        HeaderImg: HeaderImg,
+                        CompanySignature: CompanySignature,
+                      }}
+                    />}
+                    fileName="payslip.pdf"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="success"
+                      startIcon={<FileDownloadOutlinedIcon />}
+                    // disabled={loading}
+                    >
+                      {/* {loading ? "Generating..." : "Payslip"} */}
+                      Payslip
+                    </Button>
+
+                  </PDFDownloadLink>
                   <Button type="submit" variant="contained" color="secondary">
                     APPLY
                   </Button>
@@ -639,6 +744,41 @@ const EditAttendance = () => {
                       }
                     </PDFDownloadLink>
                   )}
+
+                   {AttendanceData?.length > 0 && (
+                  <FaFileExcel
+  size={20}
+  color="#1D6F42"
+  style={{ cursor: "pointer" }}
+  onClick={() =>
+    MonthlyAttendanceExcel(
+      AttendanceData,
+      {
+        month: values.attmonth,   // ✅ match Excel.jsx
+        year: values.attyear,     // ✅ match Excel.jsx
+        employee: empData?.Name   // ✅ match Excel.jsx
+      }
+    )
+  }
+/>
+                                    //  <FaFileExcel
+                                    //     size={20}
+                                    //     color="#1D6F42"
+                                    //     style={{ cursor: "pointer", }}
+                                    //     onClick={() =>
+                                    //     MonthlyAttendanceExcel(
+                                    //         AttendanceData,
+                                    //         {
+                                    //          Month: values.attmonth,
+                                    //          Year: values.attyear,
+                                    //          EmployeeID: empData?.Name, 
+                                    //         },
+                                    //         empData
+                                    //       )
+                                    //     }
+                                    //   />
+                  
+                                    )}
                 </Stack>
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
@@ -730,11 +870,30 @@ const EditAttendance = () => {
                     //     ? "odd-row"
                     //     : "even-row"
                     // }
+                    // getRowClassName={(params) => {
+                    //   const status = params.row.Status;
+                    //   if (status === "WeekOff") return "weekoff-row";
+                    //   if (status === "Holiday") return "holiday-row";
+                    //   if (status === "Casual Leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                    //   return params.indexRelativeToCurrentPage % 2 === 0
+                    //     ? "odd-row"
+                    //     : "even-row";
+                    // }}
                     getRowClassName={(params) => {
                       const status = params.row.Status;
-                      if (status === "WeekOff") return "weekoff-row";
+                      if (status === "Week Off") return "weekoff-row";
                       if (status === "Holiday") return "holiday-row";
-                      if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                      // if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                      const leaveStatuses = [
+                        "casual leave",
+                        "sick leave",
+                        "medical leave",
+                      ];
+
+                      if (leaveStatuses.includes(status?.trim().toLowerCase())) {
+                        return "leave-row";
+                      }
+
                       return params.indexRelativeToCurrentPage % 2 === 0
                         ? "odd-row"
                         : "even-row";
@@ -749,7 +908,7 @@ const EditAttendance = () => {
                 >
                   <Chip
                     icon={<AlarmOffIcon color="primary" />}
-                    label="WeekOff"
+                    label="Week Off"
                     variant="outlined"
                     sx={{
                       backgroundColor: "#f2acb7",
