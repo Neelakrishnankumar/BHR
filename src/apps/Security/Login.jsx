@@ -502,7 +502,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchApidata } from "../../store/reducers/LoginReducer";
 import { toast } from "react-hot-toast";
 // import background from "../../assets/img/Back_Office_Final.png";
-import background from "../../assets/img/Back_Office_Final2.png";
+// import background from "../../assets/img/Back_Office_Final2.png";
+import background from "../../assets/img/BOS_Coverimg2.png";
 
 const FlexBox = styled(Box)(() => ({
   display: "flex",
@@ -741,7 +742,7 @@ const Login = () => {
         sx={{
           width: "100%",
           boxShadow: { xs: "none", sm: 3 },
-          borderRadius: { xs: 0, sm: 3 },
+          borderRadius: { xs: 0, sm: 0 },
 
           // ✅ Add this
           backgroundImage: {
@@ -761,7 +762,7 @@ const Login = () => {
         }}>
 
           {/* Left Side: Login Form */}
-          <Grid item sm={8} xs={12}>
+          <Grid item sm={7} xs={12}>
             <ContentBox
               sx={{
                 mx: "auto",
@@ -769,9 +770,13 @@ const Login = () => {
                 // maxWidth: { xs: "100%", sm: 500 },
                 // px: { xs: 3, sm: 8 },
                 // py: { xs: 4, sm: 8 },
-                maxWidth: { xs: "95%", sm: 500 },
-                px: { xs: 2, sm: 6 },
-                py: { xs: 4, sm: 6 },
+                maxWidth: { xs: "95%", sm: 420 },
+                // px: { xs: 2, sm: 6 },
+                // py: { xs: 4, sm: 6 },
+                paddingRight: { xs: 2, sm: 6 },
+                paddingLeft: { xs: 1, sm: 6 },
+                paddingTop: { xs: 0, sm: 0 },
+                paddingBottom: { xs: 0, sm: 0 },
                 backgroundColor: "#ffffff",
                 // ✅ Transparent on xs so background shows
                 backgroundColor: {
@@ -779,19 +784,20 @@ const Login = () => {
                   sm: "#ffffff",
                 },
                 backdropFilter: {
-                  xs: "blur(10px)",
+                  xs: "blur(15px)",
                   sm: "none",
                 },
               }}
             >
               {/* Header */}
-              <Box mb={5}>
+              <Box mb={3}>
                 <Typography
-                  variant="h4"
+                  variant="h6"
                   sx={{
-                    fontSize: { xs: "30px", sm: "40px" },
+                    // fontSize: { xs: "30px", sm: "40px" },
+                    fontSize: { xs: "20px", sm: "30px" },
                     fontWeight: 600,
-                    mb: 0.5,
+                    // mb: 0.5,
 
                     // background: "linear-gradient(180deg, rgba(10,64,99,1) 53%, rgba(6,128,150,1) 100%)",
                     background: "linear-gradient(180deg,rgba(10, 64, 99, 1) 37%, rgba(6, 128, 150, 1) 100%)",
@@ -836,7 +842,8 @@ const Login = () => {
                   resetForm,
                 }) => (
                   <form onSubmit={handleSubmit}>
-                    <Stack spacing={3}>
+                    {/* <Stack spacing={3}> */}
+                    <Stack spacing={2}>
                       {/* Username Field */}
                       <StyledTextField
                         name="username"
@@ -936,6 +943,10 @@ const Login = () => {
                               </IconButton>
                             </InputAdornment>
                           ),
+                          sx: {
+                            paddingRight: "14px",
+                            paddingLeft: "7px",
+                          },
                         }}
                       // focused
                       />
@@ -1027,7 +1038,7 @@ const Login = () => {
           {/* Right Side: Image */}
           <Grid
             item
-            sm={4}
+            sm={5}
             xs={false}
             sx={{
               display: { xs: "none", sm: "flex" },
