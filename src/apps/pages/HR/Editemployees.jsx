@@ -3744,7 +3744,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Contracts In
+                      Contract In
                     </Typography>
                   ) : (
                     false
@@ -3756,7 +3756,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Contracts Out
+                      Contract Out
                     </Typography>
                   ) : (
                     false
@@ -3823,10 +3823,10 @@ const Editemployee = () => {
                     {/* {mode !== "E"&&(<MenuItem value={0}>Personnel</MenuItem>)} */}
                     <MenuItem value={5}>Contact</MenuItem>
                     {initialValues.employeetype === "CI" ? (
-                      <MenuItem value={8}>Contracts In</MenuItem>
+                      <MenuItem value={8}>Contract In</MenuItem>
                     ) : null}
                     {initialValues.employeetype === "CO" ? (
-                      <MenuItem value={11}>Contracts Out</MenuItem>
+                      <MenuItem value={11}>Contract Out</MenuItem>
                     ) : null}
                     {is003Subscription === true ? (
                       <MenuItem value={15}>Parent</MenuItem>

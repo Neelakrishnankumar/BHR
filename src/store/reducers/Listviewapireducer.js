@@ -6048,7 +6048,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
-  console.log("🚀 ~ EditAttendance ~ CompanySignature:", CompanySignature);
+  console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;

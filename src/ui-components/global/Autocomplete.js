@@ -26,10 +26,9 @@ const OuterElementType = React.forwardRef((props, ref) => {
 });
 
 // Custom Listbox component
-const ListboxComponent = React.forwardRef(function ListboxComponent(
-  props,
-  ref
-) { });
+const ListboxComponent = React.forwardRef(
+  function ListboxComponent(props, ref) {},
+);
 
 ListboxComponent.propTypes = {
   children: PropTypes.node,
@@ -77,7 +76,7 @@ export const Productautocomplete = ({
   useEffect(() => {
     if (defaultValue) {
       const defaultOption = options.find(
-        (option) => option.Name === defaultValue
+        (option) => option.Name === defaultValue,
       );
       if (defaultOption && !value) {
         onChange(defaultOption);
@@ -236,7 +235,9 @@ export const HSNCategoryAutocomplete = ({
       options={options}
       loading={loading}
       value={value}
-      isOptionEqualToValue={(option, value) => option.HSNCategory === value.HSNCategory}
+      isOptionEqualToValue={(option, value) =>
+        option.HSNCategory === value.HSNCategory
+      }
       onChange={(event, newValue) => onChange(newValue)}
       getOptionLabel={(option) => option.HSNCategory}
       renderInput={(params) => (
@@ -311,7 +312,9 @@ export const HSNMasterAutocomplete = ({
       options={options}
       loading={loading}
       value={value}
-      isOptionEqualToValue={(option, value) => option.HSNMaster === value.HSNMaster}
+      isOptionEqualToValue={(option, value) =>
+        option.HSNMaster === value.HSNMaster
+      }
       onChange={(event, newValue) => onChange(newValue)}
       getOptionLabel={(option) => option.HSNMaster}
       renderInput={(params) => (
@@ -389,9 +392,7 @@ export const OrderItemAutocomplete = ({
         option.RecordID === value.RecordID
       }
       onChange={(event, newValue) => onChange(newValue)}
-      getOptionLabel={(option) =>
-        option ? `${option.Name}` : ""
-      }
+      getOptionLabel={(option) => (option ? `${option.Name}` : "")}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -467,7 +468,7 @@ export const ProductautocompleteLevel = ({
   useEffect(() => {
     if (defaultValue) {
       const defaultOption = options.find(
-        (option) => option.Name === defaultValue
+        (option) => option.Name === defaultValue,
       );
       if (defaultOption && !value) {
         onChange(defaultOption);
@@ -855,10 +856,10 @@ export function MultiFormikTwoAutocomplete({
         setOptions(
           Array.isArray(data)
             ? data.map((item) => ({
-              ...item,
-              ProdCatgName: item.ProdCatgName.trim(),
-            }))
-            : []
+                ...item,
+                ProdCatgName: item.ProdCatgName.trim(),
+              }))
+            : [],
         );
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -964,7 +965,6 @@ export function MultiFormikOptimizedAutocomplete({
       }}
       size="small"
       multiple={multiple}
-
       limitTags={1}
       open={open}
       onOpen={() => setOpen(true)}
@@ -972,9 +972,11 @@ export function MultiFormikOptimizedAutocomplete({
       value={value}
       onChange={onChange}
       options={options}
-      variant="standard"  // Set variant to "standard"
+      variant="standard" // Set variant to "standard"
       focused
-      isOptionEqualToValue={(option, value) => option?.RecordID === value?.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option?.RecordID === value?.RecordID
+      }
       getOptionLabel={(option) => option?.Name || ""}
       disableCloseOnSelect
       loading={loading}
@@ -1016,7 +1018,7 @@ export function CusListRunGrpOptimizedAutocomplete1({
   multiple = true,
   errors,
   helper,
-  companyID,   // <-- FIX ADDED
+  companyID, // <-- FIX ADDED
   ...props
 }) {
   const [options, setOptions] = useState([]);
@@ -1032,7 +1034,8 @@ export function CusListRunGrpOptimizedAutocomplete1({
       try {
         const response = await axios.post(url, data, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
         setOptions(response.data.Data || []);
@@ -1052,7 +1055,6 @@ export function CusListRunGrpOptimizedAutocomplete1({
     fetchData();
   }, [url]);
 
-
   return (
     <Autocomplete
       sx={{
@@ -1070,7 +1072,7 @@ export function CusListRunGrpOptimizedAutocomplete1({
       options={options}
       isOptionEqualToValue={(option, value) => option.ID === value.ID}
       onChange={onChange}
-      getOptionLabel={(option) => option?.Name || ''}
+      getOptionLabel={(option) => option?.Name || ""}
       disableCloseOnSelect
       disableListWrap
       loading={loading}
@@ -1128,7 +1130,8 @@ export function CusListRunGrpOptimizedAutocomplete({
       try {
         const response = await axios.post(url, data, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU"
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
           },
         });
         setOptions(response.data.Data || []);
@@ -1147,7 +1150,6 @@ export function CusListRunGrpOptimizedAutocomplete({
     };
     fetchData();
   }, [url]);
-
 
   return (
     <Autocomplete
@@ -1190,8 +1192,6 @@ export function CusListRunGrpOptimizedAutocomplete({
     />
   );
 }
-
-
 
 // export function MultiSelectDropdown({
 //   data = [],
@@ -1316,15 +1316,14 @@ export function MultiSelectDropdown1({
     if (apiValue && apiValue.trim() !== "") {
       const arr = apiValue
         .split(",")
-        .map(v => v.trim())
-        .filter(v => v !== "");
+        .map((v) => v.trim())
+        .filter((v) => v !== "");
 
       setSelectedValues(arr); // ["1","2"]
     } else {
-      setSelectedValues([]);  // VERY IMPORTANT → clears previous ID
+      setSelectedValues([]); // VERY IMPORTANT → clears previous ID
     }
   }, [apiValue]);
-
 
   // User selection -> send comma-separated string
   const handleSelectChange = (event) => {
@@ -1362,21 +1361,20 @@ export function MultiSelectDropdown1({
             .join(", ");
         }}
 
-      // renderValue={(selected) => {
-      //   if (selected.length === 0) return null;
+        // renderValue={(selected) => {
+        //   if (selected.length === 0) return null;
 
-      //   return selected
-      //     .map((id) => {
-      //       const match = data.find((x) => x.ID === id);
-      //       return match ? match.Name : id;
-      //     })
-      //     .join(", ");
-      // }}
+        //   return selected
+        //     .map((id) => {
+        //       const match = data.find((x) => x.ID === id);
+        //       return match ? match.Name : id;
+        //     })
+        //     .join(", ");
+        // }}
       >
         {data?.map((item) => (
           // <MenuItem key={item.ID} value={item.ID}>
           <MenuItem key={item.ID} value={String(item.ID)}>
-
             <Checkbox checked={selectedValues.includes(String(item.ID))} />
 
             {/* //<Checkbox checked={selectedValues.includes(item.ID)} /> */}
@@ -1391,8 +1389,8 @@ export function MultiSelectDropdown1({
 export function MultiSelectDropdown({
   id,
   name,
-  data = [],          // [{ RecordID, Code, Name }]
-  apiValue = "",      // "Attendance,Leave"
+  data = [], // [{ RecordID, Code, Name }]
+  apiValue = "", // "Attendance,Leave"
   onChange,
 }) {
   const [selectedValues, setSelectedValues] = useState([]);
@@ -1408,19 +1406,17 @@ export function MultiSelectDropdown({
     const cleaned = apiValue
       .replace(/"/g, "")
       .split(",")
-      .map(v => v.trim())
-      .filter(v => v !== "");
+      .map((v) => v.trim())
+      .filter((v) => v !== "");
 
-    setSelectedValues(cleaned);  // ["Attendance","Leave"]
+    setSelectedValues(cleaned); // ["Attendance","Leave"]
   }, [apiValue]);
 
   // 2️⃣ Convert selection back to comma string: "Attendance,Leave"
   const handleSelectChange = (event) => {
     const arr = event.target.value;
 
-    const cleaned = arr
-      .map(v => v.trim())
-      .filter(v => v !== "");
+    const cleaned = arr.map((v) => v.trim()).filter((v) => v !== "");
 
     setSelectedValues(cleaned);
 
@@ -1441,8 +1437,8 @@ export function MultiSelectDropdown({
         input={<OutlinedInput label={name} />}
         renderValue={(selected) =>
           selected
-            .map(code => {
-              const match = data.find(x => x.Code === code);
+            .map((code) => {
+              const match = data.find((x) => x.Code === code);
               return match ? match.Name : code;
             })
             .join(", ")
@@ -1458,9 +1454,6 @@ export function MultiSelectDropdown({
     </FormControl>
   );
 }
-
-
-
 
 export function ModuleAutocomplete({
   value = [],
@@ -1505,20 +1498,15 @@ export function ModuleAutocomplete({
       onClose={() => setOpen(false)}
       value={value}
       onChange={onChange}
-
       // Correct options coming from Redux
       options={externalOptions.length > 0 ? externalOptions : apiOptions}
-
       // Fix label
       getOptionLabel={(option) => option?.label || option?.Name || ""}
-
       // Fix matching
       isOptionEqualToValue={(o, v) => o.value === v.value}
-
       disableCloseOnSelect
       renderInput={(params) => <TextField {...params} label={label} />}
     />
-
   );
 }
 
@@ -1687,7 +1675,7 @@ export function MultiFormikScheduleOptimizedAutocomplete({
 
 export const SingleFormikOptimizedAutocomplete = ({
   value = null,
-  onChange = () => { },
+  onChange = () => {},
   url,
   height = 20,
   ...props
@@ -1765,7 +1753,7 @@ export const SingleFormikOptimizedAutocomplete = ({
 
 export const FormikProductautocomplete = ({
   value = null,
-  onChange = () => { },
+  onChange = () => {},
   url,
   height = 20,
   ...props
@@ -1983,7 +1971,9 @@ export const ItemGroupLookup = ({
       options={options}
       loading={loading}
       value={value}
-      isOptionEqualToValue={(option, value) => option.Itemgroup === value.Itemgroup}
+      isOptionEqualToValue={(option, value) =>
+        option.Itemgroup === value.Itemgroup
+      }
       onChange={(event, newValue) => onChange(newValue)}
       getOptionLabel={(option) => option.Itemgroup}
       renderInput={(params) => (
@@ -2085,6 +2075,78 @@ export const ItemsLookup = ({
         />
       )}
       {...props}
+    />
+  );
+};
+
+//BRR-GREEN SIGNAL LOOKUP
+export const BRREmpLookup = ({ value = null, onChange, url }) => {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!url) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+        const data = response.data.Data?.rows || [];
+        setOptions(data);
+      } catch {
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Autocomplete
+      options={options}
+      value={value}
+      loading={loading}
+      getOptionLabel={(option) => option?.Name || ""}
+      isOptionEqualToValue={(o, v) => o.RecordID === v.RecordID}
+      onChange={(e, newValue) => onChange(newValue)}
+
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          placeholder=""
+          InputProps={{
+            ...params.InputProps,
+            disableUnderline: true,   // paper style
+            style: {
+              fontFamily: "Times New Roman",
+              fontSize: "14px",
+              padding: 0,
+            },
+            endAdornment: (
+              <>
+                {loading && (
+                  <CircularProgress size={16} color="inherit" />
+                )}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+          sx={{
+            "& .MuiInputBase-root": {
+              padding: 0,
+              background: "transparent",
+            },
+          }}
+        />
+      )}
     />
   );
 };

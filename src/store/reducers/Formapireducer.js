@@ -55,7 +55,7 @@ const initialState = {
   purchaseorderratingData: [],
   searchLoading: false,
   empAttendanceData: {},
-  // payslipAttendanceData: {},
+  payslipAttendanceData: {},
   empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
   AttendanceDataLoading: false,
@@ -2427,7 +2427,7 @@ export const getApiSlice = createSlice({
       state.stockorderData = [];
       state.purchaseorderratingData = [];
       state.empAttendanceData = [];
-      // state.payslipAttendanceData = [];
+      state.payslipAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
       state.MonthlyAttendanceData = [];
@@ -3364,20 +3364,20 @@ export const getApiSlice = createSlice({
         state.empAttendanceDataLoading = false;
         state.empAttendanceData = [];
       })
-      // .addCase(payslipAttendance.fulfilled, (state, action) => {
-      //   state.empAttendanceData = action.payload.Data;
-      //   state.empAttendanceDataLoading = false;
-      // })
-      // .addCase(payslipAttendance.pending, (state, action) => {
-      //   state.Status = "idle";
-      //   state.empAttendanceDataLoading = true;
-      //   state.empAttendanceData = [];
-      // })
-      // .addCase(payslipAttendance.rejected, (state, action) => {
-      //   state.Status = "Error";
-      //   state.empAttendanceDataLoading = false;
-      //   state.empAttendanceData = [];
-      // })
+      .addCase(payslipAttendance.fulfilled, (state, action) => {
+        state.payslipAttendanceData = action.payload.Data;
+        state.empAttendanceDataLoading = false;
+      })
+      .addCase(payslipAttendance.pending, (state, action) => {
+        state.Status = "idle";
+        state.empAttendanceDataLoading = true;
+        state.payslipAttendanceData = [];
+      })
+      .addCase(payslipAttendance.rejected, (state, action) => {
+        state.Status = "Error";
+        state.empAttendanceDataLoading = false;
+        state.payslipAttendanceData = [];
+      })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;
         state.AttendanceDataLoading = false;
