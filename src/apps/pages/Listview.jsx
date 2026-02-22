@@ -651,7 +651,9 @@ const Listview = () => {
               false
             ) : accessID == "TR330" ? (
               false
-            ) : YearFlag == "true" ? (
+            ) : accessID == "TR336" ? (
+              false
+            ): YearFlag == "true" ? (
               // UGA_ADD ? (
 
               <Tooltip arrow title="Add">

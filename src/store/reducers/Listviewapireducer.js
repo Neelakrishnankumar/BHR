@@ -1826,6 +1826,30 @@ export const fetchListview =
                 />
               ),
             };
+          }
+          else if (
+            AccessID == "TR336"
+          ) {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 150,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              // align: "center",
+              align: "left",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => (
+                <SOPAction
+                  // rights={rights}
+                  params={params}
+                  accessID={AccessID}
+                  screenName={screenName}
+                />
+              ),
+            };
           } else if (AccessID == "TR076") {
             obj = {
               field: "action",
@@ -6736,6 +6760,121 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
             </Tooltip>
           </Box>
         )}
+      </div>
+    </Fragment>
+  );
+};
+const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state || {};
+  const dispatch = useDispatch();
+  const UserName = sessionStorage.getItem("UserName");
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  const count = Number(params.row.MarketingCount || 0);
+  // const orderType = params.row.OrderType;
+  const id = params.row.RecordID;
+
+  const PartyName = params.row.Name;
+
+  const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
+    const dispatch = store.dispatch;
+    const [loading, setLoading] = React.useState(false);
+
+    const handlePDFGET = async () => {
+      try {
+        setLoading(true);
+
+        const resultAction = await dispatch(
+          getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
+        );
+
+        const data = resultAction.payload; // <-- this depends on how your thunk is defined
+        if (!data?.HeaderData?.DetailData?.length) {
+          alert("No Order Items available for this order..");
+          return;
+        }
+
+        // Generate and download PDF
+        const blob = await pdf(
+          <OrderHeaderPdf
+            data={data}
+            UserName={UserName}
+            OrderType={OrderType}
+          />,
+        ).toBlob();
+        // const link = document.createElement("a");
+        // link.href = URL.createObjectURL(blob);
+        // //link.download = "OrderDeatils.pdf";
+        // link.Open();
+        // link.click();
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, "_blank");
+
+        // 2. TO DOWNLOAD DIRECTLY
+        // const url = URL.createObjectURL(blob);
+
+        // const link = document.createElement("a");
+        // link.href = url;
+        // link.download = "OrderDetails.pdf";
+        // document.body.appendChild(link);
+
+        // link.click();
+
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("PDF generation failed", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <Tooltip title="Download PDF">
+        <IconButton color="info" size="small" onClick={handlePDFGET}>
+          {loading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <PictureAsPdfIcon color="error" />
+          )}
+        </IconButton>
+      </Tooltip>
+    );
+  };
+
+
+  return (
+    <Fragment>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        {accessID === "TR336" && (
+          <>
+            <Tooltip title="SOP Forms">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.Description,
+                      ItemCode: params.row.Code,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        
       </div>
     </Fragment>
   );
