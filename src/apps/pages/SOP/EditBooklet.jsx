@@ -17,6 +17,12 @@ import {
   IconButton,
   Tooltip,
   LinearProgress,
+  TableRow,
+  TableCell,
+  TableHead,
+  Table,
+  TableContainer,
+  TableBody,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -34,9 +40,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import { formGap } from "../../../ui-components/utils";
+import { SOPDocLookup } from "../../../ui-components/global/Autocomplete";
+import { SOPfileUpload } from "../../../store/reducers/Imguploadreducer";
+import { ArrowBack, CloudUpload } from "@mui/icons-material";
+import store from "../../../index";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-
-const EditListOfSOPs = () => {
+const EditBooklet = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,6 +69,10 @@ const EditListOfSOPs = () => {
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
 
   const [validationSchema, setValidationSchema] = useState(null);
+
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+  const rowSx = { height: 36, '& td, & th': { py: 0.5 } };
+  const [SOPFileLoading, setSOPFileLoading] = useState(false);
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -68,8 +82,9 @@ const EditListOfSOPs = () => {
       .then((data) => {
         setErrorMsgData(data);
         const schema = Yup.object().shape({
-          Description: Yup.string().trim().required(data.QCSOPs.Description),
-          Code: Yup.string().trim().required(data.QCSOPs.Code),
+          DocumentName: Yup.string().trim().required(data.QCSOPDoc.DocumentName),
+          PdfAttach: Yup.string().required(data.QCSOPDoc.PdfAttach),
+          DocType: Yup.object().required(data.QCSOPDoc.DocType).nullable(),
         });
         setValidationSchema(schema);
       })
@@ -81,9 +96,13 @@ const EditListOfSOPs = () => {
 
 
   const SOPInitialValues = {
-    Code: data.Code || "",
-    Description: data.Description || "",
-    Sortorder: data.SortOrder || "0",
+    DocumentName: data.DocumentName || "",
+    DocType: data.TypeOfDocumentID ? {
+      RecordID: data.TypeOfDocumentID,
+      DocumentName: data.TypeOfDocumentName,
+    } : null,
+    PdfAttach: data.PdfAttach || "",
+    SortOrder: data.SortOrder || "0",
     Disable: data.Disable === "Y" ? true : false,
   }
   const SOPSaveFn = async (values) => {
@@ -95,11 +114,12 @@ const EditListOfSOPs = () => {
 
     const idata = {
       RecordID: recID,
-      CompanyID: CompanyID,
-      Desc: values.Description,
-      Code: values.Code,
-      SortOrder: values.Sortorder || "0",
+      SopID: params.parentID1 || 0,
+      TypeOfDocumentID: values.DocType ? values.DocType.RecordID : 0,
+      DocumentName: values.DocumentName,
+      SortOrder: values.SortOrder || "0",
       Disable: values.Disable ? "Y" : "N",
+      PdfAttach: values.PdfAttach || "",
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -169,14 +189,30 @@ const EditListOfSOPs = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate("/Apps/TR336/List%20Of%20SOPs")}
                   >
-                    List of SOPs
+                    List of SOPs ({state.BreadCrumb1 || ""})
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    onClick={() => navigate(-1)}
+                  >
+                    List of SOP Document
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                    // onClick={() => navigate(-1)}
+                  >
+                    List of Booklet
                   </Typography>
                   <Typography
                     variant="h5"
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                   >
-                    {mode == "A" ? "New" : mode == "E" ? "Edit" : "View"}
+                    {mode == "A" ? "New" : mode == "E" ? `Edit ${(state.BreadCrumb2) ? `- ${state.BreadCrumb2}` : ""}` : "View"}
                   </Typography>
                 </Breadcrumbs>
               </Box>
@@ -197,6 +233,7 @@ const EditListOfSOPs = () => {
           </Box>
         </Paper>
         {getLoading ? (<LinearProgress />) : false}
+        {SOPFileLoading ? (<LinearProgress />) : false}
 
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
@@ -205,7 +242,7 @@ const EditListOfSOPs = () => {
               SOPSaveFn(values);
             }}
             enableReinitialize
-            validationSchema={validationSchema}
+          validationSchema={validationSchema}
           >
             {({
               values,
@@ -214,6 +251,7 @@ const EditListOfSOPs = () => {
               handleChange,
               handleBlur,
               handleSubmit,
+              setFieldValue
             }) => (
               <Form onSubmit={handleSubmit}>
                 <Box
@@ -227,99 +265,38 @@ const EditListOfSOPs = () => {
                     },
                   }}
                 >
-                  {/* CODE */}
-                  {/* {CompanyAutoCode == "Y" ? (
-                    <TextField
-                      name="Code"
-                      type="text"
-                      id="Code"
-                      label="Code"
-                      placeholder="Auto"
-                      variant="standard"
-                      focused
-                      // required
-                      value={values.Code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ",
-                        },
-                      }}
-                      InputProps={{ readOnly: true }}
-                    // autoFocus
-                    />
-                  ) : (
-                    <TextField
-                      name="Code"
-                      type="text"
-                      id="Code"
-                      label={
-                        <>
-                          Code
-                          <span style={{ color: "red", fontSize: "20px" }}>
-                            *
-                          </span>
-                        </>
-                      }
-                      variant="standard"
-                      focused
-                      // required
-                      value={values.Code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      sx={{
-                        backgroundColor: "#ffffff",
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ",
-                        },
-                      }}
-                      autoFocus
-                    />
-                  )} */}
-                  <TextField
-                    name="Code"
-                    type="text"
-                    id="Code"
+
+                  {/* <SOPDocLookup
+                    id="DocType"
+                    name="DocType"
                     label={
                       <>
-                        Code
+                        Type Of Document
                         <span style={{ color: "red", fontSize: "20px" }}>
                           *
                         </span>
                       </>
                     }
-                    variant="standard"
-                    focused
-                    // required
-                    value={values.Code}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.Code && !!errors.Code}
-                    helperText={touched.Code && errors.Code}
-                    sx={{
-                      backgroundColor: "#ffffff",
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ",
-                      },
+                    variant="outlined"
+                    value={values.DocType}
+                    onChange={(newValue) => {
+                      setFieldValue("DocType", newValue);
+                      console.log(newValue, "--newvalue DocType");
+                      console.log(newValue.RecordID, "DocType RecordID");
                     }}
-                    autoFocus
-                  />
+                    error={!!touched.DocType && !!errors.DocType}
+                    helperText={touched.DocType && errors.DocType}
+                    url={`${listViewurl}?data={"Query":{"AccessID":"2146","ScreenName":"DocType","Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                  /> */}
 
-                  {/* DESCRIPTION */}
                   <TextField
-                    name="Description"
+                    name="AnnexureNo"
                     type="text"
-                    id="Description"
-                    value={values.Description}
+                    id="AnnexureNo"
+                    value={values.AnnexureNo}
                     label={
                       <>
-                        Description
+                        Annexure No
                         <span style={{ fontSize: "20px", color: "red" }}>
                           *
                         </span>
@@ -329,18 +306,18 @@ const EditListOfSOPs = () => {
                     focused
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.Description && !!errors.Description}
-                    helperText={touched.Description && errors.Description}
+                    error={!!touched.AnnexureNo && !!errors.AnnexureNo}
+                    helperText={touched.AnnexureNo && errors.AnnexureNo}
                     autoFocus
                   />
                   <TextField
-                    name="VersionNo"
-                    type="text"
-                    id="VersionNo"
-                    value={values.VersionNo}
+                    name="RequestDate"
+                    type="date"
+                    id="RequestDate"
+                    value={values.RequestDate}
                     label={
                       <>
-                        Version No
+                        Request Date
                         <span style={{ fontSize: "20px", color: "red" }}>
                           *
                         </span>
@@ -350,18 +327,18 @@ const EditListOfSOPs = () => {
                     focused
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.VersionNo && !!errors.VersionNo}
-                    helperText={touched.VersionNo && errors.VersionNo}
+                    error={!!touched.RequestDate && !!errors.RequestDate}
+                    helperText={touched.RequestDate && errors.RequestDate}
                     autoFocus
                   />
                   <TextField
-                    name="ModificationNo"
+                    name="NoOfCopies"
                     type="text"
-                    id="ModificationNo"
-                    value={values.ModificationNo}
+                    id="NoOfCopies"
+                    value={values.NoOfCopies}
                     label={
                       <>
-                        Modification No
+                        No Of Copies
                         <span style={{ fontSize: "20px", color: "red" }}>
                           *
                         </span>
@@ -371,55 +348,104 @@ const EditListOfSOPs = () => {
                     focused
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.ModificationNo && !!errors.ModificationNo}
-                    helperText={touched.ModificationNo && errors.ModificationNo}
+                    error={!!touched.NoOfCopies && !!errors.NoOfCopies}
+                    helperText={touched.NoOfCopies && errors.NoOfCopies}
                     autoFocus
                   />
                   <TextField
-                    select
-                    label="Facility"
-                    id="Facility"
-                    name="Facility"
-                    value={values.Facility}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Facility", e.target.value); // save to sessionStorage
-                    }}
-                    focused
+                    name="IssuedLogBookNo"
+                    type="text"
+                    id="IssuedLogBookNo"
+                    value={values.IssuedLogBookNo}
+                    label={
+                      <>
+                        Issued Log Book No
+                        <span style={{ fontSize: "20px", color: "red" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     variant="standard"
-                  >
-                    <MenuItem value="ManufacturingFacility1">Manufacturing Facility 1</MenuItem>
-                    <MenuItem value="ManufacturingFacility2">Manufacturing Facility 2</MenuItem>
-
-                  </TextField>
+                    focused
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.IssuedLogBookNo && !!errors.IssuedLogBookNo}
+                    helperText={touched.IssuedLogBookNo && errors.IssuedLogBookNo}
+                    autoFocus
+                  />
                   <TextField
-                    select
-                    label="Type Of Copy"
-                    id="Facility"
-                    name="Facility"
-                    value={values.Facility}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Facility", e.target.value); // save to sessionStorage
-                    }}
-                    focused
+                    name="IssuedBy"
+                    type="text"
+                    id="IssuedBy"
+                    value={values.IssuedBy}
+                    label={
+                      <>
+                        Issued By
+                        <span style={{ fontSize: "20px", color: "red" }}>
+                          *
+                        </span>
+                      </>
+                    }
                     variant="standard"
-                  >
-                    <MenuItem value="Controlled">Controlled</MenuItem>
-                    <MenuItem value="Uncontrolled">Uncontrolled</MenuItem>
+                    focused
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.IssuedBy && !!errors.IssuedBy}
+                    helperText={touched.IssuedBy && errors.IssuedBy}
+                    autoFocus
+                  />
+                  <TextField
+                    name="ReceivedBy"
+                    type="text"
+                    id="ReceivedBy"
+                    value={values.ReceivedBy}
+                    label={
+                      <>
+                        Issued By
+                        <span style={{ fontSize: "20px", color: "red" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    variant="standard"
+                    focused
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.ReceivedBy && !!errors.ReceivedBy}
+                    helperText={touched.ReceivedBy && errors.ReceivedBy}
+                    autoFocus
+                  />
+                  <TextField
+                    name="AdditionalInfo"
+                    type="text"
+                    id="AdditionalInfo"
+                    value={values.AdditionalInfo}
+                    label={
+                      <>
+                        Issued By
+                        <span style={{ fontSize: "20px", color: "red" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    variant="standard"
+                    focused
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.AdditionalInfo && !!errors.AdditionalInfo}
+                    helperText={touched.AdditionalInfo && errors.AdditionalInfo}
+                    autoFocus
+                  />
 
-                  </TextField>
                   {/* SORT ORDER */}
                   <TextField
                     fullWidth
                     variant="standard"
                     type="number"
                     label="Sort Order"
-                    value={values.Sortorder}
-                    id="Sortorder"
-                    name="Sortorder"
+                    value={values.SortOrder}
+                    id="SortOrder"
+                    name="SortOrder"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     focused
@@ -446,17 +472,9 @@ const EditListOfSOPs = () => {
                         checked={values.Disable}
                         onChange={handleChange} />}
                       label="Disable"
-                      sx={{
-                        marginTop: "20px",
-                        "@media (max-width:500px)": {
-                          marginTop: 0,
-                        },
-                      }}
                     />
                   </Box>
                 </Box>
-
-                {/* BUTTONS */}
                 <Box
                   display="flex"
                   justifyContent="flex-end"
@@ -480,7 +498,10 @@ const EditListOfSOPs = () => {
                     Cancel
                   </Button>
                 </Box>
+               
               </Form>
+
+
             )}
           </Formik>
         </Paper>
@@ -490,4 +511,4 @@ const EditListOfSOPs = () => {
   )
 }
 
-export default EditListOfSOPs;
+export default EditBooklet;

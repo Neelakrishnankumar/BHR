@@ -196,6 +196,7 @@ import GSPdf from './pages/Empolyee/GSPdf'
 import BRRForm from "./pages/SOP/BRRForm";
 import EditListOfSOPs from "./pages/SOP/EditListOfSOPs";
 import EditSOPDocument from "./pages/SOP/EditSOPDocument";
+import EditBooklet from "./pages/SOP/EditBooklet";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -1349,6 +1350,11 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:parentID1/EditSopDocument/:id/:Mode"
                     element={<EditSOPDocument />}
                   />
+                  {/* EDIT BOOKLET */}
+                  {/* <Route
+                    path="/Secondarylistview/EditBooklet"
+                    element={<EditBooklet />}
+                  /> */}
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}

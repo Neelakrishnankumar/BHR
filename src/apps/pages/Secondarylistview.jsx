@@ -1770,7 +1770,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR335/List%20Of%20SOPs");
+                  navigate("/Apps/TR337/List%20Of%20SOPs");
                 }}
               >
                 List Of SOPs ({BreadCrumb1})
@@ -4875,20 +4875,7 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                   </Box>
-                )  : accessID == "TR336" ? (
-                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                    <Chip
-                      icon={<ModeEditOutlinedIcon color="primary" />}
-                      label="Edit"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<SaveOutlinedIcon color="primary" />}
-                      label="SOP Documents"
-                      variant="outlined"
-                    />
-                  </Box>
-                ): (
+                ) : (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}
