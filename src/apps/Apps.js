@@ -1332,7 +1332,8 @@ function App() {
                     element={<GSPdf />}
                   />
                   <Route
-                    path="/BatchReconciliation/BRRForm"
+                    // path="/BatchReconciliation/BRRForm"
+                    path="/Secondarylistview/:accessID1/SOPDocuments/:SOPID/EditSOPDocuments/:SOPDOCID/E"
                     element={<BRRForm />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}

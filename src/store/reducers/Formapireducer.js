@@ -2554,6 +2554,23 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.loading = false;
       })
+       .addCase(batchreconciliationGetData.pending, (state, action) => {
+        state.Status = "idle";
+        state.loading = true;
+      })
+      .addCase(batchreconciliationGetData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+        if (action.payload.Data.Disable == "Y") {
+          action.payload.Data.Disable = true;
+        } else action.payload.Data.Disable = false;
+
+        state.Data = action.payload.Data;
+      })
+      .addCase(batchreconciliationGetData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.loading = false;
+      })
       .addCase(invoiceExploreGetData.pending, (state, action) => {
         state.Status = "idle";
         state.expgetLoading = true;
@@ -5223,6 +5240,31 @@ export const replacementQtyGet = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
+    return response.data;
+  },
+);
+//batchreconciliationGetData
+export const batchreconciliationGetData = createAsyncThunk(
+  "batchreconciliationGetData/Get",
+  async (props) => {
+    var url = store.getState().globalurl.apiUrl;
+    const data = {
+      accessid: props.accessID,
+      action: props.get,
+      recid: props.recID,
+    };
+    console.log("🚀 ~ data:", JSON.stringify(data));
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
     return response.data;
   },
 );
