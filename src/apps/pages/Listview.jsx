@@ -113,7 +113,7 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { FaFileExcel } from "react-icons/fa";
 import { getConfig } from "../../config";
 import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
-
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -651,7 +651,11 @@ const Listview = () => {
               false
             ) : accessID == "TR330" ? (
               false
-            ) : accessID == "TR336" ? (
+            )
+            // : accessID == "TR336" ? (
+              //false
+            //)
+            : accessID == "TR337" ? (
               false
             ): YearFlag == "true" ? (
               // UGA_ADD ? (
@@ -4168,7 +4172,17 @@ const Listview = () => {
             // sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) : accessID == "TR316" ? (
+        ) 
+        : accessID == "TR337" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+              label="SOP Documents"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        ): accessID == "TR316" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}

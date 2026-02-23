@@ -1,4 +1,11 @@
-import { Box, Paper, Typography, Link, Breadcrumbs, IconButton, Tooltip, } from "@mui/material";
+import {
+    Box,
+    Paper,
+    Typography,
+    Breadcrumbs,
+    IconButton,
+    Tooltip,
+} from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -6,13 +13,13 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useProSidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { BRREmpLookup, MultiFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
+import { BRREmpLookup } from "../../../ui-components/global/Autocomplete";
 import { useSelector } from "react-redux";
 
 function BRRForm() {
-    const navigate = useNavigate();
+const navigate = useNavigate();
     const location = useLocation();
     const state = location.state || {};
     const params = useParams();
@@ -65,16 +72,46 @@ function BRRForm() {
             },
         }),
     )}`;
+
+    // ================= STATE =================
+
+    const [values, setValues] = useState({
+        A: 0,
+        rejections: Array(10).fill(0),
+        samples: Array(3).fill(0),
+        VVMRejection: 0,
+        PackingRejection: 0,
+    });
+
+    // ================= CALCULATIONS =================
+
+    const B = values.rejections.reduce((a, b) => a + Number(b || 0), 0);
+    const C = values.samples.reduce((a, b) => a + Number(b || 0), 0);
+    const D = B + C;
+    const readyAfterProtocol = values.A - D;
+    const E = D + values.VVMRejection + values.PackingRejection;
+    const finalReady = values.A - E;
+
+    // ================= HANDLERS =================
+
+    const handleRejectionChange = (index, value) => {
+        const updated = [...values.rejections];
+        updated[index] = Number(value || 0);
+        setValues({ ...values, rejections: updated });
+    };
+
+    const handleSampleChange = (index, value) => {
+        const updated = [...values.samples];
+        updated[index] = Number(value || 0);
+        setValues({ ...values, samples: updated });
+    };
+
+    // ================= UI =================
+
     return (
-        <React.Fragment
-            sx={{
-                p: 2,
-                height: "100vh",
-            }}
-        >
-
-
-            <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+        <React.Fragment>
+            {/* HEADER */}
+          <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
                 <Box display="flex" justifyContent="space-between" p={2}>
                     <Box display="flex" borderRadius="3px" alignItems="center">
                         {broken && !rtl && (
@@ -137,18 +174,11 @@ function BRRForm() {
                 </Box>
             </Paper>
 
-
-
+            {/* FORM */}
             <Paper elevation={3} sx={{ margin: "10px" }}>
-
-                {/* Heading */}
                 <Typography
                     variant="h5"
-                    sx={{
-                        my: 2,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                    }}
+                    sx={{ my: 2, fontWeight: "bold", textAlign: "center" }}
                 >
                     BATCH RECONCILIATION RECORD FORM
                 </Typography>
@@ -156,15 +186,13 @@ function BRRForm() {
                 <div
                     style={{
                         width: "800px",
-                        border: "2px solid black", // 🔥 OUTER BORDER
+                        border: "2px solid black",
                         padding: "10px",
-                        fontFamily: "Times New Roman",
-                        fontSize: "14px",
-                        margin: "auto"
+                        margin: "auto",
                     }}
                 >
-                    {/* ================= PRODUCT SECTION ================= */}
-                    <table
+
+                     <table
                         style={{
                             width: "100%",
                             borderCollapse: "collapse",
@@ -267,48 +295,32 @@ function BRRForm() {
                         </tbody>
                     </table>
 
-                    {/* ================= MAIN TABLE SECTION ================= */}
-                    <table
-                        style={{
-                            width: "100%",
-                            borderCollapse: "collapse",
-                            marginBottom: "10px",
-                            border: "1px solid black",
-                        }}
-                        border="1"
-                    >
+                    {/* MAIN TABLE */}
+                    <table width="100%" border="1" style={{ borderCollapse: "collapse",marginBottom: "10px", }}>
                         <tbody>
-                            {/* Header */}
                             <tr style={{ fontWeight: "bold", textAlign: "center" }}>
-                                <td style={{ width: "8%" }}>S. No</td>
+                                <td>S.No</td>
                                 <td>Description</td>
-                                <td style={{ width: "25%" }}>Number of Vials</td>
+                                <td>Number of Vials</td>
                             </tr>
 
-                            {/* 1 */}
+                            {/* A */}
                             <tr>
                                 <td align="center">1.</td>
-                                <td style={{ fontWeight: "bold" }}>
-                                    Total Number of Vials Received from Stores (A)
-                                </td>
-                                <td
-                                    style={{
-                                        width: "30%",
-                                        padding: "4px",
-                                        border: "1px solid black",
-                                    }}
-                                >
+                                <td style={{ fontWeight: "bold" }}>Total Number of Vials Received from Stores (A)</td>
+                                <td>
                                     <input
-                                        style={{
-                                            width: "100%",
-                                            border: "none",
-                                            outline: "none",
-                                        }}
+                                        type="number"
+                                        value={values.A}
+                                        onChange={(e) =>
+                                            setValues({ ...values, A: Number(e.target.value) })
+                                        }
+                                        style={{ width: "100%", border: "none",textAlign: "right" }}
                                     />
                                 </td>
                             </tr>
 
-                            {/* Rejection List */}
+                            {/* REJECTIONS */}
                             {[
                                 "Vial Washing Rejection",
                                 "Depyrogenation Tunnel Rejection",
@@ -322,151 +334,167 @@ function BRRForm() {
                                 "Labelling Rejection",
                             ].map((item, index) => (
                                 <tr key={index}>
-                                    {/* Show 2. only once and merge vertically */}
                                     {index === 0 && (
                                         <td align="center" rowSpan={10}>
                                             2.
                                         </td>
                                     )}
                                     <td>{item}</td>
-                                    <td
-                                        style={{
-                                            width: "30%",
-                                            padding: "4px",
-                                            border: "1px solid black",
-                                        }}
-                                    >
+                                    <td>
                                         <input
                                             type="number"
-                                            min="0"
-                                            step="1"
-                                            style={{
-                                                width: "100%",
-                                                border: "none",
-                                                outline: "none",
-                                            }}
-                                            onWheel={(e) => e.target.blur()} // prevents scroll changing value
+                                            value={values.rejections[index]}
+                                            onChange={(e) =>
+                                                handleRejectionChange(index, e.target.value)
+                                            }
+                                            style={{ width: "100%", border: "none",textAlign: "right" }}
                                         />
                                     </td>
                                 </tr>
                             ))}
 
-                            {/* Total Rejections Heading */}
+                            {/* B */}
                             <tr style={{ fontWeight: "bold" }}>
                                 <td colSpan="2">Total Rejections (B)</td>
-                                <td
-                                    style={{
-                                        width: "30%",
-                                        padding: "4px",
-                                        border: "1px solid black",
-                                    }}
-                                >
-                                    <input
-                                        style={{ width: "100%", border: "none", outline: "none" }}
-                                    />
+                                <td>
+                                    <input value={B} readOnly style={{ width: "100%",textAlign: "right" }} />
                                 </td>
                             </tr>
 
-                            {/* 3 - Samples Block */}
+                            {/* SAMPLES */}
                             {[
                                 "CDL + GMSD Samples",
                                 "Retention Samples",
                                 "Other Samples",
                             ].map((item, index) => (
                                 <tr key={index}>
-                                    {/* Show 3. only once and merge vertically */}
                                     {index === 0 && (
                                         <td align="center" rowSpan={3}>
                                             3.
                                         </td>
                                     )}
-
                                     <td>{item}</td>
-
-                                    <td
-                                        style={{
-                                            width: "30%",
-                                            padding: "4px",
-                                            border: "1px solid black",
-                                        }}
-                                    >
+                                    <td>
                                         <input
                                             type="number"
-                                            min="0"
-                                            step="1"
-                                            style={{
-                                                width: "100%",
-                                                border: "none",
-                                                outline: "none",
-                                            }}
-                                            onWheel={(e) => e.target.blur()} // prevents scroll changing value
+                                            value={values.samples[index]}
+                                            onChange={(e) =>
+                                                handleSampleChange(index, e.target.value)
+                                            }
+                                            style={{ width: "100%", border: "none",textAlign: "right" }}
                                         />
                                     </td>
                                 </tr>
                             ))}
 
-                            {/* Total Samples Heading */}
+                            {/* C */}
                             <tr style={{ fontWeight: "bold" }}>
                                 <td colSpan="2">Total Samples (C)</td>
-                                <td
-                                    style={{
-                                        width: "30%",
-                                        padding: "4px",
-                                        border: "1px solid black",
-                                    }}
-                                >
+                                <td>
+                                    <input value={C} readOnly style={{ width: "100%",textAlign: "right" }} />
+                                </td>
+                            </tr>
+
+                            {/* D */}
+                            <tr>
+                                <td align="center">4.</td>
+                                <td>Total Rejections and QC Samples (D = B + C)</td>
+                                <td>
+                                    <input value={D} readOnly style={{ width: "100%",textAlign: "right" }} />
+                                </td>
+                            </tr>
+
+                            {/* A - D */}
+                            <tr>
+                                <td align="center">5.</td>
+                                <td>
+                                    Total Number of Vials Ready for Release = (A) - (D)
+                                </td>
+                                <td>
                                     <input
-                                        style={{ width: "100%", border: "none", outline: "none" }}
+                                        value={readyAfterProtocol}
+                                        readOnly
+                                        style={{ width: "100%",textAlign: "right" }}
                                     />
                                 </td>
                             </tr>
 
-                            {/* Remaining Rows */}
-                            {[
-                                "Total Rejections and QC Samples (D = B + C)",
-                                "Total Number of Vials Ready for Release as per Summary Protocol Total = (A) - (D)",
-                                "VVM Rejection",
-                                "Total Number of Vials after VVM Activity",
-                                "Packing Rejection",
-                                "Overall Rejection (E) = (D) + VVM Rejection + Packing Rejection",
-                                "Total Number of Vials Ready for Release = (A) - (E)",
-                            ].map((item, index) => (
-                                <tr key={index}>
-                                    <td align="center">{index + 4}.</td>
-                                    <td
-                                        style={
-                                            index === 0 || index === 1 || index === 6
-                                                ? { fontWeight: "bold" }
-                                                : {}
+                            {/* VVM */}
+                            <tr>
+                                <td align="center">6.</td>
+                                <td>VVM Rejection</td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={values.VVMRejection}
+                                        onChange={(e) =>
+                                            setValues({
+                                                ...values,
+                                                VVMRejection: Number(e.target.value),
+                                            })
                                         }
-                                    >
-                                        {item}
-                                    </td>
-                                    <td
-                                        style={{
-                                            width: "30%",
-                                            padding: "4px",
-                                            border: "1px solid black",
-                                        }}
-                                    >
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            step="1"
-                                            style={{
-                                                width: "100%",
-                                                border: "none",
-                                                outline: "none",
-                                            }}
-                                            onWheel={(e) => e.target.blur()} // prevents scroll changing value
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
+                                        style={{ width: "100%",textAlign: "right" }}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">7.</td>
+                                <td>Total Number of Vials after VVM Activity</td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={values.VVMAfterActivity}
+                                        style={{ width: "100%",textAlign: "right" }}
+                                    />
+                                </td>
+                            </tr>
+
+                            {/* Packing */}
+                            <tr>
+                                <td align="center">8.</td>
+                                <td>Packing Rejection</td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={values.PackingRejection}
+                                        onChange={(e) =>
+                                            setValues({
+                                                ...values,
+                                                PackingRejection: Number(e.target.value),
+                                            })
+                                        }
+                                        style={{ width: "100%",textAlign: "right" }}
+                                    />
+                                </td>
+                            </tr>
+
+                            {/* E */}
+                            <tr style={{ fontWeight: "bold" }}>
+                                <td align="center">9.</td>
+                                <td>
+                                    Overall Rejection (E) = (D) + VVM Rejection + Packing
+                                    Rejection
+                                </td>
+                                <td>
+                                    <input value={E} readOnly style={{ width: "100%",textAlign: "right" }} />
+                                </td>
+                            </tr>
+
+                            {/* FINAL */}
+                            <tr style={{ fontWeight: "bold" }}>
+                                <td align="center">10.</td>
+                                <td>Total Number of Vials Ready for Release = (A) - (E)</td>
+                                <td>
+                                    <input
+                                        value={finalReady}
+                                        readOnly
+                                        style={{ width: "100%",textAlign: "right" }}
+                                    />
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 
-                    {/* ================= SIGNATURE SECTION ================= */}
                     <table
                         style={{
                             width: "100%",
@@ -606,7 +634,6 @@ function BRRForm() {
                     </table>
                 </div>
             </Paper>
-
         </React.Fragment>
     );
 }
