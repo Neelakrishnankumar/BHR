@@ -194,7 +194,8 @@ import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
 import GSPdf from './pages/Empolyee/GSPdf'
 import BRRForm from "./pages/SOP/BRRForm";
-import EditListOfSOPs from "./pages/Empolyee/EditListOfSOPs";
+import EditListOfSOPs from "./pages/SOP/EditListOfSOPs";
+import EditSOPDocument from "./pages/SOP/EditSOPDocument";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -619,6 +620,8 @@ function App() {
                     path="/Secondarylistview/Route/:accessID/:screenName/:parentID1"
                     element={<ListviewSecondary />}
                   />
+
+                 
                   <Route
                     path="SkillGlow/CandidateMain"
                     element={<CandidateMain />}
@@ -1334,6 +1337,17 @@ function App() {
                   <Route
                     path="/BatchReconciliation/BRRForm"
                     element={<BRRForm />}
+                  />
+
+                   {/* SOP DOCUMENT LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID/SopDocument/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                   {/* EDIT SOP DOCUMENT */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID1/EditSopDocument/:id/:Mode"
+                    element={<EditSOPDocument />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

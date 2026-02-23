@@ -101,6 +101,8 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { getConfig } from "../../config";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+
 const initialState = {
   rowData: [],
   columnData: [],
@@ -667,6 +669,7 @@ export const fetchListview =
         AccessID != "TR319" &&
         AccessID != "TR324" &&
         AccessID != "TR335" &&
+        AccessID != "TR338" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -736,6 +739,7 @@ export const fetchListview =
       AccessID == "TR027" ||
       AccessID == "TR319" ||
       AccessID == "TR335" ||
+      AccessID == "TR338" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -1832,6 +1836,7 @@ export const fetchListview =
           }
           else if (
             AccessID == "TR336" ||
+            AccessID == "TR338" ||
             AccessID == "TR337" 
           ) {
             obj = {
@@ -6859,7 +6864,7 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
         {accessID === "TR336" && (
           <>
-            <Tooltip title="SOP Forms">
+            <Tooltip title="Edit">
               <IconButton
                 color="info"
                 size="small"
@@ -6867,13 +6872,28 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
                     state: {
                       ...state,
-                      BreadCrumb3: params.row.Description,
-                      ItemCode: params.row.Code,
+                      BreadCrumb1: params.row.Code,
                     },
                   })
                 }
               >
                 <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="SOP Documents">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.Code,
+                    },
+                  })
+                }
+              >
+                <SaveOutlinedIcon />
               </IconButton>
             </Tooltip>
           </>
@@ -6910,7 +6930,26 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>)}
           </>
         )}
-        
+        {accessID === "TR338" && (
+          <>
+          <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopDocument/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentCode,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
       </div>
     </Fragment>
   );
