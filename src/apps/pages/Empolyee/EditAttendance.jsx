@@ -397,6 +397,13 @@ const EditAttendance = () => {
   console.log(proData, "--find proData");
 
   const [useCurrentEmp, setUseCurrentEmp] = useState(false);
+
+
+
+  const handlePdfClick = () => {
+    navigate("/Apps/GSPdf");
+  };
+
   return (
     <React.Fragment>
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
@@ -744,40 +751,51 @@ const EditAttendance = () => {
                     </PDFDownloadLink>
                   )}
 
-                   {AttendanceData?.length > 0 && (
-                  <FaFileExcel
-  size={20}
-  color="#1D6F42"
-  style={{ cursor: "pointer" }}
-  onClick={() =>
-    MonthlyAttendanceExcel(
-      AttendanceData,
-      {
-        month: values.attmonth,   // ✅ match Excel.jsx
-        year: values.attyear,     // ✅ match Excel.jsx
-        employee: empData?.Name   // ✅ match Excel.jsx
-      }
-    )
-  }
-/>
-                                    //  <FaFileExcel
-                                    //     size={20}
-                                    //     color="#1D6F42"
-                                    //     style={{ cursor: "pointer", }}
-                                    //     onClick={() =>
-                                    //     MonthlyAttendanceExcel(
-                                    //         AttendanceData,
-                                    //         {
-                                    //          Month: values.attmonth,
-                                    //          Year: values.attyear,
-                                    //          EmployeeID: empData?.Name, 
-                                    //         },
-                                    //         empData
-                                    //       )
-                                    //     }
-                                    //   />
-                  
-                                    )}
+
+
+                  {AttendanceData?.length > 0 && (
+                    <FaFileExcel
+                      size={20}
+                      color="#1D6F42"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        MonthlyAttendanceExcel(
+                          AttendanceData,
+                          {
+                            month: values.attmonth,   // ✅ match Excel.jsx
+                            year: values.attyear,     // ✅ match Excel.jsx
+                            employee: empData?.Name   // ✅ match Excel.jsx
+                          }
+                        )
+                      }
+                    />
+                    //  <FaFileExcel
+                    //     size={20}
+                    //     color="#1D6F42"
+                    //     style={{ cursor: "pointer", }}
+                    //     onClick={() =>
+                    //     MonthlyAttendanceExcel(
+                    //         AttendanceData,
+                    //         {
+                    //          Month: values.attmonth,
+                    //          Year: values.attyear,
+                    //          EmployeeID: empData?.Name, 
+                    //         },
+                    //         empData
+                    //       )
+                    //     }
+                    //   />
+
+                  )}
+
+                  {/* //For SOP PDF */}
+                  <Tooltip title="View PDF">
+                    <IconButton onClick={handlePdfClick}>
+                      <PictureAsPdfIcon sx={{ fontSize: 24, color: "#d32f2f" }} />
+                    </IconButton>
+                  </Tooltip>
+
+
                 </Stack>
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>

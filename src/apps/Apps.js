@@ -192,7 +192,9 @@ import PartyByDate from "./pages/HR/PartyByDate";
 import LeaveEntryRegister from "./pages/Empolyee/LeaveEntryRegsiter";
 import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
+import GSPdf from './pages/Empolyee/GSPdf'
 import BRRForm from "./pages/SOP/BRRForm";
+import EditListOfSOPs from "./pages/Empolyee/EditListOfSOPs";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -583,6 +585,13 @@ function App() {
                     path="/:accessID/:screenName/EditHSN Category/:id/:Mode"
                     element={<EditHSNCategory />}
                   />
+
+                      {/* For SOPs Edit */}
+                   <Route
+                    path="/:accessID/:screenName/EditList Of SOPs/:id/:Mode"
+                    element={<EditListOfSOPs />}
+                  />
+
                   {/* HSN MASTER LIST VIEW*/}
                   <Route
                     path="/Secondarylistview/HSN/:accessID/:screenName/:parentID2/:parentID1"
@@ -1317,6 +1326,10 @@ function App() {
                   <Route
                     path="/Parentcontact"
                     element={<Editparentcontact />}
+                  />
+                    <Route
+                    path="/GSPdf"
+                    element={<GSPdf />}
                   />
                   <Route
                     path="/BatchReconciliation/BRRForm"
