@@ -194,7 +194,9 @@ import EditAudit from "./pages/HR/EditAudit";
 import Editparentcontact from "./pages/HR/Editparentcontact";
 import GSPdf from './pages/Empolyee/GSPdf'
 import BRRForm from "./pages/SOP/BRRForm";
-import EditListOfSOPs from "./pages/Empolyee/EditListOfSOPs";
+import EditListOfSOPs from "./pages/SOP/EditListOfSOPs";
+import EditSOPDocument from "./pages/SOP/EditSOPDocument";
+import EditBooklet from "./pages/SOP/EditBooklet";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -619,6 +621,8 @@ function App() {
                     path="/Secondarylistview/Route/:accessID/:screenName/:parentID1"
                     element={<ListviewSecondary />}
                   />
+
+                 
                   <Route
                     path="SkillGlow/CandidateMain"
                     element={<CandidateMain />}
@@ -1336,6 +1340,22 @@ function App() {
                     path="/Secondarylistview/:accessID1/SOPDocuments/:SOPID/EditSOPDocuments/:SOPDOCID/E"
                     element={<BRRForm />}
                   />
+
+                   {/* SOP DOCUMENT LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID/SopDocument/:parentID1"
+                    element={<ListviewSecondary />}
+                  />
+                   {/* EDIT SOP DOCUMENT */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:parentID1/EditSopDocument/:id/:Mode"
+                    element={<EditSOPDocument />}
+                  />
+                  {/* EDIT BOOKLET */}
+                  {/* <Route
+                    path="/Secondarylistview/EditBooklet"
+                    element={<EditBooklet />}
+                  /> */}
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}

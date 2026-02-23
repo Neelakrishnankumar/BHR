@@ -302,6 +302,15 @@
   "RouteArea": {
     "Name": "Please enter the Route Area"
   },
+  "QCSOPs": {
+    "Description": "Please enter the Description",
+    "Code": "Please enter the Code"
+  },
+  "QCSOPDoc": {
+    "DocType": "Please select the Document Type",
+    "DocumentName": "Please enter the Document Name",
+    "PdfAttach": "Please select a file"
+  },
   "ListofAssessment": {
     "Code": "Please enter the Code",
     "DesignationID": "Please select the Designation",

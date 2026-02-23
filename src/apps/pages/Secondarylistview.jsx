@@ -83,6 +83,7 @@ import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOu
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -169,6 +170,7 @@ const ListviewSecondary = () => {
   let parentID2 = params.parentID2;
   let parentID3 = params.parentID3;
   let parentID4 = params.parentID4;
+  let SOPId = params.SOPId;
 
   var Description = params.Desc;
   var Number = params.Number;
@@ -316,6 +318,9 @@ const ListviewSecondary = () => {
   else if (accessID == "TR335") {
     filter = `CompanyID = '${compID}'`;
     // filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
+  }
+  else if (accessID == "TR338") {
+    filter = `CompanyID = '${compID}' AND SopID='${parentID1}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -1765,7 +1770,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR335/List%20Of%20SOPs");
+                  navigate("/Apps/TR337/List%20Of%20SOPs");
                 }}
               >
                 List Of SOPs ({BreadCrumb1})
@@ -1779,7 +1784,33 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-        )  : accessID == "TR084" ? (
+        )  : accessID == "TR338" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of SOP Documents
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR084" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
@@ -3787,6 +3818,20 @@ const ListviewSecondary = () => {
                     <AddOutlinedIcon
                       onClick={() => {
                         navigate(`./EditOrderitem/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
+              ): accessID === "TR338" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditSopDocument/-1/A`, {
                           state: { ...state },
                         });
                       }}

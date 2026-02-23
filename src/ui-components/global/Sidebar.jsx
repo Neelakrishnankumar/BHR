@@ -1268,7 +1268,7 @@ const Sidebars = () => {
         {
           name: "QC",
           id: 5843,
-          url: "/Apps/TR336/List Of SOPS",
+          url: "/Apps/TR336/List Of SOPs",
           icon: (
             <Tooltip title="List Of SOPs">
               <LibraryAddCheckOutlinedIcon color="info" />
