@@ -114,7 +114,7 @@ import { FaFileExcel } from "react-icons/fa";
 import { getConfig } from "../../config";
 import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 const Listview = () => {
   const navigate = useNavigate();
   const colorMode = useContext(ColorModeContext);
@@ -4174,7 +4174,8 @@ const Listview = () => {
         : accessID == "TR337" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
-              icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+              // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+              icon={<DoubleArrowOutlinedIcon color="primary" />}
               label="SOP Documents"
               variant="outlined"
             // sx={{ marginLeft: "50px" }}

@@ -313,6 +313,10 @@ const ListviewSecondary = () => {
   else if (accessID == "TR324") {
     filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
   }
+  else if (accessID == "TR335") {
+    filter = `CompanyID = '${compID}'`;
+    // filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
+  }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
   // }
@@ -1749,7 +1753,33 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-        ) : accessID == "TR084" ? (
+        ): accessID == "TR335" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR335/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of SOP Documents
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        )  : accessID == "TR084" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}

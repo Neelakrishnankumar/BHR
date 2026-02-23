@@ -100,6 +100,7 @@ import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { getConfig } from "../../config";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -665,6 +666,7 @@ export const fetchListview =
         AccessID != "TR027" &&
         AccessID != "TR319" &&
         AccessID != "TR324" &&
+        AccessID != "TR335" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -733,6 +735,7 @@ export const fetchListview =
       AccessID == "TR318" ||
       AccessID == "TR027" ||
       AccessID == "TR319" ||
+      AccessID == "TR335" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -6877,22 +6880,34 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR337" && (
           <>
+          {params.row.IsEnable === "Y" ? (
             <Tooltip title="SOP Documents">
               <IconButton
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                  navigate(`/Apps/Secondarylistview/TR335/SOPDocuments/${params.row.RecordID}`, {
                     state: {
                       ...state,
-                      BreadCrumb: params.row.Description,
+                      BreadCrumb1: params.row.Code,
                     },
                   })
                 }
               >
-                <ArrowForwardIosOutlinedIcon />
+                {/* <ArrowForwardIosOutlinedIcon /> */}
+                <DoubleArrowOutlinedIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip>):(
+            <Tooltip title="SOP Documents">
+              <IconButton
+                color="info"
+                size="small"
+                disabled
+              >
+                {/* <ArrowForwardIosOutlinedIcon /> */}
+                <DoubleArrowOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
           </>
         )}
         
