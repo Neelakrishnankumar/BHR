@@ -99,10 +99,10 @@ import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { getConfig } from "../../config";
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-
+import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 const initialState = {
   rowData: [],
   columnData: [],
@@ -670,6 +670,7 @@ export const fetchListview =
         AccessID != "TR324" &&
         AccessID != "TR335" &&
         AccessID != "TR338" &&
+        AccessID != "TR339" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -740,6 +741,7 @@ export const fetchListview =
       AccessID == "TR319" ||
       AccessID == "TR335" ||
       AccessID == "TR338" ||
+      AccessID == "TR339" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -1833,11 +1835,11 @@ export const fetchListview =
                 />
               ),
             };
-          }
-          else if (
+          } else if (
             AccessID == "TR336" ||
             AccessID == "TR338" ||
-            AccessID == "TR337" 
+            AccessID == "TR339" ||
+            AccessID == "TR337"
           ) {
             obj = {
               field: "action",
@@ -6258,10 +6260,10 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         const resultAction = await dispatch(paySlipGet(payslip));
 
         const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
-    if (!data) {
-      alert("No data available for PDF");
-      return;
-    }
+        if (!data) {
+          alert("No data available for PDF");
+          return;
+        }
         if (!resultAction.payload) {
           console.error("No payload returned");
           return;
@@ -6278,15 +6280,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             }}
           />,
         ).toBlob();
-       const blobUrl = URL.createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
 
-const link = document.createElement("a");
-link.href = blobUrl;
-link.download = "Payslip.pdf";
-document.body.appendChild(link);   // ✅ Important
-link.click();
-document.body.removeChild(link);   // ✅ Cleanup
-URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = "Payslip.pdf";
+        document.body.appendChild(link); // ✅ Important
+        link.click();
+        document.body.removeChild(link); // ✅ Cleanup
+        URL.revokeObjectURL(blobUrl); // ✅ Cleanup
       } catch (err) {
         console.error("PDF generation failed", err);
       } finally {
@@ -6858,7 +6860,6 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
     );
   };
 
-
   return (
     <Fragment>
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -6885,12 +6886,15 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.RecordID}`, {
-                    state: {
-                      ...state,
-                      BreadCrumb1: params.row.Code,
+                  navigate(
+                    `/Apps/Secondarylistview/TR338/SopDocument/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.Code,
+                      },
                     },
-                  })
+                  )
                 }
               >
                 <SaveOutlinedIcon />
@@ -6900,39 +6904,40 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR337" && (
           <>
-          {params.row.IsEnable === "Y" ? (
-            <Tooltip title="SOP Documents">
-              <IconButton
-                color="info"
-                size="small"
-                onClick={() =>
-                  navigate(`/Apps/Secondarylistview/TR335/SOPDocuments/${params.row.RecordID}`, {
-                    state: {
-                      ...state,
-                      BreadCrumb1: params.row.Code,
-                    },
-                  })
-                }
-              >
-                {/* <ArrowForwardIosOutlinedIcon /> */}
-                <DoubleArrowOutlinedIcon />
-              </IconButton>
-            </Tooltip>):(
-            <Tooltip title="SOP Documents">
-              <IconButton
-                color="info"
-                size="small"
-                disabled
-              >
-                {/* <ArrowForwardIosOutlinedIcon /> */}
-                <DoubleArrowOutlinedIcon />
-              </IconButton>
-            </Tooltip>)}
+            {params.row.IsEnable === "Y" ? (
+              <Tooltip title="SOP Documents">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `/Apps/Secondarylistview/TR335/SOPDocuments/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Code,
+                        },
+                      },
+                    )
+                  }
+                >
+                  {/* <ArrowForwardIosOutlinedIcon /> */}
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="SOP Documents">
+                <IconButton color="info" size="small" disabled>
+                  {/* <ArrowForwardIosOutlinedIcon /> */}
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </>
         )}
         {accessID === "TR338" && (
           <>
-          <Tooltip title="Edit">
+            <Tooltip title="Edit">
               <IconButton
                 color="info"
                 size="small"
@@ -6941,6 +6946,42 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                     state: {
                       ...state,
                       BreadCrumb2: params.row.TypeOfDocumentCode,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Booklets">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/Booklet/TR339/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentCode,
+                    },
+                  })
+                }
+              >
+                <AutoStoriesOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR339" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditBooklet/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
                     },
                   })
                 }

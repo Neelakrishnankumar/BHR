@@ -304,7 +304,11 @@
   },
   "QCSOPs": {
     "Description": "Please enter the Description",
-    "Code": "Please enter the Code"
+    "Code": "Please enter the Code",
+    "ModuleNo": "Please enter the Module No",
+    "VersionNo": "Please enter the Version No",
+    "TypeOfCopy": "Please select the Type of Copy",
+    "FacilityType": "Please select the Facility Type"
   },
   "QCSOPDoc": {
     "DocType": "Please select the Document Type",

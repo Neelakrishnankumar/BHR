@@ -84,6 +84,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined";
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
@@ -321,6 +322,9 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR338") {
     filter = `CompanyID = '${compID}' AND SopID='${parentID1}'`;
+  }
+  else if (accessID == "TR339") {
+    filter = `SopDocumentListID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -1807,6 +1811,42 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
               >
                 List of SOP Documents
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR339" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                List of SOP Documents ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Booklets
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3839,6 +3879,20 @@ const ListviewSecondary = () => {
                   </IconButton>
 
                 </Tooltip>
+              ): accessID === "TR339" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditBooklet/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
               ) : (
                 <Tooltip arrow title="Add">
                   <IconButton>
@@ -4493,6 +4547,19 @@ const ListviewSecondary = () => {
                       label="List of Color Shades"
                       variant="outlined"
                       sx={{ marginLeft: "50px" }}
+                    />
+                  </Box>
+                ): accessID == "TR338" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<AutoStoriesOutlinedIcon color="primary" />}
+                      label="List of Booklets"
+                      variant="outlined"
                     />
                   </Box>
                 ) : accessID == "TR033" ? (

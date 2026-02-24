@@ -4138,7 +4138,7 @@ const Listview = () => {
             />
           </Box>
         ) : accessID == "TR336" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
               icon={<ModeEditOutlinedIcon color="primary" />}
               label="Edit"

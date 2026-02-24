@@ -1351,11 +1351,16 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:parentID1/EditSopDocument/:id/:Mode"
                     element={<EditSOPDocument />}
                   />
+                    {/* SOP BOOKLET LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2"
+                    element={<ListviewSecondary />}
+                  />
                   {/* EDIT BOOKLET */}
-                  {/* <Route
-                    path="/Secondarylistview/EditBooklet"
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2/EditBooklet/:id/:Mode"
                     element={<EditBooklet />}
-                  /> */}
+                  />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}
                   {/* /Apps/Secondarylistview/TR303/Leader/68/EditLeader/-1/A */}

@@ -70,6 +70,11 @@ const EditListOfSOPs = () => {
         const schema = Yup.object().shape({
           Description: Yup.string().trim().required(data.QCSOPs.Description),
           Code: Yup.string().trim().required(data.QCSOPs.Code),
+          Code: Yup.string().trim().required(data.QCSOPs.Code),
+          ModuleNo: Yup.string().trim().required(data.QCSOPs.ModuleNo),
+          VersionNo: Yup.string().trim().required(data.QCSOPs.VersionNo),
+          TypeOfCopy: Yup.string().required(data.QCSOPs.TypeOfCopy),
+          FacilityType: Yup.string().required(data.QCSOPs.FacilityType),
         });
         setValidationSchema(schema);
       })
@@ -83,6 +88,10 @@ const EditListOfSOPs = () => {
   const SOPInitialValues = {
     Code: data.Code || "",
     Description: data.Description || "",
+    ModuleNo: data.ModuleNo || "",
+    VersionNo: data.VersionNo || "",
+    TypeOfCopy: data.TypeOfCopy || "",
+    FacilityType: data.FacilityType || "",
     Sortorder: data.SortOrder || "0",
     Disable: data.Disable === "Y" ? true : false,
   }
@@ -98,6 +107,10 @@ const EditListOfSOPs = () => {
       CompanyID: CompanyID,
       Desc: values.Description,
       Code: values.Code,
+      ModuleNo: values.ModuleNo,
+      VersionNo: values.VersionNo,
+      TypeOfCopy: values.TypeOfCopy,
+      FacilityType: values.FacilityType,
       SortOrder: values.Sortorder || "0",
       Disable: values.Disable ? "Y" : "N",
     };
@@ -216,6 +229,7 @@ const EditListOfSOPs = () => {
               handleSubmit,
             }) => (
               <Form onSubmit={handleSubmit}>
+                {JSON.stringify(errors)}
                 <Box
                   display="grid"
                   gap={formGap}
@@ -355,10 +369,10 @@ const EditListOfSOPs = () => {
                     autoFocus
                   />
                   <TextField
-                    name="ModificationNo"
+                    name="ModuleNo"
                     type="text"
-                    id="ModificationNo"
-                    value={values.ModificationNo}
+                    id="ModuleNo"
+                    value={values.ModuleNo}
                     label={
                       <>
                         Modification No
@@ -371,21 +385,32 @@ const EditListOfSOPs = () => {
                     focused
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    error={!!touched.ModificationNo && !!errors.ModificationNo}
-                    helperText={touched.ModificationNo && errors.ModificationNo}
+                    error={!!touched.ModuleNo && !!errors.ModuleNo}
+                    helperText={touched.ModuleNo && errors.ModuleNo}
                     autoFocus
                   />
                   <TextField
                     select
-                    label="Facility"
-                    id="Facility"
-                    name="Facility"
-                    value={values.Facility}
+                    // label="Facility Type"
+                    label={
+                      <>
+                        Facility Type
+                        <span style={{ fontSize: "20px", color: "red" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    id="FacilityType"
+                    name="FacilityType"
+                    value={values.FacilityType}
                     onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Facility", e.target.value); // save to sessionStorage
+                      sessionStorage.setItem("FacilityType", e.target.value); // save to sessionStorage
                     }}
+                     error={!!touched.FacilityType && !!errors.FacilityType}
+                    helperText={touched.FacilityType && errors.FacilityType}
+                    
                     focused
                     variant="standard"
                   >
@@ -395,15 +420,26 @@ const EditListOfSOPs = () => {
                   </TextField>
                   <TextField
                     select
-                    label="Type Of Copy"
-                    id="Facility"
-                    name="Facility"
-                    value={values.Facility}
+                    // label="Type Of Copy"
+                    label={
+                      <>
+                        Type Of Copy
+                        <span style={{ fontSize: "20px", color: "red" }}>
+                          *
+                        </span>
+                      </>
+                    }
+                    id="TypeOfCopy"
+                    name="TypeOfCopy"
+                    value={values.TypeOfCopy}
                     onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e); // update form state (Formik)
-                      sessionStorage.setItem("Facility", e.target.value); // save to sessionStorage
+                      sessionStorage.setItem("TypeOfCopy", e.target.value); // save to sessionStorage
                     }}
+                     error={!!touched.TypeOfCopy && !!errors.TypeOfCopy}
+                    helperText={touched.TypeOfCopy && errors.TypeOfCopy}
+                    
                     focused
                     variant="standard"
                   >
