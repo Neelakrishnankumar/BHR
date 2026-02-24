@@ -160,6 +160,11 @@ const initialState = {
   replacementQtyGetdata: {},
   replacementQtyGetstatus: "",
   replacementQtyGetloading: false,
+
+  //SOP PROCESS
+  SOPProcessdata: {},
+  SOPProcessLoading: false,
+  SOPProcessStatus: "",
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -3758,7 +3763,21 @@ export const getApiSlice = createSlice({
           },
         };
       })
+//SOP Process POST
+      .addCase(SOPProcessPost.pending, (state, action) => {
+        state.SOPProcessStatus = "idle";
+        state.SOPProcessLoading = true;
+      })
+      .addCase(SOPProcessPost.fulfilled, (state, action) => {
+        state.SOPProcessStatus = "success";
+        state.SOPProcessLoading = false
+        state.SOPProcessdata = action.meta.arg.idata;
+      })
 
+      .addCase(SOPProcessPost.rejected, (state, action) => {
+        state.SOPProcessStatus = "Error";
+        state.SOPProcessLoading = false;
+      })
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
         state.projectName =
@@ -5256,6 +5275,24 @@ export const batchreconciliationGetData = createAsyncThunk(
     console.log("🚀 ~ data:", JSON.stringify(data));
 
     const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SOPProcessPost = createAsyncThunk(
+  "SOPProcessPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SOPProcess;
+    const response = await axios.post(url, idata, {
       headers: {
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",

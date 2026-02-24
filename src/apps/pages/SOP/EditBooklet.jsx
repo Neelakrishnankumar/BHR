@@ -31,7 +31,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { getFetchData, postData, SOPProcessPost } from "../../../store/reducers/Formapireducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useProSidebar } from "react-pro-sidebar";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -82,7 +82,7 @@ const EditBooklet = () => {
             .then((data) => {
                 setErrorMsgData(data);
                 const schema = Yup.object().shape({
-                    AnnexureNo: Yup.string().trim().required(data.QCSOPBooklet.AnnexureNo),
+                    // AnnexureNo: Yup.string().trim().required(data.QCSOPBooklet.AnnexureNo),
                     RequestDate: Yup.string().required(data.QCSOPBooklet.RequestDate),
                     NoOfCopyIssue: Yup.string().required(data.QCSOPBooklet.NoOfCopyIssue),
                     IssueLogBookNo: Yup.string().required(data.QCSOPBooklet.IssueLogBookNo),
@@ -96,6 +96,7 @@ const EditBooklet = () => {
     useEffect(() => {
         dispatch(getFetchData({ accessID, get: "get", recID }));
     }, []);
+    const loginrecordID = sessionStorage.getItem("loginrecordID");
 
     const [empData, setempData] = useState(null);
     const [empData1, setempData1] = useState(null);
@@ -185,7 +186,46 @@ const EditBooklet = () => {
             }
         });
     };
+    const handleProcess = async (row) => {
+        const result = await Swal.fire({
+            title: "Process Confirmation",
+            text: "Do you wish to Process?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        });
 
+        // ❌ If user clicks NO / Cancel → stop here
+        if (!result.isConfirmed) return;
+
+        const idata = {
+            EmpID: loginrecordID,
+            SopDocumentIssuedID: recID,
+        };
+
+        const response = await dispatch(
+            SOPProcessPost({ idata }),
+        );
+
+        if (response.payload.Status === "Y") {
+            // 🔑 parse message if needed
+            let msg = "Processed successfully";
+            if (response.payload.Result) {
+                try {
+                    msg = JSON.parse(response.payload.Result)?.Msg || msg;
+                } catch { }
+            }
+
+            toast.success(msg);
+
+            navigate(-1);
+        } else {
+            toast.error("Process Conversion failed");
+        }
+    };
     return (
         <>
             <React.Fragment
@@ -226,12 +266,12 @@ const EditBooklet = () => {
                                         color="#0000D1"
                                         sx={{ cursor: "default" }}
                                         onClick={() => navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.parentID1}`, {
-                                          state: {
-                                            ...state,
-                                          },
+                                            state: {
+                                                ...state,
+                                            },
                                         })}
                                     >
-                                        List of SOP Document ({state.BreadCrumb2|| ""})
+                                        List of Documents ({state.BreadCrumb2 || ""})
                                     </Typography>
                                     <Typography
                                         variant="h5"
@@ -239,14 +279,14 @@ const EditBooklet = () => {
                                         sx={{ cursor: "default" }}
                                         onClick={() => navigate(-1)}
                                     >
-                                        List of Booklet
+                                        List of Log Notes
                                     </Typography>
                                     <Typography
                                         variant="h5"
                                         color="#0000D1"
                                         sx={{ cursor: "default" }}
                                     >
-                                        {mode == "A" ? "New" : mode == "E" ? `Edit ${(state.BreadCrumb3) ? `Annexure No ${(state.BreadCrumb3)}` : ""}` : "View"}
+                                        {mode == "A" ? "New" : mode == "E" ? `Edit ${(state.BreadCrumb3) ? `(Annexure# ${state.BreadCrumb3})` : ""}` : "View"}
                                     </Typography>
                                 </Breadcrumbs>
                             </Box>
@@ -276,7 +316,7 @@ const EditBooklet = () => {
                             SOPSaveFn(values);
                         }}
                         enableReinitialize
-                    validationSchema={validationSchema}
+                        validationSchema={validationSchema}
                     >
                         {({
                             values,
@@ -328,20 +368,25 @@ const EditBooklet = () => {
                                         type="text"
                                         id="AnnexureNo"
                                         value={values.AnnexureNo}
-                                        label={
-                                            <>
-                                                Annexure No
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
+                                        label="SL#"
+                                        placeholder="Auto SL#"
+                                        // label={
+                                        //     <>
+                                        //         Annexure No
+                                        //         <span style={{ fontSize: "20px", color: "red" }}>
+                                        //             *
+                                        //         </span>
+                                        //     </>
+                                        // }
                                         variant="standard"
                                         focused
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         error={!!touched.AnnexureNo && !!errors.AnnexureNo}
                                         helperText={touched.AnnexureNo && errors.AnnexureNo}
+                                        InputProps={{
+                                            readOnly: true
+                                        }}
                                         autoFocus
                                     />
                                     <TextField
@@ -364,6 +409,9 @@ const EditBooklet = () => {
                                         error={!!touched.RequestDate && !!errors.RequestDate}
                                         helperText={touched.RequestDate && errors.RequestDate}
                                         autoFocus
+                                        InputProps={{
+                                            readOnly: mode === "V" ? true : false
+                                        }}
                                     />
                                     <TextField
                                         name="NoOfCopyIssue"
@@ -385,6 +433,17 @@ const EditBooklet = () => {
                                         error={!!touched.NoOfCopyIssue && !!errors.NoOfCopyIssue}
                                         helperText={touched.NoOfCopyIssue && errors.NoOfCopyIssue}
                                         autoFocus
+                                        InputProps={{
+
+                                            readOnly: mode === "V" ? true : false,
+
+                                            inputProps: {
+                                                style: { textAlign: "right" },
+                                            },
+                                        }}
+                                    // InputProps={{
+                                    //     readOnly:mode === "V" ? true : false
+                                    // }}
                                     />
                                     <TextField
                                         name="IssueLogBookNo"
@@ -406,6 +465,17 @@ const EditBooklet = () => {
                                         error={!!touched.IssueLogBookNo && !!errors.IssueLogBookNo}
                                         helperText={touched.IssueLogBookNo && errors.IssueLogBookNo}
                                         autoFocus
+                                        // InputProps={{
+                                        //     readOnly:mode === "V" ? true : false
+                                        // }}
+                                        InputProps={{
+
+                                            readOnly: mode === "V" ? true : false,
+
+                                            inputProps: {
+                                                style: { textAlign: "right" },
+                                            },
+                                        }}
                                     />
                                     {/* <TextField
                                         name="IssuedBy"
@@ -476,6 +546,10 @@ const EditBooklet = () => {
                                             },
                                         }}
                                         url={employeeUrl}
+                                        InputProps={{
+                                            readOnly: mode === "V" ? true : false
+                                        }}
+                                        disabled={mode === "V" ? true : false}
                                     />
                                     <SOPEMPLookup
                                         name="ReceivedBy"
@@ -504,6 +578,10 @@ const EditBooklet = () => {
                                             },
                                         }}
                                         url={employeeUrl}
+                                        InputProps={{
+                                            readOnly: mode === "V" ? true : false
+                                        }}
+                                        disabled={mode === "V" ? true : false}
                                     />
 
                                     <TextField
@@ -511,7 +589,7 @@ const EditBooklet = () => {
                                         type="text"
                                         id="AdditionalInfo"
                                         value={values.AdditionalInfo}
-                                        label="Additional Info"                                                
+                                        label="Additional Info"
                                         // label={
                                         //     <>
                                         //         Additional Info
@@ -527,6 +605,9 @@ const EditBooklet = () => {
                                         error={!!touched.AdditionalInfo && !!errors.AdditionalInfo}
                                         helperText={touched.AdditionalInfo && errors.AdditionalInfo}
                                         autoFocus
+                                        InputProps={{
+                                            readOnly: mode === "V" ? true : false
+                                        }}
                                     />
 
                                     {/* SORT ORDER */}
@@ -551,6 +632,9 @@ const EditBooklet = () => {
                                                 .slice(0, 8);
                                         }}
                                         InputProps={{
+
+                                            readOnly: mode === "V" ? true : false,
+
                                             inputProps: {
                                                 style: { textAlign: "right" },
                                             },
@@ -562,7 +646,8 @@ const EditBooklet = () => {
                                         <FormControlLabel
                                             control={<Checkbox name="Disable"
                                                 checked={values.Disable}
-                                                onChange={handleChange} />}
+                                                onChange={handleChange}
+                                                disabled={mode === "V" ? true : false} />}
                                             label="Disable"
                                         />
                                     </Box>
@@ -578,10 +663,22 @@ const EditBooklet = () => {
                                         variant="contained"
                                         color="secondary"
                                         loading={isLoading}
+                                        disabled={mode === "P" || mode === "V"}
                                     >
                                         Save
                                     </LoadingButton>
-
+                                    {mode === "P" && (
+                                        <LoadingButton
+                                            variant="contained"
+                                            color="secondary"
+                                            loading={isLoading}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleProcess();
+                                            }}
+                                        >
+                                            Confirm
+                                        </LoadingButton>)}
                                     <Button
                                         variant="contained"
                                         color="warning"

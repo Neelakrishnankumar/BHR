@@ -51,6 +51,7 @@ import {
   getProjectCosting,
   paySlipGet,
   postData,
+  SOPProcessPost,
   StockProcessApi,
 } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
@@ -103,6 +104,7 @@ import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutl
 import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -1844,7 +1846,7 @@ export const fetchListview =
             obj = {
               field: "action",
               headerName: "Action",
-              minWidth: 150,
+              minWidth: 180,
               sortable: false,
               filterable: false,
               headerAlign: "center",
@@ -6881,7 +6883,7 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <ModeEditOutlinedIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="SOP Documents">
+            <Tooltip title="List Of Documents">
               <IconButton
                 color="info"
                 size="small"
@@ -6997,8 +6999,10 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </IconButton>
             </Tooltip>)}
 
+            
+
             {params.row.TypeOfDocumentName === "Annexure" && (
-            <Tooltip title="Booklets">
+            <Tooltip title="Log Notes">
               <IconButton
                 color="info"
                 size="small"
@@ -7019,6 +7023,47 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         )}
         {accessID === "TR339" && (
           <>
+          {params.row.Process === "Y" ? (
+
+             <>
+            <Tooltip title="View">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditBooklet/${params.row.RecordID}/V`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <VisibilityIcon/>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Process Pdf">
+              <IconButton
+                color="error"
+                size="small"
+                // onClick={() =>
+                //   navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                //     state: {
+                //       ...state,
+                //       BreadCrumb3: params.row.AnnexureNo,
+                //     },
+                //   })
+                // }
+              >
+                <PictureAsPdfIcon/>
+              </IconButton>
+            </Tooltip>
+             </>
+
+
+           
+          ):(
+            <>
             <Tooltip title="Edit">
               <IconButton
                 color="info"
@@ -7035,6 +7080,26 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <ModeEditOutlinedIcon />
               </IconButton>
             </Tooltip>
+
+             <Tooltip title="Process">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <LoopOutlinedIcon/>
+              </IconButton>
+            </Tooltip>
+            </>
+          )}
+         
           </>
         )}
       </div>

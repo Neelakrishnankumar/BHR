@@ -307,6 +307,7 @@ const initialState = {
   PayslipGetController:"",
   PartyReplacementQtyGet:"",
   SOPAttachmentsController:"",
+  SOPProcess:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -480,6 +481,7 @@ export const getUrlSlice = createSlice({
       state.PayslipGetController = APIurl + "PayslipGetController.php";
       state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
       state.SOPAttachmentsController = baseurl + "SOPAttachmentsController.php";
+      state.SOPProcess = APIurl + "SopProcessPost.php";
     },
   },
 });

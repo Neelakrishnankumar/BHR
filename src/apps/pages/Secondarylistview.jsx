@@ -85,7 +85,7 @@ import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
-
+import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -1785,7 +1785,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                List of SOP Documents
+                List of Documents
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -1811,7 +1811,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                List of SOP Documents
+                List of Documents
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -1840,14 +1840,14 @@ const ListviewSecondary = () => {
                   navigate(-1);
                 }}
               >
-                List of SOP Documents ({BreadCrumb2})
+                List of Documents ({BreadCrumb2})
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                List of Booklets
+                List of Log Notes
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -4562,13 +4562,37 @@ const ListviewSecondary = () => {
                       label="View File"
                       variant="outlined"
                     />
+                   
                     <Chip
                       icon={<AutoStoriesOutlinedIcon color="primary" />}
-                      label="Booklets"
+                      label="Log Notes"
                       variant="outlined"
                     />
                   </Box>
-                ) : accessID == "TR033" ? (
+                ) : accessID == "TR339" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<LoopOutlinedIcon color="primary" />}
+                      label="Process"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<VisibilityIcon color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                    <Chip
+                    icon={<PictureAsPdfIcon color="error" />}
+                    label="Process Pdf"
+                    variant="outlined"
+                  />
+                  </Box>
+                ): accessID == "TR033" ? (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}

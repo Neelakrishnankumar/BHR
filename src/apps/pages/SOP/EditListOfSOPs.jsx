@@ -34,6 +34,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import { formGap } from "../../../ui-components/utils";
+import { MultiFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
 
 
 const EditListOfSOPs = () => {
@@ -83,7 +84,24 @@ const EditListOfSOPs = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, []);
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
+  let employeeFilter = `CompanyID='${CompanyID}'`;
+
+  const employeeUrl = `${listViewurl}?data=${encodeURIComponent(
+    JSON.stringify({
+      Query: {
+        AccessID: "2117",
+        ScreenName: "Employee",
+        Filter: employeeFilter,
+        Any: "",
+        CompId: "",
+      },
+    }),
+  )}`;
+  const [empData, setempData] = useState([]);
+  const [empData1, setempData1] = useState([]);
+  const [empData2, setempData2] = useState([]);
 
   const SOPInitialValues = {
     Code: data.Code || "",
@@ -101,7 +119,18 @@ const EditListOfSOPs = () => {
 
     if (mode === "A") action = "insert";
     else if (mode === "E") action = "update";
-
+    const employeeIds =
+      empData && empData.length > 0
+        ? empData.map((e) => e.RecordID).join(",")
+        : "";
+    const employeeIds1 =
+      empData1 && empData1.length > 0
+        ? empData1.map((e) => e.RecordID).join(",")
+        : "";
+    const employeeIds2 =
+      empData2 && empData2.length > 0
+        ? empData2.map((e) => e.RecordID).join(",")
+        : "";
     const idata = {
       RecordID: recID,
       CompanyID: CompanyID,
@@ -111,6 +140,9 @@ const EditListOfSOPs = () => {
       VersionNo: values.VersionNo,
       TypeOfCopy: values.TypeOfCopy,
       FacilityType: values.FacilityType,
+      ReviewedBy: employeeIds1,
+      ApprovedBy: employeeIds,
+      PreparedBy: employeeIds2,
       SortOrder: values.Sortorder || "0",
       Disable: values.Disable ? "Y" : "N",
     };
@@ -148,6 +180,8 @@ const EditListOfSOPs = () => {
       }
     });
   };
+
+
 
   return (
     <>
@@ -367,6 +401,11 @@ const EditListOfSOPs = () => {
                     error={!!touched.VersionNo && !!errors.VersionNo}
                     helperText={touched.VersionNo && errors.VersionNo}
                     autoFocus
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
                   <TextField
                     name="ModuleNo"
@@ -388,6 +427,11 @@ const EditListOfSOPs = () => {
                     error={!!touched.ModuleNo && !!errors.ModuleNo}
                     helperText={touched.ModuleNo && errors.ModuleNo}
                     autoFocus
+                    InputProps={{
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   />
                   <TextField
                     select
@@ -408,9 +452,9 @@ const EditListOfSOPs = () => {
                       handleChange(e); // update form state (Formik)
                       sessionStorage.setItem("FacilityType", e.target.value); // save to sessionStorage
                     }}
-                     error={!!touched.FacilityType && !!errors.FacilityType}
+                    error={!!touched.FacilityType && !!errors.FacilityType}
                     helperText={touched.FacilityType && errors.FacilityType}
-                    
+
                     focused
                     variant="standard"
                   >
@@ -437,9 +481,9 @@ const EditListOfSOPs = () => {
                       handleChange(e); // update form state (Formik)
                       sessionStorage.setItem("TypeOfCopy", e.target.value); // save to sessionStorage
                     }}
-                     error={!!touched.TypeOfCopy && !!errors.TypeOfCopy}
+                    error={!!touched.TypeOfCopy && !!errors.TypeOfCopy}
                     helperText={touched.TypeOfCopy && errors.TypeOfCopy}
-                    
+
                     focused
                     variant="standard"
                   >
@@ -474,7 +518,79 @@ const EditListOfSOPs = () => {
                       },
                     }}
                   />
+                  <MultiFormikOptimizedAutocomplete
+                    name="PreparedBy"
+                    label="Prepared By"
+                    id="PreparedBy"
+                    value={empData2}
+                    multiple
+                    // onChange={handleSelectionEmployeeChange}
+                    onChange={(event, newValue) => {
+                      setempData2(newValue || []);
+                      if (newValue && newValue.length > 0)
+                        sessionStorage.setItem(
+                          "empData2",
+                          JSON.stringify(newValue),
+                        );
+                      else sessionStorage.removeItem("empData2");
+                    }}
+                    disablePortal={false}
+                    PopperProps={{
+                      sx: {
+                        zIndex: 1500,
+                      },
+                    }}
+                    url={employeeUrl}
+                  />
 
+                  <MultiFormikOptimizedAutocomplete
+                    name="ReviewedBy"
+                    label="Reviewed By"
+                    id="ReviewedBy"
+                    value={empData1}
+                    multiple
+                    // onChange={handleSelectionEmployeeChange}
+                    onChange={(event, newValue) => {
+                      setempData1(newValue || []);
+                      if (newValue && newValue.length > 0)
+                        sessionStorage.setItem(
+                          "empData1",
+                          JSON.stringify(newValue),
+                        );
+                      else sessionStorage.removeItem("empData1");
+                    }}
+                    disablePortal={false}
+                    PopperProps={{
+                      sx: {
+                        zIndex: 1500,
+                      },
+                    }}
+                    url={employeeUrl}
+                  />
+                  <MultiFormikOptimizedAutocomplete
+                    name="Employee"
+                    label="Approved By"
+                    id="Employee"
+                    value={empData}
+                    multiple
+                    // onChange={handleSelectionEmployeeChange}
+                    onChange={(event, newValue) => {
+                      setempData(newValue || []);
+                      if (newValue && newValue.length > 0)
+                        sessionStorage.setItem(
+                          "empData",
+                          JSON.stringify(newValue),
+                        );
+                      else sessionStorage.removeItem("empData");
+                    }}
+                    disablePortal={false}
+                    PopperProps={{
+                      sx: {
+                        zIndex: 1500,
+                      },
+                    }}
+                    url={employeeUrl}
+                  />
                   {/* DISABLE CHECKBOX */}
                   <Box display="flex" alignItems="center">
                     <FormControlLabel

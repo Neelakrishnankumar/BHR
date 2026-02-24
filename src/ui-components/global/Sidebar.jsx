@@ -1282,23 +1282,23 @@ const Sidebars = () => {
           UGA_VIEW: true,
           UGA_ACCESSIDS: "TR336",
         },
-        {
-          name: "QA",
-          id: 5877,
-          url: "/Apps/TR337/List Of SOPs",
-          icon: (
-            <Tooltip title="List Of SOPs">
-              <IntegrationInstructionsOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR337",
-        },
+        // {
+        //   name: "QA",
+        //   id: 5877,
+        //   url: "/Apps/TR337/List Of SOPs",
+        //   icon: (
+        //     <Tooltip title="List Of SOPs">
+        //       <IntegrationInstructionsOutlinedIcon color="info" />
+        //     </Tooltip>
+        //   ),
+        //   UGA_ADD: true,
+        //   UGA_DEL: true,
+        //   UGA_MOD: true,
+        //   UGA_PRINT: true,
+        //   UGA_PROCESS: true,
+        //   UGA_VIEW: true,
+        //   UGA_ACCESSIDS: "TR337",
+        // },
 
       ],
     },
