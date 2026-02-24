@@ -302,6 +302,27 @@
   "RouteArea": {
     "Name": "Please enter the Route Area"
   },
+  "QCSOPs": {
+    "Description": "Please enter the Description",
+    "Code": "Please enter the Code",
+    "ModuleNo": "Please enter the Modification No",
+    "VersionNo": "Please enter the Version No",
+    "TypeOfCopy": "Please select the Type of Copy",
+    "FacilityType": "Please select the Facility Type"
+  },
+  "QCSOPDoc": {
+    "DocType": "Please select the Document Type",
+    "DocumentName": "Please enter the Document Name",
+    "PdfAttach": "Please select a file"
+  },
+  "QCSOPBooklet": {
+    "AnnexureNo": "Please select the Document Type",
+    "RequestDate": "Please select the Request Date",
+    "NoOfCopyIssue": "Please select the No of Copies Issued",
+    "IssueLogBookNo": "Please enter the Issue Log Book No",
+    "IssuedBy": "Please select the Issued By",
+    "ReceivedBy": "Please select the Received By"
+  },
   "ListofAssessment": {
     "Code": "Please enter the Code",
     "DesignationID": "Please select the Designation",

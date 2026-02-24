@@ -307,6 +307,7 @@ const initialState = {
   PayslipGetController:"",
   PartyReplacementQtyGet:"",
   ItempriceGeturl:"",
+  SOPAttachmentsController:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -339,6 +340,7 @@ export const getUrlSlice = createSlice({
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
+      state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
       // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
 
@@ -479,6 +481,7 @@ export const getUrlSlice = createSlice({
       state.PayslipGetController = APIurl + "PayslipGetController.php";
       state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
       state.ItempriceGeturl = APIurl + "ItempriceGetController.php";
+      state.SOPAttachmentsController = baseurl + "SOPAttachmentsController.php";
     },
   },
 });
