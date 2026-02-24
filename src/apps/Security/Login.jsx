@@ -674,6 +674,7 @@ const Login = () => {
       var Modules = data.payload.apiResponse.Modules
       var UserName = data.payload.apiResponse.Name
       var SubscriptionCode = data.payload.SubscriptionCode
+      var SubscriptionID = data.payload.SubscriptionID
       var Expiryin = data.payload.Expiryin
       var CompanyAutoCode = data.payload.CompanyAutoCode
       var CompanyGraceTime = data.payload.CompanyGraceTime
@@ -689,6 +690,7 @@ const Login = () => {
 
       sessionStorage.setItem("Expiryin", Expiryin);
       sessionStorage.setItem("SubscriptionCode", SubscriptionCode);
+      sessionStorage.setItem("SubscriptionID", SubscriptionID);
       sessionStorage.setItem("UserName", UserName);
       sessionStorage.setItem("loginrecordID", loginrecordID);
       sessionStorage.setItem("SubscriptionCode", SubscriptionCode);

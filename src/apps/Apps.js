@@ -1033,7 +1033,7 @@ function App() {
                     element={<Edituser />}
                   />
                   <Route
-                    path="/Secondarylistview/:accessID/:screenName/:companyRecID/EditUsergroups/:id/:Mode"
+                    path="/:accessID/:screenName/EditUser Group/:id/:Mode"
                     element={<Editusergroup />}
                   />
                   <Route
@@ -1249,6 +1249,10 @@ function App() {
                     element={<EditContractsin />}
                   />
                   <Route
+                    path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
+                    element={<EditContractsout />}
+                  />
+                   <Route
                     path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
                     element={<EditContractsout />}
                   />
