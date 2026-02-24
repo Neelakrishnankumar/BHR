@@ -82,9 +82,12 @@ const EditBooklet = () => {
             .then((data) => {
                 setErrorMsgData(data);
                 const schema = Yup.object().shape({
-                    DocumentName: Yup.string().trim().required(data.QCSOPDoc.DocumentName),
-                    PdfAttach: Yup.string().required(data.QCSOPDoc.PdfAttach),
-                    DocType: Yup.object().required(data.QCSOPDoc.DocType).nullable(),
+                    AnnexureNo: Yup.string().trim().required(data.QCSOPBooklet.AnnexureNo),
+                    RequestDate: Yup.string().required(data.QCSOPBooklet.RequestDate),
+                    NoOfCopyIssue: Yup.string().required(data.QCSOPBooklet.NoOfCopyIssue),
+                    IssueLogBookNo: Yup.string().required(data.QCSOPBooklet.IssueLogBookNo),
+                    IssuedBy: Yup.object().required(data.QCSOPBooklet.IssuedBy).nullable(),
+                    ReceivedBy: Yup.object().required(data.QCSOPBooklet.ReceivedBy).nullable(),
                 });
                 setValidationSchema(schema);
             })
@@ -115,8 +118,14 @@ const EditBooklet = () => {
         RequestDate: data.RequestDate || "",
         NoOfCopyIssue: data.NoOfCopyIssue || "",
         IssueLogBookNo: data.IssueLogBookNo || "",
-        IssuedBy: data.IssuedBy || "",
-        ReceivedBy: data.ReceivedBy || "",
+        IssuedBy: data.IssuedBy ? {
+            RecordID: data.IssuedBy,
+            Name: data.IssuedName || "",
+        } : null,
+        ReceivedBy: data.ReceivedBy ? {
+            RecordID: data.ReceivedBy,
+            Name: data.ReceivedName || "",
+        } : null,
         AdditionalInfo: data.AdditionalInfo || "",
         SortOrder: data.SortOrder || "0",
         Disable: data.Disable === "Y" ? true : false,
@@ -216,15 +225,19 @@ const EditBooklet = () => {
                                         variant="h5"
                                         color="#0000D1"
                                         sx={{ cursor: "default" }}
-                                        onClick={() => navigate(-1)}
+                                        onClick={() => navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.parentID1}`, {
+                                          state: {
+                                            ...state,
+                                          },
+                                        })}
                                     >
-                                        List of SOP Document
+                                        List of SOP Document ({state.BreadCrumb2|| ""})
                                     </Typography>
                                     <Typography
                                         variant="h5"
                                         color="#0000D1"
                                         sx={{ cursor: "default" }}
-                                    // onClick={() => navigate(-1)}
+                                        onClick={() => navigate(-1)}
                                     >
                                         List of Booklet
                                     </Typography>
@@ -233,7 +246,7 @@ const EditBooklet = () => {
                                         color="#0000D1"
                                         sx={{ cursor: "default" }}
                                     >
-                                        {mode == "A" ? "New" : mode == "E" ? `Edit ${(state.BreadCrumb2) ? `- ${state.BreadCrumb2}` : ""}` : "View"}
+                                        {mode == "A" ? "New" : mode == "E" ? `Edit ${(state.BreadCrumb3) ? `Annexure No ${(state.BreadCrumb3)}` : ""}` : "View"}
                                     </Typography>
                                 </Breadcrumbs>
                             </Box>
@@ -263,7 +276,7 @@ const EditBooklet = () => {
                             SOPSaveFn(values);
                         }}
                         enableReinitialize
-                    // validationSchema={validationSchema}
+                    validationSchema={validationSchema}
                     >
                         {({
                             values,
@@ -438,7 +451,15 @@ const EditBooklet = () => {
                                     /> */}
                                     <SOPEMPLookup
                                         name="IssuedBy"
-                                        label="IssuedBy"
+                                        // label="Issued By"
+                                        label={
+                                            <>
+                                                Issued By
+                                                <span style={{ fontSize: "20px", color: "red" }}>
+                                                    *
+                                                </span>
+                                            </>
+                                        }
                                         id="IssuedBy"
                                         value={values.IssuedBy}
                                         onChange={(newValue) => {
@@ -458,7 +479,15 @@ const EditBooklet = () => {
                                     />
                                     <SOPEMPLookup
                                         name="ReceivedBy"
-                                        label="ReceivedBy"
+                                        // label="Received By"
+                                        label={
+                                            <>
+                                                Received By
+                                                <span style={{ fontSize: "20px", color: "red" }}>
+                                                    *
+                                                </span>
+                                            </>
+                                        }
                                         id="ReceivedBy"
                                         value={values.ReceivedBy}
                                         onChange={(newValue) => {
@@ -482,14 +511,15 @@ const EditBooklet = () => {
                                         type="text"
                                         id="AdditionalInfo"
                                         value={values.AdditionalInfo}
-                                        label={
-                                            <>
-                                                Additional Info
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
+                                        label="Additional Info"                                                
+                                        // label={
+                                        //     <>
+                                        //         Additional Info
+                                        //         <span style={{ fontSize: "20px", color: "red" }}>
+                                        //             *
+                                        //         </span>
+                                        //     </>
+                                        // }
                                         variant="standard"
                                         focused
                                         onBlur={handleBlur}

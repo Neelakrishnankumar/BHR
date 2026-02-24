@@ -324,7 +324,8 @@ const ListviewSecondary = () => {
     filter = `CompanyID = '${compID}' AND SopID='${parentID1}'`;
   }
   else if (accessID == "TR339") {
-    filter = `SopDocumentListID='${parentID2}'`;
+    filter = `CompanyID = '${compID}' AND SopDocumentListID='${parentID2}'`;
+    // filter = `SopDocumentListID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -4557,8 +4558,13 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                     <Chip
+                      icon={<OpenInNewIcon color="primary" />}
+                      label="View File"
+                      variant="outlined"
+                    />
+                    <Chip
                       icon={<AutoStoriesOutlinedIcon color="primary" />}
-                      label="List of Booklets"
+                      label="Booklets"
                       variant="outlined"
                     />
                   </Box>

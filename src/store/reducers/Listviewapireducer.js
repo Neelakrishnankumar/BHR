@@ -6953,6 +6953,51 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <ModeEditOutlinedIcon />
               </IconButton>
             </Tooltip>
+            {params.row.PdfAttach && (
+            <Tooltip title="View File">
+              <IconButton
+                color="info"
+                size="small"
+                // onClick={() =>
+                //   navigate(`./EditSopDocument/${params.row.RecordID}/E`, {
+                //     state: {
+                //       ...state,
+                //       BreadCrumb2: params.row.TypeOfDocumentCode,
+                //     },
+                //   })
+                // }
+
+                 onClick={() => {
+                                      if (!params.row.PdfAttach) {
+                                        toast.error("No file available");
+                                        return;
+                                      }
+
+                                      const fileUrl =
+                                        store.getState().globalurl.SOPUploadUrl + params.row.PdfAttach;
+
+                                      // 👇 Detect file type
+                                      const lower = fileUrl.toLowerCase();
+
+                                      let viewUrl = fileUrl;
+
+                                      // 👉 For DOC/DOCX use Office Online Viewer
+                                      if (lower.endsWith(".doc") || lower.endsWith(".docx")) {
+                                        viewUrl =
+                                          "https://view.officeapps.live.com/op/view.aspx?src=" +
+                                          encodeURIComponent(fileUrl);
+                                      }
+
+                                      // 👉 Open in new tab
+                                      window.open(viewUrl, "_blank", "noopener,noreferrer");
+                                    }}
+                     
+              >
+                <OpenInNewIcon sx={{opacity: params.row.PdfAttach ? 1 : 0.5}}/>
+              </IconButton>
+            </Tooltip>)}
+
+            {params.row.TypeOfDocumentName === "Annexure" && (
             <Tooltip title="Booklets">
               <IconButton
                 color="info"
@@ -6961,14 +7006,15 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/Booklet/TR339/${params.row.RecordID}`, {
                     state: {
                       ...state,
-                      BreadCrumb2: params.row.TypeOfDocumentCode,
+                      // BreadCrumb2: params.row.TypeOfDocumentCode,
+                      BreadCrumb2: params.row.TypeOfDocumentName,
                     },
                   })
                 }
               >
                 <AutoStoriesOutlinedIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip>)}
           </>
         )}
         {accessID === "TR339" && (
