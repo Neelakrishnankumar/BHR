@@ -177,12 +177,12 @@ const initialState = {
   SOPConfigGetloading: false,
   SOPConfigGetStatus: "",
 
-  //SPECIMEN POST
+  //SPECIMEN GET
   SpecimenGetdata: {},
-  SpecimenGetLoading: false,
+  SpecimenGetloading: false,
   SpecimenGetStatus: "",
 
-  //SPECIMEN GET
+  //SPECIMEN POST
   SpecimenPostdata: {},
   SpecimenPostloading: false,
   SpecimenPostStatus: "",

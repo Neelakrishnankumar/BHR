@@ -232,6 +232,12 @@ const Editemployee = () => {
   const SpecimenGetdata = useSelector(
     (state) => state.formApi.SpecimenGetdata
   );
+  const SpecimenGetloading = useSelector(
+    (state) => state.formApi.SpecimenGetloading
+  );
+  const SpecimenPostloading = useSelector(
+    (state) => state.formApi.SpecimenPostloading
+  );
 
   const [sign1, setsign1Image] = useState("");
   const [sign2, setsign2Image] = useState("");
@@ -3976,6 +3982,17 @@ const Editemployee = () => {
                       sx={{ cursor: "default" }}
                     >
                       SOP Configuration
+                    </Typography>
+                  ) : (
+                    false
+                  )}
+                  {show == "18" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Specimen
                     </Typography>
                   ) : (
                     false
@@ -13762,6 +13779,8 @@ const Editemployee = () => {
 
            {show == "18" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
+            {SpecimenGetloading ? <LinearProgress/> : false}
+            {SpecimenPostloading ? <LinearProgress/> : false}
             <Formik
               initialValues={CompReportInitialValue}
               onSubmit={(values, setSubmitting) => {
@@ -13911,13 +13930,13 @@ const Editemployee = () => {
                         </Button>
                       </Box>
                       <Box>
-                        {setsign1Preview ||
+                        {sign1Preview ||
                           sign1 ||
                           SpecimenGetdata.EMP_SIGN1 ? (
                           <img
                             src={
-                              setsign1Preview
-                                ? setsign1Preview
+                              sign1Preview
+                                ? sign1Preview
                                 : sign1
                                   ? store.getState().globalurl.SOPUploadUrl +
                                   sign1
@@ -13996,13 +14015,13 @@ const Editemployee = () => {
                         </Button>
                       </Box>
                       <Box>
-                        {setsign2Preview ||
+                        {sign2Preview ||
                           sign2 ||
                           SpecimenGetdata.EMP_SIGN2 ? (
                           <img
                             src={
-                              setsign2Preview
-                                ? setsign2Preview
+                              sign2Preview
+                                ? sign2Preview
                                 : sign2
                                   ? store.getState().globalurl.SOPUploadUrl +
                                   sign2
@@ -14081,13 +14100,13 @@ const Editemployee = () => {
                         </Button>
                       </Box>
                       <Box>
-                        {setsign3Preview ||
+                        {sign3Preview ||
                           sign3 ||
                           SpecimenGetdata.EMP_SIGN3 ? (
                           <img
                             src={
-                              setsign3Preview
-                                ? setsign3Preview
+                              sign3Preview
+                                ? sign3Preview
                                 : sign3
                                   ? store.getState().globalurl.SOPUploadUrl + sign3
                                   : store.getState().globalurl.SOPUploadUrl +
