@@ -518,6 +518,40 @@ const EditListOfSOPs = () => {
                       },
                     }}
                   />
+
+                  {/* DISABLE CHECKBOX */}
+                  <Box display="flex" alignItems="center">
+                    <FormControlLabel
+                      control={<Checkbox name="Disable"
+                        checked={values.Disable}
+                        onChange={handleChange} />}
+                      label="Disable"
+                      sx={{
+                        marginTop: "20px",
+                        "@media (max-width:500px)": {
+                          marginTop: 0,
+                        },
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                <Typography
+                  variant="h5"
+                  sx={{ padding: 1 }}
+                >
+                  User Accountability :
+                </Typography>
+                <Box display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}>
+
                   <MultiFormikOptimizedAutocomplete
                     name="PreparedBy"
                     label="Prepared By"
@@ -568,9 +602,9 @@ const EditListOfSOPs = () => {
                     url={employeeUrl}
                   />
                   <MultiFormikOptimizedAutocomplete
-                    name="Employee"
+                    name="ApprovedBy"
                     label="Approved By"
-                    id="Employee"
+                    id="ApprovedBy"
                     value={empData}
                     multiple
                     // onChange={handleSelectionEmployeeChange}
@@ -591,23 +625,7 @@ const EditListOfSOPs = () => {
                     }}
                     url={employeeUrl}
                   />
-                  {/* DISABLE CHECKBOX */}
-                  <Box display="flex" alignItems="center">
-                    <FormControlLabel
-                      control={<Checkbox name="Disable"
-                        checked={values.Disable}
-                        onChange={handleChange} />}
-                      label="Disable"
-                      sx={{
-                        marginTop: "20px",
-                        "@media (max-width:500px)": {
-                          marginTop: 0,
-                        },
-                      }}
-                    />
-                  </Box>
                 </Box>
-
                 {/* BUTTONS */}
                 <Box
                   display="flex"

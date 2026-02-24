@@ -20,6 +20,7 @@ import {
   Tooltip,
   Paper,
   Grid,
+      LinearProgress,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -45,7 +46,11 @@ import {
   PartyContactget,
   EmployeeVendorGetController,
   EmployeeVendorContactGet,
-  partypost
+  partypost,
+  SOPConfigGet,
+  SOPConfigPost,
+  SpecimenGet,
+  SpecimenPost
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -99,6 +104,7 @@ import {
 import Resizer from "react-image-file-resizer";
 import ContactsIcon from '@mui/icons-material/Contacts';
 import CircularProgress from "@mui/material/CircularProgress";
+import { SOPfileUpload } from "../../../store/reducers/Imguploadreducer";
 
 
 // ***********************************************
@@ -186,6 +192,11 @@ const Editemployee = () => {
     "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
   );
+
+    const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
+    const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
+
+
   const LoginID = sessionStorage.getItem("loginrecordID");
   const [panImage, setPanImage] = useState("");
   const [gstImage, setGstImage] = useState("");
@@ -217,6 +228,153 @@ const Editemployee = () => {
   const [validationSchema17, setValidationSchema17] = useState(null);
 
 
+  //SPECIMEN 
+  const SpecimenGetdata = useSelector(
+    (state) => state.formApi.SpecimenGetdata
+  );
+
+  const [sign1, setsign1Image] = useState("");
+  const [sign2, setsign2Image] = useState("");
+  const [sign3, setsign3Image] = useState("");
+
+
+  //IMAGE PREVIEW
+  const [sign1Preview, setsign1Preview] = useState(""); // blob preview url
+  const [sign2Preview, setsign2Preview] = useState(""); // blob preview url
+  const [sign3Preview, setsign3Preview] = useState(""); // blob preview url
+
+  const CompReportInitialValue = {
+    code: Data.Code || "",
+    name: Data.Name || "",
+    Sign1: SpecimenGetdata.EMP_SIGN1 || "",
+    Sign2: SpecimenGetdata.EMP_SIGN2 || "",
+    Sign3: SpecimenGetdata.EMP_SIGN3 || "",
+  };
+
+  const CompReportsave = async (values, del) => {
+    setLoading(true);
+
+    const idata = {
+      CompanyID: CompanyID,
+      EmployeeID:recID,
+      Sign1:
+        sign1 && sign1 !== ""
+          ? sign1
+          : SpecimenGetdata.EMP_SIGN1,
+
+      Sign2:
+        sign2 && sign2 !== ""
+          ? sign2
+          : SpecimenGetdata.EMP_SIGN2,
+
+      Sign3:
+        sign3 && sign3 !== ""
+          ? sign3
+          : SpecimenGetdata.EMP_SIGN3,
+    };
+
+    try {
+      const response = await dispatch(SpecimenPost({ idata }));
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        // navigate("/Apps/TR243/Party");
+        setScreen("18");
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getFileHeaderChange1 = async (event) => {
+    setsign1Image(event.target.files[0]);
+    setsign1Preview(URL.createObjectURL(event.target.files[0]));
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    const fileData = await dispatch(SOPfileUpload({ formData }));
+    setsign1Image(fileData.payload.file_name);
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.message);
+    }
+  };
+
+  const getFileFooterChange = async (event) => {
+    setsign2Image(event.target.files[0]);
+    setsign2Preview(URL.createObjectURL(event.target.files[0]));
+    console.log(event.target.files[0]);
+    //setFooterPreview(URL.createObjectURL(event.target.files[0]));
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    const fileData = await dispatch(SOPfileUpload({ formData }));
+    setsign2Image(fileData.payload.file_name);
+
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.message);
+    }
+  };
+
+  const getFileESignChange = async (event) => {
+    setsign3Image(event.target.files[0]);
+
+    setsign3Preview(URL.createObjectURL(event.target.files[0]));
+    console.log(event.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    const fileData = await dispatch(SOPfileUpload({ formData }));
+    setsign3Image(fileData.payload.file_name);
+
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.message);
+    }
+  };
+
+  const SOPConfigGetInitialValue = {
+    code: Data.Code || "",
+    description: Data.Name || "",
+    PreparedBy: SOPConfigGetdata?.EMP_PREPAREDBY === "Y" ? true :false,
+    ReviewedBy: SOPConfigGetdata?.EMP_REVIEWBY === "Y" ? true :false,
+    ApprovedBy: SOPConfigGetdata?.EMP_APPROVEDBY === "Y" ? true :false,
+  };
+
+   const SOPConfigsave = async (values, del) => {
+    setLoading(true);
+
+    const idata = {
+      CompanyID: CompanyID,
+     EmployeeID:recID,
+     PreparedBy:values.PreparedBy === true ? "Y" : "N",
+     ReviewdBy:values.ReviewedBy  === true ? "Y" : "N",
+     ApprovedBY:values.ApprovedBy === true ? "Y" : "N"
+    };
+
+    try {
+      const response = await dispatch(SOPConfigPost({ idata }));
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+        setLoading(false);
+        setScreen("19");
+      } else {
+        toast.error(response.payload.Msg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving data.");
+    } finally {
+      setLoading(false);
+    }
+  };
   const dropdownData = [
     { ID: "All", Name: "All" },
     { ID: "Selected", Name: "Selected" },
@@ -961,7 +1119,7 @@ const Editemployee = () => {
       if (del) {
         // navigate(`/Apps/TR027/Personnel`);
         navigate(`/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}`, { state: { ...state } });
-      } 
+      }
       // else {
       //   navigate(
       //     // `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
@@ -969,14 +1127,14 @@ const Editemployee = () => {
       // }
       else {
 
-    navigate(
-      is00123Subscription
-        ? `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`
-        : `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
-      { state: { ...state } }
-    );
+        navigate(
+          is00123Subscription
+            ? `/Apps/SecondarylistView/Classification/TR027/Personnel/${parentID}/EditPersonnel/${data.payload.Recid}/E`
+            : `/Apps/TR027/Personnel/EditPersonnel/${data.payload.Recid}/E`,
+          { state: { ...state } }
+        );
 
-  }
+      }
     } else {
       toast.error(data.payload.Msg);
       console.log(data.payload.Msg, "--error");
@@ -1064,6 +1222,12 @@ const Editemployee = () => {
     }
     if (event.target.value == "5") {
       dispatch(invoiceExploreGetData({ accessID: "TR209", get: "get", recID }));
+    }
+    if (event.target.value == "19") {
+      dispatch(SOPConfigGet({ EmployeeID: recID, CompanyID: CompanyID }));
+    }
+    if (event.target.value == "18") {
+      dispatch(SpecimenGet({ EmployeeID: recID, CompanyID: CompanyID }));
     }
     if (event.target.value == "6") {
       dispatch(
@@ -3805,6 +3969,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "19" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      SOP Configuration
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                 </Breadcrumbs>
               </Box>
             </Box>
@@ -3846,7 +4021,9 @@ const Editemployee = () => {
                     <MenuItem value={17}>Item Custody</MenuItem>
                     <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
-                    
+                    <MenuItem value={18}>Specimen</MenuItem>
+                    <MenuItem value={19}>SOP Configuration</MenuItem>
+
                   </Select>
                 </FormControl>
               ) : (
@@ -7016,11 +7193,11 @@ const Editemployee = () => {
                       />
                     </FormControl>
                   </Box>
-                    <Divider variant="fullWidth" sx={{ mt: "20px" }} />
+                  <Divider variant="fullWidth" sx={{ mt: "20px" }} />
                   <Typography variant="h5" padding={1}>
                     Work Location
                   </Typography>
-                    <Box
+                  <Box
                     display="grid"
                     gap={formGap}
                     padding={1}
@@ -7032,7 +7209,7 @@ const Editemployee = () => {
                       },
                     }}
                   >
-  <Box>
+                    <Box>
                       <Field
                         //  size="small"
                         type="checkbox"
@@ -7063,7 +7240,7 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Work From Home
                       </FormLabel>
-                       <Field
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="hybrid"
@@ -7078,7 +7255,7 @@ const Editemployee = () => {
                       <FormLabel focused={false}>
                         Hybrid
                       </FormLabel>
-                       <Field
+                      <Field
                         //  size="small"
                         type="checkbox"
                         name="onsite"
@@ -13392,26 +13569,26 @@ const Editemployee = () => {
                         // required
                         // onBlur={handleBlur}
                         // onChange={handleChange}
-                       onChange={(e) => {
-                            // allow only numbers + decimal
-                            const val = e.target.value;
-                            if (/^\d*\.?\d*$/.test(val)) {
-                              setFieldValue("ItemValue", val);
-                            }
-                          }}
-                          onBlur={(e) => {
-                            let val = e.target.value;
+                        onChange={(e) => {
+                          // allow only numbers + decimal
+                          const val = e.target.value;
+                          if (/^\d*\.?\d*$/.test(val)) {
+                            setFieldValue("ItemValue", val);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          let val = e.target.value;
 
-                            if (val === "" || val === ".") {
-                              setFieldValue("ItemValue", "0.00");
-                              return;
-                            }
+                          if (val === "" || val === ".") {
+                            setFieldValue("ItemValue", "0.00");
+                            return;
+                          }
 
-                            const num = parseFloat(val);
-                            if (!isNaN(num)) {
-                              setFieldValue("ItemValue", num.toFixed(2)); // ✅ forces .00
-                            }
-                          }}
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setFieldValue("ItemValue", num.toFixed(2)); // ✅ forces .00
+                          }
+                        }}
                         error={!!touched.ItemValue && !!errors.ItemValue}
                         helperText={touched.ItemValue && errors.ItemValue}
                         sx={{
@@ -13582,6 +13759,587 @@ const Editemployee = () => {
         ) : (
           false
         )}
+
+           {show == "18" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={CompReportInitialValue}
+              onSubmit={(values, setSubmitting) => {
+                setTimeout(() => {
+                  CompReportsave(values);
+                }, 100);
+              }}
+              enableReinitialize={true}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                setFieldValue,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <TextField
+                      name="code"
+                      type="text"
+                      id="code"
+                      label={
+                        <>
+                          Code
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      // required
+                      value={values.code}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.code && !!errors.code}
+                      helperText={touched.code && errors.code}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          readOnly: true,
+                        },
+                      }}
+                      autoFocus
+                    />
+                    <TextField
+                      name="name"
+                      type="text"
+                      id="name"
+                      label={
+                        <>
+                          Name
+                        </>
+                      }
+                      variant="standard"
+                      focused
+                      value={values.name}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name && errors.name}
+                      sx={{
+                        backgroundColor: "#ffffff", // Set the background to white
+                        "& .MuiFilledInput-root": {
+                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                        },
+                      }}
+                      InputProps={{
+                        inputProps: {
+                          readOnly: true,
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(3 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      <Box>
+                        {/* HEADER IMAGE */}
+                        <Tooltip title="Prepared By Upload">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={getFileHeaderChange1}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            SpecimenGetdata.EMP_SIGN1 || sign1
+                              ? window.open(
+                                sign1
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign1
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN1,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          Prepared By Image View
+                        </Button>
+                      </Box>
+                      <Box>
+                        {setsign1Preview ||
+                          sign1 ||
+                          SpecimenGetdata.EMP_SIGN1 ? (
+                          <img
+                            src={
+                              setsign1Preview
+                                ? setsign1Preview
+                                : sign1
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign1
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN1
+                            }
+                            width={175}
+                            height={175}
+                            style={{
+                              objectFit: "contain",
+                              border: "1px solid #ccc",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: "red",
+                              marginTop: 10,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: 175,
+                              height: 175,
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            Please upload image
+                          </div>
+                        )}
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      {/* FOOTER IMAGE */}
+                      <Box>
+                        <Tooltip title="Reviewed By Upload">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={getFileFooterChange}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            SpecimenGetdata.EMP_SIGN2 || sign2
+                              ? window.open(
+                                sign2
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign2
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN2,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          Reviewed By Image View
+                        </Button>
+                      </Box>
+                      <Box>
+                        {setsign2Preview ||
+                          sign2 ||
+                          SpecimenGetdata.EMP_SIGN2 ? (
+                          <img
+                            src={
+                              setsign2Preview
+                                ? setsign2Preview
+                                : sign2
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign2
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN2
+                            }
+                            width={175}
+                            height={175}
+                            style={{
+                              objectFit: "contain",
+                              border: "1px solid #ccc",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: "red",
+                              marginTop: 10,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: 175,
+                              height: 175,
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            Please upload image
+                          </div>
+                        )}
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      {/* E-SIGN IMAGE */}
+                      <Box>
+                        <Tooltip title="Approved by Upload">
+                          <IconButton
+                            size="small"
+                            color="warning"
+                            aria-label="upload picture"
+                            component="label"
+                          >
+                            <input
+                              hidden
+                              accept="all/*"
+                              type="file"
+                              onChange={getFileESignChange}
+                            />
+                            <PictureAsPdfOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          component={"a"}
+                          onClick={() => {
+                            SpecimenGetdata.EMP_SIGN3 || sign3
+                              ? window.open(
+                                sign3
+                                  ? store.getState().globalurl.SOPUploadUrl +
+                                  sign3
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN3,
+                                "_blank"
+                              )
+                              : toast.error("Please Upload File");
+                          }}
+                        >
+                          Approved by Image View
+                        </Button>
+                      </Box>
+                      <Box>
+                        {setsign3Preview ||
+                          sign3 ||
+                          SpecimenGetdata.EMP_SIGN3 ? (
+                          <img
+                            src={
+                              setsign3Preview
+                                ? setsign3Preview
+                                : sign3
+                                  ? store.getState().globalurl.SOPUploadUrl + sign3
+                                  : store.getState().globalurl.SOPUploadUrl +
+                                  SpecimenGetdata.EMP_SIGN3
+                            }
+                            width={175}
+                            height={175}
+                            style={{
+                              objectFit: "contain",
+                              border: "1px solid #ccc",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: "red",
+                              marginTop: 10,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: 175,
+                              height: 175,
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            Please upload image
+                          </div>
+                        )}
+                      </Box>
+                    </Box>
+
+
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    padding={1}
+                    gap="20px"
+                  >
+                    {/* {YearFlag == "true" ? ( */}
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      Save
+                    </LoadingButton>
+                   
+
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+
+
+
+ {show == "19" ? (
+
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+                  {loading ? (<LinearProgress />) : false}
+                  {SOPConfigGetLoading ? (<LinearProgress />) : false}
+
+            <Formik
+              initialValues={SOPConfigGetInitialValue}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  SOPConfigsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                isSubmitting,
+                values,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="PreparedBy"
+                        name="PreparedBy"
+                        as={Checkbox}
+                        label="PreparedBy"
+                      />
+                      <FormLabel focused={false}>Prepared By</FormLabel>
+                     
+                    </Box>
+
+                    {/* Row 2: Vertical */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="ReviewedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="ReviewedBy"
+                        as={Checkbox}
+                        label="ReviewedBy"
+                      />
+                      <FormLabel focused={false}>ReviewedBy</FormLabel>
+                    
+                    </Box>
+                  </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    marginTop={1}
+                    gap={2}
+                  >
+                    {/* First AutoApprovalYesOrNo Checkbox */}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="ApprovedBy"
+                        name="ApprovedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Approved By</FormLabel>
+
+                    </Box>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    mt="30px"
+                    padding={1}
+                    gap={2}
+                  >
+                    {YearFlag == "true" ? (
+                      <LoadingButton
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        loading={isLoading}
+                      >
+                        Save
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        disabled={true}
+                      >
+                        Save
+                      </Button>
+                    )}
+                   
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
+     
       </Box>
     </React.Fragment>
   );

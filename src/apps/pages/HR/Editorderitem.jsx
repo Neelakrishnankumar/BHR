@@ -27,6 +27,7 @@ import {
   DefaultProductDeliveryChargeGet,
   fetchApidata,
   getFetchData,
+  ItempriceGet,
   postApidata,
   postData,
   replacementQtyGet,
@@ -659,12 +660,41 @@ const EditOrderitem = () => {
                         variant="outlined"
                         value={values.product}
                         onBlur={() => setFieldTouched("product", true)}
-                        onChange={(newValue) => {
+                        // onChange={(newValue) => {
+                        //   const prevProduct = values.product;
+                        //   // Set the selected product
+                        //   setFieldValue("product", newValue);
+
+                        //   // If nothing selected (cleared)
+                        //   if (!newValue) {
+                        //     setFieldValue("price", "");
+                        //     setFieldValue("discount", "");
+                        //     setFieldValue("netprice", "");
+                        //     setFieldValue("quantity", "");
+                        //     setFieldValue("amount", "");
+                        //     return;
+                        //   }
+
+                        //   //  If SAME product is selected again — DO NOTHING
+                        //   if (
+                        //     prevProduct &&
+                        //     prevProduct.RecordID === newValue.RecordID
+                        //   ) {
+                        //     console.log("Same product selected — no reset");
+                        //     return;
+                        //   }
+
+                        //   // ★ If NEW product selected → reset all dependent fields
+                        //   setFieldValue("price", newValue.Price);
+                        //   setFieldValue("discount", "");
+                        //   setFieldValue("netprice", "");
+                        //   setFieldValue("quantity", "");
+                        //   setFieldValue("amount", "");
+                        // }}
+                        onChange={async (newValue) => {
                           const prevProduct = values.product;
-                          // Set the selected product
                           setFieldValue("product", newValue);
 
-                          // If nothing selected (cleared)
                           if (!newValue) {
                             setFieldValue("price", "");
                             setFieldValue("discount", "");
@@ -674,17 +704,32 @@ const EditOrderitem = () => {
                             return;
                           }
 
-                          //  If SAME product is selected again — DO NOTHING
-                          if (
-                            prevProduct &&
-                            prevProduct.RecordID === newValue.RecordID
-                          ) {
-                            console.log("Same product selected — no reset");
+                          if (prevProduct && prevProduct.RecordID === newValue.RecordID) {
                             return;
                           }
 
-                          // ★ If NEW product selected → reset all dependent fields
-                          setFieldValue("price", newValue.Price);
+                          try {
+                            const res = await dispatch(
+                              ItempriceGet({
+                                ItemID: newValue.RecordID,
+                                PartyID: PartyRecordID,
+                                CompanyID
+                              })
+                            ).unwrap();
+
+                            console.log("API Response:", res);
+
+                            if (res.Status === "Y") {
+                              setFieldValue("price", res.Price);   // THIS LINE SETS 60.00
+                            } else {
+                              setFieldValue("price", "");
+                            }
+
+                          } catch (err) {
+                            console.error("Price fetch failed", err);
+                            setFieldValue("price", "");
+                          }
+
                           setFieldValue("discount", "");
                           setFieldValue("netprice", "");
                           setFieldValue("quantity", "");

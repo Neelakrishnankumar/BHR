@@ -306,8 +306,11 @@ const initialState = {
   Processposturl:"",
   PayslipGetController:"",
   PartyReplacementQtyGet:"",
+  ItempriceGeturl:"",
   SOPAttachmentsController:"",
   SOPProcess:"",
+  SOPConfigPost:"",
+  SOPConfigGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -396,7 +399,7 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
+      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceControllerV1.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
@@ -480,8 +483,13 @@ export const getUrlSlice = createSlice({
       state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
       state.PayslipGetController = APIurl + "PayslipGetController.php";
       state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
+      state.ItempriceGeturl = APIurl + "ItempriceGetController.php";
       state.SOPAttachmentsController = baseurl + "SOPAttachmentsController.php";
       state.SOPProcess = APIurl + "SopProcessPost.php";
+      state.SOPConfigPost = APIurl + "emppoststatus.php";
+      state.SOPConfigGet = APIurl + "empgetstatus.php";
+      state.SpecimenPost = APIurl + "emppostspeciman.php";
+      state.SpecimenGet = APIurl + "empgetspeciman.php";
     },
   },
 });

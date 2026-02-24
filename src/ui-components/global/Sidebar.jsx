@@ -98,6 +98,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import DescriptionIcon from "@mui/icons-material/Description";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
+import GroupsIcon from '@mui/icons-material/Groups';
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import SquareFootOutlinedIcon from "@mui/icons-material/SquareFootOutlined";
@@ -134,7 +135,7 @@ import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
-
+import SecurityIcon from '@mui/icons-material/Security';
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import FenceIcon from "@mui/icons-material/Fence";
 import { menuHeight } from "./utils";
@@ -1252,6 +1253,53 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR253",
           },
+        ],
+      },
+        {
+        name: "Security",
+        id: 989,
+        MenuID: "SE100",
+        Tooltipname: "Security",
+        icon: (
+          <Tooltip title="Security">
+            <SecurityIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "User",
+            id: 586,
+            url: "./TR094/User",
+            icon: (
+              <Tooltip title="User">
+                <BadgeIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR094",
+          },
+          {
+            name: "User Group",
+            id: 5867,
+            url: "./TR095/User Group",
+            icon: (
+              <Tooltip title="User Group">
+                <GroupsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR099",
+          },                  
         ],
       },
       {
