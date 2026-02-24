@@ -34,7 +34,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import { formGap } from "../../../ui-components/utils";
-import { MultiFormikOptimizedAutocomplete } from "../../../ui-components/global/Autocomplete";
+import { MultiFormikOptimizedAutocomplete ,MultiSopFormikOptimizedAutocomplete} from "../../../ui-components/global/Autocomplete";
 
 
 const EditListOfSOPs = () => {
@@ -88,12 +88,34 @@ const EditListOfSOPs = () => {
 
   let employeeFilter = `CompanyID='${CompanyID}'`;
 
-  const employeeUrl = `${listViewurl}?data=${encodeURIComponent(
+  const employeePrepareUrl = `${listViewurl}?data=${encodeURIComponent(
     JSON.stringify({
       Query: {
         AccessID: "2117",
         ScreenName: "Employee",
-        Filter: employeeFilter,
+        Filter: `${employeeFilter} AND PreparedBy='Y'`,
+        Any: "",
+        CompId: "",
+      },
+    }),
+  )}`;
+    const employeeApproveUrl = `${listViewurl}?data=${encodeURIComponent(
+    JSON.stringify({
+      Query: {
+        AccessID: "2117",
+        ScreenName: "Employee",
+        Filter: `${employeeFilter} AND ApprovedBy='Y'`,
+        Any: "",
+        CompId: "",
+      },
+    }),
+  )}`;
+    const employeeReviewUrl = `${listViewurl}?data=${encodeURIComponent(
+    JSON.stringify({
+      Query: {
+        AccessID: "2117",
+        ScreenName: "Employee",
+        Filter: `${employeeFilter} AND ReviewBy='Y'`,
         Any: "",
         CompId: "",
       },
@@ -112,6 +134,9 @@ const EditListOfSOPs = () => {
     FacilityType: data.FacilityType || "",
     Sortorder: data.SortOrder || "0",
     Disable: data.Disable === "Y" ? true : false,
+    PreparedBy: data.PreparedBy|| null,
+    ReviewBy: data.ReviewedBy || null,
+    ApproveBy: data.ApprovedBy || null,
   }
   const SOPSaveFn = async (values) => {
 
@@ -552,11 +577,13 @@ const EditListOfSOPs = () => {
                     },
                   }}>
 
-                  <MultiFormikOptimizedAutocomplete
+                  <MultiSopFormikOptimizedAutocomplete
                     name="PreparedBy"
                     label="Prepared By"
                     id="PreparedBy"
+                    Type=" AND PreparedBy ='Y'"
                     value={empData2}
+                    Values={values.PreparedBy}
                     multiple
                     // onChange={handleSelectionEmployeeChange}
                     onChange={(event, newValue) => {
@@ -574,14 +601,16 @@ const EditListOfSOPs = () => {
                         zIndex: 1500,
                       },
                     }}
-                    url={employeeUrl}
+                    url={employeePrepareUrl}
                   />
 
-                  <MultiFormikOptimizedAutocomplete
+                  <MultiSopFormikOptimizedAutocomplete
                     name="ReviewedBy"
                     label="Reviewed By"
                     id="ReviewedBy"
+                     Type=" AND ReviewBy ='Y'"
                     value={empData1}
+                    Values={values.ReviewBy}
                     multiple
                     // onChange={handleSelectionEmployeeChange}
                     onChange={(event, newValue) => {
@@ -599,13 +628,15 @@ const EditListOfSOPs = () => {
                         zIndex: 1500,
                       },
                     }}
-                    url={employeeUrl}
+                    url={employeeReviewUrl}
                   />
-                  <MultiFormikOptimizedAutocomplete
+                  <MultiSopFormikOptimizedAutocomplete
                     name="ApprovedBy"
                     label="Approved By"
                     id="ApprovedBy"
+                    Type=" AND ApprovedBy ='Y'"
                     value={empData}
+                    Values={values.ApproveBy}
                     multiple
                     // onChange={handleSelectionEmployeeChange}
                     onChange={(event, newValue) => {
@@ -623,7 +654,7 @@ const EditListOfSOPs = () => {
                         zIndex: 1500,
                       },
                     }}
-                    url={employeeUrl}
+                    url={employeeApproveUrl}
                   />
                 </Box>
                 {/* BUTTONS */}
