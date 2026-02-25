@@ -133,6 +133,9 @@ const Editproject = () => {
       }
       : null,
     OtherExpenses: data.OtherExpenses || 0,
+    longitude: data.Longitude || 0,
+    latitude: data.Latitude || 0,
+    radius: data.Radius || 0,
   };
 
   const Fnsave = async (values, del) => {
@@ -168,6 +171,9 @@ const Editproject = () => {
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
+      Longitude: values.longitude || 0,
+      Latitude: values.latitude || 0,
+      Radius: values.radius || 0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -764,102 +770,109 @@ const Editproject = () => {
                   Location:
                 </Typography>
                 <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    label="Latitude"
+                    name="latitude"
+                    focused
+                    type="text"
+                    value={values.latitude}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      // Allow - and one decimal only
+                      if (/^-?\d*\.?\d*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      style: { textAlign: "right" },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    label="Longitude"
+                    name="longitude"
+                    focused
+                    type="text"
+                    value={values.longitude}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (/^-?\d*\.?\d*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      style: { textAlign: "right" },
+                    }}
+                  />
+                 
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    focused
+                    label="Radius (m)"
+                    name="radius"
+                    type="text"
+                    value={values.radius}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (/^\d*\.?\d*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      style: { textAlign: "right" },
+                    }}
+                  />
+                  {/* <TextField
+                    fullWidth
+                    variant="standard"
+                    focused
+                    label="Radius (m)"
+                    name="radius"
+                    value={values.radius}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    inputProps={{
+                      step: "any",
+                      min: 0,
+                      style: { textAlign: "right" },
+                      onKeyDown: (e) => {
+                        if (["e", "E", "+", "-"].includes(e.key)) {
+                          e.preventDefault();
+                        }
+                      },
+                      onInput: (e) => {
+                        e.target.value = e.target.value.replace(
+                          /[eE+\-]/g,
+                          ""
+                        );
                       },
                     }}
-                  >
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  type="number"
-                  id="longitude"
-                  label="Longitude"
-                  name="longitude"
-                  focused
-                  value={values.longitude}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  inputProps={{
-                    step: "any",
-                    min: -180,
-                    max: 180,
-                    style: { textAlign: "right" },
-                    onKeyDown: (e) => {
-                      if (["e", "E", "+", "-"].includes(e.key)) {
-                        e.preventDefault();
-                      }
-                    },
-                    onInput: (e) => {
-                      e.target.value = e.target.value.replace(
-                        /[eE+\-]/g,
-                        ""
-                      );
-                    },
-                  }}
-                />
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="latitude"
-                  name="latitude"
-                  label="Latitude"
-                  focused
-                  value={values.latitude}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="number"
-                  inputProps={{
-                    step: "any",
-                    min: -90,
-                    max: 90,
-                    style: { textAlign: "right" },
-                    onKeyDown: (e) => {
-                      if (["e", "E", "+", "-"].includes(e.key)) {
-                        e.preventDefault();
-                      }
-                    },
-                    onInput: (e) => {
-                      e.target.value = e.target.value.replace(
-                        /[eE+\-]/g,
-                        ""
-                      );
-                    },
-                  }}
-                />
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  focused
-                  label="Radius (m)"
-                  name="radius"
-                  value={values.radius}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="number"
-                  inputProps={{
-                    step: "any",
-                    min: 0,
-                    style: { textAlign: "right" },
-                    onKeyDown: (e) => {
-                      if (["e", "E", "+", "-"].includes(e.key)) {
-                        e.preventDefault();
-                      }
-                    },
-                    onInput: (e) => {
-                      e.target.value = e.target.value.replace(
-                        /[eE+\-]/g,
-                        ""
-                      );
-                    },
-                  }}
-                />
+                  /> */}
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
