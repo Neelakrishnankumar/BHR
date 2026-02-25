@@ -14314,7 +14314,7 @@ const Editemployee = () => {
                         as={Checkbox}
                         label="ReviewedBy"
                       />
-                      <FormLabel focused={false}>ReviewedBy</FormLabel>
+                      <FormLabel focused={false}>Reviewed By</FormLabel>
                     
                     </Box>
                   </Box>
