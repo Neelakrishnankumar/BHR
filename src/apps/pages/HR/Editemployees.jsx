@@ -4038,8 +4038,9 @@ const Editemployee = () => {
                     <MenuItem value={17}>Item Custody</MenuItem>
                     <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
-                    <MenuItem value={18}>Specimen</MenuItem>
                     <MenuItem value={19}>SOP Configuration</MenuItem>
+                    <MenuItem value={18}>Specimen</MenuItem>
+                    
 
                   </Select>
                 </FormControl>
@@ -14242,6 +14243,9 @@ const Editemployee = () => {
                           },
                         }}
                         focused
+                         InputProps={{
+                          readOnly:true
+                        }}
                       />
 
                       <TextField
@@ -14262,9 +14266,30 @@ const Editemployee = () => {
                           },
                         }}
                         focused
+                        InputProps={{
+                          readOnly:true
+                        }}
                       />
                     </FormControl>
+                       <Stack
+                      sx={{
+                        //gridColumn: "span 2",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
                   </Box>
+
+                 
                   <Box display="flex" flexDirection="column" gap={1}>
                     <Box display="flex" alignItems="center" gap={1}>
                       <Field
