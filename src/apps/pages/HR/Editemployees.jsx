@@ -3784,7 +3784,8 @@ const Editemployee = () => {
                     color="#0000D1"
                     sx={{ cursor: "default" }}
                     onClick={() => {
-                      setScreen(1);
+                      // setScreen(1);
+                      setScreen(0);
                     }}
                   >
                     {/* {mode === "E"
@@ -3992,7 +3993,7 @@ const Editemployee = () => {
                       color="#0000D1"
                       sx={{ cursor: "default" }}
                     >
-                      Specimen
+                      Specimen Sign
                     </Typography>
                   ) : (
                     false
@@ -4039,7 +4040,7 @@ const Editemployee = () => {
                     <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
                     <MenuItem value={19}>SOP Configuration</MenuItem>
-                    <MenuItem value={18}>Specimen</MenuItem>
+                    <MenuItem value={18}>Specimen Sign</MenuItem>
                     
 
                   </Select>
