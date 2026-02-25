@@ -85,7 +85,8 @@ import CurrencyRupeeOutlinedIcon from "@mui/icons-material/CurrencyRupeeOutlined
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
-
+import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -326,6 +327,9 @@ const ListviewSecondary = () => {
   else if (accessID == "TR339") {
     filter = `CompanyID = '${compID}' AND SopDocumentListID='${parentID2}'`;
     // filter = `SopDocumentListID='${parentID2}'`;
+  }
+  else if (accessID == "TR341") {
+    filter = `CompanyID = '${compID}' AND SopDocListID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
   //   filter = `AssessmentID ='${parentID1}' AND EmployeeID ='${parentID2}'`;
@@ -1785,7 +1789,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                List of SOP Documents
+                List of Documents
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -1811,7 +1815,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                List of SOP Documents
+                List of Documents
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -1840,14 +1844,50 @@ const ListviewSecondary = () => {
                   navigate(-1);
                 }}
               >
-                List of SOP Documents ({BreadCrumb2})
+                List of Documents ({BreadCrumb2})
               </Typography>
               <Typography
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                List of Booklets
+                List of Log Notes
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) : accessID == "TR341" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
+                }}
+              >
+                List Of SOPs ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                List of Documents ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Checklist
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3894,6 +3934,20 @@ const ListviewSecondary = () => {
                   </IconButton>
 
                 </Tooltip>
+              ): accessID === "TR341" ? (
+                <Tooltip arrow title="Add">
+
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(`./EditSopCheckList/-1/A`, {
+                          state: { ...state },
+                        });
+                      }}
+                    />
+                  </IconButton>
+
+                </Tooltip>
               ) : (
                 <Tooltip arrow title="Add">
                   <IconButton>
@@ -4563,12 +4617,41 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                     <Chip
+                      icon={<ChecklistOutlinedIcon color="primary" />}
+                      label="Checklist"
+                      variant="outlined"
+                    />
+                   
+                    <Chip
                       icon={<AutoStoriesOutlinedIcon color="primary" />}
-                      label="Booklets"
+                      label="Log Notes"
                       variant="outlined"
                     />
                   </Box>
-                ) : accessID == "TR033" ? (
+                ) : accessID == "TR339" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                    <Chip
+                      icon={<ModeEditOutlinedIcon color="primary" />}
+                      label="Edit"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<LoopOutlinedIcon color="primary" />}
+                      label="Process"
+                      variant="outlined"
+                    />
+                    <Chip
+                      icon={<VisibilityIcon color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                    <Chip
+                    icon={<PictureAsPdfIcon color="error" />}
+                    label="Process Pdf"
+                    variant="outlined"
+                  />
+                  </Box>
+                ): accessID == "TR033" ? (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}

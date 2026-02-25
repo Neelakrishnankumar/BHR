@@ -46,7 +46,7 @@ import { ArrowBack, CloudUpload } from "@mui/icons-material";
 import store from "../../../index";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-const EditBooklet = () => {
+const EditCheckList = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -115,21 +115,13 @@ const EditBooklet = () => {
         }),
     )}`;
     const SOPInitialValues = {
-        AnnexureNo: data.AnnexureNo || "",
-        RequestDate: data.RequestDate || "",
-        NoOfCopyIssue: data.NoOfCopyIssue || "",
-        IssueLogBookNo: data.IssueLogBookNo || "",
-        IssuedBy: data.IssuedBy ? {
-            RecordID: data.IssuedBy,
-            Name: data.IssuedName || "",
-        } : null,
-        ReceivedBy: data.ReceivedBy ? {
-            RecordID: data.ReceivedBy,
-            Name: data.ReceivedName || "",
-        } : null,
-        AdditionalInfo: data.AdditionalInfo || "",
+
         SortOrder: data.SortOrder || "0",
         Disable: data.Disable === "Y" ? true : false,
+        Approved: data.Approved === "Y" ? true : false,
+        Reviewed: data.Reviewed === "Y" ? true : false,
+        Description: data.Description || "",
+        GuidelineNote: data.GuideLineNote || "",
     }
     const SOPSaveFn = async (values) => {
 
@@ -141,16 +133,13 @@ const EditBooklet = () => {
         const idata = {
             RecordID: recID,
             CompanyID: CompanyID,
-            SopDocumentListID: params.parentID2 || 0,
-            AnnexureNo: values.AnnexureNo || "",
-            RequestDate: values.RequestDate || "",
-            NoOfCopyIssue: values.NoOfCopyIssue || "",
-            IssueLogBookNo: values.IssueLogBookNo || "",
-            IssuedBy: values.IssuedBy?.RecordID || null,
-            ReceivedBy: values.ReceivedBy?.RecordID || null,
-            AdditionalInfo: values.AdditionalInfo || "",
+            SopDocListID: params.parentID2,
+            Description: values.Description || "",
+            GuideLineNote: values.GuidelineNote || "",
             SortOrder: values.SortOrder || "0",
             Disable: values.Disable ? "Y" : "N",
+            Approved: values.Approved ? "Y" : "N",
+            Reviewed: values.Reviewed ? "Y" : "N",
         };
 
         const response = await dispatch(postData({ accessID, action, idata }));
@@ -186,46 +175,7 @@ const EditBooklet = () => {
             }
         });
     };
-    const handleProcess = async (row) => {
-        const result = await Swal.fire({
-            title: "Process Confirmation",
-            text: "Do you wish to Process?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
-        });
 
-        // ❌ If user clicks NO / Cancel → stop here
-        if (!result.isConfirmed) return;
-
-        const idata = {
-            EmpID: loginrecordID,
-            SopDocumentIssuedID: recID,
-        };
-
-        const response = await dispatch(
-            SOPProcessPost({ idata }),
-        );
-
-        if (response.payload.Status === "Y") {
-            // 🔑 parse message if needed
-            let msg = "Processed successfully";
-            if (response.payload.Result) {
-                try {
-                    msg = JSON.parse(response.payload.Result)?.Msg || msg;
-                } catch { }
-            }
-
-            toast.success(msg);
-
-            navigate(-1);
-        } else {
-            toast.error("Process Conversion failed");
-        }
-    };
     return (
         <>
             <React.Fragment
@@ -279,7 +229,7 @@ const EditBooklet = () => {
                                         sx={{ cursor: "default" }}
                                         onClick={() => navigate(-1)}
                                     >
-                                        List of Log Notes
+                                        List of Check List
                                     </Typography>
                                     <Typography
                                         variant="h5"
@@ -316,7 +266,7 @@ const EditBooklet = () => {
                             SOPSaveFn(values);
                         }}
                         enableReinitialize
-                        validationSchema={validationSchema}
+                    // validationSchema={validationSchema}
                     >
                         {({
                             values,
@@ -339,257 +289,12 @@ const EditBooklet = () => {
                                         },
                                     }}
                                 >
-
-                                    {/* <SOPDocLookup
-                    id="DocType"
-                    name="DocType"
-                    label={
-                      <>
-                        Type Of Document
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    variant="outlined"
-                    value={values.DocType}
-                    onChange={(newValue) => {
-                      setFieldValue("DocType", newValue);
-                      console.log(newValue, "--newvalue DocType");
-                      console.log(newValue.RecordID, "DocType RecordID");
-                    }}
-                    error={!!touched.DocType && !!errors.DocType}
-                    helperText={touched.DocType && errors.DocType}
-                    url={`${listViewurl}?data={"Query":{"AccessID":"2146","ScreenName":"DocType","Filter":"CompanyID=${CompanyID}","Any":""}}`}
-                  /> */}
-
                                     <TextField
-                                        name="AnnexureNo"
+                                        name="Description"
                                         type="text"
-                                        id="AnnexureNo"
-                                        value={values.AnnexureNo}
-                                        label="SL#"
-                                        placeholder="Auto SL#"
-                                        // label={
-                                        //     <>
-                                        //         Annexure No
-                                        //         <span style={{ fontSize: "20px", color: "red" }}>
-                                        //             *
-                                        //         </span>
-                                        //     </>
-                                        // }
-                                        variant="standard"
-                                        focused
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.AnnexureNo && !!errors.AnnexureNo}
-                                        helperText={touched.AnnexureNo && errors.AnnexureNo}
-                                        InputProps={{
-                                            readOnly: true
-                                        }}
-                                        autoFocus
-                                    />
-                                    <TextField
-                                        name="RequestDate"
-                                        type="date"
-                                        id="RequestDate"
-                                        value={values.RequestDate}
-                                        label={
-                                            <>
-                                                Request Date
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        variant="standard"
-                                        focused
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.RequestDate && !!errors.RequestDate}
-                                        helperText={touched.RequestDate && errors.RequestDate}
-                                        autoFocus
-                                        InputProps={{
-                                            readOnly: mode === "V" ? true : false
-                                        }}
-                                    />
-                                    <TextField
-                                        name="NoOfCopyIssue"
-                                        type="text"
-                                        id="NoOfCopyIssue"
-                                        value={values.NoOfCopyIssue}
-                                        label={
-                                            <>
-                                                No Of Copies Issued
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        variant="standard"
-                                        focused
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.NoOfCopyIssue && !!errors.NoOfCopyIssue}
-                                        helperText={touched.NoOfCopyIssue && errors.NoOfCopyIssue}
-                                        autoFocus
-                                        InputProps={{
-
-                                            readOnly: mode === "V" ? true : false,
-
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
-                                        }}
-                                    // InputProps={{
-                                    //     readOnly:mode === "V" ? true : false
-                                    // }}
-                                    />
-                                    <TextField
-                                        name="IssueLogBookNo"
-                                        type="text"
-                                        id="IssueLogBookNo"
-                                        value={values.IssueLogBookNo}
-                                        label={
-                                            <>
-                                                Issued Log Book No
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        variant="standard"
-                                        focused
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.IssueLogBookNo && !!errors.IssueLogBookNo}
-                                        helperText={touched.IssueLogBookNo && errors.IssueLogBookNo}
-                                        autoFocus
-                                        // InputProps={{
-                                        //     readOnly:mode === "V" ? true : false
-                                        // }}
-                                        InputProps={{
-
-                                            readOnly: mode === "V" ? true : false,
-
-                                            inputProps: {
-                                                style: { textAlign: "right" },
-                                            },
-                                        }}
-                                    />
-                                    {/* <TextField
-                                        name="IssuedBy"
-                                        type="text"
-                                        id="IssuedBy"
-                                        value={values.IssuedBy}
-                                        label={
-                                            <>
-                                                Issued By
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        variant="standard"
-                                        focused
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.IssuedBy && !!errors.IssuedBy}
-                                        helperText={touched.IssuedBy && errors.IssuedBy}
-                                        autoFocus
-                                    />
-                                    <TextField
-                                        name="ReceivedBy"
-                                        type="text"
-                                        id="ReceivedBy"
-                                        value={values.ReceivedBy}
-                                        label={
-                                            <>
-                                                Received By
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        variant="standard"
-                                        focused
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        error={!!touched.ReceivedBy && !!errors.ReceivedBy}
-                                        helperText={touched.ReceivedBy && errors.ReceivedBy}
-                                        autoFocus
-                                    /> */}
-                                    <SOPEMPLookup
-                                        name="IssuedBy"
-                                        // label="Issued By"
-                                        label={
-                                            <>
-                                                Issued By
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        id="IssuedBy"
-                                        value={values.IssuedBy}
-                                        onChange={(newValue) => {
-                                            setFieldValue("IssuedBy", newValue);
-                                            console.log(newValue, "--newvalue IssuedBy");
-                                            console.log(newValue.RecordID, "IssuedBy RecordID");
-                                        }}
-                                        error={!!touched.IssuedBy && !!errors.IssuedBy}
-                                        helperText={touched.IssuedBy && errors.IssuedBy}
-                                        disablePortal={false}
-                                        PopperProps={{
-                                            sx: {
-                                                zIndex: 1500,
-                                            },
-                                        }}
-                                        url={employeeUrl}
-                                        InputProps={{
-                                            readOnly: mode === "V" ? true : false
-                                        }}
-                                        disabled={mode === "V" ? true : false}
-                                    />
-                                    <SOPEMPLookup
-                                        name="ReceivedBy"
-                                        // label="Received By"
-                                        label={
-                                            <>
-                                                Received By
-                                                <span style={{ fontSize: "20px", color: "red" }}>
-                                                    *
-                                                </span>
-                                            </>
-                                        }
-                                        id="ReceivedBy"
-                                        value={values.ReceivedBy}
-                                        onChange={(newValue) => {
-                                            setFieldValue("ReceivedBy", newValue);
-                                            console.log(newValue, "--newvalue ReceivedBy");
-                                            console.log(newValue.RecordID, "ReceivedBy RecordID");
-                                        }}
-                                        error={!!touched.ReceivedBy && !!errors.ReceivedBy}
-                                        helperText={touched.ReceivedBy && errors.ReceivedBy}
-                                        disablePortal={false}
-                                        PopperProps={{
-                                            sx: {
-                                                zIndex: 1500,
-                                            },
-                                        }}
-                                        url={employeeUrl}
-                                        InputProps={{
-                                            readOnly: mode === "V" ? true : false
-                                        }}
-                                        disabled={mode === "V" ? true : false}
-                                    />
-
-                                    <TextField
-                                        name="AdditionalInfo"
-                                        type="text"
-                                        id="AdditionalInfo"
-                                        value={values.AdditionalInfo}
-                                        label="Additional Info"
+                                        id="Description"
+                                        value={values.Description}
+                                        label="Description"
                                         // label={
                                         //     <>
                                         //         Additional Info
@@ -602,8 +307,33 @@ const EditBooklet = () => {
                                         focused
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        error={!!touched.AdditionalInfo && !!errors.AdditionalInfo}
-                                        helperText={touched.AdditionalInfo && errors.AdditionalInfo}
+                                        error={!!touched.Description && !!errors.Description}
+                                        helperText={touched.Description && errors.Description}
+                                        autoFocus
+                                        InputProps={{
+                                            readOnly: mode === "V" ? true : false
+                                        }}
+                                    />
+                                    <TextField
+                                        name="GuidelineNote"
+                                        type="text"
+                                        id="GuidelineNote"
+                                        value={values.GuidelineNote}
+                                        label="Guideline Note"
+                                        // label={
+                                        //     <>
+                                        //         Additional Info
+                                        //         <span style={{ fontSize: "20px", color: "red" }}>
+                                        //             *
+                                        //         </span>
+                                        //     </>
+                                        // }
+                                        variant="standard"
+                                        focused
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        error={!!touched.GuidelineNote && !!errors.GuidelineNote}
+                                        helperText={touched.GuidelineNote && errors.GuidelineNote}
                                         autoFocus
                                         InputProps={{
                                             readOnly: mode === "V" ? true : false
@@ -644,10 +374,30 @@ const EditBooklet = () => {
                                     {/* DISABLE CHECKBOX */}
                                     <Box display="flex" alignItems="center">
                                         <FormControlLabel
+                                            control={<Checkbox name="Approved"
+                                                checked={values.Approved}
+                                                onChange={handleChange}
+                                            />}
+                                            label="Approved"
+                                        />
+                                        <Box />
+                                        <FormControlLabel
+                                            control={<Checkbox name="Reviewed"
+                                                checked={values.Reviewed}
+                                                onChange={handleChange}
+                                                disabled={mode === "V" ? true : false}
+                                               
+                                            />}
+                                            label="Reviewed"
+                                        />
+
+                                        <FormControlLabel
                                             control={<Checkbox name="Disable"
                                                 checked={values.Disable}
                                                 onChange={handleChange}
-                                                disabled={mode === "V" ? true : false} />}
+                                                disabled={mode === "V" ? true : false}
+                                               
+                                            />}
                                             label="Disable"
                                         />
                                     </Box>
@@ -667,18 +417,7 @@ const EditBooklet = () => {
                                     >
                                         Save
                                     </LoadingButton>
-                                    {mode === "P" && (
-                                        <LoadingButton
-                                            variant="contained"
-                                            color="secondary"
-                                            loading={isLoading}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleProcess();
-                                            }}
-                                        >
-                                            Confirm
-                                        </LoadingButton>)}
+
                                     <Button
                                         variant="contained"
                                         color="warning"
@@ -700,4 +439,4 @@ const EditBooklet = () => {
     )
 }
 
-export default EditBooklet;
+export default EditCheckList;

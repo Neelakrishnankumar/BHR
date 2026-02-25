@@ -4146,7 +4146,7 @@ const Listview = () => {
             />
             <Chip
               icon={<SaveOutlinedIcon color="primary" />}
-              label="SOP Documents"
+              label="List Of Documents"
               variant="outlined"
             />
           </Box>

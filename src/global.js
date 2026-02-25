@@ -308,6 +308,9 @@ const initialState = {
   PartyReplacementQtyGet:"",
   ItempriceGeturl:"",
   SOPAttachmentsController:"",
+  SOPProcess:"",
+  SOPConfigPost:"",
+  SOPConfigGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -482,6 +485,11 @@ export const getUrlSlice = createSlice({
       state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
       state.ItempriceGeturl = APIurl + "ItempriceGetController.php";
       state.SOPAttachmentsController = baseurl + "SOPAttachmentsController.php";
+      state.SOPProcess = APIurl + "SopProcessPost.php";
+      state.SOPConfigPost = APIurl + "emppoststatus.php";
+      state.SOPConfigGet = APIurl + "empgetstatus.php";
+      state.SpecimenPost = APIurl + "emppostspeciman.php";
+      state.SpecimenGet = APIurl + "empgetspeciman.php";
     },
   },
 });

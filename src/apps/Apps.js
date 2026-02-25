@@ -197,6 +197,7 @@ import BRRForm from "./pages/SOP/BRRForm";
 import EditListOfSOPs from "./pages/SOP/EditListOfSOPs";
 import EditSOPDocument from "./pages/SOP/EditSOPDocument";
 import EditBooklet from "./pages/SOP/EditBooklet";
+import EditSopCheckList from "./pages/SOP/EditCheckList";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -1360,10 +1361,20 @@ function App() {
                     path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2"
                     element={<ListviewSecondary />}
                   />
+                    {/* SOP CHECKLIST LIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/SopCheckList/:accessID/:parentID2"
+                    element={<ListviewSecondary />}
+                  />
                   {/* EDIT BOOKLET */}
                   <Route
                     path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2/EditBooklet/:id/:Mode"
                     element={<EditBooklet />}
+                  />
+                  {/* EDIT CHECKLIST */}
+                  <Route
+                    path="/Secondarylistview/:accessID1/SopDocument/:parentID1/SopCheckList/:accessID/:parentID2/EditSopCheckList/:id/:Mode"
+                    element={<EditSopCheckList />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

@@ -31,7 +31,7 @@ import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getFetchData, postData } from "../../../store/reducers/Formapireducer";
+import { getFetchData, postData, SOPProcessPost } from "../../../store/reducers/Formapireducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useProSidebar } from "react-pro-sidebar";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -67,6 +67,7 @@ const EditSOPDocument = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
 
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+  const loginrecordID = sessionStorage.getItem("loginrecordID");
 
   const [validationSchema, setValidationSchema] = useState(null);
 
@@ -155,7 +156,50 @@ const EditSOPDocument = () => {
       }
     });
   };
+  const handleProcess = async (row) => {
+    const result = await Swal.fire({
+      title: "Process Confirmation",
+      text: "Do you wish to Process?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
 
+    // ❌ If user clicks NO / Cancel → stop here
+    if (!result.isConfirmed) return;
+
+    const idata = {
+      EmpID: loginrecordID,
+      SopDocumentListID: recID,
+    };
+
+    const response = await dispatch(
+      SOPProcessPost({ idata }),
+    );
+
+    if (response.payload.Status === "Y") {
+      // 🔑 parse message if needed
+      let msg = "Processed successfully";
+      if (response.payload.Result) {
+        try {
+          msg = JSON.parse(response.payload.Result)?.Msg || msg;
+        } catch {}
+      }
+
+      toast.success(msg);
+
+      // navigate(`/Apps/Secondarylistview/TR310/Order/${filtertype}/${Type}/O`, {
+      //   state: {
+      //     ...state,
+      //   },
+      // });
+    } else {
+      toast.error("Conversion failed");
+    }
+  };
   return (
     <>
       <React.Fragment
@@ -197,7 +241,7 @@ const EditSOPDocument = () => {
                     sx={{ cursor: "default" }}
                     onClick={() => navigate(-1)}
                   >
-                    List of SOP Document
+                    List of Documents
                   </Typography>
                   <Typography
                     variant="h5"
@@ -354,8 +398,6 @@ const EditSOPDocument = () => {
                   padding={1}
                   gap={2}
                 >
-
-
                   <Tooltip title="Upload a file">
                     <IconButton
                       size="small"
@@ -468,9 +510,23 @@ const EditSOPDocument = () => {
                     variant="contained"
                     color="secondary"
                     loading={isLoading}
+                    disabled={mode === "P"}
                   >
                     Save
                   </LoadingButton>
+
+                  {/* {mode === "P" && (
+                  <LoadingButton
+                    variant="contained"
+                    color="secondary"
+                    loading={isLoading}
+                    onClick={(e) => {
+                    e.stopPropagation();
+                    handleProcess();
+                  }}
+                  >
+                    Confirm
+                  </LoadingButton>)} */}
 
                   <Button
                     variant="contained"
