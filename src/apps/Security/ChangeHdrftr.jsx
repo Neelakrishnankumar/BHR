@@ -77,10 +77,10 @@ const Changehdrftr = () => {
   const data = useSelector((state) => state.formApi.Data) || {};
   console.log(data, "--data");
   const isLoading = useSelector((state) => state.formApi.postLoading);
-  const [logoimage, setlogoimage] = useState("");
+  const [logoimage, setlogoimage] = useState(data?.CM_HEADER || "");
   console.log("Nowlogo", logoimage);
   const company = sessionStorage.getItem("company");
-  const [gstImage, setGstImage] = useState("");
+  const [gstImage, setGstImage] = useState(data?.CM_FOOTER || "");
   const [offaddress, setOffaddress] = useState("");
   const [headerPreview, setHeaderPreview] = useState(""); // blob preview url
   const [footerPreview, setFooterPreview] = useState("");

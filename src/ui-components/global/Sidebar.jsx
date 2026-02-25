@@ -761,7 +761,7 @@ const Sidebars = () => {
           },
           {
             name: "Party",
-            id: 4346895,
+            id: 434895,
             //  url: "./TR243/Party",
             url: "./TR321/Party",
             icon: (
@@ -779,7 +779,7 @@ const Sidebars = () => {
           },
           {
             name: "Aging Report",
-            id: 4346895,
+            id: 434685,
             //  url: "./TR243/Party",
             url: "/Apps/Party/AgingReport",
             icon: (
@@ -793,7 +793,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR321",
+            UGA_ACCESSIDS: "TR000",
           },
           //  {
           //   name: "Lead",
@@ -1013,7 +1013,7 @@ const Sidebars = () => {
         },
         {
           name: "Attendance(M)",
-          url: "/Apps/TR260/EditAttendance",
+          url: "/Apps/TR217/EditAttendance",
           id: 5580,
           icon: (
             <Tooltip title="Monthly Attendance">
@@ -1027,7 +1027,7 @@ const Sidebars = () => {
           UGA_PRINT: true,
           UGA_PROCESS: true,
           UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR260",
+          UGA_ACCESSIDS: "TR217",
         },
         {
           name: "Attendance Register",
