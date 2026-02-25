@@ -319,7 +319,8 @@ const EditCheckList = () => {
                                         type="text"
                                         id="GuidelineNote"
                                         value={values.GuidelineNote}
-                                        label="Guideline Note"
+                                        label="Guideline Value/Note"
+                                        // label="Guideline Note"
                                         // label={
                                         //     <>
                                         //         Additional Info
