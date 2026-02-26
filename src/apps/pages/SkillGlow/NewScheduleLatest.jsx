@@ -389,7 +389,7 @@ const NewScheduleLatest = () => {
 
   const [rowCount, setRowCount] = useState(0);
   const Sprintcolumns = [
-    { field: "SLNO", headerName: "#SL", width: 40 },
+    { field: "SLNO", headerName: "SL#", width: 40 },
     {
       headerName: "Date",
       field: "DATE",
@@ -403,7 +403,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Employee Name",
       field: "EmployeeName",
-      width: "150",
+      width: "200",
       align: "left",
       headerAlign: "center",
       hide: false,
@@ -628,7 +628,7 @@ const NewScheduleLatest = () => {
           </Box>
         </Paper>
 
-        {!getLoading ? (
+        {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Box m="5px">
               <Box
