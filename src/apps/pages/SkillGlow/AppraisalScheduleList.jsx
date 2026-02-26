@@ -547,7 +547,7 @@ const AppraisalScheduleList = () => {
           </Box>
         </Paper>
 
-        {!getLoading ? (
+        {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Box m="5px">
               <Box

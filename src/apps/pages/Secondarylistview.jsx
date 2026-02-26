@@ -318,7 +318,7 @@ const ListviewSecondary = () => {
     filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
   }
   else if (accessID == "TR335") {
-    filter = `CompanyID = '${compID}'`;
+    filter = `CompanyID = '${compID}' AND SOPID='${parentID1}'`;
     // filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
   }
   else if (accessID == "TR338") {
@@ -1779,7 +1779,7 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                 onClick={() => {
-                  navigate("/Apps/TR337/List%20Of%20SOPs");
+                  navigate("/Apps/TR336/List%20Of%20SOPs");
                 }}
               >
                 List Of SOPs ({BreadCrumb1})
@@ -1788,8 +1788,28 @@ const ListviewSecondary = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}`, { state: { ...state }});
+                }}
               >
-                List of Documents
+                List of Documents ({BreadCrumb2})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                 onClick={() => {
+                  navigate(`/Apps/Secondarylistview/${params.accessID2}/SopDocument/${params.parentID1}/Booklet/${params.accessID1}/${params.parentID2}`, { state: { ...state }});
+                }}
+              >
+                List of Log Notes (Serial#{BreadCrumb3})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                List of Batch Reconciliation Records
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -3692,6 +3712,8 @@ const ListviewSecondary = () => {
             false
           ) : accessID == "TR115" ? (
             false
+          ) : accessID == "TR335" ? (
+            false
           ) : accessID == "TR288" ? (
             false
             //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
@@ -4104,10 +4126,11 @@ const ListviewSecondary = () => {
           />
         </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
+          {accessID !== "TR335" && (
           <Typography fontWeight={400} fontSize={15} lineHeight={1}
             mb={-2} >
             Legend
-          </Typography>
+          </Typography>)}
         </Box>
         {accessID == "TR001" ? (
           <Box
@@ -5031,7 +5054,11 @@ const ListviewSecondary = () => {
                       variant="outlined"
                     />
                   </Box>
-                ) : (
+                ) : accessID == "TR335" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                   
+                  </Box>
+                ): (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip
                       icon={<ModeEditOutlinedIcon color="primary" />}

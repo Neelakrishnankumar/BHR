@@ -1845,6 +1845,7 @@ export const fetchListview =
             AccessID == "TR338" ||
             AccessID == "TR339" ||
             AccessID == "TR341" ||
+            AccessID == "TR335" ||
             AccessID == "TR337"
           ) {
             obj = {
@@ -7118,6 +7119,26 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
             </>
           )}
+
+           {/* <Tooltip title="SOP Documents">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `./SOPBatch/TR335/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      },
+                    )
+                  }
+                >
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip> */}
          
           </>
         )}
@@ -7140,6 +7161,11 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </IconButton>
             </Tooltip>
          
+          </>
+        )}
+
+        {accessID === "TR335" && (
+          <>
           </>
         )}
       </div>

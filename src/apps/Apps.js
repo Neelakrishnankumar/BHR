@@ -1361,6 +1361,11 @@ function App() {
                     path="/Secondarylistview/:accessID1/SopDocument/:parentID1/Booklet/:accessID/:parentID2"
                     element={<ListviewSecondary />}
                   />
+                    {/* SOP DOCUMENT LIST - TR335 */}
+                  <Route
+                    path="/Secondarylistview/:accessID2/SopDocument/:parentID1/Booklet/:accessID1/:parentID2/SOPBatch/:accessID/:parentID3"
+                    element={<ListviewSecondary />}
+                  />
                     {/* SOP CHECKLIST LIST */}
                   <Route
                     path="/Secondarylistview/:accessID1/SopDocument/:parentID1/SopCheckList/:accessID/:parentID2"
