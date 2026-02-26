@@ -493,7 +493,7 @@ import {
   Stack,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -611,13 +611,37 @@ const Login = () => {
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
+  const formikRef = useRef();
 
-  const initialValues = {
+  // useEffect(() => {
+  //   dispatch(resetData())
+  // }, [])
+  const [initialValues, setInitialValues] = useState({
     username: "",
     password: "",
     license: "",
     remember: false,
-  };
+  });
+  useEffect(() => {
+    const rememberedData = localStorage.getItem("rememberMeData");
+
+    if (rememberedData) {
+      const parsedData = JSON.parse(rememberedData);
+
+      setInitialValues({
+        username: parsedData.username || "",
+        password: parsedData.password || "",
+        license: parsedData.license || "",
+        remember: true,
+      });
+    }
+  }, []);
+  // const initialValues = {
+  //   username: "",
+  //   password: "",
+  //   license: "",
+  //   remember: false,
+  // };
 
   const fnLogin = async (values) => {
     if (values.username == "") {
@@ -654,7 +678,23 @@ const Login = () => {
 
     sessionStorage.setItem("loginRecid", loginrecordID);
     if (data.payload.Status == "Y") {
-
+      if (values.remember) {
+        localStorage.setItem("rememberMeData", JSON.stringify({
+          username: values.username,
+          password: values.password,
+          license: values.license,
+          remember: true,
+        }));
+        console.log("Saved:", localStorage.getItem("rememberMeData"));
+      } else {
+        localStorage.removeItem("rememberMeData");
+        setInitialValues({
+          username: "",
+          password: "",
+          license: "",
+          remember: false,
+        });
+      }
       var company = data.payload.apiResponse.Company
       var SubscriptionCode = data.payload.SubscriptionCode
       var year = data.payload.apiResponse.Year
@@ -816,7 +856,9 @@ const Login = () => {
 
               {/* Form */}
               <Formik
+                innerRef={formikRef}
                 initialValues={initialValues}
+                enableReinitialize
                 validate={(values) => {
                   const errors = {};
                   if (!values.username) {
