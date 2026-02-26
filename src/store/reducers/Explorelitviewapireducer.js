@@ -257,9 +257,9 @@ export const getApiSlice = createSlice({
 
         state.Data = action.payload.Data;
 
-        // if(action.payload.Data.Groupaccess){
-        // state.explorerowData = action.payload.Data.Groupaccess
-        // }
+        if(action.payload.Data.Groupaccess){
+        state.explorerowData = action.payload.Data.Groupaccess
+        }
 
         // state.explorecolumnData= action.payload.columndata
       })

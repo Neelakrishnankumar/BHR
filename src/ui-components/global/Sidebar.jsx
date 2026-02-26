@@ -98,6 +98,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import DescriptionIcon from "@mui/icons-material/Description";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
+import GroupsIcon from '@mui/icons-material/Groups';
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import SquareFootOutlinedIcon from "@mui/icons-material/SquareFootOutlined";
@@ -132,6 +133,9 @@ import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+
+import SecurityIcon from '@mui/icons-material/Security';
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import FenceIcon from "@mui/icons-material/Fence";
 import { menuHeight } from "./utils";
@@ -158,11 +162,14 @@ import { useDispatch } from "react-redux";
 import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
-const is003Subscription = SubscriptionCode.endsWith("003");
-const is00123Subscription = ["001", "002", "003"].some(code =>
-  SubscriptionCode?.endsWith(code)
-);
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
+import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
+// const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+// const is003Subscription = SubscriptionCode.endsWith("003");
+// const is00123Subscription = ["001", "002", "003"].some(code =>
+//   SubscriptionCode?.endsWith(code)
+// );
 
 const getPersonnelMenu = (is00123Subscription) =>
   is00123Subscription
@@ -188,7 +195,7 @@ const getPersonnelMenu = (is00123Subscription) =>
       id: 5634,
       url: "./TR027/Personnel",
       icon: (
-        <Tooltip title="Classification">
+        <Tooltip title="Personnel">
           <PeopleAltIcon color="info" />
         </Tooltip>
       ),
@@ -201,926 +208,7 @@ const getPersonnelMenu = (is00123Subscription) =>
       UGA_ACCESSIDS: "TR027",
     };
 
-const child = {
-  data: [
-    {
-      name: "Setup",
-      id: 4,
-      MenuID: "HR600",
-      Tooltipname: "Setup",
-      icon: (
-        <Tooltip title="Setup">
-          <RecentActorsIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
 
-        {
-          name: "Designation",
-          id: 4578,
-          url: "./TR122/Designation",
-          icon: (
-            <Tooltip title="Designation">
-              <PersonIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR122",
-        },
-        {
-          name: "Department",
-          id: 3456,
-          url: "./TR026/Department",
-          icon: (
-            <Tooltip title="Department">
-              <DeveloperBoardIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR026",
-        },
-        {
-          name: "Role",
-          url: "./TR232/Role",
-          id: 34578,
-          icon: (
-            <Tooltip title="Roles">
-              <PeopleAltIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR232",
-        },
-
-        // {
-        //   name: "Personnel",
-        //   // url: "./TR027/Personnel",
-        //   url: is00123Subscription == true ? "./TR330/Classification" : "./TR027/Personnel",
-        //   id: 5634,
-        //   icon: (
-        //     <Tooltip title="Classification">
-        //       <PeopleAltIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR027",
-        // },
-        getPersonnelMenu(is00123Subscription),
-        {
-          name: "Project",
-          id: 4346894,
-          url: "./TR275/Project",
-          icon: (
-            <Tooltip title="Project">
-              <SourceOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR275",
-        },
-        {
-          name: "Functions",
-          id: 567,
-          url: "./TR121/Functions",
-          icon: (
-            <Tooltip title="Functions">
-              <Diversity3Icon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR121",
-        },
-        // {
-        //   name: "Party",
-        //   id: 4346895,
-        //   url: "./TR243/Party",
-        //   icon: (
-        //     <Tooltip title="Party">
-        //       <PersonSearchIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR243",
-        // },
-        {
-          name: "Shift",
-          id: 45689,
-          url: "./TR265/Shift",
-          icon: (
-            <Tooltip title="Shift">
-              <SafetyCheckIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR265",
-        },
-        {
-          name: "Leave Type",
-          id: 45680,
-          url: "./TR213/Leave Type",
-          icon: (
-            <Tooltip title="Leave Type">
-              <Hail color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR121",
-        },
-        // {
-        //   name: "Payroll",
-        //   id: 46,
-        //   url: "./TR027/Employee Payroll",
-        //   icon: (
-        //     <Tooltip title="Employees">
-        //       <CurrencyRubleIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR027",
-        // },
-        {
-          name: "Overhead Type",
-          id: 47,
-          url: "./TR292/Overhead Type",
-          icon: (
-            <Tooltip title="Overhead Type">
-              <SummarizeIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR292",
-        },
-        {
-          name: "Overhead",
-          id: 41,
-          url: "./TR085/Overhead",
-          icon: (
-            <Tooltip title="Overhead">
-              <RequestQuoteOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR085",
-        },
-
-        {
-          name: "Holiday List",
-          id: 54668,
-          url: "./TR218/Holiday List",
-          icon: (
-            <Tooltip title="Leave Type">
-              <FactCheckRoundedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR121",
-        },
-
-        {
-          name: "Salary Component",
-          id: 56796,
-          url: "./TR205/Salary Component",
-          icon: (
-            <Tooltip title="Salary Component">
-              <AttachMoneyIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR205",
-        },
-
-        {
-          name: "Satuary Component",
-          id: 4578,
-          url: "./TR207/Satuary Component",
-          icon: (
-            <Tooltip title="Satuary Component">
-              <LocalPoliceOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR207",
-        },
-      ],
-    },
-    {
-      name: "CRM",
-      id: 33,
-      MenuID: "CRM1800",
-      Tooltipname: "CRM",
-      icon: (
-        <Tooltip title="CRM">
-          <SupportAgentOutlinedIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-
-        {
-          name: "HSN",
-          id: 43468,
-          url: "./TR316/HSN Category",
-          icon: (
-            <Tooltip title="HSN">
-              <QrCodeScannerOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR316",
-        },
-        {
-          name: "Item",
-          id: 43468,
-          url: "./TR315/Item Group",
-          icon: (
-            <Tooltip title="Item">
-              <InventoryOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR315",
-        },
-        {
-          name: "Route",
-          id: 43468,
-          url: "./TR323/Route",
-          icon: (
-            <Tooltip title="Route">
-              <RouteOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR323",
-        },
-        {
-          name: "Party",
-          id: 4346895,
-          //  url: "./TR243/Party",
-          url: "./TR321/Party",
-          icon: (
-            <Tooltip title="Party">
-              <PersonSearchIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR321",
-        },
-        {
-          name: "Aging Report",
-          id: 4346895,
-          //  url: "./TR243/Party",
-          url: "/Apps/Party/AgingReport",
-          icon: (
-            <Tooltip title="Aging Report">
-              <ScaleOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR321",
-        },
-        //  {
-        //   name: "Lead",
-        //   id: 4346895,
-        //   //  url: "./TR243/Lead",
-        //   url: "./TR321/Lead",
-        //   icon: (
-        //     <Tooltip title="Lead">
-        //       <PersonSearchIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR321",
-        // },
-        {
-          name: "Order Enquiry",
-          id: 4346899,
-          url: "./TR313/Order Enquiry",
-          icon: (
-            <Tooltip title="Order Enquiry">
-              <QueryStatsOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR313",
-        },
-        {
-          name: "Lead Enquiry",
-          id: 4346899,
-          url: "./TR328/Lead Enquiry",
-          icon: (
-            <Tooltip title="Lead Enquiry">
-              <QueryBuilderIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR328",
-        },
-
-        //  {
-        //   name: "Audit",
-        //   id: 4346899,
-        //   url: "/Apps/TR260/EditAudit",
-        //   icon: (
-        //     <Tooltip title="Audit">
-        //       <ArtTrackIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR328",
-        // },
-
-      ],
-    },
-    {
-      name: "Transaction",
-      id: 97659,
-      MenuID: "ST1600",
-      Tooltipname: "Transaction",
-      icon: (
-        <Tooltip title="Transaction">
-          <AssignmentTurnedInIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-        {
-          name: "Check In",
-          id: 5486,
-          url: "./TR123/Check In",
-          icon: (
-            <Tooltip title="Check In">
-              <ChecklistIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR123",
-        },
-        {
-          name: "Check Out",
-          id: 5589,
-          url: "./TR124/Check Out",
-          icon: (
-            <Tooltip title="Check Out">
-              <ChecklistRtlIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR124",
-        },
-        {
-          name: "Payroll Configuration",
-          id: 47,
-          url: "./TR027/Employee Payroll",
-          icon: (
-            <Tooltip title="Payroll Configuration">
-              <PriceCheckIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR027",
-        },
-          {
-          name: "Payroll",
-          id: 46,
-          url: "./TR333/Payroll",
-          icon: (
-            <Tooltip title="Payroll">
-              <CurrencyRubleIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR027",
-        },
-        {
-          name: "Employee Request",
-          id: 5846,
-          url: "./TR257/Employee Request",
-          icon: (
-            <Tooltip title="Requests">
-              <PermContactCalendarIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR257",
-        },
-        // {
-        //   name: "Approval",
-        //   id: 5859,
-        //   url: "./TR027/Approval",
-        //   icon: (
-        //     <Tooltip title="Approval">
-        //       <TaskAltIcon color="info" />
-        //     </Tooltip>
-        //   ),
-        //   UGA_ADD: true,
-        //   UGA_DEL: true,
-        //   UGA_MOD: true,
-        //   UGA_PRINT: true,
-        //   UGA_PROCESS: true,
-        //   UGA_VIEW: true,
-        //   UGA_ACCESSIDS: "TR258",
-        // },
-      ],
-    },
-    {
-      name: "Agile",
-      id: 45678,
-      MenuID: "EM900",
-      Tooltipname: "Agile",
-      icon: (
-        <Tooltip title="Agile">
-          <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-        {
-          name: "Attendance(D)",
-          url: "/Apps/TR260/Editdailyattendance",
-          id: 5590,
-          icon: (
-            <Tooltip title="Daily Attendance">
-              <AppRegistrationOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR260",
-        },
-        {
-          name: "Attendance(M)",
-          url: "/Apps/TR260/EditAttendance",
-          id: 5580,
-          icon: (
-            <Tooltip title="Monthly Attendance">
-              <AppRegistrationOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR260",
-        },
-        {
-          name: "Attendance Register",
-          url: "/Apps/TR259/EditAttendanceHistory",
-          id: 5591,
-          icon: (
-            <Tooltip title="Attendance Register">
-              <WorkHistoryOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR259",
-        },
-        {
-          name: "Timesheet",
-          url: "/Apps/TR261/EditTimeSheet",
-          id: 5592,
-          icon: (
-            <Tooltip title="Timesheet">
-              <PendingActionsOutlinedIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR261",
-        },
-      ],
-    },
-
-
-    // {
-    //   name: "Assessment",
-    //   id: 4578,
-    //   MenuID: "ST1600",
-    //   Tooltipname: "Assessment",
-    //   icon: (
-    //     <Tooltip title="Assessment">
-    //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-    //     </Tooltip>
-    //   ),
-    //   children: [
-    //     {
-    //       name: "Prepare",
-    //       id: 5848,
-    //       // url: "/Apps/SkillGlow/CategoryMain",
-    //       url: "/Apps/TR278/List Of Categories",
-    //       icon: (
-    //         <Tooltip title="Prepare">
-    //           <CategoryOutlinedIcon color="info" />
-    //         </Tooltip>
-    //       ),
-    //       UGA_ADD: true,
-    //       UGA_DEL: true,
-    //       UGA_MOD: true,
-    //       UGA_PRINT: true,
-    //       UGA_PROCESS: true,
-    //       UGA_VIEW: true,
-    //       UGA_ACCESSIDS: "TR122",
-    //     },
-    //     {
-    //       name: "Schedule",
-    //       id: 5849,
-    //       url: "/Apps/TR286/List of Employees",
-    //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
-    //       icon: (
-    //         <Tooltip title="Schedule">
-    //           <BadgeIcon color="info" />
-    //         </Tooltip>
-    //       ),
-    //       UGA_ADD: true,
-    //       UGA_DEL: true,
-    //       UGA_MOD: true,
-    //       UGA_PRINT: true,
-    //       UGA_PROCESS: true,
-    //       UGA_VIEW: true,
-    //       UGA_ACCESSIDS: "TR122",
-    //     },
-    //     {
-    //       name: "Insights",
-    //       id: 5849,
-    //       //url: "/Apps/TR286/List of Employees",
-    //       url: "/Apps/SkillGlow/SkillInsights",
-    //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
-    //       icon: (
-    //         <Tooltip title="Insights">
-    //           <DashboardOutlinedIcon color="info" />
-    //         </Tooltip>
-    //       ),
-    //       UGA_ADD: true,
-    //       UGA_DEL: true,
-    //       UGA_MOD: true,
-    //       UGA_PRINT: true,
-    //       UGA_PROCESS: true,
-    //       UGA_VIEW: true,
-    //       UGA_ACCESSIDS: "TR122",
-    //     },
-
-    //   ],
-    // },
-
-    // {
-    //   name: "Assessment",
-    //   id: 4579,
-    //   MenuID: "ST1609",
-    //   Tooltipname: "Assessment",
-    //   icon: (
-    //     <Tooltip title="Assessment">
-    //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-    //     </Tooltip>
-    //   ),
-    //   url: "/Apps/TR299/List Of Assessment Type",
-    //   UGA_ADD: true,
-    //   UGA_DEL: true,
-    //   UGA_MOD: true,
-    //   UGA_PRINT: true,
-    //   UGA_PROCESS: true,
-    //   UGA_VIEW: true,
-    //   UGA_ACCESSIDS: "TR122",
-
-    // },
-    {
-      name: "Settings",
-      id: 95689,
-      MenuID: "ST1600",
-      Tooltipname: "Settings",
-      icon: (
-        <Tooltip title="Settings">
-          <SettingsIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-        {
-          name: "Company",
-          id: 5846,
-          url: "./configuration",
-          icon: (
-            <Tooltip title="Configuration">
-              <DisplaySettingsIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR252",
-        },
-        {
-          name: "Approval",
-          id: 58467,
-          url: "./Approval",
-          icon: (
-            <Tooltip title="Approval">
-              <EventAvailableIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR258",
-        },
-        {
-          name: "Biometric",
-          id: 58467,
-          url: "./Biometric",
-          icon: (
-            <Tooltip title="Biometric">
-              <FingerprintIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR252",
-        },
-        {
-          name: "Geo Fencing",
-          id: 58468,
-          url: "./TR128/Location",
-          icon: (
-            <Tooltip title="Geofencing">
-              <FenceIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR252",
-        },
-        {
-          name: "Change Password",
-          id: 5859,
-          url: "./change Password",
-          icon: (
-            <Tooltip title="Change Password">
-              <LockOpenIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR253",
-        },
-      ],
-    },
-    {
-      name: "Company",
-      id: 95689,
-      MenuID: "ST1600",
-      Tooltipname: "Company",
-      icon: (
-        <Tooltip title="Company">
-          <AssuredWorkloadIcon sx={{ color: "#651fff" }} />
-        </Tooltip>
-      ),
-      children: [
-        {
-          name: "Company Details",
-          id: 5846,
-          url: "./ChangeyourPassword_2",
-          icon: (
-            <Tooltip title="Company Details">
-              <DisplaySettingsIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR252",
-        },
-
-        {
-          name: "Logo & GST Upload",
-          id: 58467,
-          url: "./ChangeyourPassword_4",
-          icon: (
-            <Tooltip title="Logo & GST Upload">
-              <PermMediaIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR258",
-        },
-        {
-          name: "Header & Footer Setup",
-          id: 56667,
-          url: "./ChangeyourPassword_5",
-          icon: (
-            <Tooltip title="Header & Footer Setup">
-              <SettingsOverscanIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR258",
-        },
-        {
-          name: "Activate My Subscription",
-          id: 5846,
-          url: "./ChangeyourPassword_3",
-          icon: (
-            <Tooltip title="Activate My Subscription">
-              <UnsubscribeIcon color="info" />
-            </Tooltip>
-          ),
-          UGA_ADD: true,
-          UGA_DEL: true,
-          UGA_MOD: true,
-          UGA_PRINT: true,
-          UGA_PROCESS: true,
-          UGA_VIEW: true,
-          UGA_ACCESSIDS: "TR252",
-        },
-
-      ],
-    },
-  ],
-};
 
 const Item = ({ title, to, icon, selected, setSelected, isChild }) => {
   const theme = useTheme();
@@ -1196,16 +284,16 @@ const Sidebars = () => {
 
   const Modules = JSON.parse(sessionStorage.getItem("Modules")) || [];
   console.log(Modules, "Straaaaa");
-
+  const handleLogout = () => {
+    sessionStorage.clear(); // clear session only
+    navigate("/");
+  };
   const handleClicks = (item) => {
     let newData = { ...menu, [item]: !menu[item] };
     setMenu(newData);
   };
   const [menu, setMenu] = useState({});
-  const filteredMenuData =
-    firstLogin === "Y"
-      ? child.data.filter((menu) => menu.name === "Company")
-      : child.data.filter((menu) => menu.name !== "Company");
+
 
 
   const handleMenu = (children, accessRow, isChild, parentMenuID = null) => {
@@ -1334,7 +422,1026 @@ const Sidebars = () => {
   // const Expiryin = sessionStorage.getItem("Expiryin");
   const Expiryin = Number(sessionStorage.getItem("Expiryin")) || 0;
   console.log(Expiryin, "--in a sideBar Expiryin");
+  const child = {
+    data: [
+      {
+        name: "Setup",
+        id: 4,
+        MenuID: "HR600",
+        Tooltipname: "Setup",
+        icon: (
+          <Tooltip title="Setup">
+            <RecentActorsIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
 
+          {
+            name: "Designation",
+            id: 4578,
+            url: "./TR122/Designation",
+            icon: (
+              <Tooltip title="Designation">
+                <PersonIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR122",
+          },
+          {
+            name: "Department",
+            id: 3456,
+            url: "./TR026/Department",
+            icon: (
+              <Tooltip title="Department">
+                <DeveloperBoardIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR026",
+          },
+          {
+            name: "Role",
+            url: "./TR232/Role",
+            id: 34578,
+            icon: (
+              <Tooltip title="Roles">
+                <PeopleAltIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR232",
+          },
+
+          // {
+          //   name: "Personnel",
+          //   // url: "./TR027/Personnel",
+          //   url: is00123Subscription == true ? "./TR330/Classification" : "./TR027/Personnel",
+          //   id: 5634,
+          //   icon: (
+          //     <Tooltip title="Classification">
+          //       <PeopleAltIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR027",
+          // },
+          getPersonnelMenu(is00123Subscription),
+          {
+            name: "Project",
+            id: 4346894,
+            url: "./TR275/Project",
+            icon: (
+              <Tooltip title="Project">
+                <SourceOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR275",
+          },
+          {
+            name: "Functions",
+            id: 567,
+            url: "./TR121/Functions",
+            icon: (
+              <Tooltip title="Functions">
+                <Diversity3Icon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR121",
+          },
+          // {
+          //   name: "Party",
+          //   id: 4346895,
+          //   url: "./TR243/Party",
+          //   icon: (
+          //     <Tooltip title="Party">
+          //       <PersonSearchIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR243",
+          // },
+          {
+            name: "Shift",
+            id: 45689,
+            url: "./TR265/Shift",
+            icon: (
+              <Tooltip title="Shift">
+                <SafetyCheckIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR265",
+          },
+          {
+            name: "Leave Type",
+            id: 45680,
+            url: "./TR213/Leave Type",
+            icon: (
+              <Tooltip title="Leave Type">
+                <Hail color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR213",
+          },
+          // {
+          //   name: "Payroll",
+          //   id: 46,
+          //   url: "./TR027/Employee Payroll",
+          //   icon: (
+          //     <Tooltip title="Employees">
+          //       <CurrencyRubleIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR027",
+          // },
+          {
+            name: "Overhead Type",
+            id: 47,
+            url: "./TR292/Overhead Type",
+            icon: (
+              <Tooltip title="Overhead Type">
+                <SummarizeIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR292",
+          },
+          {
+            name: "Overhead",
+            id: 41,
+            url: "./TR085/Overhead",
+            icon: (
+              <Tooltip title="Overhead">
+                <RequestQuoteOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR085",
+          },
+
+          {
+            name: "Holiday List",
+            id: 54668,
+            url: "./TR218/Holiday List",
+            icon: (
+              <Tooltip title="Leave Type">
+                <FactCheckRoundedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR218",
+          },
+
+          {
+            name: "Salary Component",
+            id: 56796,
+            url: "./TR205/Salary Component",
+            icon: (
+              <Tooltip title="Salary Component">
+                <AttachMoneyIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR205",
+          },
+
+          {
+            name: "Satuary Component",
+            id: 4578,
+            url: "./TR207/Satuary Component",
+            icon: (
+              <Tooltip title="Satuary Component">
+                <LocalPoliceOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR207",
+          },
+        ],
+      },
+      {
+        name: "CRM",
+        id: 33,
+        MenuID: "CRM1800",
+        Tooltipname: "CRM",
+        icon: (
+          <Tooltip title="CRM">
+            <SupportAgentOutlinedIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+
+          {
+            name: "HSN",
+            id: 43468,
+            url: "./TR316/HSN Category",
+            icon: (
+              <Tooltip title="HSN">
+                <QrCodeScannerOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR316",
+          },
+          {
+            name: "Item",
+            id: 43468,
+            url: "./TR315/Item Group",
+            icon: (
+              <Tooltip title="Item">
+                <InventoryOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR315",
+          },
+          {
+            name: "Route",
+            id: 43468,
+            url: "./TR323/Route",
+            icon: (
+              <Tooltip title="Route">
+                <RouteOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR323",
+          },
+          {
+            name: "Party",
+            id: 434895,
+            //  url: "./TR243/Party",
+            url: "./TR321/Party",
+            icon: (
+              <Tooltip title="Party">
+                <PersonSearchIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR321",
+          },
+          {
+            name: "Aging Report",
+            id: 434685,
+            //  url: "./TR243/Party",
+            url: "/Apps/Party/AgingReport",
+            icon: (
+              <Tooltip title="Aging Report">
+                <ScaleOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR343",
+          },
+          //  {
+          //   name: "Lead",
+          //   id: 4346895,
+          //   //  url: "./TR243/Lead",
+          //   url: "./TR321/Lead",
+          //   icon: (
+          //     <Tooltip title="Lead">
+          //       <PersonSearchIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR321",
+          // },
+          {
+            name: "Order Enquiry",
+            id: 4346899,
+            url: "./TR313/Order Enquiry",
+            icon: (
+              <Tooltip title="Order Enquiry">
+                <QueryStatsOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR313",
+          },
+          {
+            name: "Lead Enquiry",
+            id: 4346899,
+            url: "./TR328/Lead Enquiry",
+            icon: (
+              <Tooltip title="Lead Enquiry">
+                <QueryBuilderIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR328",
+          },
+
+          //  {
+          //   name: "Audit",
+          //   id: 4346899,
+          //   url: "/Apps/TR260/EditAudit",
+          //   icon: (
+          //     <Tooltip title="Audit">
+          //       <ArtTrackIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR328",
+          // },
+
+        ],
+      },
+      {
+        name: "Transaction",
+        id: 97659,
+        MenuID: "TS1700",
+        Tooltipname: "Transaction",
+        icon: (
+          <Tooltip title="Transaction">
+            <AssignmentTurnedInIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "Check In",
+            id: 5486,
+            url: "./TR123/Check In",
+            icon: (
+              <Tooltip title="Check In">
+                <ChecklistIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR123",
+          },
+          {
+            name: "Check Out",
+            id: 5589,
+            url: "./TR124/Check Out",
+            icon: (
+              <Tooltip title="Check Out">
+                <ChecklistRtlIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR124",
+          },
+          {
+            name: "Payroll Configuration",
+            id: 47,
+            url: "./TR027/Employee Payroll",
+            icon: (
+              <Tooltip title="Payroll Configuration">
+                <PriceCheckIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR342",
+          },
+          {
+            name: "Payroll",
+            id: 46,
+            url: "./TR333/Payroll",
+            icon: (
+              <Tooltip title="Payroll">
+                <CurrencyRubleIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR333",
+          },
+          {
+            name: "Employee Request",
+            id: 5846,
+            url: "./TR257/Employee Request",
+            icon: (
+              <Tooltip title="Requests">
+                <PermContactCalendarIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR257",
+          },
+          // {
+          //   name: "Approval",
+          //   id: 5859,
+          //   url: "./TR027/Approval",
+          //   icon: (
+          //     <Tooltip title="Approval">
+          //       <TaskAltIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR258",
+          // },
+        ],
+      },
+      {
+        name: "Agile",
+        id: 45678,
+        MenuID: "EM900",
+        Tooltipname: "Agile",
+        icon: (
+          <Tooltip title="Agile">
+            <GroupsOutlinedIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "Attendance(D)",
+            url: "/Apps/TR260/Editdailyattendance",
+            id: 5590,
+            icon: (
+              <Tooltip title="Daily Attendance">
+                <AppRegistrationOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR260",
+          },
+          {
+            name: "Attendance(M)",
+            url: "/Apps/TR217/EditAttendance",
+            id: 5580,
+            icon: (
+              <Tooltip title="Monthly Attendance">
+                {/* <AppRegistrationOutlinedIcon color="info" /> */}
+                <CalendarMonthOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR217",
+          },
+          {
+            name: "Attendance Register",
+            url: "/Apps/TR259/EditAttendanceHistory",
+            id: 5591,
+            icon: (
+              <Tooltip title="Attendance Register">
+                <WorkHistoryOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR259",
+          },
+          {
+            name: "Timesheet",
+            url: "/Apps/TR261/EditTimeSheet",
+            id: 5592,
+            icon: (
+              <Tooltip title="Timesheet">
+                <PendingActionsOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR261",
+          },
+        ],
+      },
+
+
+      // {
+      //   name: "Assessment",
+      //   id: 4578,
+      //   MenuID: "ST1600",
+      //   Tooltipname: "Assessment",
+      //   icon: (
+      //     <Tooltip title="Assessment">
+      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+      //     </Tooltip>
+      //   ),
+      //   children: [
+      //     {
+      //       name: "Prepare",
+      //       id: 5848,
+      //       // url: "/Apps/SkillGlow/CategoryMain",
+      //       url: "/Apps/TR278/List Of Categories",
+      //       icon: (
+      //         <Tooltip title="Prepare">
+      //           <CategoryOutlinedIcon color="info" />
+      //         </Tooltip>
+      //       ),
+      //       UGA_ADD: true,
+      //       UGA_DEL: true,
+      //       UGA_MOD: true,
+      //       UGA_PRINT: true,
+      //       UGA_PROCESS: true,
+      //       UGA_VIEW: true,
+      //       UGA_ACCESSIDS: "TR122",
+      //     },
+      //     {
+      //       name: "Schedule",
+      //       id: 5849,
+      //       url: "/Apps/TR286/List of Employees",
+      //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+      //       icon: (
+      //         <Tooltip title="Schedule">
+      //           <BadgeIcon color="info" />
+      //         </Tooltip>
+      //       ),
+      //       UGA_ADD: true,
+      //       UGA_DEL: true,
+      //       UGA_MOD: true,
+      //       UGA_PRINT: true,
+      //       UGA_PROCESS: true,
+      //       UGA_VIEW: true,
+      //       UGA_ACCESSIDS: "TR122",
+      //     },
+      //     {
+      //       name: "Insights",
+      //       id: 5849,
+      //       //url: "/Apps/TR286/List of Employees",
+      //       url: "/Apps/SkillGlow/SkillInsights",
+      //       // url: "/Apps/SkillGlow/Assessment/Schedule/EmployeeSchedule",
+      //       icon: (
+      //         <Tooltip title="Insights">
+      //           <DashboardOutlinedIcon color="info" />
+      //         </Tooltip>
+      //       ),
+      //       UGA_ADD: true,
+      //       UGA_DEL: true,
+      //       UGA_MOD: true,
+      //       UGA_PRINT: true,
+      //       UGA_PROCESS: true,
+      //       UGA_VIEW: true,
+      //       UGA_ACCESSIDS: "TR122",
+      //     },
+
+      //   ],
+      // },
+
+      {
+        name: "Assessment",
+        id: 4579,
+        MenuID: "ST1609",
+        Tooltipname: "Assessment",
+        icon: (
+          <Tooltip title="Assessment">
+            <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        url: "/Apps/TR299/List Of Assessment Type",
+        UGA_ADD: true,
+        UGA_DEL: true,
+        UGA_MOD: true,
+        UGA_PRINT: true,
+        UGA_PROCESS: true,
+        UGA_VIEW: true,
+        UGA_ACCESSIDS: "TR299",
+
+      },
+      {
+        name: "Settings",
+        id: 95689,
+        MenuID: "ST1600",
+        Tooltipname: "Settings",
+        icon: (
+          <Tooltip title="Settings">
+            <SettingsIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "Company",
+            id: 5846,
+            url: "./configuration",
+            icon: (
+              <Tooltip title="Configuration">
+                <DisplaySettingsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR014",
+          },
+          {
+            name: "Approval",
+            id: 58467,
+            url: "./Approval",
+            icon: (
+              <Tooltip title="Approval">
+                <EventAvailableIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR258",
+          },
+          {
+            name: "Biometric",
+            id: 58467,
+            url: "./Biometric",
+            icon: (
+              <Tooltip title="Biometric">
+                <FingerprintIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR344",
+          },
+          {
+            name: "Geo Fencing",
+            id: 58468,
+            url: "./TR128/Location",
+            icon: (
+              <Tooltip title="Geofencing">
+                <FenceIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR345",
+          },
+          {
+            name: "Change Password",
+            id: 5859,
+            url: "./change Password",
+            icon: (
+              <Tooltip title="Change Password">
+                <LockOpenIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR253",
+          },
+        ],
+      },
+      {
+        name: "Security",
+        id: 989,
+        MenuID: "SE100",
+        Tooltipname: "Security",
+        icon: (
+          <Tooltip title="Security">
+            <SecurityIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "User",
+            id: 586,
+            url: "./TR094/User",
+            icon: (
+              <Tooltip title="User">
+                <BadgeIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR094",
+          },
+          {
+            name: "User Group",
+            id: 5867,
+            url: "./TR095/User Group",
+            icon: (
+              <Tooltip title="User Group">
+                <GroupsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR099",
+          },
+        ],
+      },
+      {
+        name: "GSBD",
+        id: 95654,
+        MenuID: "SOP100",
+        Tooltipname: "GSBD",
+        icon: (
+          <Tooltip title="GSBD">
+            <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "QC",
+            id: 5843,
+            url: "/Apps/TR336/List Of SOPs",
+            icon: (
+              <Tooltip title="List Of SOPs">
+                <LibraryAddCheckOutlinedIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR336",
+          },
+          // {
+          //   name: "QA",
+          //   id: 5877,
+          //   url: "/Apps/TR337/List Of SOPs",
+          //   icon: (
+          //     <Tooltip title="List Of SOPs">
+          //       <IntegrationInstructionsOutlinedIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR337",
+          // },
+
+        ],
+      },
+      {
+        name: "Company",
+        id: 95689,
+        MenuID: "BC2000",
+        Tooltipname: "Company",
+        icon: (
+          <Tooltip title="Company">
+            <AssuredWorkloadIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        children: [
+          {
+            name: "Company Details",
+            id: 5846,
+            url: "./ChangeyourPassword_2",
+            icon: (
+              <Tooltip title="Company Details">
+                <DisplaySettingsIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR346",
+          },
+
+          {
+            name: "Logo & GST Upload",
+            id: 58467,
+            url: "./ChangeyourPassword_4",
+            icon: (
+              <Tooltip title="Logo & GST Upload">
+                <PermMediaIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR347",
+          },
+          {
+            name: "Header & Footer Setup",
+            id: 56667,
+            url: "./ChangeyourPassword_5",
+            icon: (
+              <Tooltip title="Header & Footer Setup">
+                <SettingsOverscanIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR348",
+          },
+          {
+            name: "Activate My Subscription",
+            id: 5846,
+            url: "./ChangeyourPassword_3",
+            icon: (
+              <Tooltip title="Activate My Subscription">
+                <UnsubscribeIcon color="info" />
+              </Tooltip>
+            ),
+            UGA_ADD: true,
+            UGA_DEL: true,
+            UGA_MOD: true,
+            UGA_PRINT: true,
+            UGA_PROCESS: true,
+            UGA_VIEW: true,
+            UGA_ACCESSIDS: "TR349",
+          },
+
+        ],
+      },
+    ],
+  };
+  const filteredMenuData =
+    firstLogin === "Y"
+      ? child.data.filter((menu) => menu.name === "Company")
+      : child.data.filter((menu) => menu.name !== "Company");
   return (
     <Box
       sx={{
@@ -1441,10 +1548,11 @@ const Sidebars = () => {
 
             <Tooltip title="Logout">
               <ListItemButton
-                onClick={() => {
-                  navigate("/");
-                  dispatch(logout());
-                }}
+                // onClick={() => {
+                //   navigate("/");
+                //   dispatch(logout());
+                // }}
+                onClick={() => { handleLogout() }}
               >
                 <ListItemIcon>
                   <LogoutOutlinedIcon color="error" />

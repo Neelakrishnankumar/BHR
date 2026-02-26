@@ -118,21 +118,34 @@ const Editproject = () => {
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
     ByProduct: data.ByProduct === "Y" ? true : false,
+    Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
-    budget: data.Budget || 0,
-    scheduled: data.ScheduledCost || 0,
-    actual: data.ActualCost || 0,
-    price: data.Price || "0",
+    // budget: data.Budget ?? 0.00,
+    // scheduled: data.ScheduledCost ?? 0.00,
+    // actual: data.ActualCost ?? 0.00,
+    // price: data.Price ?? 0.00,
+    budget: data.Budget === "" ? "0.00" : data.Budget,
+    scheduled:
+      data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+    actual:
+      data.ActualCost === "" ? "0.00" : data.ActualCost,
+    price:
+      data.Price === "" ? "0.00" : data.Price,
+    OtherExpenses:
+      data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
     projectOwner: data.ProjectOwnerID && data.ProjectOwnerID !== "0"
       ? {
-          RecordID: data.ProjectOwnerID,
-          Code: data.ProjectOwnerCode,
-          Name: data.ProjectOwnerName,
-        }
+        RecordID: data.ProjectOwnerID,
+        Code: data.ProjectOwnerCode,
+        Name: data.ProjectOwnerName,
+      }
       : null,
-    OtherExpenses: data.OtherExpenses || 0,
+    // OtherExpenses: data.OtherExpenses ?? 0.00,
+    longitude: data.Longitude || 0,
+    latitude: data.Latitude || 0,
+    radius: data.Radius || 0,
   };
 
   const Fnsave = async (values, del) => {
@@ -141,8 +154,8 @@ const Editproject = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "softdelete"
-        : "update";
+          ? "softdelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -161,6 +174,7 @@ const Editproject = () => {
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
       ByProduct: values.ByProduct == true ? "Y" : "N",
+      EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
       Budget: values.budget || 0,
@@ -168,6 +182,9 @@ const Editproject = () => {
       Finyear,
       CompanyID,
       ProjectOwnerID: values.projectOwner?.RecordID || 0,
+      Longitude: values.longitude || 0,
+      Latitude: values.latitude || 0,
+      Radius: values.radius || 0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -279,7 +296,7 @@ const Editproject = () => {
                 >
                   {CompanyAutoCode == "Y" ? (
                     <TextField
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       name="code"
                       type="text"
                       id="code"
@@ -295,11 +312,11 @@ const Editproject = () => {
                       helperText={touched.code && errors.code}
                       InputProps={{ readOnly: true }}
 
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       name="code"
                       type="text"
                       id="code"
@@ -324,7 +341,7 @@ const Editproject = () => {
                   )}
 
                   <TextField
-                    disabled={mode=="V"}
+                    disabled={mode == "V"}
                     name="name"
                     type="text"
                     id="name"
@@ -348,7 +365,7 @@ const Editproject = () => {
                   />
 
                   <CheckinAutocomplete
-                    disabled={mode=="V"}
+                    disabled={mode == "V"}
                     name="incharge"
                     label={
                       <>
@@ -371,7 +388,7 @@ const Editproject = () => {
                   />
 
                   <CheckinAutocomplete
-                    disabled={mode=="V"}
+                    disabled={mode == "V"}
                     name="projectOwner"
                     label="Project Owner"
                     // label={
@@ -432,12 +449,12 @@ const Editproject = () => {
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
                   <TextField
-                    disabled={mode=="V"}
+                    disabled={mode == "V"}
                     labelId="demo"
                     id="CurrentStatus"
                     name="CurrentStatus"
                     type="text"
-                    label = "Status"
+                    label="Status"
                     // label={
                     //   <>
                     //     Status
@@ -469,10 +486,10 @@ const Editproject = () => {
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
-                 
+
 
                   <TextField
-                    disabled={mode=="V"}
+                    disabled={mode == "V"}
                     name="sortorder"
                     type="number"
                     id="sortorder"
@@ -498,11 +515,11 @@ const Editproject = () => {
                     }}
                   />
 
-                   <Box>
+                  <Box>
                     {/* <Box display="flex" flexDirection="row" gap={formGap}>
                     <Box display="flex" alignItems="center"> */}
                     <Field
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       type="checkbox"
                       name="Routine"
                       id="Routine"
@@ -512,7 +529,7 @@ const Editproject = () => {
                     />
                     <FormLabel
                       focused={false}
-                      // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
+                    // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
                     >
                       Routine Tasks
                     </FormLabel>
@@ -532,7 +549,7 @@ const Editproject = () => {
                       Service & Maintenance
                     </FormLabel> */}
                     <Field
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       type="checkbox"
                       name="ByProduct"
                       id="ByProduct"
@@ -542,15 +559,25 @@ const Editproject = () => {
                     />
                     <FormLabel
                       focused={false}
-                      // htmlFor="ServiceMaintenance"
-                      // sx={{ ml: 1,marginLeft:0}}
+                    // htmlFor="ServiceMaintenance"
+                    // sx={{ ml: 1,marginLeft:0}}
                     >
                       Product
                     </FormLabel>
-
+                    <Field
+                      disabled={mode == "V"}
+                      type="checkbox"
+                      name="Onsiteactivities"
+                      id="Onsiteactivities"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel
+                      focused={false}>Enable Onsite Activities</FormLabel>
                     <Field
                       //  size="small"
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       type="checkbox"
                       name="delete"
                       id="delete"
@@ -563,7 +590,7 @@ const Editproject = () => {
                     <FormLabel focused={false}>Delete</FormLabel>
                     <Field
                       //  size="small"
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       type="checkbox"
                       name="disable"
                       id="disable"
@@ -583,6 +610,7 @@ const Editproject = () => {
                 {values.ByProduct === true ? (
                   <Box
                     display="grid"
+                    initialValues={InitialValue}
                     gap={formGap}
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -595,7 +623,7 @@ const Editproject = () => {
                   >
                     <TextField
                       //fullWidth
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       variant="standard"
                       type="number"
                       id="price"
@@ -625,6 +653,7 @@ const Editproject = () => {
                   <Box
                     display="grid"
                     gap={formGap}
+                    initialValues={InitialValue}
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     // gap="30px"
@@ -635,7 +664,7 @@ const Editproject = () => {
                     }}
                   >
                     <TextField
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       fullWidth
                       variant="standard"
                       type="number"
@@ -674,7 +703,7 @@ const Editproject = () => {
                     />
                     <TextField
                       fullWidth
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       variant="standard"
                       type="number"
                       id="scheduled"
@@ -701,7 +730,7 @@ const Editproject = () => {
                       }}
                     />
                     <TextField
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       fullWidth
                       variant="standard"
                       type="number"
@@ -729,7 +758,7 @@ const Editproject = () => {
                       }}
                     />
                     <TextField
-                      disabled={mode=="V"}
+                      disabled={mode == "V"}
                       fullWidth
                       variant="standard"
                       type="number"
@@ -760,7 +789,114 @@ const Editproject = () => {
                     {/* </FormControl> */}
                   </Box>
                 )}
+                <Typography variant="h5" padding={1}>
+                  Location:
+                </Typography>
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  // gap="30px"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    label="Latitude"
+                    name="latitude"
+                    focused
+                    type="text"
+                    value={values.latitude}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
 
+                      // Allow - and one decimal only
+                      if (/^-?\d*\.?\d*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      style: { textAlign: "right" },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    label="Longitude"
+                    name="longitude"
+                    focused
+                    type="text"
+                    value={values.longitude}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (/^-?\d*\.?\d*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      style: { textAlign: "right" },
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    focused
+                    label="Radius (m)"
+                    name="radius"
+                    type="text"
+                    value={values.radius}
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (/^\d*\.?\d*$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      style: { textAlign: "right" },
+                    }}
+                  />
+                  {/* <TextField
+                    fullWidth
+                    variant="standard"
+                    focused
+                    label="Radius (m)"
+                    name="radius"
+                    value={values.radius}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    inputProps={{
+                      step: "any",
+                      min: 0,
+                      style: { textAlign: "right" },
+                      onKeyDown: (e) => {
+                        if (["e", "E", "+", "-"].includes(e.key)) {
+                          e.preventDefault();
+                        }
+                      },
+                      onInput: (e) => {
+                        e.target.value = e.target.value.replace(
+                          /[eE+\-]/g,
+                          ""
+                        );
+                      },
+                    }}
+                  /> */}
+                </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
                   {YearFlag == "true" ? (
                     <LoadingButton

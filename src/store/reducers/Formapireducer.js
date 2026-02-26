@@ -55,6 +55,7 @@ const initialState = {
   purchaseorderratingData: [],
   searchLoading: false,
   empAttendanceData: {},
+  payslipAttendanceData: {},
   empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
   AttendanceDataLoading: false,
@@ -159,6 +160,32 @@ const initialState = {
   replacementQtyGetdata: {},
   replacementQtyGetstatus: "",
   replacementQtyGetloading: false,
+
+  //SOP PROCESS
+  SOPProcessdata: {},
+  SOPProcessLoading: false,
+  SOPProcessStatus: "",
+
+
+  //SOP CONFIG POST
+  SOPConfigdata: {},
+  SOPConfigLoading: false,
+  SOPConfigStatus: "",
+
+  //SOP CONFIG GET
+  SOPConfigGetdata: {},
+  SOPConfigGetloading: false,
+  SOPConfigGetStatus: "",
+
+  //SPECIMEN GET
+  SpecimenGetdata: {},
+  SpecimenGetloading: false,
+  SpecimenGetStatus: "",
+
+  //SPECIMEN POST
+  SpecimenPostdata: {},
+  SpecimenPostloading: false,
+  SpecimenPostStatus: "",
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2426,6 +2453,7 @@ export const getApiSlice = createSlice({
       state.stockorderData = [];
       state.purchaseorderratingData = [];
       state.empAttendanceData = [];
+      state.payslipAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
       state.MonthlyAttendanceData = [];
@@ -2549,6 +2577,23 @@ export const getApiSlice = createSlice({
         state.Data = action.payload.Data;
       })
       .addCase(invoiceHeaderGetData.rejected, (state, action) => {
+        state.Status = "Error";
+        state.loading = false;
+      })
+       .addCase(batchreconciliationGetData.pending, (state, action) => {
+        state.Status = "idle";
+        state.loading = true;
+      })
+      .addCase(batchreconciliationGetData.fulfilled, (state, action) => {
+        state.Status = "success";
+        state.loading = false;
+        if (action.payload.Data.Disable == "Y") {
+          action.payload.Data.Disable = true;
+        } else action.payload.Data.Disable = false;
+
+        state.Data = action.payload.Data;
+      })
+      .addCase(batchreconciliationGetData.rejected, (state, action) => {
         state.Status = "Error";
         state.loading = false;
       })
@@ -3362,6 +3407,20 @@ export const getApiSlice = createSlice({
         state.empAttendanceDataLoading = false;
         state.empAttendanceData = [];
       })
+      .addCase(payslipAttendance.fulfilled, (state, action) => {
+        state.payslipAttendanceData = action.payload.Data;
+        state.empAttendanceDataLoading = false;
+      })
+      .addCase(payslipAttendance.pending, (state, action) => {
+        state.Status = "idle";
+        state.empAttendanceDataLoading = true;
+        state.payslipAttendanceData = [];
+      })
+      .addCase(payslipAttendance.rejected, (state, action) => {
+        state.Status = "Error";
+        state.empAttendanceDataLoading = false;
+        state.payslipAttendanceData = [];
+      })
       .addCase(Attendance.fulfilled, (state, action) => {
         state.AttendanceData = action.payload.Data;
         state.AttendanceDataLoading = false;
@@ -3725,7 +3784,85 @@ export const getApiSlice = createSlice({
           },
         };
       })
+//SOP Process POST
+      .addCase(SOPProcessPost.pending, (state, action) => {
+        state.SOPProcessStatus = "idle";
+        state.SOPProcessLoading = true;
+      })
+      .addCase(SOPProcessPost.fulfilled, (state, action) => {
+        state.SOPProcessStatus = "success";
+        state.SOPProcessLoading = false
+        state.SOPProcessdata = action.meta.arg.idata;
+      })
 
+      .addCase(SOPProcessPost.rejected, (state, action) => {
+        state.SOPProcessStatus = "Error";
+        state.SOPProcessLoading = false;
+      })
+//SOP CONFIG POST
+      .addCase(SOPConfigPost.pending, (state, action) => {
+        state.SOPConfigStatus = "idle";
+        state.SOPConfigLoading = true;
+      })
+      .addCase(SOPConfigPost.fulfilled, (state, action) => {
+        state.SOPConfigStatus = "success";
+        state.SOPConfigLoading = false
+        state.SOPConfigdata = action.meta.arg.idata;
+      })
+
+      .addCase(SOPConfigPost.rejected, (state, action) => {
+        state.SOPConfigStatus = "Error";
+        state.SOPConfigLoading = false;
+      })
+
+       //SOP CONFIGURATION  - GET
+      .addCase(SOPConfigGet.pending, (state, action) => {
+        state.SOPConfigGetstatus = "idle";
+        state.SOPConfigGetloading = true;
+      })
+      .addCase(SOPConfigGet.fulfilled, (state, action) => {
+        state.SOPConfigGetstatus = "success";
+        state.SOPConfigGetloading = false;
+        state.SOPConfigGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SOPConfigGet.rejected, (state, action) => {
+        state.SOPConfigGetstatus = "Error";
+        state.SOPConfigGetloading = false;
+      })
+       //SPECIMEN - GET
+      .addCase(SpecimenGet.pending, (state, action) => {
+        state.SpecimenGetstatus = "idle";
+        state.SpecimenGetloading = true;
+      })
+      .addCase(SpecimenGet.fulfilled, (state, action) => {
+        state.SpecimenGetstatus = "success";
+        state.SpecimenGetloading = false;
+        state.SpecimenGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SpecimenGet.rejected, (state, action) => {
+        state.SpecimenGetstatus = "Error";
+        state.SpecimenGetloading = false;
+      })
+       //SPECIMEN - POST
+      .addCase(SpecimenPost.pending, (state, action) => {
+        state.SpecimenPoststatus = "idle";
+        state.SpecimenPostloading = true;
+      })
+      .addCase(SpecimenPost.fulfilled, (state, action) => {
+        state.SpecimenPoststatus = "success";
+        state.SpecimenPostloading = false;
+        state.SpecimenPostdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SpecimenPost.rejected, (state, action) => {
+        state.SpecimenPoststatus = "Error";
+        state.SpecimenPostloading = false;
+      })
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
         state.projectName =
@@ -4773,6 +4910,46 @@ export const empAttendance = createAsyncThunk(
     return response.data;
   },
 );
+export const payslipAttendance = createAsyncThunk(
+  "employee/Payslipattendance",
+  async ({ data }) => {
+    var url = store.getState().globalurl.payslipattendanceUrl;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const ItempriceGet = createAsyncThunk(
+  "employee/ItempriceGet",
+  async (data) => {  
+    var url = store.getState().globalurl.ItempriceGeturl;
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const MonthlyAttendance = createAsyncThunk(
   "employee/monthlyattendance",
   async ({ data }) => {
@@ -5138,7 +5315,7 @@ export const Setup_MenuExcel = createAsyncThunk(
 
     const response = await axios.post(baseUrl, excelSetUp, {
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         Authorization:
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
@@ -5177,6 +5354,125 @@ export const replacementQtyGet = createAsyncThunk(
 
     const data = {
       PartyID: PartyID,
+      CompanyID: CompanyID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+//batchreconciliationGetData
+export const batchreconciliationGetData = createAsyncThunk(
+  "batchreconciliationGetData/Get",
+  async (props) => {
+    var url = store.getState().globalurl.apiUrl;
+    const data = {
+      accessid: props.accessID,
+      action: props.get,
+      recid: props.recID,
+    };
+    console.log("🚀 ~ data:", JSON.stringify(data));
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SOPProcessPost = createAsyncThunk(
+  "SOPProcessPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SOPProcess;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const SOPConfigPost = createAsyncThunk(
+  "SOPConfigPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SOPConfigPost;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SOPConfigGet = createAsyncThunk(
+  "SOPConfigGet/Get",
+  async ({EmployeeID,CompanyID}) => {
+    const url = store.getState().globalurl.SOPConfigGet;
+
+    const data = {
+      EmployeeID: EmployeeID,
+      CompanyID: CompanyID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+
+export const SpecimenPost = createAsyncThunk(
+  "SpecimenPost/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SpecimenPost;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+
+export const SpecimenGet = createAsyncThunk(
+  "SpecimenGet/Get",
+  async ({EmployeeID,CompanyID}) => {
+    const url = store.getState().globalurl.SpecimenGet;
+
+    const data = {
+      EmployeeID: EmployeeID,
       CompanyID: CompanyID,
     };
     console.log("get" + JSON.stringify(data));

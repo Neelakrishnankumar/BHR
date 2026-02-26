@@ -644,7 +644,7 @@ const NewSchedule = () => {
           </Box>
         </Paper>
 
-        {!getLoading ? (
+        {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
               initialValues={initialValues}

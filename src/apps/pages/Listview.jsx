@@ -54,7 +54,7 @@ import { useContext } from "react";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useState } from "react";
-import { fnCsvFileUpload, fnCsvFileUploadnew } from "../../store/reducers/Imguploadreducer";
+import { fnCsvFileUpload, fnCsvFileUploadnew, } from "../../store/reducers/Imguploadreducer";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { screenRightsData } from "../../store/reducers/screenRightsreducer";
 import EditIcon from "@mui/icons-material/Edit";
@@ -113,7 +113,9 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { FaFileExcel } from "react-icons/fa";
 import { getConfig } from "../../config";
 import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
-
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -560,6 +562,7 @@ const Listview = () => {
             ) : (
               false
             )}
+
             {/* <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
@@ -568,6 +571,7 @@ const Listview = () => {
                 />
               </IconButton>
             </Tooltip> */}
+
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -649,34 +653,57 @@ const Listview = () => {
               false
             ) : accessID == "TR330" ? (
               false
-            ) : YearFlag == "true" ? (
-              // UGA_ADD ? (
+            )
+              // : accessID == "TR336" ? (
+              //false
+              //)
+              : accessID == "TR337" ? (
+                false
+              ) : YearFlag == "true" ? (
+                // UGA_ADD ? (
 
-              <Tooltip arrow title="Add">
-                <IconButton>
-                  <AddOutlinedIcon
-                    onClick={() => {
-                      navigate(
-                        `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
-                        }`,
-                        {
-                          state: {
-                            CustomerID: "-1",
-                            ProductID: "-1",
-                            BomID: "-1",
-                          },
-                        }
-                      );
-                    }}
+                <Tooltip arrow title="Add">
+                  <IconButton>
+                    <AddOutlinedIcon
+                      onClick={() => {
+                        navigate(
+                          `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                          }`,
+                          {
+                            state: {
+                              CustomerID: "-1",
+                              ProductID: "-1",
+                              BomID: "-1",
+                            },
+                          }
+                        );
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                // ) : (
+                //   false
+                // )
+                false
+              )}
+
+            {/* <Tooltip arrow title="Import Excel">
+                <IconButton
+                  size="large"
+                  color="primary"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept=".xlsx,.xls"
+                    type="file"
+                    onChange={handleDesignationImport}
                   />
+
+                  <FileUploadIcon />
                 </IconButton>
-              </Tooltip>
-            ) : (
-              // ) : (
-              //   false
-              // )
-              false
-            )}
+              </Tooltip> */}
             {/* <Tooltip arrow title="Excel">
             <IconButton  color="primary">
             <input hidden accept="all/*"  type="file" onChange={changeHandler}/>
@@ -816,11 +843,11 @@ const Listview = () => {
             const response = await dispatch(
               ExcelFileUpload({ formData, forcedFileName })
             ).unwrap();
-            if (response.payload.Status == "Y") {
-              toast.success(response.payload.Msg);
-              window.location.reload();
+            if (response.Status == "Y") {
+              toast.success(response.Msg);
+              // window.location.reload();
             } else {
-              toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+              toast.error(response.Msg ? response.Msg : "Error");
             }
           } catch (error) {
             console.error(error);
@@ -1183,7 +1210,8 @@ const Listview = () => {
 
                       const formattedScreenName = formatScreenName(screenName);
                       const forcedFileName = `${formattedScreenName}.xlsx`;
-                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName)
+                      console.log("🚀 ~ Listview ~ forcedFileName:", forcedFileName);
+
 
                       formData.append("CompanyID", compID);
                       formData.append("screename", screenName);
@@ -1200,11 +1228,11 @@ const Listview = () => {
                         Setup_MenuExcel(excelSetUp)
                       ).unwrap();
 
-                      if (response.payload.Status == "Y") {
-                        toast.success(response.payload.Msg);
-                        window.location.reload();
+                      if (response.Status == "Y") {
+                        toast.success(response.Msg);
+                        // window.location.reload();
                       } else {
-                        toast.error(response.payload.Msg ? response.payload.Msg : "Error");
+                        toast.error(response.Msg ? response.Msg : "Error");
                       }
                     } catch (error) {
                       toast.error("Upload failed");
@@ -1238,7 +1266,7 @@ const Listview = () => {
                           width: "100%",
                         }}>
 
-                        {/* ✅ Download Excel Button */}
+                        {/* Download Excel Button */}
                         <Button
                           variant="outlined"
                           color="success"
@@ -2003,37 +2031,37 @@ const Listview = () => {
                             //     )
                             //   }
                             // </PDFDownloadLink>
-                            
-<BlobProvider
-  document={
-    <OrdEnqProductPDF
-      data={listViewData}
-      Product={values?.product?.Name}
-      Party={values?.party?.Name}
-      filters={{
-        fromdate: values?.fromdate,
-        todate: values?.date,
-        ordertype: values?.ordertype,
-        // Imageurl: baseurlUAAM,
-        // HeaderImg: HeaderImg,
-        // FooterImg: FooterImg,
-      }}
-    />
-  }
->
-  {({ url, loading }) =>
-    loading ? (
-      <PictureAsPdfIcon
-        sx={{ fontSize: 24, opacity: 0.5 }}
-      />
-    ) : (
-      <PictureAsPdfIcon
-        sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
-        onClick={() => window.open(url, "_blank")}
-      />
-    )
-  }
-</BlobProvider>
+
+                            <BlobProvider
+                              document={
+                                <OrdEnqProductPDF
+                                  data={listViewData}
+                                  Product={values?.product?.Name}
+                                  Party={values?.party?.Name}
+                                  filters={{
+                                    fromdate: values?.fromdate,
+                                    todate: values?.date,
+                                    ordertype: values?.ordertype,
+                                    // Imageurl: baseurlUAAM,
+                                    // HeaderImg: HeaderImg,
+                                    // FooterImg: FooterImg,
+                                  }}
+                                />
+                              }
+                            >
+                              {({ url, loading }) =>
+                                loading ? (
+                                  <PictureAsPdfIcon
+                                    sx={{ fontSize: 24, opacity: 0.5 }}
+                                  />
+                                ) : (
+                                  <PictureAsPdfIcon
+                                    sx={{ fontSize: 24, color: "#d32f2f", cursor: "pointer" }}
+                                    onClick={() => window.open(url, "_blank")}
+                                  />
+                                )
+                              }
+                            </BlobProvider>
                           ) : (
                             <PDFDownloadLink
                               document={
@@ -2066,7 +2094,7 @@ const Listview = () => {
                             </PDFDownloadLink>
                           )}
 
-{/* <FaFileExcel
+                          {/* <FaFileExcel
   size={20}
   color="#1D6F42"
   style={{ cursor: "pointer" }}
@@ -4109,6 +4137,19 @@ const Listview = () => {
               variant="outlined"
             />
           </Box>
+        ) : accessID == "TR336" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<SaveOutlinedIcon color="primary" />}
+              label="List Of Documents"
+              variant="outlined"
+            />
+          </Box>
         ) : accessID == "TR323" ? (
           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
             <Chip
@@ -4146,80 +4187,91 @@ const Listview = () => {
             // sx={{ marginLeft: "50px" }}
             />
           </Box>
-        ) : accessID == "TR316" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<QrCodeScannerOutlinedIcon color="primary" />}
-              label="HSN Master"
-              variant="outlined"
-            // sx={{ marginLeft: "50px" }}
-            />
-          </Box>
-        ) : accessID == "TR099" ? (
-          <Box display="flex" flexDirection="row" padding="25px">
-            <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="List of Usergroups"
-              variant="outlined"
-            />
-          </Box>
-        ) : accessID == "TR275" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
-            {/* <Chip
+        )
+          : accessID == "TR337" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                // icon={<ArrowForwardIosOutlinedIcon color="primary" />}
+                icon={<DoubleArrowOutlinedIcon color="primary" />}
+                label="SOP Documents"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          ) : accessID == "TR316" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<QrCodeScannerOutlinedIcon color="primary" />}
+                label="HSN Master"
+                variant="outlined"
+              // sx={{ marginLeft: "50px" }}
+              />
+            </Box>
+          ) : accessID == "TR099" ? (
+            <Box display="flex" flexDirection="row" padding="25px">
+              <Chip
+                icon={<ListAltOutlinedIcon color="primary" />}
+                label="List of Usergroups"
+                variant="outlined"
+              />
+            </Box>
+          ) : accessID == "TR275" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+              {/* <Chip
               icon={<BalanceIcon color="primary" />}
               label="Milestone Weightage"
               variant="outlined"
             /> */}
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<Visibility color="primary" />}
-              label="View"
-              variant="outlined"
-            />
-            <Chip
-              icon={<PictureAsPdfIcon color="error" />}
-              label="Download PDF"
-              variant="outlined"
-            />
-            {/* <Chip
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<Visibility color="primary" />}
+                label="View"
+                variant="outlined"
+              />
+              <Chip
+                icon={<PictureAsPdfIcon color="error" />}
+                label="Download PDF"
+                variant="outlined"
+              />
+              {/* <Chip
               icon={<ListAltOutlinedIcon color="primary" />}
               label="List of Milestone"
               variant="outlined"
             /> */}
-          </Box>
-        ) : accessID == "TR128" ? (
-          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+            </Box>
+          ) : accessID == "TR128" ? (
+            <Box display="flex" flexDirection="row" padding="25px" gap="5px">
 
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-            <Chip
-              icon={<ListAltOutlinedIcon color="primary" />}
-              label="Gate"
-              variant="outlined"
-            />
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+              <Chip
+                icon={<ListAltOutlinedIcon color="primary" />}
+                label="Gate"
+                variant="outlined"
+              />
 
-          </Box>
-        ) : (
-          <Box display="flex" flexDirection="row" padding="25px">
-            <Chip
-              icon={<ModeEditOutlinedIcon color="primary" />}
-              label="Edit"
-              variant="outlined"
-            />
-          </Box>
-        )}
+            </Box>
+          ) : (
+            <Box display="flex" flexDirection="row" padding="25px">
+              <Chip
+                icon={<ModeEditOutlinedIcon color="primary" />}
+                label="Edit"
+                variant="outlined"
+              />
+            </Box>
+          )}
       </Box>
       <MatxCustomizer
         open={open}

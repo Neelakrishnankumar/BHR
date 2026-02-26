@@ -180,6 +180,7 @@ const initialState = {
   attachmentUrl: "",
   attachmentSkilUrl: "",
   fileUploadUrl: "",
+  designationImportUrl:"",
   pcdurl: "",
   pdfurl: "",
   indentUrl: "",
@@ -240,7 +241,7 @@ const initialState = {
   SprintgetUrl: "",
   SprintPPGetUrl: "",
   regGetUrl: "",
-  //payrollattendanceUrl: APIurl + "PayrollAttendanceController.php",
+  payslipattendanceUrl: "",
   leavelApprovalUrl: "",
   requestAcknowledgeUrl: "",
   monthlyattendanceUrl: "",
@@ -305,6 +306,11 @@ const initialState = {
   Processposturl:"",
   PayslipGetController:"",
   PartyReplacementQtyGet:"",
+  ItempriceGeturl:"",
+  SOPAttachmentsController:"",
+  SOPProcess:"",
+  SOPConfigPost:"",
+  SOPConfigGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -317,6 +323,7 @@ export const getUrlSlice = createSlice({
       const APIurl = config.API_URL;
       const baseurl = config.BASE_URL;
       const baseurlUAAM = config.UAAM_URL;
+      //const uaturl = "https://essuat.beyondexs.com"
 
       state.baseApiUrl = APIurl;
       state.baseUrl = baseurl;
@@ -336,7 +343,11 @@ export const getUrlSlice = createSlice({
       //attachmentUrl=baseurl + 'uploads/images/';
       state.attachmentUrl = baseurl + "uploads/images/";
       state.attachmentSkilUrl = baseurl + "uploads/attachments/";
+      state.SOPUploadUrl = baseurl + "uploads/sopatachments/";
       state.fileUploadUrl = baseurl + "fileupload.php";
+      // state.designationImportUrl = uaturl + "api/Excel_Upload.php";
+
+
       state.pcdurl = APIurl + "PCDController.php";
       state.pdfurl = baseurl + "tcpdf/";
       state.indentUrl = APIurl + "IndentController.php";
@@ -388,7 +399,7 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      // state.payrollattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
+      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceControllerV1.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
@@ -472,6 +483,13 @@ export const getUrlSlice = createSlice({
       state.Processposturl = APIurl + "EmpPayrollAttendancePostController.php"
       state.PayslipGetController = APIurl + "PayslipGetController.php";
       state.PartyReplacementQtyGet = APIurl + "PartyReplacementQtyGet.php";
+      state.ItempriceGeturl = APIurl + "ItempriceGetController.php";
+      state.SOPAttachmentsController = baseurl + "SOPAttachmentsController.php";
+      state.SOPProcess = APIurl + "SopProcessPost.php";
+      state.SOPConfigPost = APIurl + "emppoststatus.php";
+      state.SOPConfigGet = APIurl + "empgetstatus.php";
+      state.SpecimenPost = APIurl + "emppostspeciman.php";
+      state.SpecimenGet = APIurl + "empgetspeciman.php";
     },
   },
 });

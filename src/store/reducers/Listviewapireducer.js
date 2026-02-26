@@ -51,6 +51,7 @@ import {
   getProjectCosting,
   paySlipGet,
   postData,
+  SOPProcessPost,
   StockProcessApi,
 } from "./Formapireducer";
 import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined";
@@ -99,7 +100,12 @@ import AltRouteOutlinedIcon from "@mui/icons-material/AltRouteOutlined";
 import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { getConfig } from "../../config";
-
+import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -665,6 +671,10 @@ export const fetchListview =
         AccessID != "TR027" &&
         AccessID != "TR319" &&
         AccessID != "TR324" &&
+        AccessID != "TR335" &&
+        AccessID != "TR338" &&
+        AccessID != "TR339" &&
+        AccessID != "TR341" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -733,6 +743,10 @@ export const fetchListview =
       AccessID == "TR318" ||
       AccessID == "TR027" ||
       AccessID == "TR319" ||
+      AccessID == "TR335" ||
+      AccessID == "TR338" ||
+      AccessID == "TR339" ||
+      AccessID == "TR341" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -1819,6 +1833,34 @@ export const fetchListview =
               disableExport: true,
               renderCell: (params) => (
                 <ItemAction
+                  // rights={rights}
+                  params={params}
+                  accessID={AccessID}
+                  screenName={screenName}
+                />
+              ),
+            };
+          } else if (
+            AccessID == "TR336" ||
+            AccessID == "TR338" ||
+            AccessID == "TR339" ||
+            AccessID == "TR341" ||
+            AccessID == "TR335" ||
+            AccessID == "TR337"
+          ) {
+            obj = {
+              field: "action",
+              headerName: "Action",
+              minWidth: 180,
+              sortable: false,
+              filterable: false,
+              headerAlign: "center",
+              // align: "center",
+              align: "left",
+              disableColumnMenu: true,
+              disableExport: true,
+              renderCell: (params) => (
+                <SOPAction
                   // rights={rights}
                   params={params}
                   accessID={AccessID}
@@ -5191,7 +5233,7 @@ export const fetchListview =
                   <Stack direction="row">
                     <Link>
                       {params.row.EmpType === "Contracts In" && (
-                        <Tooltip title="Contracts In">
+                        <Tooltip title="Contract In">
                           <IconButton color="info">
                             <RedoIcon />
                           </IconButton>
@@ -5201,7 +5243,7 @@ export const fetchListview =
 
                     <Link>
                       {params.row.EmpType === "Contracts Out" && (
-                        <Tooltip title="Contracts Out">
+                        <Tooltip title="Contract Out">
                           <IconButton color="info">
                             <UndoIcon />
                           </IconButton>
@@ -6048,7 +6090,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const HeaderImg = sessionStorage.getItem("CompanyHeader");
   const FooterImg = sessionStorage.getItem("CompanyFooter");
   const CompanySignature = sessionStorage.getItem("CompanySignature");
-  console.log("🚀 ~ EditAttendance ~ CompanySignature:", CompanySignature);
+  console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
@@ -6225,10 +6267,10 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
         const resultAction = await dispatch(paySlipGet(payslip));
 
         const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
-    if (!data) {
-      alert("No data available for PDF");
-      return;
-    }
+        if (!data) {
+          alert("No data available for PDF");
+          return;
+        }
         if (!resultAction.payload) {
           console.error("No payload returned");
           return;
@@ -6245,15 +6287,15 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             }}
           />,
         ).toBlob();
-       const blobUrl = URL.createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
 
-const link = document.createElement("a");
-link.href = blobUrl;
-link.download = "Payslip.pdf";
-document.body.appendChild(link);   // ✅ Important
-link.click();
-document.body.removeChild(link);   // ✅ Cleanup
-URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = "Payslip.pdf";
+        document.body.appendChild(link); // ✅ Important
+        link.click();
+        document.body.removeChild(link); // ✅ Cleanup
+        URL.revokeObjectURL(blobUrl); // ✅ Cleanup
       } catch (err) {
         console.error("PDF generation failed", err);
       } finally {
@@ -6735,6 +6777,396 @@ URL.revokeObjectURL(blobUrl);      // ✅ Cleanup
               </IconButton> */}
             </Tooltip>
           </Box>
+        )}
+      </div>
+    </Fragment>
+  );
+};
+const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state || {};
+  const dispatch = useDispatch();
+  const UserName = sessionStorage.getItem("UserName");
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  console.log(" ~ EditAttendance ~ CompanySignature:", CompanySignature);
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  const count = Number(params.row.MarketingCount || 0);
+  // const orderType = params.row.OrderType;
+  const id = params.row.RecordID;
+
+  const PartyName = params.row.Name;
+
+  const PDFButton = ({ PartyID, OrderHdrID, CompanyID, OrderType }) => {
+    const dispatch = store.dispatch;
+    const [loading, setLoading] = React.useState(false);
+
+    const handlePDFGET = async () => {
+      try {
+        setLoading(true);
+
+        const resultAction = await dispatch(
+          getOrderdetailReport({ PartyID, OrderHdrID, CompanyID }),
+        );
+
+        const data = resultAction.payload; // <-- this depends on how your thunk is defined
+        if (!data?.HeaderData?.DetailData?.length) {
+          alert("No Order Items available for this order..");
+          return;
+        }
+
+        // Generate and download PDF
+        const blob = await pdf(
+          <OrderHeaderPdf
+            data={data}
+            UserName={UserName}
+            OrderType={OrderType}
+          />,
+        ).toBlob();
+        // const link = document.createElement("a");
+        // link.href = URL.createObjectURL(blob);
+        // //link.download = "OrderDeatils.pdf";
+        // link.Open();
+        // link.click();
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, "_blank");
+
+        // 2. TO DOWNLOAD DIRECTLY
+        // const url = URL.createObjectURL(blob);
+
+        // const link = document.createElement("a");
+        // link.href = url;
+        // link.download = "OrderDetails.pdf";
+        // document.body.appendChild(link);
+
+        // link.click();
+
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("PDF generation failed", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <Tooltip title="Download PDF">
+        <IconButton color="info" size="small" onClick={handlePDFGET}>
+          {loading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <PictureAsPdfIcon color="error" />
+          )}
+        </IconButton>
+      </Tooltip>
+    );
+  };
+
+  return (
+    <Fragment>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        {accessID === "TR336" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.Code,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="List Of Documents">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/TR338/SopDocument/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.Code,
+                      },
+                    },
+                  )
+                }
+              >
+                <SaveOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        {accessID === "TR337" && (
+          <>
+            {params.row.IsEnable === "Y" ? (
+              <Tooltip title="SOP Documents">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `/Apps/Secondarylistview/TR335/SOPDocuments/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb1: params.row.Code,
+                        },
+                      },
+                    )
+                  }
+                >
+                  {/* <ArrowForwardIosOutlinedIcon /> */}
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="SOP Documents">
+                <IconButton color="info" size="small" disabled>
+                  {/* <ArrowForwardIosOutlinedIcon /> */}
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
+        )}
+        {accessID === "TR338" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopDocument/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentCode,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            {params.row.PdfAttach && (
+            <Tooltip title="View File">
+              <IconButton
+                color="info"
+                size="small"
+                // onClick={() =>
+                //   navigate(`./EditSopDocument/${params.row.RecordID}/E`, {
+                //     state: {
+                //       ...state,
+                //       BreadCrumb2: params.row.TypeOfDocumentCode,
+                //     },
+                //   })
+                // }
+
+                 onClick={() => {
+                                      if (!params.row.PdfAttach) {
+                                        toast.error("No file available");
+                                        return;
+                                      }
+
+                                      const fileUrl =
+                                        store.getState().globalurl.SOPUploadUrl + params.row.PdfAttach;
+
+                                      // 👇 Detect file type
+                                      const lower = fileUrl.toLowerCase();
+
+                                      let viewUrl = fileUrl;
+
+                                      // 👉 For DOC/DOCX use Office Online Viewer
+                                      if (lower.endsWith(".doc") || lower.endsWith(".docx")) {
+                                        viewUrl =
+                                          "https://view.officeapps.live.com/op/view.aspx?src=" +
+                                          encodeURIComponent(fileUrl);
+                                      }
+
+                                      // 👉 Open in new tab
+                                      window.open(viewUrl, "_blank", "noopener,noreferrer");
+                                    }}
+                     
+              >
+                <OpenInNewIcon sx={{opacity: params.row.PdfAttach ? 1 : 0.5}}/>
+              </IconButton>
+            </Tooltip>)}
+
+            <Tooltip title="Checklist">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/SopCheckList/TR341/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentName,
+                    },
+                  })
+                }
+              >
+                <ChecklistOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+
+            {params.row.TypeOfDocumentName === "Annexure" && (
+            <Tooltip title="Log Notes">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/Booklet/TR339/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      // BreadCrumb2: params.row.TypeOfDocumentCode,
+                      BreadCrumb2: params.row.TypeOfDocumentName,
+                    },
+                  })
+                }
+              >
+                <AutoStoriesOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
+          </>
+        )}
+        {accessID === "TR339" && (
+          <>
+          {params.row.Process === "Y" ? (
+
+             <>
+            <Tooltip title="View">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditBooklet/${params.row.RecordID}/V`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <VisibilityIcon/>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Process Pdf">
+              <IconButton
+                color="error"
+                size="small"
+                // onClick={() =>
+                //   navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                //     state: {
+                //       ...state,
+                //       BreadCrumb3: params.row.AnnexureNo,
+                //     },
+                //   })
+                // }
+              >
+                <PictureAsPdfIcon/>
+              </IconButton>
+            </Tooltip>
+             </>
+
+
+           
+          ):(
+            <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditBooklet/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+
+             <Tooltip title="Process">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditBooklet/${params.row.RecordID}/P`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <LoopOutlinedIcon/>
+              </IconButton>
+            </Tooltip>
+            </>
+          )}
+
+           {/* <Tooltip title="SOP Documents">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `./SOPBatch/TR335/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      },
+                    )
+                  }
+                >
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip> */}
+         
+          </>
+        )}
+        {accessID === "TR341" && (
+          <>
+          <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopCheckList/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+         
+          </>
+        )}
+
+        {accessID === "TR335" && (
+          <>
+          </>
         )}
       </div>
     </Fragment>
