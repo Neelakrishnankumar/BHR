@@ -968,6 +968,7 @@ const Login = () => {
                         name="password"
                         label="Password"
                         type={showPassword ? "text" : "password"}
+                        placeholder="Password"
                         value={values.password}
                         onBlur={handleBlur}
                         onChange={handleChange}

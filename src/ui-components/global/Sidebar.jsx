@@ -590,7 +590,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR121",
+            UGA_ACCESSIDS: "TR213",
           },
           // {
           //   name: "Payroll",
@@ -659,7 +659,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR121",
+            UGA_ACCESSIDS: "TR218",
           },
 
           {
@@ -796,7 +796,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR000",
+            UGA_ACCESSIDS: "TR343",
           },
           //  {
           //   name: "Lead",
@@ -874,7 +874,7 @@ const Sidebars = () => {
       {
         name: "Transaction",
         id: 97659,
-        MenuID: "ST1600",
+        MenuID: "TS1700",
         Tooltipname: "Transaction",
         icon: (
           <Tooltip title="Transaction">
@@ -931,7 +931,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR027",
+            UGA_ACCESSIDS: "TR342",
           },
           {
             name: "Payroll",
@@ -948,7 +948,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR027",
+            UGA_ACCESSIDS: "TR333",
           },
           {
             name: "Employee Request",
@@ -1140,26 +1140,26 @@ const Sidebars = () => {
       //   ],
       // },
 
-      // {
-      //   name: "Assessment",
-      //   id: 4579,
-      //   MenuID: "ST1609",
-      //   Tooltipname: "Assessment",
-      //   icon: (
-      //     <Tooltip title="Assessment">
-      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-      //     </Tooltip>
-      //   ),
-      //   url: "/Apps/TR299/List Of Assessment Type",
-      //   UGA_ADD: true,
-      //   UGA_DEL: true,
-      //   UGA_MOD: true,
-      //   UGA_PRINT: true,
-      //   UGA_PROCESS: true,
-      //   UGA_VIEW: true,
-      //   UGA_ACCESSIDS: "TR122",
+      {
+        name: "Assessment",
+        id: 4579,
+        MenuID: "ST1609",
+        Tooltipname: "Assessment",
+        icon: (
+          <Tooltip title="Assessment">
+            <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        url: "/Apps/TR299/List Of Assessment Type",
+        UGA_ADD: true,
+        UGA_DEL: true,
+        UGA_MOD: true,
+        UGA_PRINT: true,
+        UGA_PROCESS: true,
+        UGA_VIEW: true,
+        UGA_ACCESSIDS: "TR299",
 
-      // },
+      },
       {
         name: "Settings",
         id: 95689,
@@ -1186,7 +1186,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR252",
+            UGA_ACCESSIDS: "TR014",
           },
           {
             name: "Approval",
@@ -1220,7 +1220,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR252",
+            UGA_ACCESSIDS: "TR344",
           },
           {
             name: "Geo Fencing",
@@ -1237,7 +1237,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR252",
+            UGA_ACCESSIDS: "TR345",
           },
           {
             name: "Change Password",
@@ -1356,7 +1356,7 @@ const Sidebars = () => {
       {
         name: "Company",
         id: 95689,
-        MenuID: "ST1600",
+        MenuID: "BC2000",
         Tooltipname: "Company",
         icon: (
           <Tooltip title="Company">
@@ -1379,7 +1379,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR252",
+            UGA_ACCESSIDS: "TR346",
           },
 
           {
@@ -1397,7 +1397,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR258",
+            UGA_ACCESSIDS: "TR347",
           },
           {
             name: "Header & Footer Setup",
@@ -1414,7 +1414,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR258",
+            UGA_ACCESSIDS: "TR348",
           },
           {
             name: "Activate My Subscription",
@@ -1431,7 +1431,7 @@ const Sidebars = () => {
             UGA_PRINT: true,
             UGA_PROCESS: true,
             UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR252",
+            UGA_ACCESSIDS: "TR349",
           },
 
         ],
