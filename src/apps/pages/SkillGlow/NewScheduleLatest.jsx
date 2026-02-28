@@ -48,6 +48,7 @@ import {
   getFetchData,
   postData,
   scheduleGetData,
+  SopEmpMappingController,
 } from "../../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import {
@@ -73,7 +74,7 @@ import {
 } from "@mui/x-data-grid";
 import { useTheme } from "@emotion/react";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
 const NewScheduleLatest = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -213,6 +214,7 @@ const NewScheduleLatest = () => {
   //     }
   //   };
   // define it at the top of your component
+
   const fetchScheduleData = async () => {
     try {
       const data = await dispatch(
@@ -242,10 +244,10 @@ const NewScheduleLatest = () => {
       mode === "A"
         ? "insert"
         : mode === "E"
-        ? delAction === "harddelete"
-          ? "harddelete"
-          : "update"
-        : "";
+          ? delAction === "harddelete"
+            ? "harddelete"
+            : "update"
+          : "";
 
     const idata = {
       Details: selectedEmp.map((emp) => ({
@@ -385,6 +387,43 @@ const NewScheduleLatest = () => {
     }
   };
 
+    const handleStatusUpdate = (row) => async () => {
+    try {
+
+       const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You want to update status of this schedule",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+      });
+
+      if (!result.isConfirmed) return;
+
+      const idata = {
+        AssessmentID: row.AssessmentID || parentID2 || 0,
+        EmpRecid: row.EmployeeID,
+        AssessmentName:row.Assessment
+      };
+
+      const response = await dispatch(
+        SopEmpMappingController({ idata })
+      );
+
+      if (response.payload?.Status === "Y") {
+        toast.success(response.payload.Msg || "Status updated successfully!");
+        fetchScheduleData(); // 🔹 refresh the grid after delete
+      } else {
+        toast.error(response.payload?.Msg || "Failed to update status!");
+      }
+    } catch (error) {
+      console.error("❌ Error updating status:", error);
+      toast.error("Error occurred during status update.");
+    }
+  };
   const [rowCount, setRowCount] = useState(0);
   const Sprintcolumns = [
     { field: "SLNO", headerName: "SL#", width: 40 },
@@ -482,34 +521,86 @@ const NewScheduleLatest = () => {
     //         />,
     //     ],
     // },
+    // {
+    //   field: "actions",
+    //   type: "actions",
+    //   headerName: "Actions",
+    //   width: 150,
+    //   cellClassName: "actions",
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       key="delete"
+    //       icon={
+    //         <DeleteIcon
+    //           style={{
+    //             color: "#e74c3c",
+    //             opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+    //           }}
+    //         />
+    //       }
+    //       label="Delete"
+    //       disabled={params.row.STATUS !== "Not Attended"}
+    //       onClick={
+    //         params.row.STATUS === "Not Attended"
+    //           ? handleDeleteClick(params.row) // ✅ Correct
+    //           : undefined
+    //       }
+    //       color="inherit"
+    //     />,
+
+    //   ],
+    // },
+
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
       width: 150,
+      align: "left",
       cellClassName: "actions",
-      getActions: (params) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={
-            <DeleteIcon
-              style={{
-                color: "#e74c3c",
-                opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
-              }}
+      getActions: (params) => {
+        const actions = [];
+
+        // ✅ DELETE ICON (existing logic)
+        actions.push(
+          <GridActionsCellItem
+            key="delete"
+            icon={
+              <DeleteIcon
+                style={{
+                  color: "#e74c3c",
+                  opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+                }}
+              />
+            }
+            label="Delete"
+            disabled={params.row.STATUS !== "Not Attended"}
+            onClick={
+              params.row.STATUS === "Not Attended"
+                ? handleDeleteClick(params.row)
+                : undefined
+            }
+            color="inherit"
+          />
+        );
+
+        if (params.row.STATUS === "Pass") {
+          actions.push(
+            <GridActionsCellItem
+              key="statusUpdate"
+              icon={<AutorenewOutlinedIcon style={{ color: "#075b2a" }} />}
+              label="Status Update"
+              onClick={
+                handleStatusUpdate(params.row)
+              }
+              color="inherit"
             />
-          }
-          label="Delete"
-          disabled={params.row.STATUS !== "Not Attended"}
-          onClick={
-            params.row.STATUS === "Not Attended"
-              ? handleDeleteClick(params.row) // ✅ Correct
-              : undefined
-          }
-          color="inherit"
-        />,
-      ],
-    },
+          );
+        }
+
+        return actions;
+      },
+    }
   ];
 
   function Custombar() {
@@ -626,7 +717,7 @@ const NewScheduleLatest = () => {
           </Box>
         </Paper>
 
-        {!scheduleLoading ? (
+        {!scheduleLoading  ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Box m="5px">
               <Box

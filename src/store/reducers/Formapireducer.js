@@ -186,6 +186,11 @@ const initialState = {
   SpecimenPostdata: {},
   SpecimenPostloading: false,
   SpecimenPostStatus: "",
+
+  //SopEmpMappingController - POST
+  SopEmpMappingControllerdata: {},
+  SopEmpMappingControllerloading: false,
+  SopEmpMappingControllerStatus: "",
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -3863,6 +3868,22 @@ export const getApiSlice = createSlice({
         state.SpecimenPoststatus = "Error";
         state.SpecimenPostloading = false;
       })
+       //SopEmpMappingController - POST
+      .addCase(SopEmpMappingController.pending, (state, action) => {
+        state.SopEmpMappingControllerstatus = "idle";
+        state.SopEmpMappingControllerloading = true;
+      })
+      .addCase(SopEmpMappingController.fulfilled, (state, action) => {
+        state.SopEmpMappingControllerstatus = "success";
+        state.SopEmpMappingControllerloading = false;
+        state.SopEmpMappingControllerdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SopEmpMappingController.rejected, (state, action) => {
+        state.SopEmpMappingControllerstatus = "Error";
+        state.SopEmpMappingControllerloading = false;
+      })
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
         state.projectName =
@@ -5482,6 +5503,24 @@ export const SpecimenGet = createAsyncThunk(
           "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
       },
     });
+    return response.data;
+  },
+);
+
+export const SopEmpMappingController = createAsyncThunk(
+  "SopEmpMappingController/post",
+  async ({ idata }) => {
+    var url = store.getState().globalurl.SopEmpMappingController;
+    const response = await axios.post(url, idata, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
     return response.data;
   },
 );
