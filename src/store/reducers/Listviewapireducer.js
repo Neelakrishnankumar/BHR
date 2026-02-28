@@ -7004,7 +7004,27 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </IconButton>
             </Tooltip>)}
 
-            <Tooltip title="Checklist">
+            {/* <Tooltip title="Checklist">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/SopCheckList/TR341/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb2: params.row.TypeOfDocumentName,
+                    },
+                  })
+                }
+              >
+                <ChecklistOutlinedIcon />
+              </IconButton>
+            </Tooltip> */}
+
+            {params.row.TypeOfDocumentName === "Annexure" && (
+
+              <>
+                <Tooltip title="Checklist">
               <IconButton
                 color="info"
                 size="small"
@@ -7021,7 +7041,6 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               </IconButton>
             </Tooltip>
 
-            {params.row.TypeOfDocumentName === "Annexure" && (
             <Tooltip title="Log Notes">
               <IconButton
                 color="info"
@@ -7038,7 +7057,9 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
               >
                 <AutoStoriesOutlinedIcon />
               </IconButton>
-            </Tooltip>)}
+            </Tooltip>
+            </>
+            )}
           </>
         )}
         {accessID === "TR339" && (

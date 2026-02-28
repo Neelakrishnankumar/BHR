@@ -311,6 +311,9 @@ const initialState = {
   SOPProcess:"",
   SOPConfigPost:"",
   SOPConfigGet:"",
+  SpecimenPost:"",
+  SpecimenGet:"",
+  SopEmpMappingController:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -490,6 +493,7 @@ export const getUrlSlice = createSlice({
       state.SOPConfigGet = APIurl + "empgetstatus.php";
       state.SpecimenPost = APIurl + "emppostspeciman.php";
       state.SpecimenGet = APIurl + "empgetspeciman.php";
+      state.SopEmpMappingController = APIurl + "SopEmpMappingController.php";
     },
   },
 });

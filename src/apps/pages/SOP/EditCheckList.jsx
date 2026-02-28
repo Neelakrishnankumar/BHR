@@ -374,23 +374,25 @@ const EditCheckList = () => {
 
                                     {/* DISABLE CHECKBOX */}
                                     <Box display="flex" alignItems="center">
-                                        <FormControlLabel
-                                            control={<Checkbox name="Approved"
-                                                checked={values.Approved}
-                                                onChange={handleChange}
-                                            />}
-                                            label="Approved"
-                                        />
-                                        <Box />
-                                        <FormControlLabel
+                                         <FormControlLabel
                                             control={<Checkbox name="Reviewed"
                                                 checked={values.Reviewed}
                                                 onChange={handleChange}
                                                 disabled={mode === "V" ? true : false}
                                                
                                             />}
-                                            label="Reviewed"
+                                            label="Review"
                                         />
+
+                                        <FormControlLabel
+                                            control={<Checkbox name="Approved"
+                                                checked={values.Approved}
+                                                onChange={handleChange}
+                                            />}
+                                            label="Approve"
+                                        />
+                                        <Box />
+                                       
 
                                         <FormControlLabel
                                             control={<Checkbox name="Disable"
