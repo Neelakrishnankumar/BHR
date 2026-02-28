@@ -825,7 +825,7 @@ const Editemployee = () => {
     Password: Data.Password,
     Job: Data.Job,
     employeetype:
-      Data.EmpType === "Prohibition"
+      Data.EmpType === "Probation"
         ? "PP"
         : Data.EmpType === "Permanent"
           ? "PM"
@@ -4328,7 +4328,7 @@ const Editemployee = () => {
                           // },
                         }}
                       >
-                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PP">Probation Period</MenuItem>
                         <MenuItem value="PM">Permanent</MenuItem>
                         {/* <MenuItem value="ST">Student</MenuItem> */}
                         <MenuItem value="CI">Contract In</MenuItem>
