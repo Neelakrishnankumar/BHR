@@ -3520,6 +3520,10 @@ const Editemployee = () => {
       AutoPresent: values.defaultpresent === true ? "Y" : "N",
       CloudApplication: values.cloud === true ? "Y" : "N",
       MobileGeoFencing: values.mobile === true ? "Y" : "N",
+      Office: values.office === true ? "Y" : "N",
+      WorkFromHome: values.workfromhome === true ? "Y" : "N",
+      Hybrid: values.hybrid === true ? "Y" : "N",
+      OnSite: values.onsite === true ? "Y" : "N",
     };
 
     const response = await dispatch(postDeployment({ data: idata }));
