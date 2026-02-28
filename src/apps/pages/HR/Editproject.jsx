@@ -118,13 +118,23 @@ const Editproject = () => {
       : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
     ByProduct: data.ByProduct === "Y" ? true : false,
+    Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
-    budget: data.Budget || 0,
-    scheduled: data.ScheduledCost || 0,
-    actual: data.ActualCost || 0,
-    price: data.Price || "0",
+    // budget: data.Budget ?? 0.00,
+    // scheduled: data.ScheduledCost ?? 0.00,
+    // actual: data.ActualCost ?? 0.00,
+    // price: data.Price ?? 0.00,
+    budget: data.Budget === "" ? "0.00" : data.Budget,
+    scheduled:
+      data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+    actual:
+      data.ActualCost === "" ? "0.00" : data.ActualCost,
+    price:
+      data.Price === "" ? "0.00" : data.Price,
+    OtherExpenses:
+      data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
     projectOwner: data.ProjectOwnerID && data.ProjectOwnerID !== "0"
       ? {
         RecordID: data.ProjectOwnerID,
@@ -132,7 +142,7 @@ const Editproject = () => {
         Name: data.ProjectOwnerName,
       }
       : null,
-    OtherExpenses: data.OtherExpenses || 0,
+    // OtherExpenses: data.OtherExpenses ?? 0.00,
     longitude: data.Longitude || 0,
     latitude: data.Latitude || 0,
     radius: data.Radius || 0,
@@ -164,6 +174,7 @@ const Editproject = () => {
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
       ByProduct: values.ByProduct == true ? "Y" : "N",
+      EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
       Budget: values.budget || 0,
@@ -553,7 +564,17 @@ const Editproject = () => {
                     >
                       Product
                     </FormLabel>
-
+                    <Field
+                      disabled={mode == "V"}
+                      type="checkbox"
+                      name="Onsiteactivities"
+                      id="Onsiteactivities"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      as={Checkbox}
+                    />
+                    <FormLabel
+                      focused={false}>Enable Onsite Activities</FormLabel>
                     <Field
                       //  size="small"
                       disabled={mode == "V"}
@@ -589,6 +610,7 @@ const Editproject = () => {
                 {values.ByProduct === true ? (
                   <Box
                     display="grid"
+                    initialValues={InitialValue}
                     gap={formGap}
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
@@ -631,6 +653,7 @@ const Editproject = () => {
                   <Box
                     display="grid"
                     gap={formGap}
+                    initialValues={InitialValue}
                     padding={1}
                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
                     // gap="30px"
@@ -824,7 +847,7 @@ const Editproject = () => {
                       style: { textAlign: "right" },
                     }}
                   />
-                 
+
                   <TextField
                     fullWidth
                     variant="standard"

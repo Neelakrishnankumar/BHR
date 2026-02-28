@@ -112,6 +112,8 @@ const NewScheduleLatest = () => {
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const isLoading = useSelector((state) => state.formApi.postLoading);
   const scheduleLoading = useSelector((state) => state.formApi.scheduleloading);
+  const schedulegetdata = useSelector((state) => state.formApi.schedulegetdata);
+
   console.log("🚀 ~ NewSchedule ~ scheduleLoading:", scheduleLoading);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   const AssessmentAutoUrl = useSelector(
@@ -224,7 +226,7 @@ const NewScheduleLatest = () => {
       console.log("🚀 ~ fetchScheduleData ~ data:", data);
 
       if (data?.payload?.Status === "Y") {
-        setRows(data.payload.Data || []);
+        // setRows(data.payload.Data || []);
       } else {
         setRows([]); // Prevents DataGrid errors
       }
@@ -430,7 +432,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Date",
       field: "DATE",
-      type: "date",
+      // type: "date",
       width: "100",
       align: "center",
       headerAlign: "center",
@@ -467,7 +469,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Targeted Date",
       field: "Targeteddate",
-      type: "date",
+      // type: "date",
 
       width: "100",
       align: "center",
@@ -479,7 +481,7 @@ const NewScheduleLatest = () => {
     {
       headerName: "Last Att Date",
       field: "Lastattdate",
-      type: "date",
+      // type: "date",
       width: "100",
       align: "center",
       headerAlign: "center",
@@ -764,7 +766,7 @@ const NewScheduleLatest = () => {
                       minHeight: dataGridHeaderFooterHeight,
                     },
                   }}
-                  rows={rows}
+                  rows={schedulegetdata}
                   columns={Sprintcolumns}
                   loading={scheduleLoading}
                   //rowModesModel={rowModesModel}

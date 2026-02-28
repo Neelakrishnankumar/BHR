@@ -131,7 +131,8 @@ const Editdept = () => {
     Loc: apiData.Loc,
     SortOrder: apiData.SortOrder || 0,
     checkbox: Data.Disable === "Y" ? true : false,
-    delete: Data.DeleteFlag === "Y" ? true : false
+    delete: Data.DeleteFlag === "Y" ? true : false,
+    subjectskill: Data.SubjectSkill === "Y" ? true : false
   };
   // **********Save Function*****************
   const fnSave = async (values, del) => {
@@ -169,6 +170,7 @@ const Editdept = () => {
       SortOrder: values.SortOrder,
       Disable: values.checkbox === true ? "Y" : "N",
       DeleteFlag: values.delete == true ? "Y" : "N",
+      SubjectSkill: values.subjectskill === true ? "Y" : "N",
       Finyear,
       CompanyID,
     };
@@ -497,6 +499,18 @@ const Editdept = () => {
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
+                        <Field
+                        //  size="small"
+                        type="checkbox"
+                        name="subjectskill"
+                        id="subjectskill"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                        label="subjectskill"
+                      />
+
+                      <FormLabel focused={false}>Subject / Skill</FormLabel>
                     </Box>
                   </FormControl>
 
