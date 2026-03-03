@@ -251,7 +251,7 @@ const AnnexureForm1 = () => {
             </Paper>
             {/* <div style={styles.wrapper}> */}
 
-            <TableContainer component={Paper} sx={{ m: 2 }}>
+            <TableContainer component={Paper} sx={{ m: 1 }}>
                 <Table sx={{ borderCollapse: "collapse" }}>
                     <TableBody>
 
@@ -329,7 +329,7 @@ const AnnexureForm1 = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TableContainer component={Paper} sx={{ m: 2 }}>
+            <TableContainer component={Paper} sx={{ m: 1 }}>
                 <Table sx={{ borderCollapse: "collapse" }}>
 
                     <TableHead>

@@ -586,19 +586,19 @@ const NewScheduleLatest = () => {
           />
         );
 
-        if (params.row.STATUS === "Pass") {
-          actions.push(
-            <GridActionsCellItem
-              key="statusUpdate"
-              icon={<AutorenewOutlinedIcon style={{ color: "#075b2a" }} />}
-              label="Status Update"
-              onClick={
-                handleStatusUpdate(params.row)
-              }
-              color="inherit"
-            />
-          );
-        }
+        // if (params.row.STATUS === "Pass") {
+        //   actions.push(
+        //     <GridActionsCellItem
+        //       key="statusUpdate"
+        //       icon={<AutorenewOutlinedIcon style={{ color: "#075b2a" }} />}
+        //       label="Status Update"
+        //       onClick={
+        //         handleStatusUpdate(params.row)
+        //       }
+        //       color="inherit"
+        //     />
+        //   );
+        // }
 
         return actions;
       },
