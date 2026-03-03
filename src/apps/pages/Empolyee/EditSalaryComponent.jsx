@@ -308,6 +308,11 @@ const EditSalaryComponent = () => {
                     <MenuItem value="FX">Fixed Amount</MenuItem>
                     <MenuItem value="PC">Policy</MenuItem>
                   </TextField>
+                   {/* <MenuItem value="FX">Fixed Amount</MenuItem>
+                    <MenuItem value="A1">Percentage Of Basic Salary</MenuItem>
+                    <MenuItem value="A2">Percentage Of Basic Salary</MenuItem>
+                    <MenuItem value="A3">Percentage Of Basic Salary</MenuItem>
+                    <MenuItem value="PC">Policy</MenuItem> */}
                   {/* <FormControl
                     focused
                     variant="standard"

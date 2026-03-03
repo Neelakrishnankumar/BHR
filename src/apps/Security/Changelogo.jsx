@@ -84,6 +84,7 @@ const Logochange = () => {
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     const [errorMsgData, setErrorMsgData] = useState(null);
     const grace = sessionStorage.getItem("CompanyGraceTime");
+    console.log("CompanyGraceTime:", grace);
     const timeout = sessionStorage.getItem("CompanySessionTimeOut");
     console.log("Grace:", grace);
     console.log("Timeout:", timeout);

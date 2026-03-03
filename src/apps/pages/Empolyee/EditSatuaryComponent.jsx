@@ -20,7 +20,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import { Field, Formik } from "formik";
-import { CheckBox } from "@mui/icons-material";
+import { CheckBox, Description } from "@mui/icons-material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +41,9 @@ import Popup from "../popup";
 import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/utils";
 import * as Yup from "yup";
-
+import { fileUpload } from "../../../store/reducers/Imguploadreducer";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import store from "../../..";
 // import CryptoJS from "crypto-js";
 const EditSatuaryComponent = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -63,7 +65,10 @@ const EditSatuaryComponent = () => {
   const location = useLocation();
   const CompanyID = sessionStorage.getItem("compID");
   const [validationSchema, setValidationSchema] = useState(null);
-    const [errorMsgData, setErrorMsgData] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
+  const [logoimage, setlogoimage] = useState("");
+  console.log("Nowlogo", logoimage);
+
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
@@ -77,7 +82,7 @@ const EditSatuaryComponent = () => {
         setErrorMsgData(data);
         //Permission
         const schema = Yup.object().shape({
-          description: Yup.string().required(data.Salarycomp.Name),         
+          description: Yup.string().required(data.Salarycomp.Name),
         })
         setValidationSchema(schema);
       })
@@ -93,9 +98,11 @@ const EditSatuaryComponent = () => {
   // *************** INITIALVALUE  *************** //
 
   const InitialValue = {
-    description: data.Name,
+    description: data.Policy,
     sortOrder: data.Sortorder || 0,
     disable: data.Disable === "Y" ? true : false,
+    Name: data.Description,
+    Attachment: data.Attachments,
   };
 
   const Fnsave = async (values, del) => {
@@ -113,22 +120,45 @@ const EditSatuaryComponent = () => {
 
     const idata = {
       RecordID: recID,
-      Name: values.description,
+      Policy: values.description,
       SortOrder: values.sortOrder,
+      Description: values.Name,
       Disable: values.disable === true ? "Y" : "N",
-      CompanyID
+      CompanyID,
+      Attachments: logoimage ? logoimage : "",
     };
 
 
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      navigate(`/Apps/TR207/Satuary Component`);
+      navigate(`/Apps/TR207/Payroll Policy`);
     } else {
       toast.error(response.payload.Msg);
     }
   };
+  const getFilepanChange = async (event) => {
+    setlogoimage(event.target.files[0]);
 
+    console.log(event.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    formData.append("type", "images");
+
+    const fileData = await dispatch(fileUpload({ formData }));
+    setlogoimage(fileData.payload.name);
+    sessionStorage.setItem("logoimage", fileData.payload.name);
+    console.log(">>>", fileData.payload);
+    console.log(
+      "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
+      fileData
+    );
+    if (fileData.payload.Status == "Y") {
+      // console.log("I am here");
+      toast.success(fileData.payload.Msg);
+    }
+  };
 
   const fnLogOut = (props) => {
     Swal.fire({
@@ -169,7 +199,7 @@ const EditSatuaryComponent = () => {
               sx={{ cursor: "default" }}
 
             >
-              Satuary Component
+              Payroll Policy
             </Typography>
           </Box>
 
@@ -230,7 +260,7 @@ const EditSatuaryComponent = () => {
                     // label="Name"
                     label={
                       <span>
-                        Name <span style={{ color: 'red', fontSize: '20px' }}>*</span>
+                        Policy <span style={{ color: 'red', fontSize: '20px' }}>*</span>
                       </span>
                     }
                     variant="standard"
@@ -246,8 +276,33 @@ const EditSatuaryComponent = () => {
                       "& .MuiFilledInput-root": {
                         backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
                       }
-                    }} />
-
+                    }}
+                  />
+                  <TextField
+                    name="Name"
+                    type="text"
+                    id="Name"
+                    // label="Name"
+                    label={
+                      <span>
+                        Description
+                      </span>
+                    }
+                    variant="standard"
+                    focused
+                    value={values.Name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    error={!!touched.Name && !!errors.Name}
+                    helperText={touched.Name && errors.Name}
+                    sx={{
+                      //gridColumn: "span 2",
+                      backgroundColor: "#ffffff", // Set the background to white
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: "#f5f5f5", // Ensure the filled variant also has a white background
+                      }
+                    }}
+                  />
 
 
                   <TextField
@@ -263,10 +318,10 @@ const EditSatuaryComponent = () => {
                     error={!!touched.sortOrder && !!errors.sortOrder}
                     helperText={touched.sortOrder && errors.sortOrder}
                     InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
+                      inputProps: {
+                        style: { textAlign: "right" },
+                      },
+                    }}
                   //sx={{ gridColumn: "span 2", background: "#fff6c3" }}
                   />
                   <FormControl>
@@ -287,6 +342,41 @@ const EditSatuaryComponent = () => {
                   </FormControl>
                 </Box>
                 <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                  <Tooltip title="Upload Attachment">
+                    <IconButton
+                      size="small"
+                      color="warning"
+                      aria-label="upload picture"
+                      component="label"
+                    >
+                      <input
+                        hidden
+                        accept="all/*"
+                        type="file"
+                        onChange={getFilepanChange}
+                      />
+                      <PictureAsPdfOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    component={"a"}
+                    onClick={() => {
+                      data.Attachments || logoimage
+                        ? window.open(
+                          logoimage
+                            ? store.getState().globalurl.attachmentUrl +
+                            logoimage
+                            : store.getState().globalurl.attachmentUrl +
+                            data.Attachments,
+                          "_blank"
+                        )
+                        : toast.error("Please Upload File");
+                    }}
+                  >
+                    View
+                  </Button>
                   {YearFlag == "true" ? (
                     <LoadingButton
                       color="secondary"
@@ -327,7 +417,7 @@ const EditSatuaryComponent = () => {
                     color="warning"
                     variant="contained"
                     onClick={() => {
-                      navigate("/Apps/TR207/Satuary Component");
+                      navigate("/Apps/TR207/Payroll Policy");
                     }}
                   >
                     Cancel

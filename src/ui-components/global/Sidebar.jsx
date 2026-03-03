@@ -681,11 +681,11 @@ const Sidebars = () => {
           },
 
           {
-            name: "Satuary Component",
+            name: "Payroll Policy",
             id: 4578,
-            url: "./TR207/Satuary Component",
+            url: "./TR207/Payroll Policy",
             icon: (
-              <Tooltip title="Satuary Component">
+              <Tooltip title="Payroll Policy">
                 <LocalPoliceOutlinedIcon color="info" />
               </Tooltip>
             ),
