@@ -198,6 +198,8 @@ import EditListOfSOPs from "./pages/SOP/EditListOfSOPs";
 import EditSOPDocument from "./pages/SOP/EditSOPDocument";
 import EditBooklet from "./pages/SOP/EditBooklet";
 import EditSopCheckList from "./pages/SOP/EditCheckList";
+import AnnexureForm1 from "./pages/SOP/AnnexureForm1";
+import AnnexureForm2 from "./pages/SOP/AnnexureForm2";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -1380,6 +1382,16 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID1/SopDocument/:parentID1/SopCheckList/:accessID/:parentID2/EditSopCheckList/:id/:Mode"
                     element={<EditSopCheckList />}
+                  />
+                  {/* EDIT ANNEXURE FORM 1 */}
+                  <Route
+                    path="/Secondarylistview/AnnexureForm1"
+                    element={<AnnexureForm1 />}
+                  />
+                  {/* EDIT ANNEXURE FORM 2 */}
+                  <Route
+                    path="/Secondarylistview/AnnexureForm2"
+                    element={<AnnexureForm2 />}
                   />
                   {/* <Route path="/ChangeyourPassword_1" element={<ChangeyourPassword_1 />} /> */}
                   {/* <Route path="/Geo configuration" element={<Geoconfiguration />} /> */}

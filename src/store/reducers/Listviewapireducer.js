@@ -7099,6 +7099,25 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 <PictureAsPdfIcon/>
               </IconButton>
             </Tooltip>
+             <Tooltip title="Batch Reconciliation Records">
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() =>
+                    navigate(
+                      `./SOPBatch/TR335/${params.row.RecordID}`,
+                      {
+                        state: {
+                          ...state,
+                          BreadCrumb3: params.row.AnnexureNo,
+                        },
+                      },
+                    )
+                  }
+                >
+                  <DoubleArrowOutlinedIcon />
+                </IconButton>
+              </Tooltip>
              </>
 
 
@@ -7141,25 +7160,6 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </>
           )}
 
-           {/* <Tooltip title="SOP Documents">
-                <IconButton
-                  color="info"
-                  size="small"
-                  onClick={() =>
-                    navigate(
-                      `./SOPBatch/TR335/${params.row.RecordID}`,
-                      {
-                        state: {
-                          ...state,
-                          BreadCrumb3: params.row.AnnexureNo,
-                        },
-                      },
-                    )
-                  }
-                >
-                  <DoubleArrowOutlinedIcon />
-                </IconButton>
-              </Tooltip> */}
          
           </>
         )}

@@ -20,7 +20,7 @@ import {
   Tooltip,
   Paper,
   Grid,
-      LinearProgress,
+  LinearProgress,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -193,8 +193,8 @@ const Editemployee = () => {
     DataExplore
   );
 
-    const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
-    const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
+  const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
+  const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
 
 
   const LoginID = sessionStorage.getItem("loginrecordID");
@@ -262,7 +262,7 @@ const Editemployee = () => {
 
     const idata = {
       CompanyID: CompanyID,
-      EmployeeID:recID,
+      EmployeeID: recID,
       Sign1:
         sign1 && sign1 !== ""
           ? sign1
@@ -349,20 +349,22 @@ const Editemployee = () => {
   const SOPConfigGetInitialValue = {
     code: Data.Code || "",
     description: Data.Name || "",
-    PreparedBy: SOPConfigGetdata?.EMP_PREPAREDBY === "Y" ? true :false,
-    ReviewedBy: SOPConfigGetdata?.EMP_REVIEWBY === "Y" ? true :false,
-    ApprovedBy: SOPConfigGetdata?.EMP_APPROVEDBY === "Y" ? true :false,
+    PreparedBy: SOPConfigGetdata?.EMP_PREPAREDBY === "Y" ? true : false,
+    ReviewedBy: SOPConfigGetdata?.EMP_REVIEWBY === "Y" ? true : false,
+    ApprovedBy: SOPConfigGetdata?.EMP_APPROVEDBY === "Y" ? true : false,
+    TrainedBy: SOPConfigGetdata?.EMP_TRAINBY === "Y" ? true : false,
   };
 
-   const SOPConfigsave = async (values, del) => {
+  const SOPConfigsave = async (values, del) => {
     setLoading(true);
 
     const idata = {
       CompanyID: CompanyID,
-     EmployeeID:recID,
-     PreparedBy:values.PreparedBy === true ? "Y" : "N",
-     ReviewdBy:values.ReviewedBy  === true ? "Y" : "N",
-     ApprovedBY:values.ApprovedBy === true ? "Y" : "N"
+      EmployeeID: recID,
+      PreparedBy: values.PreparedBy === true ? "Y" : "N",
+      ReviewdBy: values.ReviewedBy === true ? "Y" : "N",
+      ApprovedBY: values.ApprovedBy === true ? "Y" : "N",
+      TrainedBy: values.TrainedBy === true ? "Y" : "N"
     };
 
     try {
@@ -4045,7 +4047,7 @@ const Editemployee = () => {
                     <MenuItem value={13}>Locality</MenuItem>
                     <MenuItem value={19}>SOP Configuration</MenuItem>
                     <MenuItem value={18}>Specimen Sign</MenuItem>
-                    
+
 
                   </Select>
                 </FormControl>
@@ -13783,10 +13785,10 @@ const Editemployee = () => {
           false
         )}
 
-           {show == "18" ? (
+        {show == "18" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-            {SpecimenGetloading ? <LinearProgress/> : false}
-            {SpecimenPostloading ? <LinearProgress/> : false}
+            {SpecimenGetloading ? <LinearProgress /> : false}
+            {SpecimenPostloading ? <LinearProgress /> : false}
             <Formik
               initialValues={CompReportInitialValue}
               onSubmit={(values, setSubmitting) => {
@@ -14161,7 +14163,7 @@ const Editemployee = () => {
                     >
                       Save
                     </LoadingButton>
-                   
+
 
                     <Button
                       color="warning"
@@ -14183,11 +14185,11 @@ const Editemployee = () => {
 
 
 
- {show == "19" ? (
+        {show == "19" ? (
 
           <Paper elevation={3} sx={{ margin: "10px" }}>
-                  {loading ? (<LinearProgress />) : false}
-                  {SOPConfigGetLoading ? (<LinearProgress />) : false}
+            {loading ? (<LinearProgress />) : false}
+            {SOPConfigGetLoading ? (<LinearProgress />) : false}
 
             <Formik
               initialValues={SOPConfigGetInitialValue}
@@ -14248,8 +14250,8 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                         InputProps={{
-                          readOnly:true
+                        InputProps={{
+                          readOnly: true
                         }}
                       />
 
@@ -14272,11 +14274,11 @@ const Editemployee = () => {
                         }}
                         focused
                         InputProps={{
-                          readOnly:true
+                          readOnly: true
                         }}
                       />
                     </FormControl>
-                       <Stack
+                    <Stack
                       sx={{
                         //gridColumn: "span 2",
                         alignContent: "center",
@@ -14294,7 +14296,9 @@ const Editemployee = () => {
                     </Stack>
                   </Box>
 
-                 
+                  <Typography variant="h5" padding={1}>
+                    Roles And Responsibilities:
+                  </Typography>
                   <Box display="flex" flexDirection="column" gap={1}>
                     <Box display="flex" alignItems="center" gap={1}>
                       <Field
@@ -14305,7 +14309,7 @@ const Editemployee = () => {
                         label="PreparedBy"
                       />
                       <FormLabel focused={false}>Prepared By</FormLabel>
-                     
+
                     </Box>
 
                     {/* Row 2: Vertical */}
@@ -14320,14 +14324,14 @@ const Editemployee = () => {
                         label="ReviewedBy"
                       />
                       <FormLabel focused={false}>Reviewed By</FormLabel>
-                    
+
                     </Box>
                   </Box>
                   <Box
                     display="flex"
                     flexDirection="column"
                     marginTop={1}
-                    gap={2}
+                    gap={1}
                   >
                     {/* First AutoApprovalYesOrNo Checkbox */}
                     <Box display="flex" alignItems="center" gap={1}>
@@ -14340,6 +14344,18 @@ const Editemployee = () => {
                         as={Checkbox}
                       />
                       <FormLabel focused={false}>Approved By</FormLabel>
+
+                    </Box>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="TrainedBy"
+                        name="TrainedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Trained By</FormLabel>
 
                     </Box>
                   </Box>
@@ -14369,7 +14385,7 @@ const Editemployee = () => {
                         Save
                       </Button>
                     )}
-                   
+
                     <Button
                       type="reset"
                       color="warning"
@@ -14388,7 +14404,7 @@ const Editemployee = () => {
         ) : (
           false
         )}
-     
+
       </Box>
     </React.Fragment>
   );
