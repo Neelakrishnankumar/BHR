@@ -314,6 +314,7 @@ const initialState = {
   SpecimenPost:"",
   SpecimenGet:"",
   SopEmpMappingController:"",
+  Scoreboard:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -494,6 +495,7 @@ export const getUrlSlice = createSlice({
       state.SpecimenPost = APIurl + "emppostspeciman.php";
       state.SpecimenGet = APIurl + "empgetspeciman.php";
       state.SopEmpMappingController = APIurl + "SopEmpMappingController.php";
+      state.Scoreboard = APIurl + "ScoreBoardChartController.php";
     },
   },
 });

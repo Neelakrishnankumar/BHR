@@ -8,14 +8,18 @@ activityListener.startListening({
   //   action.type.endsWith("/fulfilled") &&
   //   !action.type.startsWith("activity/log"), // prevent loop
 
-  matcher: (action) =>
-    (action.type.endsWith("/fulfilled") &&
-      !action.type.startsWith("activity/log")) ||
-       action.type === "exploreApi/Success" ||
-       action.type === "imageApi/Success" ||
-    action.type === "loginApi/Success" ||
-    action.type === "loginApi/logout" ||
-    action.type === "formApi/Success",
+  matcher: (action) => {
+    if (typeof action?.type !== "string") return false;
+    return (
+      (action.type.endsWith("/fulfilled") &&
+        !action.type.startsWith("activity/log")) ||
+      action.type === "exploreApi/Success" ||
+      action.type === "imageApi/Success" ||
+      action.type === "loginApi/Success" ||
+      action.type === "loginApi/logout" ||
+      action.type === "formApi/Success"
+    );
+  },
 
   effect: async (action, listenerApi) => {
     if (action.type === "loginApi/logout") {
@@ -26,8 +30,8 @@ activityListener.startListening({
           CompanyID: sessionStorage.getItem("compID") || "0",
           AccessID: "Logout",
           Activity: "logout",
-          Type:"B",
-        })
+          Type: "B",
+        }),
       );
 
       // Optional cleanup
@@ -45,8 +49,8 @@ activityListener.startListening({
           CompanyID: action.payload?.apiResponse?.CompanyRecordid || "0",
           AccessID: "Login",
           Activity: "login",
-          Type:"B",
-        })
+          Type: "B",
+        }),
       );
       return; // ✅ VERY IMPORTANT (prevents double logging)
     }
@@ -64,12 +68,11 @@ activityListener.startListening({
             "0",
           AccessID: action.payload?.accessID || "fetchApidata",
           Activity: action.payload?.action || "success",
-          Type:"B",
-        })
+          Type: "B",
+        }),
       );
       return; // ✅ VERY IMPORTANT
     }
-
 
     if (action.type === "exploreApi/Success") {
       listenerApi.dispatch(
@@ -85,8 +88,8 @@ activityListener.startListening({
             "0",
           AccessID: action.payload?.accessID || "formApi",
           Activity: action.payload?.action || "success",
-          Type:"B",
-        })
+          Type: "B",
+        }),
       );
       return;
     }
@@ -104,8 +107,8 @@ activityListener.startListening({
             "0",
           AccessID: action.payload?.accessid || "formApi",
           Activity: action.payload?.action || "success",
-          Type:"B",
-        })
+          Type: "B",
+        }),
       );
       return;
     }
@@ -167,8 +170,8 @@ activityListener.startListening({
         CompanyID,
         AccessID: AccessOrScreen, // may be AccessID or ScreenName
         Activity,
-        Type:"B",
-      })
+        Type: "B",
+      }),
     );
   },
 });

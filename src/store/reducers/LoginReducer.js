@@ -15,6 +15,13 @@ const initialState = {
   msg: "",
   loading: false,
   error: "",
+
+
+    //SCOREBOARD
+  ScoredashBoardGetData: {},
+  ScoredashBoardGetStaus: "idle",
+  ScoredashBoardGetLoading: false,
+  ScoredashBoardGetError: null,
 };
 
 export const authentication = createAsyncThunk(
@@ -82,7 +89,26 @@ export const ChangePasswordRequest = async (requestData) => {
     throw error;
   }
 };
-
+export const ScoredashBoard = createAsyncThunk(
+  "ScoredashBoard/getdata",
+  async ({ data }, thunkAPI) => {
+    try {
+      // var url = store.getState().globalurl.Scoreboard;
+      const url = thunkAPI.getState().globalurl.Scoreboard;
+      console.log("get" + JSON.stringify(data));
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+        },
+      });
+      console.log("🚀 ~ response.data:", response.data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 export const getApiSlice = createSlice({
   name: "loginApi",
@@ -133,6 +159,35 @@ export const getApiSlice = createSlice({
         state.loading = false;
         toast.error('Something Went Wrong')
       })
+      //SCOREBOARD
+      .addCase(ScoredashBoard.pending, (state, action) => {
+        state.ScoredashBoardGetData = []
+        // state.dashBoardAttenGetData = {
+        //   // taskSummaryCardData: [],
+
+        //   ScoreChart: {
+        //     xaxis: [],
+        //     yaxis: [],
+        //   },
+        // };
+        state.ScoredashBoardGetStaus = "pending";
+        state.ScoredashBoardGetLoading = true;
+        state.ScoredashBoardGetError = null;
+      })
+
+      .addCase(ScoredashBoard.fulfilled, (state, action) => {
+        state.ScoredashBoardGetData = action.payload;
+        console.log("🚀 ~ ScoredashBoardGetData", action.payload);
+        state.ScoredashBoardGetStaus = "fulfilled";
+        state.ScoredashBoardGetLoading = false;
+        state.ScoredashBoardGetError = null;
+      })
+      .addCase(ScoredashBoard.rejected, (state, action) => {
+        state.ScoredashBoardGetData = [];
+        state.ScoredashBoardGetStaus = "rejected";
+        state.ScoredashBoardGetLoading = false;
+        state.ScoredashBoardGetError = null;
+      });
   }
 });
 

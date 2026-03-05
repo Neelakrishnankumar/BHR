@@ -75,6 +75,8 @@ import {
 import { useTheme } from "@emotion/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+
 const NewScheduleLatest = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -84,12 +86,16 @@ const NewScheduleLatest = () => {
 
   const recID = params.id;
   const accessID = params.accessID;
+  const accessID1 = params.accessID1;
+  const accessID2 = params.accessID2;
   //const accessID = "TR283";
   const screenName = params.screenName;
   const mode = params.Mode;
   const EmpId = params.parentID3;
   const parentID1 = params.parentID1;
   const parentID2 = params.parentID2;
+  const parentID3 = params.parentID3;
+  const parentID4 = params.parentID4;
   console.log("🚀 ~ NewSchedule ~ parentID2:", parentID2);
 
   const CompanyID = sessionStorage.getItem("compID");
@@ -389,10 +395,10 @@ const NewScheduleLatest = () => {
     }
   };
 
-    const handleStatusUpdate = (row) => async () => {
+  const handleStatusUpdate = (row) => async () => {
     try {
 
-       const result = await Swal.fire({
+      const result = await Swal.fire({
         title: "Are you sure?",
         text: "You want to update status of this schedule",
         icon: "warning",
@@ -408,7 +414,7 @@ const NewScheduleLatest = () => {
       const idata = {
         AssessmentID: row.AssessmentID || parentID2 || 0,
         EmpRecid: row.EmployeeID,
-        AssessmentName:row.Assessment
+        AssessmentName: row.Assessment
       };
 
       const response = await dispatch(
@@ -600,6 +606,38 @@ const NewScheduleLatest = () => {
         //   );
         // }
 
+        if (params.row.STATUS === "Pass") {
+          actions.push(
+            <Tooltip title="Score Board">
+            <GridActionsCellItem
+              key="ScoreBoard"
+              icon={<AnalyticsIcon style={{ color: "#4cceac" }} />}
+              label="Score Board"
+              onClick={() =>
+                navigate(
+                  `/Apps/Secondarylistview/skillglow/${accessID2}/${screenName}/${parentID4}/${accessID1}/${parentID3}/ScheduleListAssessment/${parentID2}/AssessmentScoreBoard/${params.row.RecordID}`,
+                  {
+                    state: {
+                      ...state,
+                      AssessmentName: params.row.AssessmentName,
+                      AssessmentID: params.row.AssessmentID,
+                      ScheduleID: params.row.RecordID,
+                      Lastattdate: params.row.Lastattdate,
+                      Firstattdate: params.row.Firstattdate,
+                      Lastattscore: params.row.Lastattscore,
+                      NoofAttemp: params.row.NoofAttemp,
+                      EmployeeName: params.row.EmployeeName,
+                      EmployeeID: params.row.EmployeeID,
+                    },
+                  },
+                )
+              }
+              color="inherit"
+            />
+            </Tooltip>
+          );
+        }
+
         return actions;
       },
     }
@@ -719,7 +757,7 @@ const NewScheduleLatest = () => {
           </Box>
         </Paper>
 
-        {!scheduleLoading  ? (
+        {!scheduleLoading ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Box m="5px">
               <Box

@@ -444,11 +444,11 @@ const EditListOfSOPs = () => {
                     error={!!touched.VersionNo && !!errors.VersionNo}
                     helperText={touched.VersionNo && errors.VersionNo}
                     autoFocus
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     name="ModuleNo"
@@ -470,11 +470,11 @@ const EditListOfSOPs = () => {
                     error={!!touched.ModuleNo && !!errors.ModuleNo}
                     helperText={touched.ModuleNo && errors.ModuleNo}
                     autoFocus
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     select
