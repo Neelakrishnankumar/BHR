@@ -160,8 +160,34 @@ const Listview = () => {
   const listViewData = useSelector((state) => state.listviewApi.rowData);
 
   const loading = useSelector((state) => state.listviewApi.loading);
-  const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
-    useSelector((state) => state.screenRights.data);
+  // const { UGA_ADD, UGA_VIEW, UGA_MOD, UGA_DEL, UGA_PROCESS, UGA_PRINT } =
+  //   useSelector((state) => state.screenRights.data);
+  const rights = useSelector((state) => state.screenRights.data) || {};
+  const {
+    UGA_ADD,
+    UGA_VIEW,
+    UGA_MOD,
+    UGA_DEL,
+    UGA_PROCESS,
+    UGA_PRINT,
+  } = rights;
+
+  useEffect(() => {
+    const Groupaccess =
+      JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
+
+    const found = Groupaccess.find(
+      (item) =>
+        String(item.UGA_ACCESSID).trim() ===
+        String(accessID).trim()
+    );
+
+    console.log("AccessID:", accessID);
+    console.log("Matched Rights:", found);
+
+    dispatch(screenRightsData(found));
+  }, [accessID, dispatch]);
+  console.log("🚀 ~ file: Listview.jsx:59 ~ Listview ~ UGA_ADD:", UGA_ADD);
   // console.log("🚀 ~ file: Listview.jsx:61 ~ Listview ~ UGA_MOD:", UGA_MOD)
 
   // console.log("🚀 ~ file: Listview.jsx:60 ~ Listview ~ rightsData:", JSON.stringify(rightsData))
@@ -563,15 +589,16 @@ const Listview = () => {
               false
             )}
 
-            {/* <Tooltip title="Bulk Upload">
+           {accessID == "TR122" || accessID == "TR026" ? (
+            <Tooltip title="Bulk Upload">
               <IconButton sx={{ cursor: "pointer" }}>
                 <FaFileExcel size={20}
                   color="#1D6F42"
                   onClick={() => setShowBulkUpload((prev) => !prev)}
                 />
               </IconButton>
-            </Tooltip> */}
-
+            </Tooltip>
+):null}
             <GridToolbarQuickFilter key={accessID} />
             {accessID == "TR002" ? (
               <Tooltip arrow title="Product Tracking">
@@ -659,34 +686,35 @@ const Listview = () => {
               //)
               : accessID == "TR337" ? (
                 false
-              ) : YearFlag == "true" ? (
-                // UGA_ADD ? (
+              )
+                // : YearFlag == "true" ? (
+                : UGA_ADD ? (
 
-                <Tooltip arrow title="Add">
-                  <IconButton>
-                    <AddOutlinedIcon
-                      onClick={() => {
-                        navigate(
-                          `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
-                          }`,
-                          {
-                            state: {
-                              CustomerID: "-1",
-                              ProductID: "-1",
-                              BomID: "-1",
-                            },
-                          }
-                        );
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                // ) : (
-                //   false
-                // )
-                false
-              )}
+                  <Tooltip arrow title="Add">
+                    <IconButton>
+                      <AddOutlinedIcon
+                        onClick={() => {
+                          navigate(
+                            `./Edit${screenName}/-1/A${accessID === "TR010" ? "/0" : ""
+                            }`,
+                            {
+                              state: {
+                                CustomerID: "-1",
+                                ProductID: "-1",
+                                BomID: "-1",
+                              },
+                            }
+                          );
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  // ) : (
+                  //   false
+                  // )
+                  false
+                )}
 
             {/* <Tooltip arrow title="Import Excel">
                 <IconButton
@@ -751,7 +779,7 @@ const Listview = () => {
               }}
             />
             {/* {accessID == "TR122" && (
-              <Box display="flex" alignItems="center" gap={2} mt={3}>
+              <Box display="flex" alignItems="center" gap={2} >
                 <TextField
                   value={ImageName?.name || ""}
                   size="small"
@@ -952,8 +980,8 @@ const Listview = () => {
               }}
               key={accessID}
               rows={rows}
-              // columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
-              columns={columns}
+              columns={UGA_MOD || UGA_VIEW ? columns : columnShow}
+              // columns={columns}
               loading={loading}
               disableSelectionOnClick
               rowHeight={dataGridRowHeight}

@@ -19,23 +19,35 @@ const initialState = {
     }
 }
 
-const screenRights = createSlice({
-    name:"screenRights",
-    initialState,
-    reducers:{
-        screenRightsData: (state,action) => {
+// const screenRights = createSlice({
+//     name:"screenRights",
+//     initialState,
+//     reducers:{
+//         screenRightsData: (state,action) => {
          
        
-            const Groupaccess = JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
-            state.data =  Groupaccess.find(({ UGA_ACCESSID }) => UGA_ACCESSID === action.payload);
+//             const Groupaccess = JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
+//             state.data =  Groupaccess.find(({ UGA_ACCESSID }) => UGA_ACCESSID === action.payload);
 
-        }
-    }
-})
+//         }
+//     }
+// })
 
 
-export const {
-    screenRightsData
-  } = screenRights.actions;
+// export const {
+//     screenRightsData
+//   } = screenRights.actions;
   
-  export default screenRights.reducer;
+//   export default screenRights.reducer;
+const screenRights = createSlice({
+  name: "screenRights",
+  initialState,
+  reducers: {
+    screenRightsData: (state, action) => {
+      state.data = action.payload || initialState.data;
+    },
+  },
+});
+
+export const { screenRightsData } = screenRights.actions;
+export default screenRights.reducer;

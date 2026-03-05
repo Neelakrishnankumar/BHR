@@ -56,7 +56,7 @@ import Listviewpopup from "../Lookup";
 import Popup from "../popup";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { tokens } from "../../../Theme";
-
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -86,11 +86,9 @@ import {
   formGap,
 } from "../../../ui-components/global/utils";
 import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
-// ***********************************************
-//  Developer:Gowsalya
-// Purpose:To Create Employee
+import RegisterOfWagesPDF from "../pdf/Payslip_V1";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
-// ***********************************************
 const EditemployeePayroll = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -115,7 +113,36 @@ const EditemployeePayroll = () => {
     setAnchorEl(null);
   };
 
-
+  const sampleData = [
+    {
+      name: "Surya",
+      sex: "F",
+      designation: "QA",
+      wagePeriod: "Monthly",
+      days: 31,
+      basic: 6183,
+      da: 8419,
+      gross: 14602,
+      pf: 1752,
+      esi: 110,
+      totalDed: 1862,
+      net: 12740,
+    },
+    {
+      name: "Jayakavitha",
+      sex: "F",
+      designation: "Developer",
+      wagePeriod: "Monthly",
+      days: 31,
+      basic: 6183,
+      da: 8419,
+      gross: 14602,
+      pf: 1752,
+      esi: 110,
+      totalDed: 1862,
+      net: 12740,
+    },
+  ];
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
@@ -2978,6 +3005,22 @@ const EditemployeePayroll = () => {
                     <Button type="reset" variant="contained" color="error">
                       RESET
                     </Button>
+                    {/* <PDFDownloadLink
+                      document={<RegisterOfWagesPDF data={sampleData} />}
+                      fileName="Register_Of_Wages.pdf"
+                      style={{ color: "#d32f2f", cursor: "pointer" }} 
+
+                    >
+                      {({ loading }) =>
+                        loading ? (
+                          <PictureAsPdfIcon
+                            sx={{ fontSize: 24, opacity: 0.5 }}
+                          />
+                        ) : (
+                          <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                        )
+                      }
+                    </PDFDownloadLink> */}
                   </Box>
 
                   <Box m="5px">
@@ -6228,6 +6271,7 @@ const EditemployeePayroll = () => {
                     <Button type="reset" variant="contained" color="error">
                       RESET
                     </Button>
+
                   </Box>
 
                   <Box sx={{ gridColumn: "span 4" }}>

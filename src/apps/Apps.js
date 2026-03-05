@@ -703,7 +703,7 @@ function App() {
                     element={<EditSalaryComponent />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditSatuary Component/:id/:Mode"
+                    path="/:accessID/:screenName/EditPayroll Policy/:id/:Mode"
                     element={<EditSatuaryComponent />}
                   />
                   <Route path="/:accessID/:screenName" element={<Listview />} />
