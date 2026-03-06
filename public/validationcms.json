@@ -363,7 +363,9 @@
   "Warningmsg": {
     "Logout": "Do you really want to Log Out?",
     "Close": "Do you want to Close?",
-    "Delete": "Do you want to Delete?"
+    "Delete": "Do you want to Delete?",
+    "Remove": "Do you want to remove this item?"
+
   },
   "Questions": {
     "Option1": "Please enter Option 1",
@@ -385,5 +387,10 @@
     "Type": "Please select the Type",
     "Name": "Please enter the Name",
     "Category": "Please select the Category"
+  },
+  "Inventory":{
+    "itemgroups": "Please select the Item Group",
+    "itemcategory": "Please select the Item Category",
+    "Grpitems": "Please select the Item"
   }
 }

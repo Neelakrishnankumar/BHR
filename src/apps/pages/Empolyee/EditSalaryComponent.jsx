@@ -42,6 +42,7 @@ import Listviewpopup from "../Lookup";
 import { formGap } from "../../../ui-components/utils";
 // import CryptoJS from "crypto-js";
 import * as Yup from "yup";
+import { CheckinAutocomplete } from "../../../ui-components/global/Autocomplete";
 
 const EditSalaryComponent = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -65,6 +66,7 @@ const EditSalaryComponent = () => {
   const [validationSchema, setValidationSchema] = useState(null);
   const [errorMsgData, setErrorMsgData] = useState(null);
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+  const listViewurl = useSelector((state) => state.globalurl.listViewurl);
 
 
 
@@ -100,13 +102,16 @@ const EditSalaryComponent = () => {
 
   const InitialValue = {
     description: data.Name,
-    type: data.Type == "Percentage of basic salary" ? "PS" :
-      data.Type == "Fixed" ? "FX" :
-        data.Type == "policy" ? "PC" : "",
+    type: data.Type == "Percentage of Allowance 1" ? "A1" :
+      data.Type == "Percentage of Allowance 1 + Allowance 2 + Allowance 3" ? "A3" :
+        data.Type == "Percentage of Allowance 1 + Allowance 2" ? "A2" :
+          data.Type == "Fixed Amount" ? "FX" :
+            data.Type == "Policy" ? "PC" : "",
     category: data.Category == "Allowance" ? "A" :
       data.Category == "Deduction" ? "D" : "",
     sortOrder: data.Sortorder || 0,
     disable: data.Disable === "Y" ? true : false,
+    Policy: data.StatuaryRecordID ? { RecordID: data.StatuaryRecordID, Name: data.Policy } : null,
   };
 
   const Fnsave = async (values, del) => {
@@ -129,7 +134,8 @@ const EditSalaryComponent = () => {
       Category: values.category || "",
       SortOrder: values.sortOrder,
       Disable: values.disable === true ? "Y" : "N",
-      CompanyID
+      CompanyID,
+      StatuaryRecordID : values.Policy?.RecordID || 0,
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -224,6 +230,7 @@ const EditSalaryComponent = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue
             }) => (
               <form onSubmit={handleSubmit}>
 
@@ -284,35 +291,122 @@ const EditSalaryComponent = () => {
                       <MenuItem value="PC">POLICY</MenuItem>
                     </Select>
                   </FormControl> */}
-                  <TextField
-                    label={
-                      <>
-                        Type
-                        <span style={{ color: "red", fontSize: "20px" }}>
-                          *
-                        </span>
-                      </>
-                    }
-                    id="type"
-                    name="type"
-                    focused
-                    variant="standard"
-                    value={values.type}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    select
-                    error={!!touched.type && !!errors.type}
-                    helperText={touched.type && errors.type}
+                  {/* <FormControl
+                    sx={{
+                      gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "flex-start",
+                      gap: 2,
+                    }}
                   >
-                    <MenuItem value="PS">Percentage Of Basic Salary</MenuItem>
-                    <MenuItem value="FX">Fixed Amount</MenuItem>
-                    <MenuItem value="PC">Policy</MenuItem>
-                  </TextField>
-                   {/* <MenuItem value="FX">Fixed Amount</MenuItem>
-                    <MenuItem value="A1">Percentage Of Basic Salary</MenuItem>
-                    <MenuItem value="A2">Percentage Of Basic Salary</MenuItem>
-                    <MenuItem value="A3">Percentage Of Basic Salary</MenuItem>
-                    <MenuItem value="PC">Policy</MenuItem> */}
+                    <Box sx={{ flex: 1 }}>
+                      <TextField
+                        label={
+                          <>
+                            Type
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        id="type"
+                        name="type"
+                        focused
+                        variant="standard"
+                        value={values.type}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        select
+                        error={!!touched.type && !!errors.type}
+                        helperText={touched.type && errors.type}
+                      >                      
+                        <MenuItem value="FX">Fixed Amount</MenuItem>
+                        <MenuItem value="A1">Percentage Of Basic Salary</MenuItem>
+                        <MenuItem value="A2">Percentage Of Basic Salary</MenuItem>
+                        <MenuItem value="A3">Percentage Of Basic Salary</MenuItem>
+                        <MenuItem value="PC">Policy</MenuItem>
+                      </TextField>
+                    </Box>
+                    {values.type === "PC" && (
+                      <Box sx={{ flex: 1 }}>
+                        <CheckinAutocomplete
+                          variant="outlined"
+                          name="Policy"
+                          label={
+                            <>
+                              Policy
+                              <span style={{ color: "red", fontSize: "20px" }}> * </span>
+                            </>
+                          }
+                          id="Policy"
+                          value={values.Policy}
+                          onChange={(newValue) => {
+                            setFieldValue("Policy", newValue);
+                          }}
+                          error={!!touched.Policy && !!errors.Policy}
+                          helperText={touched.Policy && errors.Policy}
+                          url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
+                        />
+                      </Box>
+                    )}
+                  </FormControl> */}
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        values.type === "PC"
+                          ? "1fr 1fr"
+                          : "1fr",
+                      gap: 2,
+                    }}
+                  >
+                    <TextField
+                      fullWidth
+                      label={
+                        <>
+                          Type <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                        </>
+                      }
+                      id="type"
+                      name="type"
+                      variant="standard"
+                      focused
+                      value={values.type}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      select
+                      error={!!touched.type && !!errors.type}
+                      helperText={touched.type && errors.type}
+                    >
+                      <MenuItem value="FX">Fixed Amount</MenuItem>
+                      <MenuItem value="A1">Percentage Of Allowance 1</MenuItem>
+                      <MenuItem value="A2">Percentage Of Allowance 1 + Allowance 2</MenuItem>
+                      <MenuItem value="A3">Percentage Of Allowance 1 + Allowance 2 + Allowance 3</MenuItem>
+                      <MenuItem value="PC">Policy</MenuItem>
+                    </TextField>
+
+                    {values.type === "PC" || data.Type == "Policy" ? (
+                      <CheckinAutocomplete
+                        fullWidth
+                        variant="outlined"
+                        name="Policy"
+                        label={
+                          <>
+                            Policy <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                          </>
+                        }
+                        id="Policy"
+                        value={values.Policy}
+                        onChange={(newValue) => {
+                          setFieldValue("Policy", newValue);
+                        }}
+                        error={!!touched.Policy && !!errors.Policy}
+                        helperText={touched.Policy && errors.Policy}
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2150","ScreenName":"Payroll Policy","Filter":"companyID='${CompanyID}'","Any":""}}`}
+                      />
+                    ):(null)}
+                  </Box>
                   {/* <FormControl
                     focused
                     variant="standard"

@@ -55,6 +55,9 @@ const initialState = {
   purchaseorderratingData: [],
   searchLoading: false,
   empAttendanceData: {},
+  InventrygetData: [],
+  InventrygetDataStatus: "idle",
+  Inventoryloading: false, //ADDED BY - MANOJ
   payslipAttendanceData: {},
   empAttendanceDataLoading: false, //ADDED BY - MANOJ
   AttendanceData: {},
@@ -84,6 +87,19 @@ const initialState = {
   PartyDateAndAmtFilterstatus: "",
   PartyDateAndAmtFilterloading: false,
   LeaveEntryRegdata: [],
+  //Inventorygrid1
+  Inventorygrid1status: "",
+  Inventorygrid1loading: false,
+  Inventorygrid1data: [],
+  //Inventorygrid2
+  Inventorygrid2status: "",
+  Inventorygrid2loading: false,
+  Inventorygrid2data: [],
+  //Inventorygrid3
+  Inventorygrid3status: "",
+  Inventorygrid3loading: false,
+  Inventorygrid3data: [],
+
   Partygetdata: [],
   Partycontactgetdata: [],
   LeaveEntryRegstatus: "",
@@ -691,7 +707,22 @@ export const Processpost = createAsyncThunk(
     return response.data;
   }
 );
+export const InventoryPostController = createAsyncThunk(
+  "employee/deployment/postdata",
+  async (payload) => {
+    const url = store.getState().globalurl.EmpInventoryPostController;
 
+    console.log("Final API Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
 
 export const costLeatherData = createAsyncThunk(
   "bom/costing/leather",
@@ -2245,7 +2276,87 @@ export const hashtoken = createAsyncThunk(
     return response.data;
   },
 );
+export const Inventorygrid1 = createAsyncThunk(
+  "Inv1/Itemgroup",
+  async ({ AccessID, screenName, filter, any }, { getState }) => {
+    const url = getState().globalurl.listViewurl;
 
+    const CompId = sessionStorage.getItem("compID");
+
+    const idata = {
+      Query: {
+        AccessID,
+        ScreenName: screenName,
+        Filter: filter,
+        Any: any,
+        CompId,
+      },
+    };
+
+    const response = await axios.get(url, {
+      params: { data: JSON.stringify(idata) },
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+
+    return response.data; // returning full response
+  }
+);
+export const Inventorygrid2 = createAsyncThunk(
+  "Inv2/Itemcategory",
+  async ({ AccessID, screenName, filter, any }, { getState }) => {
+    const url = getState().globalurl.listViewurl;
+
+    const CompId = sessionStorage.getItem("compID");
+
+    const idata = {
+      Query: {
+        AccessID,
+        ScreenName: screenName,
+        Filter: filter,
+        Any: any,
+        CompId,
+      },
+    };
+
+    const response = await axios.get(url, {
+      params: { data: JSON.stringify(idata) },
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+
+    return response.data; // returning full response
+  }
+);
+export const Inventorygrid3 = createAsyncThunk(
+  "Inv3/Item",
+  async ({ AccessID, screenName, filter, any }, { getState }) => {
+    const url = getState().globalurl.listViewurl;
+
+    const CompId = sessionStorage.getItem("compID");
+
+    const idata = {
+      Query: {
+        AccessID,
+        ScreenName: screenName,
+        Filter: filter,
+        Any: any,
+        CompId,
+      },
+    };
+
+    const response = await axios.get(url, {
+      params: { data: JSON.stringify(idata) },
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+
+    return response.data; // returning full response
+  }
+);
 export const getBomList = createAsyncThunk(
   "listOfBom/getbom",
   async ({ recid, action, ProductID }) => {
@@ -2458,6 +2569,7 @@ export const getApiSlice = createSlice({
       state.stockorderData = [];
       state.purchaseorderratingData = [];
       state.empAttendanceData = [];
+      state.InventrygetData = [];
       state.payslipAttendanceData = [];
       state.AttendanceData = [];
       state.timeSheetData = [];
@@ -2585,7 +2697,7 @@ export const getApiSlice = createSlice({
         state.Status = "Error";
         state.loading = false;
       })
-       .addCase(batchreconciliationGetData.pending, (state, action) => {
+      .addCase(batchreconciliationGetData.pending, (state, action) => {
         state.Status = "idle";
         state.loading = true;
       })
@@ -2927,6 +3039,69 @@ export const getApiSlice = createSlice({
       .addCase(leaveenquiryget.rejected, (state, action) => {
         state.LeaveEntryRegstatus = "Error";
         state.LeaveEntryRegloading = false;
+      })
+      // Inventorygrid1
+      .addCase(Inventorygrid1.pending, (state) => {
+        state.Inventorygrid1loading = true;
+        state.Inventorygrid1status = "loading";
+      })
+
+      .addCase(Inventorygrid1.fulfilled, (state, action) => {
+        state.Inventorygrid1loading = false;
+        state.Inventorygrid1status = "success";
+
+        state.Inventorygrid1columns =
+          action.payload?.Data?.columns || [];
+
+        state.Inventorygrid1rows =
+          action.payload?.Data?.rows || [];
+      })
+
+      .addCase(Inventorygrid1.rejected, (state) => {
+        state.Inventorygrid1loading = false;
+        state.Inventorygrid1status = "error";
+      })
+      // Inventorygrid2
+      .addCase(Inventorygrid2.pending, (state) => {
+        state.Inventorygrid2loading = true;
+        state.Inventorygrid2status = "loading";
+      })
+
+      .addCase(Inventorygrid2.fulfilled, (state, action) => {
+        state.Inventorygrid2loading = false;
+        state.Inventorygrid2status = "success";
+
+        state.Inventorygrid2columns =
+          action.payload?.Data?.columns || [];
+
+        state.Inventorygrid2rows =
+          action.payload?.Data?.rows || [];
+      })
+
+      .addCase(Inventorygrid2.rejected, (state) => {
+        state.Inventorygrid2loading = false;
+        state.Inventorygrid2status = "error";
+      })
+      // Inventorygrid3
+      .addCase(Inventorygrid3.pending, (state) => {
+        state.Inventorygrid3loading = true;
+        state.Inventorygrid3status = "loading";
+      })
+
+      .addCase(Inventorygrid3.fulfilled, (state, action) => {
+        state.Inventorygrid3loading = false;
+        state.Inventorygrid3status = "success";
+
+        state.Inventorygrid3columns =
+          action.payload?.Data?.columns || [];
+
+        state.Inventorygrid3rows =
+          action.payload?.Data?.rows || [];
+      })
+
+      .addCase(Inventorygrid3.rejected, (state) => {
+        state.Inventorygrid3loading = false;
+        state.Inventorygrid3status = "error";
       })
 
       .addCase(EmployeeVendorGetController.pending, (state, action) => {
@@ -3412,6 +3587,40 @@ export const getApiSlice = createSlice({
         state.empAttendanceDataLoading = false;
         state.empAttendanceData = [];
       })
+
+
+      // .addCase(Inventryget.fulfilled, (state, action) => {
+      //   state.InventrygetData = action.payload.Data;
+      //   state.InventrygetDataLoading = false;
+      // })
+      // .addCase(Inventryget.pending, (state, action) => {
+      //   state.InventrygetDataStatus = "idle";
+      //   state.InventrygetDataLoading = true;
+      //   state.InventrygetData = [];
+      // })
+      // .addCase(Inventryget.rejected, (state, action) => {
+      //   state.InventrygetDataStatus = "Error";
+      //   state.InventrygetDataLoading = false;
+      //   state.InventrygetData = [];
+      // })
+      .addCase(Inventryget.pending, (state) => {
+        state.Inventoryloading = true;
+      })
+
+      .addCase(Inventryget.fulfilled, (state, action) => {
+        state.Inventoryloading = false;
+
+        if (action.payload?.Status === "Y") {
+          state.InventrygetData = action.payload.Data || [];
+        } else {
+          state.InventrygetData = [];
+        }
+      })
+
+      .addCase(Inventryget.rejected, (state) => {
+        state.Inventoryloading = false;
+        state.InventrygetData = [];
+      })
       .addCase(payslipAttendance.fulfilled, (state, action) => {
         state.payslipAttendanceData = action.payload.Data;
         state.empAttendanceDataLoading = false;
@@ -3789,7 +3998,7 @@ export const getApiSlice = createSlice({
           },
         };
       })
-//SOP Process POST
+      //SOP Process POST
       .addCase(SOPProcessPost.pending, (state, action) => {
         state.SOPProcessStatus = "idle";
         state.SOPProcessLoading = true;
@@ -3804,7 +4013,7 @@ export const getApiSlice = createSlice({
         state.SOPProcessStatus = "Error";
         state.SOPProcessLoading = false;
       })
-//SOP CONFIG POST
+      //SOP CONFIG POST
       .addCase(SOPConfigPost.pending, (state, action) => {
         state.SOPConfigStatus = "idle";
         state.SOPConfigLoading = true;
@@ -3820,7 +4029,7 @@ export const getApiSlice = createSlice({
         state.SOPConfigLoading = false;
       })
 
-       //SOP CONFIGURATION  - GET
+      //SOP CONFIGURATION  - GET
       .addCase(SOPConfigGet.pending, (state, action) => {
         state.SOPConfigGetstatus = "idle";
         state.SOPConfigGetloading = true;
@@ -3836,7 +4045,7 @@ export const getApiSlice = createSlice({
         state.SOPConfigGetstatus = "Error";
         state.SOPConfigGetloading = false;
       })
-       //SPECIMEN - GET
+      //SPECIMEN - GET
       .addCase(SpecimenGet.pending, (state, action) => {
         state.SpecimenGetstatus = "idle";
         state.SpecimenGetloading = true;
@@ -3852,7 +4061,7 @@ export const getApiSlice = createSlice({
         state.SpecimenGetstatus = "Error";
         state.SpecimenGetloading = false;
       })
-       //SPECIMEN - POST
+      //SPECIMEN - POST
       .addCase(SpecimenPost.pending, (state, action) => {
         state.SpecimenPoststatus = "idle";
         state.SpecimenPostloading = true;
@@ -3868,7 +4077,7 @@ export const getApiSlice = createSlice({
         state.SpecimenPoststatus = "Error";
         state.SpecimenPostloading = false;
       })
-       //SopEmpMappingController - POST
+      //SopEmpMappingController - POST
       .addCase(SopEmpMappingController.pending, (state, action) => {
         state.SopEmpMappingControllerstatus = "idle";
         state.SopEmpMappingControllerloading = true;
@@ -4931,6 +5140,27 @@ export const empAttendance = createAsyncThunk(
     return response.data;
   },
 );
+export const Inventryget = createAsyncThunk(
+  "Inventryget/Inventorygetitem",
+  async ({ data }) => {
+    var url = store.getState().globalurl.EmpInventoryGetController;
+    // var url = store.getState().globalurl.employeeattendanceUrl;
+
+    console.log("get" + JSON.stringify(data));
+    console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
 export const payslipAttendance = createAsyncThunk(
   "employee/Payslipattendance",
   async ({ data }) => {
@@ -4954,7 +5184,7 @@ export const payslipAttendance = createAsyncThunk(
 );
 export const ItempriceGet = createAsyncThunk(
   "employee/ItempriceGet",
-  async (data) => {  
+  async (data) => {
     var url = store.getState().globalurl.ItempriceGeturl;
     console.log("get" + JSON.stringify(data));
     console.log("🚀 ~ file: Formapireducer.js:26 ~ data:", data);
@@ -5348,7 +5578,7 @@ export const Setup_MenuExcel = createAsyncThunk(
 
 export const paySlipGet = createAsyncThunk(
   "paySlipGet/Get",
-  async (payslip ) => {
+  async (payslip) => {
     const url = store.getState().globalurl.PayslipGetController;
 
     const data = {
@@ -5370,7 +5600,7 @@ export const paySlipGet = createAsyncThunk(
 
 export const replacementQtyGet = createAsyncThunk(
   "replacementQtyGet/Get",
-  async ({PartyID,CompanyID}) => {
+  async ({ PartyID, CompanyID }) => {
     const url = store.getState().globalurl.PartyReplacementQtyGet;
 
     const data = {
@@ -5450,7 +5680,7 @@ export const SOPConfigPost = createAsyncThunk(
 
 export const SOPConfigGet = createAsyncThunk(
   "SOPConfigGet/Get",
-  async ({EmployeeID,CompanyID}) => {
+  async ({ EmployeeID, CompanyID }) => {
     const url = store.getState().globalurl.SOPConfigGet;
 
     const data = {
@@ -5489,7 +5719,7 @@ export const SpecimenPost = createAsyncThunk(
 
 export const SpecimenGet = createAsyncThunk(
   "SpecimenGet/Get",
-  async ({EmployeeID,CompanyID}) => {
+  async ({ EmployeeID, CompanyID }) => {
     const url = store.getState().globalurl.SpecimenGet;
 
     const data = {
