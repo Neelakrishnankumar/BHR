@@ -56,7 +56,7 @@ import Listviewpopup from "../Lookup";
 import Popup from "../popup";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { tokens } from "../../../Theme";
-
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -86,11 +86,9 @@ import {
   formGap,
 } from "../../../ui-components/global/utils";
 import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
-// ***********************************************
-//  Developer:Gowsalya
-// Purpose:To Create Employee
+import RegisterOfWagesPDF from "../pdf/Payslip_V1";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
-// ***********************************************
 const EditemployeePayroll = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -115,7 +113,36 @@ const EditemployeePayroll = () => {
     setAnchorEl(null);
   };
 
-
+  const sampleData = [
+    {
+      name: "Surya",
+      sex: "F",
+      designation: "QA",
+      wagePeriod: "Monthly",
+      days: 31,
+      basic: 6183,
+      da: 8419,
+      gross: 14602,
+      pf: 1752,
+      esi: 110,
+      totalDed: 1862,
+      net: 12740,
+    },
+    {
+      name: "Jayakavitha",
+      sex: "F",
+      designation: "Developer",
+      wagePeriod: "Monthly",
+      days: 31,
+      basic: 6183,
+      da: 8419,
+      gross: 14602,
+      pf: 1752,
+      esi: 110,
+      totalDed: 1862,
+      net: 12740,
+    },
+  ];
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
@@ -242,7 +269,7 @@ const EditemployeePayroll = () => {
     // DeptRecordID:apiData.DeptRecordID,
     Comm: apiData.Comm,
     Mgr: apiData.Mgr,
-    Sal: apiData.Sal,
+    amount: apiData.Sal,
     Fax: apiData.Fax,
     SortOrder: apiData.SortOrder,
     checkbox: apiData.Disable,
@@ -393,6 +420,7 @@ const EditemployeePayroll = () => {
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
       EmpType: values.employeetype,
+      Sal: values.amount || 0,
       DateOfJoin: values.joindate,
       DateOfConfirmation: values.confirmdate,
       Job: values.Job,
@@ -422,6 +450,7 @@ const EditemployeePayroll = () => {
     if (data.payload.Status == "Y") {
       toast.success(data.payload.Msg);
       setLoading(false);
+      dispatch(fetchApidata(accessID, "get", recID));
       navigate(
         // `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
         `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${data.payload.apiResponse}/E`
@@ -2538,6 +2567,27 @@ const EditemployeePayroll = () => {
                         <MenuItem value="CI">Contracts In</MenuItem>
                         <MenuItem value="CO">Contracts Out</MenuItem>
                       </TextField>
+                      <TextField
+                        name="amount"
+                        type="text"
+                        id="amount"
+                        label="Actual Salary"
+                        variant="standard"
+                        focused
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        // autoFocus
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 0,
+                            max: 24,
+                          },
+                        }}
+                      />
                       <Box>
                         <Field
                           //  size="small"
@@ -2978,6 +3028,22 @@ const EditemployeePayroll = () => {
                     <Button type="reset" variant="contained" color="error">
                       RESET
                     </Button>
+                    <PDFDownloadLink
+                      document={<RegisterOfWagesPDF data={sampleData} />}
+                      fileName="Register_Of_Wages.pdf"
+                      style={{ color: "#d32f2f", cursor: "pointer" }}
+
+                    >
+                      {({ loading }) =>
+                        loading ? (
+                          <PictureAsPdfIcon
+                            sx={{ fontSize: 24, opacity: 0.5 }}
+                          />
+                        ) : (
+                          <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                        )
+                      }
+                    </PDFDownloadLink>
                   </Box>
 
                   <Box m="5px">
@@ -3326,7 +3392,7 @@ const EditemployeePayroll = () => {
                                 SalaryCategory: newValue.SalaryCategory,
                               });
                             }}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Allowances","Filter":"SalaryCategory='A'","Any":""}}`}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Allowances","Filter":"SalaryCategory='A' AND CompanyID='${CompanyID}'","Any":""}}`}
                           />
                           {/* <TextField
                           id="outlined-basic"
@@ -3799,7 +3865,7 @@ const EditemployeePayroll = () => {
                                 SalaryCategory: newValue.SalaryCategory,
                               });
                             }}
-                            url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D'","Any":""}}`}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2082","ScreenName":"Deduction","Filter":"SalaryCategory='D' AND CompanyID='${CompanyID}'","Any":""}}`}
                           />
                         </FormControl>
 
@@ -6228,6 +6294,7 @@ const EditemployeePayroll = () => {
                     <Button type="reset" variant="contained" color="error">
                       RESET
                     </Button>
+
                   </Box>
 
                   <Box sx={{ gridColumn: "span 4" }}>

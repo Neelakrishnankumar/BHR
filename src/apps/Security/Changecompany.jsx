@@ -331,8 +331,8 @@ const Companychange = () => {
             FooterImg: overrides.footerImage ?? footerImage,
 
             CompanyName: data.CM_NAME,
-            GraceTime: grace,
-            SessionTimeOut: timeout
+            GraceTime: grace || 15,
+            SessionTimeOut: timeout || 600,
         };
 
         return dispatch(CompanydetailpostData({ idata }));

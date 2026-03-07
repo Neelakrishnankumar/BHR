@@ -87,6 +87,8 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -318,7 +320,7 @@ const ListviewSecondary = () => {
     filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
   }
   else if (accessID == "TR335") {
-    filter = `CompanyID = '${compID}' AND SOPID='${parentID1}'`;
+    filter = `CompanyID = '${compID}' AND DocumentIssuedID='${parentID3}'`;
     // filter = `CompanyID = '${compID}' AND RouteHdrID='${parentID1}'`;
   }
   else if (accessID == "TR338") {
@@ -1861,7 +1863,8 @@ const ListviewSecondary = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
                  onClick={() => {
-                  navigate(-1);
+                  // navigate(-1);
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.parentID1}`, { state: { ...state }});
                 }}
               >
                 List of Documents ({BreadCrumb2})
@@ -4671,6 +4674,11 @@ const ListviewSecondary = () => {
                     <Chip
                     icon={<PictureAsPdfIcon color="error" />}
                     label="Process Pdf"
+                    variant="outlined"
+                  />
+                    <Chip
+                    icon={<DoubleArrowOutlinedIcon color="primary" />}
+                    label="Batch Reconciliation Records"
                     variant="outlined"
                   />
                   </Box>

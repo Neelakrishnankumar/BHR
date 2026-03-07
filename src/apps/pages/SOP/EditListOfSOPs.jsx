@@ -121,9 +121,21 @@ const EditListOfSOPs = () => {
       },
     }),
   )}`;
+    const employeeTrainedByUrl = `${listViewurl}?data=${encodeURIComponent(
+    JSON.stringify({
+      Query: {
+        AccessID: "2117",
+        ScreenName: "Employee",
+        Filter: `${employeeFilter} AND TrainedBy='Y'`,
+        Any: "",
+        CompId: "",
+      },
+    }),
+  )}`;
   const [empData, setempData] = useState([]);
   const [empData1, setempData1] = useState([]);
   const [empData2, setempData2] = useState([]);
+  const [empData3, setempData3] = useState([]);
 
   const SOPInitialValues = {
     Code: data.Code || "",
@@ -137,6 +149,7 @@ const EditListOfSOPs = () => {
     PreparedBy: data.PreparedBy|| null,
     ReviewBy: data.ReviewedBy || null,
     ApproveBy: data.ApprovedBy || null,
+    TrainedBy: data.TrainedBy || null,
   }
   const SOPSaveFn = async (values) => {
 
@@ -156,6 +169,10 @@ const EditListOfSOPs = () => {
       empData2 && empData2.length > 0
         ? empData2.map((e) => e.RecordID).join(",")
         : "";
+    const employeeId3 =
+      empData3 && empData3.length > 0
+        ? empData3.map((e) => e.RecordID).join(",")
+        : "";
     const idata = {
       RecordID: recID,
       CompanyID: CompanyID,
@@ -168,6 +185,7 @@ const EditListOfSOPs = () => {
       ReviewedBy: employeeIds1,
       ApprovedBy: employeeIds,
       PreparedBy: employeeIds2,
+      TrainedBy: employeeId3,
       SortOrder: values.Sortorder || "0",
       Disable: values.Disable ? "Y" : "N",
     };
@@ -426,11 +444,11 @@ const EditListOfSOPs = () => {
                     error={!!touched.VersionNo && !!errors.VersionNo}
                     helperText={touched.VersionNo && errors.VersionNo}
                     autoFocus
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     name="ModuleNo"
@@ -452,11 +470,11 @@ const EditListOfSOPs = () => {
                     error={!!touched.ModuleNo && !!errors.ModuleNo}
                     helperText={touched.ModuleNo && errors.ModuleNo}
                     autoFocus
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right" },
-                      },
-                    }}
+                    // InputProps={{
+                    //   inputProps: {
+                    //     style: { textAlign: "right" },
+                    //   },
+                    // }}
                   />
                   <TextField
                     select
@@ -655,6 +673,33 @@ const EditListOfSOPs = () => {
                       },
                     }}
                     url={employeeApproveUrl}
+                  />
+
+                   <MultiSopFormikOptimizedAutocomplete
+                    name="TrainedBy"
+                    label="Trained By"
+                    id="TrainedBy"
+                    Type=" AND TrainedBy ='Y'"
+                    value={empData3}
+                    Values={values.TrainedBy}
+                    multiple
+                    // onChange={handleSelectionEmployeeChange}
+                    onChange={(event, newValue) => {
+                      setempData3(newValue || []);
+                      if (newValue && newValue.length > 0)
+                        sessionStorage.setItem(
+                          "empData3",
+                          JSON.stringify(newValue),
+                        );
+                      else sessionStorage.removeItem("empData3");
+                    }}
+                    disablePortal={false}
+                    PopperProps={{
+                      sx: {
+                        zIndex: 1500,
+                      },
+                    }}
+                    url={employeeTrainedByUrl}
                   />
                 </Box>
                 {/* BUTTONS */}

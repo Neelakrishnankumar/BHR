@@ -20,7 +20,7 @@ import {
   Tooltip,
   Paper,
   Grid,
-      LinearProgress,
+  LinearProgress,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -50,7 +50,12 @@ import {
   SOPConfigGet,
   SOPConfigPost,
   SpecimenGet,
-  SpecimenPost
+  SpecimenPost,
+  Inventorygrid1,
+  Inventorygrid2,
+  Inventorygrid3,
+  Inventryget,
+  InventoryPostController
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -95,6 +100,7 @@ import {
   MultiSelectDropdown,
   ModuleAutocomplete,
   MultiFormikOptimizedAutocomplete,
+  MultiFormikUniqueAutocomplete,
   Productautocomplete,
   ProductautocompleteLevel,
   SingleFormikOptimizedAutocomplete,
@@ -187,16 +193,53 @@ const Editemployee = () => {
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   console.log("deploymentData", deploymentData);
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
-
+  const Inventorygrid1columns = useSelector(
+    (state) => state.formApi.Inventorygrid1columns
+  );
+  const Inventorygrid1rows = useSelector(
+    (state) => state.formApi.Inventorygrid1rows
+  );
+  const Inventorygrid2columns = useSelector(
+    (state) => state.formApi.Inventorygrid2columns
+  );
+  const Inventorygrid2rows = useSelector(
+    (state) => state.formApi.Inventorygrid2rows
+  );
+  const Inventorygrid3columns = useSelector(
+    (state) => state.formApi.Inventorygrid3columns
+  );
+  const Inventorygrid3rows = useSelector(
+    (state) => state.formApi.Inventorygrid3rows
+  );
+  // console.log("Inventorygrid1rows", Inventorygrid1rows);
+  // console.log("Inventorygrid2rows", Inventorygrid2rows);
+  // console.log("Inventorygrid3rows", Inventorygrid3rows);
+  const InventrygetData = useSelector(
+    (state) => state.formApi.InventrygetData
+  );
+  const Inventoryloading = useSelector(
+    (state) => state.formApi.Inventoryloading
+  );
+  console.log("InventrygetData", InventrygetData);
+  const Inventorygrid1loading = useSelector(
+    (state) => state.formApi.Inventorygrid1loading
+  );
   console.log(
-    "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
+    " ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
     DataExplore
   );
 
-    const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
-    const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
+  const SOPConfigGetdata = useSelector((state) => state.formApi.SOPConfigGetdata);
+  const SOPConfigGetLoading = useSelector((state) => state.formApi.SOPConfigGetloading);
 
-
+  const [show, setScreen] = React.useState("0");
+  useEffect(() => {
+    if (show == "20") {
+      setSelectionModel([]);
+      setSelectionModel2([]);
+      setSelectionModel3([]);
+    }
+  }, [show]);
   const LoginID = sessionStorage.getItem("loginrecordID");
   const [panImage, setPanImage] = useState("");
   const [gstImage, setGstImage] = useState("");
@@ -226,6 +269,7 @@ const Editemployee = () => {
   const [validationSchema13, setValidationSchema13] = useState(null);
   const [validationSchema14, setValidationSchema14] = useState(null);
   const [validationSchema17, setValidationSchema17] = useState(null);
+  const [validationSchema18, setValidationSchema18] = useState(null);
 
 
   //SPECIMEN 
@@ -248,7 +292,16 @@ const Editemployee = () => {
   const [sign1Preview, setsign1Preview] = useState(""); // blob preview url
   const [sign2Preview, setsign2Preview] = useState(""); // blob preview url
   const [sign3Preview, setsign3Preview] = useState(""); // blob preview url
-
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectionModel2, setSelectionModel2] = useState([]);
+  const [selectedItemIDs, setSelectedItemIDs] = useState([]);
+  const [selectionModel3, setSelectionModel3] = useState([]);
+  // const [selectionModel3, setSelectionModel3] = useState([]);
+  const filteredRows =
+    (InventrygetData || []).filter((row) =>
+      selectionModel3.includes(String(row.ItemID))
+    );
+  const [bottomRows, setBottomRows] = useState([]);
   const CompReportInitialValue = {
     code: Data.Code || "",
     name: Data.Name || "",
@@ -262,7 +315,7 @@ const Editemployee = () => {
 
     const idata = {
       CompanyID: CompanyID,
-      EmployeeID:recID,
+      EmployeeID: recID,
       Sign1:
         sign1 && sign1 !== ""
           ? sign1
@@ -349,20 +402,22 @@ const Editemployee = () => {
   const SOPConfigGetInitialValue = {
     code: Data.Code || "",
     description: Data.Name || "",
-    PreparedBy: SOPConfigGetdata?.EMP_PREPAREDBY === "Y" ? true :false,
-    ReviewedBy: SOPConfigGetdata?.EMP_REVIEWBY === "Y" ? true :false,
-    ApprovedBy: SOPConfigGetdata?.EMP_APPROVEDBY === "Y" ? true :false,
+    PreparedBy: SOPConfigGetdata?.EMP_PREPAREDBY === "Y" ? true : false,
+    ReviewedBy: SOPConfigGetdata?.EMP_REVIEWBY === "Y" ? true : false,
+    ApprovedBy: SOPConfigGetdata?.EMP_APPROVEDBY === "Y" ? true : false,
+    TrainedBy: SOPConfigGetdata?.EMP_TRAINBY === "Y" ? true : false,
   };
 
-   const SOPConfigsave = async (values, del) => {
+  const SOPConfigsave = async (values, del) => {
     setLoading(true);
 
     const idata = {
       CompanyID: CompanyID,
-     EmployeeID:recID,
-     PreparedBy:values.PreparedBy === true ? "Y" : "N",
-     ReviewdBy:values.ReviewedBy  === true ? "Y" : "N",
-     ApprovedBY:values.ApprovedBy === true ? "Y" : "N"
+      EmployeeID: recID,
+      PreparedBy: values.PreparedBy === true ? "Y" : "N",
+      ReviewdBy: values.ReviewedBy === true ? "Y" : "N",
+      ApprovedBY: values.ApprovedBy === true ? "Y" : "N",
+      TrainedBy: values.TrainedBy === true ? "Y" : "N"
     };
 
     try {
@@ -411,6 +466,17 @@ const Editemployee = () => {
     }));
   }, [ParentgetData, is003Subscription]);
 
+  useEffect(() => {
+    if (InventrygetData) {
+      setBottomRows(InventrygetData);
+
+      const preSelected = InventrygetData
+        .filter((row) => row.IsSelect === "Y")
+        .map((row) => row.ItemID);
+
+      setSelectionModel3(preSelected);
+    }
+  }, [InventrygetData]);
   useEffect(() => {
     if (Data?.ImageName) {
       setViewImage(baseUrl + Data.ImageName);
@@ -673,6 +739,13 @@ const Editemployee = () => {
           ItemValue: Yup.string().required(data.Itemcustody1.ItemValue),
         });
         setValidationSchema17(schema17);
+        const schema18 = Yup.object().shape({
+          itemgroups: Yup.object().required(data.Inventory.itemgroups).nullable(),
+          itemcategory: Yup.object().required(data.Inventory.itemcategory).nullable(),
+          Grpitems: Yup.object().required(data.Inventory.Grpitems).nullable(),
+
+        });
+        setValidationSchema18(schema18);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -825,7 +898,7 @@ const Editemployee = () => {
     Password: Data.Password,
     Job: Data.Job,
     employeetype:
-      Data.EmpType === "Prohibition"
+      Data.EmpType === "Probation"
         ? "PP"
         : Data.EmpType === "Permanent"
           ? "PM"
@@ -849,7 +922,7 @@ const Editemployee = () => {
     SortOrder: Data.SortOrder || 0,
     delete: Data.DeleteFlag === "Y" ? true : false,
     Mgr: Data.Mgr,
-    Sal: Data.Sal,
+    amount: Data.Sal,
     Fax: Data.Fax,
     //module:Data.Module,
     // module: Data.Module
@@ -1092,7 +1165,7 @@ const Editemployee = () => {
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
-      Sal: "",
+      Sal: values.amount || 0,
       EmpType: values.employeetype,
       DateOfJoin: values.joindate,
       DateOfBirth: values.dateofbirth,
@@ -1159,7 +1232,6 @@ const Editemployee = () => {
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
-  const [show, setScreen] = React.useState("0");
   // material
   const [supprodata, setSupprodata] = useState({
     RecordID: "",
@@ -1367,7 +1439,74 @@ const Editemployee = () => {
       // dispatch(fetchApidata(accessID, "get", recID));
       selectcelldata("", "A", "");
     }
+    // if (event.target.value == "20") {
+    //   dispatch(
+    //     fetchExplorelitview("2151", "Item Group", `CompanyID=${CompanyID}`, ""));
+    //     dispatch(
+    //     fetchExplorelitview("2152", "Item Category", `CompanyID=${CompanyID}`, ""));
+    //     dispatch(
+    //     fetchExplorelitview("2153", "Item", `CompanyID=${CompanyID}`, ""));
+    //   dispatch(
+    //     fetchExplorelitview(
+    //       "TR350",
+    //       "Inventory",
+    //       `EmployeeID='${recID}'AND CompanyID=${CompanyID}`,
+    //       ""
+    //     )
+    //   );
+    //   // dispatch(fetchApidata(accessID, "get", recID));
+    //   selectcelldata("", "A", "");
+    // }
+    if (event.target.value == "20") {
+      dispatch(
+        Inventryget({ data: { EmployeeID: recID } }));
+      // Item Group
+      dispatch(
+        Inventorygrid1({
+          AccessID: "2151",
+          screenName: "Item Group",
+          filter: `CompanyID=${CompanyID}`,
+          any: "",
+        })
+      );
+
+      // Item Category
+      dispatch(
+        Inventorygrid2({
+          AccessID: "2152",
+          screenName: "Item Category",
+          filter: `CompanyID=${CompanyID}`,
+          any: "",
+        })
+      );
+
+      // // Item
+      dispatch(
+        Inventorygrid3({
+          AccessID: "2153",
+          screenName: "Item",
+          filter: `CompanyID=${CompanyID}`,
+          any: "",
+        })
+      );
+
+      // Inventory
+      // dispatch(fetchExplorelitview("TR350",
+      //   "Inventory",
+      //   `EmployeeID='${recID}' AND CompanyID=${CompanyID}`,
+      //   ""
+      // ))
+      //   .unwrap()
+      //   .then((res) => {
+      //     if (res.Status === "Y") {
+      //       setInventoryColumns(res.Data.columns);
+      //       setInventoryRows(res.Data.rows);
+      //     }
+      //   });
+
+    }
   };
+
 
   /******************Employee values assign a state variale******************** */
   const selectcelldata = (data, bMode, field) => {
@@ -1661,7 +1800,17 @@ const Editemployee = () => {
       "EligibleDays",
       "action",
     ];
-  } else {
+  }
+  else if (show == "20") {
+    VISIBLE_FIELDS = [
+      "slno",
+      "Item",
+      "ItemCategory",
+      "ItemGroup",
+      "action",
+    ];
+  }
+  else {
     VISIBLE_FIELDS = [
       "slno",
       "EmployeeCode",
@@ -1859,23 +2008,25 @@ const Editemployee = () => {
                 ? "List of Documents"
                 : show == "3"
                   ? "List of Managers"
-                  : show == "7"
-                    ? "Item Custody"
-                    : show == "10"
-                      ? "List of Configurations"
-                      : show == "13"
-                        ? "List of Localities"
-                        : show == "14"
-                          ? "List of Services"
-                          : show == "15"
-                            ? "List of Parent"
-                            : show == "17"
-                              ? "List of Item Custody"
-                              : show == "8" || show == "11"
-                                ? "List of Contracts"
-                                : "List of Managers"}
+                  : show == "20"
+                    ? "List of Items"
+                    : show == "7"
+                      ? "Item Custody"
+                      : show == "10"
+                        ? "List of Configurations"
+                        : show == "13"
+                          ? "List of Localities"
+                          : show == "14"
+                            ? "List of Services"
+                            : show == "15"
+                              ? "List of Parent"
+                              : show == "17"
+                                ? "List of Item Custody"
+                                : show == "8" || show == "11"
+                                  ? "List of Contracts"
+                                  : "List of Managers"}
           </Typography>
-          <Typography variant="h5">{`(${rowCount})`}</Typography>
+          {show != "20" && (<Typography variant="h5">{`(${rowCount})`}</Typography>)}
         </Box>
         <Box
           sx={{
@@ -1967,6 +2118,13 @@ const Editemployee = () => {
     shift: "",
     shift2: "",
     project: "",
+  });
+  const [Invendata, setInvendata] = useState({
+    recordID: "",
+    itemgroups: null,
+    itemcategory: null,
+    Grpitems: [],
+    SortOrder: ""
   });
   const [LeaveCondata, setLeaveCondata] = useState({
     recordID: "",
@@ -2103,6 +2261,13 @@ const Editemployee = () => {
         availableleave: "",
         elligibledays: "",
         Year: "",
+      });
+      setInvendata({
+        recordID: "",
+        itemgroups: null,
+        itemcategory: null,
+        Grpitems: [],
+        SortOrder: ""
       });
     } else {
       console.log(rowData, "--rowData");
@@ -2300,6 +2465,31 @@ const Editemployee = () => {
             }
             : null,
           Year: rowData.Year,
+        });
+        setInvendata({
+          recordID: rowData.RecordID,
+          itemgroups: rowData.ItemGroupID
+            ? {
+              RecordID: rowData.ItemGroupID,
+              Code: rowData.ItemgroupCode,
+              Name: rowData.ItemGroupDesc,
+            }
+            : null,
+          itemcategory: rowData.ItemCategoryID
+            ? {
+              RecordID: rowData.ItemCategoryID,
+              Code: rowData.ItemCategoryCode,
+              Name: rowData.ItemCategoryDesc,
+            }
+            : null,
+          Grpitems: rowData.ItemID
+            ? {
+              RecordID: rowData.ItemID,
+              Code: rowData.Code,
+              Name: rowData.Name,
+            }
+            : [],
+          SortOrder: rowData.SortOrder,
         });
         setFieldValue("functionLookup", {
           RecordID: rowData.FunctionsID,
@@ -3084,7 +3274,161 @@ const Editemployee = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const AttColumn = [
+    {
+      field: "slno",
+      headerName: "SL#",
+      width: 60,
+      sortable: false,
+      filterable: false,
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueGetter: (params) => {
+        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
 
+        const totalVisibleRows = params.api.getAllRowIds().length;
+        const totalAllRows = params.api.getRowsCount();
+
+        if (totalVisibleRows < totalAllRows) {
+          return index + 1;
+        } else {
+          return page * pageSize + index + 1;
+        }
+      },
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "Item",
+      headerName: "Item",
+      width: 200,
+      headerAlign: "center",
+      align: "left"
+    },
+    {
+      field: "IsSelect",
+      headerName: "Select",
+      width: 30,
+      hide: true,
+    }
+
+  ];
+  const Att1Column = [
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 80,
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "Itemgroup",
+      headerName: "Item Group",
+      width: 180,
+      headerAlign: "center",
+      align: "left"
+
+    }
+
+  ];
+  const Att2Column = [
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 80,
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "ItemCategory",
+      headerName: "Item Category",
+      width: 180,
+      headerAlign: "center",
+      align: "left"
+
+    }
+
+  ];
+  const Att3Column = [
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 80,
+    },
+    {
+      field: "RecordID",
+      headerName: "RecordID",
+      width: 80,
+      hide: true,
+    },
+    {
+      field: "Item",
+      headerName: "Item",
+      width: 180,
+      headerAlign: "center",
+      align: "left"
+
+    }
+
+  ];
+  const InventoryinitialValue = {
+    Code: Data.Code,
+    Name: Data.Name,
+    itemgroups: Invendata.itemgroups,
+    itemcategory: Invendata.itemcategory,
+    Grpitems: Invendata.Grpitems,
+    SortOrder: Invendata.SortOrder,
+
+  };
+  const Inventoryfnsave = async (values, resetForm, del) => {
+    setLoading(true);
+
+    const response = await dispatch(
+      Inventryget({ data: { EmployeeID: recID } })
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      toast.success("Data fetched successfully");
+      resetForm();
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
+  const Invsave2 = async () => {
+    setLoading(true);
+    const idata = {
+      CompanyID,
+      RecordID: Invendata.recordID || -1,
+      EmployeeID: recID,
+      ItemGroupID: selectionModel?.join(",") || 0,
+      ItemCategoryID: selectionModel2?.join(",") || 0,
+      ItemID: selectionModel3?.join(",") || 0,
+      SortOrder: 0,
+    };
+    const response = await dispatch(InventoryPostController(idata));
+    if (response.payload.Status == "Y") {
+      dispatch(
+        Inventryget({ data: { EmployeeID: recID } }))
+      toast.success(response.payload.Msg);
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+
+  }
   //Leave Configuration
   const LCInitialValue = {
     Code: Data.Code,
@@ -3913,6 +4257,17 @@ const Editemployee = () => {
                   ) : (
                     false
                   )}
+                  {show == "20" ? (
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Inventory
+                    </Typography>
+                  ) : (
+                    false
+                  )}
                   {show == "8" ? (
                     <Typography
                       variant="h5"
@@ -4040,12 +4395,13 @@ const Editemployee = () => {
                     <MenuItem value={10}>Leave Configuration</MenuItem>
                     <MenuItem value={6}>List of Documents</MenuItem>
                     {/* <MenuItem value={7}>Item Custody</MenuItem> */}
+                    <MenuItem value={20}>Inventory</MenuItem>
                     <MenuItem value={17}>Item Custody</MenuItem>
                     <MenuItem value={14}>Item Services</MenuItem>
                     <MenuItem value={13}>Locality</MenuItem>
                     <MenuItem value={19}>SOP Configuration</MenuItem>
                     <MenuItem value={18}>Specimen Sign</MenuItem>
-                    
+
 
                   </Select>
                 </FormControl>
@@ -4332,7 +4688,7 @@ const Editemployee = () => {
                           // },
                         }}
                       >
-                        <MenuItem value="PP">Prohibition Period</MenuItem>
+                        <MenuItem value="PP">Probation Period</MenuItem>
                         <MenuItem value="PM">Permanent</MenuItem>
                         {/* <MenuItem value="ST">Student</MenuItem> */}
                         <MenuItem value="CI">Contract In</MenuItem>
@@ -4340,6 +4696,27 @@ const Editemployee = () => {
                         <MenuItem value="IN">Intern</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
+                      <TextField
+                        name="amount"
+                        type="text"
+                        id="amount"
+                        label="Actual Salary"
+                        variant="standard"
+                        focused
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        // autoFocus
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 0,
+                            max: 24,
+                          },
+                        }}
+                      />
                       <Box>
                         {/* <CusListRunGrpOptimizedAutocomplete
                           name="module"
@@ -12445,7 +12822,619 @@ const Editemployee = () => {
         ) : (
           false
         )}
+        {show == "20" ? (
+          <Paper elevation={3} sx={{ margin: "10px" }}>
+            <Formik
+              initialValues={InventoryinitialValue}
+              // validationSchema={validationSchema18}
+              enableReinitialize={true}
+              onSubmit={(values, { resetForm }) => {
+                setTimeout(() => {
+                  Inventoryfnsave(values, resetForm, false);
+                }, 100);
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                resetForm,
+                setFieldValue,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  onReset={() => {
+                    selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                    resetForm();
+                  }}
+                >
 
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Code"
+                        name="Code"
+                        value={values.Code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+                    </FormControl>
+
+                    <Stack
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
+
+                  </Box>
+                  <Box marginLeft={2} height="50vh"
+                    sx={{
+                      "& .MuiDataGrid-root": {
+                        border: "none",
+                      },
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                      },
+                      "& .name-column--cell": {
+                        color: colors.greenAccent[300],
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[800],
+                        borderBottom: "none",
+                      },
+                      "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                      },
+                      "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[800],
+                      },
+                      "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                      },
+                      "& .odd-row": {
+                        backgroundColor: "",
+                        color: "", // Color for odd rows
+                      },
+                      "& .even-row": {
+                        backgroundColor: "#D3D3D3",
+                        color: "", // Color for even rows
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                          height: dataGridHeaderFooterHeight,
+                          minHeight: dataGridHeaderFooterHeight,
+                        },
+                      }}
+                      // rows={(bottomRows || [])}
+                      // // rows={(InventrygetData || []).filter((row) => row.IsSelect === "Y")}
+                      // // rows={InventrygetData || []}
+                      // columns={AttColumn}
+                      // loading={Inventoryloading}
+                      // checkboxSelection
+                      // selectionModel={selectionModel3}
+                      // onSelectionModelChange={(newSelection) => {
+                      //   setSelectionModel3(newSelection);
+                      // }}
+                      rows={filteredRows}
+                      columns={AttColumn}
+                      loading={Inventoryloading}
+                      checkboxSelection
+                      selectionModel={selectionModel3}
+                      // onSelectionModelChange={(newSelection) => {
+                      //   setSelectionModel3(newSelection.map((id) => String(id)));
+                      // }}
+                      onSelectionModelChange={(newSelection) => {
+                        const newIds = newSelection.map((id) => String(id));
+
+                        const removedIds = selectionModel3.filter(
+                          (id) => !newIds.includes(String(id))
+                        );
+
+                        if (removedIds.length > 0) {
+                          Swal.fire({
+                            title: errorMsgData.Warningmsg.Remove,
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Confirm",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              setSelectionModel3(newIds);
+                            }
+                          });
+                        } else {
+                          setSelectionModel3(newIds);
+                        }
+                      }}
+                      disableSelectionOnClick
+                      getRowId={(row) => row.ItemID}
+                      rowHeight={dataGridRowHeight}
+                      headerHeight={dataGridHeaderFooterHeight}
+                      pageSize={pageSize}
+                      page={page}
+                      onPageSizeChange={(newPageSize) =>
+                        setPageSize(newPageSize)
+                      }
+                      rowsPerPageOptions={[5, 10, 15, 20]}
+                      onPageChange={(pageno) => handlePagechange(pageno)}
+                      pagination
+                      onCellClick={(params) => {
+                        selectCellRowData({
+                          rowData: params.row,
+                          mode: "E",
+                          field: params.field,
+                          setFieldValue,
+                        });
+                      }}
+                      components={{
+                        Toolbar: Employee,
+                      }}
+                      onStateChange={(stateParams) =>
+                        setRowCount(stateParams.pagination.rowCount)
+                      }
+                      getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0
+                          ? "odd-row"
+                          : "even-row"
+                      }
+                      componentsProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                          quickFilterProps: { debounceMs: 500 },
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns={{
+                      xs: "1fr",
+                      md: "repeat(3, 1fr)",
+                    }}
+                    gap={2}
+                    mt={2}
+                  >
+
+                    <Box
+
+                      height="40vh"
+                      marginLeft={2}
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <Typography>List of Item Group :</Typography>
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={Inventorygrid1rows || []}
+                        columns={Att1Column || []}
+                        loading={Inventorygrid1loading}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPageChange={(pageno) => handlePagechange(pageno)}
+                        pagination
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        checkboxSelection
+                        selectionModel={selectionModel}
+                        // onSelectionModelChange={(newSelection) => {
+                        //   setSelectionModel(newSelection.slice(-1));
+                        // }}
+                        onSelectionModelChange={(ids) => {
+                          const selectedID = ids.slice(-1)[0]; // allow only one checkbox
+                          setSelectionModel([selectedID]);     // ✅ update selection state
+
+                          const selectedRow = Inventorygrid1rows.find(
+                            (row) => row.RecordID === selectedID
+                          );
+
+                          if (selectedRow) {
+                            dispatch(
+                              Inventorygrid2({
+                                AccessID: "2152",
+                                screenName: "Item Category",
+                                filter: `CompanyID=${CompanyID} AND ItemGroupID=${selectedRow.RecordID}`,
+                                any: "",
+                              })
+                            );
+                          }
+                        }}
+                        components={{
+                          // Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+
+                    </Box>
+                    <Box height="40vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <Typography>List of Item Category :</Typography>
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={Inventorygrid2rows || []}
+                        columns={Att2Column || []}
+                        loading={exploreLoading}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPageChange={(pageno) => handlePagechange(pageno)}
+                        pagination
+                        checkboxSelection
+                        selectionModel={selectionModel2}
+                        onSelectionModelChange={(ids) => {
+                          const selectedID = ids.slice(-1)[0];
+                          setSelectionModel2([selectedID]);
+
+                          const selectedRow = Inventorygrid2rows.find(
+                            (row) => row.RecordID === selectedID
+                          );
+
+                          if (selectedRow) {
+                            dispatch(
+                              Inventorygrid3({
+                                AccessID: "2153",
+                                screenName: "Item",
+                                filter: `CompanyID=${CompanyID} AND ItemCategoryID=${selectedRow.RecordID}`,
+                                any: "",
+                              })
+                            );
+                          }
+                        }}
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        components={{
+                          // Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box height="40vh"
+                      // marginLeft={2}
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[800],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[800],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .odd-row": {
+                          backgroundColor: "",
+                          color: "", // Color for odd rows
+                        },
+                        "& .even-row": {
+                          backgroundColor: "#D3D3D3",
+                          color: "", // Color for even rows
+                        },
+                      }}
+                    >
+                      <Typography>List of Items :</Typography>
+                      <DataGrid
+                        sx={{
+                          "& .MuiDataGrid-footerContainer": {
+                            height: dataGridHeaderFooterHeight,
+                            minHeight: dataGridHeaderFooterHeight,
+                          },
+                        }}
+                        rows={Inventorygrid3rows || []}
+                        columns={Att3Column || []}
+                        loading={exploreLoading}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.RecordID}
+                        rowHeight={dataGridRowHeight}
+                        headerHeight={dataGridHeaderFooterHeight}
+                        pageSize={pageSize}
+                        page={page}
+                        onPageSizeChange={(newPageSize) =>
+                          setPageSize(newPageSize)
+                        }
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPageChange={(pageno) => handlePagechange(pageno)}
+                        pagination
+                        checkboxSelection
+                        // onSelectionModelChange={(ids) => {
+                        //   setSelectedItemIDs(ids); // store all selected RecordIDs
+                        // }}
+                        // onSelectionModelChange={(ids) => {
+
+                        //   const selectedItemIDs = ids.map((id) => String(id));
+
+                        //   setSelectionModel3((prev) => {
+                        //     const merged = [...new Set([...prev, ...selectedItemIDs])];
+                        //     return merged;
+                        //   });
+
+                        // }}
+                        // onSelectionModelChange={(ids) => {
+                        //   const selectedItemIDs = ids.map((id) => String(id));
+                        //   setSelectionModel3(selectedItemIDs);
+                        // }}
+                        onSelectionModelChange={(ids) => {
+                          const newSelected = ids.map((id) => String(id));
+
+                          setSelectionModel3((prev) => {
+                            const merged = [...new Set([...prev, ...newSelected])];
+                            return merged;
+                          });
+                        }}
+                        onCellClick={(params) => {
+                          selectCellRowData({
+                            rowData: params.row,
+                            mode: "E",
+                            field: params.field,
+                            setFieldValue,
+                          });
+                        }}
+                        components={{
+                          // Toolbar: Employee,
+                        }}
+                        onStateChange={(stateParams) =>
+                          setRowCount(stateParams.pagination.rowCount)
+                        }
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "odd-row"
+                            : "even-row"
+                        }
+                        componentsProps={{
+                          toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+
+                  <Box
+                    display="flex"
+                    justifyContent="end"
+                    padding={1}
+                    gap={2}
+                    mt={6}
+                  >
+                    {/* {YearFlag == "true" ? ( */}
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      loading={isLoading}
+                      onClick={() => Invsave2()}
+                    >
+                      SAVE
+
+                    </Button>
+
+                    <Button
+                      type="reset"
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  {/* </FormControl>                   */}
+
+
+
+                </form>
+              )}
+            </Formik>
+          </Paper>
+        ) : (
+          false
+        )}
         {show == "10" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
             <Formik
@@ -13783,10 +14772,10 @@ const Editemployee = () => {
           false
         )}
 
-           {show == "18" ? (
+        {show == "18" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-            {SpecimenGetloading ? <LinearProgress/> : false}
-            {SpecimenPostloading ? <LinearProgress/> : false}
+            {SpecimenGetloading ? <LinearProgress /> : false}
+            {SpecimenPostloading ? <LinearProgress /> : false}
             <Formik
               initialValues={CompReportInitialValue}
               onSubmit={(values, setSubmitting) => {
@@ -14161,7 +15150,7 @@ const Editemployee = () => {
                     >
                       Save
                     </LoadingButton>
-                   
+
 
                     <Button
                       color="warning"
@@ -14183,11 +15172,11 @@ const Editemployee = () => {
 
 
 
- {show == "19" ? (
+        {show == "19" ? (
 
           <Paper elevation={3} sx={{ margin: "10px" }}>
-                  {loading ? (<LinearProgress />) : false}
-                  {SOPConfigGetLoading ? (<LinearProgress />) : false}
+            {loading ? (<LinearProgress />) : false}
+            {SOPConfigGetLoading ? (<LinearProgress />) : false}
 
             <Formik
               initialValues={SOPConfigGetInitialValue}
@@ -14248,8 +15237,8 @@ const Editemployee = () => {
                           },
                         }}
                         focused
-                         InputProps={{
-                          readOnly:true
+                        InputProps={{
+                          readOnly: true
                         }}
                       />
 
@@ -14272,11 +15261,11 @@ const Editemployee = () => {
                         }}
                         focused
                         InputProps={{
-                          readOnly:true
+                          readOnly: true
                         }}
                       />
                     </FormControl>
-                       <Stack
+                    <Stack
                       sx={{
                         //gridColumn: "span 2",
                         alignContent: "center",
@@ -14294,7 +15283,9 @@ const Editemployee = () => {
                     </Stack>
                   </Box>
 
-                 
+                  <Typography variant="h5" padding={1}>
+                    Roles And Responsibilities:
+                  </Typography>
                   <Box display="flex" flexDirection="column" gap={1}>
                     <Box display="flex" alignItems="center" gap={1}>
                       <Field
@@ -14305,7 +15296,7 @@ const Editemployee = () => {
                         label="PreparedBy"
                       />
                       <FormLabel focused={false}>Prepared By</FormLabel>
-                     
+
                     </Box>
 
                     {/* Row 2: Vertical */}
@@ -14320,14 +15311,14 @@ const Editemployee = () => {
                         label="ReviewedBy"
                       />
                       <FormLabel focused={false}>Reviewed By</FormLabel>
-                    
+
                     </Box>
                   </Box>
                   <Box
                     display="flex"
                     flexDirection="column"
                     marginTop={1}
-                    gap={2}
+                    gap={1}
                   >
                     {/* First AutoApprovalYesOrNo Checkbox */}
                     <Box display="flex" alignItems="center" gap={1}>
@@ -14340,6 +15331,18 @@ const Editemployee = () => {
                         as={Checkbox}
                       />
                       <FormLabel focused={false}>Approved By</FormLabel>
+
+                    </Box>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Field
+                        type="checkbox"
+                        id="TrainedBy"
+                        name="TrainedBy"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        as={Checkbox}
+                      />
+                      <FormLabel focused={false}>Trained By</FormLabel>
 
                     </Box>
                   </Box>
@@ -14369,7 +15372,7 @@ const Editemployee = () => {
                         Save
                       </Button>
                     )}
-                   
+
                     <Button
                       type="reset"
                       color="warning"
@@ -14388,7 +15391,7 @@ const Editemployee = () => {
         ) : (
           false
         )}
-     
+
       </Box>
     </React.Fragment>
   );

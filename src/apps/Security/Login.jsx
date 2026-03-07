@@ -759,6 +759,8 @@ const Login = () => {
       sessionStorage.setItem("Modules", JSON.stringify(Modules))
 
       navigate("/Apps/HR");
+            console.log("Groupaccess:", Groupaccess);
+
       console.log("firstLogin:", firstLogin);
       if (firstLogin == "Y") {
         navigate("/Apps/ChangeyourPassword_1", { state: { uname: values.username, license: values.license } });

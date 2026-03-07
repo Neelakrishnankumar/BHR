@@ -311,6 +311,13 @@ const initialState = {
   SOPProcess:"",
   SOPConfigPost:"",
   SOPConfigGet:"",
+  SpecimenPost:"",
+  SpecimenGet:"",
+  SopEmpMappingController:"",
+  EmpInventoryGetController:"",
+  EmpInventoryPostController:"",
+  Scoreboard:"",
+  RepaymentScheduleGet:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -399,7 +406,7 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
-      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceControllerV1.php";
+      state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
       state.attendanceprocessUrl =
         APIurl + "EmpAttendanceHistoryController.php";
@@ -490,6 +497,11 @@ export const getUrlSlice = createSlice({
       state.SOPConfigGet = APIurl + "empgetstatus.php";
       state.SpecimenPost = APIurl + "emppostspeciman.php";
       state.SpecimenGet = APIurl + "empgetspeciman.php";
+      state.SopEmpMappingController = APIurl + "SopEmpMappingController.php";
+      state.EmpInventoryGetController = APIurl + "EmpInventoryGetController.php";
+      state.EmpInventoryPostController = APIurl + "EmpInventoryPostController.php";
+      state.Scoreboard = APIurl + "ScoreBoardChartController.php";
+      state.RepaymentScheduleGet = APIurl + "RepaymentScheduleGet.php";
     },
   },
 });

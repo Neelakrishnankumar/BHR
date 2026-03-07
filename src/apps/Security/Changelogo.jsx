@@ -84,6 +84,7 @@ const Logochange = () => {
     const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
     const [errorMsgData, setErrorMsgData] = useState(null);
     const grace = sessionStorage.getItem("CompanyGraceTime");
+    console.log("CompanyGraceTime:", grace);
     const timeout = sessionStorage.getItem("CompanySessionTimeOut");
     console.log("Grace:", grace);
     console.log("Timeout:", timeout);
@@ -351,8 +352,8 @@ const Logochange = () => {
             HeaderImg: headerImage,
             FooterImg: footerImage,
             CompanyName: values.Name ? values.Name : company,
-            GraceTime: grace,
-            SessionTimeOut: timeout
+            GraceTime: grace || 15,
+            SessionTimeOut: timeout || 600
         };
         console.log(offaddress, "Address");
         console.log(gst, "gst");

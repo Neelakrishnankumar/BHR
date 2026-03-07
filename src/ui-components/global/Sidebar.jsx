@@ -470,23 +470,23 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR026",
           },
-          {
-            name: "Role",
-            url: "./TR232/Role",
-            id: 34578,
-            icon: (
-              <Tooltip title="Roles">
-                <PeopleAltIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR232",
-          },
+          // {
+          //   name: "Role",
+          //   url: "./TR232/Role",
+          //   id: 34578,
+          //   icon: (
+          //     <Tooltip title="Roles">
+          //       <PeopleAltIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR232",
+          // },
 
           // {
           //   name: "Personnel",
@@ -681,11 +681,11 @@ const Sidebars = () => {
           },
 
           {
-            name: "Satuary Component",
+            name: "Payroll Policy",
             id: 4578,
-            url: "./TR207/Satuary Component",
+            url: "./TR207/Payroll Policy",
             icon: (
-              <Tooltip title="Satuary Component">
+              <Tooltip title="Payroll Policy">
                 <LocalPoliceOutlinedIcon color="info" />
               </Tooltip>
             ),
@@ -1140,26 +1140,26 @@ const Sidebars = () => {
       //   ],
       // },
 
-      {
-        name: "Assessment",
-        id: 4579,
-        MenuID: "ST1609",
-        Tooltipname: "Assessment",
-        icon: (
-          <Tooltip title="Assessment">
-            <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
-          </Tooltip>
-        ),
-        url: "/Apps/TR299/List Of Assessment Type",
-        UGA_ADD: true,
-        UGA_DEL: true,
-        UGA_MOD: true,
-        UGA_PRINT: true,
-        UGA_PROCESS: true,
-        UGA_VIEW: true,
-        UGA_ACCESSIDS: "TR299",
+      // {
+      //   name: "Assessment",
+      //   id: 4579,
+      //   MenuID: "ST1609",
+      //   Tooltipname: "Assessment",
+      //   icon: (
+      //     <Tooltip title="Assessment">
+      //       <AssessmentOutlinedIcon sx={{ color: "#651fff" }} />
+      //     </Tooltip>
+      //   ),
+      //   url: "/Apps/TR299/List Of Assessment Type",
+      //   UGA_ADD: true,
+      //   UGA_DEL: true,
+      //   UGA_MOD: true,
+      //   UGA_PRINT: true,
+      //   UGA_PROCESS: true,
+      //   UGA_VIEW: true,
+      //   UGA_ACCESSIDS: "TR299",
 
-      },
+      // },
       {
         name: "Settings",
         id: 95689,
@@ -1305,54 +1305,54 @@ const Sidebars = () => {
           },
         ],
       },
-      {
-        name: "GSBD",
-        id: 95654,
-        MenuID: "SOP100",
-        Tooltipname: "GSBD",
-        icon: (
-          <Tooltip title="GSBD">
-            <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
-          </Tooltip>
-        ),
-        children: [
-          {
-            name: "QC",
-            id: 5843,
-            url: "/Apps/TR336/List Of SOPs",
-            icon: (
-              <Tooltip title="List Of SOPs">
-                <LibraryAddCheckOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR336",
-          },
-          // {
-          //   name: "QA",
-          //   id: 5877,
-          //   url: "/Apps/TR337/List Of SOPs",
-          //   icon: (
-          //     <Tooltip title="List Of SOPs">
-          //       <IntegrationInstructionsOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR337",
-          // },
+      // {
+      //   name: "GSBD",
+      //   id: 95654,
+      //   MenuID: "SOP100",
+      //   Tooltipname: "GSBD",
+      //   icon: (
+      //     <Tooltip title="GSBD">
+      //       <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
+      //     </Tooltip>
+      //   ),
+      //   children: [
+      //     {
+      //       name: "QC",
+      //       id: 5843,
+      //       url: "/Apps/TR336/List Of SOPs",
+      //       icon: (
+      //         <Tooltip title="List Of SOPs">
+      //           <LibraryAddCheckOutlinedIcon color="info" />
+      //         </Tooltip>
+      //       ),
+      //       UGA_ADD: true,
+      //       UGA_DEL: true,
+      //       UGA_MOD: true,
+      //       UGA_PRINT: true,
+      //       UGA_PROCESS: true,
+      //       UGA_VIEW: true,
+      //       UGA_ACCESSIDS: "TR336",
+      //     },
+      //     // {
+      //     //   name: "QA",
+      //     //   id: 5877,
+      //     //   url: "/Apps/TR337/List Of SOPs",
+      //     //   icon: (
+      //     //     <Tooltip title="List Of SOPs">
+      //     //       <IntegrationInstructionsOutlinedIcon color="info" />
+      //     //     </Tooltip>
+      //     //   ),
+      //     //   UGA_ADD: true,
+      //     //   UGA_DEL: true,
+      //     //   UGA_MOD: true,
+      //     //   UGA_PRINT: true,
+      //     //   UGA_PROCESS: true,
+      //     //   UGA_VIEW: true,
+      //     //   UGA_ACCESSIDS: "TR337",
+      //     // },
 
-        ],
-      },
+      //   ],
+      // },
       {
         name: "Company",
         id: 95689,
