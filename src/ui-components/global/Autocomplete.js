@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect,useMemo, createContext } from "react";
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -1009,7 +1009,110 @@ export function MultiFormikOptimizedAutocomplete({
     />
   );
 }
+export function MultiFormikUniqueAutocomplete({
+  value = [],
+  onChange,
+  url,
+  label = "Select Options",
+  multiple = true,
+  errors,
+  helper,
+  ...props
+}) {
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  // 🔹 Fetch API Data
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!url) return;
+
+      setLoading(true);
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
+        });
+
+        const data = response?.data?.Data?.rows || [];
+
+        // ✅ Remove duplicate RecordID
+        const uniqueData = Array.from(
+          new Map(data.map((item) => [item.RecordID, item])).values()
+        );
+
+        setOptions(uniqueData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  // 🔹 Memoized options (performance)
+  const memoizedOptions = useMemo(() => options, [options]);
+
+  return (
+    <Autocomplete
+      size="small"
+      multiple={multiple}
+      options={memoizedOptions}
+      value={value}
+      onChange={onChange}
+      disableCloseOnSelect
+      loading={loading}
+      isOptionEqualToValue={(option, val) =>
+        option?.RecordID === val?.RecordID
+      }
+      getOptionLabel={(option) => option?.Name || ""}
+      
+      // ✅ Force unique key
+      renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+
+        return (
+          <li {...rest} key={option.RecordID}>
+            <Checkbox
+              size="small"
+              checked={selected}
+              style={{ marginRight: 8 }}
+            />
+            {option.Name}
+          </li>
+        );
+      }}
+
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant="standard"
+          error={errors}
+          helperText={helper}
+          focused
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading && (
+                  <CircularProgress color="inherit" size={20} />
+                )}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+      {...props}
+    />
+  );
+}
 export function MultiSopFormikOptimizedAutocomplete({
   value = [],
   Values=null,

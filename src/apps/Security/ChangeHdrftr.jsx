@@ -327,8 +327,8 @@ const Changehdrftr = () => {
       AutoCode: autocode ? "Y" : "N",
       HeaderImg: overrides.headerImage ?? headerImage,
       FooterImg: overrides.footerImage ?? footerImage,
-      GraceTime: grace,
-      SessionTimeOut: timeout,
+      GraceTime: grace || 15,
+      SessionTimeOut: timeout || 600,
       CompanyName: data.CM_NAME,
     };
 

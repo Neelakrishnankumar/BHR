@@ -82,7 +82,7 @@ const EditSatuaryComponent = () => {
         setErrorMsgData(data);
         //Permission
         const schema = Yup.object().shape({
-          description: Yup.string().required(data.Salarycomp.Name),
+          description: Yup.string().required(data.Salarycomp.Policy),
         })
         setValidationSchema(schema);
       })

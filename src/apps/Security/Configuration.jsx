@@ -269,8 +269,8 @@ const Configuration = () => {
             HeaderImg: data.CM_HEADER,
             FooterImg: data.CM_FOOTER,
             CompanyName: data.CM_NAME,
-            GraceTime: gracetime,
-            SessionTimeOut: sessiontime
+            GraceTime: gracetime || 15,
+            SessionTimeOut: sessiontime || 600
 
         };
         console.log(offaddress, "Address");
