@@ -352,8 +352,8 @@ const Logochange = () => {
             HeaderImg: headerImage,
             FooterImg: footerImage,
             CompanyName: values.Name ? values.Name : company,
-            GraceTime: grace,
-            SessionTimeOut: timeout
+            GraceTime: grace || 15,
+            SessionTimeOut: timeout || 600
         };
         console.log(offaddress, "Address");
         console.log(gst, "gst");

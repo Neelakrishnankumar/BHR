@@ -386,7 +386,8 @@
    "Salarycomp": {
     "Type": "Please select the Type",
     "Name": "Please enter the Name",
-    "Category": "Please select the Category"
+    "Category": "Please select the Category",
+    "Policy": "Please enter the Policy"
   },
   "Inventory":{
     "itemgroups": "Please select the Item Group",

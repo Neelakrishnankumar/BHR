@@ -391,11 +391,12 @@ const EditSalaryComponent = () => {
                         fullWidth
                         variant="outlined"
                         name="Policy"
-                        label={
-                          <>
-                            Policy <span style={{ color: "red", fontSize: "20px" }}> *</span>
-                          </>
-                        }
+                        label = "Policy"
+                        // label={
+                        //   <>
+                        //     Policy <span style={{ color: "red", fontSize: "20px" }}> *</span>
+                        //   </>
+                        // }
                         id="Policy"
                         value={values.Policy}
                         onChange={(newValue) => {

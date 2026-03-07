@@ -922,7 +922,7 @@ const Editemployee = () => {
     SortOrder: Data.SortOrder || 0,
     delete: Data.DeleteFlag === "Y" ? true : false,
     Mgr: Data.Mgr,
-    Sal: Data.Sal,
+    amount: Data.Sal,
     Fax: Data.Fax,
     //module:Data.Module,
     // module: Data.Module
@@ -1165,7 +1165,7 @@ const Editemployee = () => {
       QualityAssurance: values.qualityassurance === true ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
-      Sal: "",
+      Sal: values.amount || 0,
       EmpType: values.employeetype,
       DateOfJoin: values.joindate,
       DateOfBirth: values.dateofbirth,
@@ -3296,11 +3296,6 @@ const Editemployee = () => {
         }
       },
     },
-    //  {
-    //   field: "SLNO",
-    //   headerName: "SL#",
-    //   width: 80,
-    // },
     {
       field: "RecordID",
       headerName: "RecordID",
@@ -3323,7 +3318,7 @@ const Editemployee = () => {
 
   ];
   const Att1Column = [
- {
+    {
       field: "SLNO",
       headerName: "SL#",
       width: 80,
@@ -3345,7 +3340,7 @@ const Editemployee = () => {
 
   ];
   const Att2Column = [
- {
+    {
       field: "SLNO",
       headerName: "SL#",
       width: 80,
@@ -3367,7 +3362,7 @@ const Editemployee = () => {
 
   ];
   const Att3Column = [
- {
+    {
       field: "SLNO",
       headerName: "SL#",
       width: 80,
@@ -4701,6 +4696,27 @@ const Editemployee = () => {
                         <MenuItem value="IN">Intern</MenuItem>
                         {/* <MenuItem value="CT">Contractor</MenuItem> */}
                       </TextField>
+                      <TextField
+                        name="amount"
+                        type="text"
+                        id="amount"
+                        label="Actual Salary"
+                        variant="standard"
+                        focused
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        // autoFocus
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                            min: 0,
+                            max: 24,
+                          },
+                        }}
+                      />
                       <Box>
                         {/* <CusListRunGrpOptimizedAutocomplete
                           name="module"
@@ -12892,25 +12908,25 @@ const Editemployee = () => {
                       // inputProps={{ readOnly: true }}
                       />
                     </FormControl>
-                    
-                      <Stack
-                        sx={{
-                          //    width: {sm:'100%',md:'100%',lg:'100%'},
 
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                          right: "0px",
-                        }}
-                      >
-                        <Avatar
-                          variant="rounded"
-                          src={userimg}
-                          sx={{ width: "200px", height: "120px" }}
-                        />
-                      </Stack>
-                  
+                    <Stack
+                      sx={{
+                        //    width: {sm:'100%',md:'100%',lg:'100%'},
+
+                        alignContent: "center",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        right: "0px",
+                      }}
+                    >
+                      <Avatar
+                        variant="rounded"
+                        src={userimg}
+                        sx={{ width: "200px", height: "120px" }}
+                      />
+                    </Stack>
+
 
                   </Box>
                   <Box marginLeft={2} height="50vh"

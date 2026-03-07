@@ -207,6 +207,12 @@ const initialState = {
   SopEmpMappingControllerdata: {},
   SopEmpMappingControllerloading: false,
   SopEmpMappingControllerStatus: "",
+
+  //SCOREBOARD
+  // ScoredashBoardGetData: {},
+  // ScoredashBoardGetStaus: "idle",
+  // ScoredashBoardGetLoading: false,
+  // ScoredashBoardGetError: null,
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -2276,6 +2282,7 @@ export const hashtoken = createAsyncThunk(
     return response.data;
   },
 );
+
 export const Inventorygrid1 = createAsyncThunk(
   "Inv1/Itemgroup",
   async ({ AccessID, screenName, filter, any }, { getState }) => {
@@ -4093,6 +4100,30 @@ export const getApiSlice = createSlice({
         state.SopEmpMappingControllerstatus = "Error";
         state.SopEmpMappingControllerloading = false;
       })
+
+      //SCOREBOARD
+      // .addCase(ScoredashBoard.pending, (state, action) => {
+      //   // state.ScoredashBoardGetData = []
+      //   state.ScoredashBoardGetStaus = "pending";
+      //   state.ScoredashBoardGetLoading = true;
+      //   state.ScoredashBoardGetError = null;
+      // })
+
+      // .addCase(ScoredashBoard.fulfilled, (state, action) => {
+      //   state.ScoredashBoardGetData = action.payload;
+      //   state.ScoredashBoardGetStaus = "fulfilled";
+      //   state.ScoredashBoardGetLoading = false;
+      //   state.ScoredashBoardGetError = null;
+      //   console.log("ScoredashBoardGetData",state.ScoredashBoardGetData)
+      // })
+      // .addCase(ScoredashBoard.rejected, (state, action) => {
+      //   // state.ScoredashBoardGetData = [];
+      //   state.ScoredashBoardGetStaus = "rejected";
+      //   state.ScoredashBoardGetLoading = false;
+      //   state.ScoredashBoardGetError = null;
+      // })
+
+
       .addCase(timeSheet.fulfilled, (state, action) => {
         state.timeSheetData = action.payload?.Data?.Task || [];
         state.projectName =
@@ -5617,6 +5648,8 @@ export const replacementQtyGet = createAsyncThunk(
     return response.data;
   },
 );
+
+
 //batchreconciliationGetData
 export const batchreconciliationGetData = createAsyncThunk(
   "batchreconciliationGetData/Get",
@@ -5754,3 +5787,23 @@ export const SopEmpMappingController = createAsyncThunk(
     return response.data;
   },
 );
+
+// export const ScoredashBoard = createAsyncThunk(
+//   "ScoredashBoard/getdata",
+//   async ({ data }, thunkAPI) => {
+//     try {
+//       var url = store.getState().globalurl.Scoreboard;
+//       console.log("get" + JSON.stringify(data));
+//       const response = await axios.post(url, data, {
+//         headers: {
+//           Authorization:
+//             "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+//         },
+//       });
+//       console.log("🚀 ~ response.data:", response.data);
+//       return response.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.response?.data || error.message);
+//     }
+//   }
+// );

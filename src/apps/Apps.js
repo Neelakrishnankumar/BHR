@@ -200,6 +200,7 @@ import EditBooklet from "./pages/SOP/EditBooklet";
 import EditSopCheckList from "./pages/SOP/EditCheckList";
 import AnnexureForm1 from "./pages/SOP/AnnexureForm1";
 import AnnexureForm2 from "./pages/SOP/AnnexureForm2";
+import ScoreBoard from "./pages/SkillGlow/ScoreBoard";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -549,6 +550,11 @@ function App() {
                   <Route
                     path="/Secondarylistview/skillglow/:accessID3/:screenName/:parentID3/:accessID2/:parentID2/:accessID1/AppraisalSchedule/AppraisalScheduleListEMP/:parentID1"
                     element={<AppraisalScheduleList />}
+                  />
+                  {/* ASSESSMENT SCORE BOARD*/}
+                  <Route
+                    path="/Secondarylistview/skillglow/:accessID2/:screenName/:parentID4/:accessID1/:parentID3/ScheduleListAssessment/:parentID2/AssessmentScoreBoard/:parentID1"
+                    element={<ScoreBoard />}
                   />
 
                   {/* ITEM GROUP EDIT */}
