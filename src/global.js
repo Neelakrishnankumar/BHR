@@ -474,6 +474,8 @@ export const getUrlSlice = createSlice({
       state.LeaveenquiryGetController = APIurl + "HrEmployeeLeaveGetController.php";
       state.OHPaymentUpdateController =
         APIurl + "OHPaymentUpdateController.php";
+      // state.OHPaymentUpdateController =
+      //   APIurl + "OHPaymentUpdateControllerV1.php";
       state.PartyBydateByamtFilter =
         APIurl + "PartyBydateByamtFilter.php";
       state.UserActivityGet = APIurl + "UserActivityGetController.php";

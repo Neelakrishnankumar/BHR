@@ -330,7 +330,7 @@ const ListviewSecondary = () => {
     filter = `CompanyID = '${compID}' AND SopDocumentListID='${parentID2}'`;
     // filter = `SopDocumentListID='${parentID2}'`;
   }
-  else if (accessID == "TR341") {
+  else if (accessID == "TR351") {
     filter = `CompanyID = '${compID}' AND SopDocListID='${parentID2}'`;
   }
   // else if (accessID == "TR283") {
@@ -1878,7 +1878,7 @@ const ListviewSecondary = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-        ) : accessID == "TR341" ? (
+        ) : accessID == "TR351" ? (
           <Box display="flex" borderRadius="3px" alignItems="center">
             <Breadcrumbs
               maxItems={2}
@@ -3959,7 +3959,7 @@ const ListviewSecondary = () => {
                   </IconButton>
 
                 </Tooltip>
-              ): accessID === "TR341" ? (
+              ): accessID === "TR351" ? (
                 <Tooltip arrow title="Add">
 
                   <IconButton>
@@ -4223,11 +4223,11 @@ const ListviewSecondary = () => {
                     label="View"
                     variant="outlined"
                   />
-                  {/* <Chip
+                  <Chip
                   icon={<CurrencyRupeeOutlinedIcon color="primary" />}
                   label="Payment"
                   variant="outlined"
-                /> */}
+                />
                   {params.OrderType === "Q" &&
                     <Chip
                       icon={<CurrencyExchangeOutlinedIcon color="primary" />}

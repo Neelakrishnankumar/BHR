@@ -207,6 +207,7 @@ const EditOHPayment = () => {
     paiddate: data.PaidDate
       ? data.PaidDate.split(" ")[0] // keeps YYYY-MM-DD
       : "",
+    // paidamount: data.PaidAmount || 0,
     paidamount: "",
     status: " ",
     paymentmode: "",
@@ -219,104 +220,33 @@ const EditOHPayment = () => {
     RatingComments: "",
   };
 
-  // const Fnsave = async (values, del, override = {}) => {
-  //   // let action = mode === "A" ? "insert" : "update";
-  //   const partyBalance = Number(values.PartyBalance || 0);
-  //   const paidAmount = Number(values.paidamount || 0);
-  //   const status = override.ORStatus ?? values.status;
-  //   const finalPaidAmount =
-  //     status === "Adjust From Advance" ? 0 : values.paidamount || 0;
+  const calculatePayable = (values) => {
+    const netPayable =
+      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
-  //   if (status === "Adjust From Advance") {
-  //     const advanceAmount = Math.abs(partyBalance);
+    const Balance = Number(values.PartyBalance || 0);
 
-  //     if (paidAmount > advanceAmount) {
-  //       toast.error("Paid amount cannot be greater than available advance.");
-  //       return;
-  //     }
-  //   }
+    let totalPayable = 0;
 
-  //   let action =
-  //     mode === "A" && !del
-  //       ? "insert"
-  //       : mode === "E" && del
-  //       ? "harddelete"
-  //       : "update";
-  //   var isCheck = "N";
-  //   if (values.disable == true) {
-  //     isCheck = "Y";
-  //   }
+    if (Balance > 0) {
+      // advance available
+      totalPayable = Math.max(netPayable - Balance, 0);
+    } else {
+      // previous due
+      totalPayable = netPayable + Math.abs(Balance);
+    }
 
-  //   const idata = {
-  //     RecordID: recID,
-  //     ...(mode === "E" && { Code: values.orderno || "" }),
-  //     //   PartyRecordID: state.PartyID,
-  //     //   EmployeeRecordID: state.PartyID,
-  //     //LeaderID: params.filtertype || 0,
-  //     LeaderID:
-  //       params.Type === "Party"
-  //         ? data.LeaderRecordID || 0
-  //         : params.filtertype || 0,
+    const paidAmount = Number(values.paidamount || 0);
 
-  //     PartyName: values.partyname || "",
-  //     OrderDate: values.orderdate || "",
-  //     DeliveryCharges: values.delivercharges || 0,
-  //     TotalPrice: values.totalprice || 0,
-  //     TentativeDeliveryDate: values.tentativedeliverdate || "",
-  //     DeliveryBy: values.deliveredby || "",
-  //     DeliveryYesorNo: mode === "A" ? "N" : values.deliver || "N",
-  //     PaidYesorNo: mode === "A" ? "No" : values.paid || "No",
-  //     ProcessDate: values.processdate || "",
-  //     PaidDate: values.paiddate || "",
-  //     DeliveryDate: values.deliverydate || "",
-  //     // PaidAmount: values.paidamount || 0,
-  //     PaidAmount: finalPaidAmount || 0,
-  //     // PaidAmount: values.Tobepaid || 0,
-  //     // ORStatus: values.status || "",
-  //     PaymentMode: values.paymentmode || "",
-  //     ReceiverName: values.receivername || "",
-  //     ReceiverMobileNumber: values.mobilenumber || "",
-  //     DeliveryComments: values.DeliveryComments || "",
-  //     PaidComments: values.PaidComments || "",
-  //     PartyRecordID: state.PartyID || 0,
-  //     EmployeeRecordID: LoginID,
-  //     // SortOrder: values.sortorder,
-  //     // Disable: isCheck,
-  //     //   Finyear,
-  //     CompanyID,
-  //     // OrderType: values.OrderType || "",
-  //     ORStatus: override.ORStatus ?? values.status ?? "",
-  //     OrderType: override.OrderType ?? values.OrderType ?? "",
-  //     PurchaseCheckbox: values.PurchaseCheckbox === true ? "Y" : "N",
-  //   };
+    const toBePaid = totalPayable - paidAmount;
 
-  //   const response = await dispatch(postData({ accessID, action, idata }));
-  //   if (response.payload.Status == "Y") {
-  //     toast.success(response.payload.Msg);
-  //     if (mode === "A") {
-  //       const OrderHeaderId = response.payload.OrderHeaderID;
-  //       const OrderHeaderCode = response.payload.OrderHeaderCode;
-  //       navigate(
-  //         `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/${params.OrderType}/TR311/${OrderHeaderId}/EditOrderitem/-1/A`,
-  //         { state: { ...state, Code: OrderHeaderCode } }
-  //       );
-  //     } else if (mode === "E" && params.OrderType === "O") {
-  //       //toast.success(response.payload.Msg);
-  //       navigate(-1);
-  //     } else if (mode === "E" && params.OrderType === "Q") {
-  //       //toast.success(response.payload.Msg);
-  //       navigate(
-  //         `/Apps/Secondarylistview/${params.accessID}/Order/${params.filtertype}/${params.Type}/O`,
-  //         { state: { ...state } }
-  //       );
-  //     }
-  //     return;
-  //   } else {
-  //     toast.error(response.payload.Msg);
+    return {
+      netPayable,
+      totalPayable,
+      toBePaid,
+    };
+  };
 
-  //     dispatch(getFetchData({ accessID, get: "get", recID }));
-  //   }
-  // };
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
     const partyBalance = Number(values.PartyBalance || 0);
@@ -340,13 +270,23 @@ const EditOHPayment = () => {
       toast.error("Please provide comments for low rating.");
       return;
     }
-    const netPayable =
-      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
+    // const netPayable =
+    //   Number(values.delivercharges || 0) + Number(values.totalprice || 0);
+    const { netPayable, totalPayable, toBePaid } = calculatePayable(values);
+    // if (totalPayable > values.paidamount) {
+    //   toast.error("Please provide the remaining amount only.");
+    //   return;
+    // }
     const Balance = Number(values.PartyBalance || 0);
 
-    const totalBalance = netPayable + Balance;
-    const toBePaid = totalBalance - Number(values.paidamount || 0);
+
+    if (Balance < 0 && values.paidamount === "0.00") {
+      toast.error("Paid Amount cannot be 0.00");
+      return;
+    }
+    // const totalBalance = netPayable + Balance;
+    // const toBePaid = totalBalance - Number(values.paidamount || 0);
     const idata = {
       PaymentMethod: values.paymentmode || "",
       Amount: netPayable || 0,
@@ -358,7 +298,7 @@ const EditOHPayment = () => {
       PaidComments: values.PaidComments || "",
       NextOrdDate: values.NextOrdDate || "",
       Balance: Balance || 0,
-      ToBePaid: toBePaid || 0,
+      // ToBePaid: toBePaid || 0,
       PaidAmount: values.paidamount || 0,
       Rating: values.Rating || 0,
       Comments: values.RatingComments || "",
@@ -462,9 +402,9 @@ const EditOHPayment = () => {
                 variant="h5"
                 color="#0000D1"
                 sx={{ cursor: "default" }}
-                // onClick={() => {
-                //   navigate(-1);
-                // }}
+              // onClick={() => {
+              //   navigate(-1);
+              // }}
               >
                 Payment
                 {/* {params.OrderType === "O"
@@ -515,14 +455,19 @@ const EditOHPayment = () => {
               handleSubmit,
               setFieldValue,
             }) => {
-              const netPayable =
-                Number(values.delivercharges || 0) +
-                Number(values.totalprice || 0);
 
-              const Balance = Number(values.PartyBalance || 0);
 
-              const totalBalance = netPayable + Balance;
-              const toBePaid = totalBalance - Number(values.paidamount || 0);
+              // const netPayable =
+              //   Number(values.delivercharges || 0) +
+              //   Number(values.totalprice || 0);
+
+              // const Balance = Number(values.PartyBalance || 0);
+
+              // const totalBalance = netPayable + Balance;
+              // const toBePaid = totalBalance - Number(values.paidamount || 0);
+              const { netPayable, totalPayable, toBePaid } = calculatePayable(values);
+
+
               return (
                 <form onSubmit={handleSubmit}>
                   <Box
@@ -558,8 +503,8 @@ const EditOHPayment = () => {
                       InputProps={{
                         readOnly: true,
                       }}
-                      // required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                    // required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     />
                     {CompanyAutoCode == "Y" ? (
                       <TextField
@@ -583,7 +528,7 @@ const EditOHPayment = () => {
                           },
                         }}
                         InputProps={{ readOnly: true }}
-                        // autoFocus
+                      // autoFocus
                       />
                     ) : (
                       <TextField
@@ -675,8 +620,8 @@ const EditOHPayment = () => {
                           label="Due"
                           variant="standard"
                           focused
-                          // value={Math.abs(Number(values.PartyBalance || 0))}
-                          value={Math.abs(Balance || 0)}
+                          value={Math.abs(Number(values.PartyBalance || 0))}
+                          // value={Math.abs(Balance || 0)}
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={
@@ -694,7 +639,7 @@ const EditOHPayment = () => {
                                   Number(values.PartyBalance) < 0
                                     ? "#d32f2f"
                                     : // ? "#db4f4a"
-                                      "#2e7d32", // red : green
+                                    "#2e7d32", // red : green
                                 fontWeight: 600,
                               },
                             },
@@ -705,7 +650,7 @@ const EditOHPayment = () => {
                           label="Total Payable"
                           variant="standard"
                           focused
-                          value={totalBalance.toFixed(2)}
+                          value={totalPayable.toFixed(2)}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
@@ -736,8 +681,28 @@ const EditOHPayment = () => {
                           variant="standard"
                           focused
                           value={values.paidamount}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                          // onBlur={handleBlur}
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            // allow only numbers + decimal
+                            const val = e.target.value;
+                            if (/^\d*\.?\d*$/.test(val)) {
+                              setFieldValue("paidamount", val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let val = e.target.value;
+
+                            if (val === "" || val === ".") {
+                              setFieldValue("paidamount", "0.00");
+                              return;
+                            }
+
+                            const num = parseFloat(val);
+                            if (!isNaN(num)) {
+                              setFieldValue("paidamount", num.toFixed(2)); // ✅ forces .00
+                            }
+                          }}
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
@@ -890,15 +855,13 @@ const EditOHPayment = () => {
                           id="RatingComments"
                           label={
                             Number(values.Rating) > 0 &&
-                            Number(values.Rating) <= 2 ? (
+                              Number(values.Rating) <= 2 ? (
                               <>
                                 Rating Comments
                                 <span
                                   style={{ color: "red", fontSize: "18px" }}
                                 >
-                                  {" "}
-                                  *
-                                </span>
+                                  {" "}*</span>
                               </>
                             ) : (
                               "Rating Comments (Optional)"
@@ -917,8 +880,8 @@ const EditOHPayment = () => {
                           }
                           helperText={
                             Number(values.Rating) > 0 &&
-                            Number(values.Rating) <= 2 &&
-                            !values.RatingComments ? (
+                              Number(values.Rating) <= 2 &&
+                              !values.RatingComments ? (
                               <>
                                 <span style={{ color: "red" }}>
                                   Comments are required for low ratings
@@ -939,7 +902,7 @@ const EditOHPayment = () => {
                     gap="20px"
                   >
                     {YearFlag == "true" &&
-                    (mode === "A" || params.OrderType === "O") ? (
+                      (mode === "A" || params.OrderType === "O") ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"
