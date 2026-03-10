@@ -2831,7 +2831,8 @@ export const fetchListview =
                   <Box>
                     {/* Edit Button */}
                     <Link
-                      to={`./EditAdvancePayment/${params.row.RecordID}/E`}
+                      // to={`./EditAdvancePayment/${params.row.RecordID}/E`}
+                      to={`./EditAdvancePayment/${params.row.RecordID}/V`}
                       state={{
                         PartyName: params.row.PartyName,
                         Count: params.row.MarketingCount,
@@ -2840,9 +2841,9 @@ export const fetchListview =
                         PartyID: params.row.PartyRecordID,
                       }}
                     >
-                      <Tooltip title="Edit">
+                      <Tooltip title="View">
                         <IconButton color="info" size="small">
-                          <ModeEditOutlinedIcon />
+                          <VisibilityIcon />
                         </IconButton>
                       </Tooltip>
                     </Link>

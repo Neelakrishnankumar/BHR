@@ -102,7 +102,7 @@ const Editvendor = () => {
   const Finyear = sessionStorage.getItem("YearRecorid");
   const CompanyID = sessionStorage.getItem("compID");
   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
-   const LoginID = sessionStorage.getItem("loginrecordID");
+  const LoginID = sessionStorage.getItem("loginrecordID");
   const [panImage, setPanImage] = useState("");
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
@@ -138,7 +138,8 @@ const Editvendor = () => {
 
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
-            .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+            // .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
+             .matches(/^(\d{10,11})$/, "Enter a valid Mobile or Landline Number"),
 
           emailid: Yup.string()
             .nullable()
@@ -234,9 +235,9 @@ const Editvendor = () => {
 
   useEffect(() => {
     if (recID && mode === "E") {
-      dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
+      dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
     } else {
-      dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
+      dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
     }
   }, [location.key, recID, mode]);
 
@@ -426,9 +427,9 @@ const Editvendor = () => {
       console.log(event.target.value, "--find event.target.value");
 
       if (recID && mode === "E") {
-        dispatch(getFetchData({ accessID:"TR243", get: "get", recID }));
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID:"TR243", get: "", recID }));
+        dispatch(getFetchData({ accessID: "TR243", get: "", recID }));
       }
     }
     if (event.target.value == "3") {
@@ -462,18 +463,18 @@ const Editvendor = () => {
     locality:
       data.LocalityID && data.LocalityID !== "0"
         ? {
-            RecordID: data.LocalityID,
-            Code: data.LocalityCode,
-            Name: data.LocalityName,
-          }
+          RecordID: data.LocalityID,
+          Code: data.LocalityCode,
+          Name: data.LocalityName,
+        }
         : null,
     ReferenceBy:
       data.ReferenceID && data.ReferenceID !== "0"
         ? {
-            RecordID: data.ReferenceID,
-            Code: data.ReferenceByName,
-            Name: data.ReferenceByName,
-          }
+          RecordID: data.ReferenceID,
+          Code: data.ReferenceByName,
+          Name: data.ReferenceByName,
+        }
         : null,
     address: data.Address || "",
     maplink: data.MapLocation || "",
@@ -500,8 +501,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     // var isCheck = "N";
     // if (values.disable == true) {
     //   isCheck = "Y";
@@ -537,11 +538,11 @@ const Editvendor = () => {
       ParentCheckBox: values.Parent == true ? "Y" : "N",
       Disable: values.disable == true ? "Y" : "N",
       Source: "Cloud",
-      CreateBy:LoginID,
+      CreateBy: LoginID,
     };
 
     try {
-      const response = await dispatch(postData({ accessID:"TR243V1", action, idata }));
+      const response = await dispatch(postData({ accessID: "TR243V1", action, idata }));
 
       if (response.payload.Status === "Y") {
         toast.success(response.payload.Msg);
@@ -589,8 +590,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: recID,
       PanCardNo: values.Pancardnumber,
@@ -604,7 +605,7 @@ const Editvendor = () => {
 
     try {
       const response = await dispatch(
-        VendorRegisterpostData({ accessID:"TR243", action, idata })
+        VendorRegisterpostData({ accessID: "TR243", action, idata })
       );
 
       if (response.payload.Status === "Y") {
@@ -625,14 +626,14 @@ const Editvendor = () => {
     name: partyDefaultgetdata.Name || "",
     Product:
       partyDefaultgetdata.DefaultProductID &&
-      partyDefaultgetdata.DefaultProductID !== "0"
+        partyDefaultgetdata.DefaultProductID !== "0"
         ? {
-            RecordID: partyDefaultgetdata.DefaultProductID,
-            Name: partyDefaultgetdata.DefaultProductName,
-          }
+          RecordID: partyDefaultgetdata.DefaultProductID,
+          Name: partyDefaultgetdata.DefaultProductName,
+        }
         : partyDefaultgetdata.DefaultProductID == null
-        ? []
-        : null,
+          ? []
+          : null,
     defaultDelivery: partyDefaultgetdata.DeliveryCharge || 0,
     DefaultPaymentMode: partyDefaultgetdata.DefaultPaymentMode || "",
     // DefaultPaymentMode:
@@ -652,8 +653,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     const idata = {
       RecordID: recID,
       DefaultProduct: values.Product.RecordID || 0,
@@ -663,7 +664,7 @@ const Editvendor = () => {
 
     try {
       const response = await dispatch(
-        VendorDefaultPUTdata({ accessID:"TR243", action, idata })
+        VendorDefaultPUTdata({ accessID: "TR243", action, idata })
       );
 
       if (response.payload.Status === "Y") {
@@ -698,8 +699,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       VendorID: recID,
@@ -753,8 +754,8 @@ const Editvendor = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
 
     const idata = {
       VendorID: recID,
@@ -768,8 +769,8 @@ const Editvendor = () => {
       AadhatNo2: values.aadharcardnumber2,
       // ContactPersonIDProofImg1: data.ContactPersonIDProofImg1 || ID1Image,
       // ContactPersonIDProofImg2: data.ContactPersonIDProofImg2 || ID2Image,
-      ContactPersonIDProofImg1:  ID1Image || partyContactgetdata.ContactPersonIDProofImg1,
-      ContactPersonIDProofImg2:  ID2Image || partyContactgetdata.ContactPersonIDProofImg2,
+      ContactPersonIDProofImg1: ID1Image || partyContactgetdata.ContactPersonIDProofImg1,
+      ContactPersonIDProofImg2: ID2Image || partyContactgetdata.ContactPersonIDProofImg2,
     };
 
     try {
@@ -1000,7 +1001,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1066,7 +1067,7 @@ const Editvendor = () => {
                     id="mobilenumber"
                     label={
                       <>
-                        Contact Mobile Number
+                        Contact Mobile or Landline Number
                         <span style={{ color: "red", fontSize: "20px" }}>
                           *
                         </span>
@@ -1079,7 +1080,7 @@ const Editvendor = () => {
                     onChange={(e) => {
                       const value = e.target.value;
                       // Only allow numbers and max 10 digits
-                      if (/^\d{0,10}$/.test(value)) {
+                      if (/^\d{0,11}$/.test(value)) {
                         handleChange(e);
                       }
                     }}
@@ -1087,10 +1088,10 @@ const Editvendor = () => {
                     helperText={touched.mobilenumber && errors.mobilenumber}
                     inputProps={{ maxLength: 10 }}
                     sx={{ backgroundColor: "#ffffff" }}
-                    InputProps={{ 
+                    InputProps={{
                       inputProps: {
-                        style:{textAlign: 'left'}
-                      } 
+                        style: { textAlign: 'left' }
+                      }
                     }}
                   />
                   <TextField
@@ -1111,7 +1112,7 @@ const Editvendor = () => {
                         backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                       },
                     }}
-                    // autoFocus
+                  // autoFocus
                   />
 
                   <TextField
@@ -1556,7 +1557,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -1894,13 +1895,13 @@ const Editvendor = () => {
                         onClick={() => {
                           partyContactgetdata.ContactPersonIDProofImg1 || ID1Image
                             ? window.open(
+                              ID1Image
+                                ? store.getState().globalurl.attachmentUrl +
                                 ID1Image
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      ID1Image
-                                  : store.getState().globalurl.attachmentUrl +
-                                      partyContactgetdata.ContactPersonIDProofImg1,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                partyContactgetdata.ContactPersonIDProofImg1,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -1936,13 +1937,13 @@ const Editvendor = () => {
                         onClick={() => {
                           partyContactgetdata.ContactPersonIDProofImg2 || ID2Image
                             ? window.open(
+                              ID2Image
+                                ? store.getState().globalurl.attachmentUrl +
                                 ID2Image
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      ID2Image
-                                  : store.getState().globalurl.attachmentUrl +
-                                      partyContactgetdata.ContactPersonIDProofImg2,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                partyContactgetdata.ContactPersonIDProofImg2,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2068,7 +2069,7 @@ const Editvendor = () => {
                         },
                       }}
                       InputProps={{ readOnly: true }}
-                      // autoFocus
+                    // autoFocus
                     />
                   ) : (
                     <TextField
@@ -2520,7 +2521,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                          // autoFocus
+                        // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2640,7 +2641,7 @@ const Editvendor = () => {
                         sx={{
                           backgroundColor: "#ffffff",
                         }}
-                        // autoFocus
+                      // autoFocus
                       />
 
                       <TextField
@@ -2663,7 +2664,7 @@ const Editvendor = () => {
                             backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                           },
                         }}
-                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
                         name="verifieddate"
@@ -2716,13 +2717,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.PanImg || panImage
                             ? window.open(
+                              panImage
+                                ? store.getState().globalurl.attachmentUrl +
                                 panImage
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      panImage
-                                  : store.getState().globalurl.attachmentUrl +
-                                      data.PanImg,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                data.PanImg,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2752,13 +2753,13 @@ const Editvendor = () => {
                         onClick={() => {
                           data.GstImg || gstImage
                             ? window.open(
+                              gstImage
+                                ? store.getState().globalurl.attachmentUrl +
                                 gstImage
-                                  ? store.getState().globalurl.attachmentUrl +
-                                      gstImage
-                                  : store.getState().globalurl.attachmentUrl +
-                                      data.GstImg,
-                                "_blank"
-                              )
+                                : store.getState().globalurl.attachmentUrl +
+                                data.GstImg,
+                              "_blank"
+                            )
                             : toast.error("Please Upload File");
                         }}
                       >
@@ -2855,7 +2856,7 @@ const Editvendor = () => {
                             },
                           }}
                           InputProps={{ readOnly: true }}
-                          // autoFocus
+                        // autoFocus
                         />
                       ) : (
                         <TextField
@@ -2960,7 +2961,7 @@ const Editvendor = () => {
                             style: { textAlign: "right" },
                           },
                         }}
-                        // autoFocus
+                      // autoFocus
                       />
                       {/* <TextField
                         name="DefaultPaymentMode"
