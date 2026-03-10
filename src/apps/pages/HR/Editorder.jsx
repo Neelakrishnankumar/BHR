@@ -939,7 +939,8 @@ const EditOrder = () => {
                           error={!!touched.paidamount && !!errors.paidamount}
                           helperText={touched.paidamount && errors.paidamount}
                           InputProps={{
-                            readOnly: ViewStatus === "Paid" ? true : false, 
+                            // readOnly: ViewStatus === "Paid" ? true : false, 
+                            readOnly:true, 
                             inputProps: {
                               style: { textAlign: "right" },
                             },
@@ -1003,10 +1004,11 @@ const EditOrder = () => {
                           {/* <MenuItem value="Scheduled">Scheduled</MenuItem> */}
                           <MenuItem value="Yet To Deliver">Scheduled</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
-                          <MenuItem value="Paid">Paid</MenuItem>
-                          <MenuItem value="Adjust From Advance">
+                          {/* COMMENTED AS PER NK ANNA - 06/03/2026 */}
+                          {/* <MenuItem value="Paid">Paid</MenuItem> */}
+                          {/* <MenuItem value="Adjust From Advance">
                             Adjust From Advance
-                          </MenuItem>
+                          </MenuItem> */}
                         </TextField>
                         {/* <TextField
                           name="paymentmode"

@@ -114,6 +114,7 @@ const EditItem = () => {
   const ItemMainData = useSelector((state) => state.formApi.itemMainGetData);
   const ItemFlagData = useSelector((state) => state.formApi.itemFlagGetData);
   const ItemStockData = useSelector((state) => state.formApi.itemStockGetData);
+console.log(ItemStockData, "--ItemStockData");
 
   const ItemMainDataLoading = useSelector(
     (state) => state.formApi.itemMainGetDataloading
@@ -370,6 +371,8 @@ const EditItem = () => {
       Price: values.GuidelinePrice || "0.00",
       MinStock: values.MinStock || "0",
       ReorderLevel: values.ReorderLevel || "0",
+      LotNumber: values.locknumber || "",
+      ExpiryDate: values.expirydate
     };
 
     const response = await dispatch(ItemStockMenuPut({ action, idata }));
@@ -558,6 +561,8 @@ const EditItem = () => {
     minvendorstkQty: ItemStockData?.MinorVenStockQty || "",
     MinStock: ItemStockData?.MinStock || "",
     ReorderLevel: ItemStockData?.ReorderLevel || "",
+    locknumber: ItemStockData?.LotNumber,
+    expirydate: ItemStockData?.ExpiryDate
   };
   // const selectCellRowData = ({ rowData, mode, field, setFieldValue, type }) => {
   //   setFunMode(mode);
@@ -1973,6 +1978,53 @@ const EditItem = () => {
                         inputProps: { style: { textAlign: "right" } },
                       }}
                     />
+                      <TextField
+                      name="locknumber"
+                      type="number"
+                      id="locknumber"
+                      label="Lot Number"
+                      // label={
+                      //   <span>
+                      //     Lock Number{" "}
+                      //     <span
+                      //       style={{
+                      //         fontSize: "20px",
+                      //         color: "red",
+                      //       }}
+                      //     >
+                      //       *
+                      //     </span>
+                      //   </span>
+                      // }
+                      variant="standard"
+                      focused
+                      value={values.locknumber}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.locknumber && !!errors.locknumber}
+                      helperText={touched.locknumber && errors.locknumber}
+                      autoFocus
+                      InputProps={{
+                        inputProps: { style: { textAlign: "right" } },
+                      }}
+                    />
+                     <TextField
+                                            name="expirydate"
+                                            type="date"
+                                            id="expirydate"
+                                            label="Expiry Date"
+                                            variant="standard"
+                                            focused
+                                            inputFormat="YYYY-MM-DD"
+                                            value={values.expirydate}
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            error={!!touched.expirydate && !!errors.expirydate}
+                                            helperText={touched.expirydate && errors.expirydate}
+                                            sx={{ background: "" }}
+                                          // required
+                                          //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                                          />
                   </Box>
                   {/* BUTTONS */}
                   <Box

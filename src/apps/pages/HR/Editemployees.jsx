@@ -13235,24 +13235,42 @@ const Editemployee = () => {
                         pagination
                         checkboxSelection
                         selectionModel={selectionModel2}
+                        // onSelectionModelChange={(ids) => {
+                        //   const selectedID = ids.slice(-1)[0];
+                        //   setSelectionModel2([selectedID]);
+
+                        //   const selectedRow = Inventorygrid2rows.find(
+                        //     (row) => row.RecordID === selectedID
+                        //   );
+
+                        //   if (selectedRow) {
+                        //     dispatch(
+                        //       Inventorygrid3({
+                        //         AccessID: "2153",
+                        //         screenName: "Item",
+                        //         filter: `CompanyID=${CompanyID} AND ItemCategoryID=${selectedRow.RecordID}`,
+                        //         any: "",
+                        //       })
+                        //     );
+                        //   }
+                        // }}
                         onSelectionModelChange={(ids) => {
-                          const selectedID = ids.slice(-1)[0];
-                          setSelectionModel2([selectedID]);
+                          const selectedIds = ids.map((id) => String(id));
 
-                          const selectedRow = Inventorygrid2rows.find(
-                            (row) => row.RecordID === selectedID
+                          // store selected ids
+                          setSelectionModel2(selectedIds);
+
+                          // create comma separated ids
+                          const commaSeparatedIds = selectedIds.join(",");
+
+                          dispatch(
+                            Inventorygrid3({
+                              AccessID: "2153",
+                              screenName: "Item",
+                              filter: `CompanyID=${CompanyID} AND ItemCategoryID IN (${commaSeparatedIds})`,
+                              any: "",
+                            })
                           );
-
-                          if (selectedRow) {
-                            dispatch(
-                              Inventorygrid3({
-                                AccessID: "2153",
-                                screenName: "Item",
-                                filter: `CompanyID=${CompanyID} AND ItemCategoryID=${selectedRow.RecordID}`,
-                                any: "",
-                              })
-                            );
-                          }
                         }}
                         onCellClick={(params) => {
                           selectCellRowData({

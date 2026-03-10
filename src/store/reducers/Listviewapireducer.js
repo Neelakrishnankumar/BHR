@@ -674,7 +674,8 @@ export const fetchListview =
         AccessID != "TR335" &&
         AccessID != "TR338" &&
         AccessID != "TR339" &&
-        AccessID != "TR341" &&
+        // AccessID != "TR341" &&
+        AccessID != "TR351" &&
         AccessID != "TR127"
       ) {
         filter = "parentID=" + `'${filter}'`;
@@ -746,7 +747,8 @@ export const fetchListview =
       AccessID == "TR335" ||
       AccessID == "TR338" ||
       AccessID == "TR339" ||
-      AccessID == "TR341" ||
+      // AccessID == "TR341" ||
+      AccessID == "TR351" ||
       AccessID == "TR282"
       // AccessID == "TR304"
     ) {
@@ -1844,7 +1846,8 @@ export const fetchListview =
             AccessID == "TR336" ||
             AccessID == "TR338" ||
             AccessID == "TR339" ||
-            AccessID == "TR341" ||
+            // AccessID == "TR341" ||
+            AccessID == "TR351" ||
             AccessID == "TR335" ||
             AccessID == "TR337"
           ) {
@@ -6655,7 +6658,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 </Tooltip>
               </Link>
             )}
-            {/* {params.row.Status === "Delivered" && (
+            {(params.row.Status === "Delivered" || params.row.Status === "Partially Paid") && (
               <Link
                 to={`./EditPayment/${params.row.RecordID}/E`}
                 state={{
@@ -6673,7 +6676,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                   </IconButton>
                 </Tooltip>
               </Link>
-            ) } */}
+            ) }
 
             {/* CONVERT TO ORDER */}
             {params.row.OrderType === "Q" && (
@@ -7029,7 +7032,7 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 color="info"
                 size="small"
                 onClick={() =>
-                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/SopCheckList/TR341/${params.row.RecordID}`, {
+                  navigate(`/Apps/Secondarylistview/TR338/SopDocument/${params.row.SopID}/SopCheckList/TR351/${params.row.RecordID}`, {
                     state: {
                       ...state,
                       BreadCrumb2: params.row.TypeOfDocumentName,
@@ -7163,7 +7166,28 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
          
           </>
         )}
-        {accessID === "TR341" && (
+        {/* {accessID === "TR341" && (
+          <>
+          <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./EditSopCheckList/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb3: params.row.AnnexureNo,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+         
+          </>
+        )} */}
+        {accessID === "TR351" && (
           <>
           <Tooltip title="Edit">
               <IconButton
