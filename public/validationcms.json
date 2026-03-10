@@ -189,6 +189,10 @@
     "Amount": "Please enter the Amount",
     "paymentdate": "Please select the Payment Date"
   },
+  "OHPayment": {
+    "paidamount": "Please enter the Paid Amount",
+    "paymentmode": "Please select the Payment Mode"
+  },
   "Locality": {
     "code": "Please enter the Code",
     "name": "Please enter the Name",

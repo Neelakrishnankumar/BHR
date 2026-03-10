@@ -75,29 +75,29 @@ const EditAdvancePayment = () => {
   }, [location.key]);
 
 
-    useEffect(() => {
-      fetch(process.env.PUBLIC_URL + "/validationcms.json")
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch validationcms.json");
-          return res.json();
-        })
-        .then((data) => {
-          setErrorMsgData(data);
-  
-          let schemaFields = {
-            Amount: Yup.number()
-              .typeError(data.AdvancePayment.Amount)
-              .required(data.AdvancePayment.Amount),
-            paymentdate: Yup.date()
-              .typeError(data.AdvancePayment.paymentdate)
-              .required(data.AdvancePayment.paymentdate)
-          };
-  
-          const schema = Yup.object().shape(schemaFields);
-          setValidationSchema(schema);
-        })
-        .catch((err) => console.error("Error loading validationcms.json:", err));
-    }, []);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+
+        let schemaFields = {
+          Amount: Yup.number()
+            .typeError(data.AdvancePayment.Amount)
+            .required(data.AdvancePayment.Amount),
+          paymentdate: Yup.date()
+            .typeError(data.AdvancePayment.paymentdate)
+            .required(data.AdvancePayment.paymentdate)
+        };
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
 
 
   // *************** INITIALVALUE  *************** //
@@ -116,8 +116,8 @@ const EditAdvancePayment = () => {
       mode === "A" && !del
         ? "insert"
         : mode === "E" && del
-        ? "harddelete"
-        : "update";
+          ? "harddelete"
+          : "update";
     var isCheck = "N";
     if (values.disable == true) {
       isCheck = "Y";
@@ -158,7 +158,7 @@ const EditAdvancePayment = () => {
           navigate("/");
         }
         if (props === "Close") {
-          navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.partyID}`,{
+          navigate(`/Apps/Secondarylistview/${params.accessID}/${params.screenName}/${params.partyID}`, {
             state: state,
           });
         }
@@ -211,7 +211,7 @@ const EditAdvancePayment = () => {
                 color="#0000D1"
                 sx={{ cursor: "default" }}
               >
-                {mode === "A" ? "Add Advance" : "Edit Advance"}
+                {mode === "A" ? "Add Advance" : "View Advance"}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -271,14 +271,14 @@ const EditAdvancePayment = () => {
                       type="date"
                       id="paymentdate"
                       label={
-                          <>
-                            Payment Date
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
-                          </>
-                        }
+                        <>
+                          Payment Date
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       inputFormat="YYYY-MM-DD"
@@ -287,23 +287,26 @@ const EditAdvancePayment = () => {
                       onChange={handleChange}
                       error={!!touched.paymentdate && !!errors.paymentdate}
                       helperText={touched.paymentdate && errors.paymentdate}
-                      //required
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      InputProps={{
+                        readOnly: mode === "V" ? true : false,
+                      }}
+                    //required
+                    //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     />
 
                     <TextField
                       name="Amount"
                       type="number"
                       id="Amount"
-                       label={
-                          <>
-                            Amount
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              {" "}
-                              *{" "}
-                            </span>
-                          </>
-                        }
+                      label={
+                        <>
+                          Amount
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            {" "}
+                            *{" "}
+                          </span>
+                        </>
+                      }
                       variant="standard"
                       focused
                       value={values.Amount}
@@ -313,8 +316,9 @@ const EditAdvancePayment = () => {
                       helperText={touched.Amount && errors.Amount}
                       autoFocus
                       InputProps={{
+                        readOnly: mode === "V" ? true : false,
                         inputProps: {
-                          style:{textAlign: "right"},
+                          style: { textAlign: "right" },
                         },
                       }}
                     />
@@ -336,7 +340,10 @@ const EditAdvancePayment = () => {
                         touched.paymentComments && errors.paymentComments
                       }
                       autoFocus
-                      // disabled
+                      InputProps={{
+                        readOnly: mode === "V" ? true : false,
+                      }}
+                    // disabled
                     />
 
                     <TextField
@@ -353,6 +360,7 @@ const EditAdvancePayment = () => {
                       helperText={touched.sortorder && errors.sortorder}
                       // sx={{ background: "#fff6c3" }}
                       InputProps={{
+                        readOnly: mode === "V" ? true : false,
                         inputProps: {
                           style: { textAlign: "right" },
                         },
@@ -373,6 +381,7 @@ const EditAdvancePayment = () => {
                         onBlur={handleBlur}
                         as={Checkbox}
                         label="Disable"
+                       disabled={mode === "V"}
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
@@ -384,7 +393,7 @@ const EditAdvancePayment = () => {
                     padding={1}
                     gap="20px"
                   >
-                    {YearFlag == "true" ? (
+                    {YearFlag == "true" && mode === "A" ? (
                       <LoadingButton
                         color="secondary"
                         variant="contained"

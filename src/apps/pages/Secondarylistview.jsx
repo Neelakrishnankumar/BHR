@@ -5066,6 +5066,14 @@ const ListviewSecondary = () => {
                   <Box display="flex" flexDirection="row" padding="25px" gap="5px">
                    
                   </Box>
+                ): accessID == "TR314" ? (
+                  <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                   <Chip
+                      icon={<VisibilityIcon color="primary" />}
+                      label="View"
+                      variant="outlined"
+                    />
+                  </Box>
                 ): (
                   <Box display="flex" flexDirection="row" padding="25px">
                     <Chip

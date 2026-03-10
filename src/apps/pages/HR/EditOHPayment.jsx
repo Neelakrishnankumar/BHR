@@ -39,6 +39,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Rating from "@mui/material/Rating";
+import * as Yup from "yup";
 
 // import CryptoJS from "crypto-js";
 const EditOHPayment = () => {
@@ -70,6 +71,8 @@ const EditOHPayment = () => {
   );
   const PartyRecordID = state.PartyID;
   console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
+  const [validationSchema, setValidationSchema] = useState(null);
+  const [errorMsgData, setErrorMsgData] = useState(null);
 
   useEffect(() => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
@@ -78,7 +81,29 @@ const EditOHPayment = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/validationcms.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+        return res.json();
+      })
+      .then((data) => {
+        setErrorMsgData(data);
+        let schemaFields = {
+          paidamount: Yup.number()
+            .typeError(data.OHPayment.paidamount)
+            .required(data.OHPayment.paidamount),
 
+          paymentmode: Yup.string()
+            .typeError(data.OHPayment.paymentmode)
+            .required(data.OHPayment.paymentmode),
+        };
+
+        const schema = Yup.object().shape(schemaFields);
+        setValidationSchema(schema);
+      })
+      .catch((err) => console.error("Error loading validationcms.json:", err));
+  }, []);
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
   // Extract default API data safely
@@ -218,35 +243,81 @@ const EditOHPayment = () => {
     PartyBalance: data.PartyBalance,
     Rating: "",
     RatingComments: "",
+    AlreadyPaidAmount: data.AlreadyPaidAmount || 0,
   };
 
-  const calculatePayable = (values) => {
-    const netPayable =
-      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
+  // const calculatePayable = (values) => {
+  //   const netPayable =
+  //     Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
-    const Balance = Number(values.PartyBalance || 0);
+  //   const Balance = Number(values.PartyBalance || 0);
 
-    let totalPayable = 0;
+  //   // let totalPayable = Number(values.AlreadyPaidAmount || 0);
+  //   let AlreadyPaid = Number(values.AlreadyPaidAmount || 0);
+  //   let totalPayable = 0;
+  //   if (Balance > 0) {
+  //     // advance available
+  //     totalPayable = Math.max(netPayable - Balance, 0);
+  //     if (AlreadyPaid !== 0) {
+  //       totalPayable = totalPayable - AlreadyPaid;
+  //     }
+  //   } else {
+  //     // previous due
+  //     totalPayable = netPayable + Math.abs(Balance);
+  //   }
 
-    if (Balance > 0) {
-      // advance available
-      totalPayable = Math.max(netPayable - Balance, 0);
-    } else {
-      // previous due
-      totalPayable = netPayable + Math.abs(Balance);
-    }
+  //   const paidAmount = Number(values.paidamount || 0);
 
-    const paidAmount = Number(values.paidamount || 0);
+  //   const toBePaid = netPayable - totalPayable;
 
-    const toBePaid = totalPayable - paidAmount;
+  //   return {
+  //     netPayable,
+  //     totalPayable,
+  //     toBePaid,
+  //   };
+  // };
+const calculatePayable = (values) => {
+  const netPayable =
+    Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
-    return {
-      netPayable,
-      totalPayable,
-      toBePaid,
-    };
+  const balance = Number(values.PartyBalance || 0);
+  const alreadyPaid = Number(values.AlreadyPaidAmount || 0);
+  const paidAmount = Number(values.paidamount || 0); //USER INPUT
+
+  let totalPayable = 0;
+
+  // Scenario 1: Advance available
+  if (balance > 0) {
+    totalPayable = netPayable - balance;
+  }
+
+  // Scenario 2: Previous due
+  else if (balance < 0) {
+    totalPayable = netPayable + Math.abs(balance);
+  }
+
+  // Scenario 3: No balance
+  else {
+    totalPayable = netPayable;
+  }
+
+  // Subtract already paid
+  totalPayable = totalPayable - alreadyPaid;
+
+  // Prevent negative payable
+  if (totalPayable < 0) {
+    totalPayable = 0;
+  }
+
+  // Remaining to be paid after current payment
+  const toBePaid = totalPayable - paidAmount;
+
+  return {
+    netPayable,
+    totalPayable,
+    toBePaid,
   };
-
+};
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
     const partyBalance = Number(values.PartyBalance || 0);
@@ -442,7 +513,7 @@ const EditOHPayment = () => {
                 Fnsave(values);
               }, 100);
             }}
-            //  validationSchema={ DesignationSchema}
+            validationSchema={validationSchema}
             enableReinitialize={true}
           >
             {({
@@ -677,7 +748,15 @@ const EditOHPayment = () => {
                           name="paidamount"
                           type="number"
                           id="paidamount"
-                          label="Paid Amount"
+                          // label="Paid Amount"
+                          label={
+                            <>
+                              Paid Amount
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
                           variant="standard"
                           focused
                           value={values.paidamount}
@@ -739,18 +818,27 @@ const EditOHPayment = () => {
                         </TextField> */}
                         <TextField
                           select
-                          label="Payment Mode"
+                          // label="Payment Mode"
+                          label={
+                            <>
+                              Payment Mode
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
                           id="paymentmode"
                           name="paymentmode"
                           value={values.paymentmode}
                           onBlur={handleBlur}
-                          onChange={(e) => {
-                            handleChange(e); // update form state (Formik)
-                            sessionStorage.setItem(
-                              "paymentmode",
-                              e.target.value,
-                            ); // save to sessionStorage
-                          }}
+                          onChange={handleChange}
+                          // onChange={(e) => {
+                          //   handleChange(e); // update form state (Formik)
+                          //   sessionStorage.setItem(
+                          //     "paymentmode",
+                          //     e.target.value,
+                          //   ); // save to sessionStorage
+                          // }}
                           error={!!touched.paymentmode && !!errors.paymentmode}
                           helperText={touched.paymentmode && errors.paymentmode}
                           focused
