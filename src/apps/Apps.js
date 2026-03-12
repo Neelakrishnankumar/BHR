@@ -201,6 +201,7 @@ import EditSopCheckList from "./pages/SOP/EditCheckList";
 import AnnexureForm1 from "./pages/SOP/AnnexureForm1";
 import AnnexureForm2 from "./pages/SOP/AnnexureForm2";
 import ScoreBoard from "./pages/SkillGlow/ScoreBoard";
+import Editdoctype from "./pages/HR/Editdocumenttype";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -1269,6 +1270,11 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditContracts In/:id/:Mode"
                     element={<EditContractsin />}
+                  />
+                  
+                  <Route
+                    path="/:accessID/:screenName/EditDocument/:id/:Mode"
+                    element={<Editdoctype />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditContracts Out/:id/:Mode"
