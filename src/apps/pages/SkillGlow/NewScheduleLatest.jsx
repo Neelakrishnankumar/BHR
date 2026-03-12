@@ -577,14 +577,17 @@ const NewScheduleLatest = () => {
               <DeleteIcon
                 style={{
                   color: "#e74c3c",
-                  opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+                  // opacity: params.row.STATUS === "Not Attended" ? 1 : 0.3,
+                  opacity: params.row.STATUS === "Scheduled" ? 1 : 0.3,
                 }}
               />
             }
             label="Delete"
-            disabled={params.row.STATUS !== "Not Attended"}
+            // disabled={params.row.STATUS !== "Not Attended"}
+            disabled={params.row.STATUS !== "Scheduled"}
             onClick={
-              params.row.STATUS === "Not Attended"
+              // params.row.STATUS === "Not Attended"
+              params.row.STATUS === "Scheduled"
                 ? handleDeleteClick(params.row)
                 : undefined
             }

@@ -28,6 +28,7 @@ import {
   fetchApidata,
   getFetchData,
   OHPaymentUpdateController,
+  PartyOrderPendingGet,
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
@@ -36,10 +37,16 @@ import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { formGap } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridRowHeight, formGap } from "../../../ui-components/utils";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Rating from "@mui/material/Rating";
 import * as Yup from "yup";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { InputAdornment } from "@mui/material";
+import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { dataGridHeight } from "../../../ui-components/global/utils";
+import { useTheme } from "@emotion/react";
+import { tokens } from "../../../Theme";
 
 // import CryptoJS from "crypto-js";
 const EditOHPayment = () => {
@@ -73,6 +80,14 @@ const EditOHPayment = () => {
   console.log("🚀 ~ EditOrderitem ~ PartyRecordID:", PartyRecordID);
   const [validationSchema, setValidationSchema] = useState(null);
   const [errorMsgData, setErrorMsgData] = useState(null);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [pageSize, setPageSize] = React.useState(10);
+
+  const [showDueGrid, setShowDueGrid] = useState(false);
+  const [dueRows, setDueRows] = useState([]);
+  const [dueLoading, setDueLoading] = useState(false);
+
 
   useEffect(() => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
@@ -104,6 +119,135 @@ const EditOHPayment = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, []);
+
+
+  useEffect(() => {
+    const fetchDueList = async () => {
+      try {
+        setDueLoading(true);
+
+        const response = await dispatch(
+          PartyOrderPendingGet({
+            CompanyID: CompanyID,
+            PartyID: PartyRecordID,
+            OrderID: recID,
+          })
+        );
+
+        if (response.payload?.Data) {
+          setDueRows(response.payload.Data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setDueLoading(false);
+      }
+    };
+
+    fetchDueList();
+  }, [location.key]);
+
+
+  // const fetchDueDetails = async () => {
+  //   try {
+  //     setDueLoading(true);
+
+  //     const response = await dispatch(
+  //       PartyOrderPendingGet({
+  //         CompanyID: CompanyID,
+  //         PartyID: PartyRecordID,
+  //         OrderID: recID
+  //       })
+  //     );
+
+  //     if (response.payload?.Data) {
+  //       setDueRows(response.payload.Data);
+  //       setShowDueGrid(true);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setDueLoading(false);
+  //   }
+  // };
+
+
+  const Sprintcolumns = [
+    { field: "SLNO", headerName: "SL#", width: 40 },
+    {
+      headerName: "Order Date",
+      field: "OrderDate",
+      // type: "date",
+      width: "100",
+      align: "center",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Order Number",
+      field: "Code",
+      width: "200",
+      align: "left",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Total Amount",
+      field: "TotalPrice",
+      width: "100",
+      align: "right",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Pending Amount",
+      field: "PendingAmount",
+      width: "100",
+      align: "right",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Already Paid",
+      field: "AlreadyPaid",
+      width: "100",
+      align: "right",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+    {
+      headerName: "Status",
+      field: "Status",
+      width: "100",
+      align: "left",
+      headerAlign: "center",
+      hide: false,
+      editable: false,
+    },
+
+  ];
+
+  function Custombar() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>List of Pending Orders</Typography>
+        </Box>
+        <GridToolbarQuickFilter />
+      </GridToolbarContainer>
+    );
+  }
   // *************** INITIALVALUE  *************** //
   const currentDate = new Date().toISOString().split("T")[0];
   // Extract default API data safely
@@ -276,48 +420,63 @@ const EditOHPayment = () => {
   //     toBePaid,
   //   };
   // };
-const calculatePayable = (values) => {
-  const netPayable =
-    Number(values.delivercharges || 0) + Number(values.totalprice || 0);
+  const calculatePayable = (values) => {
+    const netPayable =
+      Number(values.delivercharges || 0) + Number(values.totalprice || 0);
 
-  const balance = Number(values.PartyBalance || 0);
-  const alreadyPaid = Number(values.AlreadyPaidAmount || 0);
-  const paidAmount = Number(values.paidamount || 0); //USER INPUT
+    const balance = Number(values.PartyBalance || 0);
+    const alreadyPaid = Number(values.AlreadyPaidAmount || 0);
+    const paidAmount = Number(values.paidamount || 0); //USER INPUT
 
-  let totalPayable = 0;
+    // let totalPayable = Number(values.PartyBalance || 0);
+    let totalPayable = netPayable - balance;
+    // Scenario 1: Advance available
+    // if (balance > 0) {
+    //   totalPayable = netPayable - balance;
+    // }
 
-  // Scenario 1: Advance available
-  if (balance > 0) {
-    totalPayable = netPayable - balance;
-  }
+    // Scenario 2: Previous due
+    // else if (balance < 0) {
+    //   totalPayable = netPayable + Math.abs(balance);
+    // }
 
-  // Scenario 2: Previous due
-  else if (balance < 0) {
-    totalPayable = netPayable + Math.abs(balance);
-  }
+    // Scenario 3: No balance
+    // else {
+    //   totalPayable = Number(values.PartyBalance || 0);
+    // }
 
-  // Scenario 3: No balance
-  else {
-    totalPayable = netPayable;
-  }
+    // Subtract already paid
+    // totalPayable = totalPayable - alreadyPaid;
 
-  // Subtract already paid
-  totalPayable = totalPayable - alreadyPaid;
+    // Prevent negative payable
+    // if (totalPayable < 0) {
+    //   totalPayable = 0;
+    // }
 
-  // Prevent negative payable
-  if (totalPayable < 0) {
-    totalPayable = 0;
-  }
+    // Remaining to be paid after current payment
+    let toBePaid = totalPayable - paidAmount;
+    // if (balance > 0) {
+    //   // toBePaid = Math.abs(totalPayable - paidAmount);
+    //   toBePaid = totalPayable - paidAmount;
+    // }
+    // else {
+    //   // toBePaid = Math.abs(totalPayable + paidAmount);
+    //   // toBePaid = totalPayable + paidAmount;
+    //   toBePaid = totalPayable - paidAmount;
+    // }
 
-  // Remaining to be paid after current payment
-  const toBePaid = totalPayable - paidAmount;
+    // const remainingBalance = Math.abs(balance - paidAmount);
 
-  return {
-    netPayable,
-    totalPayable,
-    toBePaid,
+    // const toBePaid =
+    //   remainingBalance < 0 ? Math.abs(remainingBalance) : 0;
+
+    return {
+      netPayable,
+      totalPayable,
+      toBePaid,
+      balance
+    };
   };
-};
   const Fnsave = async (values, del, override = {}) => {
     // let action = mode === "A" ? "insert" : "update";
     const partyBalance = Number(values.PartyBalance || 0);
@@ -714,6 +873,20 @@ const calculatePayable = (values) => {
                                 fontWeight: 600,
                               },
                             },
+
+                            // endAdornment:
+                            //   // Number(values.PartyBalance) < 0 && (
+                            //     <InputAdornment position="end">
+                            //       <Tooltip title="View Due Details">
+                            //         <IconButton
+                            //           size="small"
+                            //           onClick={fetchDueDetails}
+                            //         >
+                            //           <InfoOutlinedIcon color="error" />
+                            //         </IconButton>
+                            //       </Tooltip>
+                            //     </InputAdornment>
+                            // ),
                           }}
                           autoFocus
                         />
@@ -721,12 +894,26 @@ const calculatePayable = (values) => {
                           label="Total Payable"
                           variant="standard"
                           focused
-                          value={totalPayable.toFixed(2)}
+                          value={Math.abs(totalPayable.toFixed(2))}
                           InputProps={{
                             inputProps: {
                               style: { textAlign: "right" },
                             },
                           }}
+                        //  InputProps={{
+                        //   readOnly: true,
+                        //   inputProps: {
+                        //     style: {
+                        //       textAlign: "right",
+                        //       color:
+                        //         Number(values.PartyBalance) < 0
+                        //           ? "#d32f2f"
+                        //           : // ? "#db4f4a"
+                        //           "#2e7d32", // red : green
+                        //       fontWeight: 600,
+                        //     },
+                        //   },
+                        // }}
                         />
 
                         <TextField
@@ -1081,6 +1268,82 @@ const calculatePayable = (values) => {
               );
             }}
           </Formik>
+
+          {!dueLoading && dueRows.length > 0 && (
+            <Paper elevation={3} sx={{ margin: "10px" }}>
+              <Box m="5px">
+                <Box
+                  m="5px 0 0 0"
+                  height={dataGridHeight}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#D3D3D3",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      },
+                    }}
+                    rows={dueRows}
+                    columns={Sprintcolumns}
+                    loading={dueLoading}
+                    //rowModesModel={rowModesModel}
+                    getRowId={(row) => row.RecordID}
+                    editMode="cell"
+                    disableRowSelectionOnClick
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    components={{
+                      Toolbar: Custombar,
+                    }}
+                    // componentsProps={{
+                    //   toolbar: { setRows, setRowModesModel },
+                    // }}
+                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                    pagination
+                  />
+                </Box>
+              </Box>
+            </Paper>
+          )}
         </Paper>
       ) : (
         false

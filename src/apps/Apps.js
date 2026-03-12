@@ -202,6 +202,7 @@ import AnnexureForm1 from "./pages/SOP/AnnexureForm1";
 import AnnexureForm2 from "./pages/SOP/AnnexureForm2";
 import ScoreBoard from "./pages/SkillGlow/ScoreBoard";
 import Editdoctype from "./pages/HR/Editdocumenttype";
+import BatchTimeLine from "./pages/SOP/BatchTimeline";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -1379,6 +1380,11 @@ function App() {
                   <Route
                     path="/Secondarylistview/:accessID2/SopDocument/:parentID1/Booklet/:accessID1/:parentID2/SOPBatch/:accessID/:parentID3"
                     element={<ListviewSecondary />}
+                  />
+                    {/* SOP DOCUMENT LIST - TR335 TIMELINE */}
+                  <Route
+                    path="/Secondarylistview/:accessID2/SopDocument/:parentID1/Booklet/:accessID1/:parentID2/SOPBatch/:accessID/:parentID3/TimeLine/:id"
+                    element={<BatchTimeLine />}
                   />
                     {/* SOP CHECKLIST LIST */}
                   <Route
