@@ -318,6 +318,8 @@ const initialState = {
   EmpInventoryPostController:"",
   Scoreboard:"",
   RepaymentScheduleGet:"",
+  PartypendingorderlistgetController:"",
+  SopTimeLineController:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -504,6 +506,8 @@ export const getUrlSlice = createSlice({
       state.EmpInventoryPostController = APIurl + "EmpInventoryPostController.php";
       state.Scoreboard = APIurl + "ScoreBoardChartController.php";
       state.RepaymentScheduleGet = APIurl + "RepaymentScheduleGet.php";
+      state.PartypendingorderlistgetController = APIurl + "PartypendingorderlistgetController.php";
+      state.SopTimeLineController = APIurl + "SopTimeLineController.php";
     },
   },
 });

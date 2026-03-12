@@ -23,6 +23,7 @@ import Resizer from "react-image-file-resizer";
 import store from "../../../index";
 import {
   fileUpload,
+  fnFileUpload,
   fnImageUpload,
   imageUpload,
 } from "../../../store/reducers/Imguploadreducer";
@@ -46,8 +47,9 @@ import {
   VendorRegisterFetchData,
   VendorDefaultPUTdata,
   VendorDefaultFetchData,
+  explorePostData,
 } from "../../../store/reducers/Formapireducer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
@@ -58,7 +60,13 @@ import {
   CheckinAutocomplete,
   OrderItemAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
-
+import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter } from "@mui/x-data-grid";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { dataGridHeaderFooterHeight, dataGridRowHeight } from "../../../ui-components/utils";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ArrowBack, CloudUpload } from "@mui/icons-material";
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -72,6 +80,7 @@ const Editvendor = () => {
   const [loading, setLoading] = useState(false);
   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
   // Redux state
+  const [page, setPage] = React.useState(secondaryCurrentPage);
   const data = useSelector((state) => state.formApi.Data);
   const getLoading = useSelector((state) => state.formApi.getLoading);
   const state = location.state || {};
@@ -106,7 +115,9 @@ const Editvendor = () => {
   const [panImage, setPanImage] = useState("");
   const [ID1Image, setID1Image] = useState("");
   const [ID2Image, setID2Image] = useState("");
-
+  var secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
   const [panUrl, setPanUrl] = useState(null);
   const [gstImage, setGstImage] = useState("");
   const [gstUrl, setGstUrl] = useState(null);
@@ -124,6 +135,10 @@ const Editvendor = () => {
   const [validationSchema3, setValidationSchema3] = useState(null);
   const [validationSchema4, setValidationSchema4] = useState(null);
 
+  const [funMode, setFunMode] = useState("A");
+  const [laomode, setLaoMode] = useState("A");
+  const colors = tokens(theme.palette.mode);
+
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
       .then((res) => {
@@ -139,7 +154,7 @@ const Editvendor = () => {
           mobilenumber: Yup.string()
             .required(data.Party.mobilenumber)
             // .matches(/^[6-9]\d{9}$/, "Invalid Mobile Number"),
-             .matches(/^(\d{10,11})$/, "Enter a valid Mobile or Landline Number"),
+            .matches(/^(\d{10,11})$/, "Enter a valid Mobile or Landline Number"),
 
           emailid: Yup.string()
             .nullable()
@@ -241,6 +256,72 @@ const Editvendor = () => {
     }
   }, [location.key, recID, mode]);
 
+
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+
+  // let VISIBLE_FIELDS;
+
+  // if (show == "5") {
+  //   VISIBLE_FIELDS = [
+  //     "slno",
+  //     "NextRenewalRequiredDate",
+  //     "Description",
+  //     "Category",
+  //     "action",
+  //   ];
+  // }
+  const VISIBLE_FIELDS =
+    show === "6"
+      ? [
+        "slno",
+        "NextRenewalRequiredDate",
+        "Description",
+        "Category",
+        "action",
+      ]
+      : [];
+  const columns = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page * pageSize +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const [rowCount, setRowCount] = useState(0);
+  const [uploadFile, setUploadFile] = useState();
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
+
+  const [empLoaData, SetEmpLoaData] = useState({
+    recordID: "",
+    description: "",
+    category: "",
+    RenewalDate: "",
+    personal: false,
+    renewal: false,
+    Attachment: "",
+  });
   if (!data && getLoading) {
     return <LinearProgress />;
   }
@@ -446,6 +527,17 @@ const Editvendor = () => {
         dispatch(VendorDefaultFetchData({ get: "", recID }));
       }
     }
+    if (event.target.value == "5") {
+      dispatch(
+        fetchExplorelitview(
+          "TR210",
+          "Attachment",
+          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          ""
+        )
+      );
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
     if (event.target.value == "1") {
       dispatch(PartyContactget({ VendorID: recID }));
     }
@@ -454,6 +546,82 @@ const Editvendor = () => {
       dispatch(PartyBankget({ VendorID: recID }));
     }
   };
+
+
+  const changeHandler = async (event) => {
+    setUploading(true);   // Start loader
+
+    setSelectedFile(event.target.files[0]);
+
+    console.log(event.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    formData.append("type", "images");
+
+    const fileData = await dispatch(fnFileUpload(formData));
+    var filePath = store.getState().globalurl.attachmentUrl + uploadFile
+
+    console.log("fileData" + JSON.stringify(fileData));
+    setUploadFile(fileData.payload.apiResponse);
+
+    setUploading(false);  // Stop loader
+  };
+
+  const fnViewFile = (values) => {
+    const baseUrl = store.getState().globalurl.attachmentUrl;
+
+    const fileName = uploadFile || values.Attachment; // ✅ KEY FIX
+
+    console.log("Final fileName:", fileName);
+
+    if (!fileName) {
+      toast.error("No file to view");
+      return;
+    }
+
+    const encodedFileName = encodeURIComponent(fileName);
+    const filePath = `${baseUrl}${encodedFileName}`;
+
+    console.log("Opening:", filePath);
+
+    window.open(filePath, "_blank");
+  };
+  function Employee() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>
+            {show == "5"
+              ? "List of Documents"
+              : ""
+            }
+          </Typography>
+          {show != "20" && (<Typography variant="h5">{`(${rowCount})`}</Typography>)}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          <Tooltip title="ADD">
+            <IconButton type="reset">
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
   // Page params
 
   const InitialValue = {
@@ -789,6 +957,109 @@ const Editvendor = () => {
     }
   };
 
+
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
+    setFunMode(mode);
+    setLaoMode(mode);
+
+    if (mode == "A") {
+      SetEmpLoaData({
+        description: "",
+        Attachment: "",
+        recordID: "",
+        category: "",
+        RenewalDate: "",
+        personal: false,
+        renewal: false,
+      });
+    } else {
+
+      if (field == "action") {
+        SetEmpLoaData({
+          description: rowData.Description,
+          recordID: rowData.RecordID,
+          category: rowData.Category,
+          RenewalDate: rowData.NextRenewalRequiredDate,
+          personal: rowData.Personal,
+          renewal: rowData.RenewalRequired,
+          Attachment: rowData.Attachment,
+        });
+      }
+    }
+    console.log(selectCellRowData, "Itemservices");
+  };
+
+
+  const AttachmentInitialValues = {
+    code: data.Code,
+    description: data.Name,
+    LoaDescription: empLoaData.description,
+    personal: empLoaData.personal === "Y" ? true : false,
+    renewal: empLoaData.renewal === "Y" ? true : false,
+    // category: Data.Category,
+    Attachment: empLoaData.Attachment || "",
+    category:
+      empLoaData.category == "Education"
+        ? "EC"
+        : empLoaData.category == "Insurance "
+          ? "IS"
+          : empLoaData.category == "Award "
+            ? "AD"
+            : empLoaData.category == "Certificate "
+              ? "CT"
+              : empLoaData.category == "Warranty "
+                ? "WT"
+                : empLoaData.category == "Others "
+                  ? "OS"
+                  : "",
+    RenewalDate: empLoaData.RenewalDate || "",
+    Sortorder: "",
+  };
+  const FnAttachment = async (values, resetForm, del) => {
+    let action =
+      laomode === "A" && !del
+        ? "insert"
+        : laomode === "E" && del
+          ? "harddelete"
+          : "update";
+
+    console.log(values);
+
+    const idata = {
+      RecordID: empLoaData.recordID,
+      EmployeeID: recID,
+      Description: values.LoaDescription,
+      //  ImageName: ImageName ? ImageName:Data.ImageName,
+      Attachment: uploadFile || values.Attachment || "",
+      Personal: values.personal === true ? "Y" : "N",
+      RenewalRequired: values.renewal === true ? "Y" : "N",
+      Category: values.category,
+      NextRenewalRequiredDate: values.RenewalDate,
+      Sortorder: 0,
+      CompanyID,
+    };
+    const response = await dispatch(
+      explorePostData({ accessID: "TR210", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      dispatch(
+        fetchExplorelitview(
+          "TR210",
+          "List of Documents",
+          `EmployeeID=${recID}`,
+          ""
+        )
+      );
+      resetForm();
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
+
+
   const fnLogOut = (props) => {
     Swal.fire({
       title: errorMsgData.Warningmsg[props],
@@ -809,6 +1080,8 @@ const Editvendor = () => {
       }
     });
   };
+
+
 
   return (
     <React.Fragment>
@@ -891,6 +1164,17 @@ const Editvendor = () => {
                 ) : (
                   false
                 )}
+                {show == "5" ? (
+                  <Typography
+                    variant="h5"
+                    color="#0000D1"
+                    sx={{ cursor: "default" }}
+                  >
+                    List Of Documents
+                  </Typography>
+                ) : (
+                  false
+                )}
               </Breadcrumbs>
             </Box>
           </Box>
@@ -911,6 +1195,8 @@ const Editvendor = () => {
                   <MenuItem value={4}>Default Settings</MenuItem>
                   <MenuItem value={2}>Bank Details</MenuItem>
                   <MenuItem value={1}>Contact Details</MenuItem>
+                  {/* <MenuItem value={5}>List Of Documents</MenuItem>
+                  <MenuItem value={6}>Unit</MenuItem> */}
                   {/* {initialValues.employeetype === "CI" ? (
                                               <MenuItem value={8}>Contracts In</MenuItem>
                                             ) : null}
@@ -3038,6 +3324,415 @@ const Editvendor = () => {
                 ) : (
                   false
                 )}
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+
+      {show == "5" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            // onSubmit={handleFormSubmit}
+            initialValues={AttachmentInitialValues}
+            // validationSchema={validationSchema5}
+            enableReinitialize={true}
+            onSubmit={(values, { resetForm, setFieldValue }) => {
+              if (
+                values.renewal &&
+                (!values.RenewalDate || values.RenewalDate === "00-00-0000")
+              ) {
+                toast.error("Renewal Date is Required");
+                return;
+              }
+              setTimeout(() => {
+                FnAttachment(values, resetForm, false, setFieldValue);
+              }, 100);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+                onReset={() => {
+                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                  resetForm();
+                }}
+              >
+                <Box>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    // gap="30px"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="Name"
+                        name="Name"
+                        value={values.description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Name"
+                        focused
+                      // inputProps={{ readOnly: true }}
+                      />
+
+                      <Box
+                        m="5px 0 0 0"
+                        //height={dataGridHeight}
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                            });
+                          }}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          components={{
+                            Toolbar: Employee,
+                          }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          loading={exploreLoading}
+                          componentsProps={{
+                            toolbar: {
+                              showQuickFilter: true,
+                              quickFilterProps: { debounceMs: 500 },
+                            },
+                          }}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                          }
+                        />
+                      </Box>
+                    </FormControl>
+
+                    <FormControl
+                      sx={{
+                        gap: formGap,
+                        mt: { xs: "opx", md: "150px" },
+                      }}
+                    >
+                      {/* <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="LoaDescription"
+                        name="LoaDescription"
+                        value={values.LoaDescription}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Description"
+                        sx={{
+                          //gridColumn: "span 2",
+                          backgroundColor: "#ffffff", // Set the background to white
+                          "& .MuiFilledInput-root": {
+                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
+                          },
+                        }}
+                        focused
+                        inputProps={{ tabIndex: "-1" }}
+                      /> */}
+                      <TextField
+                        label={
+                          <>
+                            Document Type
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        id="category"
+                        name="category"
+                        focused
+                        variant="standard"
+                        value={values.category}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        select
+                        error={!!touched.category && !!errors.category}
+                        helperText={touched.category && errors.category}
+                      >
+                        <MenuItem value="EC">PDF</MenuItem>
+                        <MenuItem value="AD">PPT</MenuItem>
+                        <MenuItem value="CT">Excel</MenuItem>
+                        <MenuItem value="CT">Image</MenuItem>
+                      </TextField>
+                      <TextField
+                        label={
+                          <>
+                            Document Category
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        id="category"
+                        name="category"
+                        focused
+                        variant="standard"
+                        value={values.category}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        select
+                        error={!!touched.category && !!errors.category}
+                        helperText={touched.category && errors.category}
+                      >
+                        <MenuItem value="EC">Education</MenuItem>
+                        <MenuItem value="AD">Award</MenuItem>
+                        <MenuItem value="CT">Certificate</MenuItem>
+                        <MenuItem value="IS">Insurance</MenuItem>
+                        <MenuItem value="WT">Warranty</MenuItem>
+                        <MenuItem value="OS">Others</MenuItem>
+                      </TextField>
+                      {/* <TextField
+                        label={
+                          <>
+                            Document
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        id="category"
+                        name="category"
+                        focused
+                        variant="standard"
+                        value={values.category}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        select
+                        error={!!touched.category && !!errors.category}
+                        helperText={touched.category && errors.category}
+                      >
+                        <MenuItem value="EC">Education</MenuItem>
+                        <MenuItem value="AD">Award</MenuItem>
+                        <MenuItem value="CT">Certificate</MenuItem>
+                        <MenuItem value="IS">Insurance</MenuItem>
+                        <MenuItem value="WT">Warranty</MenuItem>
+                        <MenuItem value="OS">Others</MenuItem>
+                      </TextField> */}
+
+
+                      <FormControl
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+
+
+                      </FormControl>
+
+
+
+                      <Box
+                        display="flex"
+                        justifyContent="end"
+                        padding={1}
+                        gap={2}
+                      >
+
+                        <Tooltip title="Please upload a file">
+                          <IconButton
+                            size="small"
+                            color="info"
+                            aria-label="upload picture"
+                            component="label"
+                            disabled={uploading}
+                          >
+                            <input
+                              hidden
+                              type="file"
+                              onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
+
+                                changeHandler(e);
+                                setFieldValue("Attachment", file.name);
+                              }}
+                            />
+
+                            {uploading ? (
+                              <>
+                                <CircularProgress size={18} sx={{ mr: 1 }} />
+                                Uploading...
+                              </>
+                            ) : (
+                              <CloudUpload fontSize="medium" />
+                            )}
+
+                          </IconButton>
+                        </Tooltip>
+                        <Button
+                          variant="contained"
+                          onClick={() => fnViewFile(values)}
+                        >
+                          View
+                        </Button>
+
+                        {YearFlag == "true" ? (
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                          >
+                            Save
+                          </LoadingButton>
+                        ) : (
+                          <Button
+                            color="secondary"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Save
+                          </Button>
+                        )}
+                        {YearFlag == "true" ? (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={funMode == "A"}
+                            onClick={() => {
+                              Swal.fire({
+                                title: errorMsgData.Warningmsg.Delete,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  FnAttachment(
+                                    values,
+                                    resetForm,
+                                    "harddelete"
+                                  );
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Delete
+                          </Button>
+                        )}
+                        <Button
+                          type="reset"
+                          color="warning"
+                          variant="contained"
+                          onClick={() => {
+                            setScreen(0);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </FormControl>
+                  </Box>
+                </Box>
               </form>
             )}
           </Formik>

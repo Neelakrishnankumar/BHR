@@ -213,6 +213,17 @@ const initialState = {
   // ScoredashBoardGetStaus: "idle",
   // ScoredashBoardGetLoading: false,
   // ScoredashBoardGetError: null,
+
+    //PARTY ORDER PENDING GET
+  PartyOrderPendingGetdata: {},
+  PartyOrderPendingGetloading: false,
+  PartyOrderPendingGetStatus: "",
+
+
+    //SOP TIMELINE GET
+  SOPTimelinedata: {},
+  SOPTimelineloading: false,
+  SOPTimelinestatus: "",
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -4100,7 +4111,39 @@ export const getApiSlice = createSlice({
         state.SopEmpMappingControllerstatus = "Error";
         state.SopEmpMappingControllerloading = false;
       })
+ //PARTY ORDER PENDING - GET
+      .addCase(PartyOrderPendingGet.pending, (state, action) => {
+        state.PartyOrderPendingGetstatus = "idle";
+        state.PartyOrderPendingGetloading = true;
+      })
+      .addCase(PartyOrderPendingGet.fulfilled, (state, action) => {
+        state.PartyOrderPendingGetstatus = "success";
+        state.PartyOrderPendingGetloading = false;
+        state.PartyOrderPendingGetdata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(PartyOrderPendingGet.rejected, (state, action) => {
+        state.PartyOrderPendingGetstatus = "Error";
+        state.PartyOrderPendingGetloading = false;
+      })
 
+ //SOP TIMELINE - GET
+      .addCase(SopTimeLineController.pending, (state, action) => {
+        state.SOPTimelinestatus = "idle";
+        state.SOPTimelineloading = true;
+      })
+      .addCase(SopTimeLineController.fulfilled, (state, action) => {
+        state.SOPTimelinestatus = "success";
+        state.SOPTimelineloading = false;
+        state.SOPTimelinedata = action.payload.Data
+          ? action.payload.Data
+          : {};
+      })
+      .addCase(SopTimeLineController.rejected, (state, action) => {
+        state.SOPTimelinestatus = "Error";
+        state.SOPTimelineloading = false;
+      })
       //SCOREBOARD
       // .addCase(ScoredashBoard.pending, (state, action) => {
       //   // state.ScoredashBoardGetData = []
@@ -5807,3 +5850,42 @@ export const SopEmpMappingController = createAsyncThunk(
 //     }
 //   }
 // );
+
+export const PartyOrderPendingGet = createAsyncThunk(
+  "PartyOrderPendingGet/Get",
+  async ({ PartyID, CompanyID,OrderID }) => {
+    const url = store.getState().globalurl.PartypendingorderlistgetController;
+
+    const data = {
+      PartyID: PartyID,
+      CompanyID: CompanyID,
+      OrderID:OrderID
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+export const SopTimeLineController = createAsyncThunk(
+  "SopTimeLineController/Get",
+  async ({ SopID }) => {
+    const url = store.getState().globalurl.SopTimeLineController;
+
+    const data = {
+      SopID: SopID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);

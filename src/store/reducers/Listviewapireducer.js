@@ -106,6 +106,7 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -7212,6 +7213,23 @@ const SOPAction = ({ params, accessID, screenName, rights, AsmtType }) => {
 
         {accessID === "TR335" && (
           <>
+{params.row.BatchStatus !== "" && (
+          <Tooltip title="Timeline">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./TimeLine/${params.row.RecordID}`, {
+                    state: {
+                      ...state,
+                      BreadCrumb4: params.row.NameoftheProduct,
+                    },
+                  })
+                }
+              >
+                <TimelineOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
           </>
         )}
       </div>

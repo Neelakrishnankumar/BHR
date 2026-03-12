@@ -88,7 +88,7 @@ import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
-
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -4129,11 +4129,11 @@ const ListviewSecondary = () => {
           />
         </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
-          {accessID !== "TR335" && (
+          
           <Typography fontWeight={400} fontSize={15} lineHeight={1}
             mb={-2} >
             Legend
-          </Typography>)}
+          </Typography>
         </Box>
         {accessID == "TR001" ? (
           <Box
@@ -5064,7 +5064,11 @@ const ListviewSecondary = () => {
                   </Box>
                 ) : accessID == "TR335" ? (
                   <Box display="flex" flexDirection="row" padding="25px" gap="5px">
-                   
+                    <Chip
+                      icon={<TimelineOutlinedIcon color="primary" />}
+                      label="Timeline"
+                      variant="outlined"
+                    />
                   </Box>
                 ): accessID == "TR314" ? (
                   <Box display="flex" flexDirection="row" padding="25px" gap="5px">
