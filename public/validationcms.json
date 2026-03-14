@@ -26,6 +26,11 @@
     "CurrentStatus": "Please select the Status",
     "budget": "Please enter the Budget"
   },
+  "ProjectUnit": {
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name",
+    "OwnedBy": "Please select the Owned By"
+  },
   "LeadMarketingActivity": {
     "project": "Please select the Product",
     "Status": "Please select the Status",
