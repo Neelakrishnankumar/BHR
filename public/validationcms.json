@@ -9,7 +9,14 @@
     "Name": "Please enter the Name",
     "Loc": "Please enter the Location"
   },
-
+  "Doccategory": {
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name"
+  },
+  "Document": {
+    "Code": "Please enter the Code",
+    "Name": "Please enter the Name"
+  },
   "GeoLoc": {
     "code": "Please enter the Code",
     "name": "Please enter the Name"
@@ -53,7 +60,6 @@
     "frequency": "Please enter the Frequency",
     "OverheadType": "Please select the OverheadType",
     "Overhead": "Please select the Overhead"
-
   },
   "Overheadtype": {
     "code": "Please enter the Code",
@@ -112,7 +118,7 @@
     "MinOrderQty": "Please enter the Minimum Order Qty",
     "LeadTime": "Please enter the Lead Time (In days)",
     "AgreedPrice": "Please enter the Agreed Price",
-    "ReorderLevel":"Please enter the ReorderLevel"
+    "ReorderLevel": "Please enter the ReorderLevel"
   },
   "Route": {
     "Description": "Please enter the Route Description"
@@ -369,7 +375,6 @@
     "Close": "Do you want to Close?",
     "Delete": "Do you want to Delete?",
     "Remove": "Do you want to remove this item?"
-
   },
   "Questions": {
     "Option1": "Please enter Option 1",
@@ -387,13 +392,13 @@
     "numbertype": "Option must be a number",
     "option": "Please enter the Option"
   },
-   "Salarycomp": {
+  "Salarycomp": {
     "Type": "Please select the Type",
     "Name": "Please enter the Name",
     "Category": "Please select the Category",
     "Policy": "Please enter the Policy"
   },
-  "Inventory":{
+  "Inventory": {
     "itemgroups": "Please select the Item Group",
     "itemcategory": "Please select the Item Category",
     "Grpitems": "Please select the Item"

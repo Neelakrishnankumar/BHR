@@ -201,8 +201,9 @@ import EditSopCheckList from "./pages/SOP/EditCheckList";
 import AnnexureForm1 from "./pages/SOP/AnnexureForm1";
 import AnnexureForm2 from "./pages/SOP/AnnexureForm2";
 import ScoreBoard from "./pages/SkillGlow/ScoreBoard";
-import Editdoctype from "./pages/HR/Editdocumenttype";
 import BatchTimeLine from "./pages/SOP/BatchTimeline";
+import Editdoccategory from "./pages/HR/Editdoccategory";
+import Editdocument from "./pages/HR/Editdocument";
 // import Editpayrollattendance from "./pages/Empolyee/Editpayrollattendance";
 
 function App() {
@@ -953,6 +954,10 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:parentID1/:Type"
                     element={<ListviewSecondary />}
                   />
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:DocumentID"
+                    element={<ListviewSecondary />}
+                  />
 
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Number"
@@ -974,6 +979,7 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:CusID/:secondaryAccessID/:InvoiceName/:InvType"
                     element={<ListviewSecondary />}
                   />
+                
                   <Route
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/:Desc/EditProforma%20Invoice/:id/:Mode/Editworkinprocess/:productID/:proformaID/:bomID/:proformaRecid"
                     element={<ListviewSecondary />}
@@ -1274,8 +1280,23 @@ function App() {
                   />
                   
                   <Route
-                    path="/:accessID/:screenName/EditDocument/:id/:Mode"
-                    element={<Editdoctype />}
+                    path="/:accessID/:screenName/EditDocument Category/:id/:Mode"
+                    element={<Editdoccategory />}
+                  />
+                   <Route
+
+                    // path="/Secondarylistview/:accessID/:screenName/:id1/:filtertype/EditDocument/:id/:Mode"
+                    // path="/Secondarylistview/:accessID/:screenName/:filtertype/EditDocument/:id/:Mode"
+                    path="/Secondarylistview/Document Category/:accessID/:screenname/:parentID1/EditDocument/:id/:Mode"
+                    element={<Editdocument />}
+                    // /Apps/Secondarylistview/Document%20Category/TR362/Document/1/EditDocument/-1/A
+                  />
+                  {/* /Apps/Secondarylistview/Document Category/TR362/Document/${params.row.RecordID} */}
+
+                  {/* DOCUMENT LIST */}
+                    <Route
+                    path="/Secondarylistview/Document Category/:accessID/:screenName/:parentID1"
+                    element={<ListviewSecondary />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditContracts Out/:id/:Mode"

@@ -138,6 +138,7 @@ const ListviewSecondary = () => {
   const [collapse, setcollapse] = React.useState(false);
   const [page, setPage] = React.useState(secondaryCurrentPage);
   var parentID = params.filtertype;
+  var DocumentID = params.DocumentID;
   var InvType = params.InvType;
   var OrderType = params.OrderType;
   var Code = params.Code;
@@ -309,6 +310,12 @@ const ListviewSecondary = () => {
   }
   else if (accessID == "TR318") {
     filter = `CompanyID = '${compID}' AND ItemGroupID='${parentID1}'`;
+  }
+  // else if (accessID == "TR362") {
+  //   filter = `CompanyID = '${compID}' AND DocumentCategoryID='${params.filtertype || 0}'`;
+  // }
+  else if (accessID == "TR362") {
+    filter = `CompanyID = '${compID}' AND DocumentCategoryID='${parentID1}'`;
   }
   else if (accessID == "TR027") {
     filter = `CompanyID = '${compID}' AND ClassificationID='${parentID || 0}'`;
@@ -1674,6 +1681,37 @@ const ListviewSecondary = () => {
                 sx={{ cursor: "default" }}
               >
                 List of Item Category
+              </Typography>
+            </Breadcrumbs>
+          </Box>
+        ) 
+        : accessID == "TR362" ? (
+          <Box display="flex" borderRadius="3px" alignItems="center">
+            <Breadcrumbs
+              maxItems={2}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  navigate("/Apps/TR361/Document%20Category", {
+                    state: {
+                      ...state,
+                    }
+                  });
+                }}
+              >
+                Document Category ({BreadCrumb1})
+              </Typography>
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+              >
+                Document
               </Typography>
             </Breadcrumbs>
           </Box>

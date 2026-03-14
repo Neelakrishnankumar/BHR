@@ -107,6 +107,7 @@ import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 const initialState = {
   rowData: [],
   columnData: [],
@@ -666,6 +667,7 @@ export const fetchListview =
         AccessID != "TR243" &&
         AccessID != "TR321" &&
         AccessID != "TR315" &&
+        AccessID != "TR362" &&
         AccessID != "TR316" &&
         AccessID != "TR317" &&
         AccessID != "TR318" &&
@@ -743,6 +745,7 @@ export const fetchListview =
       AccessID == "TR294" ||
       AccessID == "TR317" ||
       AccessID == "TR318" ||
+      AccessID == "TR362" ||
       AccessID == "TR027" ||
       AccessID == "TR319" ||
       AccessID == "TR335" ||
@@ -1821,6 +1824,7 @@ export const fetchListview =
             AccessID == "TR323" ||
             AccessID == "TR324" ||
             AccessID == "TR328" ||
+            AccessID == "TR361" ||
             AccessID == "TR319"
           ) {
             obj = {
@@ -6372,6 +6376,57 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
+         {accessID === "TR361" && (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(`./Edit${screenName}/${params.row.RecordID}/E`, {
+                    state: {
+                      ...state,
+                      BreadCrumb1: params.row.DocumentCategories,
+                      // DocumentCategories,
+                    },
+                  })
+                }
+              >
+                <ModeEditOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Document">
+              <IconButton
+                color="info"
+                size="small"
+                onClick={() =>
+                  navigate(
+                    `/Apps/Secondarylistview/Document Category/TR362/Document/${params.row.RecordID}`,
+                    {
+                      state: {
+                        ...state,
+                        BreadCrumb1: params.row.DocumentCategories,
+                      },
+                    },
+                  )
+                }
+                // onClick={() =>
+                //   navigate(
+                //     `/Apps/SecondarylistView/TR362/Document/${params.row.RecordID}`,
+                //     // {
+                //     //   state: {
+                //     //     ...state,
+                //     //     BreadCrumb1: params.row.ItemGroup,
+                //     //   },
+                //     // },
+                //   )
+                // }
+              >
+                <TextSnippetIcon />
+              </IconButton>
+            </Tooltip>
+        </>
+        )}
         {accessID === "TR330" && (
           <>
             <Tooltip title="Personnel">
@@ -6526,6 +6581,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
+       
         {accessID === "TR319" && (
           <>
             <Tooltip title="Edit">

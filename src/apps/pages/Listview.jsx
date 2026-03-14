@@ -80,7 +80,7 @@ import {
 } from "../../store/reducers/Formapireducer";
 import toast from "react-hot-toast";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import { Delete, Psychology, Category, PeopleAlt } from "@mui/icons-material";
+import { Delete, Psychology, Category, PeopleAlt, TextSnippet } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect } from "react";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -116,6 +116,7 @@ import OrderEnqProdandPartyExcel from "./pdf/OrderEnqProdandPartyExcel";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -4202,6 +4203,21 @@ const Listview = () => {
             <Chip
               icon={<CategoryOutlinedIcon color="primary" />}
               label="Item Category"
+              variant="outlined"
+            // sx={{ marginLeft: "50px" }}
+            />
+          </Box>
+        )
+        : accessID == "TR361" ? (
+          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+            <Chip
+              icon={<ModeEditOutlinedIcon color="primary" />}
+              label="Edit"
+              variant="outlined"
+            />
+            <Chip
+              icon={<TextSnippetIcon color="primary" />}
+              label="Document"
               variant="outlined"
             // sx={{ marginLeft: "50px" }}
             />

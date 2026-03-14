@@ -165,6 +165,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
 // const is003Subscription = SubscriptionCode.endsWith("003");
 // const is00123Subscription = ["001", "002", "003"].some(code =>
@@ -1161,23 +1162,23 @@ const Sidebars = () => {
         UGA_ACCESSIDS: "TR299",
 
       },
-      // {
-      //   name: "Document",
-      //   id: 43468,
-      //   url: "./TR508/Document/EditDocument/-1/A",
-      //   icon: (
-      //     <Tooltip title="Document">
-      //       <InventoryOutlinedIcon color="info" />
-      //     </Tooltip>
-      //   ),
-      //   UGA_ADD: true,
-      //   UGA_DEL: true,
-      //   UGA_MOD: true,
-      //   UGA_PRINT: true,
-      //   UGA_PROCESS: true,
-      //   UGA_VIEW: true,
-      //   UGA_ACCESSIDS: "TR315",
-      // },
+      {
+        name: "Document",
+        id: 43468,
+        url: "./TR361/Document Category",
+        icon: (
+          <Tooltip title="Document">
+            <FolderCopyIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        UGA_ADD: true,
+        UGA_DEL: true,
+        UGA_MOD: true,
+        UGA_PRINT: true,
+        UGA_PROCESS: true,
+        UGA_VIEW: true,
+        UGA_ACCESSIDS: "TR361",
+      },
       {
         name: "Settings",
         id: 95689,
