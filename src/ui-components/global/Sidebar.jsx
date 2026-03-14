@@ -745,6 +745,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR315",
           },
+
           {
             name: "Route",
             id: 43468,
@@ -1160,6 +1161,23 @@ const Sidebars = () => {
         UGA_ACCESSIDS: "TR299",
 
       },
+      // {
+      //   name: "Document",
+      //   id: 43468,
+      //   url: "./TR508/Document/EditDocument/-1/A",
+      //   icon: (
+      //     <Tooltip title="Document">
+      //       <InventoryOutlinedIcon color="info" />
+      //     </Tooltip>
+      //   ),
+      //   UGA_ADD: true,
+      //   UGA_DEL: true,
+      //   UGA_MOD: true,
+      //   UGA_PRINT: true,
+      //   UGA_PROCESS: true,
+      //   UGA_VIEW: true,
+      //   UGA_ACCESSIDS: "TR315",
+      // },
       {
         name: "Settings",
         id: 95689,
