@@ -14,6 +14,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
+  Breadcrumbs,
 } from "@mui/material";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -26,13 +28,14 @@ import { gradeSchema } from "../../Security/validation";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import {
+  explorePostData,
   fetchApidata,
   getFetchData,
   postApidata,
   postData,
 } from "../../../store/reducers/Formapireducer";
 import * as Yup from "yup";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { LoadingButton } from "@mui/lab";
 import Swal from "sweetalert2";
 import { useProSidebar } from "react-pro-sidebar";
@@ -42,7 +45,16 @@ import {
   CheckinAutocomplete,
   Employeeautocomplete,
   Productautocomplete,
+  ProjectVendor,
 } from "../../../ui-components/global/Autocomplete";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { GridToolbarContainer } from "@mui/x-data-grid";
+import { tokens } from "../../../Theme";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../../ui-components/utils";
+import { useTheme } from "@emotion/react";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
@@ -50,6 +62,7 @@ const Editproject = () => {
   const navigate = useNavigate();
   let params = useParams();
   const dispatch = useDispatch();
+  const theme = useTheme();
   var recID = params.id;
   var mode = params.Mode;
   // var accessID = params.accessID;
@@ -72,6 +85,18 @@ const Editproject = () => {
   const location = useLocation();
   const [errorMsgData, setErrorMsgData] = useState(null);
   const [validationSchema, setValidationSchema] = useState(null);
+  const [validationSchema2, setValidationSchema2] = useState(null);
+  let secondaryCurrentPage = parseInt(
+    sessionStorage.getItem("secondaryCurrentPage")
+  );
+  const [show, setScreen] = React.useState("0");
+  const [funMode, setFunMode] = useState("A");
+  const [laomode, setLaoMode] = useState("A");
+  const colors = tokens(theme.palette.mode);
+  const [page, setPage] = React.useState(secondaryCurrentPage);
+  const [pageSize, setPageSize] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -94,7 +119,17 @@ const Editproject = () => {
         }
 
         const schema = Yup.object().shape(schemaFields);
+        let schemaFields2 = {
+          Name: Yup.string().trim().required(data.ProjectUnit.Name),
+          OwnedBy: Yup.object().required(data.ProjectUnit.OwnedBy).nullable(),
+        };
+        if (CompanyAutoCode === "N") {
+          schemaFields2.Code = Yup.string().required(data.ProjectUnit.Code);
+        }
+        const schema2 = Yup.object().shape(schemaFields2);
+
         setValidationSchema(schema);
+        setValidationSchema2(schema2);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -107,6 +142,59 @@ const Editproject = () => {
   //     .nullable()
   //     .required("Owner is required"),
   // });
+
+  const screenChange = (event) => {
+    setScreen(event.target.value);
+    if (event.target.value == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID, get: "", recID }));
+      }
+    }
+    if (event.target.value == "1") {
+      dispatch(
+        fetchExplorelitview(
+          "TR363",
+          "Project Unit",
+          `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+          ""
+        )
+      );
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+
+    }
+    if (event.target.value == "2") {
+      dispatch(
+        fetchExplorelitview(
+          "TR364",
+          "Project Documents",
+          // `AND DOC_CMRECID = '${CompanyID}' AND (FIND_IN_SET ('${recID}', DOC_PRECID))`,
+          // `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+          `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_PRECID))`,
+          ""
+        )
+      );
+
+    }
+  };
+  const [UnitData, SetUnitData] = useState({
+    recordID: "",
+    description: "",
+    OwnedBy: null,
+    Comments: "",
+    sortOrder: 0,
+    disable: false,
+    Code: "",
+    Name: "",
+  });
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
   const InitialValue = {
     code: data.Code,
@@ -196,6 +284,177 @@ const Editproject = () => {
       toast.error(response.payload.Msg);
     }
   };
+  const VISIBLE_FIELDS =
+    show == "1"
+      ? [
+        "slno",
+        "Code",
+        "Name",
+        "OwnedBy",
+        "Comments",
+        "action",
+      ]
+      : show == "2"
+        ? [
+          "slno",
+          "Code",
+          "Documents",
+          // "Party",
+          // "Unit",
+          "action",
+        ] : [];
+  const columns = React.useMemo(() => {
+    let visibleColumns = explorelistViewcolumn.filter((column) =>
+      VISIBLE_FIELDS.includes(column.field)
+    );
+
+    if (VISIBLE_FIELDS.includes("slno")) {
+      const slnoColumn = {
+        field: "slno",
+        headerName: "SL#",
+        width: 50,
+        sortable: false,
+        filterable: false,
+        valueGetter: (params) =>
+          page * pageSize +
+          params.api.getRowIndexRelativeToVisibleRows(params.id) +
+          1,
+      };
+      visibleColumns = [slnoColumn, ...visibleColumns];
+    }
+
+    return visibleColumns;
+  }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+  const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
+    setFunMode(mode);
+    setLaoMode(mode);
+
+    if (mode == "A") {
+      SetUnitData({
+        recordID: "",
+        description: "",
+        OwnedBy: null,
+        Comments: "",
+        Code: "",
+        Name: "",
+        sortOrder: 0,
+        disable: false,
+      });
+    } else {
+
+      if (field == "action") {
+        SetUnitData({
+          recordID: rowData.RecordID,
+          description: rowData.description,
+          OwnedBy: rowData.OwnedByRecordID ? {
+            RecordID: rowData.OwnedByRecordID,
+            Code: rowData.OwnedByCode,
+            Name: rowData.OwnedByName,
+          } : null,
+          sortOrder: rowData.SortOrder,
+          Comments: rowData.Comments,
+          disable: rowData.Disable,
+          Code: rowData.Code,
+          Name: rowData.Name,
+        });
+      }
+    }
+  };
+
+  function Employee() {
+    return (
+      <GridToolbarContainer
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography>
+            {show == "1"
+              ? "List of Units"
+              : ""
+            }
+            {show == "2"
+              ? "List of Documents"
+              : ""
+            }
+          </Typography>
+          <Typography variant="h5">{`(${rowCount})`}</Typography>
+
+
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <GridToolbarQuickFilter />
+          {show != "2" && (
+            <Tooltip title="ADD">
+              <IconButton type="reset">
+                <AddOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
+  const UnitInitialValues = {
+    code: data.Code,
+    description: data.Name,
+    Code: UnitData.Code || "",
+    Name: UnitData.Name || "",
+    Comments: UnitData.Comments || "",
+    OwnedBy: UnitData.OwnedBy || null,
+    sortOrder: UnitData.sortOrder || 0,
+    disable: UnitData.disable === "Y" ? true : false,
+  };
+  const FnAttachment = async (values, resetForm, del) => {
+    let action =
+      laomode === "A" && !del
+        ? "insert"
+        : laomode === "E" && del
+          ? "harddelete"
+          : "update";
+
+    console.log(values);
+
+    const idata = {
+      ProjectID: recID || 0,
+      RecordID: UnitData.recordID || "-1",
+      CompanyID,
+      OwnedBy: values.OwnedBy ? values.OwnedBy.RecordID : 0 || null,
+      Code: values.Code || "",
+      Name: values.Name || "",
+      SortOrder: values.sortOrder || 0,
+      Comments: values.Comments || "",
+      Disable: values.disable === true ? "Y" : "N",
+      DeleteFlag: "N"
+    };
+    const response = await dispatch(
+      explorePostData({ accessID: "TR363", action, idata })
+    );
+    if (response.payload.Status == "Y") {
+      toast.success(response.payload.Msg);
+      dispatch(
+        fetchExplorelitview(
+          "TR363",
+          "Project Unit",
+          `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+          ""
+        )
+      );
+      resetForm();
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    } else {
+      toast.error(response.payload.Msg);
+    }
+  };
   const fnLogOut = (props) => {
     //   if(Object.keys(ref.current.touched).length === 0){
     //     if(props === 'Logout'){
@@ -239,12 +498,61 @@ const Editproject = () => {
                 <MenuOutlinedIcon />
               </IconButton>
             )}
-            <Typography variant="h5" color="#0000D1" sx={{ cursor: "default" }}>
-              Project
-            </Typography>
+            <Breadcrumbs
+              maxItems={3}
+              aria-label="breadcrumb"
+              separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+            >
+              <Typography
+                variant="h5"
+                color="#0000D1"
+                sx={{ cursor: "default" }}
+                onClick={() => {
+                  setScreen(0);
+                }}
+
+              >
+                Project
+              </Typography>
+              {show == "1" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  Units
+                </Typography>) : false}
+              {show == "2" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  List Of Documents
+                </Typography>) : false}
+            </Breadcrumbs>
           </Box>
 
           <Box display="flex">
+
+            {mode !== "A" ? (
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">Explore</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  value={show}
+                  label="Explore"
+                  onChange={screenChange}
+                >
+                  <MenuItem value={0}>Project</MenuItem>
+                  <MenuItem value={1}>Units</MenuItem>
+                  <MenuItem value={2}>List Of Documents</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              false
+            )}
             <Tooltip title="Close">
               <IconButton onClick={() => fnLogOut("Close")} color="error">
                 <ResetTvIcon />
@@ -259,7 +567,7 @@ const Editproject = () => {
         </Box>
       </Paper>
 
-      {!getLoading ? (
+      {(show == "0") ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
@@ -962,6 +1270,599 @@ const Editproject = () => {
               </form>
             )}
           </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+      {show == "1" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={UnitInitialValues}
+            validationSchema={validationSchema2}
+            enableReinitialize={true}
+            onSubmit={(values, { resetForm, setFieldValue }) => {
+              setTimeout(() => {
+                FnAttachment(values, resetForm, false, setFieldValue);
+              }, 100);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+                onReset={() => {
+                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                  resetForm();
+                }}
+              >
+                <Box>
+                  <Box
+                    display="grid"
+                    gap={formGap}
+                    padding={1}
+                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                    sx={{
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 2",
+                      },
+                    }}
+                  >
+
+                    <FormControl sx={{ gap: formGap }}>
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="code"
+                        name="code"
+                        value={values.code}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Code"
+                        focused
+                        InputProps={{
+                          readOnly: true
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={values.description}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Description"
+                        focused
+                        InputProps={{
+                          readOnly: true
+                        }}
+                      />
+
+                      <Box
+                        m="5px 0 0 0"
+                        height="50vh"
+                        sx={{
+                          "& .MuiDataGrid-root": {
+                            border: "none",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                          },
+                          "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[800],
+                            borderBottom: "none",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                          },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[800],
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                          },
+                          "& .odd-row": {
+                            backgroundColor: "",
+                            color: "", // Color for odd rows
+                          },
+                          "& .even-row": {
+                            backgroundColor: "#D3D3D3",
+                            color: "", // Color for even rows
+                          },
+                        }}
+                      >
+                        <DataGrid
+                          sx={{
+                            "& .MuiDataGrid-footerContainer": {
+                              height: dataGridHeaderFooterHeight,
+                              minHeight: dataGridHeaderFooterHeight,
+                            },
+                          }}
+                          rows={explorelistViewData}
+                          columns={columns}
+                          disableSelectionOnClick
+                          getRowId={(row) => row.RecordID}
+                          rowHeight={dataGridRowHeight}
+                          headerHeight={dataGridHeaderFooterHeight}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
+                          onCellClick={(params) => {
+                            selectCellRowData({
+                              rowData: params.row,
+                              mode: "E",
+                              field: params.field,
+                            });
+                          }}
+                          rowsPerPageOptions={[5, 10, 20]}
+                          pagination
+                          components={{
+                            Toolbar: Employee,
+                          }}
+                          onStateChange={(stateParams) =>
+                            setRowCount(stateParams.pagination.rowCount)
+                          }
+                          loading={exploreLoading}
+                          componentsProps={{
+                            toolbar: {
+                              showQuickFilter: true,
+                              quickFilterProps: { debounceMs: 500 },
+                            },
+                          }}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0
+                              ? "odd-row"
+                              : "even-row"
+                          }
+                        />
+                      </Box>
+                    </FormControl>
+
+                    <FormControl
+                      sx={{
+                        gap: formGap,
+                        mt: { xs: "opx", md: "150px" },
+                      }}
+                    >
+
+                      {CompanyAutoCode == "Y" ? (
+                        <TextField
+                          name="Code"
+                          type="text"
+                          id="Code"
+                          label="Code"
+                          placeholder="Auto"
+                          variant="standard"
+                          focused
+                          // required
+                          value={values.Code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.Code && !!errors.Code}
+                          helperText={touched.Code && errors.Code}
+                          sx={{
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ",
+                            },
+                          }}
+                          InputProps={{ readOnly: true }}
+                        // autoFocus
+                        />
+                      ) : (
+                        <TextField
+                          name="Code"
+                          type="text"
+                          id="Code"
+                          label={
+                            <>
+                              Code
+                              <span style={{ color: "red", fontSize: "20px" }}>
+                                *
+                              </span>
+                            </>
+                          }
+                          variant="standard"
+                          focused
+                          // required
+                          value={values.Code}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.Code && !!errors.Code}
+                          helperText={touched.Code && errors.Code}
+                          sx={{
+                            backgroundColor: "#ffffff",
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ",
+                            },
+                          }}
+                          autoFocus
+                        />
+                      )}
+
+                      <TextField
+                        disabled={mode == "V"}
+                        name="Name"
+                        type="text"
+                        id="Name"
+                        label={
+                          <>
+                            Name
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="standard"
+                        focused
+                        value={values.Name}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Name && !!errors.Name}
+                        helperText={touched.Name && errors.Name}
+                        autoFocus
+                      />
+                      <ProjectVendor
+                        name="OwnedBy"
+                        // label="Owned By"
+                        label={
+                          <>
+
+                            Owned By
+                            <span style={{ color: "red", fontSize: "20px" }}>
+                              *
+                            </span>
+                          </>
+                        }
+                        variant="outlined"
+                        id="OwnedBy"
+                        value={values.OwnedBy}
+                        onChange={(newValue) => {
+                          setFieldValue(
+                            "OwnedBy",
+                            newValue
+                              ? {
+                                RecordID: newValue.RecordID,
+                                Code: newValue.Code,
+                                Name: newValue.Name,
+                              }
+                              : null
+                          );
+                        }}
+                        error={!!touched.OwnedBy && !!errors.OwnedBy}
+                        helperText={touched.OwnedBy && errors.OwnedBy}
+
+                        url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Vendor","Filter":"parentID='${CompanyID}'","Any":""}}`}
+                      />
+                      <TextField
+                        label="Comments"
+                        id="Comments"
+                        name="Comments"
+                        focused
+                        variant="standard"
+                        value={values.Comments}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.Comments && !!errors.Comments}
+                        helperText={touched.Comments && errors.Comments}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="standard"
+                        type="number"
+                        label="Sort Order"
+                        value={values.sortOrder}
+                        id="sortOrder"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="sortOrder"
+                        sx={{ background: "" }}
+                        focused
+                        onWheel={(e) => e.target.blur()}
+                        onInput={(e) => {
+                          e.target.value = Math.max(0, parseInt(e.target.value))
+                            .toString()
+                            .slice(0, 8);
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            style: { textAlign: "right" },
+                          },
+                        }}
+                      />
+
+                      <Box>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name="disable"
+                              checked={values.disable}
+                              onChange={handleChange}
+                            />
+                          }
+                          label="Disable"
+
+                        />
+                      </Box>
+                      <Box
+                        display="flex"
+                        justifyContent="end"
+                        padding={1}
+                        gap={2}
+                      >
+                        {YearFlag == "true" ? (
+                          <LoadingButton
+                            color="secondary"
+                            variant="contained"
+                            type="submit"
+                            loading={isLoading}
+                          >
+                            Save
+                          </LoadingButton>
+                        ) : (
+                          <Button
+                            color="secondary"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Save
+                          </Button>
+                        )}
+                        {YearFlag == "true" ? (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={funMode == "A"}
+                            onClick={() => {
+                              Swal.fire({
+                                title: errorMsgData.Warningmsg.Delete,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Confirm",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  FnAttachment(
+                                    values,
+                                    resetForm,
+                                    "harddelete"
+                                  );
+                                } else {
+                                  return;
+                                }
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        ) : (
+                          <Button
+                            color="error"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Delete
+                          </Button>
+                        )}
+                        <Button
+                          type="reset"
+                          color="warning"
+                          variant="contained"
+                          onClick={() => {
+                            setScreen(0);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </FormControl>
+                  </Box>
+                </Box>
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
+      )}
+
+      {show == "2" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={UnitInitialValues}
+            // validationSchema={validationSchema2}
+            enableReinitialize={true}
+          // onSubmit={(values, { resetForm, setFieldValue }) => {
+          //   setTimeout(() => {
+          //     FnAttachment(values, resetForm, false, setFieldValue);
+          //   }, 100);
+          // }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+                onReset={() => {
+                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                  resetForm();
+                }}
+              >
+
+
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="code"
+                    name="code"
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Code"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="description"
+                    name="description"
+                    value={values.description}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Description"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                  {/* </FormControl> */}
+                </Box>
+
+                <Box
+                  m="5px 0 0 0"
+                  // height="50vh"
+                  height={dataGridHeight}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#D3D3D3",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      },
+                    }}
+                    rows={explorelistViewData}
+                    columns={columns}
+                    disableSelectionOnClick
+                    getRowId={(row) => row.RecordID}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) =>
+                      setPageSize(newPageSize)
+                    }
+                    onCellClick={(params) => {
+                      selectCellRowData({
+                        rowData: params.row,
+                        mode: "E",
+                        field: params.field,
+                      });
+                    }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    pagination
+                    components={{
+                      Toolbar: Employee,
+                    }}
+                    onStateChange={(stateParams) =>
+                      setRowCount(stateParams.pagination.rowCount)
+                    }
+                    loading={exploreLoading}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      },
+                    }}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                  />
+                </Box>
+
+
+
+              </form>
+            )}
+          </Formik>
+          <Box display="flex" justifyContent="end" padding={1} gap="20px">
+            <Button
+              color="warning"
+              variant="contained"
+              onClick={() => {
+                setScreen("0");
+              }}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Paper>
       ) : (
         false

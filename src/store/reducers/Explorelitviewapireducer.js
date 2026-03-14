@@ -20,6 +20,10 @@ import OpenInBrowserOutlinedIcon from "@mui/icons-material/OpenInBrowserOutlined
 import TimelineIcon from "@mui/icons-material/Timeline";
 import workinProgress from "../../assets/img/wip.png";
 import DescriptionIcon from "@mui/icons-material/Description";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import toast from "react-hot-toast";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
 const initialState = {
   explorerowData: [],
   explorecolumnData: [],
@@ -47,10 +51,10 @@ export const userGroupExplore = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const getFetchUserData = createAsyncThunk(
@@ -65,7 +69,7 @@ export const getFetchUserData = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
 
     const response = await axios.post(url, data, {
@@ -76,10 +80,10 @@ export const getFetchUserData = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 
 export const packingListView = createAsyncThunk(
@@ -98,7 +102,7 @@ export const packingListView = createAsyncThunk(
 
     console.log(
       "🚀 ~ file: Formapireducer.js:225 ~ data:",
-      JSON.stringify(idata)
+      JSON.stringify(idata),
     );
     idata = JSON.stringify(idata);
     const response = await axios.get(url, {
@@ -112,10 +116,10 @@ export const packingListView = createAsyncThunk(
     });
     console.log(
       "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
-      response
+      response,
     );
     return response.data;
-  }
+  },
 );
 export const getApiSlice = createSlice({
   name: "exploreApi",
@@ -130,7 +134,7 @@ export const getApiSlice = createSlice({
     packingRowUpdate(state, action) {
       console.log(
         "🚀 ~ file: Explorelitviewapireducer.js:96 ~ packingRowUpdate ~ action:",
-        action
+        action,
       );
       switch (action.payload.type) {
         case "INSERTED":
@@ -147,7 +151,7 @@ export const getApiSlice = createSlice({
     addtionalQtyCal(state, action) {
       console.log(
         "🚀 ~ file: Explorelitviewapireducer.js:138 ~ addtionalQtyCal ~ action:",
-        action
+        action,
       );
 
       // for(let row of action.payload.listviewData){
@@ -257,8 +261,8 @@ export const getApiSlice = createSlice({
 
         state.Data = action.payload.Data;
 
-        if(action.payload.Data.Groupaccess){
-        state.explorerowData = action.payload.Data.Groupaccess
+        if (action.payload.Data.Groupaccess) {
+          state.explorerowData = action.payload.Data.Groupaccess;
         }
 
         // state.explorecolumnData= action.payload.columndata
@@ -302,6 +306,9 @@ export const fetchExplorelitview =
       AccessID !== "2153" &&
       AccessID !== "TR350" &&
       AccessID !== "TR210" &&
+      AccessID !== "TR363" &&
+      AccessID !== "TR362" &&
+      AccessID !== "TR364" &&
       AccessID !== "TR219" &&
       AccessID !== "TR086" &&
       AccessID !== "TR242" &&
@@ -485,6 +492,69 @@ export const fetchExplorelitview =
               };
 
               exploreData.Data.columns.push(obj);
+            }
+
+            if (AccessID == "TR362" || AccessID === "TR364") {
+              var obj = {};
+              var currentRow = "";
+
+              obj = {
+                field: "action",
+                headerName: "Action",
+                width: 70,
+                align: "center",
+                headerAlign:"center",
+                sortable: false,
+                disableColumnMenu: true,
+                renderCell: (params) => {
+                  return (
+                    <Stack direction="row">
+                      <Tooltip title="Open Document">
+                        <IconButton
+                          component="a"
+                          onClick={() => {
+
+                            if(!params.row.Attachments){
+                              toast.error("No Document Avaliable!");
+                              return;
+                            }
+                            const fileUrl =
+                              `${store.getState().globalurl.attachmentUrl}/${params.row.Attachments}`;
+
+                            // 👇 Detect file type
+                            const lower = fileUrl.toLowerCase();
+
+                            let viewUrl = fileUrl;
+
+                            // 👉 For DOC/DOCX use Office Online Viewer
+                            if (
+                              lower.endsWith(".doc") ||
+                              lower.endsWith(".docx")
+                            ) {
+                              viewUrl =
+                                "https://view.officeapps.live.com/op/view.aspx?src=" +
+                                encodeURIComponent(fileUrl);
+                            }
+
+                            // 👉 Open in new tab
+                            window.open(
+                              viewUrl,
+                              "_blank",
+                              "noopener,noreferrer",
+                            );
+                          }}
+                          color="primary"
+                          size="small"
+                        >
+                          <VisibilityIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  );
+                },
+              };
+
+              exploreData.Data.columns.push(obj);
             } else {
               var obj = {};
               var currentRow = "";
@@ -631,7 +701,7 @@ export const fetchExplorelitview =
               accessID: AccessID, // ← from Query.AccessID
               screenName: screenName, // optional but useful
               action: "get", // optional (for audit clarity)
-            })
+            }),
           );
         } else {
           dispatch(
@@ -641,7 +711,7 @@ export const fetchExplorelitview =
               accessID: AccessID,
               screenName: screenName,
               action: "get",
-            })
+            }),
           );
         }
       })

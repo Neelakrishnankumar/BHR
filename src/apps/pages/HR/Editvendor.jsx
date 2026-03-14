@@ -64,7 +64,7 @@ import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapire
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { dataGridHeaderFooterHeight, dataGridRowHeight } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../../ui-components/utils";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ArrowBack, CloudUpload } from "@mui/icons-material";
 const Editvendor = () => {
@@ -277,12 +277,13 @@ const Editvendor = () => {
   //   ];
   // }
   const VISIBLE_FIELDS =
-    show === "6"
+    show == "5"
       ? [
         "slno",
-        "NextRenewalRequiredDate",
-        "Description",
-        "Category",
+        "Code",
+        "Documents",
+        // "Party",
+        // "Unit",
         "action",
       ]
       : [];
@@ -298,10 +299,12 @@ const Editvendor = () => {
         width: 50,
         sortable: false,
         filterable: false,
-        valueGetter: (params) =>
-          page * pageSize +
-          params.api.getRowIndexRelativeToVisibleRows(params.id) +
-          1,
+        // valueGetter: (params) =>
+        //   page * pageSize +
+        //   params.api.getRowIndexRelativeToVisibleRows(params.id) +
+        //   1,
+        renderCell: (params) => params.row.SLNO,
+
       };
       visibleColumns = [slnoColumn, ...visibleColumns];
     }
@@ -530,13 +533,14 @@ const Editvendor = () => {
     if (event.target.value == "5") {
       dispatch(
         fetchExplorelitview(
-          "TR210",
-          "Attachment",
-          `EmployeeID=${recID} AND CompanyID=${CompanyID}`,
+          "TR364",
+          "Party Documents",
+          // `PartyID='${recID}' AND CompanyID='${CompanyID}'`,
+          `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_HVRECID))`,
           ""
         )
       );
-      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+
     }
     if (event.target.value == "1") {
       dispatch(PartyContactget({ VendorID: recID }));
@@ -613,11 +617,12 @@ const Editvendor = () => {
           }}
         >
           <GridToolbarQuickFilter />
-          <Tooltip title="ADD">
-            <IconButton type="reset">
-              <AddOutlinedIcon />
-            </IconButton>
-          </Tooltip>
+          {show != "5" && (
+            <Tooltip title="ADD">
+              <IconButton type="reset">
+                <AddOutlinedIcon />
+              </IconButton>
+            </Tooltip>)}
         </Box>
       </GridToolbarContainer>
     );
@@ -1195,8 +1200,8 @@ const Editvendor = () => {
                   <MenuItem value={4}>Default Settings</MenuItem>
                   <MenuItem value={2}>Bank Details</MenuItem>
                   <MenuItem value={1}>Contact Details</MenuItem>
-                  {/* <MenuItem value={5}>List Of Documents</MenuItem>
-                  <MenuItem value={6}>Unit</MenuItem> */}
+                  <MenuItem value={5}>List Of Documents</MenuItem>
+                  {/* <MenuItem value={6}>Unit</MenuItem>  */}
                   {/* {initialValues.employeetype === "CI" ? (
                                               <MenuItem value={8}>Contracts In</MenuItem>
                                             ) : null}
@@ -3336,22 +3341,14 @@ const Editvendor = () => {
       {show == "5" ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
-            // onSubmit={handleFormSubmit}
-            initialValues={AttachmentInitialValues}
-            // validationSchema={validationSchema5}
+            initialValues={InitialValue}
+            // validationSchema={validationSchema2}
             enableReinitialize={true}
-            onSubmit={(values, { resetForm, setFieldValue }) => {
-              if (
-                values.renewal &&
-                (!values.RenewalDate || values.RenewalDate === "00-00-0000")
-              ) {
-                toast.error("Renewal Date is Required");
-                return;
-              }
-              setTimeout(() => {
-                FnAttachment(values, resetForm, false, setFieldValue);
-              }, 100);
-            }}
+          // onSubmit={(values, { resetForm, setFieldValue }) => {
+          //   setTimeout(() => {
+          //     FnAttachment(values, resetForm, false, setFieldValue);
+          //   }, 100);
+          // }}
           >
             {({
               values,
@@ -3370,372 +3367,156 @@ const Editvendor = () => {
                   resetForm();
                 }}
               >
-                <Box>
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    // gap="30px"
+
+
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="code"
+                    name="code"
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Code"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={values.name}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Name"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                  {/* </FormControl> */}
+                </Box>
+
+                <Box
+                  m="5px 0 0 0"
+                  // height="50vh"
+                  height={dataGridHeight}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#D3D3D3",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
                     sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
                       },
                     }}
-                  >
-
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="code"
-                        name="code"
-                        value={values.code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Code"
-                        focused
-                      // inputProps={{ readOnly: true }}
-                      />
-
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="Name"
-                        name="Name"
-                        value={values.description}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Name"
-                        focused
-                      // inputProps={{ readOnly: true }}
-                      />
-
-                      <Box
-                        m="5px 0 0 0"
-                        //height={dataGridHeight}
-                        height="50vh"
-                        sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
-                          "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
-                          },
-                        }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: Employee,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                          }
-                        />
-                      </Box>
-                    </FormControl>
-
-                    <FormControl
-                      sx={{
-                        gap: formGap,
-                        mt: { xs: "opx", md: "150px" },
-                      }}
-                    >
-                      {/* <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="LoaDescription"
-                        name="LoaDescription"
-                        value={values.LoaDescription}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Description"
-                        sx={{
-                          //gridColumn: "span 2",
-                          backgroundColor: "#ffffff", // Set the background to white
-                          "& .MuiFilledInput-root": {
-                            backgroundColor: "#ffffff", // Ensure the filled variant also has a white background
-                          },
-                        }}
-                        focused
-                        inputProps={{ tabIndex: "-1" }}
-                      /> */}
-                      <TextField
-                        label={
-                          <>
-                            Document Type
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        id="category"
-                        name="category"
-                        focused
-                        variant="standard"
-                        value={values.category}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        select
-                        error={!!touched.category && !!errors.category}
-                        helperText={touched.category && errors.category}
-                      >
-                        <MenuItem value="EC">PDF</MenuItem>
-                        <MenuItem value="AD">PPT</MenuItem>
-                        <MenuItem value="CT">Excel</MenuItem>
-                        <MenuItem value="CT">Image</MenuItem>
-                      </TextField>
-                      <TextField
-                        label={
-                          <>
-                            Document Category
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        id="category"
-                        name="category"
-                        focused
-                        variant="standard"
-                        value={values.category}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        select
-                        error={!!touched.category && !!errors.category}
-                        helperText={touched.category && errors.category}
-                      >
-                        <MenuItem value="EC">Education</MenuItem>
-                        <MenuItem value="AD">Award</MenuItem>
-                        <MenuItem value="CT">Certificate</MenuItem>
-                        <MenuItem value="IS">Insurance</MenuItem>
-                        <MenuItem value="WT">Warranty</MenuItem>
-                        <MenuItem value="OS">Others</MenuItem>
-                      </TextField>
-                      {/* <TextField
-                        label={
-                          <>
-                            Document
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        id="category"
-                        name="category"
-                        focused
-                        variant="standard"
-                        value={values.category}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        select
-                        error={!!touched.category && !!errors.category}
-                        helperText={touched.category && errors.category}
-                      >
-                        <MenuItem value="EC">Education</MenuItem>
-                        <MenuItem value="AD">Award</MenuItem>
-                        <MenuItem value="CT">Certificate</MenuItem>
-                        <MenuItem value="IS">Insurance</MenuItem>
-                        <MenuItem value="WT">Warranty</MenuItem>
-                        <MenuItem value="OS">Others</MenuItem>
-                      </TextField> */}
-
-
-                      <FormControl
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-
-
-                      </FormControl>
-
-
-
-                      <Box
-                        display="flex"
-                        justifyContent="end"
-                        padding={1}
-                        gap={2}
-                      >
-
-                        <Tooltip title="Please upload a file">
-                          <IconButton
-                            size="small"
-                            color="info"
-                            aria-label="upload picture"
-                            component="label"
-                            disabled={uploading}
-                          >
-                            <input
-                              hidden
-                              type="file"
-                              onChange={(e) => {
-                                const file = e.target.files[0];
-                                if (!file) return;
-
-                                changeHandler(e);
-                                setFieldValue("Attachment", file.name);
-                              }}
-                            />
-
-                            {uploading ? (
-                              <>
-                                <CircularProgress size={18} sx={{ mr: 1 }} />
-                                Uploading...
-                              </>
-                            ) : (
-                              <CloudUpload fontSize="medium" />
-                            )}
-
-                          </IconButton>
-                        </Tooltip>
-                        <Button
-                          variant="contained"
-                          onClick={() => fnViewFile(values)}
-                        >
-                          View
-                        </Button>
-
-                        {YearFlag == "true" ? (
-                          <LoadingButton
-                            color="secondary"
-                            variant="contained"
-                            type="submit"
-                            loading={isLoading}
-                          >
-                            Save
-                          </LoadingButton>
-                        ) : (
-                          <Button
-                            color="secondary"
-                            variant="contained"
-                            disabled={true}
-                          >
-                            Save
-                          </Button>
-                        )}
-                        {YearFlag == "true" ? (
-                          <Button
-                            color="error"
-                            variant="contained"
-                            disabled={funMode == "A"}
-                            onClick={() => {
-                              Swal.fire({
-                                title: errorMsgData.Warningmsg.Delete,
-                                icon: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Confirm",
-                              }).then((result) => {
-                                if (result.isConfirmed) {
-                                  FnAttachment(
-                                    values,
-                                    resetForm,
-                                    "harddelete"
-                                  );
-                                } else {
-                                  return;
-                                }
-                              });
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        ) : (
-                          <Button
-                            color="error"
-                            variant="contained"
-                            disabled={true}
-                          >
-                            Delete
-                          </Button>
-                        )}
-                        <Button
-                          type="reset"
-                          color="warning"
-                          variant="contained"
-                          onClick={() => {
-                            setScreen(0);
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </Box>
-                    </FormControl>
-                  </Box>
+                    rows={explorelistViewData}
+                    columns={columns}
+                    disableSelectionOnClick
+                    getRowId={(row) => row.RecordID}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newPageSize) =>
+                      setPageSize(newPageSize)
+                    }
+                    onCellClick={(params) => {
+                      selectCellRowData({
+                        rowData: params.row,
+                        mode: "E",
+                        field: params.field,
+                      });
+                    }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    pagination
+                    components={{
+                      Toolbar: Employee,
+                    }}
+                    onStateChange={(stateParams) =>
+                      setRowCount(stateParams.pagination.rowCount)
+                    }
+                    loading={exploreLoading}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      },
+                    }}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                  />
                 </Box>
+
+
+
               </form>
             )}
           </Formik>
+          <Box display="flex" justifyContent="end" padding={1} gap="20px">
+            <Button
+              color="warning"
+              variant="contained"
+              onClick={() => {
+                setScreen("0");
+              }}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Paper>
       ) : (
         false
