@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo, createContext } from "react";
+import React, { useState, useEffect, useMemo, createContext } from "react";
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -1040,7 +1040,7 @@ export function MultiFormikUniqueAutocomplete({
 
         // ✅ Remove duplicate RecordID
         const uniqueData = Array.from(
-          new Map(data.map((item) => [item.RecordID, item])).values()
+          new Map(data.map((item) => [item.RecordID, item])).values(),
         );
 
         setOptions(uniqueData);
@@ -1067,11 +1067,8 @@ export function MultiFormikUniqueAutocomplete({
       onChange={onChange}
       disableCloseOnSelect
       loading={loading}
-      isOptionEqualToValue={(option, val) =>
-        option?.RecordID === val?.RecordID
-      }
+      isOptionEqualToValue={(option, val) => option?.RecordID === val?.RecordID}
       getOptionLabel={(option) => option?.Name || ""}
-      
       // ✅ Force unique key
       renderOption={(props, option, { selected }) => {
         const { key, ...rest } = props;
@@ -1087,7 +1084,6 @@ export function MultiFormikUniqueAutocomplete({
           </li>
         );
       }}
-
       renderInput={(params) => (
         <TextField
           {...params}
@@ -1100,9 +1096,7 @@ export function MultiFormikUniqueAutocomplete({
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading && (
-                  <CircularProgress color="inherit" size={20} />
-                )}
+                {loading && <CircularProgress color="inherit" size={20} />}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -1115,7 +1109,7 @@ export function MultiFormikUniqueAutocomplete({
 }
 export function MultiSopFormikOptimizedAutocomplete({
   value = [],
-  Values=null,
+  Values = null,
   onChange,
   url,
   label = "Select Options",
@@ -1150,10 +1144,10 @@ export function MultiSopFormikOptimizedAutocomplete({
         setLoading(false);
       }
     };
-console.log(Values,"check values"); 
+    console.log(Values, "check values");
     fetchData();
   }, [url]);
-   /* ---------------- AUTO SELECT FROM "1,2,3" ---------------- */
+  /* ---------------- AUTO SELECT FROM "1,2,3" ---------------- */
   useEffect(() => {
     if (!Values || options.length === 0) return;
 
@@ -1164,7 +1158,7 @@ console.log(Values,"check values");
 
     // Match options
     const selectedOptions = options.filter((opt) =>
-      selectedIds.includes(String(opt.RecordID))
+      selectedIds.includes(String(opt.RecordID)),
     );
 
     if (multiple) {
@@ -1194,11 +1188,7 @@ console.log(Values,"check values");
       renderOption={(props, option, { selected }) => (
         <li {...props} style={{ display: "flex", alignItems: "center" }}>
           {multiple && (
-            <Checkbox
-              size="small"
-              sx={{ marginRight: 1 }}
-              checked={selected}
-            />
+            <Checkbox size="small" sx={{ marginRight: 1 }} checked={selected} />
           )}
           {option.Name}
         </li>
@@ -1214,9 +1204,7 @@ console.log(Values,"check values");
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading && (
-                  <CircularProgress color="inherit" size={18} />
-                )}
+                {loading && <CircularProgress color="inherit" size={18} />}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -1227,8 +1215,6 @@ console.log(Values,"check values");
     />
   );
 }
-
-
 
 export function CusListRunGrpOptimizedAutocomplete1({
   value = [],
@@ -2336,7 +2322,6 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
       getOptionLabel={(option) => option?.Name || ""}
       isOptionEqualToValue={(o, v) => o.RecordID === v.RecordID}
       onChange={(e, newValue) => onChange(newValue)}
-
       renderInput={(params) => (
         <TextField
           {...params}
@@ -2344,7 +2329,7 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
           placeholder=""
           InputProps={{
             ...params.InputProps,
-            disableUnderline: true,   // paper style
+            disableUnderline: true, // paper style
             style: {
               fontFamily: "Times New Roman",
               fontSize: "14px",
@@ -2352,9 +2337,7 @@ export const BRREmpLookup = ({ value = null, onChange, url }) => {
             },
             endAdornment: (
               <>
-                {loading && (
-                  <CircularProgress size={16} color="inherit" />
-                )}
+                {loading && <CircularProgress size={16} color="inherit" />}
                 {params.InputProps.endAdornment}
               </>
             ),
@@ -2414,7 +2397,9 @@ export const SOPDocLookup = ({
       options={options}
       loading={loading}
       value={value}
-      isOptionEqualToValue={(option, value) => option.RecordID === value.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
       onChange={(event, newValue) => onChange(newValue)}
       getOptionLabel={(option) => option.DocumentName}
       renderInput={(params) => (
@@ -2489,7 +2474,9 @@ export const SOPEMPLookup = ({
       options={options}
       loading={loading}
       value={value}
-      isOptionEqualToValue={(option, value) => option.RecordID === value.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
       onChange={(event, newValue) => onChange(newValue)}
       getOptionLabel={(option) => option.Name}
       renderInput={(params) => (
@@ -2524,7 +2511,7 @@ export const ProjectVendor = ({
   value = null,
   onChange,
   url,
-  height = 20,
+  height = 15,
   defaultValue,
   ...props
 }) => {
@@ -2563,16 +2550,17 @@ export const ProjectVendor = ({
       options={options}
       loading={loading}
       value={value}
-      isOptionEqualToValue={(option, value) => option.RecordID === value.RecordID}
+      isOptionEqualToValue={(option, value) =>
+        option.RecordID === value.RecordID
+      }
       onChange={(event, newValue) => onChange(newValue)}
       // getOptionLabel={(option) => option.Name}
       getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
-
-// renderOption={(props, option) => (
-//   <li {...props} key={option.RecordID}>
-//     {option.Code} || {option.Name}
-//   </li>
-// )}
+      // renderOption={(props, option) => (
+      //   <li {...props} key={option.RecordID}>
+      //     {option.Code} || {option.Name}
+      //   </li>
+      // )}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -2581,14 +2569,12 @@ export const ProjectVendor = ({
           // helperText={error}
 
           {...props}
-          variant="standard"
-          focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
               <>
                 {loading ? (
-                  <CircularProgress color="inherit" size={20} />
+                  <CircularProgress color="inherit" size={15} />
                 ) : null}
                 {params.InputProps.endAdornment}
               </>

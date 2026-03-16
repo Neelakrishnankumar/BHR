@@ -1045,7 +1045,8 @@ const EditOrder = () => {
                           focused
                           variant="standard"
                           InputProps={{
-                            readOnly: ViewStatus === "Paid" ? true : false,
+                            // readOnly: ViewStatus === "Paid" ? true : false,
+                            readOnly: true,
                           }}
                         >
                           <MenuItem value="COD">Cash On Delivery</MenuItem>
