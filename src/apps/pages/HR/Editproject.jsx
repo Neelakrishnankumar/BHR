@@ -700,6 +700,10 @@ const Editproject = () => {
     sortOrder: UnitData.sortOrder || 0,
     disable: UnitData.disable === "Y" ? true : false,
   };
+  const DocInitialValues = {
+    code: data.Code,
+    description: data.Name,
+  };
   const FnAttachment = async (values, resetForm, del) => {
     let action =
       laomode === "A" && !del
@@ -2297,7 +2301,7 @@ const Editproject = () => {
       {show == "2" ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
-            initialValues={UnitInitialValues}
+            initialValues={DocInitialValues}
             // validationSchema={validationSchema2}
             enableReinitialize={true}
           // onSubmit={(values, { resetForm, setFieldValue }) => {
