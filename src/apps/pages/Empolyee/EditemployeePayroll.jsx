@@ -3028,7 +3028,7 @@ const EditemployeePayroll = () => {
                     <Button type="reset" variant="contained" color="error">
                       RESET
                     </Button>
-                    <PDFDownloadLink
+                    {/* <PDFDownloadLink
                       document={<RegisterOfWagesPDF data={sampleData} />}
                       fileName="Register_Of_Wages.pdf"
                       style={{ color: "#d32f2f", cursor: "pointer" }}
@@ -3043,7 +3043,7 @@ const EditemployeePayroll = () => {
                           <PictureAsPdfIcon sx={{ fontSize: 24 }} />
                         )
                       }
-                    </PDFDownloadLink>
+                    </PDFDownloadLink> */}
                   </Box>
 
                   <Box m="5px">
