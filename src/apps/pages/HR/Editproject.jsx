@@ -47,7 +47,7 @@ import {
   Productautocomplete,
   ProjectVendor,
 } from "../../../ui-components/global/Autocomplete";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridRowModes, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { GridToolbarContainer } from "@mui/x-data-grid";
@@ -55,6 +55,13 @@ import { tokens } from "../../../Theme";
 import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../../ui-components/utils";
 import { useTheme } from "@emotion/react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import { GridRowEditStopReasons } from "@mui/x-data-grid";
+import { nanoid } from "@reduxjs/toolkit";
 
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
@@ -96,7 +103,41 @@ const Editproject = () => {
   const [page, setPage] = React.useState(secondaryCurrentPage);
   const [pageSize, setPageSize] = useState(10);
   const [rowCount, setRowCount] = useState(0);
+  const [rowLoading, setRowLoading] = useState(false);
+  const [deletedRows, setDeletedRows] = useState([]);
+  const [editedRows, setEditedRows] = useState([]);
+  const explorelistViewData = useSelector(
+    (state) => state.exploreApi.explorerowData
+  );
+  const explorelistViewcolumn = useSelector(
+    (state) => state.exploreApi.explorecolumnData
+  );
+  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (!explorelistViewData) return;
 
+
+    // const rowLoading = exploreLoading ? exploreLoading : false;
+
+    const formattedRows = explorelistViewData.map((row) => ({
+      ...row,
+      OwnedBy: row.OwnedByRecordID
+        ? {
+          RecordID: row.OwnedByRecordID,
+          Code: row.OwnedByCode,
+          Name: row.OwnedByName,
+        }
+        : null,
+    }));
+
+    setRows(formattedRows);
+
+    // 🔧 reset tracking states
+    setDeletedRows([]);
+    setEditedRows([]);
+    // setRowLoading(rowLoading);
+  }, [explorelistViewData]);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/validationcms.json")
@@ -136,13 +177,111 @@ const Editproject = () => {
   useEffect(() => {
     dispatch(getFetchData({ accessID, get: "get", recID }));
   }, [location.key]);
+
   // *************** INITIALVALUE  *************** //
   // const validationSchema = Yup.object().shape({
   //   incharge: Yup.object()
   //     .nullable()
   //     .required("Owner is required"),
   // });
+  const [rowModesModel, setRowModesModel] = React.useState({});
+  const handleRowEditStop = (params, event) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+  const handleEditClick = (RecordID) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [RecordID]: { mode: GridRowModes.Edit },
+    });
+  };
 
+  const handleSaveClick = (RecordID) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [RecordID]: { mode: GridRowModes.View },
+    });
+  };
+  const handleDeleteClick = (RecordID) => async () => {
+    console.log("Deleting ID:", RecordID, typeof RecordID);
+
+    // ✅ Remove row from UI first
+    setRows((prevRows) =>
+      prevRows.filter((row) => row.RecordID !== RecordID)
+    );
+
+    // ✅ Only call API if RecordID is numeric
+    if (!RecordID || isNaN(Number(RecordID))) {
+      // toast.success("Deleted Successfully");
+      return;
+    }
+
+    const numericID = Number(RecordID);
+
+    setDeletedRows((prev) => {
+      if (prev.some((d) => d.RecordID === numericID)) return prev;
+      return [...prev, { RecordID: numericID }];
+    });
+
+    // 🔥 REMOVE from editedRows
+    setEditedRows((prev) =>
+      prev.filter((row) => row.RecordID !== numericID)
+    );
+
+  };
+
+  const handleCancelClick = (RecordID) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = rows.find((row) => row.RecordID === RecordID);
+    if (editedRow.isNew) {
+      setRows(rows.filter((row) => row.RecordID !== RecordID));
+    }
+  };
+
+
+  // THIS RUNS WHENEVER A ROW IS EDITED AND SAVED
+  const processRowUpdate = (newRow, oldRow) => {
+    const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
+    const updatedRow = { ...newRow, isNew: isNew };
+
+    setRows((prev) => {
+      const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
+      const updated = [...prev];
+      updated[index] = updatedRow;
+      return updated;
+    });
+
+    // track edited rows
+    if (!isNew) {
+      setEditedRows((prev) => {
+        const exists = prev.find(r => r.RecordID === newRow.RecordID);
+
+        if (exists) {
+          return prev.map(r =>
+            r.RecordID === newRow.RecordID ? updatedRow : r
+          );
+        }
+
+        return [...prev, updatedRow];
+      });
+    }
+
+    // remove from deletedRows if it exists
+    setDeletedRows((prev) =>
+      prev.filter((d) => d.RecordID !== Number(newRow.RecordID))
+    );
+
+    return updatedRow;
+
+  };
+  const handleRowModesModelChange = (newRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
   const screenChange = (event) => {
     setScreen(event.target.value);
     if (event.target.value == "0") {
@@ -163,6 +302,16 @@ const Editproject = () => {
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
 
+    }
+    if (event.target.value == "3") {
+      dispatch(
+        fetchExplorelitview(
+          "TR363",
+          "Project Unit",
+          `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+          ""
+        )
+      );
     }
     if (event.target.value == "2") {
       dispatch(
@@ -188,13 +337,7 @@ const Editproject = () => {
     Code: "",
     Name: "",
   });
-  const explorelistViewData = useSelector(
-    (state) => state.exploreApi.explorerowData
-  );
-  const explorelistViewcolumn = useSelector(
-    (state) => state.exploreApi.explorecolumnData
-  );
-  const exploreLoading = useSelector((state) => state.exploreApi.loading);
+
 
   const InitialValue = {
     code: data.Code,
@@ -303,6 +446,145 @@ const Editproject = () => {
           // "Unit",
           "action",
         ] : [];
+
+  function EditOwnedByAutocomplete(props) {
+    const { id, value, field, api, row } = props;
+
+    const [ownedBylookup, setOwnedBylookup] = useState(value || null);
+
+    const handleChange = async (newValue) => {
+      if (!newValue) return;
+
+      setOwnedBylookup(newValue);
+      await api.setEditCellValue({
+        id,
+        field: "OwnedBy",
+        value: newValue,
+      });
+
+      api.stopCellEditMode({ id, field });
+    };
+    return (
+      <ProjectVendor
+        name="OwnedBy"
+        label="Owned By"
+        id="OwnedBy"
+        value={ownedBylookup}
+        onChange={handleChange}
+        url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Project Unit","Filter":"parentID='${CompanyID}'","Any":""}}`}
+      />
+    );
+  }
+  const TTColumns = [
+    {
+      field: "RecordID",
+      headerName: "Record ID",
+      width: 120,
+      hide: true,
+    },
+    {
+      field: "SLNO",
+      headerName: "SL#",
+      width: 50,
+      hide: false,
+      headerAlign: "center",
+      align: "right",
+      sortable: false,
+      filterable: false,
+      valueGetter: (params) => {
+        return params.api.getRowIndexRelativeToVisibleRows(params.id) + 1;
+      },
+    },
+
+    {
+      headerName: "Code",
+      field: "Code",
+      width: 150,
+      hide: false,
+      editable: true,
+      headerAlign: "center"
+    },
+    {
+      headerName: "Name",
+      field: "Name",
+      width: 150,
+      hide: false,
+      editable: true,
+      headerAlign: "center"
+    },
+    {
+      field: "OwnedBy",
+      headerName: "Owned By",
+      width: 200,
+      hide: false,
+      editable: true,
+      headerAlign: "center",
+      sortable: false,
+      renderCell: (params) => {
+        return params.value ? `${params.value.Code || ""} || ${params.value.Name || ""}` : null;
+      },
+      renderEditCell: (params) => {
+        return <EditOwnedByAutocomplete {...params} />;
+      },
+
+    },
+    {
+      headerName: "Comments",
+      field: "Comments",
+      width: "320",
+      hide: false,
+      editable: true,
+      headerAlign: "center"
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              material={{
+                sx: {
+                  color: "primary.main",
+                },
+              }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
   const columns = React.useMemo(() => {
     let visibleColumns = explorelistViewcolumn.filter((column) =>
       VISIBLE_FIELDS.includes(column.field)
@@ -378,6 +660,10 @@ const Editproject = () => {
             }
             {show == "2"
               ? "List of Documents"
+              : ""
+            }
+            {show == "3"
+              ? "List of Units"
               : ""
             }
           </Typography>
@@ -487,6 +773,121 @@ const Editproject = () => {
       }
     });
   };
+
+
+  // GRID VIEW SAVE 
+  const handleSaveButtonClick = async () => {
+
+    const insertRows = rows
+      .filter((row) => row.isNew || isNaN(Number(row.RecordID)))
+      .map((row) => ({
+        RecordID: "",
+        Code: row.Code || "",
+        Name: row.Name || "",
+        OwnedBy: row.OwnedBy?.RecordID || 0,
+        Comments: row.Comments || "",
+        SortOrder: row.SortOrder || 0,
+        Disable: row.Disable || "N"
+      }));
+
+
+    const updateRows = editedRows
+      // .filter((row) => !row.isNew && !isNaN(Number(row.RecordID)))
+
+      .filter(
+        (row) =>
+          !row.isNew &&
+          !isNaN(Number(row.RecordID)) &&
+          !deletedRows.some((d) => d.RecordID === Number(row.RecordID))
+      )
+      .map((row) => ({
+        RecordID: row.RecordID,
+        Code: row.Code || "",
+        Name: row.Name || "",
+        OwnedBy: row.OwnedBy?.RecordID || 0,
+        Comments: row.Comments || "",
+        SortOrder: row.SortOrder || 0,
+        Disable: row.Disable || "N"
+      }));
+
+
+    const payload = {
+      CompanyID: CompanyID?.toString(),
+      ProjectID: recID || 0,
+      insert: insertRows,
+      update: updateRows,
+      harddelete: deletedRows
+    };
+
+    try {
+
+      const response = await dispatch(
+        postData({
+          accessID: "TR363",
+          action: "batchsave",
+          idata: payload
+        })
+      );
+
+      if (response.payload.Status === "Y") {
+        toast.success(response.payload.Msg);
+
+        dispatch(
+          fetchExplorelitview(
+            "TR363",
+            "Project Unit",
+            `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+            ""
+          )
+        );
+      } else {
+        toast.error(response.payload.Msg);
+      }
+
+    } catch (error) {
+      toast.error("Error occurred during save.");
+    }
+
+  };
+
+  function EditToolbar(props) {
+    const { setRows, setRowModesModel } = props;
+
+    const handleClick = () => {
+      const id = nanoid();
+      const nextSLNO =
+        rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
+      setRows((oldRows) => [
+        ...oldRows,
+
+        {
+          id: id,
+          RecordID: id,
+          OwnedBy: null,
+          Name: "",
+          Code: "",
+          Comments: "",
+        }
+      ]);
+      setRowModesModel((oldModel) => ({
+        ...oldModel,
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: "Name" },
+      }));
+    };
+    return (
+      <GridToolbarContainer
+        sx={{
+          marginBottom: "10px",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+          Add Record
+        </Button>
+      </GridToolbarContainer>
+    );
+  }
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
@@ -522,6 +923,14 @@ const Editproject = () => {
                 >
                   Units
                 </Typography>) : false}
+              {show == "3" ? (
+                <Typography
+                  variant="h5"
+                  color="#0000D1"
+                  sx={{ cursor: "default" }}
+                >
+                  Units
+                </Typography>) : false}
               {show == "2" ? (
                 <Typography
                   variant="h5"
@@ -546,7 +955,8 @@ const Editproject = () => {
                   onChange={screenChange}
                 >
                   <MenuItem value={0}>Project</MenuItem>
-                  <MenuItem value={1}>Units</MenuItem>
+                  {/* <MenuItem value={1}>Units</MenuItem> */}
+                  <MenuItem value={3}>Units</MenuItem>
                   <MenuItem value={2}>List Of Documents</MenuItem>
                 </Select>
               </FormControl>
@@ -1275,7 +1685,7 @@ const Editproject = () => {
         false
       )}
 
-      {show == "1" ? (
+      {/* {show == "1" ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={UnitInitialValues}
@@ -1682,6 +2092,206 @@ const Editproject = () => {
         </Paper>
       ) : (
         false
+      )} */}
+
+      {show == "3" ? (
+        <Paper elevation={3} sx={{ margin: "10px" }}>
+          <Formik
+            initialValues={UnitInitialValues}
+            // validationSchema={validationSchema2}
+            enableReinitialize={true}
+            // onSubmit={(values, { resetForm, setFieldValue }) => {
+            //   setTimeout(() => {
+            //     FnAttachment(values, resetForm, false, setFieldValue);
+            //   }, 100);
+            // }}
+            onSubmit={(values, { resetForm }) => {
+              handleSaveButtonClick(values, resetForm);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleSubmit,
+              handleChange,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form
+                onSubmit={handleSubmit}
+              // onReset={() => {
+              //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+              //   resetForm();
+              // }}
+              >
+
+                <Box
+                  display="grid"
+                  gap={formGap}
+                  padding={1}
+                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 2",
+                    },
+                  }}
+                >
+
+                  {/* <FormControl sx={{ gap: formGap }}> */}
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="code"
+                    name="code"
+                    value={values.code}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Code"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    type="text"
+                    id="description"
+                    name="description"
+                    value={values.description}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    label="Description"
+                    focused
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                </Box>
+                <Box
+                  // height="500px"
+                  height={dataGridHeight}
+                  marginTop={2}
+                  sx={{
+                    "& .MuiDataGrid-root": {
+                      // border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      // borderBottom: "none",
+                    },
+                    "& .name-column--cell": {
+                      color: colors.greenAccent[300],
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: colors.blueAccent[800],
+                      // borderBottom: "none",
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                      backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      // borderTop: "none",
+                      backgroundColor: colors.blueAccent[800],
+                    },
+                    "& .MuiCheckbox-root": {
+                      color: `${colors.greenAccent[200]} !important`,
+                    },
+                    "& .odd-row": {
+                      backgroundColor: "",
+                      color: "", // Color for odd rows
+                    },
+                    "& .even-row": {
+                      backgroundColor: "#d0edec",
+                      color: "", // Color for even rows
+                    },
+                  }}
+                >
+                  <DataGrid
+                    sx={{
+                      "& .MuiDataGrid-footerContainer": {
+                        height: dataGridHeaderFooterHeight,
+                        minHeight: dataGridHeaderFooterHeight,
+                      },
+                    }}
+                    rowHeight={dataGridRowHeight}
+                    headerHeight={dataGridHeaderFooterHeight}
+                    rows={rows}
+                    columns={TTColumns}
+                    loading={exploreLoading}
+                    editMode="row"
+                    disableSelectionOnClick
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    getRowId={(row) => row.RecordID}
+                    isCellEditable={(params) => {
+                      if (params.field === "SLNO") return false;
+                      if (params.field === "Code" && YearFlag == "true") return false;
+                      return true;
+                    }}
+                    disableRowSelectionOnClick
+                    experimentalFeatures={{ newEditingApi: true }}
+                    onProcessRowUpdateError={(error) => {
+                      console.error(
+                        "Row update validation failed:",
+                        error.message,
+                      );
+
+                      toast.error(error.message);
+                    }}
+                    components={{
+                      Toolbar: EditToolbar,
+                    }}
+                    componentsProps={{
+                      toolbar: { setRows, setRowModesModel },
+                    }}
+                    rowsPerPageOptions={[5, 10, 20]}
+                    getRowClassName={(params) =>
+                      params.indexRelativeToCurrentPage % 2 === 0
+                        ? "odd-row"
+                        : "even-row"
+                    }
+                    pagination
+                    pageSize={pageSize}
+                    page={page}
+                    onPageSizeChange={(newPageSize) =>
+                      setPageSize(newPageSize)
+                    }
+                    onPageChange={(newPage) => setPage(newPage)}
+                  />
+                </Box>
+
+                {/* </FormControl> */}
+                <Box display="flex" justifyContent="end" padding={1} gap="20px">
+                  <LoadingButton
+                    color="secondary"
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </LoadingButton>
+                  <Button
+                    color="warning"
+                    variant="contained"
+                    onClick={() => {
+                      setScreen("0");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+
+              </form>
+            )}
+          </Formik>
+        </Paper>
+      ) : (
+        false
       )}
 
       {show == "2" ? (
@@ -1832,13 +2442,16 @@ const Editproject = () => {
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
                     componentsProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                      },
+                      toolbar: { setRows, setRowModesModel },
                     }}
+                    loading={exploreLoading}
+                    // componentsProps={{
+                    //   toolbar: {
+                    //     showQuickFilter: true,
+                    //     quickFilterProps: { debounceMs: 500 },
+                    //   },
+                    // }}
                     getRowClassName={(params) =>
                       params.indexRelativeToCurrentPage % 2 === 0
                         ? "odd-row"

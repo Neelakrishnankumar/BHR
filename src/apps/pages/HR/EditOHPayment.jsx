@@ -428,9 +428,8 @@ const EditOHPayment = () => {
     const alreadyPaid = Number(values.AlreadyPaidAmount || 0);
     const paidAmount = Number(values.paidamount || 0); //USER INPUT
 
-    // let totalPayable = Number(values.PartyBalance || 0);
-    // let totalPayable = netPayable - balance;
     let totalPayable = Math.abs(Number(values.PartyBalance || 0));
+    // let totalPayable = netPayable - balance;
     // Scenario 1: Advance available
     // if (balance > 0) {
     //   totalPayable = netPayable - balance;

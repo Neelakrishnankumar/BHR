@@ -251,6 +251,7 @@ const EditAdvancePayment = () => {
               isSubmitting,
               values,
               handleSubmit,
+              setFieldValue
             }) => {
               return (
                 <form onSubmit={handleSubmit}>
@@ -310,8 +311,28 @@ const EditAdvancePayment = () => {
                       variant="standard"
                       focused
                       value={values.Amount}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
+                      // onBlur={handleBlur}
+                      // onChange={handleChange}
+                      onChange={(e) => {
+                        // allow only numbers + decimal
+                        const val = e.target.value;
+                        if (/^\d*\.?\d*$/.test(val)) {
+                          setFieldValue("Amount", val);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        let val = e.target.value;
+
+                        if (val === "" || val === ".") {
+                          setFieldValue("Amount", "0.00");
+                          return;
+                        }
+
+                        const num = parseFloat(val);
+                        if (!isNaN(num)) {
+                          setFieldValue("Amount", num.toFixed(2)); // ✅ forces .00
+                        }
+                      }}
                       error={!!touched.Amount && !!errors.Amount}
                       helperText={touched.Amount && errors.Amount}
                       autoFocus
@@ -381,7 +402,7 @@ const EditAdvancePayment = () => {
                         onBlur={handleBlur}
                         as={Checkbox}
                         label="Disable"
-                       disabled={mode === "V"}
+                        disabled={mode === "V"}
                       />
 
                       <FormLabel focused={false}>Disable</FormLabel>
