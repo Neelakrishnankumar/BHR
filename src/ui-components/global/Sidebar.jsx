@@ -1162,23 +1162,23 @@ const Sidebars = () => {
       //   UGA_ACCESSIDS: "TR299",
 
       // },
-      // {
-      //   name: "Document",
-      //   id: 43468,
-      //   url: "./TR508/Document/EditDocument/-1/A",
-      //   icon: (
-      //     <Tooltip title="Document">
-      //       <InventoryOutlinedIcon color="info" />
-      //     </Tooltip>
-      //   ),
-      //   UGA_ADD: true,
-      //   UGA_DEL: true,
-      //   UGA_MOD: true,
-      //   UGA_PRINT: true,
-      //   UGA_PROCESS: true,
-      //   UGA_VIEW: true,
-      //   UGA_ACCESSIDS: "TR315",
-      // },
+      {
+        name: "Document",
+        id: 43468,
+        url: "./TR361/Document Category",
+        icon: (
+          <Tooltip title="Document">
+            <FolderCopyIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        UGA_ADD: true,
+        UGA_DEL: true,
+        UGA_MOD: true,
+        UGA_PRINT: true,
+        UGA_PROCESS: true,
+        UGA_VIEW: true,
+        UGA_ACCESSIDS: "TR361",
+      },
       {
         name: "Settings",
         id: 95689,
@@ -1324,54 +1324,54 @@ const Sidebars = () => {
           },
         ],
       },
-      {
-        name: "GSBD",
-        id: 95654,
-        MenuID: "SOP100",
-        Tooltipname: "GSBD",
-        icon: (
-          <Tooltip title="GSBD">
-            <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
-          </Tooltip>
-        ),
-        children: [
-          {
-            name: "QC",
-            id: 5843,
-            url: "/Apps/TR336/List Of SOPs",
-            icon: (
-              <Tooltip title="List Of SOPs">
-                <LibraryAddCheckOutlinedIcon color="info" />
-              </Tooltip>
-            ),
-            UGA_ADD: true,
-            UGA_DEL: true,
-            UGA_MOD: true,
-            UGA_PRINT: true,
-            UGA_PROCESS: true,
-            UGA_VIEW: true,
-            UGA_ACCESSIDS: "TR336",
-          },
-          // {
-          //   name: "QA",
-          //   id: 5877,
-          //   url: "/Apps/TR337/List Of SOPs",
-          //   icon: (
-          //     <Tooltip title="List Of SOPs">
-          //       <IntegrationInstructionsOutlinedIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR337",
-          // },
+      // {
+      //   name: "GSBD",
+      //   id: 95654,
+      //   MenuID: "SOP100",
+      //   Tooltipname: "GSBD",
+      //   icon: (
+      //     <Tooltip title="GSBD">
+      //       <AdminPanelSettingsOutlinedIcon sx={{ color: "#651fff" }} />
+      //     </Tooltip>
+      //   ),
+      //   children: [
+      //     {
+      //       name: "QC",
+      //       id: 5843,
+      //       url: "/Apps/TR336/List Of SOPs",
+      //       icon: (
+      //         <Tooltip title="List Of SOPs">
+      //           <LibraryAddCheckOutlinedIcon color="info" />
+      //         </Tooltip>
+      //       ),
+      //       UGA_ADD: true,
+      //       UGA_DEL: true,
+      //       UGA_MOD: true,
+      //       UGA_PRINT: true,
+      //       UGA_PROCESS: true,
+      //       UGA_VIEW: true,
+      //       UGA_ACCESSIDS: "TR336",
+      //     },
+      //     // {
+      //     //   name: "QA",
+      //     //   id: 5877,
+      //     //   url: "/Apps/TR337/List Of SOPs",
+      //     //   icon: (
+      //     //     <Tooltip title="List Of SOPs">
+      //     //       <IntegrationInstructionsOutlinedIcon color="info" />
+      //     //     </Tooltip>
+      //     //   ),
+      //     //   UGA_ADD: true,
+      //     //   UGA_DEL: true,
+      //     //   UGA_MOD: true,
+      //     //   UGA_PRINT: true,
+      //     //   UGA_PROCESS: true,
+      //     //   UGA_VIEW: true,
+      //     //   UGA_ACCESSIDS: "TR337",
+      //     // },
 
-        ],
-      },
+      //   ],
+      // },
       {
         name: "Company",
         id: 95689,
