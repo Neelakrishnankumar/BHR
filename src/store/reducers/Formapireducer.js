@@ -214,13 +214,13 @@ const initialState = {
   // ScoredashBoardGetLoading: false,
   // ScoredashBoardGetError: null,
 
-    //PARTY ORDER PENDING GET
+  //PARTY ORDER PENDING GET
   PartyOrderPendingGetdata: {},
   PartyOrderPendingGetloading: false,
   PartyOrderPendingGetStatus: "",
 
 
-    //SOP TIMELINE GET
+  //SOP TIMELINE GET
   SOPTimelinedata: {},
   SOPTimelineloading: false,
   SOPTimelinestatus: "",
@@ -2799,22 +2799,40 @@ export const getApiSlice = createSlice({
         state.loading = false;
       })
 
-      .addCase(getFetchData.pending, (state, action) => {
+      // .addCase(getFetchData.pending, (state, action) => {
+      //   state.Status = "idle";
+      //   state.getLoading = true;
+      //   state.Data = {};
+      //   state.msg = "Loading...";
+      // })
+      // .addCase(getFetchData.fulfilled, (state, action) => {
+      //   state.Status = "success";
+      //   state.getLoading = false;
+      //   state.Data = action.payload.Data ? action.payload.Data : {};
+      //   // state.msg =  action.payload.Msg
+      // })
+      // .addCase(getFetchData.rejected, (state, action) => {
+      //   state.Status = "Error";
+      //   state.getLoading = false;
+      //   state.Data = {};
+      //   toast.error("Something Went Wrong");
+      // })
+      .addCase(getFetchData.pending, (state) => {
         state.Status = "idle";
         state.getLoading = true;
-        state.Data = {};
         state.msg = "Loading...";
       })
+
       .addCase(getFetchData.fulfilled, (state, action) => {
+        console.log("API SUCCESS", action.payload);
         state.Status = "success";
         state.getLoading = false;
-        state.Data = action.payload.Data ? action.payload.Data : {};
-        // state.msg =  action.payload.Msg
+        state.Data = action.payload?.Data || {};
       })
-      .addCase(getFetchData.rejected, (state, action) => {
+
+      .addCase(getFetchData.rejected, (state) => {
         state.Status = "Error";
         state.getLoading = false;
-        state.Data = {};
         toast.error("Something Went Wrong");
       })
       //PartyBank Details GET
@@ -4111,7 +4129,7 @@ export const getApiSlice = createSlice({
         state.SopEmpMappingControllerstatus = "Error";
         state.SopEmpMappingControllerloading = false;
       })
- //PARTY ORDER PENDING - GET
+      //PARTY ORDER PENDING - GET
       .addCase(PartyOrderPendingGet.pending, (state, action) => {
         state.PartyOrderPendingGetstatus = "idle";
         state.PartyOrderPendingGetloading = true;
@@ -4128,7 +4146,7 @@ export const getApiSlice = createSlice({
         state.PartyOrderPendingGetloading = false;
       })
 
- //SOP TIMELINE - GET
+      //SOP TIMELINE - GET
       .addCase(SopTimeLineController.pending, (state, action) => {
         state.SOPTimelinestatus = "idle";
         state.SOPTimelineloading = true;
@@ -5853,13 +5871,13 @@ export const SopEmpMappingController = createAsyncThunk(
 
 export const PartyOrderPendingGet = createAsyncThunk(
   "PartyOrderPendingGet/Get",
-  async ({ PartyID, CompanyID,OrderID }) => {
+  async ({ PartyID, CompanyID, OrderID }) => {
     const url = store.getState().globalurl.PartypendingorderlistgetController;
 
     const data = {
       PartyID: PartyID,
       CompanyID: CompanyID,
-      OrderID:OrderID
+      OrderID: OrderID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {
