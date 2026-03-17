@@ -804,9 +804,18 @@ const Editemployee = () => {
   //     .required("Leave Type is required"),
   // });
   // const { setFieldValue } = useFormikContext();
+  // useEffect(() => {
+  //   dispatch(fetchApidata(accessID, "get", recID));
+  // }, [location.key]);
   useEffect(() => {
-    dispatch(fetchApidata(accessID, "get", recID));
-  }, [location.key]);
+    if (show == "0") {
+    if (recID && mode === "E") {
+      dispatch(fetchApidata("TR027","get", recID ));
+    } else {
+      dispatch(fetchApidata("TR027", "get", recID ));
+    }
+  }
+  }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   // const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);

@@ -189,9 +189,19 @@ const EditemployeePayroll = () => {
 
   const [Color, setColor] = useState("");
   const { toggleSidebar, broken, rtl } = useProSidebar();
+  // useEffect(() => {
+  //   dispatch(fetchApidata("TR027", "get", recID));
+  // }, []);
+    const [show, setScreen] = React.useState(0);
   useEffect(() => {
-    dispatch(fetchApidata("TR027", "get", recID));
-  }, []);
+      if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(fetchApidata("TR027","get", recID ));
+      } else {
+        dispatch(fetchApidata("TR027", "get", recID ));
+      }
+    }
+    }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -541,7 +551,6 @@ const EditemployeePayroll = () => {
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
   // const [show, setScreen] = React.useState(mode == "E" ? "1" : "0");
-  const [show, setScreen] = React.useState(accessID == "TR027" ? "0" : "11");
 
   // material
   const [supprodata, setSupprodata] = useState({
@@ -3591,9 +3600,9 @@ const EditemployeePayroll = () => {
                         color="warning"
                         variant="contained"
                         onClick={() => {
-                          // setScreen(0);
+                           setScreen(0);
                           // navigate(`/Apps/TR333/Payroll`);
-                          navigate("/Apps/TR027/Employee%20Payroll")
+                          // navigate("/Apps/TR027/Employee%20Payroll")
                         }}
                       >
                         Cancel
