@@ -21,7 +21,8 @@ import {
     LinearProgress,
     Paper,
     Breadcrumbs,
-    Divider
+    Divider,
+    CircularProgress
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
@@ -96,7 +97,7 @@ const Editdocument = () => {
     // const [image, setimage] = useState("");
     const [image, setimage] = useState("");
     const listViewurl = useSelector((state) => state.globalurl.listViewurl);
-
+    const [uploading, setUploading] = useState("");
     useEffect(() => {
         fetch(process.env.PUBLIC_URL + "/validationcms.json")
             .then((res) => {
@@ -119,37 +120,19 @@ const Editdocument = () => {
             })
             .catch((err) => console.error("Error loading validationcms.json:", err));
     }, [CompanyAutoCode]);
-    // const getFilepanChange = async (event) => {
-    //     setimage(event.target.files[0]);
 
-    //     console.log(event.target.files[0]);
-
-    //     const formData = new FormData();
-    //     formData.append("file", event.target.files[0]);
-    //     formData.append("type", "images");
-
-    //     const fileData = await dispatch(fileUpload({ formData }));
-    //     setimage(fileData.payload.name);
-    //     sessionStorage.setItem("image", fileData.payload.name);
-    //     console.log(">>>", fileData.payload);
-    //     console.log(
-    //         "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-    //         fileData
-    //     );
-    //     if (fileData.payload.Status == "Y") {
-    //         // console.log("I am here");
-    //         toast.success(fileData.payload.Msg);
-    //     }
-    // };
-    //useEffect(() => {
-    //     dispatch(getFetchData({ accessID, get: "get", recID }));
-    // }, [location.key]);
     // const getFilepanChange = async (event) => {
     //     const file = event.target.files[0];
 
     //     if (!file) return;
 
-    //     console.log(file);
+    //     const maxSize = 1 * 1024 * 1024;
+
+    //     // if (file.size > maxSize) {
+    //     //     toast.error("File size must be less than or equal to 1 MB");
+    //     //     event.target.value = "";
+    //     //     return;
+    //     // }
 
     //     const formData = new FormData();
     //     formData.append("file", file);
@@ -157,63 +140,64 @@ const Editdocument = () => {
 
     //     const fileData = await dispatch(fileUpload({ formData }));
 
-    //     console.log("Upload Response:", fileData);
-
     //     if (fileData.payload.Status === "Y") {
-    //         setimage(fileData.payload.name);   // store only filename
-    //         sessionStorage.setItem("image", fileData.payload.name);
+    //         const filename = fileData.payload.name;
+
+    //         setimage(filename);
+    //         sessionStorage.setItem("image", filename);
+
     //         toast.success(fileData.payload.Msg);
+
+    //         const fileUrl =
+    //             store.getState().globalurl.attachmentUrl + filename;
+
+    //         window.open(fileUrl, "_blank");
     //     } else {
     //         toast.error("File Upload Failed");
     //     }
     // };
     const getFilepanChange = async (event) => {
         const file = event.target.files[0];
-
         if (!file) return;
 
-        const maxSize = 1 * 1024 * 1024;
+        setUploading(true);
 
-        // if (file.size > maxSize) {
-        //     toast.error("File size must be less than or equal to 1 MB");
-        //     event.target.value = "";
-        //     return;
-        // }
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("type", "images");
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("type", "images");
+            const fileData = await dispatch(fileUpload({ formData }));
 
-        const fileData = await dispatch(fileUpload({ formData }));
+            if (fileData.payload.Status === "Y") {
+                const filename = fileData.payload.name;
 
-        if (fileData.payload.Status === "Y") {
-            const filename = fileData.payload.name;
+                setimage(filename);
+                sessionStorage.setItem("image", filename);
 
-            setimage(filename);
-            sessionStorage.setItem("image", filename);
-
-            toast.success(fileData.payload.Msg);
-
-            const fileUrl =
-                store.getState().globalurl.attachmentUrl + filename;
-
-            window.open(fileUrl, "_blank");
-        } else {
-            toast.error("File Upload Failed");
+                toast.success(fileData.payload.Msg);
+            } else {
+                toast.error("File Upload Failed");
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setUploading(false);
         }
     };
+
     useEffect(() => {
         if (recID) {
             dispatch(getFetchData({ accessID, get: "get", recID }));
         }
     }, [recID]);
     useEffect(() => {
-    if (Data?.Attachments) {
-        setimage(Data.Attachments);
-    } else {
-        setimage("");
-    }
-}, [Data]);
+        if (Data?.Attachments) {
+            setimage(Data.Attachments);
+        } else {
+            setimage("");
+        }
+    }, [Data]);
     const [ini, setIni] = useState(true);
     const [loading, setLoading] = useState(false);
     // var apiData = "";
@@ -687,7 +671,7 @@ const Editdocument = () => {
                                     onChange={(e, newValue) => {
                                         setFieldValue("Unit", newValue);
                                     }}
-                                    url={`${listViewurl}?data={"Query":{"AccessID":"2158","ScreenName":"Unit","Filter":"CompanyID='${CompanyID}'","Any":""}}`}
+                                    url={`${listViewurl}?data={"Query":{"AccessID":"2158","ScreenName":"Unit","Filter":"ProjectID='${values.project?.map(x => x.RecordID).join(",")}' AND CompanyID='${CompanyID}'","Any":""}}`}
                                 />
                                 <MultiFormikOptimizedAutocomplete
                                     sx={{ width: "100%" }}
@@ -719,7 +703,7 @@ const Editdocument = () => {
                                 <MultiFormikOptimizedAutocomplete
                                     sx={{ width: "100%" }}
                                     name="Employee"
-                                    label="Employee"
+                                    label="Personnel"
                                     id="Employee"
                                     value={values.Employee || []}
                                     onChange={(e, newValue) => {
@@ -820,13 +804,12 @@ const Editdocument = () => {
                                     background: "#fafafa"
                                 }}
                             >
-                                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                                <Typography variant="h5" sx={{ mb: 1,color: "#3924f9" }}>
                                     Attachment
                                 </Typography>
 
-                                <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+                                {/* <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
 
-                                    {/* Upload Button */}
                                     <Button
                                         variant="outlined"
                                         component="label"
@@ -841,7 +824,6 @@ const Editdocument = () => {
                                         />
                                     </Button>
 
-                                    {/* File Name Box */}
                                     {!!image && (
                                         <Box
                                             sx={{
@@ -881,6 +863,77 @@ const Editdocument = () => {
                                             </Button>
                                         </Box>
                                     )}
+
+                                </Box> */}
+                                <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+
+                                    {/* Upload Button */}
+                                    <Button
+                                        variant="outlined"
+                                        component="label"
+                                        size="small"
+                                        disabled={uploading}
+                                    >
+                                        {uploading ? "Uploading..." : "Upload File"}
+                                        <input
+                                            hidden
+                                            type="file"
+                                            accept="video/*,audio/*,image/*,.pdf,.doc,.docx,.xls,.xlsx"
+                                            onChange={getFilepanChange}
+                                        />
+                                    </Button>
+
+                                    {/* File Name Box (Always Visible) */}
+                                    <Box
+                                        sx={{
+                                            border: "1px solid #dcdcdc",
+                                            borderRadius: 1,
+                                            px: 2,
+                                            py: 0.5,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            background: "#fff",
+                                            minWidth: 250
+                                        }}
+                                    >
+                                        {/* File Name */}
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                flex: 1,
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap"
+                                            }}
+                                        >
+                                            {uploading
+                                                ? "Uploading..."
+                                                : image
+                                                    ? image
+                                                    : "No file chosen"}
+                                        </Typography>
+
+                                        {/* Loader OR View Button */}
+                                        {uploading ? (
+                                            <CircularProgress size={18} />
+                                        ) : (
+                                            image && (
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
+                                                    onClick={() => {
+                                                        const fileUrl =
+                                                            store.getState().globalurl.attachmentUrl + image;
+
+                                                        window.open(fileUrl, "_blank");
+                                                    }}
+                                                >
+                                                    View
+                                                </Button>
+                                            )
+                                        )}
+                                    </Box>
 
                                 </Box>
 
