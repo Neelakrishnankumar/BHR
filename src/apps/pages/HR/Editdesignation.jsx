@@ -15,6 +15,7 @@ import {
   MenuItem,
   InputLabel,
   Select,
+  Chip,
 } from "@mui/material";
 import { Field, Formik } from "formik";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -42,11 +43,12 @@ import { DesignationSchema } from "../../Security/validation";
 import { formGap } from "../../../ui-components/global/utils";
 import * as Yup from "yup";
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { tokens } from "../../../Theme";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
 import { useTheme } from "@emotion/react";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 // import CryptoJS from "crypto-js";
 const Editdesignation = () => {
@@ -107,9 +109,19 @@ const Editdesignation = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
+  // useEffect(() => {
+  //   dispatch(getFetchData({ accessID, get: "get", recID }));
+  // }, [location.key]);
+
   useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID }));
-  }, [location.key]);
+    if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID, get: "", recID }));
+      }
+    }
+  }, [show]);
   // *************** INITIALVALUE  *************** //
 
   const screenChange = (event) => {
@@ -758,7 +770,8 @@ const Editdesignation = () => {
                 <Box
                   m="5px 0 0 0"
                   // height="50vh"
-                  height={dataGridHeight}
+                  // height={dataGridHeight}
+                  height={dataGridHeightExplore}
                   sx={{
                     "& .MuiDataGrid-root": {
                       border: "none",
@@ -846,16 +859,34 @@ const Editdesignation = () => {
             )}
 
           </Formik>
-          <Box display="flex" justifyContent="end" padding={1} gap="20px">
-            <Button
-              color="warning"
-              variant="contained"
-              onClick={() => {
-                setScreen("0");
-              }}
-            >
-              Cancel
-            </Button>
+          <Box display="flex" justifyContent="space-between" padding={1}>
+
+            <Box>
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                Actions Guide
+              </Typography>
+              <Box display="flex"
+                flexDirection="row"
+                gap="15px"
+                sx={{ overflowY: "auto" }}>
+                <Chip
+                  icon={<VisibilityIcon color="primary" />}
+                  label="Open Document"
+                  variant="outlined"
+                />
+              </Box>
+            </Box>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+              <Button
+                color="warning"
+                variant="contained"
+                onClick={() => {
+                  setScreen("0");
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Paper>
       ) : (

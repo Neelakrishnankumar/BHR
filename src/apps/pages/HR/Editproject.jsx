@@ -16,6 +16,7 @@ import {
   MenuItem,
   CircularProgress,
   Breadcrumbs,
+  Chip,
 } from "@mui/material";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -52,7 +53,7 @@ import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapire
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { GridToolbarContainer } from "@mui/x-data-grid";
 import { tokens } from "../../../Theme";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
 import { useTheme } from "@emotion/react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SaveIcon from "@mui/icons-material/Save";
@@ -62,6 +63,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { GridRowEditStopReasons } from "@mui/x-data-grid";
 import { nanoid } from "@reduxjs/toolkit";
+import VisibilityIcon from "@mui/icons-material/Visibility"
 
 // import CryptoJS from "crypto-js";
 const Editproject = () => {
@@ -174,9 +176,18 @@ const Editproject = () => {
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
+  // useEffect(() => {
+  //   dispatch(getFetchData({ accessID, get: "get", recID }));
+  // }, [location.key]);
   useEffect(() => {
-    dispatch(getFetchData({ accessID, get: "get", recID }));
-  }, [location.key]);
+    if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID, get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID, get: "", recID }));
+      }
+    }
+  }, [show]);
 
   // *************** INITIALVALUE  *************** //
   // const validationSchema = Yup.object().shape({
@@ -502,7 +513,15 @@ const Editproject = () => {
       width: 150,
       hide: false,
       editable: true,
-      headerAlign: "center"
+      headerAlign: "center",
+      renderCell: (params) => {
+        // show "Auto Code" only for new rows OR empty code
+        if (YearFlag == "true" && (!params.value || params.row.isNew)) {
+          return "Auto Code";
+        }
+
+        return params.value;
+      }
     },
     {
       headerName: "Name",
@@ -958,10 +977,13 @@ const Editproject = () => {
                   label="Explore"
                   onChange={screenChange}
                 >
-                  <MenuItem value={0}>Project</MenuItem>
-                  {/* <MenuItem value={1}>Units</MenuItem> */}
+                  {/* <MenuItem value={0}>Project</MenuItem>
                   <MenuItem value={3}>Units</MenuItem>
-                  <MenuItem value={2}>List Of Documents</MenuItem>
+                  <MenuItem value={2}>List Of Documents</MenuItem> */}
+
+                  <MenuItem value="0">Project</MenuItem>
+                  <MenuItem value="3">Units</MenuItem>
+                  <MenuItem value="2">List Of Documents</MenuItem>
                 </Select>
               </FormControl>
             ) : (
@@ -981,7 +1003,7 @@ const Editproject = () => {
         </Box>
       </Paper>
 
-      {(show == "0") ? (
+      {show == "0" ? (
         <Paper elevation={3} sx={{ margin: "10px" }}>
           <Formik
             initialValues={InitialValue}
@@ -2271,25 +2293,56 @@ const Editproject = () => {
                 </Box>
 
                 {/* </FormControl> */}
-                <Box display="flex" justifyContent="end" padding={1} gap="20px">
-                  <LoadingButton
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                  >
-                    Save
-                  </LoadingButton>
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      setScreen("0");
-                    }}
-                  >
-                    Cancel
-                  </Button>
+                <Box display="flex" justifyContent="space-between" padding={1}>
+                  <Box>
+                    <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                      Actions Guide
+                    </Typography>
+                    <Box display="flex"
+                      flexDirection="row"
+                      gap="15px"
+                      sx={{ overflowY: "auto" }}>
+                      <Chip
+                        icon={<EditIcon color="inherit" />}
+                        label="Edit"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<DeleteIcon color="inherit" />}
+                        label="Delete"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<SaveIcon color="inherit" />}
+                        label="Save"
+                        variant="outlined"
+                      />
+                      <Chip
+                        icon={<CancelIcon color="inherit" />}
+                        label="Cancel"
+                        variant="outlined"
+                      />
+                    </Box>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between" padding={1} gap="20px">
+                    <LoadingButton
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                    >
+                      Save
+                    </LoadingButton>
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
                 </Box>
-
               </form>
             )}
           </Formik>
@@ -2379,7 +2432,8 @@ const Editproject = () => {
                 <Box
                   m="5px 0 0 0"
                   // height="50vh"
-                  height={dataGridHeight}
+                  // height={dataGridHeight}
+                  height={dataGridHeightExplore}
                   sx={{
                     "& .MuiDataGrid-root": {
                       border: "none",
@@ -2469,16 +2523,34 @@ const Editproject = () => {
               </form>
             )}
           </Formik>
-          <Box display="flex" justifyContent="end" padding={1} gap="20px">
-            <Button
-              color="warning"
-              variant="contained"
-              onClick={() => {
-                setScreen("0");
-              }}
-            >
-              Cancel
-            </Button>
+          <Box display="flex" justifyContent="space-between" padding={1}>
+
+            <Box>
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                Actions Guide
+              </Typography>
+              <Box display="flex"
+                flexDirection="row"
+                gap="15px"
+                sx={{ overflowY: "auto" }}>
+                <Chip
+                  icon={<VisibilityIcon color="primary" />}
+                  label="Open Document"
+                  variant="outlined"
+                />
+              </Box>
+            </Box>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+              <Button
+                color="warning"
+                variant="contained"
+                onClick={() => {
+                  setScreen("0");
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Paper>
       ) : (

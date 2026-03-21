@@ -18,6 +18,7 @@ import {
   Paper,
   Breadcrumbs,
   Grid,
+  Chip,
 } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import store from "../../../index";
@@ -64,9 +65,11 @@ import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapire
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { dataGridHeaderFooterHeight, dataGridHeight, dataGridRowHeight } from "../../../ui-components/utils";
+import { dataGridHeaderFooterHeight, dataGridHeight, dataGridHeightExplore, dataGridRowHeight } from "../../../ui-components/utils";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ArrowBack, CloudUpload } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
 const Editvendor = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -248,14 +251,22 @@ const Editvendor = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
+  // useEffect(() => {
+  //   if (recID && mode === "E") {
+  //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+  //   } else {
+  //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+  //   }
+  // }, [location.key, recID, mode]);
   useEffect(() => {
-    if (recID && mode === "E") {
-      dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
-    } else {
-      dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+    if (show == "0") {
+      if (recID && mode === "E") {
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+      } else {
+        dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+      }
     }
-  }, [location.key, recID, mode]);
-
+  }, [location.key, recID, mode, show]);
 
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
@@ -3419,7 +3430,7 @@ const Editvendor = () => {
                 <Box
                   m="5px 0 0 0"
                   // height="50vh"
-                  height={dataGridHeight}
+                  height={dataGridHeightExplore}
                   sx={{
                     "& .MuiDataGrid-root": {
                       border: "none",
@@ -3506,16 +3517,34 @@ const Editvendor = () => {
               </form>
             )}
           </Formik>
-          <Box display="flex" justifyContent="end" padding={1} gap="20px">
-            <Button
-              color="warning"
-              variant="contained"
-              onClick={() => {
-                setScreen("0");
-              }}
-            >
-              Cancel
-            </Button>
+          <Box display="flex" justifyContent="space-between" padding={1}>
+
+ <Box>
+                    <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                      Actions Guide
+                    </Typography>
+                    <Box display="flex"
+                      flexDirection="row"
+                      gap="15px"
+                      sx={{ overflowY: "auto" }}>
+                      <Chip
+                        icon={<VisibilityIcon color="primary" />}
+                        label="Open Document"
+                        variant="outlined"
+                      />
+                    </Box>
+                  </Box>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+              <Button
+                color="warning"
+                variant="contained"
+                onClick={() => {
+                  setScreen("0");
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Paper>
       ) : (

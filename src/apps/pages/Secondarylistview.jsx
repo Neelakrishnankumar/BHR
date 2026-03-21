@@ -4168,9 +4168,9 @@ const ListviewSecondary = () => {
         </Box>
         <Box display="flex" alignItems="center" marginLeft={3}  >
           
-          <Typography fontWeight={400} fontSize={15} lineHeight={1}
+          <Typography fontWeight={600} fontSize={15} lineHeight={1}
             mb={-2} >
-            Legend
+            Actions Guide
           </Typography>
         </Box>
         {accessID == "TR001" ? (

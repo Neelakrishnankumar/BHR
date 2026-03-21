@@ -403,7 +403,7 @@ const Listview = () => {
                   fontWeight: 600,
                 }}
               >
-                {absValue}
+                {absValue.toFixed(2)}
               </span>
             );
           },
@@ -3743,8 +3743,8 @@ const Listview = () => {
           </Box>
           {accessID !== "TR313" && (
             <Box display="flex" alignItems="center" marginLeft={3}>
-              <Typography fontWeight={400} fontSize={15} lineHeight={1} mb={-2}>
-                Legend
+              <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={-2}>
+                Actions Guide
               </Typography>
             </Box>)}
         </Box>
