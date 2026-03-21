@@ -78,7 +78,7 @@
   "Party": {
     "code": "Please enter the Code",
     "name": "Please enter the Name",
-    "mobilenumber": "Please enter the Contact Mobile Number",
+    "mobilenumber": "Please enter the Contact Mobile or Landline Number",
     "Pancardnumber": "Invalid Pan Card Number",
     "gstnumber": "Invalid GST Number",
     "locality": "Please enter the Locality"

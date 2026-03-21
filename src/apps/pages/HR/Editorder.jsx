@@ -1005,7 +1005,9 @@ const EditOrder = () => {
                           <MenuItem value="Yet To Deliver">Scheduled</MenuItem>
                           <MenuItem value="Delivered">Delivered</MenuItem>
                           {/* COMMENTED AS PER NK ANNA - 06/03/2026 */}
-                          {/* <MenuItem value="Paid">Paid</MenuItem> */}
+                          {/* UNCOMMENTED AS ON - 20/03/2026 */}
+                          {ViewStatus === "Paid" && (
+                          <MenuItem value="Paid">Paid</MenuItem>)}
                           {/* <MenuItem value="Adjust From Advance">
                             Adjust From Advance
                           </MenuItem> */}

@@ -789,11 +789,11 @@ const EditAttendance = () => {
                   )}
 
                   {/* //For SOP PDF */}
-                  <Tooltip title="View PDF">
+                  {/* <Tooltip title="View PDF">
                     <IconButton onClick={handlePdfClick}>
                       <PictureAsPdfIcon sx={{ fontSize: 24, color: "#d32f2f" }} />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
 
 
                 </Stack>

@@ -170,6 +170,22 @@ const EditOrderitem = () => {
     dispatch(DefaultProductDeliveryChargeGet({ PartyRecordID }));
   }, [location.key]);
 
+
+  const computedPrice =
+    mode === "A"
+      ? DefaultProductDeliveryChargeGetData?.Price || 0
+      : data.Price || 0;
+
+  const computedQty = data.Quantity || 1;
+  const computedDiscount = data.Discount || 0;
+
+  const computedNet =
+    computedDiscount === 0
+      ? computedPrice
+      : computedPrice - (computedPrice * computedDiscount) / 100;
+
+  const computedAmount = (computedNet * computedQty).toFixed(2);
+
   const InitialValue = {
     quantity: data.Quantity || 1,
     damageqty: data.DamageQty,
@@ -186,7 +202,8 @@ const EditOrderitem = () => {
           ? DefaultProductDeliveryChargeGetData?.Price
           : data.Price) || 0
         : 0),
-    amount: data.Amount,
+    // netprice: data.NetPrice ?? computedNet,
+    amount: data.Amount !== "" ? data.Amount : computedAmount,
     discount: data.Discount || 0,
     // PurchaseType: data.PurchaseType || "Purchase",
     PurchaseType: data.DamageQty > 0 ? "Damage" : data.ReturnQty > 0 ? "Return" : "Purchase",

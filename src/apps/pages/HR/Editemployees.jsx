@@ -21,6 +21,7 @@ import {
   Paper,
   Grid,
   LinearProgress,
+  Chip,
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -111,6 +112,8 @@ import Resizer from "react-image-file-resizer";
 import ContactsIcon from '@mui/icons-material/Contacts';
 import CircularProgress from "@mui/material/CircularProgress";
 import { SOPfileUpload } from "../../../store/reducers/Imguploadreducer";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { dataGridHeightExplore } from "../../../ui-components/utils";
 
 
 // ***********************************************
@@ -2030,7 +2033,7 @@ const Editemployee = () => {
             {show == "2" ? "List of Functions" : "List of Designation"}||{show=="6" && "List of Documents"}
             
           </Typography> */}
-          <Typography>
+          <Typography variant="h6" fontWeight="bold">
             {show == "2"
               ? "List of Functions"
               : show == "6"
@@ -2057,7 +2060,7 @@ const Editemployee = () => {
                                     ? "List of Contracts"
                                     : "List of Managers"}
           </Typography>
-          {show != "20" && (<Typography variant="h5">{`(${rowCount})`}</Typography>)}
+          {show != "20" && (<Typography variant="h6" fontWeight="bold">{`(${rowCount})`}</Typography>)}
         </Box>
         <Box
           sx={{
@@ -3338,7 +3341,7 @@ const Editemployee = () => {
     {
       field: "Item",
       headerName: "Item",
-      width: 200,
+      width: 400,
       headerAlign: "center",
       align: "left"
     },
@@ -3354,7 +3357,7 @@ const Editemployee = () => {
     {
       field: "SLNO",
       headerName: "SL#",
-      width: 80,
+      width: 50,
     },
     {
       field: "RecordID",
@@ -3365,7 +3368,7 @@ const Editemployee = () => {
     {
       field: "Itemgroup",
       headerName: "Item Group",
-      width: 180,
+      width: 250,
       headerAlign: "center",
       align: "left"
 
@@ -3376,7 +3379,7 @@ const Editemployee = () => {
     {
       field: "SLNO",
       headerName: "SL#",
-      width: 80,
+      width: 50,
     },
     {
       field: "RecordID",
@@ -3387,7 +3390,7 @@ const Editemployee = () => {
     {
       field: "ItemCategory",
       headerName: "Item Category",
-      width: 180,
+      width: 250,
       headerAlign: "center",
       align: "left"
 
@@ -3398,7 +3401,7 @@ const Editemployee = () => {
     {
       field: "SLNO",
       headerName: "SL#",
-      width: 80,
+      width: 50,
     },
     {
       field: "RecordID",
@@ -3409,7 +3412,7 @@ const Editemployee = () => {
     {
       field: "Item",
       headerName: "Item",
-      width: 180,
+      width: 250,
       headerAlign: "center",
       align: "left"
 
@@ -3435,7 +3438,8 @@ const Editemployee = () => {
       setLoading(false);
       toast.success("Data fetched successfully");
       resetForm();
-    } else {
+    } 
+    else {
       setLoading(false);
       toast.error(response.payload.Msg);
     }
@@ -3456,9 +3460,25 @@ const Editemployee = () => {
       dispatch(
         Inventryget({ data: { EmployeeID: recID } }))
       toast.success(response.payload.Msg);
-    } else {
-      setLoading(false);
-      toast.error(response.payload.Msg);
+    } 
+    // else {
+    //   setLoading(false);
+    //   toast.error(response.payload.Msg);
+    // }
+     else {
+      const errors = response.payload.Message;
+
+      if (Array.isArray(errors)) {
+        toast.error(
+          <div>
+            {errors.map((err, i) => (
+              <div key={i}>{err}</div>
+            ))}
+          </div>
+        );
+      } else {
+        toast.error(errors || "Something went wrong");
+      }
     }
 
   }
@@ -13109,7 +13129,7 @@ const Editemployee = () => {
 
                     <Box
 
-                      height="40vh"
+                      height="45vh"
                       marginLeft={2}
                       sx={{
                         "& .MuiDataGrid-root": {
@@ -13127,6 +13147,7 @@ const Editemployee = () => {
                         },
                         "& .MuiDataGrid-virtualScroller": {
                           backgroundColor: colors.primary[400],
+                          // overflowX: "auto",
                         },
                         "& .MuiDataGrid-footerContainer": {
                           borderTop: "none",
@@ -13145,13 +13166,22 @@ const Editemployee = () => {
                         },
                       }}
                     >
-                      <Typography>List of Item Group :</Typography>
+                      <Typography variant="h6" fontWeight="bold">List of Item Group :</Typography>
                       <DataGrid
                         sx={{
                           "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                            // height: dataGridHeaderFooterHeight,
+                            // minHeight: dataGridHeaderFooterHeight,
+                            height: "auto",
+                            minHeight: 52,
                           },
+                          "& .MuiDataGrid-virtualScroller": {
+                            paddingBottom: "10px", // ✅ FIX HERE
+                          },
+                          "& .MuiDataGrid-main": {
+                            paddingBottom: "8px",
+                          }
+
                         }}
                         rows={Inventorygrid1rows || []}
                         columns={Att1Column || []}
@@ -13220,7 +13250,7 @@ const Editemployee = () => {
                       />
 
                     </Box>
-                    <Box height="40vh"
+                    <Box height="45vh"
                       sx={{
                         "& .MuiDataGrid-root": {
                           border: "none",
@@ -13255,13 +13285,26 @@ const Editemployee = () => {
                         },
                       }}
                     >
-                      <Typography>List of Item Category :</Typography>
+                      <Typography variant="h6" fontWeight="bold">List of Item Category :</Typography>
                       <DataGrid
+                        // sx={{
+                        //   "& .MuiDataGrid-footerContainer": {
+                        //     height: dataGridHeaderFooterHeight,
+                        //     minHeight: dataGridHeaderFooterHeight,
+                        //   },
+                        // }}
                         sx={{
                           "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                            height: "auto",
+                            minHeight: 52,
                           },
+                          "& .MuiDataGrid-virtualScroller": {
+                            paddingBottom: "10px", // ✅ FIX HERE
+                          },
+                          "& .MuiDataGrid-main": {
+                            paddingBottom: "8px",
+                          }
+
                         }}
                         rows={Inventorygrid2rows || []}
                         columns={Att2Column || []}
@@ -13344,7 +13387,7 @@ const Editemployee = () => {
                         }}
                       />
                     </Box>
-                    <Box height="40vh"
+                    <Box height="45vh"
                       // marginLeft={2}
                       sx={{
                         "& .MuiDataGrid-root": {
@@ -13380,13 +13423,26 @@ const Editemployee = () => {
                         },
                       }}
                     >
-                      <Typography>List of Items :</Typography>
+                      <Typography variant="h6" fontWeight="bold">List of Items :</Typography>
                       <DataGrid
+                        // sx={{
+                        //   "& .MuiDataGrid-footerContainer": {
+                        //     height: dataGridHeaderFooterHeight,
+                        //     minHeight: dataGridHeaderFooterHeight,
+                        //   },
+                        // }}
                         sx={{
                           "& .MuiDataGrid-footerContainer": {
-                            height: dataGridHeaderFooterHeight,
-                            minHeight: dataGridHeaderFooterHeight,
+                            height: "auto",
+                            minHeight: 52,
                           },
+                          "& .MuiDataGrid-virtualScroller": {
+                            paddingBottom: "10px", // ✅ FIX HERE
+                          },
+                          "& .MuiDataGrid-main": {
+                            paddingBottom: "8px",
+                          }
+
                         }}
                         rows={Inventorygrid3rows || []}
                         columns={Att3Column || []}
@@ -15545,7 +15601,8 @@ const Editemployee = () => {
                   <Box
                     m="5px 0 0 0"
                     // height="50vh"
-                    height={dataGridHeight}
+                    // height={dataGridHeight}
+                    height={dataGridHeightExplore}
                     sx={{
                       "& .MuiDataGrid-root": {
                         border: "none",
@@ -15633,16 +15690,34 @@ const Editemployee = () => {
               )}
 
             </Formik>
-            <Box display="flex" justifyContent="end" padding={1} gap="20px">
-              <Button
-                color="warning"
-                variant="contained"
-                onClick={() => {
-                  setScreen("0");
-                }}
-              >
-                Cancel
-              </Button>
+            <Box display="flex" justifyContent="space-between" padding={1}>
+
+              <Box>
+                <Typography fontWeight={600} fontSize={15} lineHeight={1} mb={1} ml={0.5}>
+                  Actions Guide
+                </Typography>
+                <Box display="flex"
+                  flexDirection="row"
+                  gap="15px"
+                  sx={{ overflowY: "auto" }}>
+                  <Chip
+                    icon={<VisibilityIcon color="primary" />}
+                    label="Open Document"
+                    variant="outlined"
+                  />
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent="space-between" padding={1}>
+                <Button
+                  color="warning"
+                  variant="contained"
+                  onClick={() => {
+                    setScreen("0");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
           </Paper>
         ) : (
