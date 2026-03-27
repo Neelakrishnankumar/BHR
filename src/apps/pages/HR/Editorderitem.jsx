@@ -737,7 +737,24 @@ const EditOrderitem = () => {
                             console.log("API Response:", res);
 
                             if (res.Status === "Y") {
-                              setFieldValue("price", res.Price);   // THIS LINE SETS 60.00
+                              // setFieldValue("price", res.Price);   // THIS LINE SETS 60.00
+
+                              const price = parseFloat(res.Price || 0);
+                              // ✅ SET PRICE
+                              setFieldValue("price", price.toFixed(2));
+
+                              // ✅ SET DISCOUNT = 0
+                              const discount = 0;
+                              setFieldValue("discount", discount);
+
+                              // ✅ CALCULATE NET PRICE
+                              const netPrice = price - (price * discount) / 100;
+                              setFieldValue("netprice", netPrice.toFixed(2));
+
+                              // OPTIONAL: reset qty & amount
+                              setFieldValue("quantity", "");
+                              setFieldValue("amount", "");
+
                             } else {
                               setFieldValue("price", "");
                             }
@@ -747,10 +764,10 @@ const EditOrderitem = () => {
                             setFieldValue("price", "");
                           }
 
-                          setFieldValue("discount", "");
-                          setFieldValue("netprice", "");
-                          setFieldValue("quantity", "");
-                          setFieldValue("amount", "");
+                          // setFieldValue("discount", "");
+                          // setFieldValue("netprice", "");
+                          // setFieldValue("quantity", "");
+                          // setFieldValue("amount", "");
                         }}
                         error={!!touched.product && !!errors.product}
                         helperText={touched.product && errors.product}
@@ -784,7 +801,8 @@ const EditOrderitem = () => {
                       //label="Discount (In Percentage)"
                       label={
                         <>
-                          Discount / Add On(%)
+                          {/* Discount / Add On(%) */}
+                          Discount / Add-on (%)
                           <span style={{ color: "red", fontSize: "20px" }}>
                             {" "}
                             *{" "}
