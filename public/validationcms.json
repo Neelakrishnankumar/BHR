@@ -193,12 +193,13 @@
   },
   "OrderItem": {
     "product": "Please select the Product",
-    "discount": "Please enter the Discount / Add On(%)",
+    "discount": "Please enter the Discount / Add-on (%)",
     "quantity": "Please enter the Quantity"
   },
   "AdvancePayment": {
     "Amount": "Please enter the Amount",
-    "paymentdate": "Please select the Payment Date"
+    "paymentdate": "Please select the Payment Date",
+    "ModeofPayment": "Please select the Payment Mode"
   },
   "OHPayment": {
     "paidamount": "Please enter the Paid Amount",
@@ -407,5 +408,8 @@
     "itemgroups": "Please select the Item Group",
     "itemcategory": "Please select the Item Category",
     "Grpitems": "Please select the Item"
+  },
+  "ResetParty": {
+    "Password": "Please Enter Your Passord"
   }
 }

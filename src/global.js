@@ -320,6 +320,8 @@ const initialState = {
   RepaymentScheduleGet:"",
   PartypendingorderlistgetController:"",
   SopTimeLineController:"",
+  GetOverflowAffectedOrders:"",
+  PartyReset:"",
 };
 
 export const getUrlSlice = createSlice({
@@ -508,6 +510,8 @@ export const getUrlSlice = createSlice({
       state.RepaymentScheduleGet = APIurl + "RepaymentScheduleGet.php";
       state.PartypendingorderlistgetController = APIurl + "PartypendingorderlistgetController.php";
       state.SopTimeLineController = APIurl + "SopTimeLineController.php";
+      state.GetOverflowAffectedOrders = APIurl + "getOverflowAffectedOrders.php";
+      state.PartyReset = APIurl + "PartyResetController.php";
     },
   },
 });

@@ -85,12 +85,22 @@ const EditAdvancePayment = () => {
         setErrorMsgData(data);
 
         let schemaFields = {
+          // Amount: Yup.number()
+          //   .typeError(data.AdvancePayment.Amount)
+          //   .required(data.AdvancePayment.Amount),
           Amount: Yup.number()
+            .transform((value, originalValue) =>
+              originalValue === "" ? undefined : Number(originalValue)
+            )
             .typeError(data.AdvancePayment.Amount)
-            .required(data.AdvancePayment.Amount),
+            .required(data.AdvancePayment.Amount)
+            .moreThan(0, "Amount must be greater than 0.00"),
           paymentdate: Yup.date()
             .typeError(data.AdvancePayment.paymentdate)
-            .required(data.AdvancePayment.paymentdate)
+            .required(data.AdvancePayment.paymentdate),
+          ModeofPayment: Yup.string()
+            .typeError(data.AdvancePayment.ModeofPayment)
+            .required(data.AdvancePayment.ModeofPayment)
         };
 
         const schema = Yup.object().shape(schemaFields);
@@ -109,6 +119,7 @@ const EditAdvancePayment = () => {
     paymentdate: data.Date ? data.Date.split(" ")[0] : "" || "",
     Amount: data.Amount || "",
     paymentComments: data.Comments || "",
+    ModeofPayment: data.ModeofPayment || "",
   };
 
   const Fnsave = async (values, del) => {
@@ -130,6 +141,7 @@ const EditAdvancePayment = () => {
       Amount: values.Amount || 0,
       SortOrder: values.sortorder || 0,
       Comments: values.paymentComments || "",
+      ModeofPayment: values.ModeofPayment || "",
       Disable: isCheck,
     };
 
@@ -344,6 +356,30 @@ const EditAdvancePayment = () => {
                       }}
                     />
 
+                    <TextField
+                      select
+                      label={
+                        <>
+                          Payment Mode
+                          <span style={{ color: "red", fontSize: "20px" }}>
+                            *
+                          </span>
+                        </>
+                      }
+                      id="ModeofPayment"
+                      name="ModeofPayment"
+                      value={values.ModeofPayment}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.ModeofPayment && !!errors.ModeofPayment}
+                      helperText={touched.ModeofPayment && errors.ModeofPayment}
+                      focused
+                      variant="standard"
+                    >
+                      <MenuItem value="COD">Cash On Delivery</MenuItem>
+                      <MenuItem value="UPI">UPI</MenuItem>
+                      <MenuItem value="Others">Others</MenuItem>
+                    </TextField>
                     <TextField
                       name="paymentComments"
                       type="text"
