@@ -654,6 +654,7 @@ const EditAttendanceHistory = () => {
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
                   height="500px"
+                  padding={1}
                   // height={dataGridHeight}
                   marginTop={2}
                   sx={{

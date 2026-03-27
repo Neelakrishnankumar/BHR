@@ -2233,8 +2233,9 @@ const Editproject = () => {
                   />
                 </Box>
                 <Box
+                padding={1}
                   // height="500px"
-                  height={dataGridHeight}
+                  height={dataGridHeightExplore}
                   marginTop={2}
                   sx={{
                     "& .MuiDataGrid-root": {
@@ -2464,6 +2465,7 @@ const Editproject = () => {
                 </Box>
 
                 <Box
+                padding={1}
                   m="5px 0 0 0"
                   // height="50vh"
                   // height={dataGridHeight}

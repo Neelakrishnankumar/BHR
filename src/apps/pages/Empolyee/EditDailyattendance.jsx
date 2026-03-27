@@ -69,7 +69,11 @@ const baseurlUAAM = config.UAAM_URL;
   const AttendanceData = useSelector(
     (state) => state.formApi.MonthlyAttendanceData
   );
-  console.log("AttendanceData", AttendanceData);
+  // console.log("AttendanceData", AttendanceData);
+  console.log("AttendanceData length", AttendanceData?.length);
+
+  const rows = React.useMemo(() => AttendanceData || [], [AttendanceData]);
+
   const [page, setPage] = React.useState(0);
 
   const getLoading = useSelector((state) => state.formApi.getLoading);
@@ -98,18 +102,42 @@ const baseurlUAAM = config.UAAM_URL;
   // useEffect(() => {
   //   dispatch(resetTrackingData());
   // }, []);
- useEffect(() => {
+
+
     const savedDate = sessionStorage.getItem("date");
-    const restoredDate = savedDate || new Date().toISOString().split("T")[0];
+      const restoredDate =
+        savedDate || new Date().toISOString().split("T")[0];
 
-    const data = {
-      Date: restoredDate,
-      CompanyID
-    };
 
-    console.log("Dispatching MonthlyAttendance:", data);
-    dispatch(MonthlyAttendance({ data }));
-  }, [EMPID, dispatch]);
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+    
+
+      await dispatch(
+        MonthlyAttendance({
+          data: { Date: restoredDate, CompanyID },
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchData();
+}, [dispatch]);
+//  useEffect(() => {
+//     const savedDate = sessionStorage.getItem("date");
+//     const restoredDate = savedDate || new Date().toISOString().split("T")[0];
+
+//     const data = {
+//       Date: restoredDate,
+//       CompanyID
+//     };
+
+//     console.log("Dispatching MonthlyAttendance:", data);
+//     dispatch(MonthlyAttendance({ data }));
+//   }, []);
 
   function AttendanceTool() {
     return (
@@ -445,11 +473,11 @@ const baseurlUAAM = config.UAAM_URL;
                   <Button type="reset" variant="contained" color="error">
                     RESET
                   </Button>
-                  {AttendanceData?.length > 0 && (
+                  {rows?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <DailyattendancePDF
-                          data={AttendanceData}
+                          data={rows}
                           filters={{
                             Date: values.date,
                             //EmployeeID: empData?.Name || EmpName,
@@ -479,6 +507,7 @@ const baseurlUAAM = config.UAAM_URL;
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
+                padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}
@@ -525,7 +554,7 @@ const baseurlUAAM = config.UAAM_URL;
                     }}
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
-                    rows={AttendanceData}
+                    rows={rows}
                     columns={AttColumn}
                     disableSelectionOnClick
                     getRowId={(row) => row.SLNO}

@@ -72,7 +72,7 @@ const initialState = {
     },
   },
   timeSheetData: {},
-  MonthlyAttendanceData: {},
+  MonthlyAttendanceData: [],
   sprintget: {},
   sprintPPget: [],
   sprintgetstatus: "",
@@ -5214,7 +5214,8 @@ export const timeSheetPostData = createAsyncThunk(
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
-    var url = store.getState().globalurl.payrollattendanceUrl;
+    // var url = store.getState().globalurl.payrollattendanceUrl
+var url = store.getState().globalurl.payslipattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
     console.log("get" + JSON.stringify(data));
