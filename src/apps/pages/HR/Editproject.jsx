@@ -254,9 +254,25 @@ const Editproject = () => {
     }
   };
 
-
+ const UnitRowSlot = (row) => {
+  if (!row.Name) {
+    return "Name is required";
+  }
+ if (!row.OwnedBy || !row.OwnedBy.Name) {
+    return "Owned By is required";
+  }
+  
+  return null;
+};
   // THIS RUNS WHENEVER A ROW IS EDITED AND SAVED
   const processRowUpdate = (newRow, oldRow) => {
+
+    //validation
+  const error = UnitRowSlot(newRow);
+  if (error) {
+    throw new Error(error);
+  }
+ 
     const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
     const updatedRow = { ...newRow, isNew: isNew };
 
@@ -524,7 +540,12 @@ const Editproject = () => {
       }
     },
     {
-      headerName: "Name",
+      headerName: (
+        <span>
+          Name <span style={{ color: "red" }}>*</span>
+        </span>
+      ),
+    
       field: "Name",
       width: 150,
       hide: false,
@@ -533,7 +554,12 @@ const Editproject = () => {
     },
     {
       field: "OwnedBy",
-      headerName: "Owned By",
+      headerName: (
+        <span>
+          Owned By <span style={{ color: "red" }}>*</span>
+        </span>
+      ),
+    
       width: 200,
       hide: false,
       editable: true,
@@ -800,7 +826,15 @@ const Editproject = () => {
 
   // GRID VIEW SAVE 
   const handleSaveButtonClick = async () => {
+    for (let index = 0; index < rows.length; index++) {
+  const row = rows[index];
+  const error = UnitRowSlot(row);
 
+  if (error) {
+    toast.error(`${error}`);
+    return; // ✅ stops entire save function
+  }
+}
     const insertRows = rows
       .filter((row) => row.isNew || isNaN(Number(row.RecordID)))
       .map((row) => ({
