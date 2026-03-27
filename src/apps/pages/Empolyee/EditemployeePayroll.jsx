@@ -19,7 +19,7 @@ import {
   Select,
   Tooltip,
   Paper,
-  Alert
+  Alert,
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
@@ -85,7 +85,12 @@ import {
   dataGridRowHeight,
   formGap,
 } from "../../../ui-components/global/utils";
-import { CheckinAutocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import {
+  CheckinAutocomplete,
+  MultiFormikOptimizedAutocomplete,
+  MultiSelectDropdown,
+  Productautocomplete,
+} from "../../../ui-components/global/Autocomplete";
 import RegisterOfWagesPDF from "../pdf/Payslip_V1";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
@@ -155,6 +160,7 @@ const EditemployeePayroll = () => {
   const dispatch = useDispatch();
   var recID = params.id;
   var mode = params.Mode;
+  var parentID = params.filtertype;
   var accessID = params.accessID;
   const Data = useSelector((state) => state.formApi.Data);
   const Status = useSelector((state) => state.formApi.Status);
@@ -162,10 +168,14 @@ const EditemployeePayroll = () => {
   const isLoading = useSelector((state) => state.formApi.loading);
   const deploymentData = useSelector((state) => state.formApi.deploymentData);
   //  console.log("deploymentData",deploymentData);
+  const fetchedData = useSelector((state) => state.formApi.data);
+  console.log(fetchedData, "fetcheddata");
+
   const DataExplore = useSelector((state) => state.formApi.inviceEData);
+
   console.log(
     "🚀 ~ file: Editproformainvoice.jsx:110 ~ DataExplore:",
-    DataExplore
+    DataExplore,
   );
   const [openDEPopup, setOpenDEPopup] = useState(false);
   const [openADPopup, setOpenADPopup] = useState(false);
@@ -174,10 +184,10 @@ const EditemployeePayroll = () => {
   const [openLOCATIONPopup, setOpenLOCATIONPopup] = useState(false);
   const [openGATEPopup, setOpenGATEPopup] = useState(false);
   const empAttendanceData = useSelector(
-    (state) => state.formApi.empAttendanceData
+    (state) => state.formApi.empAttendanceData,
   );
   const payslipAttendanceData = useSelector(
-    (state) => state.formApi.payslipAttendanceData
+    (state) => state.formApi.payslipAttendanceData,
   );
   console.log("payslipAttendanceData", payslipAttendanceData);
   console.log("empAttendanceData", empAttendanceData);
@@ -192,28 +202,25 @@ const EditemployeePayroll = () => {
   // useEffect(() => {
   //   dispatch(fetchApidata("TR027", "get", recID));
   // }, []);
-    // const [show, setScreen] = React.useState(0);
+  // const [show, setScreen] = React.useState(0);
     const [show, setScreen] = React.useState(accessID == "TR027" ? "0" : "11");
+ 
   useEffect(() => {
-      if (show == "0") {
+    if (show == "0") {
       if (recID && mode === "E") {
-        dispatch(fetchApidata("TR027","get", recID ));
+        dispatch(fetchApidata("TR027", "get", recID));
       } else {
-        dispatch(fetchApidata("TR027", "get", recID ));
+        dispatch(fetchApidata("TR027", "get", recID));
       }
     }
-    }, [location.key, recID, mode, show]);
+  }, [location.key, recID, mode, show]);
   const [ini, setIni] = useState(true);
   const [iniProcess, setIniProcess] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const currentYear = new Date().getFullYear();
 
-  const yearOptions = [
-    currentYear - 1,
-    currentYear,
-    currentYear + 1
-  ];
+  const yearOptions = [currentYear - 1, currentYear, currentYear + 1];
   const handleButtonClick = (params) => {
     const rowData = {
       CheckInDate: params.row.CheckInDate,
@@ -266,30 +273,21 @@ const EditemployeePayroll = () => {
     Password: Data.Password,
     Department: Data.DeptRecordID
       ? {
-        RecordID: Data.DeptRecordID,
-        Code: Data.DeptCode,
-        Name: Data.DeptName,
-      }
+          RecordID: Data.DeptRecordID,
+          Code: Data.DeptCode,
+          Name: Data.DeptName,
+        }
       : null,
   };
   //*******Assign Employee values from Database in  Yup initial value******* */
   const initialValues = {
+    Department: apiData.Department,
     Code: apiData.Code,
     Name: apiData.Name,
-    Job: apiData.Job,
-    // DeptRecordID:apiData.DeptRecordID,
-    Comm: apiData.Comm,
-    Mgr: apiData.Mgr,
-    amount: apiData.Sal,
-    Fax: apiData.Fax,
-    SortOrder: apiData.SortOrder,
-    checkbox: apiData.Disable,
     Password: apiData.Password,
-    Department: apiData.Department,
-    scrummaster: Data.ScrumMaster === "Y" ? true : false,
-    prjmanager: Data.ProjectManager === "Y" ? true : false,
+    Job: apiData.Job,
     employeetype:
-      Data.EmpType === "Prohibition"
+      Data.EmpType === "Probation"
         ? "PP"
         : Data.EmpType === "Permanent"
           ? "PM"
@@ -297,12 +295,28 @@ const EditemployeePayroll = () => {
             ? "CI"
             : Data.EmpType === "Contracts Out"
               ? "CO"
-              : // : Data.EmpType === "Contractor"
-              // ? "CT"
-              "",
+              : Data.EmpType === "Student"
+                ? "ST"
+                : Data.EmpType === "Intern"
+                  ? "IN"
+                  : "",
+    checkbox: apiData.Disable,
+    scrummaster: Data.ScrumMaster === "Y" ? true : false,
+    prjmanager: Data.ProjectManager === "Y" ? true : false,
+    qualityassurance: Data.QualityAssurance === "Y" ? true : false,
     joindate: Data.DateOfJoin,
+    dateofbirth: Data.DateOfBirth,
     confirmdate: Data.DateOfConfirmation,
+    // DeptRecordID:apiData.DeptRecordID,
+    Comm: apiData.Comm,
+    SortOrder: apiData.SortOrder,
+    delete: Data.DeleteFlag === "Y" ? true : false,
+    Mgr: apiData.Mgr,
+    amount: apiData.Sal,
+    Fax: apiData.Fax,
   };
+  // // 2. Initialize state
+  const [apiReturnValue, setApiReturnValue] = useState("");
 
   const [isPopupData, setisPopupdata] = React.useState(false);
   const [opendesignPopup, setOpendesignPopup] = useState(false);
@@ -430,24 +444,26 @@ const EditemployeePayroll = () => {
       Disable: values.checkbox === true ? "Y" : "N",
       ScrumMaster: values.scrummaster === true ? "Y" : "N",
       ProjectManager: values.prjmanager === true ? "Y" : "N",
-      EmpType: values.employeetype,
-      Sal: values.amount || 0,
-      DateOfJoin: values.joindate,
-      DateOfConfirmation: values.confirmdate,
+      QualityAssurance: Data.QualityAssurance === "Y" ? "Y" : "N",
       Job: values.Job,
       Mgr: values.Mgr,
-      Sal: values.Sal,
+      Sal: values.amount || 0,
+      // Sal: values.Sal,
+      EmpType: values.employeetype,
+      DateOfJoin: values.joindate,
+      DateOfBirth: values.dateofbirth,
+      DateOfConfirmation: values.confirmdate,
       Comm: values.Comm,
       Password: values.Password,
-      DesignID: 0,
-      LocationRecID: 0,
-      GateRecID: 0,
-      WeekOff: 0,
-      CompanyID,
-      QualityAssurance: Data.QualityAssurance === "Y" ? "Y" : "N",
       DeleteFlag: Data.DeleteFlag === "Y" ? "Y" : "N",
-      Module: "",
-      SubscriptionCode
+      Module: apiReturnValue,
+      // DesignID: 0,
+      // LocationRecID: 0,
+      // GateRecID: 0,
+      // WeekOff: 0,
+      CompanyID,
+      SubscriptionCode,
+      ClassificationID: parentID ? parentID : 0,
     };
     var type = "";
 
@@ -464,7 +480,7 @@ const EditemployeePayroll = () => {
       dispatch(fetchApidata(accessID, "get", recID));
       navigate(
         // `/Apps/TR027/Employees/EditEmployees/${data.payload.apiResponse}/E`
-        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${data.payload.apiResponse}/E`
+        `/Apps/TR027/Employee%20Payroll/EditEmployee%20Payroll/${data.payload.apiResponse}/E`,
       );
     } else {
       toast.error(data.payload.Msg);
@@ -482,7 +498,7 @@ const EditemployeePayroll = () => {
 
     // EmplyeeCheckInDateTime: passedData.EmplyeeCheckInDateTime,
     // EmplyeeCheckOutDateTime: passedData.EmplyeeCheckOutDateTime,
-    // Status: passedData.Status === "Present" 
+    // Status: passedData.Status === "Present"
     //         ? "P"
     //         : passedData.Status === "Absent"
     //         ? "A"
@@ -495,7 +511,6 @@ const EditemployeePayroll = () => {
     //         : "",
   };
   console.log(RegInitialValue, "kkkk");
-
 
   const RegFNsave = async (values, del) => {
     // let action = mode === "A" ? "insert" : "update";
@@ -518,10 +533,10 @@ const EditemployeePayroll = () => {
       RegularizationDate: values.MonthDate,
 
       // CheckInDate:passedData.CheckInDate,
-      // CheckOutDate: passedData.CheckOutDate,  
+      // CheckOutDate: passedData.CheckOutDate,
 
-      // CheckInTime: passedData.EmplyeeCheckInDateTime?.split(" / ")[1] || "", 
-      // CheckOutTime: passedData.EmplyeeCheckOutDateTime?.split(" / ")[1] || "", 
+      // CheckInTime: passedData.EmplyeeCheckInDateTime?.split(" / ")[1] || "",
+      // CheckOutTime: passedData.EmplyeeCheckOutDateTime?.split(" / ")[1] || "",
       Status: values.Status,
       Remarks: values.remarks,
       NewCheckInDate: values.CheckInDate,
@@ -544,10 +559,10 @@ const EditemployeePayroll = () => {
     }
   };
   const explorelistViewData = useSelector(
-    (state) => state.exploreApi.explorerowData
+    (state) => state.exploreApi.explorerowData,
   );
   const explorelistViewcolumn = useSelector(
-    (state) => state.exploreApi.explorecolumnData
+    (state) => state.exploreApi.explorecolumnData,
   );
   const exploreLoading = useSelector((state) => state.exploreApi.loading);
 
@@ -570,7 +585,6 @@ const EditemployeePayroll = () => {
     }
 
     return months.reverse().join(",");
-
   };
 
   // **********ScreenChange Function*********
@@ -583,8 +597,8 @@ const EditemployeePayroll = () => {
           "TR206",
           "Employee Allowances",
           `${recID} AND Category='A'`,
-          ""
-        )
+          "",
+        ),
       );
 
       dispatch(fetchApidata(accessID, "get", recID));
@@ -601,8 +615,8 @@ const EditemployeePayroll = () => {
           "TR206",
           "Employee Deductions",
           `${recID} AND Category='D'`,
-          ""
-        )
+          "",
+        ),
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({
@@ -630,11 +644,12 @@ const EditemployeePayroll = () => {
         Year: currentYear,
         Month: getLastSixMonthsIN(),
         CompanyID,
-        ManagerID: "",
+        // ManagerID: "",
         Etype: "E",
         ProjectID: "1",
         DesignationID: "83",
       };
+      return;
       dispatch(empAttendance({ data }));
     }
     // if (event.target.value == "9") {
@@ -642,14 +657,13 @@ const EditemployeePayroll = () => {
     // }
     if (event.target.value == "2") {
       dispatch(
-        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
     if (event.target.value == "8") {
-
       dispatch(
-        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, ""),
       );
       dispatch(fetchApidata(accessID, "get", recID));
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
@@ -660,8 +674,8 @@ const EditemployeePayroll = () => {
           "TR160",
           "Salary Advance",
           `EmployeeID=${recID}`,
-          ""
-        )
+          "",
+        ),
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
@@ -712,8 +726,7 @@ const EditemployeePayroll = () => {
       "EffectiveValue",
       "action",
     ];
-  }
-  else if (show == "8") {
+  } else if (show == "8") {
     VISIBLE_FIELDS = [
       "SLNO",
       "FromDate",
@@ -747,9 +760,9 @@ const EditemployeePayroll = () => {
   const columns = React.useMemo(
     () =>
       explorelistViewcolumn.filter((column) =>
-        VISIBLE_FIELDS.includes(column.field)
+        VISIBLE_FIELDS.includes(column.field),
       ),
-    [explorelistViewcolumn]
+    [explorelistViewcolumn],
   );
 
   // **********Grid header function************
@@ -863,7 +876,7 @@ const EditemployeePayroll = () => {
       field: "Name",
       headerName: "Name",
       width: 150,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     // {
     //   field: "Block",
@@ -874,205 +887,205 @@ const EditemployeePayroll = () => {
       field: "Day1",
       headerName: "1",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day2",
       headerName: "2",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day3",
       headerName: "3",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day4",
       headerName: "4",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day5",
       headerName: "5",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day6",
       headerName: "6",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day7",
       headerName: "7",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day8",
       headerName: "8",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day9",
       headerName: "9",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day10",
       headerName: "10",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day11",
       headerName: "11",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day12",
       headerName: "12",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day13",
       headerName: "13",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day14",
       headerName: "14",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day15",
       headerName: "15",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day16",
       headerName: "16",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day17",
       headerName: "17",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day18",
       headerName: "18",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day19",
       headerName: "19",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day20",
       headerName: "20",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day21",
       headerName: "21",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day22",
       headerName: "22",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day23",
       headerName: "23",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day24",
       headerName: "24",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day25",
       headerName: "25",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day26",
       headerName: "26",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day27",
       headerName: "27",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Day28",
       headerName: "28",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day29",
       headerName: "29",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day30",
       headerName: "30",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Day31",
       headerName: "31",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
 
     {
       field: "Present",
       headerName: "Present",
       headerAlign: "center",
-      align: "right"
+      align: "right",
     },
     // {
     //   field: "Absent",
@@ -1083,19 +1096,19 @@ const EditemployeePayroll = () => {
       field: "Leave",
       headerName: "Leave",
       headerAlign: "center",
-      align: "right"
+      align: "right",
     },
     {
       field: "Weekoff",
       headerName: "weekoff",
       headerAlign: "center",
-      align: "right"
+      align: "right",
     },
     {
       field: "Total",
       headerName: "Total",
       headerAlign: "center",
-      align: "right"
+      align: "right",
     },
   ];
   const AttColumn = [
@@ -1109,25 +1122,25 @@ const EditemployeePayroll = () => {
       field: "CheckInDateTimeConcat",
       headerName: "Employee CheckIn Date Time",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "CheckOutDateTimeConcat",
       headerName: "Employee CheckOut Date Time",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "NumberOfHoursWorked",
       headerName: "Number Of Hours Worked",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Status",
       headerName: "Status",
       flex: 1,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "Action",
@@ -1140,32 +1153,32 @@ const EditemployeePayroll = () => {
             color="primary"
             size="small"
             onClick={() => handleButtonClick(params)}
-          // onClick={() =>
-          // {
-          // handleButtonClick
-          // dispatch(setReg({ params}));
-          //dispatch(setReg({ params}));
-          //regfn(params);
-          // Navigate to the second screen for regularization
-          //  navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
-          // Set the selected row data in the state
-          //   setAsignReg({
-          //     CheckInDate: params.row.CheckInDate,
-          //     CheckOutDate: params.row.CheckOutDate,
-          //     EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
-          //     EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
-          //     MonthDate: params.row.MonthDate,
-          //     Name: params.row.Name,
-          //     NumberOfHoursWorked: params.row.NumberOfHoursWorked,
-          //     RecordID: params.row.RecordID,
-          //     SLNO: params.row.SLNO,
-          //     Status: params.row.Status
-          //   });
-          //   console.log(asignReg, "--onclick asignReg");
-          //   console.log(params.row, "-- onclick setAsignReg");
-          //  console.log(params.row.Name, "--Name");
-          // }}
-          // }
+            // onClick={() =>
+            // {
+            // handleButtonClick
+            // dispatch(setReg({ params}));
+            //dispatch(setReg({ params}));
+            //regfn(params);
+            // Navigate to the second screen for regularization
+            //  navigate(`/Apps/TR219/Regularization/${params.row.RecordID}`);
+            // Set the selected row data in the state
+            //   setAsignReg({
+            //     CheckInDate: params.row.CheckInDate,
+            //     CheckOutDate: params.row.CheckOutDate,
+            //     EmplyeeCheckInDateTime: params.row.EmplyeeCheckInDateTime,
+            //     EmplyeeCheckOutDateTime: params.row.EmplyeeCheckOutDateTime,
+            //     MonthDate: params.row.MonthDate,
+            //     Name: params.row.Name,
+            //     NumberOfHoursWorked: params.row.NumberOfHoursWorked,
+            //     RecordID: params.row.RecordID,
+            //     SLNO: params.row.SLNO,
+            //     Status: params.row.Status
+            //   });
+            //   console.log(asignReg, "--onclick asignReg");
+            //   console.log(params.row, "-- onclick setAsignReg");
+            //  console.log(params.row.Name, "--Name");
+            // }}
+            // }
           >
             Regularization
           </Button>
@@ -1227,7 +1240,7 @@ const EditemployeePayroll = () => {
   const selectCellRowData = ({ rowData, mode, field }) => {
     console.log(
       "🚀 ~ file: Editfunction.jsx:178 ~ selectcelldata ~ rowData:",
-      rowData
+      rowData,
     );
 
     setFunMode(mode);
@@ -1392,7 +1405,9 @@ const EditemployeePayroll = () => {
     amount: Data.Amount,
     comments: Data.Comments,
     approvedby: Data.Approvedby,
-    overhead: Data.OverheadsRecordID ? { RecordID: Data.OverheadsRecordID, Name: Data.Name } : null,
+    overhead: Data.OverheadsRecordID
+      ? { RecordID: Data.OverheadsRecordID, Name: Data.Name }
+      : null,
   };
   const getExpenseFileChange = async (event) => {
     setImgName(event.target.files[0]);
@@ -1409,7 +1424,7 @@ const EditemployeePayroll = () => {
     console.log(">>>", fileData.payload);
     console.log(
       "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-      fileData
+      fileData,
     );
     if (fileData.payload.Status == "Y") {
       // console.log("I am here");
@@ -1504,7 +1519,6 @@ const EditemployeePayroll = () => {
 
   console.log("Data:", Data);
 
-
   const ondutyFNsave = async (values, resetForm, del) => {
     setLoading(true);
     let action =
@@ -1525,7 +1539,6 @@ const EditemployeePayroll = () => {
       ManagerComments: values.managerComments,
       //SortOrder: "1",
       //Disable: "N",
-
 
       //   LeaveTypeID: values.leavetype.RecordID || 0,
     };
@@ -1559,13 +1572,13 @@ const EditemployeePayroll = () => {
     //   toast.error(response.payload.Msg);
     // }
     const response = await dispatch(
-      explorePostData({ accessID: "TR242", action, idata })
+      explorePostData({ accessID: "TR242", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
         //fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "",`CompId=${compID}`)
-        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR242", "On Duty", `EmployeeID=${recID}`, ""),
       );
 
       toast.success(response.payload.Msg);
@@ -1632,15 +1645,14 @@ const EditemployeePayroll = () => {
       Disable: "N",
       // LeaveTypeID: selectLETLookupData.letlookupRecordid,
       LeaveTypeID: selectLETLookupData ? selectLETLookupData.RecordID : 0,
-
     };
     const response = await dispatch(
-      explorePostData({ accessID: "TR208", action, idata })
+      explorePostData({ accessID: "TR208", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR208", "Leave", `EmployeeID=${recID}`, ""),
       );
 
       toast.success(response.payload.Msg);
@@ -1718,7 +1730,7 @@ const EditemployeePayroll = () => {
     };
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR216", action, idata })
+      explorePostData({ accessID: "TR216", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
@@ -1789,7 +1801,7 @@ const EditemployeePayroll = () => {
     };
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR160", action, idata })
+      explorePostData({ accessID: "TR160", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
@@ -1798,8 +1810,8 @@ const EditemployeePayroll = () => {
           "TR160",
           "Salary Advance",
           `EmployeeID=${recID}`,
-          ""
-        )
+          "",
+        ),
       );
 
       toast.success(response.payload.Msg);
@@ -1833,7 +1845,7 @@ const EditemployeePayroll = () => {
 
     // type: ADLookupData.adType,
     value: allDecData.value,
-    effectiveValue: allDecData.effectivevalue || 0.00,
+    effectiveValue: allDecData.effectivevalue || 0.0,
     sortorder: allDecData.sortOrder || 0,
   };
 
@@ -1869,14 +1881,14 @@ const EditemployeePayroll = () => {
     };
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR206", action, idata })
+      explorePostData({ accessID: "TR206", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       const query =
         show == "1" ? `${recID} AND Category='A'` : `${recID} AND Category='D'`;
       dispatch(
-        fetchExplorelitview("TR206", "AllowancesAndDeductions", query, "")
+        fetchExplorelitview("TR206", "AllowancesAndDeductions", query, ""),
       );
 
       toast.success(response.payload.Msg);
@@ -1921,12 +1933,12 @@ const EditemployeePayroll = () => {
     // console.log("save" + JSON.stringify(saveData));
 
     const response = await dispatch(
-      explorePostData({ accessID: "TR146", action, idata })
+      explorePostData({ accessID: "TR146", action, idata }),
     );
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR146", "ItemCustody", `EmployeeID=${recID}`, "")
+        fetchExplorelitview("TR146", "ItemCustody", `EmployeeID=${recID}`, ""),
       );
 
       toast.success(response.payload.Msg);
@@ -1986,12 +1998,11 @@ const EditemployeePayroll = () => {
   // };
   const [rows, setRows] = useState([]);
   const attFnSave = async (values) => {
-
     const data = {
       Month: values.month.toString(),
       Year: values.year,
       CompanyID,
-      ManagerID: "",
+      // ManagerID: "",
       Etype: "E",
       ProjectID: values.project.map((p) => p.RecordID).join(",") || "",
       DesignationID: values.Designation.map((d) => d.RecordID).join(",") || "",
@@ -2000,10 +2011,8 @@ const EditemployeePayroll = () => {
     const response = await dispatch(payslipAttendance({ data }));
 
     if (response?.payload?.Status === "Y") {
-
       // Directly set rows from dispatch response
       setRows(response.payload.Data || []);
-
     } else {
       setRows([]);
     }
@@ -2024,7 +2033,7 @@ const EditemployeePayroll = () => {
       EmployeeID: recID,
       // ProjectID: "1"
       ProjectID: values.ProName.RecordID || 0,
-      CompanyID
+      CompanyID,
       // ProjectName: values.ProName.Name || "",
     };
 
@@ -2061,22 +2070,31 @@ const EditemployeePayroll = () => {
   /*end of the Process button onclick */
 
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
   const attendaceProcessFnSave = async (values) => {
     const EmployeeIDs = payslipAttendanceData
-      .map(row => row.EmpRecid)
+      .map((row) => row.EmpRecid)
       .join(",");
     const data = {
       // action: "update",
 
-      // Month: values.month.toString(),   
+      // Month: values.month.toString(),
       Month: monthNames[Number(values.month) - 1],
       Year: values.year.toString(),
       CompanyID: CompanyID,
-      EmployeeID: EmployeeIDs
-
+      EmployeeID: EmployeeIDs,
     };
 
     console.log("Final Payload:", data);
@@ -2105,7 +2123,7 @@ const EditemployeePayroll = () => {
     console.log(">>>", fileData.payload);
     console.log(
       "🚀 ~ file: Editdeliverychalan.jsx:1143 ~ getFileChange ~ fileData:",
-      fileData
+      fileData,
     );
     if (fileData.payload.Status == "Y") {
       // console.log("I am here");
@@ -2245,11 +2263,12 @@ const EditemployeePayroll = () => {
                       setScreen(0);
                     }}
                   >
-                    {/* {" "}
-                    {mode === "E"
-                      ? `Employee(${state.EmpName})`
-                      : "Employee(New)"} */}
-                    Payroll
+                    {
+                      mode === "E"
+                        ? `Personnel(${state?.EmpName || Data?.Name})`
+                        : "Personnel(New)"
+                    }
+                    {/* Payroll */}
                   </Typography>
                   {show == "1" ? (
                     <Typography
@@ -2364,7 +2383,9 @@ const EditemployeePayroll = () => {
                     label="Explore"
                     onChange={screenChange}
                   >
-                    {accessID == "TR027" && (<MenuItem value={0}>Employee</MenuItem>)}
+                    {accessID == "TR027" && (
+                      <MenuItem value={0}>Employee</MenuItem>
+                    )}
                     {/* <MenuItem value={0}>Employee</MenuItem> */}
                     <MenuItem value={1}>Allowances</MenuItem>
                     <MenuItem value={5}>Deductions</MenuItem>
@@ -2375,7 +2396,9 @@ const EditemployeePayroll = () => {
                     <MenuItem value={9}>Expense</MenuItem>
                     <MenuItem value={10}>Regularization</MenuItem> */}
                     <MenuItem value={3}>Attendance</MenuItem>
-                    {accessID == "TR027" && (<MenuItem value={4}>Payroll Attendance</MenuItem>)}
+                    {/* {accessID == "TR027" && (
+                      <MenuItem value={4}>Payroll Attendance</MenuItem>
+                    )} */}
                   </Select>
                 </FormControl>
               ) : (
@@ -2398,7 +2421,6 @@ const EditemployeePayroll = () => {
 
         {show == "0" ? (
           <Paper elevation={3} sx={{ margin: "10px" }}>
-
             <Formik
               // onSubmit={handleFormSubmit}
               initialValues={initialValues}
@@ -2448,7 +2470,9 @@ const EditemployeePayroll = () => {
                     )}
 
                     <FormControl sx={{ gap: formGap }}>
-                      <Productautocomplete
+                      {/* <Productautocomplete */}
+                      <CheckinAutocomplete
+                     disabled={mode == "E"}
                         sx={{ marginTop: "7px" }}
                         name="Department"
                         label="Department"
@@ -2465,6 +2489,7 @@ const EditemployeePayroll = () => {
                         url={`${listViewurl}?data={"Query":{"AccessID":"2010","ScreenName":"Department","Filter":"parentID=${compID}","Any":""}}`}
                       />
                       <TextField
+                      disabled={mode == "E"}
                         fullWidth
                         variant="standard"
                         type="text"
@@ -2474,6 +2499,7 @@ const EditemployeePayroll = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         name="Code"
+                        placeholder="Auto"
                         // error={!!touched.Code && !!errors.Code}
                         // helperText={touched.Code && errors.Code}
                         sx={{
@@ -2489,6 +2515,7 @@ const EditemployeePayroll = () => {
                       />
 
                       <TextField
+                      disabled={mode == "E"}
                         fullWidth
                         variant="standard"
                         type="text"
@@ -2511,6 +2538,7 @@ const EditemployeePayroll = () => {
                         multiline
                       />
                       <TextField
+                      disabled={mode == "E"}
                         fullWidth
                         variant="standard"
                         type="Password"
@@ -2531,6 +2559,7 @@ const EditemployeePayroll = () => {
                         focused
                       />
                       <TextField
+                      disabled={mode == "E"}
                         fullWidth
                         variant="standard"
                         type="text"
@@ -2553,6 +2582,7 @@ const EditemployeePayroll = () => {
                       />
 
                       <TextField
+                      disabled={mode == "E"}
                         select
                         fullWidth
                         variant="standard"
@@ -2576,8 +2606,10 @@ const EditemployeePayroll = () => {
                         <MenuItem value="PM">Permanent</MenuItem>
                         <MenuItem value="CI">Contracts In</MenuItem>
                         <MenuItem value="CO">Contracts Out</MenuItem>
+                        <MenuItem value="IN">Intern</MenuItem>
                       </TextField>
                       <TextField
+                      disabled={mode == "E"}
                         name="amount"
                         type="text"
                         id="amount"
@@ -2598,20 +2630,36 @@ const EditemployeePayroll = () => {
                           },
                         }}
                       />
+
+                      <Box>
+                        <MultiSelectDropdown
+                        disabled={mode == "E"}
+                          id="module"
+                          name="Module"
+                          data={fetchedData?.Data || []} // from API
+                          apiValue={Data.Module} // from API
+                          onChange={(val) => {
+                            console.log("Send this to API:", val);
+                            setApiReturnValue(val);
+                          }}
+                        />
+                      </Box>
                       <Box>
                         <Field
+                        disabled={mode == "E"}
                           //  size="small"
                           type="checkbox"
-                          name="checkbox"
-                          id="checkbox"
+                          name="qualityassurance"
+                          id="qualityassurance"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           as={Checkbox}
-                          label="Disable"
+                          label="Quality Assurance"
                         />
 
-                        <FormLabel focused={false}>Disable</FormLabel>
+                        <FormLabel focused={false}>Quality Assurance</FormLabel>
                         <Field
+                        disabled={mode == "E"}
                           //  size="small"
                           type="checkbox"
                           name="scrummaster"
@@ -2624,6 +2672,7 @@ const EditemployeePayroll = () => {
 
                         <FormLabel focused={false}>Scrum Master</FormLabel>
                         <Field
+                        disabled={mode == "E"}
                           //  size="small"
                           type="checkbox"
                           name="prjmanager"
@@ -2635,6 +2684,34 @@ const EditemployeePayroll = () => {
                         />
 
                         <FormLabel focused={false}>Project Manager</FormLabel>
+                      </Box>
+                      <Box>
+                        <Field
+                        disabled={mode == "E"}
+                          //  size="small"
+                          type="checkbox"
+                          name="delete"
+                          id="delete"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Delete"
+                        />
+
+                        <FormLabel focused={false}>Delete</FormLabel>
+                        <Field
+                        disabled={mode == "E"}
+                          //  size="small"
+                          type="checkbox"
+                          name="checkbox"
+                          id="checkbox"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          as={Checkbox}
+                          label="Disable"
+                        />
+
+                        <FormLabel focused={false}>Disable</FormLabel>
                       </Box>
                     </FormControl>
 
@@ -2658,8 +2735,28 @@ const EditemployeePayroll = () => {
                           />
                         </Stack>
                       )}
-
                       <TextField
+                      disabled={mode == "E"}
+                       InputLabelProps={{ shrink: true }}   // ✅ FIX
+                        name="dateofbirth"
+                        type="date"
+                        id="dateofbirth"
+                        label="Date of Birth"
+                        variant="standard"
+                        focused
+                        inputFormat="YYYY-MM-DD"
+                        value={values.dateofbirth}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.dateofbirth && !!errors.dateofbirth}
+                        helperText={touched.dateofbirth && errors.dateofbirth}
+                        sx={{ background: "" }}
+                        // required
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                      />
+                      <TextField
+                      disabled={mode == "E"}
+                       InputLabelProps={{ shrink: true }}   // ✅ FIX
                         name="joindate"
                         type="date"
                         id="joindate"
@@ -2673,9 +2770,11 @@ const EditemployeePayroll = () => {
                         error={!!touched.joindate && !!errors.joindate}
                         helperText={touched.joindate && errors.joindate}
                         sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
+                      disabled={mode == "E"}
+                       InputLabelProps={{ shrink: true }}   // ✅ FIX
                         name="confirmdate"
                         type="date"
                         id="confirmdate"
@@ -2689,9 +2788,10 @@ const EditemployeePayroll = () => {
                         error={!!touched.confirmdate && !!errors.confirmdate}
                         helperText={touched.confirmdate && errors.confirmdate}
                         sx={{ background: "" }}
-                      //inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                        //inputProps={{ max: new Date().toISOString().split("T")[0] }}
                       />
                       <TextField
+                      disabled={mode == "E"}
                         fullWidth
                         variant="standard"
                         type="text"
@@ -2713,9 +2813,10 @@ const EditemployeePayroll = () => {
                         focused
                         inputProps={{ maxLength: 90 }}
                         multiline
-                      // rows={2}
+                        // rows={2}
                       />
                       <TextField
+                      disabled={mode == "E"}
                         fullWidth
                         variant="standard"
                         type="number"
@@ -2746,6 +2847,7 @@ const EditemployeePayroll = () => {
                   <Box display="flex" justifyContent="end" padding={1} gap={2}>
                     {YearFlag == "true" ? (
                       <LoadingButton
+                      disabled={mode == "E"}
                         color="secondary"
                         variant="contained"
                         type="submit"
@@ -2758,6 +2860,7 @@ const EditemployeePayroll = () => {
                       </LoadingButton>
                     ) : (
                       <Button
+                      // disabled={mode == "E"}
                         color="secondary"
                         variant="contained"
                         disabled={true}
@@ -2767,6 +2870,7 @@ const EditemployeePayroll = () => {
                     )}
                     {YearFlag == "true" && mode == "E" ? (
                       <Button
+                      disabled={mode == "E"}
                         color="error"
                         variant="contained"
                         onClick={() => {
@@ -2788,24 +2892,22 @@ const EditemployeePayroll = () => {
                       >
                         Delete
                       </Button>
-                    ) : (
-                      // <Button
-                      //   color="error"
-                      //   variant="contained"
-                      //   disabled={true}
-                      // //  color="error"
-                      // >
-                      //   Delete
-                      // </Button>
-                      null
-                    )}
+                    ) : // <Button
+                    //   color="error"
+                    //   variant="contained"
+                    //   disabled={true}
+                    // //  color="error"
+                    // >
+                    //   Delete
+                    // </Button>
+                    null}
                     <Button
+
                       color="warning"
                       variant="contained"
                       onClick={() => {
                         // navigate(`/Apps/TR027/Employees`);
-                        navigate("/Apps/TR027/Employee%20Payroll")
-
+                        navigate("/Apps/TR027/Employee%20Payroll");
                       }}
                     >
                       Cancel
@@ -2847,7 +2949,7 @@ const EditemployeePayroll = () => {
                       screenName="Gate"
                       childToParent={childToParent}
                       filterName={"parentID"}
-                    // filterValue={locationLookup.locationRecordID}
+                      // filterValue={locationLookup.locationRecordID}
                     />
                   </Popup>
                   <Popup
@@ -2890,7 +2992,7 @@ const EditemployeePayroll = () => {
                 values,
                 handleSubmit,
                 resetForm,
-                setFieldValue
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -2932,10 +3034,9 @@ const EditemployeePayroll = () => {
                       id="project"
                       value={values.project}
                       onChange={(e, newValue) => {
-                        setFieldValue("project", newValue)
+                        setFieldValue("project", newValue);
                       }}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID='${CompanyID}'","Any":""}}`}
-
                     />
                     {/* <CheckinAutocomplete
                       name="Designation"
@@ -2956,7 +3057,7 @@ const EditemployeePayroll = () => {
                       id="Designation"
                       value={values.Designation}
                       onChange={(e, newValue) => {
-                        setFieldValue("Designation", newValue)
+                        setFieldValue("Designation", newValue);
                       }}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2047","ScreenName":"Designation","Filter":"parentID='${CompanyID}'","Any":""}}`}
                     />
@@ -3032,7 +3133,12 @@ const EditemployeePayroll = () => {
                     <Button type="submit" variant="contained" color="secondary">
                       APPLY
                     </Button>
-                    <Button type="reset" variant="contained" color="primary" onClick={() => attendaceProcessFnSave(values)}>
+                    <Button
+                      type="reset"
+                      variant="contained"
+                      color="primary"
+                      onClick={() => attendaceProcessFnSave(values)}
+                    >
                       PROCESS
                     </Button>
                     <Button type="reset" variant="contained" color="error">
@@ -3167,7 +3273,7 @@ const EditemployeePayroll = () => {
                 values,
                 handleSubmit,
                 resetForm,
-                setFieldValue
+                setFieldValue,
               }) => {
                 // const baseSalary = Number(Data?.Sal || 0);
                 const enteredValue = Number(values.value || 0);
@@ -3180,7 +3286,6 @@ const EditemployeePayroll = () => {
                       selectCellRowData({ rowData: {}, mode: "A", field: "" });
                       resetForm();
                     }}
-
                   >
                     <Box
                       display="grid"
@@ -3387,12 +3492,12 @@ const EditemployeePayroll = () => {
                               // setFieldValue("Allowances", newValue);
                               console.log(
                                 ADLookupData,
-                                "--ADLookupData Allowances"
+                                "--ADLookupData Allowances",
                               );
 
                               console.log(
                                 newValue.RecordID,
-                                "Allowances RecordID"
+                                "Allowances RecordID",
                               );
 
                               setADLookupData({
@@ -3522,12 +3627,12 @@ const EditemployeePayroll = () => {
                               style: { textAlign: "right" },
                             },
                           }}
-                        // sx={{
-                        //   backgroundColor: '#ffffff', // Change to your desired background color
-                        //   '& .MuiFilledInput-root': {
-                        //     backgroundColor: '#f5f5f5', // For the filled variant
-                        //   },
-                        // }}
+                          // sx={{
+                          //   backgroundColor: '#ffffff', // Change to your desired background color
+                          //   '& .MuiFilledInput-root': {
+                          //     backgroundColor: '#f5f5f5', // For the filled variant
+                          //   },
+                          // }}
                         />
                         <TextField
                           name="sortorder"
@@ -3549,7 +3654,12 @@ const EditemployeePayroll = () => {
                         />
                       </FormControl>
                     </Box>
-                    <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                    <Box
+                      display="flex"
+                      justifyContent="end"
+                      padding={1}
+                      gap={2}
+                    >
                       {/* {YearFlag == "true" ? ( */}
                       <LoadingButton
                         color="secondary"
@@ -3601,7 +3711,7 @@ const EditemployeePayroll = () => {
                         color="warning"
                         variant="contained"
                         onClick={() => {
-                           setScreen(0);
+                          setScreen(0);
                           // navigate(`/Apps/TR333/Payroll`);
                           // navigate("/Apps/TR027/Employee%20Payroll")
                         }}
@@ -3623,7 +3733,7 @@ const EditemployeePayroll = () => {
                       </Popup>
                     </Box>
                   </form>
-                )
+                );
               }}
             </Formik>
           </Paper>
@@ -3650,7 +3760,7 @@ const EditemployeePayroll = () => {
                 values,
                 handleSubmit,
                 resetForm,
-                setFieldValue
+                setFieldValue,
               }) => {
                 // const baseSalary = Number(Data?.Sal || 0);
                 const enteredValue = Number(values.value || 0);
@@ -3860,12 +3970,12 @@ const EditemployeePayroll = () => {
                               // setFieldValue("Deduction", newValue);
                               console.log(
                                 ADLookupData,
-                                "--ADLookupData Deduction"
+                                "--ADLookupData Deduction",
                               );
 
                               console.log(
                                 newValue.RecordID,
-                                "Deduction RecordID"
+                                "Deduction RecordID",
                               );
 
                               setADLookupData({
@@ -3938,7 +4048,7 @@ const EditemployeePayroll = () => {
                               setFieldValue("value", num.toFixed(2)); // ✅ forces .00
                             }
                           }}
-                        // inputProps={{ readOnly: true }}
+                          // inputProps={{ readOnly: true }}
                         />
                         <TextField
                           fullWidth
@@ -3978,7 +4088,12 @@ const EditemployeePayroll = () => {
                         />
                       </FormControl>
                     </Box>
-                    <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                    <Box
+                      display="flex"
+                      justifyContent="end"
+                      padding={1}
+                      gap={2}
+                    >
                       {/* {YearFlag == "true" ? ( */}
                       <LoadingButton
                         color="secondary"
@@ -4050,7 +4165,7 @@ const EditemployeePayroll = () => {
                       </Popup>
                     </Box>
                   </form>
-                )
+                );
               }}
             </Formik>
           </Paper>
@@ -4261,7 +4376,6 @@ const EditemployeePayroll = () => {
                           alignItems: "center",
                         }}
                       >
-
                         <Productautocomplete
                           name="leavetype"
                           label={
@@ -4282,24 +4396,22 @@ const EditemployeePayroll = () => {
                             // setFieldValue("leavetype", newValue);
                             console.log(
                               selectLETLookupData,
-                              "--selectLETLookupData leavetype"
+                              "--selectLETLookupData leavetype",
                             );
 
                             console.log(
                               newValue.RecordID,
-                              "leavetype RecordID"
+                              "leavetype RecordID",
                             );
 
                             setselectLETLookupData({
                               RecordID: newValue.RecordID,
                               Code: newValue.Code,
                               Name: newValue.Name,
-
                             });
                           }}
                           url={`${listViewurl}?data={"Query":{"AccessID":"2092","ScreenName":"Leave Type","Filter":"","Any":""}}`}
                         />
-
                       </FormControl>
                       <FormControl focused variant="standard">
                         <InputLabel variant="standard" id="LeavePart">
@@ -4445,8 +4557,8 @@ const EditemployeePayroll = () => {
                         accessID="2092"
                         screenName="Leave Type"
                         childToParent={childToParent}
-                      //filterName={"parentID"}
-                      //filterValue={""}
+                        //filterName={"parentID"}
+                        //filterValue={""}
                       />
                     </Popup>
                   </Box>
@@ -4644,7 +4756,7 @@ const EditemployeePayroll = () => {
                           onChange={handleChange}
                           required
 
-                        //sx={{ gridColumn: "span 2" }}
+                          //sx={{ gridColumn: "span 2" }}
                         />
 
                         <TextField
@@ -4686,7 +4798,7 @@ const EditemployeePayroll = () => {
                         <FormControl
                           focused
                           variant="standard"
-                        //sx={{ gridColumn: "span 2" }}
+                          //sx={{ gridColumn: "span 2" }}
                         >
                           <InputLabel id="PaymentMethod">
                             Payment Methods
@@ -4699,8 +4811,7 @@ const EditemployeePayroll = () => {
                             onBlur={handleBlur}
                             onChange={handleChange}
                             error={
-                              !!touched.PaymentMethod &&
-                              !!errors.PaymentMethod
+                              !!touched.PaymentMethod && !!errors.PaymentMethod
                             }
                             helperText={
                               touched.PaymentMethod && errors.PaymentMethod
@@ -4715,7 +4826,7 @@ const EditemployeePayroll = () => {
                         <FormControl
                           focused
                           variant="standard"
-                        //sx={{ gridColumn: "span 2" }}
+                          //sx={{ gridColumn: "span 2" }}
                         >
                           <InputLabel id="OtType">OT Type</InputLabel>
                           <Select
@@ -4736,7 +4847,7 @@ const EditemployeePayroll = () => {
                         <FormControl
                           focused
                           variant="standard"
-                        //sx={{ gridColumn: "span 2" }}
+                          //sx={{ gridColumn: "span 2" }}
                         >
                           <InputLabel id="Status">Status</InputLabel>
                           <Select
@@ -4748,13 +4859,13 @@ const EditemployeePayroll = () => {
                             onChange={handleChange}
                             error={!!touched.Status && !!errors.Status}
                             helperText={touched.Status && errors.Status}
-                          // sx={{
-                          //   gridColumn: "span 2",
-                          //   backgroundColor: "#ffffff",
-                          //   "& .MuiFilledInput-root": {
-                          //     backgroundColor: "#ffffff",
-                          //   }
-                          // }}
+                            // sx={{
+                            //   gridColumn: "span 2",
+                            //   backgroundColor: "#ffffff",
+                            //   "& .MuiFilledInput-root": {
+                            //     backgroundColor: "#ffffff",
+                            //   }
+                            // }}
                           >
                             <MenuItem value="AL">Applied</MenuItem>
                             <MenuItem value="AP">Approved</MenuItem>
@@ -4769,7 +4880,7 @@ const EditemployeePayroll = () => {
                     justifyContent="end"
                     padding={1}
                     gap={2}
-                  // style={{ marginTop: "-45px" }}
+                    // style={{ marginTop: "-45px" }}
                   >
                     {/* {/ {YearFlag == "true" ? ( /} */}
                     <LoadingButton
@@ -5093,19 +5204,18 @@ const EditemployeePayroll = () => {
                                 // setFieldValue("overhead", newValue);
                                 console.log(
                                   selectOHLookupData,
-                                  "--selectOHLookupData overhead"
+                                  "--selectOHLookupData overhead",
                                 );
 
                                 console.log(
                                   newValue.RecordID,
-                                  "overhead RecordID"
+                                  "overhead RecordID",
                                 );
 
                                 setselectOHLookupData({
                                   RecordID: newValue.RecordID,
                                   Code: newValue.Code,
                                   Name: newValue.Name,
-
                                 });
                               }}
                               url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"Overhead","Filter":"","Any":""}}`}
@@ -5340,8 +5450,8 @@ const EditemployeePayroll = () => {
                 accessID="2032"
                 screenName="OverHead"
                 childToParent={childToParent}
-              //filterName={"FinanceCategoryType"}
-              //filterValue={parentID}
+                //filterName={"FinanceCategoryType"}
+                //filterValue={parentID}
               />
             </Popup>
           </Paper>
@@ -5521,9 +5631,8 @@ const EditemployeePayroll = () => {
                         focused
                         variant="standard"
                         sx={{ gap: formGap }}
-                      // disabled={mode == "E" && values.Status != "AL"}
+                        // disabled={mode == "E" && values.Status != "AL"}
                       >
-
                         <InputLabel variant="standard" id="LeavePart">
                           {
                             <span>
@@ -5583,7 +5692,8 @@ const EditemployeePayroll = () => {
                           sx={{ gridColumn: "span 2" }}
                           inputProps={{
                             min:
-                              values.FromDate || new Date().toISOString().split("T")[0],
+                              values.FromDate ||
+                              new Date().toISOString().split("T")[0],
                           }}
                         />
                         <TextField
@@ -5640,7 +5750,9 @@ const EditemployeePayroll = () => {
                           focused
                           variant="standard"
                         >
-                          {mode != "M" && <MenuItem value="AL">Applied</MenuItem>}
+                          {mode != "M" && (
+                            <MenuItem value="AL">Applied</MenuItem>
+                          )}
                           <MenuItem disabled={mode != "M"} value="AP">
                             Approved
                           </MenuItem>
@@ -5654,14 +5766,20 @@ const EditemployeePayroll = () => {
                         {/* {mode == "E" && values.Status == "RJ" && <Alert variant="filled" sx={{mt:1}} severity="error">Your Leave Request Was Rejected.</Alert>} */}
                       </FormControl>
 
-                      <Box display="flex" padding={1} justifyContent="flex-end" mt="2px" gridColumn="span 4" gap={2} >
+                      <Box
+                        display="flex"
+                        padding={1}
+                        justifyContent="flex-end"
+                        mt="2px"
+                        gridColumn="span 4"
+                        gap={2}
+                      >
                         {/* {mode != "M" && (values.Status == "AL" || mode == "A" ) &&  */}
                         <LoadingButton
                           color="secondary"
                           variant="contained"
                           type="submit"
                           loading={isLoading}
-
                         >
                           Save
                         </LoadingButton>
@@ -5753,7 +5871,6 @@ const EditemployeePayroll = () => {
                       </Box>
                     </FormControl>
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -5781,7 +5898,7 @@ const EditemployeePayroll = () => {
                 values,
                 handleSubmit,
                 resetForm,
-                setFieldValue
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -5930,13 +6047,11 @@ const EditemployeePayroll = () => {
                       />
                     </Box>
 
-
                     <FormControl sx={{ gap: formGap }}>
                       <FormControl
                         focused
                         variant="standard"
                         sx={{ gap: formGap }}
-
                       >
                         <TextField
                           name="date"
@@ -5972,8 +6087,9 @@ const EditemployeePayroll = () => {
                           autoFocus
                         />
 
-                        <FormControl sx={{ gridColumn: "span 2", display: "flex" }}>
-
+                        <FormControl
+                          sx={{ gridColumn: "span 2", display: "flex" }}
+                        >
                           <FormControl
                             sx={{
                               gridColumn: "span 2",
@@ -5989,12 +6105,11 @@ const EditemployeePayroll = () => {
                               id="overhead"
                               value={values.overhead}
                               onChange={(newValue) => {
-                                setFieldValue("overhead", newValue)
+                                setFieldValue("overhead", newValue);
                               }}
                               //  onChange={handleSelectionFunctionname}
                               // defaultValue={selectedFunctionName}
                               url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead","Filter":"","Any":""}}`}
-
                             />
                           </FormControl>
                         </FormControl>
@@ -6034,10 +6149,15 @@ const EditemployeePayroll = () => {
                           helperText={touched.comments && errors.comments}
                           autoFocus
                         />
-
                       </FormControl>
 
-                      <Box display="flex" padding={1} justifyContent="end" mt={18} gap={formGap}>
+                      <Box
+                        display="flex"
+                        padding={1}
+                        justifyContent="end"
+                        mt={18}
+                        gap={formGap}
+                      >
                         <IconButton
                           size="small"
                           color="warning"
@@ -6058,13 +6178,13 @@ const EditemployeePayroll = () => {
                           onClick={() => {
                             Data.Attachment || ImageName
                               ? window.open(
-                                ImageName
-                                  ? store.getState().globalurl.attachmentUrl +
                                   ImageName
-                                  : store.getState().globalurl.attachmentUrl +
-                                  Data.Attachment,
-                                "_blank"
-                              )
+                                    ? store.getState().globalurl.attachmentUrl +
+                                        ImageName
+                                    : store.getState().globalurl.attachmentUrl +
+                                        Data.Attachment,
+                                  "_blank",
+                                )
                               : toast.error("Please Upload File");
                           }}
                         >
@@ -6116,7 +6236,6 @@ const EditemployeePayroll = () => {
                       </Box>
                     </FormControl>
                   </Box>
-
                 </form>
               )}
             </Formik>
@@ -6144,7 +6263,7 @@ const EditemployeePayroll = () => {
                 values,
                 handleSubmit,
                 resetForm,
-                setFieldValue
+                setFieldValue,
               }) => (
                 <form
                   onSubmit={handleSubmit}
@@ -6175,12 +6294,12 @@ const EditemployeePayroll = () => {
                       label="Code"
                       focused
                       inputProps={{ readOnly: true }}
-                    // sx={{
-                    //   backgroundColor: '#f5f5f5 ', // Change to your desired background color
-                    //   '& .MuiFilledInput-root': {
-                    //     backgroundColor: '#f5f5f5 ', // For the filled variant
-                    //   },
-                    // }}
+                      // sx={{
+                      //   backgroundColor: '#f5f5f5 ', // Change to your desired background color
+                      //   '& .MuiFilledInput-root': {
+                      //     backgroundColor: '#f5f5f5 ', // For the filled variant
+                      //   },
+                      // }}
                     />
                     <TextField
                       fullWidth
@@ -6199,14 +6318,13 @@ const EditemployeePayroll = () => {
                       id="ProName"
                       value={values.ProName}
                       onChange={(newValue) => {
-                        setFieldValue("ProName", newValue)
+                        setFieldValue("ProName", newValue);
                         console.log(newValue);
                       }}
                       //value={selectedProjectOptions}
                       //onChange={handleSelectionProjectname}
                       // defaultValue={selectedProjectName}
                       url={`${listViewurl}?data={"Query":{"AccessID":"2054","ScreenName":"Project","Filter":"parentID=${CompanyID}","Any":""}}`}
-
                     />
 
                     <TextField
@@ -6235,7 +6353,6 @@ const EditemployeePayroll = () => {
                           .slice(0, 8);
                       }}
                     />
-
 
                     <TextField
                       fullWidth
@@ -6281,7 +6398,7 @@ const EditemployeePayroll = () => {
                           style: { textAlign: "right" },
                         },
                       }}
-                    // sx={{ gridColumn: "span 2" }}
+                      // sx={{ gridColumn: "span 2" }}
                     />
                   </Box>
                   <Box
@@ -6304,12 +6421,12 @@ const EditemployeePayroll = () => {
                     <Button type="reset" variant="contained" color="error">
                       RESET
                     </Button>
-
                   </Box>
 
                   <Box sx={{ gridColumn: "span 4" }}>
                     <Box
                       m="5px 0 0 0"
+                      padding={1}
                       //height={dataGridHeight}
                       height="50vh"
                       sx={{
@@ -6453,7 +6570,7 @@ const EditemployeePayroll = () => {
                       label="Code"
                       focused
                       inputProps={{ readOnly: true }}
-                    // sx={{ gridColumn: "span 2" }}
+                      // sx={{ gridColumn: "span 2" }}
                     />
 
                     <TextField
@@ -6466,7 +6583,7 @@ const EditemployeePayroll = () => {
                       label="Description"
                       focused
                       inputProps={{ readOnly: true }}
-                    // sx={{ gridColumn: "span 2" }}
+                      // sx={{ gridColumn: "span 2" }}
                     />
                     {/* <TextField
                       fullWidth
@@ -6814,7 +6931,7 @@ const EditemployeePayroll = () => {
                         onChange={handleChange}
                         error={!!touched.MonthDate && !!errors.MonthDate}
                         helperText={touched.MonthDate && errors.MonthDate}
-                      //sx={{ gridColumn: "span 2" }}
+                        //sx={{ gridColumn: "span 2" }}
                       />
 
                       <TextField
@@ -6830,7 +6947,7 @@ const EditemployeePayroll = () => {
                         onChange={handleChange}
                         error={!!touched.CheckInDate && !!errors.CheckInDate}
                         helperText={touched.CheckInDate && errors.CheckInDate}
-                      //sx={{ gridColumn: "span 2" }}
+                        //sx={{ gridColumn: "span 2" }}
                       />
 
                       <TextField
@@ -6850,7 +6967,7 @@ const EditemployeePayroll = () => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         focused
-                      //sx={{ gridColumn: "span 2" }}
+                        //sx={{ gridColumn: "span 2" }}
                       />
 
                       <TextField
@@ -6866,7 +6983,7 @@ const EditemployeePayroll = () => {
                         onChange={handleChange}
                         error={!!touched.CheckOutDate && !!errors.CheckOutDate}
                         helperText={touched.CheckOutDate && errors.CheckOutDate}
-                      //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
+                        //sx={{ gridColumn: "span 2", background: "#f5f5f5" }}
                       />
 
                       <TextField
@@ -6888,11 +7005,10 @@ const EditemployeePayroll = () => {
                         variant="standard"
                       />
 
-
                       <FormControl
                         focused
                         variant="standard"
-                      //sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
+                        //sx={{ gridColumn: "span 2", backgroundColor: "#f5f5f5" }}
                       >
                         <InputLabel id="Status">Status</InputLabel>
                         <Select
@@ -6925,7 +7041,6 @@ const EditemployeePayroll = () => {
                         focused
                         required
                         inputProps={{ maxLength: 90 }}
-
                       />
                     </FormControl>
                   </Box>
@@ -7000,8 +7115,8 @@ const EditemployeePayroll = () => {
                         accessID="2092"
                         screenName="Leave Type"
                         childToParent={childToParent}
-                      //filterName={"parentID"}
-                      //filterValue={""}
+                        //filterName={"parentID"}
+                        //filterValue={""}
                       />
                     </Popup>
                   </Box>

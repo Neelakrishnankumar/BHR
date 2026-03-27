@@ -89,6 +89,8 @@ import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -4279,6 +4281,14 @@ const ListviewSecondary = () => {
                     variant="outlined"
                   // sx={{ marginLeft: "50px" }}
                   />
+                  {params.OrderType === "O" &&
+                  <Chip
+                    icon={<PendingActionsOutlinedIcon color="primary" />}
+                    label="View Amount Adjustment"
+                    variant="outlined"
+                  // sx={{ marginLeft: "50px" }}
+                  />}
+                  
                   <Chip
                     icon={< PictureAsPdfIcon color="error" />}
                     label="Order Pdf"

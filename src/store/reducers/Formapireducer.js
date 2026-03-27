@@ -72,7 +72,7 @@ const initialState = {
     },
   },
   timeSheetData: {},
-  MonthlyAttendanceData: {},
+  MonthlyAttendanceData: [],
   MonthlyAttendanceDataGetloading: false,
   sprintget: {},
   sprintPPget: [],
@@ -225,6 +225,17 @@ const initialState = {
   SOPTimelinedata: {},
   SOPTimelineloading: false,
   SOPTimelinestatus: "",
+
+  //GetOverflowAffectedOrders GET
+  GetOverflowAffectedOrdersdata: {},
+  GetOverflowAffectedOrdersloading: false,
+  GetOverflowAffectedOrdersstatus: "",
+
+  
+  //PartyReset POST
+  PartyResetdata: {},
+  PartyResetloading: false,
+  PartyResetstatus: "",
 };
 
 export const subscriptionRenewal = createAsyncThunk(
@@ -4163,6 +4174,38 @@ export const getApiSlice = createSlice({
         state.SOPTimelinestatus = "Error";
         state.SOPTimelineloading = false;
       })
+      //GetOverflowAffectedOrders - GET
+      .addCase(GetOverflowAffectedOrders.pending, (state, action) => {
+        state.GetOverflowAffectedOrdersstatus = "idle";
+        state.GetOverflowAffectedOrdersloading = true;
+      })
+      .addCase(GetOverflowAffectedOrders.fulfilled, (state, action) => {
+        state.GetOverflowAffectedOrdersstatus = "success";
+        state.GetOverflowAffectedOrdersloading = false;
+        state.GetOverflowAffectedOrdersdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(GetOverflowAffectedOrders.rejected, (state, action) => {
+        state.GetOverflowAffectedOrdersstatus = "Error";
+        state.GetOverflowAffectedOrdersloading = false;
+      })
+      //PartyReset - GET
+      .addCase(PartyReset.pending, (state, action) => {
+        state.PartyResetstatus = "idle";
+        state.PartyResetloading = true;
+      })
+      .addCase(PartyReset.fulfilled, (state, action) => {
+        state.PartyResetstatus = "success";
+        state.PartyResetloading = false;
+        state.PartyResetdata = action.payload
+          ? action.payload
+          : {};
+      })
+      .addCase(PartyReset.rejected, (state, action) => {
+        state.PartyResetstatus = "Error";
+        state.PartyResetloading = false;
+      })
       //SCOREBOARD
       // .addCase(ScoredashBoard.pending, (state, action) => {
       //   // state.ScoredashBoardGetData = []
@@ -5219,7 +5262,8 @@ export const timeSheetPostData = createAsyncThunk(
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
-    var url = store.getState().globalurl.payrollattendanceUrl;
+    // var url = store.getState().globalurl.payrollattendanceUrl
+var url = store.getState().globalurl.payslipattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
     console.log("get" + JSON.stringify(data));
@@ -5901,6 +5945,46 @@ export const SopTimeLineController = createAsyncThunk(
 
     const data = {
       SopID: SopID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+
+export const GetOverflowAffectedOrders = createAsyncThunk(
+  "GetOverflowAffectedOrders/Get",
+  async ({ HeaderID }) => {
+    const url = store.getState().globalurl.GetOverflowAffectedOrders;
+
+    const data = {
+      HeaderID: HeaderID,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    return response.data;
+  },
+);
+export const PartyReset = createAsyncThunk(
+  "PartyReset/Post",
+  async ({ Data }) => {
+    const url = store.getState().globalurl.PartyReset;
+
+    const data = {
+    UserID: Data.UserID,
+    Password: Data.Password,
+    PartyID: Data.PartyID,
+    CompanyID: Data.CompanyID
     };
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {

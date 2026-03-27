@@ -117,6 +117,7 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 
 const Listview = () => {
   const navigate = useNavigate();
@@ -4135,6 +4136,11 @@ const Listview = () => {
               label="Advance Payment"
               variant="outlined"
             // sx={{ marginLeft: "50px" }}
+            />
+            <Chip
+              icon={<RestartAltOutlinedIcon color="error" />}
+              label="Reset"
+              variant="outlined"
             />
           </Box>
         ) : accessID == "TR313" ? (
