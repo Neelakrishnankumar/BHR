@@ -742,7 +742,7 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     textAlign: "center",
   },
-   headerCellStatus: {
+  headerCellStatus: {
     padding: 4,
     fontWeight: "bold",
     backgroundColor: "#f0f0f0",
@@ -839,14 +839,18 @@ const formatDate = (date) =>
 ========================= */
 
 const OrdEnqProductPDF = ({ data = [], filters = {} }) => {
-  const productGroups = groupByProduct(data);
+  // const productGroups = groupByProduct(data);
+  const filteredData = data.filter(
+    (row) => String(row.PurchaseCheckbox).toUpperCase() === "N"
+  );
 
+  const productGroups = groupByProduct(filteredData);
   return (
     <Document>
       {Object.entries(productGroups).map(
         ([productName, productRows], productIndex) => {
           const mergedRows = mergeProductRows(productRows);
-
+          //           
           const totalTransactions = mergedRows.length;
           const totalAmount = mergedRows.reduce(
             (sum, r) => sum + Number(r.Amount || 0),

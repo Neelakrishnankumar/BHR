@@ -192,7 +192,8 @@ const EditemployeePayroll = () => {
   // useEffect(() => {
   //   dispatch(fetchApidata("TR027", "get", recID));
   // }, []);
-    const [show, setScreen] = React.useState(0);
+    // const [show, setScreen] = React.useState(0);
+    const [show, setScreen] = React.useState(accessID == "TR027" ? "0" : "11");
   useEffect(() => {
       if (show == "0") {
       if (recID && mode === "E") {

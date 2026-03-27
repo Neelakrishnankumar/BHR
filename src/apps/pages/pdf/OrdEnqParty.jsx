@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     headerCellstatus: {
-padding: 4,
+        padding: 4,
         fontWeight: 2000,
         backgroundColor: "#f0f0f0",
         // borderRightWidth: 1,
@@ -157,7 +157,9 @@ const mergePartyRows = (rows) => {
 
 const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) => {
     // const productGroups = groupByProduct(data);
-    const partyGroups = groupByParty(data);
+    // const partyGroups = groupByParty(data);
+    const filteredData = data.filter(row => row.PurchaseCheckbox === "N");
+    const partyGroups = groupByParty(filteredData);
     const statusDateMap = {
         Created: "OROrderDate",
         Process: "ORProcessDate",
@@ -288,7 +290,7 @@ const OrdEnqPartyPDF = ({ data = [], Product = [], Party = [], filters = {} }) =
                                             </Text>
 
                                             <Text style={[styles.cell, { flex: 1, textAlign: "center" }]}>
-                                                {/* {formatDate(getStatusDate(row))} */}                                                
+                                                {/* {formatDate(getStatusDate(row))} */}
                                                 {formatDate(row.OROrderDate)}
                                             </Text>
 
