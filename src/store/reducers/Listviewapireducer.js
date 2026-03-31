@@ -1839,8 +1839,9 @@ export const fetchListview =
               sortable: false,
               filterable: false,
               headerAlign: "center",
+              align: (AccessID === "TR319" || AccessID === "TR324") ? "center" : "left",
               // align: "center",
-              align: "left",
+              // align: "left",
               disableColumnMenu: true,
               disableExport: true,
               renderCell: (params) => (

@@ -232,6 +232,7 @@ const initialState = {
   weightagepostUrl: "",
   employeeattendanceUrl: "",
   payrollattendanceUrl: "",
+  GetPayrollattendaceUrl: "",
   attendanceUrl: "",
   attendanceprocessUrl: "",
   regularizationUrl: "",
@@ -410,10 +411,10 @@ export const getUrlSlice = createSlice({
       state.weightagepostUrl = APIurl + "HRWeightagesContoller.php";
       state.employeeattendanceUrl = APIurl + "getempattendancehistory.php";
       state.payrollattendanceUrl = APIurl + "PayrollAttendanceController.php";
+      state.GetPayrollattendaceUrl = APIurl + "PayrollAttendanceGet.php";
       state.payslipattendanceUrl = APIurl + "EmpPayrollAttendanceController.php";
       state.attendanceUrl = APIurl + "getempattendance.php";
-      state.attendanceprocessUrl =
-        APIurl + "EmpAttendanceHistoryController.php";
+      state.attendanceprocessUrl = APIurl + "EmpAttendanceHistoryController.php";
       state.regularizationUrl = APIurl + "APIController.php?";
       state.settingsgetUrl = APIurl + "HRSubscriptionCodeGetController.php";
       state.settingsPostUrl = APIurl + "HRChangePasswordController.php";

@@ -20,7 +20,10 @@ import {
   Tooltip,
   Paper,
   Alert,
+ Chip,
 } from "@mui/material";
+// import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Formik, Field } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -45,6 +48,7 @@ import {
   leaveAppoval,
   Processpost,
   payslipAttendance,
+  PayrollconfigpayrollAttendance,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -93,6 +97,7 @@ import {
 } from "../../../ui-components/global/Autocomplete";
 import RegisterOfWagesPDF from "../pdf/Payslip_V1";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { dataGridHeightExplore } from "../../../ui-components/utils";
 
 const EditemployeePayroll = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -194,6 +199,11 @@ const EditemployeePayroll = () => {
 
   const AttendanceData = useSelector((state) => state.formApi.AttendanceData);
   console.log("AttendanceData", AttendanceData);
+
+
+  
+    const PayrollconfigpayrollAttendanceData = useSelector((state) => state.formApi.PayrollconfigpayrollAttendanceData);
+  console.log("PayrollconfigpayrollAttendanceData", PayrollconfigpayrollAttendanceData);
 
   const [openPROPopup, setOpenPROPopup] = useState(false);
 
@@ -639,18 +649,30 @@ const EditemployeePayroll = () => {
     if (event.target.value == "0") {
       dispatch(fetchApidata(accessID, "get", recID));
     }
-    if (event.target.value == "4") {
-      const data = {
-        Year: currentYear,
-        Month: getLastSixMonthsIN(),
-        CompanyID,
-        // ManagerID: "",
-        Etype: "E",
-        ProjectID: "1",
-        DesignationID: "83",
-      };
-      return;
-      dispatch(empAttendance({ data }));
+    // if (event.target.value == "4") {
+    //   const data = {
+    //     Year: currentYear,
+    //     Month: getLastSixMonthsIN(),
+    //     CompanyID,
+    //     // ManagerID: "",
+    //     Etype: "E",
+    //     ProjectID: "1",
+    //     DesignationID: "83",
+    //   };
+    //   // return;
+    //   dispatch(empAttendance({ data }));
+    // }
+    
+      if (event.target.value == "4") {
+     dispatch(
+        fetchExplorelitview(
+          "TR367",
+          "Payroll",
+          //  `'${recID}' AND CompanyID='${CompanyID}'`,
+          `CompanyID='${CompanyID}' AND EmployeeID='${recID}'`,
+          "",
+        ),
+      );
     }
     // if (event.target.value == "9") {
     //   dispatch(fetchApidata(accessID, "get", recID));
@@ -724,6 +746,19 @@ const EditemployeePayroll = () => {
       "Type",
       "value",
       "EffectiveValue",
+      "action",
+    ];
+      } else if (show == "4") {
+    VISIBLE_FIELDS = [
+      "SLNO",
+      "Month",
+      "Year",
+      "Department",
+      "Personnel",
+      "Project",
+      "Designation",
+      "DateOfJoining",
+      "Process",
       "action",
     ];
   } else if (show == "8") {
@@ -865,6 +900,8 @@ const EditemployeePayroll = () => {
       </GridToolbarContainer>
     );
   }
+
+  
   const column = [
     {
       field: "SLNO",
@@ -2396,9 +2433,9 @@ const EditemployeePayroll = () => {
                     <MenuItem value={9}>Expense</MenuItem>
                     <MenuItem value={10}>Regularization</MenuItem> */}
                     <MenuItem value={3}>Attendance</MenuItem>
-                    {/* {accessID == "TR027" && (
+                    {accessID == "TR027" && (
                       <MenuItem value={4}>Payroll Attendance</MenuItem>
-                    )} */}
+                    )}
                   </Select>
                 </FormControl>
               ) : (
@@ -3228,6 +3265,7 @@ const EditemployeePayroll = () => {
 
                         //   console.log(JSON.stringify(params));
                         // }}
+                         loading={exploreLoading}
                         components={{
                           Toolbar: empAttendanceTool,
                         }}
@@ -6649,9 +6687,11 @@ const EditemployeePayroll = () => {
 
                   <Box m="5px">
                     <Box
+                    // padding={1}
                       m="5px 0 0 0"
-                      //height={dataGridHeight}
-                      height="50vh"
+                      height={dataGridHeightExplore}
+                      // height={dataGridHeight}
+                      // height="50vh"
                       sx={{
                         "& .MuiDataGrid-root": {
                           border: "none",
@@ -6693,10 +6733,13 @@ const EditemployeePayroll = () => {
                             minHeight: dataGridHeaderFooterHeight,
                           },
                         }}
-                        rows={empAttendanceData}
-                        columns={column}
+                       
+                        rows={explorelistViewData}
+                        columns={columns}
+                        // rows={empAttendanceData}
+                        // columns={column}
                         disableSelectionOnClick
-                        getRowId={(row) => row.SLNO}
+                        getRowId={(row) => row.RecordID}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) =>
                           setPageSize(newPageSize)
@@ -6705,7 +6748,7 @@ const EditemployeePayroll = () => {
                         headerHeight={dataGridHeaderFooterHeight}
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
-                        // loading={isLoading}
+                        loading={exploreLoading}
                         // onCellClick={(params) => {
                         //   const currentRow = params.row;
                         //   const currentcellField = params.field;
@@ -6729,7 +6772,17 @@ const EditemployeePayroll = () => {
                         }}
                       />
                     </Box>
+
+
                   </Box>
+                    <Box display="flex" flexDirection="row" gap={2} padding="25px">
+                              <Chip
+                 
+                                icon={<PictureAsPdfIcon color="error" />}
+                                label="Download Payslip PDF"
+                                variant="outlined"
+                              />
+                                </Box>  
                 </form>
               )}
             </Formik>
