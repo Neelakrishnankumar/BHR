@@ -72,7 +72,8 @@ const initialState = {
     },
   },
   timeSheetData: {},
-  MonthlyAttendanceData: {},
+  MonthlyAttendanceData: [],
+  MonthlyAttendanceDataGetloading: false,
   sprintget: {},
   sprintPPget: [],
   sprintgetstatus: "",
@@ -4235,7 +4236,11 @@ export const getApiSlice = createSlice({
         state.managerName =
           action.payload?.Data?.ManagersName?.ManagersName || "";
       })
+       .addCase(MonthlyAttendance.pending, (state, action) => {
+        state.MonthlyAttendanceDataGetloading = true;
+      })
       .addCase(MonthlyAttendance.fulfilled, (state, action) => {
+        state.MonthlyAttendanceDataGetloading = false;
         state.MonthlyAttendanceData = action.payload.Data;
       });
   },
@@ -5257,7 +5262,8 @@ export const timeSheetPostData = createAsyncThunk(
 export const empAttendance = createAsyncThunk(
   "employee/Payrollattendance",
   async ({ data }) => {
-    var url = store.getState().globalurl.payrollattendanceUrl;
+    // var url = store.getState().globalurl.payrollattendanceUrl
+var url = store.getState().globalurl.payslipattendanceUrl;
     // var url = store.getState().globalurl.employeeattendanceUrl;
 
     console.log("get" + JSON.stringify(data));

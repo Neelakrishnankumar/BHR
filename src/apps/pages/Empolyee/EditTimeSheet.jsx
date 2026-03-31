@@ -838,6 +838,7 @@ const EditTimeSheet = () => {
 
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
+                padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}

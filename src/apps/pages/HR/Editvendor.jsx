@@ -3428,6 +3428,7 @@ const Editvendor = () => {
                 </Box>
 
                 <Box
+                padding={1}
                   m="5px 0 0 0"
                   // height="50vh"
                   height={dataGridHeightExplore}

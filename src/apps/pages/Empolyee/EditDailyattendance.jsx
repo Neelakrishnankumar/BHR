@@ -12,6 +12,7 @@ import {
   MenuItem,
   Checkbox,
   FormControlLabel,
+  CircularProgress,
 } from "@mui/material";
 import {
   dataGridHeaderFooterHeight,
@@ -59,20 +60,24 @@ const EditdailyAttendance = () => {
   const EmpName = sessionStorage.getItem("EmpName");
   const CompanyID = sessionStorage.getItem("compID");
 
-const HeaderImg = sessionStorage.getItem("CompanyHeader");
-const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
 
-console.log("HeaderImg", HeaderImg, FooterImg);
-const config = getConfig();
-const baseurlUAAM = config.UAAM_URL;
-
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+  const [pdfGenerating, setPdfGenerating] = useState(false);
   const AttendanceData = useSelector(
     (state) => state.formApi.MonthlyAttendanceData
   );
-  console.log("AttendanceData", AttendanceData);
+  // console.log("AttendanceData", AttendanceData);
+  console.log("AttendanceData length", AttendanceData?.length);
+
+  const rows = React.useMemo(() => AttendanceData || [], [AttendanceData]);
+
   const [page, setPage] = React.useState(0);
 
-  const getLoading = useSelector((state) => state.formApi.getLoading);
+  const getLoading = useSelector((state) => state.formApi.MonthlyAttendanceDataGetloading);
   const data = useSelector((state) => state.formApi.Data);
   const isLoading = useSelector((state) => state.formApi.loading);
   const [pageSize, setPageSize] = useState(31);
@@ -98,18 +103,42 @@ const baseurlUAAM = config.UAAM_URL;
   // useEffect(() => {
   //   dispatch(resetTrackingData());
   // }, []);
- useEffect(() => {
+
+
     const savedDate = sessionStorage.getItem("date");
-    const restoredDate = savedDate || new Date().toISOString().split("T")[0];
+      const restoredDate =
+        savedDate || new Date().toISOString().split("T")[0];
 
-    const data = {
-      Date: restoredDate,
-      CompanyID
-    };
 
-    console.log("Dispatching MonthlyAttendance:", data);
-    dispatch(MonthlyAttendance({ data }));
-  }, [EMPID, dispatch]);
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+    
+
+      await dispatch(
+        MonthlyAttendance({
+          data: { Date: restoredDate, CompanyID },
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchData();
+}, [dispatch]);
+//  useEffect(() => {
+//     const savedDate = sessionStorage.getItem("date");
+//     const restoredDate = savedDate || new Date().toISOString().split("T")[0];
+
+//     const data = {
+//       Date: restoredDate,
+//       CompanyID
+//     };
+
+//     console.log("Dispatching MonthlyAttendance:", data);
+//     dispatch(MonthlyAttendance({ data }));
+//   }, []);
 
   function AttendanceTool() {
     return (
@@ -177,19 +206,19 @@ const baseurlUAAM = config.UAAM_URL;
     },
     {
       field: "Name",
-      headerName: "Employee Name",
+      headerName: "Personnel",
       flex: 1,
       headerAlign: "center",
     },
     {
       field: "EmplyeeCheckInDateTime",
-      headerName: "Employee Check In Date Time",
+      headerName: "Check In Date Time",
       flex: 1,
       headerAlign: "center",
     },
     {
       field: "EmplyeeCheckOutDateTime",
-      headerName: "Employee Check Out Date Time",
+      headerName: "Check Out Date Time",
       flex: 1,
       headerAlign: "center",
     },
@@ -212,7 +241,7 @@ const baseurlUAAM = config.UAAM_URL;
   const currentMonthNumber = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const AttInitialvalues = {
-    date: sessionStorage.getItem("date") || new Date().toISOString().split("T")[0],
+    date: new Date().toISOString().split("T")[0],
   };
   const attendaceFnSave = async (values) => {
     const data = {
@@ -257,6 +286,31 @@ const baseurlUAAM = config.UAAM_URL;
     setUseCurrentEmp(false);
   };
   const [useCurrentEmp, setUseCurrentEmp] = useState(false);
+  const generatePDFInBackground = (PdfComponent) => {
+    return new Promise((resolve) => {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(async () => {
+          try {
+            const { pdf } = await import("@react-pdf/renderer");
+            const blob = await pdf(PdfComponent).toBlob();
+            resolve(blob);
+          } catch (error) {
+            resolve(null);
+          }
+        }, { timeout: 5000 });
+      } else {
+        setTimeout(async () => {
+          try {
+            const { pdf } = await import("@react-pdf/renderer");
+            const blob = await pdf(PdfComponent).toBlob();
+            resolve(blob);
+          } catch (error) {
+            resolve(null);
+          }
+        }, 100);
+      }
+    });
+  };
   return (
     <React.Fragment>
       <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
@@ -309,7 +363,7 @@ const baseurlUAAM = config.UAAM_URL;
               onSubmit={handleSubmit}
               onReset={() => {
                 resetForm();
-                setFieldValue("date",new Date().toISOString().split("T")[0])
+                setFieldValue("date", new Date().toISOString().split("T")[0])
                 sessionStorage.removeItem("date")
                 dispatch(resetTrackingData());
               }}
@@ -337,7 +391,7 @@ const baseurlUAAM = config.UAAM_URL;
                     value={values.date}
                     onBlur={handleBlur}
                     // onChange={handleChange}
-                     onChange={(e) => {
+                    onChange={(e) => {
                       handleChange(e);
                       sessionStorage.setItem("date", e.target.value);
                     }}
@@ -445,11 +499,11 @@ const baseurlUAAM = config.UAAM_URL;
                   <Button type="reset" variant="contained" color="error">
                     RESET
                   </Button>
-                  {AttendanceData?.length > 0 && (
+                  {/* {rows?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <DailyattendancePDF
-                          data={AttendanceData}
+                          data={rows}
                           filters={{
                             Date: values.date,
                             //EmployeeID: empData?.Name || EmpName,
@@ -474,11 +528,59 @@ const baseurlUAAM = config.UAAM_URL;
                         )
                       }
                     </PDFDownloadLink>
+                  )} */}
+                  {AttendanceData?.length > 0 && (
+                    <Button
+                      onClick={async () => {
+                        try {
+                          setPdfGenerating(true);
+                          toast.loading("Generating PDF...");
+
+                          const pdfComponent = (
+                            <DailyattendancePDF
+                              data={AttendanceData}
+                              filters={{
+                                Date: values.date,
+                                Imageurl: baseurlUAAM,
+                                HeaderImg: HeaderImg,
+                                FooterImg: FooterImg
+                              }}
+                            />
+                          );
+
+                          // Generate in background without blocking UI
+                          const blob = await generatePDFInBackground(pdfComponent);
+
+                          if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement("a");
+                            link.href = url;
+                            link.download = `Daily_Attendance_${values.date}.pdf`;
+                            link.click();
+                            URL.revokeObjectURL(url);
+                            toast.dismiss();
+                            
+                          } else {
+                            toast.dismiss();
+                            toast.error("PDF generation failed");
+                          }
+                        } catch (error) {
+                          toast.error("Error generating PDF");
+                        } finally {
+                          setPdfGenerating(false);
+                        }
+                      }}
+                      disabled={pdfGenerating}
+                      sx={{ color: "#d32f2f" }}
+                    >
+                      {pdfGenerating ? <CircularProgress size={24} /> : <PictureAsPdfIcon sx={{ fontSize: 24 }} />}
+                    </Button>
                   )}
                 </Stack>
               </Box>
               <Box sx={{ gridColumn: "span 4" }}>
                 <Box
+                padding={1}
                   height="500px"
                   // height={dataGridHeight}
                   marginTop={2}
@@ -525,15 +627,15 @@ const baseurlUAAM = config.UAAM_URL;
                     }}
                     rowHeight={dataGridRowHeight}
                     headerHeight={dataGridHeaderFooterHeight}
-                    rows={AttendanceData}
+                    rows={rows}
                     columns={AttColumn}
                     disableSelectionOnClick
                     getRowId={(row) => row.SLNO}
-                     pageSize={pageSize}
+                    pageSize={pageSize}
                     page={page}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => {}}
+                    onCellClick={(params) => { }}
                     rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
@@ -542,7 +644,7 @@ const baseurlUAAM = config.UAAM_URL;
                     onStateChange={(stateParams) =>
                       setRowCount(stateParams.pagination.rowCount)
                     }
-                    loading={exploreLoading}
+                    loading={getLoading}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
