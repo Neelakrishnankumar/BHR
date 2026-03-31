@@ -78,6 +78,7 @@ PayrollconfigpayrollAttendanceStatus: "idle",
   },
   timeSheetData: {},
   MonthlyAttendanceData: [],
+  MonthlyAttendanceDataGetloading: false,
   sprintget: {},
   sprintPPget: [],
   sprintgetstatus: "",
@@ -4255,7 +4256,11 @@ export const getApiSlice = createSlice({
         state.managerName =
           action.payload?.Data?.ManagersName?.ManagersName || "";
       })
+       .addCase(MonthlyAttendance.pending, (state, action) => {
+        state.MonthlyAttendanceDataGetloading = true;
+      })
       .addCase(MonthlyAttendance.fulfilled, (state, action) => {
+        state.MonthlyAttendanceDataGetloading = false;
         state.MonthlyAttendanceData = action.payload.Data;
       });
   },
