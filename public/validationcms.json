@@ -31,7 +31,9 @@
     "incharge": "Please select the Accountable Incharge",
     "projectOwner": "Please enter the Project Owner",
     "CurrentStatus": "Please select the Status",
-    "budget": "Please enter the Budget"
+    "budget": "Please enter the Budget",
+    "TentativeEndDate": "Please select the Tentative End Date",
+    "TentativeStartDate": "Please select the Tentative Start Date"
   },
   "ProjectUnit": {
     "Code": "Please enter the Code",

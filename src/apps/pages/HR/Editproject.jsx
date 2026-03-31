@@ -152,6 +152,8 @@ const Editproject = () => {
 
         let schemaFields = {
           name: Yup.string().trim().required(data.Project.name),
+          TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
+          TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
           //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
           // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
@@ -184,7 +186,7 @@ const Editproject = () => {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
       } else {
-        dispatch(getFetchData({ accessID, get: "", recID }));
+        dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
   }, [show]);
@@ -388,6 +390,8 @@ const Editproject = () => {
     longitude: data.Longitude || 0,
     latitude: data.Latitude || 0,
     radius: data.Radius || 0,
+    TentativeEndDate: data.TentativeEndDate || "",
+    TentativeStartDate: data.TentativeStartDate || "",
   };
 
   const Fnsave = async (values, del) => {
@@ -427,6 +431,8 @@ const Editproject = () => {
       Longitude: values.longitude || 0,
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
+      TentativeStartDate: values.TentativeStartDate || "",
+      TentativeEndDate: values.TentativeEndDate || ""
     };
 
     const response = await dispatch(postData({ accessID, action, idata }));
@@ -1192,6 +1198,56 @@ const Editproject = () => {
                   // sx={{ gridColumn: "span 2" }}
                   > */}
                   {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
+
+                  <TextField
+                    id="TentativeStartDate"
+                    name="TentativeStartDate"
+                    type="date"
+                    // label="Tentative Start Date"
+                    label={
+                      <>
+                        Tentative Start Date
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          {" "}
+                          *{" "}
+                        </span>
+                      </>
+                    }
+                    // required
+                    focused
+                    variant="standard"
+                    error={!!touched.TentativeStartDate && !!errors.TentativeStartDate}
+                    helperText={touched.TentativeStartDate && errors.TentativeStartDate}
+                    value={values.TentativeStartDate}
+                    // value={values.CurrentStatus}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    id="TentativeEndDate"
+                    name="TentativeEndDate"
+                    type="date"
+                    // label="Tentative End Date"
+                    label={
+                      <>
+                        Tentative End Date
+                        <span style={{ color: "red", fontSize: "20px" }}>
+                          {" "}
+                          *{" "}
+                        </span>
+                      </>
+                    }
+                    // required
+                    focused
+                    variant="standard"
+                    error={!!touched.TentativeEndDate && !!errors.TentativeEndDate}
+                    helperText={touched.TentativeEndDate && errors.TentativeEndDate}
+                    value={values.TentativeEndDate}
+                    // value={values.CurrentStatus}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                  />
+
                   <TextField
                     disabled={mode == "V"}
                     labelId="demo"
@@ -1230,7 +1286,6 @@ const Editproject = () => {
                     <MenuItem value="CO">Completed</MenuItem>
                     <MenuItem value="H">Hold</MenuItem>
                   </TextField>
-
 
                   <TextField
                     disabled={mode == "V"}
