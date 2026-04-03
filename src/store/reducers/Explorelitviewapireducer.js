@@ -2,13 +2,19 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Button, IconButton, Tooltip, Stack, Box } from "@mui/material";
+import { Button, IconButton, Tooltip, Stack, Box,
+  CircularProgress,
+ } from "@mui/material";
+
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import store from "../..";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import PayslipPdf from "../../apps/pages/pdf/PaySlipPdf";
+import { pdf } from "@react-pdf/renderer";
 
 import { useNavigate } from "react-router-dom";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
@@ -23,6 +29,8 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import toast from "react-hot-toast";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { paySlipGet } from "./Formapireducer";
+import { getConfig } from "../../config";
 
 const initialState = {
   explorerowData: [],
@@ -288,11 +296,92 @@ export const {
 
 export default getApiSlice.reducer;
 
+
+
+
+
+
+
 export const fetchExplorelitview =
   (AccessID, screenName, filter, any) => async (dispatch, getState) => {
     console.log("🚀 ~ file: Explorelitviewapireducer.js:209 ~ filter:", filter);
     // const navigate = useNavigate();
     var url = store.getState().globalurl.listViewurl;
+
+
+    const HeaderImg = sessionStorage.getItem("CompanyHeader");
+  const FooterImg = sessionStorage.getItem("CompanyFooter");
+  const CompanySignature = sessionStorage.getItem("CompanySignature");
+  console.log(" ~ Payroll ConfigurationPayroll attendance ~ CompanySignature:", CompanySignature);
+  console.log("HeaderImg", HeaderImg, FooterImg);
+  const config = getConfig();
+  const baseurlUAAM = config.UAAM_URL;
+
+ const PayslipBtn = ({ CompanyID, EmployeeID, Finyear, Month }) => {
+    const dispatch = store.dispatch;
+    const [payloading, setPayLoading] = React.useState(false);
+
+    const handlePayPDFGET = async () => {
+      try {
+        setPayLoading(true);
+        const payslip = {
+          Month: Month,
+          Finyear: Finyear,
+          EmployeeID: EmployeeID,
+          CompanyID: CompanyID,
+        };
+
+        const resultAction = await dispatch(paySlipGet(payslip));
+
+        const data = resultAction.payload.data; // <-- this depends on how your thunk is defined
+        if (!data) {
+          alert("No data available for PDF");
+          return;
+        }
+        if (!resultAction.payload) {
+          console.error("No payload returned");
+          return;
+        }
+        // Generate and download PDF
+        const blob = await pdf(
+          <PayslipPdf
+            data={data}
+            filters={{
+              Imageurl: baseurlUAAM,
+              HeaderImg: HeaderImg,
+              FooterImg: FooterImg,
+              CompanySignature: CompanySignature,
+            }}
+          />,
+        ).toBlob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = "Payslip.pdf";
+        document.body.appendChild(link); // ✅ Important
+        link.click();
+        document.body.removeChild(link); // ✅ Cleanup
+        URL.revokeObjectURL(blobUrl); // ✅ Cleanup
+      } catch (err) {
+        console.error("PDF generation failed", err);
+      } finally {
+        setPayLoading(false);
+      }
+    };
+
+    return (
+      <Tooltip title="Download Payslip PDF">
+        <IconButton color="info" size="small" onClick={handlePayPDFGET}>
+          {payloading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <PictureAsPdfIcon color="error" />
+          )}
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
     if (
       filter != "" &&
@@ -328,12 +417,14 @@ export const fetchExplorelitview =
       AccessID !== "TR130" &&
       AccessID !== "TR131" &&
       AccessID !== "TR139" &&
+      AccessID !== "TR367" &&
+      
       // AccessID !== "TR321" &&
       AccessID !== "TR326"
     ) {
       filter = "parentID=" + filter;
     }
-    if (AccessID == "TR017" || AccessID == "TR088") {
+    if (AccessID == "TR017" || AccessID == "TR088" || AccessID == "TR367") {
       filter = filter;
     }
     // if (AccessID == "TR019") { TR208
@@ -494,6 +585,8 @@ export const fetchExplorelitview =
               exploreData.Data.columns.push(obj);
             }
 
+            
+ 
             if (AccessID == "TR362" || AccessID === "TR364") {
               var obj = {};
               var currentRow = "";
@@ -650,6 +743,45 @@ export const fetchExplorelitview =
                 exploreData.Data.columns.push(obj1);
               }
             }
+
+      if (AccessID == "TR367") {
+        exploreData.Data.columns = exploreData.Data.columns.filter(
+    col => col.field !== "action"
+  );
+       var obj = {};
+obj = {
+    field: "action",
+    headerName: "",
+    width: 50,
+    align: "center",
+    sortable: false,
+    disableColumnMenu: true,
+
+    renderCell: (params) => {
+      return (
+        <Stack direction="row">
+          {params.row.Process === "P" ? (
+            <PayslipBtn
+              CompanyID={params.row.CompanyID}
+              EmployeeID={params.row.EmployeeID}
+              Finyear={params.row.Year}
+              Month={params.row.Month}
+            />
+          ) : (
+            <Tooltip title="Payslip Process pending">
+              <IconButton color="error" size="small" sx={{ opacity: 0.5 }}>
+                <PictureAsPdfIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Stack>
+      );
+    },
+  };
+// exploreData.Data.columns.splice(2, 0, obj);
+  // exploreData.Data.columns.push(obj);
+  exploreData.Data.columns.splice(15, 0, obj);
+}
           } else {
             if (AccessID == "TR077") {
               var object2 = {};
@@ -691,6 +823,7 @@ export const fetchExplorelitview =
               };
               exploreData.Data.columns.splice(4, 0, object2);
             }
+ 
           }
           dispatch(
             Success({
