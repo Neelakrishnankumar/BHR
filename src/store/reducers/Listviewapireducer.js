@@ -1997,6 +1997,36 @@ export const fetchListview =
                 );
               },
             };
+
+            //  } else if (AccessID == "TR128") {
+            // obj = {
+            //   field: "action",
+            //   headerName: "Action",
+            //   minWidth: 150,
+            //   sortable: false,
+            //   filterable: false,
+            //   headerAlign: "center",
+            //   align: "center",
+            //   disableColumnMenu: true,
+            //   disableExport: true,
+            //   renderCell: (params) => {
+            //     return (
+            //       <Box>
+            //         <Link 
+            //        to={`/Apps/Secondarylistview/${params.row.ChildID}/${params.row.ChildName}/${params.row.RecordID}/${params.row.parentID}`}
+            //               state={{ Locationname: params.row.Name }}
+            //         >
+            //           <Tooltip title="Gate">
+            //             <IconButton color="info" size="small">
+            //               <ListAltOutlinedIcon />
+            //             </IconButton>
+            //           </Tooltip>
+            //         </Link>
+                 
+            //       </Box>
+            //     );
+            //   },
+            // };
           } else if (AccessID == "TR049") {
             obj = {
               field: "action",
@@ -5372,6 +5402,8 @@ const PrepareAction = ({ params, accessID, screenName, rights, AsmtType }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state || {};
+  console.log(state, "--state in listviewapireducers");
+  
   const dispatch = useDispatch();
   const ScheduleCheck = () => {
     Swal.fire({
