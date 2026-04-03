@@ -1285,8 +1285,7 @@ console.log(ItemStockData, "--ItemStockData");
                       }}
                     />
 
-
-                       <CheckinAutocomplete
+  <CheckinAutocomplete
                         name="location"
                         label="Location"
                         // label={
@@ -1354,6 +1353,12 @@ console.log(ItemStockData, "--ItemStockData");
                         helperText={touched.bin && errors.bin}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2160","ScreenName":"Bin","Filter":"LocationID=${values.location?.RecordID}","Any":""}}`}
                       />
+                      <Box
+   sx={{
+    gridColumn: "span 2",
+    width: "50%"
+  }}
+>
                          <CheckinAutocomplete
                         name="shelves"
                         label="Shelves"
@@ -1388,6 +1393,9 @@ console.log(ItemStockData, "--ItemStockData");
                         // url={`${listViewurl}?data={"Query":{"AccessID":"2100","ScreenName":"Item Lead Time","Filter":"parentID=${CompanyID}","Any":""}}`}
                         url={`${listViewurl}?data={"Query":{"AccessID":"2161","ScreenName":"Shelves","Filter":"BinID=${values.bin?.RecordID}","Any":""}}`}
                       />
+          </Box> 
+
+
                     <Box>
                       <FormControlLabel
                         control={
@@ -1441,7 +1449,7 @@ console.log(ItemStockData, "--ItemStockData");
                     </Box>
 
                     {/* CHECKBOX */}
-                    <Box>
+                  <Box>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -1530,7 +1538,9 @@ console.log(ItemStockData, "--ItemStockData");
                         }}
                         //inputProps={{ readOnly: mode == "V" }}
                       /> */}
-                    </Box>
+               </Box> 
+
+
                     {/* {values.ServiceAndMaintenance && (
                       <>
                         <TextField
